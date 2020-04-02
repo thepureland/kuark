@@ -1,0 +1,3 @@
+h2
+1. 双击工程h2目录下的h2.bat，可以运行h2 server，通过8082端口可以连接其控制台，连接信息拷贝工程resources下的application.yml.
+   这里不用springboot去集成h2控制台，因为需要servlet环境

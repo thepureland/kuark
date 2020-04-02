@@ -1,0 +1,6 @@
+#FileLock
+#Fri Mar 27 11:18:14 CST 2020
+server=192.168.0.82\:50411
+hostName=192.168.0.82
+method=file
+id=17119ff45e904eb3a98c3658a87fe28e73da4dd42cf

@@ -1,0 +1,16 @@
+1. org.h2.server.web.WebServlet类明明是存在的：
+[main] TRACE o.s.b.a.condition.OnClassCondition -
+Condition OnClassCondition on org.springframework.boot.autoconfigure.h2.H2ConsoleAutoConfiguration did not match due to
+ @ConditionalOnClass did not find required class 'org.h2.server.web.WebServlet'
+答：需要 implementation("org.springframework.boot:spring-boot-starter-web")
+
+
+2. 用idea的database以tcp的方式连接h2：
+[90079][90079] org.h2.jdbc.JdbcSQLSyntaxErrorException: Schema "information_schema" not found; SQL statement:
+select catalog_name from information_schema.catalogs [90079-200].
+而用h2自带的控制台连则没有问题。
+答：未解决
+
+
+3. ktorm，不管是查询还是新增，加上@Transactional事务都会卡住
+答：未解决，可能是它的bug

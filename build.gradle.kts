@@ -114,7 +114,9 @@ subprojects {
 //        }
         dependencies {
             dependency("de.idyl:winzipaes:1.0.1")
+            dependency("org.apache.commons:commons-lang3:3.10")
             dependency("commons-io:commons-io:2.6")
+            dependency("commons-codec:commons-codec:1.14")
 
             // log
             dependency("org.slf4j:slf4j-api:$slf4j_version")

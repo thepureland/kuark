@@ -4,7 +4,9 @@ dependencies {
 //    implementation("org.jetbrains.kotlin:kotlin-reflect")
 //    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
+    implementation("org.apache.commons:commons-lang3")
     implementation("commons-io:commons-io")
+    implementation("commons-codec:commons-codec")
     implementation("de.idyl:winzipaes")
 
     // log

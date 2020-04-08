@@ -153,7 +153,7 @@ object DigestKit {
      * @return 进行散列后的字节数组
      * @since 1.0.0
      */
-    fun digest(input: ByteArray?, algorithm: String?, salt: ByteArray?, iterations: Int): ByteArray {
+    fun digest(input: ByteArray, algorithm: String, salt: ByteArray?, iterations: Int): ByteArray {
         val digest = MessageDigest.getInstance(algorithm)
         if (salt != null) {
             digest.update(salt)
@@ -173,7 +173,7 @@ object DigestKit {
      * @return 加盐值字节数组
      * @since 1.0.0
      */
-    fun generateSalt(numBytes: Int): ByteArray? {
+    fun generateSalt(numBytes: Int): ByteArray {
         Validate.isTrue(numBytes > 0, "numBytes argument must be a positive integer (1 or larger)", numBytes)
         val bytes = ByteArray(numBytes)
         random.nextBytes(bytes)

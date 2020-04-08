@@ -5,6 +5,7 @@ dependencies {
 //    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
     implementation("org.apache.commons:commons-lang3")
+    implementation("org.apache.commons:commons-text")
     implementation("commons-io:commons-io")
     implementation("commons-codec:commons-codec")
     implementation("de.idyl:winzipaes")

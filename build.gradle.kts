@@ -114,7 +114,10 @@ subprojects {
 //        }
         dependencies {
             dependency("de.idyl:winzipaes:1.0.1")
+
+            // apache commons
             dependency("org.apache.commons:commons-lang3:3.10")
+            dependency("org.apache.commons:commons-text:1.8")
             dependency("commons-io:commons-io:2.6")
             dependency("commons-codec:commons-codec:1.14")
 

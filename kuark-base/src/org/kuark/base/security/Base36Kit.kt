@@ -3,7 +3,6 @@ package org.kuark.base.security
 import java.security.MessageDigest
 
 /**
- * Created by admin 2016/4/22
  * 目的：根据输入的秘钥，对提供的字符串进行加密，和对以此加密规则生成的密文解密
  * 说明：encrypt和decrypt为完全对称的设计，你也可以把decrypt作为加密函数，使用
  *      encrypt函数来还原。

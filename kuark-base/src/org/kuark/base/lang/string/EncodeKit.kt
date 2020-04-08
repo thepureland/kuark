@@ -2,7 +2,6 @@ package org.kuark.base.lang.string
 
 import org.apache.commons.codec.binary.Base64
 import org.apache.commons.codec.binary.Hex
-import java.io.UnsupportedEncodingException
 import java.net.URLDecoder
 import java.net.URLEncoder
 

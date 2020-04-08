@@ -189,9 +189,6 @@ object CryptoKit {
      *
      *
      * @return 向量的字节数组
-     * @author admin
-     * @author admin
-     * @time 2013-5-18 下午4:16:26
      * @since 1.0.0
      */
     fun generateIV(): ByteArray {
@@ -226,8 +223,6 @@ object CryptoKit {
      *
      * @param bytes 十六进制编码的字节数组
      * @return 解码后的字节数组
-     * @author admin
-     * @time 2013年10月1日 下午9:46:31
      * @since 1.0.0
      */
     fun decodeHex(bytes: ByteArray): ByteArray {

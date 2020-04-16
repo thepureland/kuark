@@ -1,4 +1,4 @@
-package org.kuark.spring.kit
+package org.kuark.config.kit
 
 import org.springframework.context.ApplicationContext
 import kotlin.reflect.KClass
@@ -18,11 +18,11 @@ object SpringKit {
         return applicationContext.getBean(beanClass.java)
     }
 
+    fun getProperty(propertyName: String): String? = applicationContext.environment.getProperty(propertyName)
+
     /**
      * 检查 ApplicationContext 是否注入
      */
-    private fun checkApplicationContext() {
-        checkNotNull(applicationContext) { "spring applicaitonContext未注入" }
-    }
+    private inline fun checkApplicationContext() = checkNotNull(applicationContext) { "spring applicaitonContext未注入" }
 
 }

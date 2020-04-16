@@ -1,6 +1,6 @@
-package org.kuark.spring.init
+package org.kuark.config.context
 
-import org.kuark.spring.kit.SpringKit
+import org.kuark.config.kit.SpringKit
 import org.springframework.context.ApplicationContext
 import org.springframework.context.ApplicationContextAware
 import org.springframework.stereotype.Component

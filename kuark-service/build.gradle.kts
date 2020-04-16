@@ -1,4 +1,4 @@
 
 dependencies {
-    api(project(":kuark-spring"))
+    api(project(":kuark-config"))
 }

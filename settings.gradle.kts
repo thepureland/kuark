@@ -1,7 +1,9 @@
 rootProject.name = "kuark"
 include("kuark-base")
-include("kuark-spring")
+include("kuark-config")
 include("kuark-data")
+include("kuark-data:kuark-data-cache")
+findProject(":kuark-data:kuark-data-cache")?.name = "kuark-data-cache"
 include("kuark-data:kuark-data-jdbc")
 findProject(":kuark-data:kuark-data-jdbc")?.name = "kuark-data-jdbc"
 include("kuark-data:kuark-data-redis")
@@ -21,3 +23,4 @@ include("kuark-biz:kuark-biz-web")
 findProject(":kuark-biz:kuark-biz-web")?.name = "kuark-biz-web"
 include("kuark-biz:kuark-biz-data")
 findProject(":kuark-biz:kuark-biz-data")?.name = "kuark-biz-data"
+

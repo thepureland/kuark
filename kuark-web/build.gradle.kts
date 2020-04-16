@@ -1,6 +1,6 @@
 
 dependencies {
-    api(project(":kuark-spring"))
+    api(project(":kuark-config"))
     api("io.ktor:ktor-server-netty")
     api("io.ktor:ktor-server-core")
     api("io.ktor:ktor-html-builder")

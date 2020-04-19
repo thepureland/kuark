@@ -1,0 +1,4 @@
+cache:
+  config:
+    enabled: false
+    strategy: LOCAL_REMOTE

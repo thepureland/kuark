@@ -128,10 +128,8 @@ subprojects {
             dependency("org.slf4j:log4j-over-slf4j:$slf4j_version")
             dependency("ch.qos.logback:logback-classic:$logback_version")
 
-            // spring
+            // springboot
             dependency("org.springframework.boot:spring-boot-starter-aop:$spring_boot_version")
-            dependency("org.springframework.boot:spring-boot-starter-jdbc:$spring_boot_version")
-            dependency("org.springframework.boot:spring-boot-starter-data-redis:$spring_boot_version")
             dependency("org.springframework.boot:spring-boot-starter-test:$spring_boot_version") {
                 exclude("org.junit.vintage:junit-vintage-engine")
             }
@@ -139,7 +137,16 @@ subprojects {
             // data
             dependency("me.liuwj.ktorm:ktorm-core:$ktorm_version")
             dependency("me.liuwj.ktorm:ktorm-jackson:$ktorm_version")
+            dependency("org.springframework.boot:spring-boot-starter-data-redis:$spring_boot_version")
 //            dependency("me.liuwj.ktorm:ktorm-support-sqlite:$ktorm_version")
+            dependency("org.springframework.boot:spring-boot-starter-jdbc:$spring_boot_version")
+
+            // cache
+            dependency("javax.cache:cache-api:1.1.1")
+//            dependency("org.ehcache:ehcache:3.8.1")
+            dependency("com.github.ben-manes.caffeine:caffeine:2.8.1")
+            dependency("redis.clients:jedis:3.2.0")
+            dependency("org.springframework.boot:spring-boot-starter-cache:$spring_boot_version")
 
             // ktor
             dependency("io.ktor:ktor-server-netty:$ktor_version")

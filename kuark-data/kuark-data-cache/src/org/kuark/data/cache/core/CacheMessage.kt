@@ -2,7 +2,15 @@ package org.kuark.data.cache.core
 
 import java.io.Serializable
 
-class CacheMessage(var cacheName: String, var key: Any?) : Serializable {
+open class CacheMessage() : Serializable {
+
+    lateinit var cacheName: String
+    var key: Any? = null
+
+    constructor(cacheName: String, key: Any?) : this() {
+        this.cacheName = cacheName
+        this.key = key
+    }
 
     companion object {
         /**  */

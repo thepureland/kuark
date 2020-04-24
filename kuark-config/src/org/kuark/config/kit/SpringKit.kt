@@ -1,28 +1,25 @@
 package org.kuark.config.kit
 
 import org.springframework.context.ApplicationContext
+import org.springframework.context.ApplicationContextAware
+import org.springframework.stereotype.Component
 import kotlin.reflect.KClass
 
+@Component
+object SpringKit : ApplicationContextAware {
 
-object SpringKit {
+    private lateinit var applicationContext: ApplicationContext
 
-    lateinit var applicationContext: ApplicationContext
-
-    fun getBean(beanName: String): Any {
-        checkApplicationContext()
-        return applicationContext.getBean(beanName)
+    override fun setApplicationContext(applicationContext: ApplicationContext) {
+        this.applicationContext = applicationContext
     }
 
-    fun <T : Any> getBean(beanClass: KClass<T>): T {
-        checkApplicationContext()
-        return applicationContext.getBean(beanClass.java)
-    }
+    fun getApplicationContext(): ApplicationContext = applicationContext
+
+    fun getBean(beanName: String): Any = applicationContext.getBean(beanName)
+
+    fun <T : Any> getBean(beanClass: KClass<T>): T = applicationContext.getBean(beanClass.java)
 
     fun getProperty(propertyName: String): String? = applicationContext.environment.getProperty(propertyName)
-
-    /**
-     * 检查 ApplicationContext 是否注入
-     */
-    private inline fun checkApplicationContext() = checkNotNull(applicationContext) { "spring applicaitonContext未注入" }
 
 }

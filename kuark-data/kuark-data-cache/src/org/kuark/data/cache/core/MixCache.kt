@@ -33,7 +33,8 @@ class MixCache(
             CacheStrategy.REMOTE -> remoteCache?.put(key, value)
             CacheStrategy.LOCAL_REMOTE -> {
                 remoteCache?.put(key, value)
-                pushMsg(name, key)
+                pushMsg(name, key) //TODO 异步?
+//                localCache?.put(key, value)
             }
         }
     }
@@ -44,19 +45,19 @@ class MixCache(
             CacheStrategy.REMOTE -> remoteCache!!.name
         }
 
-    override fun getNativeCache(): Any =
-        when (strategy) {
-            CacheStrategy.SINGLE_LOCAL -> localCache!!.nativeCache
-            CacheStrategy.REMOTE, CacheStrategy.LOCAL_REMOTE -> remoteCache!!.nativeCache
-        }
+    override fun getNativeCache(): Any = this
 
     override fun get(key: Any): Cache.ValueWrapper? =
         when (strategy) {
             CacheStrategy.SINGLE_LOCAL -> localCache!!.get(key)
             CacheStrategy.REMOTE -> remoteCache!!.get(key)
             CacheStrategy.LOCAL_REMOTE -> {
-                val value = localCache!!.get(key)
-                value ?: remoteCache!!.get(key)
+                var value = localCache!!.get(key)
+                if (value == null) {
+                    value = remoteCache!!.get(key)
+                    localCache.put(key, value?.get())
+                }
+                value
             }
         }
 
@@ -65,8 +66,12 @@ class MixCache(
             CacheStrategy.SINGLE_LOCAL -> localCache!!.get(key, type)
             CacheStrategy.REMOTE -> remoteCache!!.get(key, type)
             CacheStrategy.LOCAL_REMOTE -> {
-                val value = localCache!!.get(key, type)
-                value ?: remoteCache!!.get(key, type)
+                var value = localCache!!.get(key, type)
+                if (value == null) {
+                    value = remoteCache!!.get(key, type)
+                    localCache.put(key, value)
+                }
+                value
             }
         }
 
@@ -75,8 +80,12 @@ class MixCache(
             CacheStrategy.SINGLE_LOCAL -> localCache!!.get(key, valueLoader)
             CacheStrategy.REMOTE -> remoteCache!!.get(key, valueLoader)
             CacheStrategy.LOCAL_REMOTE -> {
-                val value = localCache!!.get(key, valueLoader)
-                value ?: remoteCache!!.get(key, valueLoader)
+                var value = localCache!!.get(key, valueLoader)
+                if (value == null) {
+                    value = remoteCache!!.get(key, valueLoader)
+                    localCache.put(key, value)
+                }
+                value
             }
         }
 

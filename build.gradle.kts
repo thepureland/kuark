@@ -147,6 +147,7 @@ subprojects {
             dependency("com.github.ben-manes.caffeine:caffeine:2.8.1")
             dependency("redis.clients:jedis:3.2.0")
             dependency("org.springframework.boot:spring-boot-starter-cache:$spring_boot_version")
+            dependency("com.alibaba:fastjson:1.2.68")
 
             // ktor
             dependency("io.ktor:ktor-server-netty:$ktor_version")

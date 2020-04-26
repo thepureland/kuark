@@ -45,8 +45,8 @@ open class RemoteCacheConfiguration {
 
         redisCacheConfiguration = redisCacheConfiguration.entryTtl(Duration.ofMinutes(30L)) //设置缓存的默认超时时间：30分钟
             .disableCachingNullValues()             //如果是空值，不缓存
-            .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(keySerializer()))         //设置key序列化器
-            .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer((valueSerializer())))  //设置value序列化器
+            .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(keySerializer()))
+            .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer((valueSerializer())))
 
         return RedisCacheManager
             .builder(RedisCacheWriter.nonLockingRedisCacheWriter(redisConnectionFactory))

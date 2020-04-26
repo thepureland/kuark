@@ -1,7 +1,7 @@
 logging:
   level:
     root: debug
-    me.liuwj.ktorm: debug
+    org.kuark.xxx: debug
 
 nacos:
   test: 999999

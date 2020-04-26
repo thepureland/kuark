@@ -3,7 +3,6 @@ logging:
     root: debug
     me.liuwj.ktorm: debug
 
-
 spring:
   datasource:
 #    auto-commit: true

@@ -138,6 +138,7 @@ subprojects {
             dependency("me.liuwj.ktorm:ktorm-core:$ktorm_version")
             dependency("me.liuwj.ktorm:ktorm-jackson:$ktorm_version")
             dependency("org.springframework.boot:spring-boot-starter-data-redis:$spring_boot_version")
+            dependency("org.apache.commons:commons-pool2:2.8.0")
 //            dependency("me.liuwj.ktorm:ktorm-support-sqlite:$ktorm_version")
             dependency("org.springframework.boot:spring-boot-starter-jdbc:$spring_boot_version")
 
@@ -145,7 +146,7 @@ subprojects {
             dependency("javax.cache:cache-api:1.1.1")
 //            dependency("org.ehcache:ehcache:3.8.1")
             dependency("com.github.ben-manes.caffeine:caffeine:2.8.1")
-            dependency("redis.clients:jedis:3.2.0")
+//            dependency("redis.clients:jedis:3.2.0")
             dependency("org.springframework.boot:spring-boot-starter-cache:$spring_boot_version")
             dependency("com.alibaba:fastjson:1.2.68")
 

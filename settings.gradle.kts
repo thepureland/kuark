@@ -9,6 +9,8 @@ findProject(":kuark-data:kuark-data-redis")?.name = "kuark-data-redis"
 include("kuark-data:kuark-data-mongo")
 findProject(":kuark-data:kuark-data-mongo")?.name = "kuark-data-mongo"
 include("kuark-cache")
+include("kuark-auth")
+include("kuark-session")
 include("kuark-service")
 include("kuark-web")
 include("kuark-biz")

@@ -143,12 +143,15 @@ subprojects {
             dependency("org.springframework.boot:spring-boot-starter-jdbc:$spring_boot_version")
 
             // cache
-            dependency("javax.cache:cache-api:1.1.1")
-//            dependency("org.ehcache:ehcache:3.8.1")
             dependency("com.github.ben-manes.caffeine:caffeine:2.8.1")
-//            dependency("redis.clients:jedis:3.2.0")
             dependency("org.springframework.boot:spring-boot-starter-cache:$spring_boot_version")
-            dependency("com.alibaba:fastjson:1.2.68")
+//            dependency("com.alibaba:fastjson:1.2.68")
+
+            // session
+            dependency("org.springframework.session:spring-session-data-redis:2.2.2.RELEASE")
+
+            // auth
+            dependency("org.apache.shiro:shiro-spring:1.5.2")
 
             // ktor
             dependency("io.ktor:ktor-server-netty:$ktor_version")

@@ -5,7 +5,7 @@ import java.io.File
 import java.sql.DriverManager
 
 fun main() {
-    val file = "E:\\bak\\db\\H2_PUBLIC_geo_region.sql" // 文件编码一定要是UTF8无签名，不然会出现莫名其妙的错误
+    val file = "C:\\Users\\hanfei\\Desktop\\area2019.sql" // 文件编码一定要是UTF8无签名，不然会出现莫名其妙的错误
     val lineIterator = FileKit.lineIterator(File(file), "UTF-8")
 
 

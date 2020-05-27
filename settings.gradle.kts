@@ -13,15 +13,33 @@ include("kuark-auth")
 include("kuark-session")
 include("kuark-service")
 include("kuark-web")
-include("kuark-biz")
-include("kuark-biz:kuark-biz-model")
-findProject(":kuark-biz:kuark-biz-model")?.name = "kuark-biz-model"
-include("kuark-biz:kuark-biz-iservice")
-findProject(":kuark-biz:kuark-biz-iservice")?.name = "kuark-biz-iservice"
-include("kuark-biz:kuark-biz-service")
-findProject(":kuark-biz:kuark-biz-service")?.name = "kuark-biz-service"
-include("kuark-biz:kuark-biz-web")
-findProject(":kuark-biz:kuark-biz-web")?.name = "kuark-biz-web"
-include("kuark-biz:kuark-biz-data")
-findProject(":kuark-biz:kuark-biz-data")?.name = "kuark-biz-data"
-
+include("kuark-sys")
+include("kuark-sys:kuark-sys-model")
+findProject(":kuark-sys:kuark-sys-model")?.name = "kuark-sys-model"
+include("kuark-sys:kuark-sys-iservice")
+findProject(":kuark-sys:kuark-sys-iservice")?.name = "kuark-sys-iservice"
+include("kuark-sys:kuark-sys-service")
+findProject(":kuark-sys:kuark-sys-service")?.name = "kuark-sys-service"
+include("kuark-sys:kuark-sys-web")
+findProject(":kuark-sys:kuark-sys-web")?.name = "kuark-sys-web"
+include("kuark-sys:kuark-sys-data")
+findProject(":kuark-sys:kuark-sys-data")?.name = "kuark-sys-data"
+include("kuark-distributed")
+include("kuark-distributed:kuark-distributed-registry")
+findProject(":kuark-distributed:kuark-distributed-registry")?.name = "kuark-distributed-registry"
+include("kuark-distributed:kuark-distributed-gateway")
+findProject(":kuark-distributed:kuark-distributed-gateway")?.name = "kuark-distributed-gateway"
+include("kuark-distributed:kuark-distributed-tx")
+findProject(":kuark-distributed:kuark-distributed-tx")?.name = "kuark-distributed-tx"
+include("kuark-distributed:kuark-distributed-breaker")
+findProject(":kuark-distributed:kuark-distributed-breaker")?.name = "kuark-distributed-breaker"
+include("kuark-distributed:kuark-distributed-caller")
+findProject(":kuark-distributed:kuark-distributed-caller")?.name = "kuark-distributed-caller"
+include("kuark-distributed:kuark-distributed-loadbalance")
+findProject(":kuark-distributed:kuark-distributed-loadbalance")?.name = "kuark-distributed-loadbalance"
+include("kuark-distributed:kuark-distributed-schedule")
+findProject(":kuark-distributed:kuark-distributed-schedule")?.name = "kuark-distributed-schedule"
+include("kuark-distributed:kuark-distributed-lock")
+findProject(":kuark-distributed:kuark-distributed-lock")?.name = "kuark-distributed-lock"
+include("kuark-distributed:kuark-distributed-monitor")
+findProject(":kuark-distributed:kuark-distributed-monitor")?.name = "kuark-distributed-monitor"

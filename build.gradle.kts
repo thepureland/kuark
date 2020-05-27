@@ -112,7 +112,7 @@ subprojects {
 //        imports {
 //            mavenBom("org.springframework.boot:spring-boot-dependencies:$spring_boot_version")
 //        }
-        dependencies {
+            dependencies {
             dependency("de.idyl:winzipaes:1.0.1")
             dependency("com.alibaba.boot:nacos-config-spring-boot-starter:0.2.7")
 

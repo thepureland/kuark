@@ -1,9 +1,11 @@
 package org.kuark.base.net
 
+import org.kuark.base.lang.string.StringKit
 import org.kuark.base.log.LoggerFactory
 import java.net.InetAddress
 import java.net.UnknownHostException
 import java.util.*
+import java.util.regex.Pattern
 
 /**
  * IP工具类
@@ -241,6 +243,123 @@ object IpKit {
             LOG.error(e)
             ""
         }
+    }
+
+    /**
+     * 判断给定的字符串是否为有效的ipv6(包含冒分十六进制表示法、0位压缩表示法、内嵌IPv4地址表示法)
+     *
+     * @param ipStr ip串
+     * @return ture: ipv6，false: 非ipv6
+     */
+    fun isValidIpv6(ipStr: String): Boolean {
+        if (StringKit.isBlank(ipStr)) return false
+        val colonCount = StringKit.countMatches(ipStr, ":")
+        if (ipStr.length > 45 || colonCount > 7) {
+            return false
+        } else if (colonCount == 7 && !ipStr.contains("::") && ipStr.length <= 39 &&
+            Regex("^([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}$").matches(ipStr)
+        ) {
+            return true
+        } else if (ipStr.length < 39 && Regex("^(([0-9A-Fa-f]{1,4}(:[0-9A-Fa-f]{1,4})*)?)::((([0-9A-Fa-f]{1,4}:)*[0-9A-Fa-f]{1,4})?)$").matches(
+                ipStr
+            )
+        ) {
+            return true
+        } else if (Regex("""^([0-9a-fA-F]{1,4}:){6}(25[0-5]|2[0-4]\d|[0-1]?\d?\d)(\.(25[0-5]|2[0-4]\d|[0-1]?\d?\d)){3}$""").matches(
+                ipStr
+            )
+        ) {
+            return colonCount < 7
+        } else if (Regex("""^(([0-9A-Fa-f]{1,4}(:[0-9A-Fa-f]{1,4})*)?)::((([0-9A-Fa-f]{1,4}:)*[0-9A-Fa-f]{1,4}:)?)(25[0-5]|2[0-4]\d|[0-1]?\d?\d)(\.(25[0-5]|2[0-4]\d|[0-1]?\d?\d)){3}$""").matches(
+                ipStr
+            )
+        ) {
+            return colonCount < 7
+        }
+        return false
+    }
+
+    /**
+     * 将ipv4转为标准全格式的ipv6(每组定长4位的16进制，共8组，每组间用半角冒号分隔)
+     *
+     * @param ipv4 ipv4地址
+     * @return 如果传入参数不是ipv4，将返回原始传入串
+     */
+    fun ipv4ToIpv6(ipv4: String): String {
+        if (isValidIpv4(ipv4)) {
+            val parts = ipv4.split(".").toTypedArray()
+            val part1 = Integer.toHexString(Integer.valueOf(parts[0])).toUpperCase()
+            val part2 = Integer.toHexString(Integer.valueOf(parts[1])).toUpperCase()
+            val part3 = Integer.toHexString(Integer.valueOf(parts[2])).toUpperCase()
+            val part4 = Integer.toHexString(Integer.valueOf(parts[3])).toUpperCase()
+            val ipv6Str = StringKit.leftPad(part1, 2, '0') + StringKit.leftPad(part2, 2, '0') +
+                    ":" + StringKit.leftPad(part3, 2, '0') + StringKit.leftPad(part4, 2, '0')
+            return "0000:0000:0000:0000:0000:0000:$ipv6Str"
+        }
+        return ipv4
+    }
+
+    /**
+     * 标准化ip地址为全格式的ipv6地址(每组定长4位的16进制，共8组，每组间用半角冒号分隔)
+     * 对以下情况的参数进行标准化，其他情况将直接返回原始参数：
+     * 1. ipv4，如192.168.0.1 => 0000:0000:0000:0000:0000:0000:C0A8:0001
+     * 2. 0位压缩表示法的ipv6，如FF01::1101 => FF01:0000:0000:0000:0000:0000:0000:1101、
+     * ::1 => 0000:0000:0000:0000:0000:0000:0000:0001、
+     * :: => 0000:0000:0000:0000:0000:0000:0000:0000、
+     * FF01:0:0:0:0:0:0:1101 => FF01:0000:0000:0000:0000:0000:0000:1101
+     * 3. 内嵌IPv4地址表示法的ipv6，如::192.168.0.1  => 0000:0000:0000:0000:0000:0000:C0A8:0001 、
+     * ::FFFF:192.168.0.1 => 0000:0000:0000:0000:0000:FFFF:C0A8:0001
+     *
+     * @param ipStr ip地址，可以是ipv4或ipv6的三种表示法(冒分十六进制表示法、0位压缩表示法、内嵌IPv4地址表示法)
+     * @return 标准全格式的ipv6
+     */
+    fun standardizeIpv6(ipStr: String): String? {
+        // 处理ipv6
+        if (ipStr == "::") {
+            return "0000:0000:0000:0000:0000:0000:0000:0000"
+        }
+        if (isValidIpv6(ipStr)) {
+            if (ipStr.length == 39) {
+                return ipStr
+            }
+            var ipv6 = ipStr
+            if (ipStr.contains(".")) { // 处理内嵌IPv4地址表示法的ipv6
+                val regExp = "((25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)(\\.(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)){3})"
+                val pattern = Pattern.compile(regExp)
+                val matcher = pattern.matcher(ipStr)
+                matcher.find()
+                val ipv4 = matcher.group(0)
+                val ipv4Part = ipv4ToIpv6(ipv4).substring(30)
+                ipv6 = if (ipStr.contains("::")) {
+                    val colonCount = StringKit.countMatches(ipStr, ":")
+                    var leakGroupCount = 6 - colonCount
+                    if (ipStr.startsWith("::")) {
+                        leakGroupCount++
+                    }
+                    val leakStr = StringKit.repeat("0000", ":", leakGroupCount)
+                    ipStr.replace("::", ":$leakStr:").replace(ipv4, ipv4Part)
+                } else {
+                    ipStr.replace(ipv4, ipv4Part)
+                }
+            } else if (ipStr.contains("::")) { // 处理0位压缩表示法的ipv6
+                val colonCount = StringKit.countMatches(ipStr, ":")
+                val leakGroupCount = 8 - colonCount
+                val leakStr = StringKit.repeat("0000", ":", leakGroupCount)
+                ipv6 = ipStr.replace("::", ":$leakStr:")
+            }
+
+            // 补全
+            if (ipv6.length != 39) {
+                val parts = ipv6.split(":").toTypedArray()
+                val sb = StringBuilder()
+                parts.forEach { it -> sb.append(StringKit.leftPad(it, 4, '0')).append(":") }
+                ipv6 = sb.toString().substring(0, sb.length - 1)
+            }
+            return ipv6
+        }
+
+        // 处理ipv4
+        return ipv4ToIpv6(ipStr)
     }
 
 }

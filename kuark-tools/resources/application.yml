@@ -1,0 +1,8 @@
+logging:
+  level:
+    root: debug
+    org.kuark.xxx: debug
+
+tools:
+  codegen:
+

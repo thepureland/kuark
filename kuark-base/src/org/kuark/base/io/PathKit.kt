@@ -1,5 +1,6 @@
 package org.kuark.base.io
 
+import java.io.File
 import java.net.URLDecoder
 import kotlin.reflect.KClass
 
@@ -53,6 +54,25 @@ object PathKit {
         }
         val path = c.protectionDomain.codeSource.location.path
         return URLDecoder.decode(path, "UTF-8")
+    }
+
+    /**
+     * 得到相对路径
+     * @param baseDir 基础路径
+     * @param file 待操作路径
+     * @return 相对路径
+     */
+    fun getRelativePath(baseDir: File, file: File): String {
+        if (baseDir == file) {
+            return ""
+        }
+        var templateFile = ""
+        templateFile = if (baseDir.parentFile == null) {
+            file.absolutePath.substring(baseDir.absolutePath.length)
+        } else {
+            file.absolutePath.substring(baseDir.absolutePath.length + 1)
+        }
+        return templateFile.replace("\\", "/")
     }
 
 }

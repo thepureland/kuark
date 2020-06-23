@@ -1,15 +1,14 @@
 package org.kuark.cache
 
 import org.junit.jupiter.api.Test
-import org.kuark.base.log.LoggerFactory
-import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.kuark.base.log.LogFactory
 import org.springframework.boot.test.context.SpringBootTest
 
 @SpringBootTest
 //@SpringBootApplication
 open class LoggerTest {
 
-    val logger = LoggerFactory.getLogger(LoggerTest::class)
+    val logger = LogFactory.getLog(LoggerTest::class)
 
     @Test
     fun test() {

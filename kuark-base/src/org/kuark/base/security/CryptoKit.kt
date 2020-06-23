@@ -2,7 +2,7 @@ package org.kuark.base.security
 
 import org.apache.commons.codec.binary.Base64
 import org.kuark.base.lang.string.EncodeKit
-import org.kuark.base.log.LoggerFactory
+import org.kuark.base.log.LogFactory
 import java.io.UnsupportedEncodingException
 import java.security.MessageDigest
 import java.security.SecureRandom
@@ -26,7 +26,7 @@ import javax.crypto.spec.SecretKeySpec
  */
 object CryptoKit {
 
-    private val logger = LoggerFactory.getLogger(this::class)
+    private val logger = LogFactory.getLog(this::class)
 
     private const val AES = "AES"
     private const val HMACSHA1 = "HmacSHA1"

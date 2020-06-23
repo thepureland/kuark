@@ -2,7 +2,7 @@ package org.kuark.base.security
 
 import org.apache.commons.lang3.Validate
 import org.kuark.base.lang.string.EncodeKit
-import org.kuark.base.log.LoggerFactory
+import org.kuark.base.log.LogFactory
 import java.io.InputStream
 import java.security.MessageDigest
 import java.security.SecureRandom
@@ -20,7 +20,7 @@ import java.security.SecureRandom
  */
 object DigestKit {
 
-    private val logger = LoggerFactory.getLogger(this::class)
+    private val logger = LogFactory.getLog(this::class)
     const val SHA1 = "SHA-1"
     const val MD5 = "MD5"
 
@@ -155,9 +155,7 @@ object DigestKit {
      */
     fun digest(input: ByteArray, algorithm: String, salt: ByteArray?, iterations: Int): ByteArray {
         val digest = MessageDigest.getInstance(algorithm)
-        if (salt != null) {
-            digest.update(salt)
-        }
+        salt ?: digest.update(salt)
         var result = digest.digest(input)
         for (i in 1 until iterations) {
             digest.reset()

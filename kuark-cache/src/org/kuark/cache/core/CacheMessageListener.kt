@@ -1,6 +1,6 @@
 package org.kuark.cache.core
 
-import org.kuark.base.log.LoggerFactory
+import org.kuark.base.log.LogFactory
 import org.springframework.data.redis.connection.Message
 import org.springframework.data.redis.connection.MessageListener
 import org.springframework.data.redis.core.RedisTemplate
@@ -10,7 +10,7 @@ class CacheMessageListener(
     private val mixCacheManager: MixCacheManager
 ) : MessageListener {
 
-    private val logger = LoggerFactory.getLogger(CacheMessageListener::class)
+    private val logger = LogFactory.getLog(CacheMessageListener::class)
 
     override fun onMessage(message: Message, pattern: ByteArray?) {
         try {

@@ -13,8 +13,9 @@ plugins {
 //    java
     id("org.springframework.boot") version "2.2.5.RELEASE"
     id("io.spring.dependency-management") version "1.0.9.RELEASE"
-    kotlin("jvm") version "1.3.70"
-    kotlin("plugin.spring") version "1.3.70"
+    id("org.openjfx.javafxplugin") version "0.0.8"
+    kotlin("jvm") version "1.3.72"
+    kotlin("plugin.spring") version "1.3.72"
 }
 
 /* 插件的配置需要在buildscript元素中 */
@@ -38,7 +39,7 @@ allprojects {
     repositories {
         mavenLocal()
         jcenter()
-        maven { url  = uri("http://maven.aliyun.com/nexus/content/groups/public/") }
+        maven { url = uri("http://maven.aliyun.com/nexus/content/groups/public/") }
         maven { url = uri("https://repo.spring.io/milestone") }
         maven { url = uri("https://kotlin.bintray.com/ktor") }
         maven { url = uri("https://kotlin.bintray.com/kotlin-js-wrappers") }
@@ -51,10 +52,9 @@ allprojects {
         plugin("org.springframework.boot")
         plugin("io.spring.dependency-management")
 //        plugin("maven-publish")
+        plugin("org.openjfx.javafxplugin")
     }
 }
-
-
 
 subprojects {
 
@@ -112,15 +112,22 @@ subprojects {
 //        imports {
 //            mavenBom("org.springframework.boot:spring-boot-dependencies:$spring_boot_version")
 //        }
-            dependencies {
+        dependencies {
             dependency("de.idyl:winzipaes:1.0.1")
             dependency("com.alibaba.boot:nacos-config-spring-boot-starter:0.2.7")
 
-            // apache commons
+            // commons
             dependency("org.apache.commons:commons-lang3:3.10")
             dependency("org.apache.commons:commons-text:1.8")
             dependency("commons-io:commons-io:2.6")
             dependency("commons-codec:commons-codec:1.14")
+            dependency("commons-beanutils:commons-beanutils:1.9.4")
+            dependency("com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.9.7")
+            dependency("net.sourceforge.jexcelapi:jxl:2.6.12")
+            dependency("dom4j:dom4j:1.6.1")
+            dependency("javax.xml.bind:jaxb-api:2.3.1")
+            dependency("com.sun.xml.bind:jaxb-impl:2.3.1")
+            dependency("org.glassfish.jaxb:jaxb-runtime:2.3.1")
 
             // log
             dependency("org.slf4j:slf4j-api:$slf4j_version")
@@ -165,6 +172,12 @@ subprojects {
             dependency("io.ktor:ktor-server-tests:$ktor_version")
 
             dependency("javax.validation:validation-api:2.0.1.Final")
+
+            // tools
+            dependency("org.freemarker:freemarker:2.3.30")
+//            dependency("org.openjfx:javafx-controls:12.0.1")
+            dependency("org.controlsfx:controlsfx:8.40.10")
+//            dependency("jfxrt:jfxrt:1.0.0.0")
 
             // 依赖maven中不存在的jar
 //            ext.jarTree = fileTree(dir: 'libs', include: '**/*.jar')

@@ -1,7 +1,7 @@
 package org.kuark.base.net
 
 import org.kuark.base.lang.string.StringKit
-import org.kuark.base.log.LoggerFactory
+import org.kuark.base.log.LogFactory
 import java.net.InetAddress
 import java.net.UnknownHostException
 import java.util.*
@@ -13,7 +13,7 @@ import java.util.regex.Pattern
  */
 object IpKit {
 
-    private val LOG = LoggerFactory.getLogger(this::class)
+    private val LOG = LogFactory.getLog(this::class)
 
     // 二进制32位为全1的整数值
     private const val ALL32ONE = 4294967295L

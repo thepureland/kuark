@@ -1,6 +1,6 @@
 package org.kuark.cache.core
 
-import org.kuark.base.log.LoggerFactory
+import org.kuark.base.log.LogFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.redis.connection.Message
 import org.springframework.data.redis.listener.KeyExpirationEventMessageListener
@@ -13,7 +13,7 @@ class RedisKeyExpirationListener(
     @Autowired private val mixCacheManager: MixCacheManager) :
     KeyExpirationEventMessageListener(listenerContainer) {
 
-    private val logger = LoggerFactory.getLogger(this::class)
+    private val logger = LogFactory.getLog(this::class)
 
     override fun onMessage(message: Message, pattern: ByteArray?) {
         val expiredKeys = message.toString() // 获取失效的key

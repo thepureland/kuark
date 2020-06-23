@@ -1,6 +1,6 @@
 package org.kuark.session.context
 
-import org.kuark.base.log.LoggerFactory
+import org.kuark.base.log.LogFactory
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.event.EventListener
 import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession
@@ -13,7 +13,7 @@ import org.springframework.session.events.SessionExpiredEvent
 @EnableRedisHttpSession(maxInactiveIntervalInSeconds = 120)
 class SessionConfig {
 
-    private val logger = LoggerFactory.getLogger(this::class)
+    private val logger = LogFactory.getLog(this::class)
 
     /**
      * Redis内session过期事件监听

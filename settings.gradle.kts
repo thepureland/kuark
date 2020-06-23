@@ -13,17 +13,17 @@ include("kuark-auth")
 include("kuark-session")
 include("kuark-service")
 include("kuark-web")
-include("kuark-sys")
-include("kuark-sys:kuark-sys-model")
-findProject(":kuark-sys:kuark-sys-model")?.name = "kuark-sys-model"
-include("kuark-sys:kuark-sys-iservice")
-findProject(":kuark-sys:kuark-sys-iservice")?.name = "kuark-sys-iservice"
-include("kuark-sys:kuark-sys-service")
-findProject(":kuark-sys:kuark-sys-service")?.name = "kuark-sys-service"
-include("kuark-sys:kuark-sys-web")
-findProject(":kuark-sys:kuark-sys-web")?.name = "kuark-sys-web"
-include("kuark-sys:kuark-sys-data")
-findProject(":kuark-sys:kuark-sys-data")?.name = "kuark-sys-data"
+include("kuark-biz")
+include("kuark-biz:kuark-biz-sys")
+findProject(":kuark-biz:kuark-biz-sys")?.name = "kuark-biz-sys"
+include("kuark-biz:kuark-biz-geo")
+findProject(":kuark-biz:kuark-biz-geo")?.name = "kuark-biz-geo"
+include("kuark-biz:kuark-biz-user")
+findProject(":kuark-biz:kuark-biz-user")?.name = "kuark-biz-user"
+include("kuark-biz:kuark-biz-auth")
+findProject(":kuark-biz:kuark-biz-auth")?.name = "kuark-biz-auth"
+include("kuark-biz:kuark-biz-msg")
+findProject(":kuark-biz:kuark-biz-msg")?.name = "kuark-biz-msg"
 include("kuark-distributed")
 include("kuark-distributed:kuark-distributed-registry")
 findProject(":kuark-distributed:kuark-distributed-registry")?.name = "kuark-distributed-registry"
@@ -43,3 +43,7 @@ include("kuark-distributed:kuark-distributed-lock")
 findProject(":kuark-distributed:kuark-distributed-lock")?.name = "kuark-distributed-lock"
 include("kuark-distributed:kuark-distributed-monitor")
 findProject(":kuark-distributed:kuark-distributed-monitor")?.name = "kuark-distributed-monitor"
+include("kuark-tools")
+include("kuark-ui")
+include("kuark-ui:kuark-ui-jfx")
+findProject(":kuark-ui:kuark-ui-jfx")?.name = "kuark-ui-jfx"

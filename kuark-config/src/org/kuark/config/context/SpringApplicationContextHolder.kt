@@ -12,4 +12,8 @@ class SpringApplicationContextHolder {
 //        SpringKit.getApplicationContext() = applicationContext
 //    }
 
+    fun test() {
+        RequestContext.get()
+    }
+
 }

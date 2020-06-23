@@ -3,7 +3,7 @@ package org.kuark.config.annotation
 import com.alibaba.nacos.client.config.utils.MD5
 import com.alibaba.nacos.spring.context.event.config.NacosConfigReceivedEvent
 import com.alibaba.spring.beans.factory.annotation.AnnotationInjectedBeanPostProcessor
-import org.kuark.base.log.LoggerFactory
+import org.kuark.base.log.LogFactory
 import org.springframework.beans.BeansException
 import org.springframework.beans.factory.BeanFactoryAware
 import org.springframework.beans.factory.annotation.InjectionMetadata.InjectedElement
@@ -23,7 +23,7 @@ class ConfigValueAnnotationBeanPostProcessor :
     AnnotationInjectedBeanPostProcessor<ConfigValue>(),
     BeanFactoryAware, EnvironmentAware, ApplicationListener<NacosConfigReceivedEvent> {
 
-    private val logger = LoggerFactory.getLogger(this::class)
+    private val logger = LogFactory.getLog(this::class)
     private val PLACEHOLDER_PREFIX = "\${"
     private val PLACEHOLDER_SUFFIX = "}"
     private val VALUE_SEPARATOR = ":"

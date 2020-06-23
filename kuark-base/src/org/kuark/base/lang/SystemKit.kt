@@ -42,6 +42,11 @@ object SystemKit {
         return false
     }
 
+    /**
+     * 是否为windows操作系统
+     */
+    fun isWindowsOs(): Boolean = getOSName().toLowerCase().contains("windows")
+
     // vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
     // 封装org.apache.commons.lang3.SystemUtils
     // vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv

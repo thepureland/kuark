@@ -1,7 +1,7 @@
 package org.kuark.data.jdbc.context
 
 import com.zaxxer.hikari.HikariDataSource
-import org.kuark.base.log.LoggerFactory
+import org.kuark.base.log.LogFactory
 import org.kuark.base.net.NetworkKit
 import org.kuark.config.annotation.ConfigValue
 import org.springframework.beans.factory.annotation.Autowired
@@ -34,7 +34,7 @@ import javax.sql.DataSource
 @AutoConfigureBefore(KtormConfiguration::class)
 open class LocalH2Configuration {
 
-    private val logger = LoggerFactory.getLogger(this::class)
+    private val logger = LogFactory.getLog(this::class)
 
     @ConfigValue("\${spring.datasource.url}")
     private lateinit var dbUrl: String

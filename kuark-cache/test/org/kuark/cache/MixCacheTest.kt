@@ -1,7 +1,7 @@
 package org.kuark.cache
 
 import org.junit.jupiter.api.Test
-import org.kuark.base.log.LoggerFactory
+import org.kuark.base.log.LogFactory
 import org.kuark.cache.context.CacheNames
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.SpringBootApplication
@@ -20,7 +20,7 @@ open class MixCacheTest {
     @Autowired
     private lateinit var cacheManager: CacheManager
 
-    private val logger = LoggerFactory.getLogger(LoggerTest::class)
+    private val logger = LogFactory.getLog(LoggerTest::class)
 
     @Test
     fun test1() {

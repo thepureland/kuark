@@ -276,11 +276,11 @@ object FileKit {
      * @param directory 要查找的目录
      * @param extensions 扩展名数组, 如： {"java","xml"}. 为null将返回所有文件
      * @param recursive true将查找所有子目录
-     * @return 匹配的文件对象的容器
+     * @return 匹配的文件对象的列表
      * @since 1.0.0
      */
-    fun listFiles(directory: File, extensions: Array<String>, recursive: Boolean): Collection<File> =
-        FileUtils.listFiles(directory, extensions, recursive)
+    fun listFiles(directory: File, extensions: Array<String>?, recursive: Boolean): List<File> =
+        FileUtils.listFiles(directory, extensions, recursive) as List<File>
 
     /**
      * 查找指定目录(子目录是可选的)中匹配扩展名的文件.
@@ -292,7 +292,7 @@ object FileKit {
      * @return 匹配的文件对象的迭代器
      * @since 1.0.0
      */
-    fun iterateFiles(directory: File, extensions: Array<String?>, recursive: Boolean): Iterator<File> =
+    fun iterateFiles(directory: File, extensions: Array<String>?, recursive: Boolean): Iterator<File> =
         FileUtils.iterateFiles(directory, extensions, recursive)
 
     /**

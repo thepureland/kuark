@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.kuark.tools.codegen.fx.controller.ConfigController">
+    <children>
+        <TitledPane animated="false" layoutX="14.0" layoutY="14.0" prefHeight="149.0" prefWidth="572.0" text="数据库" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0">
+            <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="112.0" prefWidth="570.0">
+                    <children>
+                        <Label layoutX="14.0" layoutY="16.0" text="URL：" />
+                        <TextField fx:id="urlTextField" layoutX="52.0" layoutY="12.0" prefHeight="23.0" prefWidth="505.0" AnchorPane.leftAnchor="42.39999999999998" AnchorPane.rightAnchor="13.0" />
+                        <Label layoutX="14.0" layoutY="47.0" text="用户：" />
+                        <TextField fx:id="userTextField" layoutX="52.0" layoutY="43.0" prefHeight="23.0" prefWidth="231.0" />
+                        <Label layoutX="14.0" layoutY="80.0" text="密码：" />
+                        <PasswordField fx:id="passwordField" layoutX="52.0" layoutY="76.0" prefHeight="23.0" prefWidth="233.0" />
+                        <Label layoutX="300.0" layoutY="47.0" text="模式(Schema)：" />
+                        <TextField fx:id="schemaField" layoutX="420.0" layoutY="47.0" prefHeight="23.0" prefWidth="231.0" />
+                    </children>
+                </AnchorPane>
+            </content>
+        </TitledPane>
+        <TitledPane animated="false" layoutX="14.0" layoutY="179.0" prefHeight="213.0" prefWidth="572.0" text="其他" AnchorPane.bottomAnchor="8.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="179.0">
+            <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                    <children>
+                        <Label alignment="CENTER_RIGHT" layoutX="12.0" layoutY="52.0" prefHeight="15.0" prefWidth="80.0" text="模块名：" />
+                        <TextField fx:id="moduleTextField" layoutX="95.0" layoutY="47.0" prefHeight="23.0" prefWidth="193.0" />
+                        <Label alignment="CENTER_RIGHT" layoutX="14.0" layoutY="18.0" prefHeight="15.0" prefWidth="78.0" text="模板：" />
+                        <TextField fx:id="templateChoiceBox" layoutX="96.0" layoutY="13.0" prefHeight="23.0" prefWidth="191.0" />
+                        <Label alignment="CENTER_RIGHT" layoutX="12.0" layoutY="123.0" prefHeight="15.0" prefWidth="79.0" text="位置：" />
+                        <TextField fx:id="locationTextField" layoutX="95.0" layoutY="119.0" prefHeight="23.0" prefWidth="310.0" />
+                        <Button fx:id="openButton" layoutX="405.0" layoutY="119.0" mnemonicParsing="false" onAction="#openFileChooser" text="..." />
+                        <Label layoutX="12.0" layoutY="87.0" prefHeight="15.0" prefWidth="83.0" text="web模块名：" />
+                        <TextField fx:id="webModuleTextField" layoutX="95.0" layoutY="82.0" prefHeight="25.0" prefWidth="194.0" />
+                    </children>
+                </AnchorPane>
+            </content>
+        </TitledPane>
+    </children>
+</AnchorPane>

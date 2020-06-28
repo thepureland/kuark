@@ -6,8 +6,7 @@ import org.apache.commons.lang3.CharUtils
  * 字符处理工具类
  *
  * @since 1.0.0
- * @author admin
- * @time 2013-4-9 下午8:32:48
+ * @author K
  */
 object CharKit {
     // vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
@@ -33,8 +32,6 @@ object CharKit {
      * @param str 要处理的字符串
      * @return 第一个字符对应的Character对象
      * @since 1.0.0
-     * @author admin
-     * @time 2013-4-30 下午7:17:44
      */
     fun toCharacterObject(str: String?): Char {
         return CharUtils.toCharacterObject(str)
@@ -56,8 +53,6 @@ object CharKit {
      * @return 转化后的char
      * @throws IllegalArgumentException 如果参数为`null`
      * @since 1.0.0
-     * @author admin
-     * @time 2013-4-30 下午7:20:16
      */
     fun toChar(ch: Char?): Char {
         return CharUtils.toChar(ch)
@@ -79,8 +74,6 @@ object CharKit {
      * @param defaultValue 默认值
      * @return Character参数的char值 或 返回默认值参数如果Character参数为null的话
      * @since 1.0.0
-     * @author admin
-     * @time 2013-4-30 下午7:22:40
      */
     fun toChar(ch: Char?, defaultValue: Char): Char {
         return CharUtils.toChar(ch, defaultValue)
@@ -103,8 +96,6 @@ object CharKit {
      * @return 第一个字符对应的Character对象
      * @throws IllegalArgumentException 如果字符串为null或空串将返抛出一个异常
      * @since 1.0.0
-     * @author admin
-     * @time 2013-4-30 下午7:28:06
      */
     fun toChar(str: String?): Char {
         return CharUtils.toChar(str)
@@ -127,8 +118,6 @@ object CharKit {
      * @param defaultValue 默认值
      * @return 第一个字符对应的char值 或 返回默认值参数如果Character参数为null或空串的话
      * @since 1.0.0
-     * @author admin
-     * @time 2013-4-30 下午7:28:16
      */
     fun toChar(str: String?, defaultValue: Char): Char {
         return CharUtils.toChar(str, defaultValue)
@@ -149,8 +138,6 @@ object CharKit {
      * @return the 字符的int值
      * @throws IllegalArgumentException 如果字符不是一个ASCII码数值
      * @since 1.0.0
-     * @author admin
-     * @time 2013-4-30 下午7:31:34
      */
     fun toIntValue(ch: Char): Int {
         return CharUtils.toIntValue(ch)
@@ -171,8 +158,6 @@ object CharKit {
      * @param defaultValue 默认值
      * @return 字符的int值
      * @since 1.0.0
-     * @author admin
-     * @time 2013-4-30 下午7:33:23
      */
     fun toIntValue(ch: Char, defaultValue: Int): Int {
         return CharUtils.toIntValue(ch, defaultValue)
@@ -194,8 +179,6 @@ object CharKit {
      * @return 字符的int值
      * @throws IllegalArgumentException 果字符不是一个ASCII码数值或者为null
      * @since 1.0.0
-     * @author admin
-     * @time 2013-4-30 下午7:36:07
      */
     fun toIntValue(ch: Char?): Int {
         return CharUtils.toIntValue(ch)
@@ -217,8 +200,6 @@ object CharKit {
      * @param defaultValue 默认值
      * @return 字符的int值
      * @since 1.0.0
-     * @author admin
-     * @time 2013-4-30 下午7:37:06
      */
     fun toIntValue(ch: Char?, defaultValue: Int): Int {
         return CharUtils.toIntValue(ch, defaultValue)
@@ -243,8 +224,6 @@ object CharKit {
      * @param ch 要转化的char
      * @return 包含一个给定字符的字符串
      * @since 1.0.0
-     * @author admin
-     * @time 2013-4-30 下午7:39:00
      */
     fun toString(ch: Char): String {
         return CharUtils.toString(ch)
@@ -273,8 +252,6 @@ object CharKit {
      * @param ch 要转化的char
      * @return 包含一个给定字符的字符串
      * @since 1.0.0
-     * @author admin
-     * @time 2013-4-30 下午7:40:29
      */
     fun toString(ch: Char?): String {
         return CharUtils.toString(ch)
@@ -294,8 +271,6 @@ object CharKit {
      * @param ch 要转化的char
      * @return 字符对应Unicode编码的字符串
      * @since 1.0.0
-     * @author admin
-     * @time 2013-4-30 下午7:42:26
      */
     fun unicodeEscaped(ch: Char): String {
         return CharUtils.unicodeEscaped(ch)
@@ -319,8 +294,6 @@ object CharKit {
      * @param ch 要转化的Character, 可以为null
      * @return 字符对应Unicode编码的字符串, 传入的参数为null将返回null
      * @since 1.0.0
-     * @author admin
-     * @time 2013-4-30 下午7:44:29
      */
     fun unicodeEscaped(ch: Char?): String {
         return CharUtils.unicodeEscaped(ch)
@@ -344,8 +317,6 @@ object CharKit {
      * @param ch 要检测的char
      * @return true: 如果ASCII码值小于128
      * @since 1.0.0
-     * @author admin
-     * @time 2013-4-30 下午7:52:09
      */
     fun isAscii(ch: Char): Boolean {
         return CharUtils.isAscii(ch)
@@ -369,8 +340,6 @@ object CharKit {
      * @param ch 要检测的char
      * @return true: 如果ASCII码值介于32和126之间
      * @since 1.0.0
-     * @author admin
-     * @time 2013-4-30 下午7:53:41
      */
     fun isAsciiPrintable(ch: Char): Boolean {
         return CharUtils.isAsciiPrintable(ch)
@@ -394,8 +363,6 @@ object CharKit {
      * @param ch 要检测的char
      * @return true: 如果ASCII码值介于32和127之间
      * @since 1.0.0
-     * @author admin
-     * @time 2013-4-30 下午7:56:14
      */
     fun isAsciiControl(ch: Char): Boolean {
         return CharUtils.isAsciiControl(ch)
@@ -419,8 +386,6 @@ object CharKit {
      * @param ch 要检测的char
      * @return true: 如果ASCII码值介于65和90之间(大写字母)或97和122之间(小写字母)
      * @since 1.0.0
-     * @author admin
-     * @time 2013-4-30 下午7:59:51
      */
     fun isAsciiAlpha(ch: Char): Boolean {
         return CharUtils.isAsciiAlpha(ch)
@@ -444,8 +409,6 @@ object CharKit {
      * @param ch 要检测的char
      * @return true: 如果ASCII码值介于65和90
      * @since 1.0.0
-     * @author admin
-     * @time 2013-4-30 下午8:00:45
      */
     fun isAsciiAlphaUpper(ch: Char): Boolean {
         return CharUtils.isAsciiAlphaUpper(ch)
@@ -469,8 +432,6 @@ object CharKit {
      * @param ch 要检测的char
      * @return true: 如果ASCII码值介于97和122之间
      * @since 1.0.0
-     * @author admin
-     * @time 2013-4-30 下午8:01:40
      */
     fun isAsciiAlphaLower(ch: Char): Boolean {
         return CharUtils.isAsciiAlphaLower(ch)
@@ -494,8 +455,6 @@ object CharKit {
      * @param ch 要检测的char
      * @return true: 如果ASCII码值介于48和57之间
      * @since 1.0.0
-     * @author admin
-     * @time 2013-4-30 下午8:03:01
      */
     fun isAsciiNumeric(ch: Char): Boolean {
         return CharUtils.isAsciiNumeric(ch)
@@ -519,12 +478,12 @@ object CharKit {
      * @param ch 要检测的char
      * @return true: 如果ASCII码值介于48和57之间(数字)或65和90之间(大写字母)或97和122之间(小写字母)
      * @since 1.0.0
-     * @author admin
-     * @time 2013-4-30 下午8:07:04
      */
     fun isAsciiAlphanumeric(ch: Char): Boolean {
         return CharUtils.isAsciiAlphanumeric(ch)
-    } // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    }
+
+    // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
     // 封装org.apache.commons.lang3.CharUtils
     // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 }

@@ -16,8 +16,7 @@ import java.util.*
  *
  *
  * @since 1.0.0
- * @author admin
- * @time 2013-5-2 下午10:59:49
+ * @author K
  */
 object TypeKit {
     /**
@@ -93,8 +92,6 @@ object TypeKit {
      * @param toType 目标类型
      * @return `true` 如果 `type` 能够被赋值给 `toType`.
      * @since 1.0.0
-     * @author admin
-     * @time 2013-5-4 下午6:24:58
      */
     fun isAssignable(type: Type?, toType: Type?): Boolean {
         return TypeUtils.isAssignable(type, toType)
@@ -110,8 +107,6 @@ object TypeKit {
      * @param type 指定的要获取类型参数的主题参数化类型
      * @return 类型参数的map
      * @since 1.0.0
-     * @author admin
-     * @time 2013-5-4 下午6:35:42
      */
     fun getTypeArguments(type: ParameterizedType?): Map<TypeVariable<*>, Type> {
         return TypeUtils.getTypeArguments(type)
@@ -144,8 +139,6 @@ object TypeKit {
      * @return a map of the type assignments for the type variables in each type in the inheritance hierarchy from
      * `type` to `toClass` inclusive.
      * @since 1.0.0
-     * @author admin
-     * @time 2013-5-4 下午7:08:57
      */
     fun getTypeArguments(
         type: Type?,
@@ -175,8 +168,6 @@ object TypeKit {
      * @return a map of the type assignments that could be determined for the type variables in each type in the
      * inheritance hierarchy from `type` to `toClass` inclusive.
      * @since 1.0.0
-     * @author admin
-     * @time 2013-5-4 下午7:23:41
      */
     fun determineTypeArguments(
         cls: Class<*>?,
@@ -195,8 +186,6 @@ object TypeKit {
      * @param type 目标类型
      * @return true 如果`value` 为 `type`的一个实例
      * @since 1.0.0
-     * @author admin
-     * @time 2013-5-4 下午8:02:45
      */
     fun isInstance(value: Any?, type: Type?): Boolean {
         return TypeUtils.isInstance(value, type)
@@ -228,8 +217,6 @@ object TypeKit {
      * @param bounds 代表通配符或类型变量的上限类型的数组
      * @return 一个包含去除了冗余的上限类型的类型数组
      * @since 1.0.0
-     * @author admin
-     * @time 2013-5-4 下午8:12:13
      */
     fun normalizeUpperBounds(bounds: Array<Type?>?): Array<Type> {
         return TypeUtils.normalizeUpperBounds(bounds)
@@ -245,8 +232,6 @@ object TypeKit {
      * @param typeVariable 主题类型变量
      * @return 一个包含类型变量边界的非空数组
      * @since 1.0.0
-     * @author admin
-     * @time 2013-5-4 下午8:18:17
      */
     fun getImplicitBounds(typeVariable: TypeVariable<*>?): Array<Type> {
         return TypeUtils.getImplicitBounds(typeVariable)
@@ -262,8 +247,6 @@ object TypeKit {
      * @param wildcardType 主题通配符类型
      * @return 一个包含通配符的上限边界的非空数组
      * @since 1.0.0
-     * @author admin
-     * @time 2013-5-4 下午8:22:26
      */
     fun getImplicitUpperBounds(wildcardType: WildcardType?): Array<Type> {
         return TypeUtils.getImplicitUpperBounds(wildcardType)
@@ -279,8 +262,6 @@ object TypeKit {
      * @param wildcardType 主题通配符类型
      * @return 一个包含通配符的下限边界的非空数组
      * @since 1.0.0
-     * @author admin
-     * @time 2013-5-4 下午8:24:03
      */
     fun getImplicitLowerBounds(wildcardType: WildcardType?): Array<Type> {
         return TypeUtils.getImplicitLowerBounds(wildcardType)
@@ -297,8 +278,6 @@ object TypeKit {
      * @param typeVarAssigns 指定的要被分配给类型变量的潜在类型
      * @return 是否指定的类型能被赋值给各自的类型变量
      * @since 1.0.0
-     * @author admin
-     * @time 2013-5-4 下午8:32:15
      */
     fun typesSatisfyVariables(typeVarAssigns: Map<TypeVariable<*>?, Type?>?): Boolean {
         return TypeUtils.typesSatisfyVariables(typeVarAssigns)
@@ -316,8 +295,6 @@ object TypeKit {
      * @param assigningType type to be resolved against
      * @return the resolved `Class` object or `null` if the type could not be resolved
      * @since 1.0.0
-     * @author admin
-     * @time 2013-5-4 下午8:52:38
      */
     fun getRawType(type: Type?, assigningType: Type?): Class<*> {
         return TypeUtils.getRawType(type, assigningType)
@@ -332,8 +309,6 @@ object TypeKit {
      * @param type 要检测的类型
      * @return `true` 如果 `type` 为数组类型 或 [GenericArrayType].
      * @since 1.0.0
-     * @author admin
-     * @time 2013-5-4 下午8:53:54
      */
     fun isArrayType(type: Type?): Boolean {
         return TypeUtils.isArrayType(type)
@@ -348,8 +323,6 @@ object TypeKit {
      * @param type 要检测的类型
      * @return 元素类型或如果指定的类型不是一个数组类型时返回null
      * @since 1.0.0
-     * @author admin
-     * @time 2013-5-4 下午8:55:35
      */
     fun getArrayComponentType(type: Type?): Type {
         return TypeUtils.getArrayComponentType(type)

@@ -13,8 +13,7 @@ import java.util.jar.JarFile
  * java包工具类
  *
  * @since 1.0.0
- * @author admin
- * @time 2013-4-10 下午9:01:06
+ * @author K
  */
 object PackageKit {
     private val LOG = LogFactory.getLog(PackageKit::class)
@@ -29,9 +28,7 @@ object PackageKit {
      * @param recursive 是否循环迭代
      * @return Set<类>
      * @since 1.0.0
-     * @author admin
-     * @time 2013-4-10 下午9:23:38
-    </类> */
+     */
     fun getClassesInPackage(pkg: String, recursive: Boolean): Set<Class<*>> {
         val action = Action(true)
         find(pkg, recursive, action)
@@ -49,9 +46,7 @@ object PackageKit {
      * @param recursive 是否递归地获取子包
      * @return Set<包名>
      * @since 1.0.0
-     * @author admin
-     * @time 2013-4-11 下午11:06:40
-    </包名> */
+     */
     fun getPackages(pkgPattern: String, recursive: Boolean): Set<String> {
         val action = Action(false)
         val packagePrefix = getPackagePrefix(pkgPattern)
@@ -69,7 +64,7 @@ object PackageKit {
 
     private fun getPackagePrefix(pkgPattern: String): String {
         val pkgPrefix = StringBuilder()
-        val pkgElems = pkgPattern.split("\\.").toTypedArray()
+        val pkgElems = pkgPattern.split(".").toTypedArray()
         for (pkgElem in pkgElems) {
             if (pkgElem.contains("*")) {
                 break
@@ -77,7 +72,7 @@ object PackageKit {
                 pkgPrefix.append(pkgElem).append(".")
             }
         }
-        return pkgPrefix.toString().replaceFirst("\\.$".toRegex(), "")
+        return pkgPrefix.deleteCharAt(pkgPrefix.length - 1).toString()
     }
 
     private fun find(packagePrefix: String, recursive: Boolean, action: Action) {

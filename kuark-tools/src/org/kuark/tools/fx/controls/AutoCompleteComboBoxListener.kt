@@ -7,9 +7,6 @@ import javafx.scene.control.ComboBox
 import javafx.scene.input.KeyCode
 import javafx.scene.input.KeyEvent
 
-/**
- * Create by (admin) on 7/2/15.
- */
 class AutoCompleteComboBoxListener<T>(private val comboBox: ComboBox<Any>?) : EventHandler<KeyEvent> {
     private val sb: StringBuilder
     private val data: ObservableList<T>

@@ -1,14 +1,13 @@
 package org.kuark.base.bean
 
-import org.kuark.base.support.IdEntity
+import org.kuark.base.support.IIdEntity
 import org.kuark.base.tree.IListToTreeRestrict
 import java.util.*
 
 /**
- * @author admin
- * @time 2013-4-3 下午8:32:42
+ * @author K
  */
-class Person : IdEntity<String>, IListToTreeRestrict<String?> {
+class Person : IIdEntity<String>, IListToTreeRestrict<String?> {
 
     override var id: String? = null
     override var parentId: String? = null

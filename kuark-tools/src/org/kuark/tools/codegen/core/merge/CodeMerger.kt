@@ -4,9 +4,6 @@ import org.kuark.base.io.FileKit
 import java.io.File
 import java.util.regex.Matcher
 
-/**
- * Create by (admin) on 6/25/15.
- */
 class CodeMerger(private val file: File) {
     private val oldFileContent: String
     private var newFileContent: String? = null

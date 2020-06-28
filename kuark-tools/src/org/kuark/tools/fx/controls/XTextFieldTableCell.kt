@@ -23,7 +23,7 @@ import java.util.stream.Collectors
  * property matches this cell's position (requires the table to be
  * of type XTableView)
  *
- * @author admin
+ * @author K
  */
 class XTextFieldTableCell<S, T> @JvmOverloads constructor(converter: StringConverter<T?>? = null) :
     TextFieldTableCell<S?, T?>(converter) {
@@ -77,9 +77,6 @@ class XTextFieldTableCell<S, T> @JvmOverloads constructor(converter: StringConve
         commitEdit()
     }
 
-    /**
-     *
-     */
     protected fun commitEdit() {
         val edited: T? = converter.fromString(myTextField!!.text)
         commitEdit(edited)

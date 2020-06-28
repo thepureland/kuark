@@ -7,9 +7,6 @@ import javafx.scene.control.TablePosition
 import javafx.scene.control.TableView
 
 /**
- * Create by (admin) on 7/2/15.
- */
-/**
  * Extended TableView that supports terminating an edit.
  *
  * Implemented by a custom property terminatingCell that supporting
@@ -23,7 +20,7 @@ import javafx.scene.control.TableView
  *
  * Note: all TableCells in this table need the extended behaviour.
  *
- * @author admin
+ * @author K
  */
 class XTableView<S> : TableView<S>() {
 

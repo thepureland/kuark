@@ -15,16 +15,22 @@ object DateTimeKit {
     // 常用时间常量
     /** 一秒的毫秒数  */
     const val MILLISECONDS_OF_SECOND = 1000
+
     /** 一分钟的秒数  */
     const val SECONDS_OF_MINUTE = 60
+
     /** 一小时的秒数  */
     const val SECONDS_OF_HOUR = 60 * SECONDS_OF_MINUTE
+
     /** 一天的秒数  */
     const val SECONDS_OF_DAY = 24 * SECONDS_OF_HOUR
+
     /** 一周的秒数  */
     const val SECONDS_OF_WEEK = 7 * SECONDS_OF_DAY
+
     /** 一个月的秒数  */
     const val SECONDS_OF_MONTH = 30 * SECONDS_OF_DAY
+
     /** 一年的秒数  */
     const val SECONDS_OF_YEAR = 365 * SECONDS_OF_DAY
 
@@ -87,6 +93,21 @@ object DateTimeKit {
         val format: DateFormat = SimpleDateFormat(dateFormat)
         format.timeZone = timeZone
         return format.format(Date(time))
+    }
+
+    /**
+     * 获取日期字符串
+     *
+     * @param date            指定日期
+     * @param locale        指定地区
+     * @param timeZone        指定时区
+     * @param dateFormat    指定日期格式
+     * @return                日期字符串
+     */
+    fun formatDate(date: Date = Date(), locale: Locale, timeZone: TimeZone, dateFormat: String): String {
+        val format: DateFormat = SimpleDateFormat(dateFormat, locale)
+        format.timeZone = timeZone
+        return format.format(date)
     }
     //endregion formatDate
 
@@ -840,8 +861,6 @@ object DateTimeKit {
      * @param fragment `Calendar`的域常量
      * @return 片断对应的分钟数
      * @since 1.0.0
-     * @author admin
-     * @time 2013-4-28 上午00:32:15
      */
     fun getFragmentInDays(date: Date, fragment: Int): Long = DateUtils.getFragmentInDays(date, fragment)
 

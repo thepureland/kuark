@@ -6,8 +6,7 @@ import org.apache.commons.lang3.BooleanUtils
  * 布尔处理工具类
  *
  * @since 1.0.0
- * @author admin
- * @time 2013-4-9 下午8:08:34
+ * @author K
  */
 object BooleanKit {
     // vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
@@ -39,8 +38,6 @@ object BooleanKit {
      * @param bool 要取反的布尔值, 可以为null
      * @return 指定布尔值的非运算结果, 输入`null`将返回`null`
      * @since 1.0.0
-     * @author admin
-     * @time 2013-4-30 下午3:32:49
      */
     fun negate(bool: Boolean?): Boolean {
         return BooleanUtils.negate(bool)
@@ -62,8 +59,6 @@ object BooleanKit {
      * @param bool 要检查的布尔值, null 将返回 `false`
      * @return `true` 仅当输入的参数不为null并且为true时
      * @since 1.0.0
-     * @author admin
-     * @time 2013-4-30 下午3:34:57
      */
     fun isTrue(bool: Boolean?): Boolean {
         return BooleanUtils.isTrue(bool)
@@ -84,8 +79,6 @@ object BooleanKit {
      * @param bool 要检查的布尔值, null 将返回 `true`
      * @return `true` 如果输入的参数为null或false时
      * @since 1.0.0
-     * @author admin
-     * @time 2013-4-30 下午3:36:26
      */
     fun isNotTrue(bool: Boolean?): Boolean {
         return BooleanUtils.isNotTrue(bool)
@@ -106,8 +99,6 @@ object BooleanKit {
      * @param bool 要检查的布尔值, null 将返回 `false`
      * @return `true` 仅当输入的参数不为null并且为false时
      * @since 1.0.0
-     * @author admin
-     * @time 2013-4-30 下午3:37:45
      */
     fun isFalse(bool: Boolean?): Boolean {
         return BooleanUtils.isFalse(bool)
@@ -128,8 +119,6 @@ object BooleanKit {
      * @param bool 要检查的布尔值, null 将返回 `true`
      * @return `true` 如果输入的参数为null或true时
      * @since 1.0.0
-     * @author admin
-     * @time 2013-4-30 下午3:38:53
      */
     fun isNotFalse(bool: Boolean?): Boolean {
         return BooleanUtils.isNotFalse(bool)
@@ -150,8 +139,6 @@ object BooleanKit {
      * @param bool 要转化的Boolean值
      * @return `true` 或 `false`, `null` 将返回 `false`
      * @since 1.0.0
-     * @author admin
-     * @time 2013-4-30 下午3:42:59
      */
     fun toBoolean(bool: Boolean?): Boolean {
         return BooleanUtils.toBoolean(bool)
@@ -173,8 +160,6 @@ object BooleanKit {
      * @param valueIfNull 布尔值为`null`时返回的值
      * @return `true` 或 `false`
      * @since 1.0.0
-     * @author admin
-     * @time 2013-4-30 下午3:44:39
      */
     fun toBooleanDefaultIfNull(bool: Boolean?, valueIfNull: Boolean): Boolean {
         return BooleanUtils.toBooleanDefaultIfNull(bool, valueIfNull)
@@ -196,8 +181,6 @@ object BooleanKit {
      * @param value 要转化的int值
      * @return `true` 如果非0, `false` 如果是0
      * @since 1.0.0
-     * @author admin
-     * @time 2013-4-30 下午3:48:52
      */
     fun toBoolean(value: Int): Boolean {
         return BooleanUtils.toBoolean(value)
@@ -218,8 +201,6 @@ object BooleanKit {
      * @param value 要转化的int值
      * @return Boolean.TRUE 如果非0, Boolean.FALSE 如果是0
      * @since 1.0.0
-     * @author admin
-     * @time 2013-4-30 下午3:50:37
      */
     fun toBooleanObject(value: Int): Boolean {
         return BooleanUtils.toBooleanObject(value)
@@ -250,8 +231,6 @@ object BooleanKit {
      * @param value 要转化的Integer值
      * @return Boolean.TRUE 如果非0, Boolean.FALSE 如果是0, `null`将返回`null` input
      * @since 1.0.0
-     * @author admin
-     * @time 2013-4-30 下午3:58:48
      */
     fun toBooleanObject(value: Int?): Boolean {
         return BooleanUtils.toBooleanObject(value)
@@ -276,8 +255,6 @@ object BooleanKit {
      * @return `true` 或 `false`
      * @throws IllegalArgumentException 如果不匹配
      * @since 1.0.0
-     * @author admin
-     * @time 2013-4-30 下午4:02:28
      */
     fun toBoolean(value: Int, trueValue: Int, falseValue: Int): Boolean {
         return BooleanUtils.toBoolean(value, trueValue, falseValue)
@@ -303,8 +280,6 @@ object BooleanKit {
      * @return `true` 或 `false`
      * @throws IllegalArgumentException 如果没有匹配
      * @since 1.0.0
-     * @author admin
-     * @time 2013-4-30 下午4:04:22
      */
     fun toBoolean(value: Int?, trueValue: Int?, falseValue: Int?): Boolean {
         return BooleanUtils.toBoolean(value, trueValue, falseValue)
@@ -334,8 +309,6 @@ object BooleanKit {
      * @return Boolean.TRUE, Boolean.FALSE, 或 `null`
      * @throws IllegalArgumentException 如果没有匹配
      * @since 1.0.0
-     * @author admin
-     * @time 2013-4-30 下午4:07:47
      */
     fun toBooleanObject(value: Int, trueValue: Int, falseValue: Int, nullValue: Int): Boolean {
         return BooleanUtils.toBooleanObject(value, trueValue, falseValue, nullValue)
@@ -365,8 +338,6 @@ object BooleanKit {
      * @return Boolean.TRUE, Boolean.FALSE, 或 `null`
      * @throws IllegalArgumentException 如果没有匹配
      * @since 1.0.0
-     * @author admin
-     * @time 2013-4-30 下午4:09:57
      */
     fun toBooleanObject(value: Int?, trueValue: Int?, falseValue: Int?, nullValue: Int?): Boolean {
         return BooleanUtils.toBooleanObject(value, trueValue, falseValue, nullValue)
@@ -387,8 +358,6 @@ object BooleanKit {
      * @param bool 要转化的boolean值
      * @return `true`返回1, `false`返回0
      * @since 1.0.0
-     * @author admin
-     * @time 2013-4-30 下午4:24:20
      */
     fun toInteger(bool: Boolean): Int {
         return BooleanUtils.toInteger(bool)
@@ -408,8 +377,6 @@ object BooleanKit {
      * @param bool 要转化的boolean值
      * @return `true`返回1, `false`返回0
      * @since 1.0.0
-     * @author admin
-     * @time 2013-4-30 下午4:26:35
      */
     fun toIntegerObject(bool: Boolean): Int {
         return BooleanUtils.toIntegerObject(bool)
@@ -434,8 +401,6 @@ object BooleanKit {
      * @param bool 要转化的Boolean值
      * @return `true`返回1, `false`返回0, `null`返回`null`
      * @since 1.0.0
-     * @author admin
-     * @time 2013-4-30 下午4:27:57
      */
     fun toIntegerObject(bool: Boolean?): Int {
         return BooleanUtils.toIntegerObject(bool)
@@ -457,8 +422,6 @@ object BooleanKit {
      * @param falseValue 代表 `false`的值
      * @return int值
      * @since 1.0.0
-     * @author admin
-     * @time 2013-4-30 下午4:33:33
      */
     fun toInteger(bool: Boolean, trueValue: Int, falseValue: Int): Int {
         return BooleanUtils.toInteger(bool, trueValue, falseValue)
@@ -482,8 +445,6 @@ object BooleanKit {
      * @param nullValue 代表 `null`的值
      * @return int值
      * @since 1.0.0
-     * @author admin
-     * @time 2013-4-30 下午4:35:16
      */
     fun toInteger(bool: Boolean?, trueValue: Int, falseValue: Int, nullValue: Int): Int {
         return BooleanUtils.toIntegerObject(bool, trueValue, falseValue, nullValue)
@@ -505,8 +466,6 @@ object BooleanKit {
      * @param falseValue 代表 `false`的值, 可以为 `null`
      * @return int值
      * @since 1.0.0
-     * @author admin
-     * @time 2013-4-30 下午4:37:08
      */
     fun toIntegerObject(bool: Boolean, trueValue: Int?, falseValue: Int?): Int {
         return BooleanUtils.toIntegerObject(bool, trueValue, falseValue)
@@ -530,8 +489,6 @@ object BooleanKit {
      * @param nullValue 代表 `null`的值, 可以为 `null`
      * @return Integer值
      * @since 1.0.0
-     * @author admin
-     * @time 2013-4-30 下午4:45:52
      */
     fun toIntegerObject(bool: Boolean?, trueValue: Int?, falseValue: Int?, nullValue: Int?): Int {
         return BooleanUtils.toIntegerObject(bool, trueValue, falseValue, nullValue)
@@ -571,8 +528,6 @@ object BooleanKit {
      * @param str 要转化的字符串
      * @return 字符串的布尔值, 不匹配或输入null将返回null
      * @since 1.0.0
-     * @author admin
-     * @time 2013-4-30 下午4:51:44
      */
     fun toBooleanObject(str: String): Boolean {
         if ("1" == str) {
@@ -607,8 +562,6 @@ object BooleanKit {
      * @return 字符串的布尔值, 如果字符串匹配`nullString`或为`null`且 `nullString`也为`null`将返回`null`,
      * @throws IllegalArgumentException 如果没有匹配
      * @since 1.0.0
-     * @author admin
-     * @time 2013-4-30 下午5:05:35
      */
     fun toBooleanObject(
         str: String?,
@@ -652,8 +605,6 @@ object BooleanKit {
      * @param str 要转化的字符串
      * @return 字符串的布尔值, 如果没有匹配或字符串为null将返回`false`
      * @since 1.0.0
-     * @author admin
-     * @time 2013-4-30 下午5:14:15
      */
     fun toBoolean(str: String): Boolean {
         if ("1" == str) {
@@ -681,8 +632,6 @@ object BooleanKit {
      * @return 字符串的布尔值
      * @throws IllegalArgumentException 如果没有匹配
      * @since 1.0.0
-     * @author admin
-     * @time 2013-4-30 下午5:16:17
      */
     fun toBoolean(str: String?, trueString: String?, falseString: String?): Boolean {
         return BooleanUtils.toBoolean(str, trueString, falseString)
@@ -704,8 +653,6 @@ object BooleanKit {
      * @param bool 要转化的Boolean
      * @return `'true'`, `'false'`, 或 `null`
      * @since 1.0.0
-     * @author admin
-     * @time 2013-4-30 下午5:17:59
      */
     fun toStringTrueFalse(bool: Boolean?): String {
         return BooleanUtils.toStringTrueFalse(bool)
@@ -726,8 +673,6 @@ object BooleanKit {
      * @param bool 要转化的Boolean
      * @return `'on'`, `'off'`, 或 `null`
      * @since 1.0.0
-     * @author admin
-     * @time 2013-4-30 下午5:18:46
      */
     fun toStringOnOff(bool: Boolean?): String {
         return BooleanUtils.toStringOnOff(bool)
@@ -748,8 +693,6 @@ object BooleanKit {
      * @param bool 要转化的Boolean
      * @return `'yes'`, `'no'`, 或 `null`
      * @since 1.0.0
-     * @author admin
-     * @time 2013-4-30 下午5:19:21
      */
     fun toStringYesNo(bool: Boolean?): String {
         return BooleanUtils.toStringYesNo(bool)
@@ -773,8 +716,6 @@ object BooleanKit {
      * @param nullString 代表 `null`的值(大小写敏感), 可以为 `null`
      * @return 输入的某个匹配的字符串
      * @since 1.0.0
-     * @author admin
-     * @time 2013-4-30 下午5:23:04
      */
     fun toString(
         bool: Boolean?,
@@ -800,8 +741,6 @@ object BooleanKit {
      * @param bool 要转化的Boolean
      * @return `'true'`, `'false'`, 或 `null`
      * @since 1.0.0
-     * @author admin
-     * @time 2013-4-30 下午5:24:04
      */
     fun toStringTrueFalse(bool: Boolean): String {
         return BooleanUtils.toStringTrueFalse(bool)
@@ -821,8 +760,6 @@ object BooleanKit {
      * @param bool 要转化的Boolean
      * @return `'on'`, `'off'`, 或 `null`
      * @since 1.0.0
-     * @author admin
-     * @time 2013-4-30 下午5:24:49
      */
     fun toStringOnOff(bool: Boolean): String {
         return BooleanUtils.toStringOnOff(bool)
@@ -842,8 +779,6 @@ object BooleanKit {
      * @param bool 要转化的Boolean
      * @return `'yes'`, `'no'`, 或 `null`
      * @since 1.0.0
-     * @author admin
-     * @time 2013-4-30 下午5:25:32
      */
     fun toStringYesNo(bool: Boolean): String {
         return BooleanUtils.toStringYesNo(bool)
@@ -865,8 +800,6 @@ object BooleanKit {
      * @param falseString 代表 `false`的值(大小写敏感), 可以为 `null`
      * @return 输入的某个匹配的字符串
      * @since 1.0.0
-     * @author admin
-     * @time 2013-4-30 下午5:26:32
      */
     fun toString(bool: Boolean, trueString: String?, falseString: String?): String {
         return BooleanUtils.toString(bool, trueString, falseString)
@@ -892,8 +825,6 @@ object BooleanKit {
      * @throws IllegalArgumentException 如果 `array` 为 `null`
      * @throws IllegalArgumentException 如果 `array` 为空.
      * @since 1.0.0
-     * @author admin
-     * @time 2013-4-30 下午5:29:37
      */
     fun and(vararg array: Boolean): Boolean {
         return BooleanUtils.and(*array)
@@ -920,8 +851,6 @@ object BooleanKit {
      * @throws IllegalArgumentException 如果 `array` 为空.
      * @throws IllegalArgumentException 如果 `array` 包含 `null`
      * @since 1.0.0
-     * @author admin
-     * @time 2013-4-30 下午5:30:59
      */
     fun and(vararg array: Boolean?): Boolean {
         return BooleanUtils.and(*array)
@@ -947,8 +876,6 @@ object BooleanKit {
      * @throws IllegalArgumentException 如果 `array` 为 `null`
      * @throws IllegalArgumentException 如果 `array` 为空.
      * @since 1.0.0
-     * @author admin
-     * @time 2013-4-30 下午5:32:17
      */
     fun or(vararg array: Boolean): Boolean {
         return BooleanUtils.or(*array)
@@ -976,8 +903,6 @@ object BooleanKit {
      * @throws IllegalArgumentException 如果 `array` 为空.
      * @throws IllegalArgumentException 如果 `array` 包含 `null`
      * @since 1.0.0
-     * @author admin
-     * @time 2013-4-30 下午5:33:05
      */
     fun or(vararg array: Boolean?): Boolean {
         return BooleanUtils.or(*array)
@@ -1003,8 +928,6 @@ object BooleanKit {
      * @throws IllegalArgumentException 如果 `array` 为 `null`
      * @throws IllegalArgumentException 如果 `array` 为空.
      * @since 1.0.0
-     * @author admin
-     * @time 2013-4-30 下午5:34:09
      */
     fun xor(vararg array: Boolean): Boolean {
         return BooleanUtils.xor(*array)
@@ -1028,8 +951,6 @@ object BooleanKit {
      * @throws IllegalArgumentException 如果 `array` 为空.
      * @throws IllegalArgumentException 如果 `array` 包含 `null`
      * @since 1.0.0
-     * @author admin
-     * @time 2013-4-30 下午5:34:41
      */
     fun xor(vararg array: Boolean?): Boolean {
         return BooleanUtils.xor(*array)

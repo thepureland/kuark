@@ -2,9 +2,6 @@ package org.kuark.tools.codegen.core.merge
 
 import java.util.regex.Pattern
 
-/**
- * Create by (admin) on 7/12/15.
- */
 class AppendCodesRetriever(private val fileContent: String?) {
     fun retrieve(): Map<Int, Pair<AppendCodeType, String>> {
         val map = hashMapOf<Int, Pair<AppendCodeType, String>>()

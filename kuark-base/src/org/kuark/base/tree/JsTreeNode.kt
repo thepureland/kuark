@@ -1,12 +1,7 @@
 package org.kuark.base.tree
 
-import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonInclude
-import java.util.*
 
-/**
- * Create by (admin) on 6/11/15.
- */
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 class JsTreeNode(
     override var id: String?,

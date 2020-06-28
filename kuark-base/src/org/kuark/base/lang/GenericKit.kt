@@ -1,5 +1,6 @@
 package org.kuark.base.lang
 
+import org.kuark.base.collections.ArrayKit
 import org.kuark.base.log.LogFactory
 import java.lang.reflect.Field
 import java.lang.reflect.Method
@@ -9,8 +10,7 @@ import java.util.*
 /**
  * 泛型工具类
  *
- * @author admin
- * @time 2012-6-26 下午9:13:34
+ * @author K
  */
 object GenericKit {
     private val LOG = LogFactory.getLog(GenericKit::class)
@@ -27,9 +27,6 @@ object GenericKit {
      * @param index 泛型参数所在索引, 从0开始.
      * @return 泛型参数的实际类型. 如果没有实现ParameterizedType接口，即不支持泛型，将直接返回`Object.class`, 如果索引越界返回null
      * @since 1.0.0
-     * @author admin
-     * @author admin
-     * @time 2013-5-1 上午9:47:11
      */
     fun getSuperClassGenricType(clazz: Class<*>, index: Int): Class<*>? {
         if (clazz == Any::class.java) {
@@ -73,9 +70,6 @@ object GenericKit {
      * @param clazz 需要获取泛型参数实际类型的类, 该类必须继承泛型父类
      * @return 泛型参数的实际类型. 如果没有实现ParameterizedType接口，即不支持泛型，所以直接返回`Object.class`
      * @since 1.0.0
-     * @author admin
-     * @author admin
-     * @time 2013-5-1 上午9:58:12
      */
     fun getSuperClassGenricType(clazz: Class<*>): Class<*>? {
         return getSuperClassGenricType(clazz, 0)
@@ -91,9 +85,6 @@ object GenericKit {
      * @param index 泛型参数所在索引, 从0开始.
      * @return 泛型参数的实际类型, 如果没有实现ParameterizedType接口，即不支持泛型，将直接返回`Object.class`, 如果索引越界返回null
      * @since 1.0.0
-     * @author admin
-     * @author admin
-     * @time 2013-5-1 上午10:07:43
      */
     fun getMethodGenericReturnType(method: Method, index: Int): Class<*>? {
         val returnType = method.genericReturnType
@@ -117,9 +108,6 @@ object GenericKit {
      * @param method 方法
      * @return 泛型参数的实际类型, 如果没有实现ParameterizedType接口，即不支持泛型，将直接返回`Object.class`
      * @since 1.0.0
-     * @author admin
-     * @author admin
-     * @time 2013-5-1 上午10:07:43
      */
     fun getMethodGenericReturnType(method: Method): Class<*>? {
         return getMethodGenericReturnType(method, 0)
@@ -135,9 +123,6 @@ object GenericKit {
      * @param index 第几个输入参数
      * @return 输入参数的泛型参数的实际类型列表, 如果没有实现ParameterizedType接口，即不支持泛型，将直接返回空列表, 如果索引越界返回null
      * @since 1.0.0
-     * @author admin
-     * @author admin
-     * @time 2013-5-1 上午10:17:52
      */
     fun getMethodGenericParameterTypes(
         method: Method,
@@ -170,9 +155,6 @@ object GenericKit {
      * @param method 方法
      * @return 输入参数的泛型参数的实际类型列表, 如果没有实现ParameterizedType接口，即不支持泛型，将直接返回空列表
      * @since 1.0.0
-     * @author admin
-     * @author admin
-     * @time 2013-5-1 上午10:17:52
      */
     fun getMethodGenericParameterTypes(method: Method): List<Class<*>>? {
         return getMethodGenericParameterTypes(method, 0)
@@ -188,8 +170,6 @@ object GenericKit {
      * @param index 泛型参数所在索引, 从0开始.
      * @return 泛型参数的实际类型, 如果没有实现ParameterizedType接口，即不支持泛型，将直接返回`Object.class`, 如果索引越界返回null
      * @since 1.0.0
-     * @author admin
-     * @time 2013-5-1 上午10:20:51
      */
     fun getFieldGenericType(field: Field, index: Int): Class<*>? {
         val genericFieldType = field.genericType
@@ -213,13 +193,12 @@ object GenericKit {
      * @param field 字段
      * @return 泛型参数的实际类型, 如果没有实现ParameterizedType接口，即不支持泛型，将直接返回`Object.class`
      * @since 1.0.0
-     * @author admin
-     * @author admin
-     * @time 2013-5-1 上午10:20:51
      */
     fun getFieldGenericType(field: Field): Class<*>? {
         return getFieldGenericType(field, 0)
-    } // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    }
+
+    // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
     // 整理SpringSide的Generics类
     // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 }

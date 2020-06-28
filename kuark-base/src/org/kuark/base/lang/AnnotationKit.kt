@@ -6,8 +6,7 @@ import org.apache.commons.lang3.AnnotationUtils
  * 注解工具类
  *
  * @since 1.0.0
- * @author admin
- * @time 2013-4-5 下午11:11:43
+ * @author K
  */
 object AnnotationKit {
     /**
@@ -17,8 +16,6 @@ object AnnotationKit {
      * @param annoClass 要找的注解类
      * @return 匹配类注解的类
      * @since 1.0.0
-     * @author admin
-     * @time 2013年12月19日 下午7:33:57
      */
     fun getClassUpHierarchy(
         clazz: Class<*>,
@@ -47,8 +44,6 @@ object AnnotationKit {
      * @param a2 第二个注解, `null` 返回 `false` 除非两个参数都为 `null`
      * @return `true` 如果两个注解相等或都为`null`
      * @since 1.0.0
-     * @author admin
-     * @time 2013-4-30 下午2:31:25
      */
     fun equals(a1: Annotation?, a2: Annotation?): Boolean {
         return AnnotationUtils.equals(a1, a2)
@@ -65,8 +60,6 @@ object AnnotationKit {
      * @throws RuntimeException 如果在注解成员访问时产生 `Exception` 异常
      * @throws IllegalStateException 如果注解方法调用返回 `null`
      * @since 1.0.0
-     * @author admin
-     * @time 2013-4-30 下午3:14:12
      */
     fun hashCode(a: Annotation?): Int {
         return AnnotationUtils.hashCode(a)
@@ -81,8 +74,6 @@ object AnnotationKit {
      * @param a 注解
      * @return 注解的字符串表示, 不会为 `null`
      * @since 1.0.0
-     * @author admin
-     * @time 2013-4-30 下午3:15:38
      */
     fun toString(a: Annotation?): String {
         return AnnotationUtils.toString(a)
@@ -102,8 +93,6 @@ object AnnotationKit {
      * @param type 要检查的类, 可以为 `null`
      * @return `true` 如果指定的类为注解的成员
      * @since 1.0.0
-     * @author admin
-     * @time 2013-4-30 下午3:22:39
      */
     fun isValidAnnotationMemberType(type: Class<*>?): Boolean {
         return AnnotationUtils.isValidAnnotationMemberType(type)

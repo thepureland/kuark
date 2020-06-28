@@ -3,9 +3,6 @@ package org.kuark.tools.codegen.core.merge
 import java.util.*
 import java.util.regex.Pattern
 
-/**
- * Create by (admin) on 6/24/15.
- */
 class CustomCodesRetriever(private val fileContent: String) {
     fun retrieve(): Map<Int, String> {
         val map: MutableMap<Int, String> = HashMap()

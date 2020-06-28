@@ -3,8 +3,7 @@ package org.kuark.base.bean
 import java.io.Serializable
 
 /**
- * @author admin
- * @time 2013-4-3 下午8:32:19
+ * @author K
  */
 class Address : Serializable {
     var province: String? = null

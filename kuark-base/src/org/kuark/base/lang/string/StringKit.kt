@@ -19,14 +19,15 @@ object StringKit {
      * 查找子串，并用指定字符串替换之（替换所有出现的地方），支持多对替换规则
      *
      * @param text 被查找和替换的源字符串, 可以为null，为null时返回null，为空串时返回空串
-     * @param map  Map<要查找的字符串></要查找的字符串>, 用来替换的字符串>
+     * @param map  Map<要查找的字符串, 用来替换的字符串>
      * @return 替换后的字符串
      * @see .replaceEach
      * @since 1.0.0
      */
-    fun replaceEach(text: String, map: Map<String, String>): String {
+    fun replaceEach(text: String?, map: Map<String?, String>): String? {
+        if (isEmpty(text)) return text
         return if (map.isNotEmpty()) {
-            replaceEach(text, map.keys.toTypedArray(), map.values.toTypedArray())
+            replaceEach(text!!, map.keys.toTypedArray(), map.values.toTypedArray())
         } else text
     }
 
@@ -74,11 +75,11 @@ object StringKit {
      * @return 等分后每个分组组成的数组
      * @since 1.0.0
      */
-    fun divideAverage(srcStr: String, groupLen: Int): Array<String> {
+    fun divideAverage(srcStr: String?, groupLen: Int): Array<String?> {
         if (isEmpty(srcStr) || groupLen <= 0) {
-            return arrayOf(srcStr)
+            return arrayOf()
         }
-        val strLen = srcStr.length
+        val strLen = srcStr!!.length
         val eachCount = ceil(strLen.toDouble() / groupLen).toInt()
         val groups = mutableListOf<String>()
         for (i in 0 until groupLen) {
@@ -106,10 +107,10 @@ object StringKit {
      * @return “_”分割的字符串, 并且是大写的
      * @since 1.0.0
      */
-    fun humpToUnderscore(str: String): String {
+    fun humpToUnderscore(str: String?): String {
         var s = str
-        if (s.isNotBlank()) {
-            s = s.trim { it <= ' ' }
+        if (isNotBlank(s)) {
+            s = s!!.trim { it <= ' ' }
             val chars = s.toCharArray()
             val sb = StringBuilder()
             sb.append(chars[0])
@@ -137,10 +138,10 @@ object StringKit {
      * @return “驼峰”式写法的字符串
      * @since 1.0.0
      */
-    fun underscoreToHump(str: String): String {
+    fun underscoreToHump(str: String?): String {
         var s = str
         if (isNotBlank(s)) {
-            s = s.trim { it <= ' ' }
+            s = s!!.trim { it <= ' ' }
             val words = split(s, "_")
             val sb = StringBuilder()
             for (i in words.indices) {
@@ -164,12 +165,13 @@ object StringKit {
      * @return 替换后的字符串
      * @since 1.0.0
      */
-    fun fillTemplate(template: String, paramMap: Map<String, String>): String {
+    fun fillTemplate(template: String?, paramMap: Map<String, String>?): String? {
+        if (isEmpty(template)) return template
         var templateStr = template
-        if (paramMap.isNotEmpty()) {
+        paramMap?.let {
             for ((paramName, paramValue) in paramMap)
-                templateStr = templateStr.replace(
-                    "\\$\\{" + paramName + "\\}".toRegex(), Matcher.quoteReplacement(paramValue)
+                templateStr = templateStr!!.replace(
+                    Regex("\\$\\{$paramName\\}"), Matcher.quoteReplacement(paramValue)
                 )
         }
         return templateStr
@@ -314,7 +316,7 @@ object StringKit {
      */
     fun trimToEmpty(str: String?): String = StringUtils.trimToEmpty(str)
     //endregion Trim
-    
+
     //region Stripping
     /**
      * 去除给定字符串的前后空白符(如果有的话)
@@ -446,7 +448,7 @@ object StringKit {
      * @return 处理后的字符串数组，`null` 如果strs参数值为null
      * @since 1.0.0
      */
-    fun stripAll(vararg strs: String?): Array<String>? = StringUtils.stripAll(*strs)
+    fun stripAll(vararg strs: String?): Array<String> = StringUtils.stripAll(*strs)
 
     /**
      * 对字符串数组中的每个字符串进行 strip(String str, String stripChars) ，然后返回。
@@ -481,7 +483,7 @@ object StringKit {
      */
     fun stripAccents(input: String?): String? = StringUtils.stripAccents(input)
     //endregion Stripping 
-    
+
     //region Equals
     // -----------------------------------------------------------------------
     /**
@@ -518,7 +520,7 @@ object StringKit {
      */
     fun equalsIgnoreCase(str1: CharSequence?, str2: CharSequence?): Boolean = StringUtils.equalsIgnoreCase(str1, str2)
     //endregion Equals
-    
+
     //region IndexOf
     /**
      * 返回字符 searchChar 在字符串 str 中第一次出现的位置
@@ -817,7 +819,7 @@ object StringKit {
     fun lastIndexOfIgnoreCase(str: CharSequence?, searchStr: CharSequence?, startPos: Int): Int =
         StringUtils.lastIndexOfIgnoreCase(str, searchStr, startPos)
     //endregion IndexOf
-    
+
     //region Contains
     /**
      * 检查字符串 seq 是否包含字符 searchChar
@@ -924,7 +926,7 @@ object StringKit {
      */
     fun indexOfAny(cs: CharSequence?, searchChars: String?): Int = StringUtils.indexOfAny(cs, searchChars)
     //endregion IndexOfAny
-    
+
     //region ContainsAny
     /**
      * 检查是否字符序列 cs 包含给定的字符组 searchChars 的任何一个字符
@@ -964,7 +966,7 @@ object StringKit {
      */
     fun containsAny(cs: CharSequence?, searchChars: CharSequence?): Boolean = StringUtils.containsAny(cs, searchChars)
     //endregion ContainsAny
-    
+
     //region IndexOfAnyBut chars
     /**
      * 在字符序列 cs 中查找给定的一组字符 searchChars，返回第一次不出现给定的任何字符的位置
@@ -1005,7 +1007,7 @@ object StringKit {
      */
     fun indexOfAnyBut(seq: CharSequence?, searchChars: CharSequence?): Int = StringUtils.indexOfAnyBut(seq, searchChars)
     //endregion IndexOfAnyBut chars
-    
+
     //region ContainsOnly
     /**
      * 检查字符序列 cs 是否只由 valid 中的字符组成
@@ -1046,7 +1048,7 @@ object StringKit {
      */
     fun containsOnly(cs: CharSequence?, validChars: String?): Boolean = StringUtils.containsOnly(cs, validChars)
     //endregion ContainsOnly
-    
+
     //region ContainsNone
     /**
      * 检查字符序列 cs 是否都不由 searchChars 中的字符组成
@@ -1088,7 +1090,7 @@ object StringKit {
      */
     fun containsNone(cs: CharSequence?, invalidChars: String?): Boolean = StringUtils.containsNone(cs, invalidChars)
     //endregion ContainsNone
-    
+
     //region IndexOfAny strings
     /**
      * 在字符序列 str 中查找给定的一组字符串 searchStrs，返回第一次出现任何字符串的位置
@@ -1179,7 +1181,7 @@ object StringKit {
      */
     fun substring(str: String?, start: Int, end: Int): String? = StringUtils.substring(str, start, end)
     //endregion Substring
-    
+
     //region Left/Right/Mid
     /**
      * 返回字符串 str 最左边的 len 个字符
@@ -1238,7 +1240,7 @@ object StringKit {
      */
     fun mid(str: String?, pos: Int, len: Int): String? = StringUtils.mid(str, pos, len)
     //endregion Left/Right/Mid
-    
+
     //region SubStringAfter/SubStringBefore
     /**
      * 从字符串 str 中获取第一次出现字符串 separator 前的子串
@@ -1325,7 +1327,7 @@ object StringKit {
      */
     fun substringAfterLast(str: String?, separator: String?): String? = StringUtils.substringAfterLast(str, separator)
     //endregion SubStringAfter/SubStringBefore
-    
+
     //region Substring between
     /**
      * 从字符串 str 中获取嵌在两个相同字符串 tag 中间的子串
@@ -1674,7 +1676,7 @@ object StringKit {
      */
     fun splitByCharacterTypeCamelCase(str: String?): Array<String>? = StringUtils.splitByCharacterType(str)
     //endregion Splitting
-    
+
     //region Joining
     /**
      * 将多个字符串按先后顺序连接在一起
@@ -1846,7 +1848,7 @@ object StringKit {
      */
     fun join(iterable: Iterable<*>?, separator: String?): String? = StringUtils.join(iterable, separator)
     //endregion Joining
-    
+
     /**
      * 删除所有空白字符
      *
@@ -1976,7 +1978,7 @@ object StringKit {
      */
     fun remove(str: String?, remove: Char): String? = StringUtils.remove(str, remove)
     //endregion Remove
-    
+
     //region Replacing
     /**
      * 查找子串，并用指定字符串替换之, 只替换一次
@@ -2073,7 +2075,7 @@ object StringKit {
      * @throws IllegalArgumentException 如果两个数组的长度不一致时(null或空数组是允许的)
      * @since 1.0.0
      */
-    fun replaceEach(text: String, searchList: Array<String>, replacementList: Array<String>): String =
+    fun replaceEach(text: String, searchList: Array<String?>, replacementList: Array<String>): String =
         StringUtils.replaceEach(text, searchList, replacementList)
 
     /**
@@ -2102,7 +2104,7 @@ object StringKit {
      */
     fun replaceEachRepeatedly(text: String?, searchList: Array<String?>?, replacementList: Array<String?>?): String? =
         StringUtils.replaceEachRepeatedly(text, searchList, replacementList)
-    
+
     /**
      * 查找所有出现指定字符的地方，并用另一个字符替换所有这些地方
      *
@@ -2391,7 +2393,7 @@ object StringKit {
      */
     fun leftPad(str: String?, size: Int, padStr: String?): String? = StringUtils.leftPad(str, size, padStr)
     //endregion pad
-    
+
     /**
      * 取得字符序列的长度，null返回0
      *
@@ -2463,7 +2465,7 @@ object StringKit {
      */
     fun center(str: String?, size: Int, padStr: String?): String? = StringUtils.center(str, size, padStr)
     //endregion Centering
-    
+
     //region Case conversion
     /**
      * 将源字符串全部转成大写

@@ -2,9 +2,6 @@ package org.kuark.base.tree
 
 import org.apache.commons.lang3.mutable.Mutable
 
-/**
- * Create by (admin) on 6/11/15.
- */
 interface IJsTreeNode : IListToTreeRestrict<String?> {
     //    id			: tid,
     //    text		: d.text || '',

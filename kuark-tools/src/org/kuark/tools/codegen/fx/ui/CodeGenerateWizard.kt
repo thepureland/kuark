@@ -13,9 +13,6 @@ import org.kuark.tools.codegen.fx.controller.FilesController
 import org.kuark.tools.fx.controls.wizard.LinearWizardFlow
 import org.kuark.tools.fx.controls.wizard.Wizard
 
-/**
- * Create by (admin) on 2015/5/26.
- */
 class CodeGenerateWizard : Application() {
 
     override fun start(stage: Stage) {

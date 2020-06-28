@@ -9,8 +9,7 @@ import java.text.DecimalFormat
  * 数值工具类
  *
  * @since 1.0.0
- * @author admin
- * @time 2013-4-9 下午7:28:33
+ * @author K
  */
 object NumberKit {
     // vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
@@ -37,8 +36,6 @@ object NumberKit {
      * @param str 要转换的字符串，可以为null，为null将返回0
      * @return 字符串的int表示，字符串为null或转换失败时将返回0
      * @since 1.0.0
-     * @author admin
-     * @time 2013-5-11 下午10:46:21
      */
     fun toInt(str: String?): Int {
         return NumberUtils.toInt(str)
@@ -78,8 +75,6 @@ object NumberKit {
      * @param defaultValue 字符串为null时返回的默认值
      * @return 字符串的int表示，字符串为null或转换失败时将返回指定的默认值
      * @since 1.0.0
-     * @author admin
-     * @time 2013-5-11 下午10:48:30
      */
     fun toInt(str: String?, defaultValue: Int): Int {
         return NumberUtils.toInt(str, defaultValue)
@@ -105,8 +100,6 @@ object NumberKit {
      * @param str 要转换的字符串，可以为null，为null将返回0
      * @return 字符串的long表示，字符串为null或转换失败时将返回0
      * @since 1.0.0
-     * @author admin
-     * @time 2013-5-11 下午10:49:52
      */
     fun toLong(str: String?): Long {
         return NumberUtils.toLong(str)
@@ -133,8 +126,6 @@ object NumberKit {
      * @param defaultValue 字符串为null时返回的默认值
      * @return 字符串的long表示，字符串为null或转换失败时将返回指定的默认值
      * @since 1.0.0
-     * @author admin
-     * @time 2013-5-11 下午10:51:12
      */
     fun toLong(str: String?, defaultValue: Long): Long {
         return NumberUtils.toLong(str, defaultValue)
@@ -160,8 +151,6 @@ object NumberKit {
      * @param str 要转换的字符串，可以为null，为null将返回0.0f
      * @return 字符串的float表示，字符串为null或转换失败时将返回0.0f
      * @since 1.0.0
-     * @author admin
-     * @time 2013-5-11 下午10:52:27
      */
     fun toFloat(str: String?): Float {
         return NumberUtils.toFloat(str)
@@ -188,8 +177,6 @@ object NumberKit {
      * @param defaultValue 字符串为null时返回的默认值
      * @return 字符串的float表示，字符串为null或转换失败时将返回指定的默认值
      * @since 1.0.0
-     * @author admin
-     * @time 2013-5-11 下午10:53:58
      */
     fun toFloat(str: String?, defaultValue: Float): Float {
         return NumberUtils.toFloat(str, defaultValue)
@@ -215,8 +202,6 @@ object NumberKit {
      * @param str 要转换的字符串，可以为null，为null将返回0.0d
      * @return 字符串的double表示，字符串为null或转换失败时将返回0.0d
      * @since 1.0.0
-     * @author admin
-     * @time 2013-5-11 下午10:55:09
      */
     fun toDouble(str: String?): Double {
         return NumberUtils.toDouble(str)
@@ -243,8 +228,6 @@ object NumberKit {
      * @param defaultValue 字符串为null时返回的默认值
      * @return 字符串的double表示，字符串为null或转换失败时将返回指定的默认值
      * @since 1.0.0
-     * @author admin
-     * @time 2013-5-11 下午10:56:34
      */
     fun toDouble(str: String?, defaultValue: Double): Double {
         return NumberUtils.toDouble(str, defaultValue)
@@ -270,8 +253,6 @@ object NumberKit {
      * @param str 要转换的字符串，可以为null，为null将返回0
      * @return 字符串的byte表示，字符串为null或转换失败时将返回0
      * @since 1.0.0
-     * @author admin
-     * @time 2013-5-11 下午10:59:00
      */
     fun toByte(str: String?): Byte {
         return NumberUtils.toByte(str)
@@ -298,8 +279,6 @@ object NumberKit {
      * @param defaultValue 字符串为null时返回的默认值
      * @return 字符串的byte表示，字符串为null或转换失败时将返回指定的默认值
      * @since 1.0.0
-     * @author admin
-     * @time 2013-5-11 下午11:00:04
      */
     fun toByte(str: String?, defaultValue: Byte): Byte {
         return NumberUtils.toByte(str, defaultValue)
@@ -325,8 +304,6 @@ object NumberKit {
      * @param str 要转换的字符串，可以为null，为null将返回0
      * @return 字符串的short表示，字符串为null或转换失败时将返回0
      * @since 1.0.0
-     * @author admin
-     * @time 2013-5-11 下午11:02:07
      */
     fun toShort(str: String?): Short {
         return NumberUtils.toShort(str)
@@ -353,8 +330,6 @@ object NumberKit {
      * @param defaultValue 字符串为null时返回的默认值
      * @return 字符串的short表示，字符串为null或转换失败时将返回指定的默认值
      * @since 1.0.0
-     * @author admin
-     * @time 2013-5-11 下午11:08:39
      */
     fun toShort(str: String?, defaultValue: Short): Short {
         return NumberUtils.toShort(str, defaultValue)
@@ -399,8 +374,6 @@ object NumberKit {
      * @return 字符串所代表的数值，为 `null` 将返回 `null`
      * @throws NumberFormatException 如果字符串不能被转换
      * @since 1.0.0
-     * @author admin
-     * @time 2013-5-12 下午11:13:17
      */
     @Throws(NumberFormatException::class)
     fun createNumber(str: String?): Number {
@@ -422,8 +395,6 @@ object NumberKit {
      * @return 转换后的 `Float` 值，参数为 `null` 将返回 `null`
      * @throws NumberFormatException 如果字符串不能被转换
      * @since 1.0.0
-     * @author admin
-     * @time 2013-5-12 下午11:15:22
      */
     fun createFloat(str: String?): Float {
         return NumberUtils.createFloat(str)
@@ -444,8 +415,6 @@ object NumberKit {
      * @return 转换后的 `Double` 值，参数为 `null` 将返回 `null`
      * @throws NumberFormatException 如果字符串不能被转换
      * @since 1.0.0
-     * @author admin
-     * @time 2013-5-12 下午11:15:22
      */
     fun createDouble(str: String?): Double {
         return NumberUtils.createDouble(str)
@@ -466,8 +435,6 @@ object NumberKit {
      * @return 转换后的 `Integer` 值，参数为 `null` 将返回 `null`
      * @throws NumberFormatException 如果字符串不能被转换
      * @since 1.0.0
-     * @author admin
-     * @time 2013-5-12 下午11:15:22
      */
     fun createInteger(str: String?): Int {
         return NumberUtils.createInteger(str)
@@ -488,8 +455,6 @@ object NumberKit {
      * @return 转换后的 `Long` 值，参数为 `null` 将返回 `null`
      * @throws NumberFormatException 如果字符串不能被转换
      * @since 1.0.0
-     * @author admin
-     * @time 2013-5-12 下午11:15:22
      */
     fun createLong(str: String?): Long {
         return NumberUtils.createLong(str)
@@ -510,8 +475,6 @@ object NumberKit {
      * @return 转换后的 `BigInteger` 值，参数为 `null` 将返回 `null`
      * @throws NumberFormatException 如果字符串不能被转换
      * @since 1.0.0
-     * @author admin
-     * @time 2013-5-12 下午11:15:22
      */
     fun createBigInteger(str: String?): BigInteger {
         return NumberUtils.createBigInteger(str)
@@ -532,8 +495,6 @@ object NumberKit {
      * @return 转换后的 `BigDecimal` 值，参数为 `null` 将返回 `null`
      * @throws NumberFormatException 如果字符串不能被转换
      * @since 1.0.0
-     * @author admin
-     * @time 2013-5-12 下午11:15:22
      */
     fun createBigDecimal(str: String?): BigDecimal {
         return NumberUtils.createBigDecimal(str)
@@ -550,8 +511,6 @@ object NumberKit {
      * @return 数组中的最小元素
      * @throws IllegalArgumentException 如果数组为null或空
      * @since 1.0.0
-     * @author admin
-     * @time 2013-5-12 下午11:18:15
      */
     fun min(array: LongArray): Long {
         return NumberUtils.min(*array)
@@ -567,8 +526,6 @@ object NumberKit {
      * @return 数组中的最小元素
      * @throws IllegalArgumentException 如果数组为null或空
      * @since 1.0.0
-     * @author admin
-     * @time 2013-5-12 下午11:18:15
      */
     fun min(array: IntArray): Int {
         return NumberUtils.min(*array)
@@ -584,8 +541,6 @@ object NumberKit {
      * @return 数组中的最小元素
      * @throws IllegalArgumentException 如果数组为null或空
      * @since 1.0.0
-     * @author admin
-     * @time 2013-5-12 下午11:18:15
      */
     fun min(array: ShortArray): Short {
         return NumberUtils.min(*array)
@@ -601,8 +556,6 @@ object NumberKit {
      * @return 数组中的最小元素
      * @throws IllegalArgumentException 如果数组为null或空
      * @since 1.0.0
-     * @author admin
-     * @time 2013-5-12 下午11:18:15
      */
     fun min(array: ByteArray): Byte {
         return NumberUtils.min(*array)
@@ -618,8 +571,6 @@ object NumberKit {
      * @return 数组中的最小元素
      * @throws IllegalArgumentException 如果数组为null或空
      * @since 1.0.0
-     * @author admin
-     * @time 2013-5-12 下午11:18:15
      */
     fun min(array: DoubleArray): Double {
         return NumberUtils.min(*array)
@@ -635,8 +586,6 @@ object NumberKit {
      * @return 数组中的最小元素
      * @throws IllegalArgumentException 如果数组为null或空
      * @since 1.0.0
-     * @author admin
-     * @time 2013-5-12 下午11:18:15
      */
     fun min(array: FloatArray): Float {
         return NumberUtils.min(*array)
@@ -653,8 +602,6 @@ object NumberKit {
      * @return 数组中的最大小元素
      * @throws IllegalArgumentException 如果数组为null或空
      * @since 1.0.0
-     * @author admin
-     * @time 2013-5-12 下午11:18:15
      */
     fun max(array: LongArray): Long {
         return NumberUtils.max(*array)
@@ -670,8 +617,6 @@ object NumberKit {
      * @return 数组中的最大小元素
      * @throws IllegalArgumentException 如果数组为null或空
      * @since 1.0.0
-     * @author admin
-     * @time 2013-5-12 下午11:18:15
      */
     fun max(array: IntArray): Int {
         return NumberUtils.max(*array)
@@ -687,8 +632,6 @@ object NumberKit {
      * @return 数组中的最大小元素
      * @throws IllegalArgumentException 如果数组为null或空
      * @since 1.0.0
-     * @author admin
-     * @time 2013-5-12 下午11:18:15
      */
     fun max(array: ShortArray): Short {
         return NumberUtils.max(*array)
@@ -704,8 +647,6 @@ object NumberKit {
      * @return 数组中的最大小元素
      * @throws IllegalArgumentException 如果数组为null或空
      * @since 1.0.0
-     * @author admin
-     * @time 2013-5-12 下午11:18:15
      */
     fun max(array: ByteArray): Byte {
         return NumberUtils.max(*array)
@@ -721,8 +662,6 @@ object NumberKit {
      * @return 数组中的最大小元素
      * @throws IllegalArgumentException 如果数组为null或空
      * @since 1.0.0
-     * @author admin
-     * @time 2013-5-12 下午11:18:15
      */
     fun max(array: DoubleArray): Double {
         return NumberUtils.max(*array)
@@ -738,8 +677,6 @@ object NumberKit {
      * @return 数组中的最大小元素
      * @throws IllegalArgumentException 如果数组为null或空
      * @since 1.0.0
-     * @author admin
-     * @time 2013-5-12 下午11:18:15
      */
     fun max(array: FloatArray): Float {
         return NumberUtils.max(*array)
@@ -757,8 +694,6 @@ object NumberKit {
      * @param c 第三个值
      * @return 最小值
      * @since 1.0.0
-     * @author admin
-     * @time 2013-5-12 下午11:20:05
      */
     fun min(a: Long, b: Long, c: Long): Long {
         return NumberUtils.min(a, b, c)
@@ -775,8 +710,6 @@ object NumberKit {
      * @param c 第三个值
      * @return 最小值
      * @since 1.0.0
-     * @author admin
-     * @time 2013-5-12 下午11:20:05
      */
     fun min(a: Int, b: Int, c: Int): Int {
         return NumberUtils.min(a, b, c)
@@ -793,8 +726,6 @@ object NumberKit {
      * @param c 第三个值
      * @return 最小值
      * @since 1.0.0
-     * @author admin
-     * @time 2013-5-12 下午11:20:05
      */
     fun min(a: Short, b: Short, c: Short): Short {
         return NumberUtils.min(a, b, c)
@@ -811,8 +742,6 @@ object NumberKit {
      * @param c 第三个值
      * @return 最小值
      * @since 1.0.0
-     * @author admin
-     * @time 2013-5-12 下午11:20:05
      */
     fun min(a: Byte, b: Byte, c: Byte): Byte {
         return NumberUtils.min(a, b, c)
@@ -836,8 +765,6 @@ object NumberKit {
      * [Symbol][IEEE754rUtils.min]
      * @see IEEE754rUtils.min
      * @since 1.0.0
-     * @author admin
-     * @time 2013-5-12 下午11:20:05
      */
     fun min(a: Double, b: Double, c: Double): Double {
         return NumberUtils.min(a, b, c)
@@ -860,8 +787,6 @@ object NumberKit {
      * @return 最小值
      * @see NumberUtils.min
      * @since 1.0.0
-     * @author admin
-     * @time 2013-5-12 下午11:20:05
      */
     fun min(a: Float, b: Float, c: Float): Float {
         return NumberUtils.min(a, b, c)
@@ -879,8 +804,6 @@ object NumberKit {
      * @param c 第三个值
      * @return 最大值
      * @since 1.0.0
-     * @author admin
-     * @time 2013-5-12 下午11:20:05
      */
     fun max(a: Long, b: Long, c: Long): Long {
         return NumberUtils.min(a, b, c)
@@ -897,8 +820,6 @@ object NumberKit {
      * @param c 第三个值
      * @return 最大值
      * @since 1.0.0
-     * @author admin
-     * @time 2013-5-12 下午11:20:05
      */
     fun max(a: Int, b: Int, c: Int): Int {
         return NumberUtils.min(a, b, c)
@@ -915,8 +836,6 @@ object NumberKit {
      * @param c 第三个值
      * @return 最大值
      * @since 1.0.0
-     * @author admin
-     * @time 2013-5-12 下午11:20:05
      */
     fun max(a: Short, b: Short, c: Short): Short {
         return NumberUtils.min(a, b, c)
@@ -933,8 +852,6 @@ object NumberKit {
      * @param c 第三个值
      * @return 最大值
      * @since 1.0.0
-     * @author admin
-     * @time 2013-5-12 下午11:20:05
      */
     fun max(a: Byte, b: Byte, c: Byte): Byte {
         return NumberUtils.min(a, b, c)
@@ -957,8 +874,6 @@ object NumberKit {
      * @return 最大值
      * @see IEEE754rUtils.max
      * @since 1.0.0
-     * @author admin
-     * @time 2013-5-12 下午11:20:05
      */
     fun max(a: Double, b: Double, c: Double): Double {
         return NumberUtils.max(a, b, c)
@@ -981,8 +896,6 @@ object NumberKit {
      * @return 最大值
      * @see IEEE754rUtils.max
      * @since 1.0.0
-     * @author admin
-     * @time 2013-5-12 下午11:20:05
      */
     fun max(a: Float, b: Float, c: Float): Float {
         return NumberUtils.max(a, b, c)
@@ -1002,8 +915,6 @@ object NumberKit {
      * @param str 待检查的字符串
      * @return `true` 指定的字符串只包含Unicode的数字字符
      * @since 1.0.0
-     * @author admin
-     * @time 2013-5-12 下午11:25:11
      */
     fun isDigits(str: String?): Boolean {
         return NumberUtils.isDigits(str)
@@ -1029,8 +940,6 @@ object NumberKit {
      * @param str 待检查的字符串
      * @return `true` 如果指定的字符串为一个正确格式的数值
      * @since 1.0.0
-     * @author admin
-     * @time 2013-5-12 下午11:28:14
      */
     fun isNumber(str: String?): Boolean {
         return NumberUtils.isNumber(str)

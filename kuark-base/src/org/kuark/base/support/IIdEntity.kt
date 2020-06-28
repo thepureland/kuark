@@ -1,6 +1,6 @@
 package org.kuark.base.support
 
-interface IdEntity<T> {
+interface IIdEntity<T> {
 
     var id: T?
 

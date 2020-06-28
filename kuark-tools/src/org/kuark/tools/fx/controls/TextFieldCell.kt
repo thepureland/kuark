@@ -9,9 +9,6 @@ import javafx.scene.control.TextField
 import javafx.scene.layout.HBox
 import javafx.util.StringConverter
 
-/**
- * Create by (admin) on 6/30/15.
- */
 class TextFieldCell<S, T> @JvmOverloads constructor(private val sc: StringConverter<Any>? = null) : TableCell<S, T>() {
     private val textField: TextField
     private val boundToCurrently: Property<T>? = null

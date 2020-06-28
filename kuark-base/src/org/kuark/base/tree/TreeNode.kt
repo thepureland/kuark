@@ -7,8 +7,7 @@ import java.util.*
  * 通用树结点
  *
  * @since 1.0.0
- * @author admin
- * @time 2012-5-1 下午9:24:05
+ * @author K
  */
 class TreeNode<T> : Serializable {
 

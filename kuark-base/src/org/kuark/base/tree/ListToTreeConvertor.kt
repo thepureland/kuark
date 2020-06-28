@@ -6,7 +6,7 @@ import java.util.*
 /**
  * 列表到树结构的转换器
  *
- * @author admin
+ * @author K
  */
 object ListToTreeConvertor {
 

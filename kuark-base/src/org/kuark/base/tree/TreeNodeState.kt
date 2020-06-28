@@ -3,9 +3,6 @@ package org.kuark.base.tree
 import com.fasterxml.jackson.annotation.JsonInclude
 import java.io.Serializable
 
-/**
- * Create by (admin) on 6/11/15.
- */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 class TreeNodeState : Serializable {
     private var loaded: Boolean? = null

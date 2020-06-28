@@ -24,9 +24,6 @@ import org.kuark.tools.fx.controls.XTextFieldTableCell
 import java.net.URL
 import java.util.*
 
-/**
- * Create by (admin) on 2015/5/26.
- */
 class ColumnsController : Initializable {
 
     @FXML

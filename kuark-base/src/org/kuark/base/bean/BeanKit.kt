@@ -7,7 +7,7 @@ import org.apache.commons.beanutils.converters.DateConverter
 import org.kuark.base.lang.SerializationKit
 import org.kuark.base.lang.string.StringKit
 import org.kuark.base.log.LogFactory
-import org.kuark.base.support.IdEntity
+import org.kuark.base.support.IIdEntity
 import java.beans.Introspector
 import java.beans.PropertyDescriptor
 import java.io.Serializable
@@ -107,7 +107,7 @@ object BeanKit {
      * IllegalAccessException 如果请求的方法不能通过反射访问
      * @since 1.0.0
      */
-    fun <T> copyPropertiesExcludeId(src: IdEntity<T>?, dest: IdEntity<T>): IdEntity<T> {
+    fun <T> copyPropertiesExcludeId(src: IIdEntity<T>?, dest: IIdEntity<T>): IIdEntity<T> {
         val id = dest.id
         copyProperties(src, dest)
         dest.id = id
@@ -158,9 +158,9 @@ object BeanKit {
      * InstantiationException 实例化异常
      * @since 1.0.0
      */
-    fun <T> resetPropertiesExcludeId(entity: IdEntity<T>) {
+    fun <T> resetPropertiesExcludeId(entity: IIdEntity<T>) {
         val id = entity.id
-        val emptyEntity: IdEntity<T> = entity.javaClass.getDeclaredConstructor().newInstance()
+        val emptyEntity: IIdEntity<T> = entity.javaClass.getDeclaredConstructor().newInstance()
         copyProperties(emptyEntity, entity)
         entity.id = id
     }

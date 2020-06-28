@@ -8,8 +8,7 @@ import java.util.concurrent.TimeUnit
  * 线程相关工具类
  *
  * @since 1.0.0
- * @author admin
- * @version 2013-01-15
+ * @author K
  */
 object ThreadKit {
     private val LOG = LogFactory.getLog(ThreadKit::class)
@@ -22,8 +21,6 @@ object ThreadKit {
      *
      * @param millis 休眠的毫秒数
      * @since 1.0.0
-     * @author admin
-     * @time 2013-5-1 下午10:59:55
      */
     fun sleep(millis: Long) {
         try {
@@ -42,8 +39,6 @@ object ThreadKit {
      * @param duration 休眠的时间值
      * @param unit 休眠的时间单位
      * @since 1.0.0
-     * @author admin
-     * @time 2013-5-1 下午11:03:08
      */
     fun sleep(duration: Long, unit: TimeUnit) {
         try {
@@ -66,8 +61,6 @@ object ThreadKit {
      * @param shutdownNowTimeout 现在关闭超时时间
      * @param timeUnit 时间单位
      * @since 1.0.0
-     * @author admin
-     * @time 2013-5-1 下午11:05:31
      */
     fun gracefulShutdown(
         pool: ExecutorService, shutdownTimeout: Int, shutdownNowTimeout: Int,
@@ -102,8 +95,6 @@ object ThreadKit {
      * @param timeout 超时时间
      * @param timeUnit 时间单位
      * @since 1.0.0
-     * @author admin
-     * @time 2013-5-1 下午11:09:48
      */
     fun normalShutdown(pool: ExecutorService, timeout: Int, timeUnit: TimeUnit?) {
         try {
@@ -127,8 +118,6 @@ object ThreadKit {
      *
      * @param clazz 类，为null将什么也不做
      * @since 1.0.0
-     * @author admin
-     * @time 2013-5-13 下午7:36:59
      */
     fun printStackTraceOnNotCallByClass(clazz: Class<*>?) {
         if (clazz == null) {
@@ -160,8 +149,6 @@ object ThreadKit {
      *
      *
      * @since 1.0.0
-     * @author admin
-     * @time 2013-5-13 下午7:38:59
      */
     fun printStackTrace() {
         if (LOG.isDebugEnabled()) {

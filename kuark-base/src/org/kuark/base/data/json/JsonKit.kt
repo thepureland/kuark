@@ -21,9 +21,9 @@ import kotlin.reflect.KClass
  *
  * @since 1.0.0
  */
-object JsonTool {
+object JsonKit {
 
-    private val LOG = LogFactory.getLog(JsonTool::class)
+    private val LOG = LogFactory.getLog(JsonKit::class)
 
     /**
      * 将简单的Json串格式化成页面显示的字符串(去掉花括号、引号及最后面可能的逗号)
@@ -249,15 +249,7 @@ object JsonTool {
         }
         return null
     }
-    /**
-     * 序列化，将对象转为json串
-     *
-     * @param object 要序列化的对象，可以是POJO，也可以是Collection或数组，
-     * 如果对象为Null, 返回"null"；如果集合为空集合, 返回"[]"
-     * @param mapper json转换器，为null时该方法内部将新建一个默认的转换器
-     * @return 序列化后的json串
-     * @since 1.0.0
-     */
+
     /**
      * 序列化，将对象转为json串
      *

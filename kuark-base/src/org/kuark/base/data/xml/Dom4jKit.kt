@@ -69,8 +69,6 @@ object Dom4jKit {
      * @param document 需要保存的document对象，为null将什么也不做
      * @param path 文件路径，为null或找不到将什么也不做
      * @since 1.0.0
-     * @author admin
-     * @time 2013-5-18 上午10:14:13
      */
     fun writeXml(document: Document?, path: String?) {
         writeXml(document, path, "UTF-8", OutputFormat.createCompactFormat())
@@ -85,8 +83,6 @@ object Dom4jKit {
      * @param encoding 编码，为空将什么也不做
      * @param format xml文档格式，为null将什么也不做
      * @since 1.0.0
-     * @author admin
-     * @time 2013-5-18 上午10:24:34
      */
     fun writeXml(document: Document?, path: String?, encoding: String?, format: OutputFormat?) {
         if (document == null) {
@@ -127,8 +123,6 @@ object Dom4jKit {
      * @param xmlStr xml格式的字符串，为空将什么也不做
      * @param path 文件路径，为null或找不到将什么也不做
      * @since 1.0.0
-     * @author admin
-     * @time 2013-5-18 上午10:26:10
      */
     fun writeXml(xmlStr: String, path: String?) {
         if (StringKit.isBlank(xmlStr)) {
@@ -214,8 +208,6 @@ object Dom4jKit {
      * @param defaultValue 默认值
      * @return 指定属性名的整型值，如果node或attributeName为空，或属性值不是整型值都将返回null
      * @since 1.0.0
-     * @author admin
-     * @time 2013-5-18 上午10:41:01
      */
     fun getIntegerAttribute(node: Element?, attributeName: String, defaultValue: Int): Int? {
         if (node == null) {
@@ -253,8 +245,6 @@ object Dom4jKit {
      * @return 指定属性名的布尔值，如果node或attributeName为空，或属性值不是布尔值都将返回null
      * @return
      * @since 1.0.0
-     * @author admin
-     * @time 2013-5-18 上午10:54:27
      */
     fun getBooleanAttribute(node: Element?, attributeName: String, defaultValue: Boolean): Boolean? {
         if (node == null) {
@@ -290,8 +280,6 @@ object Dom4jKit {
      * @param document 待转化的Document文档，为null将返回null
      * @return Document文档的xml字符串表示, document参数为null将返回null
      * @since 1.0.0
-     * @author admin
-     * @time 2013-5-18 上午10:57:17
      */
     fun asXml(document: Document?): String? {
         if (document == null) {
@@ -309,8 +297,6 @@ object Dom4jKit {
      * @param elem 待转化的Document文档Element对象，为null将返回null
      * @return Element对象的xml字符串表示, elem参数为null将返回null
      * @since 1.0.0
-     * @author admin
-     * @time 2013-5-18 上午11:00:07
      */
     fun asXml(elem: Element?): String? {
         return asXml(elem, "UTF-8")
@@ -324,8 +310,6 @@ object Dom4jKit {
      * @param charset 编码，为空将当作UTF-8
      * @return Element对象的xml字符串表示, elem参数为null将返回null
      * @since 1.0.0
-     * @author admin
-     * @time 2013-5-18 上午11:04:25
      */
     fun asXml(elem: Element?, charset: String): String? {
         var charset = charset
@@ -347,8 +331,6 @@ object Dom4jKit {
      * @param elem 待转化的Document文档Element对象，为null将返回null
      * @return Element对象的xml字符串表示, elem参数为null或转化失败都将返回null
      * @since 1.0.0
-     * @author admin
-     * @time 2013-5-18 上午11:12:20
      */
     fun elementToString(elem: Element?): String? {
         if (elem == null) {

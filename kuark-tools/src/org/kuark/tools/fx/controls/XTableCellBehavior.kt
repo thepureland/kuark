@@ -32,7 +32,7 @@ import java.util.logging.Logger
  * - so now we override the latter and try terminate edits
  *
  *
- * @author admin
+ * @author K
  */
 open class XTableCellBehavior<S, T>
 /**

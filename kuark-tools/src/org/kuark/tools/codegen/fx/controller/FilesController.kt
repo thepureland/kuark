@@ -37,9 +37,6 @@ import java.net.URL
 import java.util.*
 import java.util.function.Consumer
 
-/**
- * Create by (admin) on 6/30/15.
- */
 class FilesController : Initializable {
 
     @FXML

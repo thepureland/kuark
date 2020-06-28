@@ -19,9 +19,6 @@ import java.io.IOException
 import java.net.URL
 import java.util.*
 
-/**
- * Create by (admin) on 2015/5/26.
- */
 class ConfigController : Initializable {
 
     @FXML
@@ -207,7 +204,7 @@ class ConfigController : Initializable {
                 )
                 properties.setProperty(PROP_KEY_DB_USER, "postgres")
                 properties.setProperty(PROP_KEY_DB_PASSWORD, "postgres")
-                properties.setProperty(PROP_KEY_TEMPLATE_PATH, "org.soul.gather")
+                properties.setProperty(PROP_KEY_TEMPLATE_PATH, "")
                 properties.setProperty(PROP_KEY_MODULE_NAME, "")
                 properties.setProperty(PROP_KEY_WEB_MODULE_NAME, "")
                 properties.setProperty(PROP_KEY_CODE_LOACTION, userHome)

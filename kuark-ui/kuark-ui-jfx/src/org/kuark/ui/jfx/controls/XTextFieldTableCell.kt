@@ -1,4 +1,4 @@
-package org.kuark.tools.fx.controls
+package org.kuark.ui.jfx.controls
 
 import javafx.beans.value.ChangeListener
 import javafx.beans.value.ObservableValue

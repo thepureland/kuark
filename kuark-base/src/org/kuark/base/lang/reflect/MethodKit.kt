@@ -2,7 +2,7 @@ package org.kuark.base.lang.reflect
 
 import org.apache.commons.lang3.StringUtils
 import org.apache.commons.lang3.reflect.MethodUtils
-import org.kuark.base.lang.string.StringKit
+import org.kuark.base.lang.string.uncapitalize
 import java.beans.PropertyDescriptor
 import java.lang.reflect.InvocationTargetException
 import java.lang.reflect.Method
@@ -153,7 +153,7 @@ object MethodKit {
     fun getReadProperty(readMethod: Method): String? {
         val methodName = readMethod.name
         if ("getClass" != methodName) {
-            val prop = StringKit.uncapitalize(methodName.replaceFirst("^is|^get".toRegex(), ""))
+            val prop = methodName.replaceFirst("^is|^get".toRegex(), "").uncapitalize()
             if (methodName != prop) {
                 return prop
             }

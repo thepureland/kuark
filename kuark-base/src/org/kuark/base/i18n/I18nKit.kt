@@ -1,6 +1,5 @@
 package org.kuark.base.i18n
 
-import org.kuark.base.lang.string.StringKit
 import org.kuark.base.log.LogFactory
 import org.kuark.base.scanner.classpath.ClassPathScanner
 import org.kuark.base.scanner.support.Resource
@@ -66,7 +65,7 @@ object I18nKit {
     fun initI18nByType(vararg args: String): Boolean {
         val type = if (args.isNotEmpty()) args[0] else ""
         val prefix = if (args.size > 1) args[1] else ""
-        if (StringKit.isNotBlank(type)) {
+        if (type.isNotBlank()) {
             val otherLocales = ArrayList<String?>(supportLocales)
             //去除默认语言
             otherLocales.remove(DEFAULT_LOCALE)
@@ -157,7 +156,7 @@ object I18nKit {
             }
             val keyValueMap = moduleMap[module]
             for ((key, value) in keyValueMapDef!!) {
-                if (!keyValueMap!!.containsKey(key) || StringKit.isBlank(keyValueMap[key])) {
+                if (!keyValueMap!!.containsKey(key) || keyValueMap[key] == null || keyValueMap[key]!!.isBlank()) {
                     keyValueMap[key] = value
                     //                    LOG.debug("i18n:缺失语言:{0},类型:{1},模块:{2},键:{3}",locale,type,module,key);
                 }
@@ -311,7 +310,7 @@ object I18nKit {
     fun getLocalStr(i18nKey: String, module: String, type: String, localeObj: Locale): String? {
         val locale = localeObj.toString()
         val rs = _getLocalStr(i18nKey, module, type, locale)
-        return if (StringKit.isNotBlank(rs)) {
+        return if (rs!=null && rs.isNotBlank()) {
             rs
         } else _getLocalStr(
             i18nKey,

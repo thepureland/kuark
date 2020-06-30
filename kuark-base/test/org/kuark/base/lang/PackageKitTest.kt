@@ -4,7 +4,6 @@ import org.apache.commons.lang3.BooleanUtils
 import org.apache.commons.lang3.StringUtils
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
-import org.kuark.base.lang.string.StringKit
 
 internal class PackageKitTest {
 

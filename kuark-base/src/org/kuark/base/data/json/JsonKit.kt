@@ -10,7 +10,6 @@ import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.databind.util.JSONPObject
 import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule
 import org.apache.commons.lang3.StringUtils
-import org.kuark.base.lang.string.StringKit
 import org.kuark.base.log.LogFactory
 import java.io.File
 import java.io.IOException
@@ -33,7 +32,7 @@ object JsonKit {
      * @since 1.0.0
      */
     fun jsonToDisplay(simpleJsonStr: String): String {
-        if (StringKit.isBlank(simpleJsonStr)) {
+        if (simpleJsonStr.isBlank()) {
             return ""
         }
         var displayStr = simpleJsonStr.replaceFirst("^\\{".toRegex(), "")
@@ -73,7 +72,7 @@ object JsonKit {
      * @see .fromJson
      */
     fun <T> fromJson(json: String, clazz: Class<T>?, mapper: ObjectMapper?): T? {
-        if (StringKit.isBlank(json)) {
+        if (json.isBlank()) {
             return null
         }
         var mapper = mapper
@@ -99,7 +98,7 @@ object JsonKit {
      */
     fun <T> fromJson(json: String, typeReference: TypeReference<T>?, mapper: ObjectMapper?): T? {
         var mapper: ObjectMapper? = mapper
-        if (StringKit.isBlank(json)) {
+        if (json.isBlank()) {
             return null
         }
         if (mapper == null) {

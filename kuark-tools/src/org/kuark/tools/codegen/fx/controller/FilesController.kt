@@ -15,17 +15,13 @@ import javafx.util.Callback
 import org.apache.commons.io.filefilter.IOFileFilter
 import org.kuark.base.bean.BeanKit
 import org.kuark.base.io.FileKit
-import org.kuark.base.lang.string.StringKit
+import org.kuark.base.lang.string.underscoreToHump
 import org.kuark.base.scanner.classpath.ClassPathScanner
 import org.kuark.config.kit.SpringKit
-import org.kuark.data.jdbc.datasource.DataSourceKit
-import org.kuark.data.jdbc.metadata.Column
 import org.kuark.data.jdbc.metadata.RdbMetadataKit
-import org.kuark.data.jdbc.metadata.RdbType
-import org.kuark.data.jdbc.metadata.Table
+import org.kuark.tools.codegen.core.FreemarkerKit
 import org.kuark.tools.codegen.core.GenerateConfig
 import org.kuark.tools.codegen.core.Generator
-import org.kuark.tools.codegen.core.FreemarkerKit
 import org.kuark.tools.codegen.service.CodeGenColumnService
 import org.kuark.tools.codegen.service.CodeGenFileService
 import org.kuark.tools.codegen.service.CodeGenObjectService
@@ -88,7 +84,7 @@ class FilesController : Initializable {
         filePathModel["basepackage_dir"] = gConfig.packageFolder
         filePathModel["module_dir"] = gConfig.module
         filePathModel["webModule_dir"] = gConfig.webModule
-        filePathModel["className"] = StringKit.capitalize(StringKit.underscoreToHump(tableName))
+        filePathModel["className"] = tableName.underscoreToHump().capitalize()
         filePathModel["subModule_dir"] = gConfig.subModule
         filePathModel["topModule_dir"] = gConfig.topModule
         val codeLoaction = config!!.getCodeLoaction()
@@ -98,7 +94,7 @@ class FilesController : Initializable {
             val filename = FreemarkerKit.processTemplateString(file.name, filePathModel, cfg)
             var directory = FreemarkerKit.processTemplateString(file.parent, filePathModel, cfg)
             directory = directory.replaceFirst(templateDir.toRegex(), codeLoaction)
-            val index = directory.indexOf(template) + template.length
+            val index = directory.indexOf(template!!) + template.length
             directory = if (filename.endsWith(".java")) {
                 directory.substring(0, index) + directory.substring(index).replace("/".toRegex(), ".")
             } else {
@@ -121,7 +117,7 @@ class FilesController : Initializable {
             val files: MutableCollection<File> = ArrayList()
             val resources = ClassPathScanner.scanForResources("$templatePath/", "", "")
             for (resource1 in resources) {
-                if (StringKit.isNotBlank(resource1.filename) && !resource1.filename.contains("macro.include")) {
+                if (resource1.filename.isNotBlank() && !resource1.filename.contains("macro.include")) {
                     files.add(File(resource1.locationOnDisk))
                 }
             }
@@ -130,31 +126,19 @@ class FilesController : Initializable {
 
     @FXML
     fun generate(actionEvent: ActionEvent?) {
-        if (StringKit.isNotBlank(tableName)) {
-            val dataSource = DataSourceKit.createDataSource(
-                RdbType.byProductName(config!!.getDbType()),
-                config!!.getDbUrl(),
-                config!!.getDbUser(),
-                config!!.getDbPassword(),
-                config!!.getDbCatalog(),
-                config!!.getDbSchema()
-            )
-
+        if (tableName.isNotBlank()) {
             val columnConfMap = columns!!.map { it.getColumn() to it }.toMap()
             val templateModel = mutableMapOf<String, Any>()
-            dataSource.connection.use {
-                templateModel["table"] = RdbMetadataKit.getTableByName(it, tableName)
-                val columns = RdbMetadataKit.getColumnsByTableName(it, tableName).values
-                templateModel["columns"] = columns
-                for (column in columns) {
-                    val columnName = column.name.toLowerCase()
-                    val columnInfo = columnConfMap[columnName]
-                    if (columnInfo != null) {
-                        BeanKit.copyProperties(columnInfo, column)
-                        column.comment = columnInfo.getComment()
-                    }
+            templateModel["table"] = RdbMetadataKit.getTableByName(tableName)
+            val columns = RdbMetadataKit.getColumnsByTableName(tableName).values
+            templateModel["columns"] = columns
+            for (column in columns) {
+                val columnName = column.name.toLowerCase()
+                val columnInfo = columnConfMap[columnName]
+                if (columnInfo != null) {
+                    BeanKit.copyProperties(columnInfo, column)
+                    column.comment = columnInfo.getComment()
                 }
-
             }
 
             var filePathModel = mutableMapOf<String, Boolean>()
@@ -187,19 +171,6 @@ class FilesController : Initializable {
             isOverWrite = true
             val moduleName = config!!.getModuleName()
             module = moduleName
-            var webModuleName = config!!.getWebModuleName()
-            if (StringKit.isBlank(webModuleName)) {
-                webModuleName = moduleName
-            }
-            webModule = webModuleName
-            val i = webModuleName.indexOf(".")
-            if (i != -1) {
-                topModule = webModuleName.substring(0, i)
-                subModule = webModuleName.substring(i + 1)
-            } else {
-                topModule = webModuleName
-                subModule = webModuleName
-            }
         }
     }
 
@@ -249,6 +220,6 @@ class FilesController : Initializable {
     }
 
     companion object {
-        const val templatePath = "template/business"
+        const val templatePath = "template"
     }
 }

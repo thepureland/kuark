@@ -1,4 +1,4 @@
-package org.kuark.tools.fx.controls
+package org.kuark.ui.jfx.controls
 
 import com.sun.javafx.scene.control.behavior.TableCellBehavior
 import javafx.scene.control.TableCell

@@ -22,7 +22,7 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
-package org.kuark.tools.fx.controls.wizard
+package org.kuark.ui.jfx.controls.wizard
 
 import javafx.beans.property.ObjectProperty
 import javafx.beans.property.SimpleObjectProperty

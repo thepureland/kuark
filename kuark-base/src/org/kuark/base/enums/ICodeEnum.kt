@@ -8,7 +8,6 @@ package org.kuark.base.enums
  */
 interface ICodeEnum {
 
-
     /**
      * 代码
      */

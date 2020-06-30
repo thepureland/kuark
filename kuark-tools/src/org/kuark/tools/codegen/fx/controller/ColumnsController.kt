@@ -13,14 +13,14 @@ import javafx.scene.control.cell.PropertyValueFactory
 import javafx.scene.control.cell.TextFieldTableCell
 import javafx.util.Callback
 import javafx.util.StringConverter
-import org.kuark.base.lang.string.StringKit
+import org.kuark.base.lang.string.isNumeric
 import org.kuark.config.kit.SpringKit
 import org.kuark.tools.codegen.service.CodeGenColumnService
 import org.kuark.tools.codegen.service.CodeGenObjectService
 import org.kuark.tools.codegen.vo.ColumnInfo
 import org.kuark.tools.codegen.vo.Config
-import org.kuark.tools.fx.controls.AutoCompleteComboBoxListener
-import org.kuark.tools.fx.controls.XTextFieldTableCell
+import org.kuark.ui.jfx.controls.AutoCompleteComboBoxListener
+import org.kuark.ui.jfx.controls.XTextFieldTableCell
 import java.net.URL
 import java.util.*
 
@@ -48,7 +48,7 @@ class ColumnsController : Initializable {
         val table = table
         val tableComment = tableComment
         val items = tableComboBox!!.items
-        tableMap = SpringKit.getBean(CodeGenObjectService::class).readTables(config!!.getDbSchema())
+        tableMap = SpringKit.getBean(CodeGenObjectService::class).readTables()
         tableComboBox!!.setItems(FXCollections.observableArrayList(tableMap!!.keys.toSortedSet()))
         AutoCompleteComboBoxListener<Any>(tableComboBox)
         if (items.isEmpty()) {
@@ -60,8 +60,7 @@ class ColumnsController : Initializable {
                             tableCommentTextField!!.text = tableMap!![newValue]
                             object : Thread() {
                                 override fun run() {
-                                    val columns = SpringKit.getBean(CodeGenColumnService::class)
-                                        .readColumns(config!!.getDbSchema(), newValue)
+                                    val columns = SpringKit.getBean(CodeGenColumnService::class).readColumns(newValue)
                                     Platform.runLater { columnTable!!.setItems(FXCollections.observableArrayList(columns)) }
                                 }
                             }.start()
@@ -90,7 +89,8 @@ class ColumnsController : Initializable {
             PropertyValueFactory<ColumnInfo, String>("origComment") as Callback<TableColumn.CellDataFeatures<ColumnInfo, out Any>, ObservableValue<out Any>>
         columnTable!!.getVisibleLeafColumn(i).cellFactory =
             Callback<TableColumn<ColumnInfo, Any>, TableCell<ColumnInfo?, Any?>> {
-                XTextFieldTableCell<ColumnInfo?, Any?>(object : StringConverter<Any?>() {
+                XTextFieldTableCell<ColumnInfo?, Any?>(object :
+                    StringConverter<Any?>() {
                     override fun toString(`object`: Any?): String? {
                         return `object`?.toString()
                     }
@@ -144,7 +144,7 @@ class ColumnsController : Initializable {
         }
 
         override fun fromString(string: String): Int? {
-            return if (StringKit.isBlank(string) || !StringKit.isNumeric(string)) null else Integer.valueOf(string)
+            return if (string.isBlank() || !string.isNumeric()) null else Integer.valueOf(string)
         }
     }
 

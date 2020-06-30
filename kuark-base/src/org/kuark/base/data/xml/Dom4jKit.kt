@@ -7,7 +7,6 @@ import org.dom4j.Element
 import org.dom4j.io.OutputFormat
 import org.dom4j.io.SAXReader
 import org.dom4j.io.XMLWriter
-import org.kuark.base.lang.string.StringKit
 import org.kuark.base.log.LogFactory
 import java.io.*
 
@@ -44,7 +43,7 @@ object Dom4jKit {
      */
     fun readXml(path: String): Document? {
         var document: Document? = null
-        if (StringKit.isNotBlank(path)) {
+        if (path.isNotBlank()) {
             val file = File(path)
             if (file.exists()) {
                 try {
@@ -89,11 +88,11 @@ object Dom4jKit {
             LOG.error("调用Dom4jTool.writeXml方法时传入的document参数为null！")
             return
         }
-        if (StringKit.isBlank(path)) {
+        if (path == null || path.isBlank()) {
             LOG.error("调用Dom4jTool.writeXml方法时传入的path参数为空！")
             return
         }
-        if (StringKit.isBlank(encoding)) {
+        if (encoding == null || encoding.isBlank()) {
             LOG.error("调用Dom4jTool.writeXml方法时传入的encoding参数为空！")
             return
         }
@@ -125,7 +124,7 @@ object Dom4jKit {
      * @since 1.0.0
      */
     fun writeXml(xmlStr: String, path: String?) {
-        if (StringKit.isBlank(xmlStr)) {
+        if (xmlStr.isBlank()) {
             LOG.error("调用Dom4jTool.writeXml方法时传入的xmlStr参数为空！")
             return
         }
@@ -144,7 +143,7 @@ object Dom4jKit {
      * @since 1.0.0
      */
     fun writeXml(xmlStr: String, path: String?, encoding: String?, format: OutputFormat?) {
-        if (StringKit.isBlank(xmlStr)) {
+        if (xmlStr.isBlank()) {
             LOG.error("调用Dom4jTool.writeXml方法时传入的xmlStr参数为空！")
             return
         }
@@ -162,7 +161,7 @@ object Dom4jKit {
      */
     fun stringToDocument(xmlStr: String): Document? {
         var doc: Document? = null
-        if (StringKit.isNotBlank(xmlStr)) {
+        if (xmlStr.isNotBlank()) {
             try {
                 doc = DocumentHelper.parseText(xmlStr)
             } catch (e: DocumentException) {
@@ -189,12 +188,12 @@ object Dom4jKit {
             LOG.error("调用Dom4jTool.getAttributeValue方法时传入的node参数为null！")
             return null
         }
-        if (StringKit.isBlank(attributeName)) {
+        if (attributeName == null || attributeName.isBlank()) {
             LOG.error("调用Dom4jTool.getAttributeValue方法时传入的attributeName参数为空！")
             return null
         }
         val result: String = node.attributeValue(attributeName)
-        return if (StringKit.isNotBlank(result)) {
+        return if (result.isNotBlank()) {
             result
         } else defaultValue
     }
@@ -214,14 +213,13 @@ object Dom4jKit {
             LOG.error("调用Dom4jTool.getIntegerAttribute方法时传入的node参数为null！")
             return null
         }
-        if (StringKit.isBlank(attributeName)) {
+        if (attributeName.isBlank()) {
             LOG.error("调用Dom4jTool.getIntegerAttribute方法时传入的attributeName参数为空！")
             return null
         }
         val strValue: String = node.attributeValue(attributeName)
-        return if (StringKit.isNotBlank(strValue)) {
-            val value: Int
-            value = try {
+        return if (strValue.isNotBlank()) {
+            val value: Int = try {
                 strValue.toInt()
             } catch (e: NumberFormatException) {
                 LOG.error(
@@ -251,12 +249,12 @@ object Dom4jKit {
             LOG.error("调用Dom4jTool.getBooleanAttribute方法时传入的node参数为null！")
             return null
         }
-        if (StringKit.isBlank(attributeName)) {
+        if (attributeName.isBlank()) {
             LOG.error("调用Dom4jTool.getBooleanAttribute方法时传入的attributeName参数为空！")
             return null
         }
         val strValue: String = node.attributeValue(attributeName)
-        return if (StringKit.isNotBlank(strValue)) {
+        return if (strValue.isNotBlank()) {
             if ("false" == strValue) {
                 false
             } else if ("true" == strValue) {
@@ -317,7 +315,7 @@ object Dom4jKit {
             LOG.error("调用Dom4jTool.asXml方法时传入的elem参数为null！")
             return null
         }
-        if (StringKit.isBlank(charset)) {
+        if (charset.isBlank()) {
             charset = "UTF-8"
         }
         return """<?xml version="1.0" encoding="$charset"?>

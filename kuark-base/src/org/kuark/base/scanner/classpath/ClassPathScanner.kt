@@ -16,7 +16,6 @@
 package org.kuark.base.scanner.classpath
 
 import org.kuark.base.io.FileKit
-import org.kuark.base.lang.string.StringKit
 import org.kuark.base.log.LogFactory
 import org.kuark.base.scanner.support.Resource
 import java.io.IOException
@@ -199,13 +198,13 @@ object ClassPathScanner {
     private fun filterResourceNames(resourceNames: Set<String?>, prefix: String, suffix: String): Set<String?> {
         val filteredResourceNames: MutableSet<String?> = TreeSet()
         for (resourceName in resourceNames) {
-            if (StringKit.isBlank(prefix) && StringKit.isBlank(suffix)) {
+            if (prefix.isBlank() && suffix.isBlank()) {
                 filteredResourceNames.add(resourceName)
             } else {
                 val fileName = resourceName!!.substring(resourceName.lastIndexOf("/") + 1)
-                if (StringKit.isBlank(prefix) && fileName.endsWith(suffix)) {
+                if (prefix.isBlank() && fileName.endsWith(suffix)) {
                     filteredResourceNames.add(resourceName)
-                } else if (StringKit.isBlank(suffix) && fileName.startsWith(prefix)) {
+                } else if (suffix.isBlank() && fileName.startsWith(prefix)) {
                     filteredResourceNames.add(resourceName)
                 } else if (fileName.startsWith(prefix) && fileName.endsWith(suffix)
                         && fileName.length >= (prefix + suffix).length) {

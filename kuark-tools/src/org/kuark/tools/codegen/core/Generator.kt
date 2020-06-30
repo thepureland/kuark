@@ -6,7 +6,6 @@ import freemarker.template.Configuration
 import freemarker.template.Template
 import org.kuark.base.io.FileKit
 import org.kuark.base.io.PathKit
-import org.kuark.base.lang.string.StringKit
 import org.kuark.base.log.LogFactory
 import org.kuark.base.scanner.classpath.ClassPathScanner
 import org.kuark.tools.codegen.core.merge.CodeMerger
@@ -39,7 +38,7 @@ class Generator(
         val files = mutableListOf<File>()
         val resources = ClassPathScanner.scanForResources(FilesController.templatePath + "/", "", "")
         for (resource1 in resources) {
-            if (StringKit.isNotBlank(resource1.filename) && !resource1.filename.contains("macro.include")) {
+            if (resource1.filename.isNotBlank() && !resource1.filename.contains("macro.include")) {
                 files.add(File(resource1.locationOnDisk))
             }
         }

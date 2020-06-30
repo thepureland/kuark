@@ -10,8 +10,8 @@ import javafx.stage.Stage
 import org.kuark.tools.codegen.fx.controller.ColumnsController
 import org.kuark.tools.codegen.fx.controller.ConfigController
 import org.kuark.tools.codegen.fx.controller.FilesController
-import org.kuark.tools.fx.controls.wizard.LinearWizardFlow
-import org.kuark.tools.fx.controls.wizard.Wizard
+import org.kuark.ui.jfx.controls.wizard.LinearWizardFlow
+import org.kuark.ui.jfx.controls.wizard.Wizard
 
 class CodeGenerateWizard : Application() {
 

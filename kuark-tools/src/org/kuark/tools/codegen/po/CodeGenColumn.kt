@@ -7,8 +7,8 @@ interface CodeGenColumn : IDbEntity<String, CodeGenColumn> {
     var name: String
     var objectName: String
     var comment: String?
-    var isSearchable: Boolean
-    var isSortable: Boolean
+    var isSearchable: Boolean?
+    var isSortable: Boolean?
     var orderInList: Int?
     var defaultOrder: Int?
     var orderInEdit: Int?

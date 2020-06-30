@@ -4,25 +4,33 @@ import me.liuwj.ktorm.dsl.eq
 import me.liuwj.ktorm.dsl.insert
 import me.liuwj.ktorm.dsl.update
 import me.liuwj.ktorm.entity.*
+import org.kuark.base.collections.CollectionKit
+import org.kuark.base.collections.ListKit
+import org.kuark.base.collections.MapKit
+import org.kuark.data.jdbc.metadata.RdbMetadataKit
+import org.kuark.data.jdbc.metadata.TableType
 import org.kuark.data.jdbc.support.RdbKit
 import org.kuark.tools.codegen.dao.CodeGenObjects
-import org.kuark.tools.codegen.dao.MetaDataDao
+import org.springframework.stereotype.Service
 import java.util.*
 
+@Service
 class CodeGenObjectService {
 
-    fun readTables(dbSchema: String?): Map<String, String?> {
+    fun readTables(): Map<String, String?> {
         // from meta data
-        val tables = MetaDataDao.getTables(dbSchema)
+        val tables = RdbMetadataKit.getTablesByType(TableType.TABLE, TableType.VIEW)
+        val nameAndComments = mutableMapOf<String, String?>()
+        tables.forEach { nameAndComments[it.name] = it.comment }
 
         // from code_gen_object
         val codeGenObjects = RdbKit.getDatabase().sequenceOf(CodeGenObjects).toList()
         for (codeGenObject in codeGenObjects) {
-            if (tables.containsKey(codeGenObject.name)) {
-                tables[codeGenObject.name] = codeGenObject.comment
+            if (nameAndComments.contains(codeGenObject.name)) {
+                nameAndComments[codeGenObject.name] = codeGenObject.comment
             }
         }
-        return tables
+        return nameAndComments
     }
 
     fun saveOrUpdate(table: String, comment: String?, author: String?): Boolean {

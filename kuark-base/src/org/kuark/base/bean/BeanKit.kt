@@ -5,7 +5,6 @@ import org.apache.commons.beanutils.ConvertUtils
 import org.apache.commons.beanutils.PropertyUtils
 import org.apache.commons.beanutils.converters.DateConverter
 import org.kuark.base.lang.SerializationKit
-import org.kuark.base.lang.string.StringKit
 import org.kuark.base.log.LogFactory
 import org.kuark.base.support.IIdEntity
 import java.beans.Introspector
@@ -69,7 +68,7 @@ object BeanKit {
         try {
             val entrySet = propertyMap.entries
             for ((srcField, destFieldStr) in entrySet) {
-                if (StringKit.isNotBlank(srcField) && StringKit.isNotBlank(destFieldStr)) {
+                if (srcField.isNotBlank() && destFieldStr.isNotBlank()) {
                     val result = getProperty(srcObj, srcField)
                     result?.let { copyProperty(destObj, destFieldStr, it) }
                 }

@@ -1,6 +1,7 @@
 package org.kuark.base.net
 
-import org.kuark.base.lang.string.StringKit
+import org.kuark.base.lang.string.countMatches
+import org.kuark.base.lang.string.repeatAndSeparate
 import org.kuark.base.log.LogFactory
 import java.net.InetAddress
 import java.net.UnknownHostException
@@ -252,8 +253,8 @@ object IpKit {
      * @return ture: ipv6，false: 非ipv6
      */
     fun isValidIpv6(ipStr: String): Boolean {
-        if (StringKit.isBlank(ipStr)) return false
-        val colonCount = StringKit.countMatches(ipStr, ":")
+        if (ipStr.isBlank()) return false
+        val colonCount = ipStr.countMatches(":")
         if (ipStr.length > 45 || colonCount > 7) {
             return false
         } else if (colonCount == 7 && !ipStr.contains("::") && ipStr.length <= 39 &&
@@ -292,8 +293,8 @@ object IpKit {
             val part2 = Integer.toHexString(Integer.valueOf(parts[1])).toUpperCase()
             val part3 = Integer.toHexString(Integer.valueOf(parts[2])).toUpperCase()
             val part4 = Integer.toHexString(Integer.valueOf(parts[3])).toUpperCase()
-            val ipv6Str = StringKit.leftPad(part1, 2, '0') + StringKit.leftPad(part2, 2, '0') +
-                    ":" + StringKit.leftPad(part3, 2, '0') + StringKit.leftPad(part4, 2, '0')
+            val ipv6Str = part1.padStart(2, '0') + part2.padStart(2, '0') +
+                    ":" + part3.padStart(2, '0') + part4.padStart(2, '0')
             return "0000:0000:0000:0000:0000:0000:$ipv6Str"
         }
         return ipv4
@@ -331,20 +332,20 @@ object IpKit {
                 val ipv4 = matcher.group(0)
                 val ipv4Part = ipv4ToIpv6(ipv4).substring(30)
                 ipv6 = if (ipStr.contains("::")) {
-                    val colonCount = StringKit.countMatches(ipStr, ":")
+                    val colonCount = ipStr.countMatches(":")
                     var leakGroupCount = 6 - colonCount
                     if (ipStr.startsWith("::")) {
                         leakGroupCount++
                     }
-                    val leakStr = StringKit.repeat("0000", ":", leakGroupCount)
+                    val leakStr = "0000".repeatAndSeparate(":", leakGroupCount)
                     ipStr.replace("::", ":$leakStr:").replace(ipv4, ipv4Part)
                 } else {
                     ipStr.replace(ipv4, ipv4Part)
                 }
             } else if (ipStr.contains("::")) { // 处理0位压缩表示法的ipv6
-                val colonCount = StringKit.countMatches(ipStr, ":")
+                val colonCount = ipStr.countMatches(":")
                 val leakGroupCount = 8 - colonCount
-                val leakStr = StringKit.repeat("0000", ":", leakGroupCount)
+                val leakStr = "0000".repeatAndSeparate(":", leakGroupCount)
                 ipv6 = ipStr.replace("::", ":$leakStr:")
             }
 
@@ -352,7 +353,7 @@ object IpKit {
             if (ipv6.length != 39) {
                 val parts = ipv6.split(":").toTypedArray()
                 val sb = StringBuilder()
-                parts.forEach { it -> sb.append(StringKit.leftPad(it, 4, '0')).append(":") }
+                parts.forEach { sb.append(it.padStart(4, '0')).append(":") }
                 ipv6 = sb.toString().substring(0, sb.length - 1)
             }
             return ipv6

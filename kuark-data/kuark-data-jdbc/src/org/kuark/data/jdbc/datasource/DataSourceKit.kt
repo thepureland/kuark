@@ -1,6 +1,8 @@
 package org.kuark.data.jdbc.datasource
 
 import com.zaxxer.hikari.HikariDataSource
+import org.kuark.base.lang.string.startsWithAny
+import org.kuark.config.context.KuarkContext
 import org.kuark.data.jdbc.support.RdbKit
 import org.kuark.data.jdbc.metadata.RdbType
 import javax.sql.DataSource
@@ -8,9 +10,7 @@ import javax.sql.DataSource
 
 object DataSourceKit {
 
-    fun getCurrentDataSource(): DataSource {
-        TODO()
-    }
+    fun getCurrentDataSource(): DataSource = KuarkContext.currentDataSource()
 
     fun getDataSource(dataSourceId: String): DataSource {
         TODO()
@@ -30,8 +30,8 @@ object DataSourceKit {
             this.password = password
             driverClassName = rdbType.jdbcDriverName
             connectionTestQuery = RdbKit.getTestStatement(rdbType)
-            this.catalog = catalog
-            this.schema = schema
+            catalog?.let { this.catalog = catalog }
+            schema?.let { this.schema = schema }
         }
 
 

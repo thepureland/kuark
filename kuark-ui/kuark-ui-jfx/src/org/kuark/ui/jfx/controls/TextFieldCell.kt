@@ -1,4 +1,4 @@
-package org.kuark.tools.fx.controls
+package org.kuark.ui.jfx.controls
 
 import javafx.beans.property.Property
 import javafx.scene.Node

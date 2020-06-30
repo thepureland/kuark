@@ -1,7 +1,6 @@
 package org.kuark.tools.codegen.vo
 
 import javafx.beans.property.*
-import org.kuark.base.lang.string.StringKit
 
 class ColumnInfo {
 
@@ -116,7 +115,7 @@ class ColumnInfo {
     }
 
     fun getComment(): String {
-        return (if (StringKit.isNotBlank(getCustomComment())) getCustomComment() else origComment)!!
+        return (if (getCustomComment().isNotBlank()) getCustomComment() else origComment)!!
     }
 
     fun getColumn(): String? {

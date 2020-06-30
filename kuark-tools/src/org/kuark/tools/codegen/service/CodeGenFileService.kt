@@ -5,7 +5,9 @@ import me.liuwj.ktorm.entity.removeIf
 import me.liuwj.ktorm.entity.sequenceOf
 import org.kuark.data.jdbc.support.RdbKit
 import org.kuark.tools.codegen.dao.CodeGenFiles
+import org.springframework.stereotype.Service
 
+@Service
 class CodeGenFileService {
 
     fun read(table: String): List<String> {

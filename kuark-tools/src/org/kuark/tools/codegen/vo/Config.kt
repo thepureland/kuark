@@ -1,20 +1,18 @@
 package org.kuark.tools.codegen.vo
 
-import javafx.beans.property.SimpleStringProperty
-import javafx.beans.property.StringProperty
+import javafx.beans.property.*
+import javafx.scene.control.SingleSelectionModel
 
 class Config {
 
-    private val dbUrl: StringProperty = SimpleStringProperty()
-    private val dbUser: StringProperty = SimpleStringProperty()
-    private val dbPassword: StringProperty = SimpleStringProperty()
-    private val dbType: StringProperty = SimpleStringProperty()
-    private val dbCatalog: StringProperty = SimpleStringProperty()
-    private val dbSchema: StringProperty = SimpleStringProperty()
-    private val templatePath: StringProperty = SimpleStringProperty()
-    private val moduleName: StringProperty = SimpleStringProperty()
-    private val webModuleName: StringProperty = SimpleStringProperty()
-    private val codeLoaction: StringProperty = SimpleStringProperty()
+    private val dbUrl = SimpleStringProperty()
+    private val dbUser = SimpleStringProperty()
+    private val dbPassword = SimpleStringProperty()
+    private val dbType = SimpleStringProperty()
+    private val dbCatalog = SimpleStringProperty()
+    private val templatePath = SimpleObjectProperty<SingleSelectionModel<String>>()
+    private val moduleName = SimpleStringProperty()
+    private val codeLoaction = SimpleStringProperty()
 
     fun getDbType(): String = dbType.get()
 
@@ -27,12 +25,6 @@ class Config {
     fun dbCatalogProperty(): StringProperty = dbCatalog
 
     fun setDbType(dbType: String) = this.dbType.set(dbType)
-
-    fun getDbSchema(): String = dbSchema.get()
-
-    fun dbSchemaProperty(): StringProperty = dbSchema
-
-    fun setDbSchema(dbSchema: String) = this.dbSchema.set(dbSchema)
 
     fun getDbUrl(): String {
         return dbUrl.get()
@@ -70,16 +62,16 @@ class Config {
         this.dbPassword.set(dbPassword)
     }
 
-    fun getTemplatePath(): String {
-        return templatePath.get()
+    fun getTemplatePath(): String? {
+        return templatePath.get().selectedItem
     }
 
-    fun templatePathProperty(): StringProperty {
+    fun templatePathProperty(): SimpleObjectProperty<SingleSelectionModel<String>> {
         return templatePath
     }
 
-    fun setTemplatePath(templatePath: String) {
-        this.templatePath.set(templatePath)
+    fun setTemplatePath(templatePath: String?) {
+        this.templatePath.get()?.select(templatePath)
     }
 
     fun getModuleName(): String {
@@ -104,18 +96,6 @@ class Config {
 
     fun setCodeLoaction(codeLoaction: String) {
         this.codeLoaction.set(codeLoaction)
-    }
-
-    fun getWebModuleName(): String {
-        return webModuleName.get()
-    }
-
-    fun webModuleNameProperty(): StringProperty {
-        return webModuleName
-    }
-
-    fun setWebModuleName(webModuleName: String) {
-        this.webModuleName.set(webModuleName)
     }
 
     companion object {

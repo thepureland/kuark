@@ -1,12 +1,43 @@
 package org.kuark.data.jdbc.metadata
 
+import org.kuark.data.jdbc.support.RdbKit
 import java.sql.Connection
 import java.sql.DatabaseMetaData
 
 
 object RdbMetadataKit {
 
-    fun getTablesByType(conn: Connection, vararg tableTypes: TableType?): List<Table> {
+    fun getTablesByType(vararg tableTypes: TableType?, conn: Connection? = null): List<Table> {
+        return if (conn != null) {
+            _getTablesByType(conn, *tableTypes)
+        } else {
+            RdbKit.getDataSource().connection.use {
+                _getTablesByType(it, *tableTypes)
+            }
+        }
+    }
+
+    fun getTableByName(tableName: String, conn: Connection? = null): Table {
+        return if (conn != null) {
+            _getTableByName(conn, tableName)
+        } else {
+            RdbKit.getDataSource().connection.use {
+                _getTableByName(it, tableName)
+            }
+        }
+    }
+
+    fun getColumnsByTableName(tableName: String, conn: Connection? = null): Map<String, Column> {
+        return if (conn != null) {
+            _getColumnsByTableName(conn, tableName)
+        } else {
+            RdbKit.getDataSource().connection.use {
+                _getColumnsByTableName(it, tableName)
+            }
+        }
+    }
+
+    private fun _getTablesByType(conn: Connection, vararg tableTypes: TableType?): List<Table> {
         val dbMetaData = conn.metaData
         val types = tableTypes?.mapTo(mutableListOf()) { it -> it!!.name }.toTypedArray()
         val talbes = mutableListOf<Table>()
@@ -25,7 +56,7 @@ object RdbMetadataKit {
         return talbes
     }
 
-    fun getTableByName(conn: Connection, tableName: String): Table {
+    private fun _getTableByName(conn: Connection, tableName: String): Table {
         val dbMetaData = conn.metaData
         val rs = dbMetaData.getColumns(conn.catalog, conn.schema, tableName, null)
         rs.use {
@@ -39,9 +70,9 @@ object RdbMetadataKit {
         }
     }
 
-    fun getColumnsByTableName(conn: Connection, tableName: String): Map<String, Column> {
+    private fun _getColumnsByTableName(conn: Connection, tableName: String): Map<String, Column> {
         val dbMetaData = conn.metaData
-        val rdbType = RdbType.byProductName(dbMetaData.databaseProductName)
+        val rdbType = RdbType.productNameOf(dbMetaData.databaseProductName)
         val linkedMap = linkedMapOf<String, Column>()
 
         // 获取所有列

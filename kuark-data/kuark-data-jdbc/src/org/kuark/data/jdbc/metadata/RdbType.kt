@@ -11,16 +11,14 @@ enum class RdbType(val productName: String, val jdbcDriverName: String) {
     ORACLE("Oracle", "oracle.jdbc.driver.OracleDriver"),
     SQLITE("SQLite", "org.sqlite.JDBC"),
     DB2("DB2", "com.ibm.db2.jcc.DB2Driver"),
-    SQL_SERVER("Sql Server", "com.microsoft.sqlserver.jdbc.SQLServerDriver");
+    SQLSERVER("Sql Server", "com.microsoft.sqlserver.jdbc.SQLServerDriver");
 
     companion object {
 
-        fun byProductName(productName: String): RdbType = values().first { it.productName == productName }
+        fun productNameOf(productName: String): RdbType = values().first { it.productName == productName }
 
-        fun byJdbcDriverName(jdbcDriverName: String): RdbType = values().first { it.jdbcDriverName == jdbcDriverName }
+        fun jdbcDriverNameOf(jdbcDriverName: String): RdbType = values().first { it.jdbcDriverName == jdbcDriverName }
 
     }
-
-
 
 }

@@ -1,6 +1,5 @@
 package org.kuark.base.i18n
 
-import org.kuark.base.lang.string.StringKit
 import java.util.*
 
 /**
@@ -19,7 +18,7 @@ object LocaleKit {
      */
     fun getLocale(locale: String): Locale? {
         var l: Locale? = null
-        if (StringKit.isNotBlank(locale)) {
+        if (locale.isNotBlank()) {
             val pos = locale.indexOf("_")
             l = if (pos != -1) {
                 Locale(locale.substring(0, pos), locale.substring(pos + 1))

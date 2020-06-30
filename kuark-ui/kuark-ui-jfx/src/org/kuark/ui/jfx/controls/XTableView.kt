@@ -1,8 +1,7 @@
-package org.kuark.tools.fx.controls
+package org.kuark.ui.jfx.controls
 
 import javafx.beans.property.ReadOnlyObjectProperty
 import javafx.beans.property.ReadOnlyObjectWrapper
-import javafx.scene.control.TableColumn
 import javafx.scene.control.TablePosition
 import javafx.scene.control.TableView
 

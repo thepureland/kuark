@@ -1,6 +1,7 @@
 package org.kuark.biz.sys.po
 
 import org.kuark.data.jdbc.support.IMaintainableDbEntity
+import me.liuwj.ktorm.entity.Entity
 
 interface SysDict: IMaintainableDbEntity<String, SysDict> {
 

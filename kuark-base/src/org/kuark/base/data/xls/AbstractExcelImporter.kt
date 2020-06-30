@@ -4,9 +4,7 @@ import jxl.Cell
 import jxl.CellType
 import jxl.Sheet
 import jxl.Workbook
-import org.kuark.base.lang.string.StringKit
 import org.kuark.base.log.LogFactory
-import java.io.IOException
 import java.io.InputStream
 import java.lang.reflect.Method
 import java.util.*
@@ -171,7 +169,7 @@ abstract class AbstractExcelImporter : IExcelImporter {
         regex: String,
         isRequire: Boolean
     ) {
-        if (StringKit.isBlank(value)) {
+        if (value.isBlank()) {
             if (isRequire) {
                 throw Exception("$name 是必填项！")
             }

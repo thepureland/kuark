@@ -7,19 +7,22 @@ import me.liuwj.ktorm.entity.filter
 import me.liuwj.ktorm.entity.removeIf
 import me.liuwj.ktorm.entity.sequenceOf
 import org.kuark.base.bean.BeanKit
+import org.kuark.data.jdbc.metadata.Column
+import org.kuark.data.jdbc.metadata.RdbMetadataKit
 import org.kuark.data.jdbc.support.RdbKit
 import org.kuark.tools.codegen.dao.CodeGenColumns
-import org.kuark.tools.codegen.dao.MetaDataDao
 import org.kuark.tools.codegen.po.CodeGenColumn
 import org.kuark.tools.codegen.vo.ColumnInfo
+import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
 
+@Service
 open class CodeGenColumnService {
 
-    fun readColumns(schema: String?, table: String): List<ColumnInfo> {
+    fun readColumns(table: String): List<ColumnInfo> {
         // from meta data
-        val columns = MetaDataDao.getColumns(schema, table)
+        val columns: Map<String, Column> = RdbMetadataKit.getColumnsByTableName(table)
 
         // from code_gen_column table
         val codeGenColumns = RdbKit.getDatabase().sequenceOf(CodeGenColumns).filter { it.objectName eq table }
@@ -29,13 +32,20 @@ open class CodeGenColumnService {
         }
 
         // merge
-        for (columnInfo in columns) {
-            val codeGenColumn = columnMap[columnInfo.getName()]
+        val results = listOf<ColumnInfo>()
+        for (column in columns.values) {
+            val codeGenColumn = columnMap[column.name]
+            val columnInfo = ColumnInfo()
             if (codeGenColumn != null) { // old column
                 BeanKit.copyProperties(codeGenColumn, columnInfo)
+            } else {
+                with(columnInfo) {
+                    setName(column.name)
+                    setOrigComment(column.comment)
+                }
             }
         }
-        return columns
+        return results
     }
 
     @Transactional(rollbackFor = [Exception::class])

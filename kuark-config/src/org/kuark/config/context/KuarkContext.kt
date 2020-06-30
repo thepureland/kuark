@@ -1,11 +1,11 @@
 package org.kuark.config.context
 
-object RequestContext {
+object KuarkContext {
 
     private val contextParamThreadLocal = InheritableThreadLocal<ContextParam>()
 
-    fun set(contextParam: ContextParam) {
-        contextParamThreadLocal.set(contextParam)
+    init {
+        contextParamThreadLocal.set(ContextParam())
     }
 
     fun get(): ContextParam {

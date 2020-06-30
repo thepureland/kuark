@@ -2,7 +2,6 @@ package org.kuark.base.lang.reflect
 
 import org.apache.commons.lang3.reflect.TypeUtils
 import org.kuark.base.lang.BooleanKit
-import org.kuark.base.lang.string.StringKit
 import org.kuark.base.math.NumberKit
 import java.lang.reflect.*
 import java.math.BigDecimal
@@ -30,11 +29,10 @@ object TypeKit {
         if (returnType == String::class.java) {
             return valueStr
         }
-        if (StringKit.isBlank(valueStr) && !returnType!!.isPrimitive || returnType == null) {
+        if (valueStr.isBlank() && !returnType!!.isPrimitive || returnType == null) {
             return null
         }
-        val value: Any
-        value = if (returnType == Int::class.java) {
+        return if (returnType == Int::class.java) {
             Integer.valueOf(valueStr)
         } else if (returnType == Double::class.java) {
             java.lang.Double.valueOf(valueStr)
@@ -76,7 +74,6 @@ object TypeKit {
         } else {
             valueStr
         }
-        return value
     }
     // vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
     // 封装org.apache.commons.lang3.reflect.TypeUtils

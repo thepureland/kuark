@@ -1,7 +1,6 @@
 package org.kuark.base.enums
 
 import org.apache.commons.lang3.EnumUtils
-import org.kuark.base.lang.string.StringKit
 import org.kuark.base.log.LogFactory
 import java.util.*
 import kotlin.reflect.KClass
@@ -25,8 +24,8 @@ object EnumKit {
      * @throws IllegalArgumentException enumClass参数为null时
      */
     fun trans(enumClass: String, code: String): String? {
-        require(!StringKit.isBlank(enumClass)) { "enumClass参数不能为null" }
-        if (StringKit.isBlank(code)) {
+        require(!enumClass.isBlank()) { "enumClass参数不能为空" }
+        if (code.isBlank()) {
             LOG.error(Exception(), enumClass + "不存在code为【" + code + "】的枚举！")
             return null
         }
@@ -110,7 +109,7 @@ object EnumKit {
      * @since 1.0.0
      */
     fun getCodeEnumClass(enumClass: String): KClass<out ICodeEnum> {
-        require(!StringKit.isBlank(enumClass)) { "enumClass参数不能为null！" }
+        require(!enumClass.isBlank()) { "enumClass参数不能为空！" }
         val enumClazz = try {
             Class.forName(enumClass)
         } catch (e: ClassNotFoundException) {

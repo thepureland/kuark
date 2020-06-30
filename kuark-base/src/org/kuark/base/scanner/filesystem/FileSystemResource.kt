@@ -16,7 +16,6 @@
 package org.kuark.base.scanner.filesystem
 
 import org.kuark.base.io.IoKit
-import org.kuark.base.lang.string.StringKit
 import org.kuark.base.scanner.support.Resource
 import java.io.*
 import java.nio.charset.Charset
@@ -35,7 +34,7 @@ class FileSystemResource(location: String?) : Resource, Comparable<FileSystemRes
      */
     override val location: String?
         get() {
-            var path = StringKit.replace(loc.path, "\\", "/")
+            var path = loc.path.replace("\\", "/")
             if (path != null) {
                 if (!path.startsWith("/")) {
                     path = "/$path"

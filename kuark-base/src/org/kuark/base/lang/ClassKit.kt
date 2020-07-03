@@ -16,57 +16,6 @@ object ClassKit {
     private val LOG = LogFactory.getLog(ClassKit::class)
 
     /**
-     * 取得JDK动态代理/CGLIB代理对象
-     *
-     * @param proxy JDK动态代理/CGLIB代理对象
-     * @return 经过cglib加强过的对象的真实类型, 如果传入的对象为null将返回null
-     * @since 1.0.0
-     */
-    //TODO
-//    fun getTargetClass(proxy: Any?): Class<*>? {
-//        if (proxy == null) {
-//            return null
-//        }
-//        if (!AopUtils.isAopProxy(proxy)) {
-//            return proxy.javaClass //不是代理对象
-//        }
-//        if (AopUtils.isJdkDynamicProxy(proxy)) {
-//            try {
-//                return getJdkDynamicProxyTargetObject(proxy).javaClass
-//            } catch (e: Exception) {
-//                LOG.error(e, "获取jdk动态代理对象出错！")
-//            }
-//        } else { //cglib
-//            try {
-//                return getCglibProxyTargetObject(proxy).javaClass
-//            } catch (e: Exception) {
-//                LOG.error(e, "获取CGLIB代理对象出错！")
-//            }
-//        }
-//        return null
-//    }
-//
-//    @Throws(Exception::class)
-//    private fun getCglibProxyTargetObject(proxy: Any): Any {
-//        val h = proxy.javaClass.getDeclaredField("CGLIB\$CALLBACK_0")
-//        h.isAccessible = true
-//        val dynamicAdvisedInterceptor = h[proxy]
-//        val advised = dynamicAdvisedInterceptor.javaClass.getDeclaredField("advised")
-//        advised.isAccessible = true
-//        return (advised[dynamicAdvisedInterceptor] as AdvisedSupport).getTargetSource().getTarget()
-//    }
-//
-//    @Throws(Exception::class)
-//    private fun getJdkDynamicProxyTargetObject(proxy: Any): Any {
-//        val h = proxy.javaClass.superclass.getDeclaredField("h")
-//        h.isAccessible = true
-//        val aopProxy: AopProxy = h[proxy] as AopProxy
-//        val advised: Field = aopProxy.getClass().getDeclaredField("advised")
-//        advised.isAccessible = true
-//        return (advised[aopProxy] as AdvisedSupport).getTargetSource().getTarget()
-//    }
-
-    /**
      * 实例化指定名字的类
      *
      * @param className 要实例化的全限定名字的类

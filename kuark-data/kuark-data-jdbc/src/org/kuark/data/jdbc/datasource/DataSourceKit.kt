@@ -17,14 +17,14 @@ object DataSourceKit {
     }
 
     fun createDataSource(
-        rdbType: RdbType,
         url: String,
         username: String,
         password: String?,
         catalog: String? = null,
         schema: String? = null
-    ): DataSource =
-        HikariDataSource().apply {
+    ): DataSource {
+        val rdbType = RdbKit.determinRdbTypeByUrl(url)
+        return HikariDataSource().apply {
             jdbcUrl = url
             this.username = username
             this.password = password
@@ -33,6 +33,8 @@ object DataSourceKit {
             catalog?.let { this.catalog = catalog }
             schema?.let { this.schema = schema }
         }
+    }
+
 
 
 }

@@ -26,7 +26,7 @@ object ListToTreeConvertor {
         val treeNodeList = ArrayList<TreeNode<E>>()
         for (obj in objectList) {
             val node = treeNodeMap[getSelfId(obj)]
-            val pId = obj!!.parentId
+            val pId = obj!!.parentUniqueIdentifier
             if (pId == null || "" == pId) { // 根
                 treeNodeList.add(node!!)
             } else {
@@ -52,7 +52,7 @@ object ListToTreeConvertor {
     private fun <T, E : IListToTreeRestrict<T>> getSelfId(`object`: E): T {
         return (if (`object` is IListToTreeRestrictEx<*>) {
             (`object` as IListToTreeRestrictEx<*>).getSelfId() as T
-        } else `object`.id)!!
+        } else `object`.selfUniqueIdentifier)!!
     }
 
     /**
@@ -64,12 +64,12 @@ object ListToTreeConvertor {
     fun <E : IJsTreeNode> convertToJsTree(objectList: List<E>): List<E> {
         val treeNodeMap = HashMap<String, E>(objectList.size, 1f)
         for (`object` in objectList) {
-            treeNodeMap[`object`.id!!] = `object`
+            treeNodeMap[`object`.selfUniqueIdentifier!!] = `object`
         }
         val treeNodeList = ArrayList<E>()
         for (obj in objectList) {
-            val node = treeNodeMap[obj.id]
-            val pId = obj.parentId
+            val node = treeNodeMap[obj.selfUniqueIdentifier]
+            val pId = obj.parentUniqueIdentifier
             if (pId == null || "" == pId) { // 根
                 treeNodeList.add(node!!)
             } else {
@@ -77,7 +77,7 @@ object ListToTreeConvertor {
                 // 存在父结点
 //					watcher.setParentObject(pNode.getObject());
                 pNode?.getChildren()?.add(node!!)
-                    ?: LOG.warn("结点#" + node!!.id + "的父结点#" + pId + "不存在！")
+                    ?: LOG.warn("结点#" + node!!.selfUniqueIdentifier + "的父结点#" + pId + "不存在！")
             }
         }
         return treeNodeList

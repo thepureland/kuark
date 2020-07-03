@@ -47,6 +47,11 @@ object SystemKit {
      */
     fun isWindowsOs(): Boolean = getOSName().toLowerCase().contains("windows")
 
+    /**
+     * 得到系统当前用户
+     */
+    fun getUser(): String = System.getProperty("user.name")
+
     // vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
     // 封装org.apache.commons.lang3.SystemUtils
     // vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv

@@ -1,20 +1,22 @@
 package org.kuark.tools.codegen.vo
 
-import javafx.beans.property.BooleanProperty
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleStringProperty
-import javafx.beans.property.StringProperty
 
 class GenFile : Comparable<GenFile> {
 
-    private val generate: BooleanProperty = SimpleBooleanProperty()
-    private val filename: StringProperty = SimpleStringProperty()
-    private val directory: StringProperty = SimpleStringProperty()
+    private val generate = SimpleBooleanProperty()
+    private val filename = SimpleStringProperty()
+    private val directory = SimpleStringProperty()
+    var finalFileRelativePath: String // 参数化后的文件相对路径
+    var templateFileRelativePath: String // 模板文件相对路径，为了生成时能找得到模板文件
 
-    constructor(generate: Boolean, filename: String?, directory: String) {
+    constructor(generate: Boolean, filename: String, directory: String, finalFileRelativePath: String, templateFileRelativePath: String) {
         setGenerate(generate)
         setFilename(filename!!)
         setDirectory(directory)
+        this.finalFileRelativePath = finalFileRelativePath
+        this.templateFileRelativePath = templateFileRelativePath
     }
 
     fun getGenerate(): Boolean {

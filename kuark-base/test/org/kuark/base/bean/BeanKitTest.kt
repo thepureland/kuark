@@ -22,7 +22,7 @@ internal class BeanKitTest {
         val contact = mapOf("student" to "Tom", "teacher" to "Lucy")
         person = Person()
         with(person) {
-            id = "id"
+            selfUniqueIdentifier = "id"
             name = "Mike"
             sex = "male"
             age = 25
@@ -111,14 +111,14 @@ internal class BeanKitTest {
         BeanKit.copyPropertiesExcludeId(person, dest)
         assertEquals(person.age, dest.age)
         assertTrue(person.address === dest.address)
-        assertNull(dest.id)
+        assertNull(dest.selfUniqueIdentifier)
     }
 
     @Test
     fun testcopyPropertiesExclude() {
         val p = Person()
         BeanKit.copyPropertiesExclude(person, p, "age", "address")
-        assertEquals(person.id, p.id)
+        assertEquals(person.selfUniqueIdentifier, p.selfUniqueIdentifier)
         assertEquals(0, p.age)
         assertNull(p.address)
         assertTrue(person.goods === p.goods) // 浅克隆
@@ -130,7 +130,7 @@ internal class BeanKitTest {
         BeanKit.resetPropertiesExcludeId(p)
         assertNull(p.name)
         assertNull(p.address)
-        assertEquals(person.id, p.id)
+        assertEquals(person.selfUniqueIdentifier, p.selfUniqueIdentifier)
     }
 
     @Test

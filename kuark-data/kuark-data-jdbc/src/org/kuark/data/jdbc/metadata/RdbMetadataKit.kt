@@ -17,7 +17,7 @@ object RdbMetadataKit {
         }
     }
 
-    fun getTableByName(tableName: String, conn: Connection? = null): Table {
+    fun getTableByName(tableName: String, conn: Connection? = null): Table? {
         return if (conn != null) {
             _getTableByName(conn, tableName)
         } else {
@@ -56,17 +56,20 @@ object RdbMetadataKit {
         return talbes
     }
 
-    private fun _getTableByName(conn: Connection, tableName: String): Table {
+    private fun _getTableByName(conn: Connection, tableName: String): Table? {
         val dbMetaData = conn.metaData
-        val rs = dbMetaData.getColumns(conn.catalog, conn.schema, tableName, null)
+        val rs = dbMetaData.getTables(conn.catalog, conn.schema, tableName, null)
         rs.use {
-            return Table().apply {
-                name = tableName
-                cat = rs.getString("TABLE_CAT")
-                schema = rs.getString("TABLE_SCHEM")
-                comment = rs.getString("REMARKS")
-                type = TableType.valueOf(rs.getString("TABLE_TYPE"))
+            if (rs.next()) {
+                return Table().apply {
+                    name = tableName
+                    cat = rs.getString("TABLE_CAT")
+                    schema = rs.getString("TABLE_SCHEM")
+                    comment = rs.getString("REMARKS")
+                    type = TableType.valueOf(rs.getString("TABLE_TYPE"))
+                }
             }
+            return null
         }
     }
 
@@ -118,7 +121,7 @@ object RdbMetadataKit {
         val indexInfoRs = dbMetaData.getIndexInfo(conn.catalog, conn.schema, tableName, false, false)
         indexInfoRs.use {
             while (indexInfoRs.next()) {
-                val columnName = primaryKeyRs.getString("COLUMN_NAME")
+                val columnName = indexInfoRs.getString("COLUMN_NAME")
                 linkedMap[columnName]!!.isIndexed = true
             }
         }

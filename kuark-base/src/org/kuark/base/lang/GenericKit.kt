@@ -1,6 +1,5 @@
 package org.kuark.base.lang
 
-import org.kuark.base.collections.ArrayKit
 import org.kuark.base.log.LogFactory
 import java.lang.reflect.Field
 import java.lang.reflect.Method
@@ -35,12 +34,12 @@ object GenericKit {
         var genType = clazz.genericSuperclass // 得到泛型父类
         if (genType == null) {
             val genericInterfaces = clazz.genericInterfaces
-            if (ArrayKit.isNotEmpty(genericInterfaces)) {
+            if (genericInterfaces.isNotEmpty()) {
                 genType = genericInterfaces[0]
             }
         }
         // 如果没有实现ParameterizedType接口，即不支持泛型，直接返回Object.class
-        if (genType is ParameterizedType == false) {
+        if (genType !is ParameterizedType) {
             val superclass = clazz.superclass
             return if (superclass == Any::class.java) {
                 Any::class.java

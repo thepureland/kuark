@@ -8,11 +8,10 @@ import java.net.URL
 import java.net.URLConnection
 
 /**
- * <p>
  * IO操作工具类
- * </p>
  *
  * @since 1.0.0
+ * @author K
  */
 object IoKit {
 

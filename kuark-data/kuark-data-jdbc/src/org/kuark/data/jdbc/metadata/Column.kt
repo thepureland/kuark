@@ -1,5 +1,6 @@
 package org.kuark.data.jdbc.metadata
 
+import org.kuark.base.lang.string.underscoreToHump
 import java.sql.Types
 import kotlin.reflect.KClass
 
@@ -20,5 +21,9 @@ class Column {
     var isUnique: Boolean = false
     var isDictCode: Boolean = false
     var autoIncrement: String? = null
+
+    fun getKotlinTypeName(): String = kotlinType.simpleName!!
+
+    fun getColumnHumpName(): String = name.underscoreToHump()
 
 }

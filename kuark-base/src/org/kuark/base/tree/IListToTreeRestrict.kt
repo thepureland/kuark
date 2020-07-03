@@ -9,17 +9,15 @@ import java.io.Serializable
  * @author K
  */
 interface IListToTreeRestrict<T> : Serializable {
-    /**
-     * 获取当前结点的id
-     *
-     * @return 当前结点的id
-     */
-    val id: T?
 
     /**
-     * 获取父结点的id
-     *
-     * @return 父结点的id
+     * 当前结点的惟一标识
      */
-    val parentId: T?
+    val selfUniqueIdentifier: T
+
+    /**
+     * 父结点的惟一标识
+     */
+    val parentUniqueIdentifier: T
+
 }

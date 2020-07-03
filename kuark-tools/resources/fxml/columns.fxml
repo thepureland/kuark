@@ -1,25 +1,89 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.cell.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.kuark.tools.codegen.fx.controller.ColumnsController">
+<?import org.kuark.tools.codegen.fx.ui.SortComboBoxTableCellFactory?>
+<?import org.kuark.ui.jfx.controls.factory.*?>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0"
+            prefWidth="1024.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="org.kuark.tools.codegen.fx.controller.ColumnsController">
     <children>
-        <TableView fx:id="columnTable" editable="true" layoutX="14.0" layoutY="46.0" prefHeight="339.0" prefWidth="573.0" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="13.0" AnchorPane.topAnchor="46.0">
+        <TableView fx:id="columnTable" editable="true" layoutX="14.0" layoutY="46.0" prefHeight="339.0"
+                   prefWidth="573.0" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="14.0"
+                   AnchorPane.rightAnchor="13.0" AnchorPane.topAnchor="46.0">
             <columns>
-                <TableColumn prefWidth="153.0" text="字段" />
-            <TableColumn prefWidth="172.0" text="原注释" />
-                <TableColumn prefWidth="180.0" text="注释" />
-                <TableColumn prefWidth="90.0" text="可排序" />
-                <TableColumn minWidth="0.0" prefWidth="64.0" text="检索条件" />
-                <TableColumn prefWidth="75.0" text="列表中列序" />
-                <TableColumn prefWidth="89.0" text="列表默认排序" />
-                <TableColumn prefWidth="86.0" text="编辑页中顺序" />
-                <TableColumn prefWidth="87.0" text="详情页中顺序" />
+                <TableColumn prefWidth="153.0" text="字段">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="name"/>
+                    </cellValueFactory>
+                </TableColumn>
+                <TableColumn prefWidth="172.0" text="原注释">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="origComment"/>
+                    </cellValueFactory>
+                </TableColumn>
+                <TableColumn prefWidth="180.0" text="注释">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="customComment"/>
+                    </cellValueFactory>
+                    <cellFactory>
+                        <XTextFieldTableCellFactory/>
+                    </cellFactory>
+                </TableColumn>
+                <TableColumn prefWidth="90.0" text="可排序">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="sortable"/>
+                    </cellValueFactory>
+                    <cellFactory>
+                        <CheckBoxTableCellFactory/>
+                    </cellFactory>
+                </TableColumn>
+                <TableColumn minWidth="0.0" prefWidth="64.0" text="检索条件">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="searchable"/>
+                    </cellValueFactory>
+                    <cellFactory>
+                        <CheckBoxTableCellFactory/>
+                    </cellFactory>
+                </TableColumn>
+                <TableColumn prefWidth="89.0" text="列表默认排序">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="defaultOrder"/>
+                    </cellValueFactory>
+                    <cellFactory>
+                        <SortComboBoxTableCellFactory/>
+                    </cellFactory>
+                </TableColumn>
+                <TableColumn prefWidth="75.0" text="列表中列序">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="orderInList"/>
+                    </cellValueFactory>
+                    <cellFactory>
+                        <NumberTextFieldTableCellFactory/>
+                    </cellFactory>
+                </TableColumn>
+                <TableColumn prefWidth="86.0" text="编辑页中顺序">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="orderInEdit"/>
+                    </cellValueFactory>
+                    <cellFactory>
+                        <NumberTextFieldTableCellFactory/>
+                    </cellFactory>
+                </TableColumn>
+                <TableColumn prefWidth="87.0" text="详情页中顺序">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="orderInView"/>
+                    </cellValueFactory>
+                    <cellFactory>
+                        <NumberTextFieldTableCellFactory/>
+                    </cellFactory>
+                </TableColumn>
             </columns>
         </TableView>
-        <ComboBox fx:id="tableComboBox" editable="true" layoutX="76.0" layoutY="16.0" prefHeight="25.0" prefWidth="253.0" />
-        <Label layoutX="25.0" layoutY="20.0" text="对象：" />
-      <TextField fx:id="tableCommentTextField" layoutX="336.0" layoutY="16.0" prefHeight="25.0" prefWidth="274.0" />
+        <ComboBox fx:id="tableComboBox" editable="true" layoutX="76.0" layoutY="16.0" prefHeight="25.0"
+                  prefWidth="253.0"/>
+        <Label layoutX="25.0" layoutY="20.0" text="对象："/>
+        <TextField fx:id="tableCommentTextField" layoutX="336.0" layoutY="16.0" prefHeight="25.0" prefWidth="274.0"/>
     </children>
 </AnchorPane>

@@ -5,11 +5,13 @@ import javafx.fxml.FXML
 import javafx.fxml.Initializable
 import javafx.scene.control.*
 import javafx.stage.DirectoryChooser
+import org.kuark.base.io.FilenameKit
+import org.kuark.base.io.PathKit
+import org.kuark.base.lang.SystemKit
 import org.kuark.base.support.PropertiesLoader
 import org.kuark.config.context.KuarkContext
 import org.kuark.data.jdbc.datasource.DataSourceKit
 import org.kuark.data.jdbc.datasource.setCurrentDataSource
-import org.kuark.data.jdbc.metadata.RdbType
 import org.kuark.data.jdbc.support.RdbKit
 import org.kuark.tools.codegen.vo.Config
 import java.io.File
@@ -22,32 +24,40 @@ import java.util.*
 class ConfigController : Initializable {
 
     @FXML
-    var urlTextField: TextField? = null
+    lateinit var urlTextField: TextField
 
     @FXML
-    var userTextField: TextField? = null
+    lateinit var userTextField: TextField
 
     @FXML
-    var passwordField: PasswordField? = null
+    lateinit var passwordField: PasswordField
 
     @FXML
-    var templateChoiceBox: ComboBox<String>? = null
+    lateinit var templateChoiceBox: ComboBox<Config.TemplateNameAndRootDir>
 
     @FXML
-    var moduleTextField: TextField? = null
+    lateinit var packagePrefixTextField: TextField
 
     @FXML
-    var locationTextField: TextField? = null
+    lateinit var moduleTextField: TextField
 
     @FXML
-    var openButton: Button? = null
+    lateinit var locationTextField: TextField
+
+    @FXML
+    lateinit var openButton: Button
+
+    @FXML
+    lateinit var authorTextField: TextField
+
+    @FXML
+    lateinit var versionTextField: TextField
 
     val config = Config()
     private val userHome = System.getProperty("user.home")
     private val propertiesFile = File("$userHome/.kuark/CodeGenerator.properties")
-    private var propertiesLoader: PropertiesLoader? = null
+    private lateinit var propertiesLoader: PropertiesLoader
     private var moduleSuggestions: Set<String?>? = null
-    private var webModuleSuggestions: Set<String?>? = null
 
     override fun initialize(location: URL?, resources: ResourceBundle?) {
         initConfig()
@@ -57,90 +67,125 @@ class ConfigController : Initializable {
     }
 
     private fun initAutoCompletion() {
-        var moduleSuggestionsStr = propertiesLoader!!.getProperty(PROP_KEY_MODULE_SUGGESTIONS, "")
-        if (moduleSuggestionsStr == null) {
-            moduleSuggestionsStr = ""
-        }
+        var moduleSuggestionsStr = propertiesLoader.getProperty(Config.PROP_KEY_MODULE_SUGGESTIONS, "")
         moduleSuggestions = HashSet(listOf(*moduleSuggestionsStr.split(",".toRegex()).toTypedArray()))
     }
 
     private fun initConfig() {
         val properties = properties
         propertiesLoader = PropertiesLoader(properties)
-        config.setDbUrl(propertiesLoader!!.getProperty(PROP_KEY_DB_URL))
-        config.setDbUser(propertiesLoader!!.getProperty(PROP_KEY_DB_USER))
-        config.setDbPassword(propertiesLoader!!.getProperty(PROP_KEY_DB_PASSWORD))
-        config.setTemplatePath(propertiesLoader!!.getProperty(PROP_KEY_TEMPLATE_PATH))
-        config.setModuleName(propertiesLoader!!.getProperty(PROP_KEY_MODULE_NAME))
-        config.setCodeLoaction(propertiesLoader!!.getProperty(PROP_KEY_CODE_LOACTION))
+        with(config) {
+            setDbUrl(propertiesLoader.getProperty(Config.PROP_KEY_DB_URL, ""))
+            setDbUser(propertiesLoader.getProperty(Config.PROP_KEY_DB_USER, ""))
+            setDbPassword(propertiesLoader.getProperty(Config.PROP_KEY_DB_PASSWORD, ""))
+            val templateInfo = Config.TemplateNameAndRootDir(
+                propertiesLoader.getProperty(Config.PROP_KEY_TEMPLATE_ROOT_DIR, ""),
+                FilenameKit.normalize(propertiesLoader.getProperty(Config.PROP_KEY_TEMPLATE_ROOT_DIR, ""), true)!!
+            )
+            setTemplateInfo(templateInfo)
+            setPackagePrefix(propertiesLoader.getProperty(Config.PROP_KEY_PACKAGE_PREFIX, ""))
+            setModuleName(propertiesLoader.getProperty(Config.PROP_KEY_MODULE_NAME, ""))
+            setCodeLoaction(propertiesLoader.getProperty(Config.PROP_KEY_CODE_LOACTION, ""))
+            setAuthor(propertiesLoader.getProperty(Config.PROP_KEY_AUTHOR, SystemKit.getUser()))
+            setVersion(propertiesLoader.getProperty(Config.PROP_KEY_VERSION, ""))
+        }
     }
 
     private fun bindProperties() {
-        urlTextField!!.textProperty().bindBidirectional(config.dbUrlProperty())
-        userTextField!!.textProperty().bindBidirectional(config.dbUserProperty())
-        passwordField!!.textProperty().bindBidirectional(config.dbPasswordProperty())
-        templateChoiceBox!!.selectionModelProperty().bindBidirectional(config.templatePathProperty())
-        moduleTextField!!.textProperty().bindBidirectional(config.moduleNameProperty())
-        //        webModuleTextField.textProperty().bind(moduleTextField.textProperty());
-        locationTextField!!.textProperty().bindBidirectional(config.codeLoactionProperty())
+        with(config) {
+            urlTextField.textProperty().bindBidirectional(dbUrlProperty())
+            userTextField.textProperty().bindBidirectional(dbUserProperty())
+            passwordField.textProperty().bindBidirectional(dbPasswordProperty())
+            templateChoiceBox.selectionModelProperty().bindBidirectional(templateInfoProperty())
+            moduleTextField.textProperty().bindBidirectional(moduleNameProperty())
+            authorTextField.textProperty().bindBidirectional(authorProperty())
+            versionTextField.textProperty().bindBidirectional(versionProperty())
+            packagePrefixTextField.textProperty().bindBidirectional(packagePrefixProperty())
+            locationTextField.textProperty().bindBidirectional(codeLoactionProperty())
+            authorTextField.textProperty().bindBidirectional(authorProperty())
+            versionTextField.textProperty().bindBidirectional(versionProperty())
+        }
     }
 
     private fun initTempleComboBox() {
-        val strings = listOf("kuark") //TODO
-        val templates = FXCollections.observableArrayList(strings)
-        templateChoiceBox!!.items = templates
-        templateChoiceBox!!.selectionModel = object : SingleSelectionModel<String>() {
+        val templatesPath = "${PathKit.getRuntimePath()}/../../../resources/main/template/"
+        val files = File(templatesPath).normalize().listFiles()
+        val templateNameAndPaths = mutableListOf<Config.TemplateNameAndRootDir>()
+        files.forEach {
+            templateNameAndPaths.add(
+                Config.TemplateNameAndRootDir(it.name, FilenameKit.normalize(it.absolutePath, true)!!)
+            )
+        }
+        templateChoiceBox.items = FXCollections.observableArrayList(*templateNameAndPaths.toTypedArray())
+        templateChoiceBox.selectionModel = object : SingleSelectionModel<Config.TemplateNameAndRootDir>() {
             override fun getItemCount(): Int {
-                return strings.size
+                return templateNameAndPaths.size
             }
 
-            override fun getModelItem(index: Int): String {
-                return strings[index]
+            override fun getModelItem(index: Int): Config.TemplateNameAndRootDir {
+                return templateNameAndPaths[index]
             }
         }
-        templateChoiceBox!!.selectionModel.select(0)
+        templateChoiceBox.selectionModel.select(0)
     }
 
     fun canGoOn() {
         // test connection
         val dataSource = DataSourceKit.createDataSource(
-            RdbType.productNameOf(config!!.getDbType()),
-            urlTextField!!.text.trim { it <= ' ' },
-            userTextField!!.text.trim { it <= ' ' },
-            passwordField!!.text
+            urlTextField.text.trim(),
+            userTextField.text.trim(),
+            passwordField.text
         )
         KuarkContext.setCurrentDataSource(dataSource)
-        dataSource.connection.use {
-            if (!RdbKit.testConnection(it)) {
-                throw Exception("数据库连接不上！")
-            }
-        }
+
+        _testDbConnection()
 
         // test template
-        if (templateChoiceBox!!.selectionModel.isEmpty) {
+        if (templateChoiceBox.selectionModel.isEmpty) {
             throw Exception("请选择模板！")
         }
 
+        // package prefix
+        if (packagePrefixTextField.text == null || packagePrefixTextField.text.isBlank()) {
+            throw Exception("请填写包名前缀！")
+        }
+
         // test module
-        if (moduleTextField!!.text == null || moduleTextField!!.text.isBlank()) {
+        if (moduleTextField.text == null || moduleTextField.text.isBlank()) {
             throw Exception("请填写模块名！")
         }
 
         // test location
-        if (locationTextField!!.text == null || locationTextField!!.text.isBlank()) {
+        if (locationTextField.text == null || locationTextField.text.isBlank()) {
             throw Exception("代码生成目录不存在！")
+        }
+
+        // author location
+        if (authorTextField.text == null || authorTextField.text.isBlank()) {
+            throw Exception("请填写作者！")
+        }
+
+        // version location
+        if (versionTextField.text == null || versionTextField.text.isBlank()) {
+            throw Exception("请填写版本号！")
+        }
+    }
+
+    private fun _testDbConnection() {
+        try {
+            RdbKit.newConnection(config.getDbUrl(), config.getDbUser(), config.getDbPassword()).use {
+                RdbKit.testConnection(it)
+            }
+        } catch (e: Exception) {
+            Alert(Alert.AlertType.ERROR, "连接失败！").show()
+            throw Exception("数据库连接不上！")
         }
     }
 
     @FXML
     private fun testDbConnection() {
-        RdbKit.newConnection(config.getDbUrl(), config.getDbUser(), config.getDbPassword()).use {
-            if (RdbKit.testConnection(it)) {
-                Alert(Alert.AlertType.INFORMATION, "连接成功！").show()
-            } else {
-                Alert(Alert.AlertType.ERROR, "连接失败！").show()
-            }
-        }
+        _testDbConnection()
+        Alert(Alert.AlertType.INFORMATION, "连接成功！").show()
     }
 
     @FXML
@@ -156,19 +201,25 @@ class ConfigController : Initializable {
         directoryChooser.title = "选择生成目录"
         val selectedFolder = directoryChooser.showDialog(openButton!!.scene.window)
         if (selectedFolder != null) {
-            locationTextField!!.text = selectedFolder.absolutePath
+            locationTextField.text = selectedFolder.absolutePath
         }
     }
 
     fun storeConfig() {
-        val properties = propertiesLoader!!.properties
-        properties.setProperty(PROP_KEY_DB_URL, config.getDbUrl())
-        properties.setProperty(PROP_KEY_DB_USER, config.getDbUser())
-        properties.setProperty(PROP_KEY_DB_PASSWORD, config.getDbPassword())
-        properties.setProperty(PROP_KEY_TEMPLATE_PATH, config.getTemplatePath())
-        properties.setProperty(PROP_KEY_MODULE_NAME, config.getModuleName())
-        properties.setProperty(PROP_KEY_CODE_LOACTION, config.getCodeLoaction())
-        properties.setProperty(PROP_KEY_MODULE_SUGGESTIONS, moduleSuggestions?.joinToString())
+        val properties = propertiesLoader.properties
+        with(properties) {
+            setProperty(Config.PROP_KEY_DB_URL, config.getDbUrl())
+            setProperty(Config.PROP_KEY_DB_USER, config.getDbUser())
+            setProperty(Config.PROP_KEY_DB_PASSWORD, config.getDbPassword())
+            setProperty(Config.PROP_KEY_TEMPLATE_NAME, config.getTemplateInfo()!!.name)
+            setProperty(Config.PROP_KEY_TEMPLATE_ROOT_DIR, config.getTemplateInfo()!!.rootDir)
+            setProperty(Config.PROP_KEY_PACKAGE_PREFIX, config.getPackagePrefix())
+            setProperty(Config.PROP_KEY_MODULE_NAME, config.getModuleName())
+            setProperty(Config.PROP_KEY_CODE_LOACTION, config.getCodeLoaction())
+            setProperty(Config.PROP_KEY_MODULE_SUGGESTIONS, moduleSuggestions?.joinToString())
+            setProperty(Config.PROP_KEY_AUTHOR, config.getAuthor())
+            setProperty(Config.PROP_KEY_VERSION, config.getVersion())
+        }
         try {
             FileOutputStream(propertiesFile).use { os -> properties.store(os, null) }
         } catch (e: IOException) {
@@ -179,24 +230,24 @@ class ConfigController : Initializable {
     private val properties: Properties
         private get() {
             val properties = Properties()
-            if (!propertiesFile.exists()) {
+            if (!propertiesFile.exists()) { // 第一次使用，预设组件默认值
                 val parentFile = propertiesFile.parentFile
                 if (!parentFile.exists()) {
                     if (!parentFile.mkdir()) {
                         throw Exception(parentFile.toString() + "目录创建失败！")
                     }
                 }
-                //TODO
-                properties.setProperty(
-                    PROP_KEY_DB_URL,
-                    "jdbc:postgresql://127.0.0.1:5432/postgres?characterEncoding=UTF-8"
-                )
-                properties.setProperty(PROP_KEY_DB_USER, "postgres")
-                properties.setProperty(PROP_KEY_DB_PASSWORD, "postgres")
-                properties.setProperty(PROP_KEY_TEMPLATE_PATH, "")
-                properties.setProperty(PROP_KEY_MODULE_NAME, "")
-                properties.setProperty(PROP_KEY_CODE_LOACTION, userHome)
-                properties.setProperty(PROP_KEY_MODULE_SUGGESTIONS, "")
+                with(properties) {
+                    setProperty(Config.PROP_KEY_DB_URL, "jdbc:h2:tcp://localhost:9092/./h2;DATABASE_TO_UPPER=false")
+                    setProperty(Config.PROP_KEY_DB_USER, "sa")
+                    setProperty(Config.PROP_KEY_DB_PASSWORD, "")
+                    setProperty(Config.PROP_KEY_PACKAGE_PREFIX, "")
+                    setProperty(Config.PROP_KEY_MODULE_NAME, "")
+                    setProperty(Config.PROP_KEY_CODE_LOACTION, userHome)
+                    setProperty(Config.PROP_KEY_MODULE_SUGGESTIONS, "")
+                    setProperty(Config.PROP_KEY_AUTHOR, SystemKit.getUser())
+                    setProperty(Config.PROP_KEY_VERSION, "1.0.0")
+                }
             } else {
                 try {
                     FileInputStream(propertiesFile).use { `is` -> properties.load(`is`) }
@@ -206,15 +257,5 @@ class ConfigController : Initializable {
             }
             return properties
         }
-
-    companion object {
-        private const val PROP_KEY_DB_URL = "dbUrl"
-        private const val PROP_KEY_DB_USER = "dbUser"
-        private const val PROP_KEY_DB_PASSWORD = "dbPassword"
-        private const val PROP_KEY_TEMPLATE_PATH = "templatePath"
-        private const val PROP_KEY_MODULE_NAME = "moduleName"
-        private const val PROP_KEY_MODULE_SUGGESTIONS = "moduleNameSuggestions"
-        private const val PROP_KEY_CODE_LOACTION = "codeLoaction"
-    }
 
 }

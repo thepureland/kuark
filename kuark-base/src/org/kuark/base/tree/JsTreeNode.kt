@@ -4,9 +4,9 @@ import com.fasterxml.jackson.annotation.JsonInclude
 
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 class JsTreeNode(
-    override var id: String?,
+    override var selfUniqueIdentifier: String?,
     override var text: String?,
-    override var parentId: String?
+    override var parentUniqueIdentifier: String?
 ) : IJsTreeNode {
 
     private var icon: String? = null

@@ -1,8 +1,6 @@
 package org.kuark.base.lang.reflect
 
 import org.apache.commons.lang3.reflect.TypeUtils
-import org.kuark.base.lang.BooleanKit
-import org.kuark.base.math.NumberKit
 import java.lang.reflect.*
 import java.math.BigDecimal
 import java.math.BigInteger
@@ -37,7 +35,7 @@ object TypeKit {
         } else if (returnType == Double::class.java) {
             java.lang.Double.valueOf(valueStr)
         } else if (returnType == Boolean::class.java) {
-            BooleanKit.toBooleanObject(valueStr)
+            valueStr.toBoolean()
         } else if (returnType == Date::class.java) {
             TODO()
 //            LocaleDateKit.parse(valueStr, CommonContext.get().getLocale(), CommonContext.get().getTimeZone())
@@ -50,27 +48,27 @@ object TypeKit {
         } else if (returnType == Short::class.java) {
             valueStr.toShort()
         } else if (returnType == BigInteger::class.java) {
-            NumberKit.createBigInteger(valueStr)
+            valueStr.toBigDecimal()
         } else if (returnType == Byte::class.java) {
             java.lang.Byte.valueOf(valueStr)
         } else if (returnType == Char::class.java) {
             Character.getNumericValue(Integer.valueOf(valueStr))
         } else if (returnType == Int::class.javaPrimitiveType) {
-            NumberKit.toInt(valueStr)
+            valueStr.toInt()
         } else if (returnType == Double::class.javaPrimitiveType) {
-            NumberKit.toDouble(valueStr)
+            valueStr.toDouble()
         } else if (returnType == Boolean::class.javaPrimitiveType) {
-            BooleanKit.toBoolean(valueStr)
+            valueStr.toBoolean()
         } else if (returnType == Long::class.javaPrimitiveType) {
-            NumberKit.toLong(valueStr)
+            valueStr.toLong()
         } else if (returnType == Float::class.javaPrimitiveType) {
-            NumberKit.toFloat(valueStr)
+            valueStr.toFloat()
         } else if (returnType == Short::class.javaPrimitiveType) {
-            NumberKit.toShort(valueStr)
+            valueStr.toShort()
         } else if (returnType == Byte::class.javaPrimitiveType) {
-            NumberKit.toByte(valueStr)
+            valueStr.toByte()
         } else if (returnType == Char::class.javaPrimitiveType) {
-            NumberKit.toInt(valueStr)
+            valueStr.toInt()
         } else {
             valueStr
         }
@@ -328,14 +326,5 @@ object TypeKit {
     // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
     // 封装org.apache.commons.lang3.reflect.TypeUtils
     // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    @JvmStatic
-    fun main(args: Array<String>) {
-        val intClass = Int::class.javaPrimitiveType
-        println(intClass)
-        println(intClass!!.isPrimitive)
-        val integerClass = Int::class.java
-        println(integerClass)
-        println(integerClass.isPrimitive)
-        System.out.println(NumberKit.createDouble(""))
-    }
+
 }

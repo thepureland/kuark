@@ -38,7 +38,7 @@ import javafx.scene.control.Dialog
 import javafx.scene.control.DialogPane
 import java.util.*
 
-class Wizard private constructor(owner: Any?, title: String = "") {
+class Wizard constructor(owner: Any?, title: String = "") {
     /**************************************************************************
      *
      * Static fields

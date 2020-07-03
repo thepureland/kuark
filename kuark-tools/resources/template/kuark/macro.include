@@ -1,0 +1,16 @@
+<#-- 本文件包含一些公共的函数,本文件会被其它模板自动include -->
+
+
+<#-- 类说明 -->
+<#macro generateClassComment comment>
+/**
+ * ${comment}
+ *
+ * @author ${author}
+ * @since ${version}
+ */
+</#macro>
+
+
+
+

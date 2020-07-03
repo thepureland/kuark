@@ -7,10 +7,10 @@ import org.kuark.data.jdbc.support.MaintainableTable
 
 object SysParams: MaintainableTable<SysParam>("sys_param") {
 
-    val module by varchar("module").bindTo { it.module }
-    val paramName by varchar("param_name").bindTo { it.paramName }
-    val paramValue by varchar("param_value").bindTo { it.paramValue }
-    val defaultValue by varchar("default_value").bindTo { it.defaultValue }
-    val seqNo by int("seq_no").bindTo { it.seqNo }
+    val module = varchar("module").bindTo { it.module }
+    val paramName = varchar("param_name").bindTo { it.paramName }
+    val paramValue = varchar("param_value").bindTo { it.paramValue }
+    val defaultValue = varchar("default_value").bindTo { it.defaultValue }
+    val seqNo = int("seq_no").bindTo { it.seqNo }
 
 }

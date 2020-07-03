@@ -14,7 +14,7 @@ import kotlin.math.ceil
  * @return 替换后的字符串
  * @since 1.0.0
  */
-fun String.replaceEach(map: Map<String, String>): String {
+fun String.replaceEach(map: Map<String?, String?>): String {
     return if (map.isNotEmpty()) {
         this.replaceEach(map.keys.toTypedArray(), map.values.toTypedArray())
     } else this
@@ -559,7 +559,7 @@ fun String.replace(searchString: String?, replacement: String?, max: Int): Strin
  * @throws IllegalArgumentException 如果两个数组的长度不一致时(null或空数组是允许的)
  * @since 1.0.0
  */
-fun String.replaceEach(searchList: Array<String?>?, replacementList: Array<String>?): String =
+fun String.replaceEach(searchList: Array<String?>?, replacementList: Array<String?>?): String =
     StringUtils.replaceEach(this, searchList, replacementList)
 
 /**

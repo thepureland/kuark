@@ -173,11 +173,13 @@ subprojects {
 
             dependency("javax.validation:validation-api:2.0.1.Final")
 
-            // tools
-            dependency("org.freemarker:freemarker:2.3.30")
+            // javafx
+//            dependency("de.roskenet:springboot-javafx-support:2.1.6")
 //            dependency("org.openjfx:javafx-controls:12.0.1")
             dependency("org.controlsfx:controlsfx:8.40.10")
-//            dependency("jfxrt:jfxrt:1.0.0.0")
+
+            // tools
+            dependency("org.freemarker:freemarker:2.3.30")
 
             // 依赖maven中不存在的jar
 //            ext.jarTree = fileTree(dir: 'libs', include: '**/*.jar')

@@ -13,12 +13,9 @@ import org.kuark.data.jdbc.support.RdbKit
 import org.kuark.tools.codegen.dao.CodeGenColumns
 import org.kuark.tools.codegen.po.CodeGenColumn
 import org.kuark.tools.codegen.vo.ColumnInfo
-import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Transactional
 import java.util.*
 
-@Service
-open class CodeGenColumnService {
+object CodeGenColumnService {
 
     fun readColumns(table: String): List<ColumnInfo> {
         // from meta data
@@ -32,12 +29,15 @@ open class CodeGenColumnService {
         }
 
         // merge
-        val results = listOf<ColumnInfo>()
+        val results = mutableListOf<ColumnInfo>()
         for (column in columns.values) {
             val codeGenColumn = columnMap[column.name]
             val columnInfo = ColumnInfo()
+            results.add(columnInfo)
             if (codeGenColumn != null) { // old column
                 BeanKit.copyProperties(codeGenColumn, columnInfo)
+                columnInfo.setCustomComment(codeGenColumn.comment)
+                columnInfo.setOrigComment(column.comment)
             } else {
                 with(columnInfo) {
                     setName(column.name)
@@ -48,19 +48,28 @@ open class CodeGenColumnService {
         return results
     }
 
-    @Transactional(rollbackFor = [Exception::class])
-    open fun saveColumns(table: String, columnInfos: List<ColumnInfo>): Boolean {
+    fun saveColumns(table: String, columnInfos: List<ColumnInfo>): Boolean {
         // delete old columns first
         RdbKit.getDatabase().sequenceOf(CodeGenColumns).removeIf { it.objectName eq table }
 
         // insert new columns
-        val codeGenColumns = BeanKit.batchCopyProperties(CodeGenColumn::class, columnInfos)
-        for (codeGenColumn in codeGenColumns) {
-            codeGenColumn.objectName = table
-        }
         return RdbKit.getDatabase().batchInsert(CodeGenColumns) {
-            codeGenColumns.iterator()
+            for (column in columnInfos) {
+                item {
+                    it.name to column.getName()
+                    it.objectName to table
+                    it.comment to column.getCustomComment()
+                    it.isSearchable to column.getSearchable()
+                    it.isSortable to column.getSortable()
+                    it.orderInEdit to column.getOrderInEdit()
+                    it.orderInList to column.getOrderInList()
+                    it.orderInView to column.getOrderInView()
+                    it.defaultOrder to column.getDefaultOrder()
+                }
+            }
         }.isNotEmpty()
     }
+
+
 
 }

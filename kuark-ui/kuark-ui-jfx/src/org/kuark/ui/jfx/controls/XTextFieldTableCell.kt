@@ -132,7 +132,7 @@ class XTextFieldTableCell<S, T> @JvmOverloads constructor(converter: StringConve
     /**
      * @param oldTable
      */
-    private fun uninstallTerminatingListener(oldTable: TableView<S?>) {
+    private fun uninstallTerminatingListener(oldTable: TableView<S?>?) {
         if (oldTable is XTableView<*>) {
             (oldTable.terminatingCellProperty() as ObservableValue<*>).removeListener(terminatingListener as ChangeListener<in Any>)
         }
@@ -145,7 +145,7 @@ class XTextFieldTableCell<S, T> @JvmOverloads constructor(converter: StringConve
      * @param converter
      */
     init {
-        tableViewProperty().addListener { e: ObservableValue<out TableView<S?>>?, oldTable: TableView<S?>, newTable: TableView<S?> ->
+        tableViewProperty().addListener { e: ObservableValue<out TableView<S?>>?, oldTable: TableView<S?>?, newTable: TableView<S?> ->
             uninstallTerminatingListener(oldTable)
             installTerminatingListener(newTable)
         }

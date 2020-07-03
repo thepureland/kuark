@@ -6,7 +6,7 @@ import org.kuark.tools.codegen.po.CodeGenFile
 
 object CodeGenFiles : StringIdTable<CodeGenFile>("code_gen_file") {
 
-    val filename by varchar("filename").bindTo { it.filename }
-    val objectName by varchar("object_name").bindTo { it.objectName }
+    val filename = varchar("filename").bindTo { it.filename }
+    val objectName = varchar("object_name").bindTo { it.objectName }
 
 }

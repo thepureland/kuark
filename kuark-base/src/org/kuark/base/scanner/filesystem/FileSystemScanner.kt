@@ -24,7 +24,7 @@ import java.util.*
 /**
  * FileSystem scanner.
  */
-class FileSystemScanner {
+object FileSystemScanner {
 
     private val logger = LogFactory.getLog(FileSystemScanner::class)
 

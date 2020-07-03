@@ -8,23 +8,12 @@ class Config {
     private val dbUrl = SimpleStringProperty()
     private val dbUser = SimpleStringProperty()
     private val dbPassword = SimpleStringProperty()
-    private val dbType = SimpleStringProperty()
-    private val dbCatalog = SimpleStringProperty()
-    private val templatePath = SimpleObjectProperty<SingleSelectionModel<String>>()
+    private val templateInfo = SimpleObjectProperty<SingleSelectionModel<TemplateNameAndRootDir>>()
+    private val packagePrefix = SimpleStringProperty()
     private val moduleName = SimpleStringProperty()
     private val codeLoaction = SimpleStringProperty()
-
-    fun getDbType(): String = dbType.get()
-
-    fun dbTypeProperty(): StringProperty = dbType
-
-    fun setDbCatalog(dbCatalog: String) = this.dbCatalog.set(dbCatalog)
-
-    fun getDbCatalog(): String = dbCatalog.get()
-
-    fun dbCatalogProperty(): StringProperty = dbCatalog
-
-    fun setDbType(dbType: String) = this.dbType.set(dbType)
+    private val author = SimpleStringProperty()
+    private val version = SimpleStringProperty()
 
     fun getDbUrl(): String {
         return dbUrl.get()
@@ -62,16 +51,28 @@ class Config {
         this.dbPassword.set(dbPassword)
     }
 
-    fun getTemplatePath(): String? {
-        return templatePath.get().selectedItem
+    fun getTemplateInfo(): TemplateNameAndRootDir? {
+        return templateInfo.get().selectedItem
     }
 
-    fun templatePathProperty(): SimpleObjectProperty<SingleSelectionModel<String>> {
-        return templatePath
+    fun templateInfoProperty(): SimpleObjectProperty<SingleSelectionModel<TemplateNameAndRootDir>> {
+        return templateInfo
     }
 
-    fun setTemplatePath(templatePath: String?) {
-        this.templatePath.get()?.select(templatePath)
+    fun setTemplateInfo(templateInfo: TemplateNameAndRootDir?) {
+        this.templateInfo.get()?.select(templateInfo)
+    }
+
+    fun getPackagePrefix(): String {
+        return packagePrefix.get()
+    }
+
+    fun packagePrefixProperty(): StringProperty {
+        return packagePrefix
+    }
+
+    fun setPackagePrefix(packagePrefix: String) {
+        this.packagePrefix.set(packagePrefix)
     }
 
     fun getModuleName(): String {
@@ -98,8 +99,51 @@ class Config {
         this.codeLoaction.set(codeLoaction)
     }
 
+    fun getAuthor(): String {
+        return author.get()
+    }
+
+    fun authorProperty(): StringProperty {
+        return author
+    }
+
+    fun setAuthor(author: String) {
+        this.author.set(author)
+    }
+
+    fun getVersion(): String {
+        return version.get()
+    }
+
+    fun versionProperty(): StringProperty {
+        return version
+    }
+
+    fun setVersion(version: String) {
+        this.version.set(version)
+    }
+
     companion object {
-        const val DEFAULT_SCHEMA_NAME = "public"
+        const val PROP_KEY_DB_URL = "dbUrl"
+        const val PROP_KEY_DB_USER = "dbUser"
+        const val PROP_KEY_DB_PASSWORD = "dbPassword"
+        const val PROP_KEY_TEMPLATE_NAME = "templateName"
+        const val PROP_KEY_TEMPLATE_ROOT_DIR = "templateRootDir"
+        const val PROP_KEY_PACKAGE_PREFIX = "packagePrefix"
+        const val PROP_KEY_MODULE_NAME = "moduleName"
+        const val PROP_KEY_MODULE_SUGGESTIONS = "moduleNameSuggestions"
+        const val PROP_KEY_CODE_LOACTION = "codeLoaction"
+        const val PROP_KEY_AUTHOR = "author"
+        const val PROP_KEY_VERSION = "version"
+        const val CLASS_NAME = "className"
+    }
+
+    data class TemplateNameAndRootDir(val name: String, val rootDir: String) {
+
+        override fun toString(): String {
+            return name
+        }
+
     }
 
 }

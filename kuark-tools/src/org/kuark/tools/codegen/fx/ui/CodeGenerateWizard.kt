@@ -16,9 +16,7 @@ import org.kuark.ui.jfx.controls.wizard.Wizard
 class CodeGenerateWizard : Application() {
 
     override fun start(stage: Stage) {
-        val wizard = Wizard()
-
-//        wizard.setTitle("代码生成器");
+        val wizard = Wizard(null, "代码生成器")
 
         // config page
         var fxmlLoader = FXMLLoader()
@@ -37,8 +35,6 @@ class CodeGenerateWizard : Application() {
                     configController.canGoOn()
                     configController.storeConfig()
                     val conf = configController.config
-                    //TODO
-//                    DataContext.setDataSource(DbUtils.createDataSource(conf!!.dbUrl, conf.dbUser, conf.dbPassword))
                     columnsController.setConfig(conf)
                 } catch (e: Exception) {
                     Alert(Alert.AlertType.ERROR, e.message).show()

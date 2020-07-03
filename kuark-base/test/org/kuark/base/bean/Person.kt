@@ -9,8 +9,8 @@ import java.util.*
  */
 class Person : IIdEntity<String>, IListToTreeRestrict<String?> {
 
-    override var id: String? = null
-    override var parentId: String? = null
+    override var selfUniqueIdentifier: String? = null
+    override var parentUniqueIdentifier: String? = null
         private set
     var name: String? = null
     var sex: String? = null
@@ -37,11 +37,11 @@ class Person : IIdEntity<String>, IListToTreeRestrict<String?> {
     }
 
     fun getpId(): String? {
-        return parentId
+        return parentUniqueIdentifier
     }
 
     fun setpId(pId: String?) {
-        parentId = pId
+        parentUniqueIdentifier = pId
     }
 
     fun f(str: String) {

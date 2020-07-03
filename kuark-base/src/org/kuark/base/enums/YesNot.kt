@@ -1,7 +1,5 @@
 package org.kuark.base.enums
 
-import org.kuark.base.lang.BooleanKit
-
 /**
  * 逻辑真假的枚举
  *
@@ -23,7 +21,7 @@ enum class YesNot(val bool: Boolean, override val code: String, override var tra
             }
         }
 
-        fun enumOf(code: String): YesNot = enumOfBool(BooleanKit.toBoolean(code))
+        fun enumOf(code: String): YesNot = enumOfBool(code.toBoolean())
 
         fun enumOfBool(bool: Boolean): YesNot = if (bool) YES else NOT
     }

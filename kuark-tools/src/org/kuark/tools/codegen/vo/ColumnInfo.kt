@@ -58,7 +58,7 @@ class ColumnInfo {
         this.sortable.set(sortable)
     }
 
-    fun getDefaultOrder(): String {
+    fun getDefaultOrder(): String? {
         return defaultOrder.get()
     }
 
@@ -66,7 +66,7 @@ class ColumnInfo {
         return defaultOrder
     }
 
-    fun setDefaultOrder(defaultOrder: String) {
+    fun setDefaultOrder(defaultOrder: String?) {
         this.defaultOrder.set(defaultOrder)
     }
 
@@ -94,7 +94,7 @@ class ColumnInfo {
         this.orderInView.set(orderInView)
     }
 
-    fun getCustomComment(): String {
+    fun getCustomComment(): String? {
         return customComment.get()
     }
 
@@ -102,7 +102,7 @@ class ColumnInfo {
         return customComment
     }
 
-    fun setCustomComment(customComment: String) {
+    fun setCustomComment(customComment: String?) {
         this.customComment.set(customComment)
     }
 
@@ -114,8 +114,8 @@ class ColumnInfo {
         this.origComment = origComment
     }
 
-    fun getComment(): String {
-        return (if (getCustomComment().isNotBlank()) getCustomComment() else origComment)!!
+    fun getComment(): String? {
+        return if (getCustomComment()!=null && getCustomComment()!!.isNotBlank()) getCustomComment() else origComment
     }
 
     fun getColumn(): String? {

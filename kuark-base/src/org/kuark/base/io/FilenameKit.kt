@@ -81,12 +81,12 @@ object FilenameKit {
      *
      * 输出的路径在Unix和Windows操作系统下将一致
      *
-     * @param filename 要标准化的文件路径，null将返回null
+     * @param filename 要标准化的文件路径
      * @param unixSeparator true: 是否使用unix格式的分隔符。false: 使用windows格式的分隔符
      * @return 标准化后的文件路径，无效路径将返回null
      * @since 1.0.0
      */
-    fun normalize(filename: String?, unixSeparator: Boolean): String? = FilenameUtils.normalize(filename, unixSeparator)
+    fun normalize(filename: String, unixSeparator: Boolean): String = FilenameUtils.normalize(filename, unixSeparator)
 
     /**
      * 标准化文件路径，移除两个和一个点的部分，并移除结尾的任何分隔符

@@ -5,6 +5,6 @@ import me.liuwj.ktorm.schema.int
 
 open class IntIdTable<E : IDbEntity<Int, E>>(tableName: String): Table<E>(tableName) {
 
-    val id by int("id").primaryKey().bindTo { it.id }
+    val id = int("id").primaryKey().bindTo { it.id }
 
 }

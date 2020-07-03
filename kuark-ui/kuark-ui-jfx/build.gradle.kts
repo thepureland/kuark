@@ -1,5 +1,7 @@
 dependencies {
-
+    implementation(project(":kuark-base"))
+    api("org.controlsfx:controlsfx")
+//    api("de.roskenet:springboot-javafx-support")
 }
 
 javafx {

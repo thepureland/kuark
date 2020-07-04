@@ -6,7 +6,6 @@ import java.util.*
  * 本地化工具类
  *
  * @since 1.0.0
- * @author K
  */
 object LocaleKit {
 

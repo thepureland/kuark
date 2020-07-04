@@ -4,6 +4,8 @@ import kotlin.reflect.KClass
 
 /**
  * 日志记录器创建者
+ *
+ * @author K
  * @since 1.0.0
  */
 interface LogCreator {

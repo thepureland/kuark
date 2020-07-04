@@ -6,8 +6,8 @@ import java.util.*
 /**
  * 通用树结点
  *
- * @since 1.0.0
  * @author K
+ * @since 1.0.0
  */
 class TreeNode<T> : Serializable {
 
@@ -40,33 +40,25 @@ class TreeNode<T> : Serializable {
         this.parentObject = parentObject
     }
 
-    fun getObject(): T? {
-        return `object`
-    }
+    fun getObject(): T? = `object`
 
     fun setObject(`object`: T) {
         this.`object` = `object`
     }
 
-    fun getParentObject(): T? {
-        return parentObject
-    }
+    fun getParentObject(): T? = parentObject
 
     fun setParentObject(parentObject: T) {
         this.parentObject = parentObject
     }
 
-    fun getChildren(): MutableList<TreeNode<T>> {
-        return children
-    }
+    fun getChildren(): MutableList<TreeNode<T>> = children
 
     fun setChildren(children: MutableList<TreeNode<T>>) {
         this.children = children
     }
 
-    fun isLeaf(): Boolean {
-        return children.isEmpty()
-    }
+    fun isLeaf(): Boolean = children.isEmpty()
 
     override fun hashCode(): Int {
         val prime = 31

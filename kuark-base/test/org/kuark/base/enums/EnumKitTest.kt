@@ -4,6 +4,12 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import kotlin.reflect.KClass
 
+/**
+ * EnumKit测试用例
+ *
+ * @author K
+ * @since 1.0.0
+ */
 internal class EnumKitTest {
 
     private val enumClass: KClass<TimeUnit> = TimeUnit::class

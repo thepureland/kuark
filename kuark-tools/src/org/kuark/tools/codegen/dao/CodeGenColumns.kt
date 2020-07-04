@@ -6,6 +6,12 @@ import me.liuwj.ktorm.schema.varchar
 import org.kuark.data.jdbc.support.StringIdTable
 import org.kuark.tools.codegen.po.CodeGenColumn
 
+/**
+ * CodeGenColumn实体的DAO
+ *
+ * @author K
+ * @since 1.0.0
+ */
 object CodeGenColumns : StringIdTable<CodeGenColumn>("code_gen_column") {
 
     val name = varchar("name").bindTo { it.name }

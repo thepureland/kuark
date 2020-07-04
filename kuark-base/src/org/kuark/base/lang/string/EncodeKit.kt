@@ -6,9 +6,7 @@ import java.net.URLDecoder
 import java.net.URLEncoder
 
 /**
- * <p>
- * 封装各种格式的编码解码工具类.
- * </p>
+ * 封装各种格式的编码解码工具类
  *
  * <p>
  * 1.Commons-Codec的 hex/base64 编码
@@ -16,6 +14,7 @@ import java.net.URLEncoder
  * 3.JDK提供的URLEncoder
  * </p>
  *
+ * @author K
  * @since 1.0.0
  */
 object EncodeKit {

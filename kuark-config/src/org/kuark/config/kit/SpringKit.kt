@@ -5,6 +5,12 @@ import org.springframework.context.ApplicationContextAware
 import org.springframework.stereotype.Component
 import kotlin.reflect.KClass
 
+/**
+ * spring工具类
+ *
+ * @author K
+ * @since 1.0.0
+ */
 @Component
 object SpringKit : ApplicationContextAware {
 

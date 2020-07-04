@@ -2,6 +2,12 @@ package org.kuark.base.tree
 
 import com.fasterxml.jackson.annotation.JsonInclude
 
+/**
+ * js树结点
+ *
+ * @author K
+ * @since 1.0.0
+ */
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 class JsTreeNode(
     override var selfUniqueIdentifier: String?,

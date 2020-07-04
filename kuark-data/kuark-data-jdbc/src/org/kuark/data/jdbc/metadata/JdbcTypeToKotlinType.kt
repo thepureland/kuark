@@ -3,6 +3,12 @@ package org.kuark.data.jdbc.metadata
 import java.sql.Types
 import kotlin.reflect.KClass
 
+/**
+ * jdbc类型和kotlin类型的映射
+ *
+ * @author K
+ * @since 1.0.0
+ */
 object JdbcTypeToKotlinType {
 
     private val defaultMapping: Map<Int, KClass<*>> = mapOf(

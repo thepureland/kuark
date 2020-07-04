@@ -7,16 +7,34 @@ import javafx.scene.control.Alert
 import javafx.scene.control.Button
 import javafx.scene.control.ButtonType
 import javafx.stage.Stage
+import org.kuark.tools.codegen.core.CodeGeneratorContext
+import org.kuark.tools.codegen.core.TemplateModelCreator
 import org.kuark.tools.codegen.fx.controller.ColumnsController
 import org.kuark.tools.codegen.fx.controller.ConfigController
 import org.kuark.tools.codegen.fx.controller.FilesController
 import org.kuark.ui.jfx.controls.wizard.LinearWizardFlow
 import org.kuark.ui.jfx.controls.wizard.Wizard
 
-class CodeGenerateWizard : Application() {
+/**
+ * 代码生成器向导，用户可继承此类来提供自定的TemplateModelCreator
+ *
+ * @author K
+ * @since 1.0.0
+ */
+open class CodeGenerateWizard : Application() {
+
+    /**
+     * 得到模板数据模型创建者
+     * 开发者可通过继承CodeGenerateWizard并重写该方法来提供自定义的TemplateModelCreator,
+     * 以些来达到模板和填充模板的数据可完全自定义的目的
+     */
+    open fun getTemplateModelCreator(): TemplateModelCreator {
+        return TemplateModelCreator()
+    }
 
     override fun start(stage: Stage) {
         val wizard = Wizard(null, "代码生成器")
+        CodeGeneratorContext.templateModelCreator = getTemplateModelCreator()
 
         // config page
         var fxmlLoader = FXMLLoader()
@@ -63,10 +81,10 @@ class CodeGenerateWizard : Application() {
                 if (table == null) {
                     Alert(Alert.AlertType.ERROR, "请先选择表！").show()
                 } else {
-                    filesController.setTable(table)
-                    filesController.setTableComment(columnsController.tableComment)
-                    filesController.setColumns(columnsController.columns)
-                    filesController.setConfig(columnsController.getConfig())
+                    CodeGeneratorContext.tableName = table
+                    CodeGeneratorContext.tableComment = columnsController.tableComment
+                    CodeGeneratorContext.columns = columnsController.columns
+                    CodeGeneratorContext.config = columnsController.getConfig()
                 }
             }
 

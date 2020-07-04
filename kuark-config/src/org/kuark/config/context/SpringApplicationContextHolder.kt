@@ -1,8 +1,11 @@
 package org.kuark.config.context
 
-import org.springframework.context.ApplicationContextAware
-import org.springframework.stereotype.Component
-
+/**
+ * spring应用上下文持有者
+ *
+ * @author K
+ * @since 1.0.0
+ */
 //@Component
 class SpringApplicationContextHolder {
 

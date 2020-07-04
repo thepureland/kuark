@@ -5,8 +5,8 @@ import java.util.*
 /**
  * 注册器
  *
- * @since 1.0.0
  * @author K
+ * @since 1.0.0
  */
 object Registry {
 

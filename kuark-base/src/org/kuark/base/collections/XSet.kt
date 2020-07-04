@@ -3,6 +3,14 @@ package org.kuark.base.collections
 import org.apache.commons.collections.SetUtils
 import org.apache.commons.collections.Transformer
 
+/**
+ * kotlin.Set扩展函数
+ *
+ * @author K
+ * @since 1.0.0
+ */
+
+
 // vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 // 封装org.apache.commons.collections.SetUtils
 // vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv

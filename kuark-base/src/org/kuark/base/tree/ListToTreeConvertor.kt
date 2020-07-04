@@ -7,6 +7,7 @@ import java.util.*
  * 列表到树结构的转换器
  *
  * @author K
+ * @since 1.0.0
  */
 object ListToTreeConvertor {
 
@@ -21,11 +22,11 @@ object ListToTreeConvertor {
     fun <T, E : IListToTreeRestrict<T>> convert(objectList: List<E>): List<TreeNode<E>> {
         val treeNodeMap = HashMap<T, TreeNode<E>>(objectList.size, 1f)
         for (`object` in objectList) {
-            treeNodeMap[getSelfId(`object`)] = TreeNode(`object`)
+            treeNodeMap[`object`.selfUniqueIdentifier] = TreeNode(`object`)
         }
         val treeNodeList = ArrayList<TreeNode<E>>()
         for (obj in objectList) {
-            val node = treeNodeMap[getSelfId(obj)]
+            val node = treeNodeMap[obj.selfUniqueIdentifier]
             val pId = obj!!.parentUniqueIdentifier
             if (pId == null || "" == pId) { // 根
                 treeNodeList.add(node!!)
@@ -35,24 +36,11 @@ object ListToTreeConvertor {
                     node!!.setParentObject(pNode.getObject()!!)
                     pNode.getChildren().add(node)
                 } else {
-                    LOG.warn("结点#" + getSelfId(node!!.getObject()!!) + "的父结点#" + pId + "不存在！")
+                    LOG.warn("结点#" + node!!.getObject()!!.selfUniqueIdentifier + "的父结点#" + pId + "不存在！")
                 }
             }
         }
         return treeNodeList
-    }
-
-    /**
-     * 获取扩展接口里的selfId
-     * @param object
-     * @param <T>
-     * @param <E>
-     * @return
-     */
-    private fun <T, E : IListToTreeRestrict<T>> getSelfId(`object`: E): T {
-        return (if (`object` is IListToTreeRestrictEx<*>) {
-            (`object` as IListToTreeRestrictEx<*>).getSelfId() as T
-        } else `object`.selfUniqueIdentifier)!!
     }
 
     /**

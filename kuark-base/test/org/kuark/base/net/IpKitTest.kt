@@ -4,8 +4,10 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
 /**
- * IP工具类测试用例
+ * IpKit测试用例
+ *
  * @author K
+ * @since 1.0.0
  */
 internal class IpKitTest {
 

@@ -18,22 +18,12 @@ import javax.xml.transform.sax.SAXSource
 import kotlin.reflect.KClass
 
 /**
- *
- *
  * jaxb操作的工具类
- *
- *
- *
- *
  * JAXB = Java Architecture for XML Binding
- *
- *
- *
- *
  * 使用Jaxb2.0实现XML和Java的相互转化, OXM(Object XML Mapping), JAXB2在底层是用StAX(JSR
  * 173)来处理XML文档的
  *
- *
+ * @author K
  * @since 1.0.0
  */
 object JaxbKit {

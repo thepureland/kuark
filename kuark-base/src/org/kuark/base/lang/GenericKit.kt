@@ -10,6 +10,7 @@ import java.util.*
  * 泛型工具类
  *
  * @author K
+ * @since 1.0.0
  */
 object GenericKit {
     private val LOG = LogFactory.getLog(GenericKit::class)

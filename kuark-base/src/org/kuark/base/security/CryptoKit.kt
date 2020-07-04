@@ -13,15 +13,12 @@ import javax.crypto.SecretKey
 import javax.crypto.spec.SecretKeySpec
 
 /**
- * <p>
  * 加密工具类
- * </p>
  *
- * <p>
  * 支持HMAC-SHA1消息签名 及 DES/AES对称加密.
  * 支持Hex与Base64两种编码方式.
- * </p>
  *
+ * @author K
  * @since 1.0.0
  */
 object CryptoKit {

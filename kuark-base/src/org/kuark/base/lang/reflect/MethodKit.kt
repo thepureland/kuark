@@ -12,6 +12,7 @@ import kotlin.reflect.KClass
 /**
  * 方法工具类
  *
+ * @author K
  * @since 1.0.0
  */
 object MethodKit {

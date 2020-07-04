@@ -487,7 +487,7 @@ object ClassKit {
      * Set set = Collections.unmodifiableSet(...);
      * Method method = ClassUtils.getPublicMethod(set.getClass(), "isEmpty",  new Class[0]);
      * Object result = method.invoke(set, new Object[]);
-    </pre> *
+    * </pre>
      *
      * @param cls 被检测的类, 不能为null
      * @param methodName 方法名

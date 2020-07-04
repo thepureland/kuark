@@ -8,6 +8,7 @@ import javafx.fxml.Initializable
 import javafx.scene.control.ComboBox
 import javafx.scene.control.TableView
 import javafx.scene.control.TextField
+import org.kuark.tools.codegen.core.CodeGeneratorContext
 import org.kuark.tools.codegen.service.CodeGenColumnService
 import org.kuark.tools.codegen.service.CodeGenObjectService
 import org.kuark.tools.codegen.vo.ColumnInfo
@@ -16,6 +17,12 @@ import org.kuark.ui.jfx.controls.AutoCompleteComboBoxListener
 import java.net.URL
 import java.util.*
 
+/**
+ * 数据库表的列信息界面JavaFx控制器
+ *
+ * @author K
+ * @since 1.0.0
+ */
 class ColumnsController : Initializable {
 
     @FXML
@@ -45,14 +52,15 @@ class ColumnsController : Initializable {
         AutoCompleteComboBoxListener<Any>(tableComboBox)
         if (items.isEmpty()) {
             tableComboBox.editor.textProperty()
-                .addListener { observable: ObservableValue<out String?>?, oldValue: String?, newValue: String? ->
+                .addListener { _: ObservableValue<out String?>?, _: String?, newValue: String? ->
                     tableCommentTextField.clear()
                     if (newValue != null) {
                         if (tableMap!!.containsKey(newValue)) {
                             tableCommentTextField.text = tableMap!![newValue]
+                            CodeGeneratorContext.tableName = newValue
                             object : Thread() {
                                 override fun run() {
-                                    val columns = CodeGenColumnService.readColumns(newValue)
+                                    val columns = CodeGenColumnService.readColumns()
                                     Platform.runLater { columnTable.setItems(FXCollections.observableArrayList(columns)) }
                                 }
                             }.start()
@@ -82,7 +90,7 @@ class ColumnsController : Initializable {
         get() = tableComboBox.selectionModel.selectedItem?.toString()
 
     val tableComment: String
-        get() = if (tableCommentTextField.text == null) "" else tableCommentTextField.text.trim()
+        get() = tableCommentTextField.text?.trim() ?: ""
 
     val columns: List<ColumnInfo>
         get() = columnTable.items

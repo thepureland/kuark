@@ -4,10 +4,9 @@ import org.apache.commons.io.FilenameUtils
 import org.apache.commons.io.IOCase
 
 /**
- * <p>
  * 文件名工具类
- * </p>
  *
+ * @author K
  * @since 1.0.0
  */
 object FilenameKit {

@@ -5,6 +5,8 @@ import kotlin.reflect.KClass
 
 /**
  * 日志记录器工厂，用于创建日志记录器
+ *
+ * @author K
  * @since 1.0.0
  */
 object LogFactory {

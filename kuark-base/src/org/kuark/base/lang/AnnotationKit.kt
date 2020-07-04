@@ -5,8 +5,8 @@ import org.apache.commons.lang3.AnnotationUtils
 /**
  * 注解工具类
  *
- * @since 1.0.0
  * @author K
+ * @since 1.0.0
  */
 object AnnotationKit {
     /**

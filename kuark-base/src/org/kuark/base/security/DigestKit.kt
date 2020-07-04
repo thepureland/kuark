@@ -8,14 +8,10 @@ import java.security.MessageDigest
 import java.security.SecureRandom
 
 /**
- * <p>
  * 支持SHA-1/MD5消息摘要的工具类
- * </p>
- *
- * <p>
  * 返回ByteSource，可进一步被编码为Hex, Base64或UrlSafeBase64
- * </p>
  *
+ * @author K
  * @since 1.0.0
  */
 object DigestKit {

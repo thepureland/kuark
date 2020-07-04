@@ -12,8 +12,8 @@ import java.util.jar.JarFile
 /**
  * java包工具类
  *
- * @since 1.0.0
  * @author K
+ * @since 1.0.0
  */
 object PackageKit {
     private val LOG = LogFactory.getLog(PackageKit::class)

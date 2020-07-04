@@ -4,6 +4,9 @@ import java.util.*
 
 /**
  * 客户端信息
+ *
+ * @author K
+ * @since 1.0.0
  */
 class ClientInfo {
 

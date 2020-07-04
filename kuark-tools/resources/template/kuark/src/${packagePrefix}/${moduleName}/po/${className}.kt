@@ -1,43 +1,49 @@
 package ${packagePrefix}.${moduleName}.po
 
+<#if poSuperClass == "IDbEntity">
 import org.kuark.data.jdbc.support.IDbEntity
-<#if includeLocalDateTimeColumn>
+<#elseif poSuperClass == "IMaintainableDbEntity">
+import org.kuark.data.jdbc.support.IMaintainableDbEntity
+</#if>
+<#if containsLocalDateTimeColumn>
 import java.time.LocalDateTime
 </#if>
-<#if includeLocalDateColumn>
+<#if containsLocalDateColumn>
 import java.time.LocalDate
 </#if>
-<#if includeLocalTimeColumn>
+<#if containsLocalTimeColumn>
 import java.time.LocalTime
 </#if>
-<#if includeBlobColumn>
+<#if containsBlobColumn>
 import java.sql.Blob
 </#if>
-<#if includeClobColumn>
+<#if containsClobColumn>
 import java.sql.Clob
 </#if>
-<#if includeBigDecimalColumn>
+<#if containsBigDecimalColumn>
 import java.math.BigDecimal
 </#if>
-<#if includeRefColumn>
+<#if containsRefColumn>
 import java.sql.Ref
 </#if>
-<#if includeRowIdColumn>
+<#if containsRowIdColumn>
 import java.sql.RowId
 </#if>
-<#if includeSQLXMLColumn>
+<#if containsSQLXMLColumn>
 import java.sql.SQLXML
 </#if>
 
 
 <@generateClassComment table.comment+"数据库实体"/>
 //region your codes 1
-interface ${className} : IDbEntity<${pkColumn.kotlinTypeName}, ${className}> {
+interface ${className}: ${poSuperClass}<${pkColumn.kotlinTypeName}, ${className}> {
 //endregion your codes 1
 
 	<#list columns as column>
+	<#if column.name != "id" && (poSuperClass == "IDbEntity" || poSuperClass == "IMaintainableDbEntity" && !["create_time", "create_user", "update_time", "update_user", "is_active", "is_built_in", "remark"]?seq_contains(column.name))>
 	/** ${column.comment!""} */
 	var ${column.columnHumpName}: ${column.kotlinTypeName}
+	</#if>
 	</#list>
 
 	//region your codes 2

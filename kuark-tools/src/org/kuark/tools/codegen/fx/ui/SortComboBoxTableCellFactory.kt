@@ -6,6 +6,12 @@ import javafx.scene.control.TableColumn
 import javafx.scene.control.cell.ComboBoxTableCell
 import javafx.util.Callback
 
+/**
+ * 排序规则ComboBox表格单元格工厂
+ *
+ * @author K
+ * @since 1.0.0
+ */
 class SortComboBoxTableCellFactory<S>: Callback<TableColumn<S, String>?, TableCell<S, String>?> {
 
     override fun call(param: TableColumn<S, String>?): TableCell<S, String> {

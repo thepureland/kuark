@@ -1,4 +1,4 @@
-package org.kuark.data.jdbc.tools
+package org.kuark.tools.sql
 
 import java.io.File
 import java.io.FileOutputStream
@@ -10,6 +10,9 @@ class EmptySqlFileCreator
 
 /**
  * 在当前目录，生成规范文件名的空SQL文件。以jar包方式提供于各resources/sql目录。
+ *
+ * @author K
+ * @since 1.0.0
  */
 fun main() {    //TODO 怎么将该类单独打成jar包到resources/sql目录下
     val path = "D:/dev/kuark/kuark-data/kuark-data-jdbc/resources/sql/"

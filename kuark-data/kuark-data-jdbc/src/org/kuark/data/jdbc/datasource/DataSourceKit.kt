@@ -7,7 +7,12 @@ import org.kuark.data.jdbc.support.RdbKit
 import org.kuark.data.jdbc.metadata.RdbType
 import javax.sql.DataSource
 
-
+/**
+ * 数据源工具类
+ *
+ * @author K
+ * @since 1.0.0
+ */
 object DataSourceKit {
 
     fun getCurrentDataSource(): DataSource = KuarkContext.currentDataSource()

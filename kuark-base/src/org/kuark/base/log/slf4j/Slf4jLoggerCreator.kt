@@ -7,6 +7,8 @@ import kotlin.reflect.KClass
 
 /**
  * slf4j日志记录器创建者
+ *
+ * @author K
  * @since 1.0.0
  */
 class Slf4jLoggerCreator : LogCreator {

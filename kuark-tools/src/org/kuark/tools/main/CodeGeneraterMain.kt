@@ -9,5 +9,5 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 open class CodeGeneraterMain
 
 fun main(args: Array<String>) {
-    Application.launch(CodeGenerateWizard::class.java, *args)
+    Application.launch(CodeGenerateWizard::class.java, *args) // 可继承CodeGenerateWizard，提供自定义的模板数据模型创建者
 }

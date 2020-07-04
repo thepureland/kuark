@@ -1,9 +1,15 @@
-package org.kuark.data.jdbc.tools
+package org.kuark.tools.sql
 
 import org.kuark.base.io.FileKit
 import java.io.File
 import java.sql.DriverManager
 
+/**
+ * 用于批量执行文件中的sql语句
+ *
+ * @author K
+ * @since 1.0.0
+ */
 fun main() {
     val file = "C:\\Users\\hanfei\\Desktop\\area2019.sql" // 文件编码一定要是UTF8无签名，不然会出现莫名其妙的错误
     val lineIterator = FileKit.lineIterator(File(file), "UTF-8")

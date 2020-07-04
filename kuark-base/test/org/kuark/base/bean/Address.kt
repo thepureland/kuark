@@ -3,7 +3,10 @@ package org.kuark.base.bean
 import java.io.Serializable
 
 /**
+ * 地址信息(for test)
+ *
  * @author K
+ * @since 1.0.0
  */
 class Address : Serializable {
     var province: String? = null

@@ -3,6 +3,14 @@ package org.kuark.base.collections
 import org.apache.commons.collections.CollectionUtils
 
 /**
+ * kotlin.Collection扩展函数
+ *
+ * @author K
+ * @since 1.0.0
+ */
+
+
+/**
  * 转换Collection所有元素(通过toString())为String, 每个元素的前面加入prefix，后面加入postfix，如<div>mymessage</div>。
  *
  * @param prefix 要添加的前缀, 可以为null, 为null将被当作空串

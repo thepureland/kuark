@@ -9,7 +9,9 @@ import java.util.*
 import java.util.regex.Pattern
 
 /**
- * IP工具类
+ * IP工具类，支持ipv4和ipv6
+ *
+ * @author K
  * @since 1.0.0
  */
 object IpKit {

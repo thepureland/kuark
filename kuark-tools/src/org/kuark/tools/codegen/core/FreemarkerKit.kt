@@ -5,6 +5,12 @@ import freemarker.template.Template
 import java.io.*
 import java.util.*
 
+/**
+ * freemaker工具类
+ *
+ * @author K
+ * @since 1.0.0
+ */
 object FreemarkerKit {
 
     fun getAvailableAutoInclude(conf: Configuration, autoIncludes: List<String>): List<String?> {

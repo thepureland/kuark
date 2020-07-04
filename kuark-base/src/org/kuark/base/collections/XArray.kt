@@ -3,6 +3,13 @@ package org.kuark.base.collections
 import org.apache.commons.lang3.ArrayUtils
 import kotlin.reflect.KClass
 
+/**
+ * kotlin.Array扩展函数
+ *
+ * @author K
+ * @since 1.0.0
+ */
+
 
 /**
  * 将字符串数组转化为指定数值类型的数组 <br></br>

@@ -7,6 +7,12 @@ import org.springframework.aop.framework.AopProxy
 import org.springframework.aop.support.AopUtils
 import java.lang.reflect.Field
 
+/**
+ * XClass的扩展函数
+ *
+ * @author K
+ * @since 1.0.0
+ */
 
 private val LOG = LogFactory.getLog(ClassKit::class)
 

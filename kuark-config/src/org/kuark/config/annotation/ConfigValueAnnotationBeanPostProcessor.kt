@@ -18,6 +18,12 @@ import java.lang.reflect.Method
 import java.lang.reflect.Modifier
 import java.util.*
 
+/**
+ * 配置项注解处理逻辑
+ *
+ * @author K
+ * @since 1.0.0
+ */
 @Component
 class ConfigValueAnnotationBeanPostProcessor :
     AnnotationInjectedBeanPostProcessor<ConfigValue>(),

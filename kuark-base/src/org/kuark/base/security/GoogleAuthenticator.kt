@@ -9,6 +9,11 @@ import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
 import kotlin.experimental.and
 
+/**
+ * 谷歌动态验证器
+ *
+ * @since 1.0.0
+ */
 class GoogleAuthenticator {
     var window_size = 3 // default 3 - max 17 (from google docs)最多可偏移的时间
 

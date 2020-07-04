@@ -1,7 +1,6 @@
 package org.kuark.biz.sys.dao
 
 import me.liuwj.ktorm.schema.varchar
-import org.kuark.biz.sys.dao.SysDataSources.bindTo
 import org.kuark.biz.sys.po.SysDict
 import org.kuark.data.jdbc.support.MaintainableTable
 

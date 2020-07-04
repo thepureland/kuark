@@ -4,7 +4,14 @@ import org.kuark.base.io.FileKit
 import java.io.File
 import java.util.regex.Matcher
 
+/**
+ * 代码合并器，用于合并历史已生成的代码和当前生成的代码
+ *
+ * @author K
+ * @since 1.0.0
+ */
 class CodeMerger(private val file: File) {
+
     private val oldFileContent: String
     private var newFileContent: String? = null
     private val retriever: CustomCodesRetriever

@@ -8,8 +8,8 @@ import kotlin.reflect.KClass
 /**
  * 线程相关工具类
  *
- * @since 1.0.0
  * @author K
+ * @since 1.0.0
  */
 object ThreadKit {
 

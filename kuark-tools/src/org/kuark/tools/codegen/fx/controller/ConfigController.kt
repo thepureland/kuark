@@ -21,6 +21,12 @@ import java.io.IOException
 import java.net.URL
 import java.util.*
 
+/**
+ * 配置信息界面JavaFx控制器
+ *
+ * @author K
+ * @since 1.0.0
+ */
 class ConfigController : Initializable {
 
     @FXML

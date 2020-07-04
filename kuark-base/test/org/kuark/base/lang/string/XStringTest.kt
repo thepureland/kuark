@@ -5,7 +5,9 @@ import org.junit.jupiter.api.Test
 
 /**
  * XString单元测试类
+ *
  * @author K
+ * @since 1.0.0
  */
 internal class XStringTest {
 

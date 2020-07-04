@@ -10,14 +10,22 @@ import org.kuark.base.bean.BeanKit
 import org.kuark.data.jdbc.metadata.Column
 import org.kuark.data.jdbc.metadata.RdbMetadataKit
 import org.kuark.data.jdbc.support.RdbKit
+import org.kuark.tools.codegen.core.CodeGeneratorContext
 import org.kuark.tools.codegen.dao.CodeGenColumns
 import org.kuark.tools.codegen.po.CodeGenColumn
 import org.kuark.tools.codegen.vo.ColumnInfo
 import java.util.*
 
+/**
+ * 生成的文件历史信息服务
+ *
+ * @author K
+ * @since 1.0.0
+ */
 object CodeGenColumnService {
 
-    fun readColumns(table: String): List<ColumnInfo> {
+    fun readColumns(): List<ColumnInfo> {
+        val table = CodeGeneratorContext.tableName
         // from meta data
         val columns: Map<String, Column> = RdbMetadataKit.getColumnsByTableName(table)
 
@@ -48,7 +56,10 @@ object CodeGenColumnService {
         return results
     }
 
-    fun saveColumns(table: String, columnInfos: List<ColumnInfo>): Boolean {
+    fun saveColumns(): Boolean {
+        val table = CodeGeneratorContext.tableName
+        val columnInfos = CodeGeneratorContext.columns
+
         // delete old columns first
         RdbKit.getDatabase().sequenceOf(CodeGenColumns).removeIf { it.objectName eq table }
 

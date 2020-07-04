@@ -13,6 +13,7 @@ import java.io.*
 /**
  * DOM4J操作工具类
  *
+ * @author K
  * @since 1.0.0
  */
 object Dom4jKit {

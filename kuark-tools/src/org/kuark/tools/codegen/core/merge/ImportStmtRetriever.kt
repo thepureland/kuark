@@ -3,6 +3,12 @@ package org.kuark.tools.codegen.core.merge
 import java.util.*
 import java.util.regex.Pattern
 
+/**
+ * import语句抓取器
+ *
+ * @author K
+ * @since 1.0.0
+ */
 class ImportStmtRetriever(private val fileContent: String?) {
     fun retrieveImports(): List<String> {
         val imports: MutableList<String> = ArrayList()

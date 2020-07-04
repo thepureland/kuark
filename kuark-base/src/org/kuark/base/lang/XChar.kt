@@ -2,6 +2,14 @@ package org.kuark.base.lang
 
 import org.apache.commons.lang3.CharUtils
 
+/**
+ * kotlin.Char扩展函数
+ *
+ * @author K
+ * @since 1.0.0
+ */
+
+
 // vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 // 封装org.apache.commons.lang3.CharUtils
 // vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv

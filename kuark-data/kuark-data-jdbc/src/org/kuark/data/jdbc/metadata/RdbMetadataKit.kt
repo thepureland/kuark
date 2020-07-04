@@ -4,9 +4,22 @@ import org.kuark.data.jdbc.support.RdbKit
 import java.sql.Connection
 import java.sql.DatabaseMetaData
 
-
+/**
+ * 关系型数据库元数据工具类
+ *
+ * @author K
+ * @since 1.0.0
+ */
 object RdbMetadataKit {
 
+    /**
+     * 根据表类型取得所有表信息
+     *
+     * @param tableTypes 表类型枚举的可变数组
+     * @param conn 数据库连接。为null将用当前上下文数据源新建一个连接，在使用完关掉。不为null时由用户自行处理连接的关闭。
+     * @return List<表对象信息>
+     * @since 1.0.0
+     */
     fun getTablesByType(vararg tableTypes: TableType?, conn: Connection? = null): List<Table> {
         return if (conn != null) {
             _getTablesByType(conn, *tableTypes)
@@ -17,6 +30,14 @@ object RdbMetadataKit {
         }
     }
 
+    /**
+     * 根据表名取得对应表信息
+     *
+     * @param tableName 表名
+     * @param conn 数据库连接。为null将用当前上下文数据源新建一个连接，在使用完关掉。不为null时由用户自行处理连接的关闭。
+     * @return 表对象信息，找不到是返回null
+     * @since 1.0.0
+     */
     fun getTableByName(tableName: String, conn: Connection? = null): Table? {
         return if (conn != null) {
             _getTableByName(conn, tableName)
@@ -27,6 +48,14 @@ object RdbMetadataKit {
         }
     }
 
+    /**
+     * 根据表名取得对应表的所有列信息
+     *
+     * @param tableName 表名
+     * @param conn 数据库连接。为null将用当前上下文数据源新建一个连接，在使用完关掉。不为null时由用户自行处理连接的关闭。
+     * @return Map<列名, 列对象信息>
+     * @since 1.0.0
+     */
     fun getColumnsByTableName(tableName: String, conn: Connection? = null): Map<String, Column> {
         return if (conn != null) {
             _getColumnsByTableName(conn, tableName)

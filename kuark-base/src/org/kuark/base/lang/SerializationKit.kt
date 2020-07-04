@@ -8,6 +8,7 @@ import java.io.Serializable
 /**
  * 序列化工具类
  *
+ * @author K
  * @since 1.0.0
  */
 object SerializationKit {

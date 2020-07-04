@@ -8,6 +8,7 @@ import kotlin.math.abs
 /**
  * 随机字符串工具类
  *
+ * @author K
  * @since 1.0.0
  */
 object RandomStringKit {

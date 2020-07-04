@@ -3,14 +3,22 @@ package org.kuark.base.tree
 import com.fasterxml.jackson.annotation.JsonInclude
 import java.io.Serializable
 
+/**
+ * 树结点状态
+ *
+ * @author K
+ * @since 1.0.0
+ */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 class TreeNodeState : Serializable {
+
     private var loaded: Boolean? = null
     private var opened: Boolean? = null
     private var selected: Boolean? = null
     private var disabled: Boolean? = null
 
     constructor() {}
+
     constructor(selected: Boolean?) {
         this.selected = selected
     }
@@ -20,33 +28,25 @@ class TreeNodeState : Serializable {
         this.opened = opened
     }
 
-    fun getLoaded(): Boolean? {
-        return loaded
-    }
+    fun getLoaded(): Boolean? = loaded
 
     fun setLoaded(loaded: Boolean?) {
         this.loaded = loaded
     }
 
-    fun getOpened(): Boolean? {
-        return opened
-    }
+    fun getOpened(): Boolean? = opened
 
     fun setOpened(opened: Boolean?) {
         this.opened = opened
     }
 
-    fun getSelected(): Boolean? {
-        return selected
-    }
+    fun getSelected(): Boolean? = selected
 
     fun setSelected(selected: Boolean?) {
         this.selected = selected
     }
 
-    fun getDisabled(): Boolean? {
-        return disabled
-    }
+    fun getDisabled(): Boolean? = disabled
 
     fun setDisabled(disabled: Boolean?) {
         this.disabled = disabled

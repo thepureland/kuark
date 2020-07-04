@@ -5,6 +5,7 @@ import java.io.Serializable;
 /**
  * 回调接口
  *
+ * @author K
  * @since 1.0.0
  */
 public interface ICallback<P, R> extends Serializable{

@@ -5,8 +5,8 @@ import java.io.Serializable
 /**
  * 列表转为树结构的约束的接口
  *
- * @since 1.0.0
  * @author K
+ * @since 1.0.0
  */
 interface IListToTreeRestrict<T> : Serializable {
 

@@ -7,6 +7,13 @@ import java.io.PrintStream
 import java.util.*
 import kotlin.reflect.KClass
 
+/**
+ * kotlin.Map扩展函数
+ *
+ * @author K
+ * @since 1.0.0
+ */
+
 
 /**
  * 把Map转换为二维数组，每行两个元素，按顺序分别为map的key和value

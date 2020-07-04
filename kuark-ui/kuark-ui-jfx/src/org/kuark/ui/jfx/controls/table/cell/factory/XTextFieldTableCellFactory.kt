@@ -1,4 +1,4 @@
-package org.kuark.ui.jfx.controls.factory
+package org.kuark.ui.jfx.controls.table.cell.factory
 
 import javafx.scene.control.TableCell
 import javafx.scene.control.TableColumn

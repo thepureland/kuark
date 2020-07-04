@@ -2,11 +2,16 @@ package org.kuark.tools.codegen.dao
 
 import me.liuwj.ktorm.schema.datetime
 import me.liuwj.ktorm.schema.int
-import me.liuwj.ktorm.schema.time
 import me.liuwj.ktorm.schema.varchar
 import org.kuark.data.jdbc.support.StringIdTable
 import org.kuark.tools.codegen.po.CodeGenObject
 
+/**
+ * CodeGenObject实体的DAO
+ *
+ * @author K
+ * @since 1.0.0
+ */
 object CodeGenObjects : StringIdTable<CodeGenObject>("code_gen_object") {
 
     val name = varchar("name").bindTo { it.name }

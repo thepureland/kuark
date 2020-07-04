@@ -5,6 +5,12 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.util.*
 
+/**
+ * BeanKit测试用例
+ *
+ * @author K
+ * @since 1.0.0
+ */
 internal class BeanKitTest {
 
     private lateinit var person: Person

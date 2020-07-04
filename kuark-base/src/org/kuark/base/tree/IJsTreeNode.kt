@@ -1,7 +1,11 @@
 package org.kuark.base.tree
 
-import org.apache.commons.lang3.mutable.Mutable
-
+/**
+ * js树结点接口
+ *
+ * @author K
+ * @since 1.0.0
+ */
 interface IJsTreeNode : IListToTreeRestrict<String?> {
 
     val text: String?

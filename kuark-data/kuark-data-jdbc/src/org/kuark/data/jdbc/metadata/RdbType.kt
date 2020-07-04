@@ -1,7 +1,10 @@
 package org.kuark.data.jdbc.metadata
 
 /**
- * 支持的关系型数据库类型
+ * 支持的关系型数据库类型枚举
+ *
+ * @author K
+ * @since 1.0.0
  */
 enum class RdbType(val productName: String, val jdbcDriverName: String) {
 

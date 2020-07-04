@@ -5,7 +5,10 @@ import org.kuark.base.tree.IListToTreeRestrict
 import java.util.*
 
 /**
+ * 人物信息(for test)
+ *
  * @author K
+ * @since 1.0.0
  */
 class Person : IIdEntity<String>, IListToTreeRestrict<String?> {
 
@@ -95,5 +98,9 @@ class Person : IIdEntity<String>, IListToTreeRestrict<String?> {
     companion object {
         private const val serialVersionUID = -4651767804549188044L
     }
+
+    override var id: String?
+        get() = selfUniqueIdentifier
+        set(value) {}
 
 }

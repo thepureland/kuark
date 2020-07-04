@@ -4,6 +4,12 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import java.util.*
 
+/**
+ * I18nKit测试用例
+ *
+ * @author K
+ * @since 1.0.0
+ */
 internal class I18nKitTest {
 
     private val DEFAUTL_LOCALE = "zh_TW"

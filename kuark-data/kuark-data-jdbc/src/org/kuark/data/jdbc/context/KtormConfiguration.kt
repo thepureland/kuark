@@ -8,6 +8,12 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import javax.sql.DataSource
 
+/**
+ * ktorm sprintboot配置类
+ *
+ * @author K
+ * @since 1.0.0
+ */
 @Configuration
 //@EnableConfigurationProperties
 open class KtormConfiguration {

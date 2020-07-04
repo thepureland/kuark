@@ -6,6 +6,8 @@ import java.text.MessageFormat
 
 /**
  * slf4j实现的日志记录器
+ *
+ * @author K
  * @since 1.0.0
  */
 class Slf4jLogger : Log {

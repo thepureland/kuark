@@ -8,6 +8,14 @@ import kotlin.math.ceil
 
 
 /**
+ * kotlin.String扩展函数
+ *
+ * @author K
+ * @since 1.0.0
+ */
+
+
+/**
  * 查找子串，并用指定字符串替换之（替换所有出现的地方），支持多对替换规则
  *
  * @param map Map<要查找的字符串, 用来替换的字符串>

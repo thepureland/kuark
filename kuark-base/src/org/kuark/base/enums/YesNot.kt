@@ -3,8 +3,8 @@ package org.kuark.base.enums
 /**
  * 逻辑真假的枚举
  *
- * @since 1.0.0
  * @author K
+ * @since 1.0.0
  */
 enum class YesNot(val bool: Boolean, override val code: String, override var trans: String?) : ICodeEnum {
 

@@ -4,7 +4,14 @@ import org.apache.commons.lang3.BooleanUtils
 import org.apache.commons.lang3.StringUtils
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
+import org.kuark.base.lang.string.EncodeKit
 
+/**
+ * PackageKit测试用例
+ *
+ * @author K
+ * @since 1.0.0
+ */
 internal class PackageKitTest {
 
     @Test
@@ -13,8 +20,8 @@ internal class PackageKitTest {
         val packageName = PackageKit::class.java.getPackage().name
         var classes = PackageKit.getClassesInPackage(packageName, true)
         assertTrue(classes.contains(PackageKit::class.java))
-        assertTrue(classes.contains(StringKit::class.java))
-        assertTrue(classes.contains(BooleanKit::class.java))
+        assertTrue(classes.contains(EncodeKit::class.java))
+        assertTrue(classes.contains(SystemKit::class.java))
 
         // in jar
         classes = PackageKit.getClassesInPackage("org.apache.commons.lang3", true)

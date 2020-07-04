@@ -21,7 +21,11 @@ import javax.sql.DataSource
 
 
 /**
+ * 本地H2数据库springboot配置类
  * 如果数据库配置的是本机tcp模式的H2,将自动启动本机H2数据库及其web控制台
+ *
+ * @author K
+ * @since 1.0.0
  */
 @Configuration
 @ConditionalOnClass(name = ["org.h2.Driver"])

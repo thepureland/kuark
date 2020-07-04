@@ -3,8 +3,8 @@ package org.kuark.base.enums
 /**
  * 表码枚举的接口
  *
- * @since 1.0.0
  * @author K
+ * @since 1.0.0
  */
 interface ICodeEnum {
 

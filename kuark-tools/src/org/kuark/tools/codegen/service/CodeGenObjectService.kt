@@ -6,9 +6,16 @@ import me.liuwj.ktorm.entity.*
 import org.kuark.data.jdbc.metadata.RdbMetadataKit
 import org.kuark.data.jdbc.metadata.TableType
 import org.kuark.data.jdbc.support.RdbKit
+import org.kuark.tools.codegen.core.CodeGeneratorContext
 import org.kuark.tools.codegen.dao.CodeGenObjects
 import java.time.LocalDateTime
 
+/**
+ * 生成的表对象历史信息服务
+ *
+ * @author K
+ * @since 1.0.0
+ */
 object CodeGenObjectService {
 
     fun readTables(): Map<String, String?> {
@@ -27,7 +34,10 @@ object CodeGenObjectService {
         return nameAndComments
     }
 
-    fun saveOrUpdate(table: String, comment: String?, author: String?): Boolean {
+    fun saveOrUpdate(): Boolean {
+        val table = CodeGeneratorContext.tableName
+        val comment = CodeGeneratorContext.tableComment
+        val author = CodeGeneratorContext.config.getAuthor()
         val codeGenObjects = RdbKit.getDatabase().sequenceOf(CodeGenObjects).filter { it.name eq table }
         return if (codeGenObjects.isEmpty()) {
             RdbKit.getDatabase().insert(CodeGenObjects) {

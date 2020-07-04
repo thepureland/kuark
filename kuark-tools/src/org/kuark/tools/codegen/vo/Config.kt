@@ -3,6 +3,12 @@ package org.kuark.tools.codegen.vo
 import javafx.beans.property.*
 import javafx.scene.control.SingleSelectionModel
 
+/**
+ * 配置信息值对象
+ *
+ * @author K
+ * @since 1.0.0
+ */
 class Config {
 
     private val dbUrl = SimpleStringProperty()
@@ -15,113 +21,59 @@ class Config {
     private val author = SimpleStringProperty()
     private val version = SimpleStringProperty()
 
-    fun getDbUrl(): String {
-        return dbUrl.get()
-    }
+    fun getDbUrl(): String = dbUrl.get()
 
-    fun dbUrlProperty(): StringProperty {
-        return dbUrl
-    }
+    fun dbUrlProperty(): StringProperty = dbUrl
 
-    fun setDbUrl(dbUrl: String) {
-        this.dbUrl.set(dbUrl)
-    }
+    fun setDbUrl(dbUrl: String) = this.dbUrl.set(dbUrl)
 
-    fun getDbUser(): String {
-        return dbUser.get()
-    }
+    fun getDbUser(): String = dbUser.get()
 
-    fun dbUserProperty(): StringProperty {
-        return dbUser
-    }
+    fun dbUserProperty(): StringProperty = dbUser
 
-    fun setDbUser(dbUser: String) {
-        this.dbUser.set(dbUser)
-    }
+    fun setDbUser(dbUser: String) = this.dbUser.set(dbUser)
 
-    fun getDbPassword(): String {
-        return dbPassword.get()
-    }
+    fun getDbPassword(): String = dbPassword.get()
 
-    fun dbPasswordProperty(): StringProperty {
-        return dbPassword
-    }
+    fun dbPasswordProperty(): StringProperty = dbPassword
 
-    fun setDbPassword(dbPassword: String) {
-        this.dbPassword.set(dbPassword)
-    }
+    fun setDbPassword(dbPassword: String) = this.dbPassword.set(dbPassword)
 
-    fun getTemplateInfo(): TemplateNameAndRootDir? {
-        return templateInfo.get().selectedItem
-    }
+    fun getTemplateInfo(): TemplateNameAndRootDir? = templateInfo.get().selectedItem
 
-    fun templateInfoProperty(): SimpleObjectProperty<SingleSelectionModel<TemplateNameAndRootDir>> {
-        return templateInfo
-    }
+    fun templateInfoProperty(): SimpleObjectProperty<SingleSelectionModel<TemplateNameAndRootDir>> = templateInfo
 
-    fun setTemplateInfo(templateInfo: TemplateNameAndRootDir?) {
-        this.templateInfo.get()?.select(templateInfo)
-    }
+    fun setTemplateInfo(templateInfo: TemplateNameAndRootDir?) = this.templateInfo.get()?.select(templateInfo)
 
-    fun getPackagePrefix(): String {
-        return packagePrefix.get()
-    }
+    fun getPackagePrefix(): String = packagePrefix.get()
 
-    fun packagePrefixProperty(): StringProperty {
-        return packagePrefix
-    }
+    fun packagePrefixProperty(): StringProperty = packagePrefix
 
-    fun setPackagePrefix(packagePrefix: String) {
-        this.packagePrefix.set(packagePrefix)
-    }
+    fun setPackagePrefix(packagePrefix: String) = this.packagePrefix.set(packagePrefix)
 
-    fun getModuleName(): String {
-        return moduleName.get()
-    }
+    fun getModuleName(): String = moduleName.get()
 
-    fun moduleNameProperty(): StringProperty {
-        return moduleName
-    }
+    fun moduleNameProperty(): StringProperty = moduleName
 
-    fun setModuleName(moduleName: String) {
-        this.moduleName.set(moduleName)
-    }
+    fun setModuleName(moduleName: String) = this.moduleName.set(moduleName)
 
-    fun getCodeLoaction(): String {
-        return codeLoaction.get()
-    }
+    fun getCodeLoaction(): String = codeLoaction.get()
 
-    fun codeLoactionProperty(): StringProperty {
-        return codeLoaction
-    }
+    fun codeLoactionProperty(): StringProperty = codeLoaction
 
-    fun setCodeLoaction(codeLoaction: String) {
-        this.codeLoaction.set(codeLoaction)
-    }
+    fun setCodeLoaction(codeLoaction: String) = this.codeLoaction.set(codeLoaction)
 
-    fun getAuthor(): String {
-        return author.get()
-    }
+    fun getAuthor(): String = author.get()
 
-    fun authorProperty(): StringProperty {
-        return author
-    }
+    fun authorProperty(): StringProperty = author
 
-    fun setAuthor(author: String) {
-        this.author.set(author)
-    }
+    fun setAuthor(author: String) = this.author.set(author)
 
-    fun getVersion(): String {
-        return version.get()
-    }
+    fun getVersion(): String = version.get()
 
-    fun versionProperty(): StringProperty {
-        return version
-    }
+    fun versionProperty(): StringProperty = version
 
-    fun setVersion(version: String) {
-        this.version.set(version)
-    }
+    fun setVersion(version: String) = this.version.set(version)
 
     companion object {
         const val PROP_KEY_DB_URL = "dbUrl"
@@ -135,14 +87,11 @@ class Config {
         const val PROP_KEY_CODE_LOACTION = "codeLoaction"
         const val PROP_KEY_AUTHOR = "author"
         const val PROP_KEY_VERSION = "version"
-        const val CLASS_NAME = "className"
     }
 
     data class TemplateNameAndRootDir(val name: String, val rootDir: String) {
 
-        override fun toString(): String {
-            return name
-        }
+        override fun toString(): String = name
 
     }
 

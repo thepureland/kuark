@@ -2,7 +2,12 @@ package org.kuark.base.tree
 
 import org.kuark.base.support.ICallback
 
-
+/**
+ * 树操作工具类
+ *
+ * @author K
+ * @since 1.0.0
+ */
 object TreeKit {
 
     /**

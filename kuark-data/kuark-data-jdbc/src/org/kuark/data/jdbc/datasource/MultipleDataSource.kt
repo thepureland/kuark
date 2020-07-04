@@ -4,7 +4,12 @@ import org.kuark.config.context.KuarkContext
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource
 
-
+/**
+ * 多数据源
+ *
+ * @author K
+ * @since 1.0.0
+ */
 class MultipleDataSource : AbstractRoutingDataSource() {
 
     companion object {

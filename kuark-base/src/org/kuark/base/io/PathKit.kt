@@ -6,8 +6,9 @@ import kotlin.reflect.KClass
 
 /**
  * 路径工具类
- * @since 1.0.0
+ *
  * @author K
+ * @since 1.0.0
  */
 object PathKit {
 

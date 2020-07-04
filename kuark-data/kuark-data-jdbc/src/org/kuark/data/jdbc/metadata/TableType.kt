@@ -1,5 +1,11 @@
 package org.kuark.data.jdbc.metadata
 
+/**
+ * 关系型数据库表类型枚举
+ *
+ * @author K
+ * @since 1.0.0
+ */
 enum class TableType {
 
     TABLE,

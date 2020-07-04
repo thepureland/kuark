@@ -2,6 +2,12 @@ package org.kuark.base.lang.string
 
 import org.apache.commons.text.StringEscapeUtils
 
+/**
+ * 字符串转义工具类
+ *
+ * @author K
+ * @since 1.0.0
+ */
 object StringEscapeKit {
 
     // vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv

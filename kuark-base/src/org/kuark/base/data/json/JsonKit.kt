@@ -16,8 +16,9 @@ import java.io.IOException
 import kotlin.reflect.KClass
 
 /**
- * json工具类
+ * json工具类，底层库使用的是fasterxml
  *
+ * @author K
  * @since 1.0.0
  */
 object JsonKit {

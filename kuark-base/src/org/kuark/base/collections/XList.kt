@@ -3,6 +3,14 @@ package org.kuark.base.collections
 import org.apache.commons.collections.Factory
 import org.apache.commons.collections.ListUtils
 
+/**
+ * kotlin.List扩展函数
+ *
+ * @author K
+ * @since 1.0.0
+ */
+
+
 // vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 // 封装org.apache.commons.collections.ListUtils
 // vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv

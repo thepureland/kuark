@@ -1,5 +1,6 @@
 package org.kuark.biz.user.po
 
+import org.kuark.data.jdbc.support.DbEntityFactory
 import org.kuark.data.jdbc.support.IMaintainableDbEntity
 import java.time.LocalDateTime
 import java.time.LocalDate
@@ -14,56 +15,82 @@ import java.time.LocalDate
 interface UserPersonalInfo: IMaintainableDbEntity<String, UserPersonalInfo> {
 //endregion your codes 1
 
-	/** 真实姓名 */
-	var realName: String
-	/** 昵称 */
-	var nickname: String
-	/** 性别代码 */
-	var sexDictCode: String
-	/** 生日 */
-	var birthday: LocalDate
-	/** 身份证号 */
-	var idCardNo: String
-	/** 星座代码 */
-	var constellationDictCode: String
-	/** 国家id */
-	var countryId: String
-	/** 民族代码 */
-	var nationDictCode: String
-	/** 地区编码 */
-	var regionCode: String
-	/**  */
-	var userStatusDictCode: String
-	/**  */
-	var userStatusReason: String
-	/**  */
-	var userTypeDictCode: String
-	/** 头像url */
-	var avatarUrl: String
-	/**  */
-	var subSysDictCode: String
-	/**  */
-	var freezeTimeStart: LocalDateTime
-	/**  */
-	var freezeTimeEnd: LocalDateTime
-	/**  */
-	var lastLoginTime: LocalDateTime
-	/**  */
-	var lastLogoutTime: LocalDateTime
-	/**  */
-	var lastLoginIp: String
-	/**  */
-	var lastLoginTerminalDictCode: String
-	/**  */
-	var totalOnlineTime: Float
-	/**  */
-	var registerIp: String
-	/**  */
-	var registerUrl: String
-	/**  */
-	var dynamicAuthKey: String
+    companion object : DbEntityFactory<UserPersonalInfo>()
 
-	//region your codes 2
+    /** 真实姓名 */
+    var realName: String
+
+    /** 昵称 */
+    var nickname: String
+
+    /** 性别代码 */
+    var sexDictCode: String
+
+    /** 生日 */
+    var birthday: LocalDate
+
+    /** 身份证号 */
+    var idCardNo: String
+
+    /** 星座代码 */
+    var constellationDictCode: String
+
+    /** 国家id */
+    var countryId: String
+
+    /** 民族代码 */
+    var nationDictCode: String
+
+    /** 地区编码 */
+    var regionCode: String
+
+    /**  */
+    var userStatusDictCode: String
+
+    /**  */
+    var userStatusReason: String
+
+    /**  */
+    var userTypeDictCode: String
+
+    /** 头像url */
+    var avatarUrl: String
+
+    /**  */
+    var subSysDictCode: String
+
+    /**  */
+    var freezeTimeStart: LocalDateTime
+
+    /**  */
+    var freezeTimeEnd: LocalDateTime
+
+    /**  */
+    var lastLoginTime: LocalDateTime
+
+    /**  */
+    var lastLogoutTime: LocalDateTime
+
+    /**  */
+    var lastLoginIp: String
+
+    /**  */
+    var lastLoginTerminalDictCode: String
+
+    /**  */
+    var totalOnlineTime: Float
+
+    /**  */
+    var registerIp: String
+
+    /**  */
+    var registerUrl: String
+
+    /**  */
+    var dynamicAuthKey: String
+
+
+    //region your codes 2
 
 	//endregion your codes 2
 

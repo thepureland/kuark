@@ -1234,7 +1234,7 @@ CREATE TABLE "code_gen_column" (
   "is_searchable" bool NOT NULL DEFAULT false,
   "is_sortable" bool NOT NULL DEFAULT false,
   "order_in_list" tinyint,
-  "default_order" tinyint,
+  "default_order" varchar(8),
   "order_in_edit" tinyint,
   "order_in_view" tinyint
 );

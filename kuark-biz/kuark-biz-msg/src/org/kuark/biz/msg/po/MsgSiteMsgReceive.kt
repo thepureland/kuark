@@ -1,5 +1,6 @@
 package org.kuark.biz.msg.po
 
+import org.kuark.data.jdbc.support.DbEntityFactory
 import org.kuark.data.jdbc.support.IDbEntity
 import java.time.LocalDateTime
 
@@ -13,20 +14,28 @@ import java.time.LocalDateTime
 interface MsgSiteMsgReceive: IDbEntity<String, MsgSiteMsgReceive> {
 //endregion your codes 1
 
-	/** 接收者id */
-	var receiverId: String
-	/** 发送id */
-	var sendId: String
-	/** 接收状态代码 */
-	var receiveStatusDictCode: String
-	/** 创建时间 */
-	var createTime: LocalDateTime
-	/** 更新时间 */
-	var updateTime: LocalDateTime
-	/** 所有者id，依业务可以是店铺id、站点id、商户id等 */
-	var ownerId: String
+    companion object : DbEntityFactory<MsgSiteMsgReceive>()
 
-	//region your codes 2
+    /** 接收者id */
+    var receiverId: String
+
+    /** 发送id */
+    var sendId: String
+
+    /** 接收状态代码 */
+    var receiveStatusDictCode: String
+
+    /** 创建时间 */
+    var createTime: LocalDateTime
+
+    /** 更新时间 */
+    var updateTime: LocalDateTime
+
+    /** 所有者id，依业务可以是店铺id、站点id、商户id等 */
+    var ownerId: String
+
+
+    //region your codes 2
 
 	//endregion your codes 2
 

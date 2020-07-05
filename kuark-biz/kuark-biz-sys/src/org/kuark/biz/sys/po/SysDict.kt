@@ -1,5 +1,6 @@
 package org.kuark.biz.sys.po
 
+import org.kuark.data.jdbc.support.DbEntityFactory
 import org.kuark.data.jdbc.support.IMaintainableDbEntity
 
 /**
@@ -9,18 +10,23 @@ import org.kuark.data.jdbc.support.IMaintainableDbEntity
  * @since 1.0.0
  */
 //region your codes 1
-interface SysDict: IMaintainableDbEntity<String, SysDict> {
+interface SysDict : IMaintainableDbEntity<String, SysDict> {
 //endregion your codes 1
 
-	/** 模块 */
-	var module: String
-	/** 字典类型 */
-	var dictType: String
-	/** 字典名称，或其国际化key */
-	var dictName: String
+    companion object : DbEntityFactory<SysDict>()
 
-	//region your codes 2
+    /** 模块 */
+    var module: String
 
-	//endregion your codes 2
+    /** 字典类型 */
+    var dictType: String
+
+    /** 字典名称，或其国际化key */
+    var dictName: String
+
+
+    //region your codes 2
+
+    //endregion your codes 2
 
 }

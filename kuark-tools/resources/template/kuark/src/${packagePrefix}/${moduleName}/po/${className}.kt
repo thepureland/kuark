@@ -1,5 +1,6 @@
 package ${packagePrefix}.${moduleName}.po
 
+import org.kuark.data.jdbc.support.DbEntityFactory
 <#if poSuperClass == "IDbEntity">
 import org.kuark.data.jdbc.support.IDbEntity
 <#elseif poSuperClass == "IMaintainableDbEntity">
@@ -35,16 +36,19 @@ import java.sql.SQLXML
 
 <@generateClassComment table.comment+"数据库实体"/>
 //region your codes 1
-interface ${className}: ${poSuperClass}<${pkColumn.kotlinTypeName}, ${className}> {
+interface ${className} : ${poSuperClass}<${pkColumn.kotlinTypeName}, ${className}> {
 //endregion your codes 1
 
+    companion object : DbEntityFactory<${className}>()
+
 	<#list columns as column>
-	/** ${column.comment!""} */
-	var ${column.columnHumpName}: ${column.kotlinTypeName}
+    /** ${column.comment!""} */
+    var ${column.columnHumpName}: ${column.kotlinTypeName}
+
 	</#list>
 
-	//region your codes 2
+    //region your codes 2
 
-	//endregion your codes 2
+    //endregion your codes 2
 
 }

@@ -1,6 +1,8 @@
 package org.kuark.tools.codegen.service
 
 import me.liuwj.ktorm.dsl.*
+import me.liuwj.ktorm.entity.filter
+import me.liuwj.ktorm.entity.isEmpty
 import me.liuwj.ktorm.entity.removeIf
 import me.liuwj.ktorm.entity.sequenceOf
 import org.kuark.data.jdbc.support.RdbKit
@@ -25,17 +27,16 @@ object CodeGenFileService {
     }
 
     fun save(files: Collection<String>): Boolean {
-        val table = CodeGeneratorContext.tableName
-        RdbKit.getDatabase().sequenceOf(CodeGenFiles).removeIf { it.objectName eq table }
-
-        return RdbKit.getDatabase().batchInsert(CodeGenFiles) {
-            for (file in files) {
+        val filesInDb = read()
+        RdbKit.getDatabase().batchInsert(CodeGenFiles) {
+            files.filter { !filesInDb.contains(it) }.forEach { file ->
                 item {
-                    it.objectName to table
                     it.filename to file
+                    it.objectName to CodeGeneratorContext.tableName
                 }
             }
-        }.size == files.size
+        }
+        return true
     }
 
 }

@@ -1,25 +1,43 @@
 package org.kuark.tools.codegen.dao
 
-import me.liuwj.ktorm.schema.datetime
-import me.liuwj.ktorm.schema.int
-import me.liuwj.ktorm.schema.varchar
-import org.kuark.data.jdbc.support.StringIdTable
+import me.liuwj.ktorm.schema.*
 import org.kuark.tools.codegen.po.CodeGenObject
+import org.kuark.data.jdbc.support.StringIdTable
 
 /**
- * CodeGenObject实体的DAO
+ * 代码生成-对象信息数据库实体DAO
  *
  * @author K
  * @since 1.0.0
  */
+//region your codes 1
 object CodeGenObjects : StringIdTable<CodeGenObject>("code_gen_object") {
+//endregion your codes 1
 
-    val name = varchar("name").bindTo { it.name }
-    val comment = varchar("comment").bindTo { it.comment }
-    val createTime = datetime("create_time").bindTo { it.createTime }
-    val createUser = varchar("create_user").bindTo { it.createUser }
-    val updateTime = datetime("update_time").bindTo { it.updateTime }
-    val updateUser = varchar("update_user").bindTo { it.updateUser }
-    val genCount = int("gen_count").bindTo { it.genCount }
+    /** 对象名称 */
+    var name = varchar("name").bindTo { it.name }
+
+    /** 注释 */
+    var comment = varchar("comment").bindTo { it.comment }
+
+    /** 创建时间 */
+    var createTime = datetime("create_time").bindTo { it.createTime }
+
+    /** 创建用户 */
+    var createUser = varchar("create_user").bindTo { it.createUser }
+
+    /** 更新时间 */
+    var updateTime = datetime("update_time").bindTo { it.updateTime }
+
+    /** 更新用户 */
+    var updateUser = varchar("update_user").bindTo { it.updateUser }
+
+    /** 生成次数 */
+    var genCount = int("gen_count").bindTo { it.genCount }
+
+
+    //region your codes 2
+
+    //endregion your codes 2
 
 }

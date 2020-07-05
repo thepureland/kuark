@@ -1,8 +1,7 @@
 package org.kuark.biz.auth.po
 
+import org.kuark.data.jdbc.support.DbEntityFactory
 import org.kuark.data.jdbc.support.IMaintainableDbEntity
-import java.time.LocalDateTime
-
 
 /**
  * 用户组数据库实体
@@ -14,14 +13,19 @@ import java.time.LocalDateTime
 interface AuthUserGroup: IMaintainableDbEntity<String, AuthUserGroup> {
 //endregion your codes 1
 
-	/** 用户组名 */
-	var groupName: String
-	/** 子系统代码 */
-	var subSysDictCode: String
-	/** 所有者id，依业务可以是店铺id、站点id、商户id等 */
-	var ownerId: String
+    companion object : DbEntityFactory<AuthUserGroup>()
 
-	//region your codes 2
+    /** 用户组名 */
+    var groupName: String
+
+    /** 子系统代码 */
+    var subSysDictCode: String
+
+    /** 所有者id，依业务可以是店铺id、站点id、商户id等 */
+    var ownerId: String
+
+
+    //region your codes 2
 
 	//endregion your codes 2
 

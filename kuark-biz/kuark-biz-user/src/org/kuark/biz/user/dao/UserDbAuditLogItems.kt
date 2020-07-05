@@ -14,18 +14,23 @@ import org.kuark.data.jdbc.support.StringIdTable
 object UserDbAuditLogItems: StringIdTable<UserDbAuditLogItem>("user_db_audit_log_item") {
 //endregion your codes 1
 
-	/** 外键，数据库操作审计日志id，user_db_audit_log表主键 */
-	var dbAuditLogId = varchar("db_audit_log_id").bindTo { it.dbAuditLogId }
-	/** 记录的主键值 */
-	var recordId = varchar("record_id").bindTo { it.recordId }
-	/** update的列名 */
-	var columnName = varchar("column_name").bindTo { it.columnName }
-	/** update前的值 */
-	var oldValue = varchar("old_value").bindTo { it.oldValue }
-	/** update后的值 */
-	var newValue = varchar("new_value").bindTo { it.newValue }
+    /** 外键，数据库操作审计日志id，user_db_audit_log表主键 */
+    var dbAuditLogId = varchar("db_audit_log_id").bindTo { it.dbAuditLogId }
 
-	//region your codes 2
+    /** 记录的主键值 */
+    var recordId = varchar("record_id").bindTo { it.recordId }
+
+    /** update的列名 */
+    var columnName = varchar("column_name").bindTo { it.columnName }
+
+    /** update前的值 */
+    var oldValue = varchar("old_value").bindTo { it.oldValue }
+
+    /** update后的值 */
+    var newValue = varchar("new_value").bindTo { it.newValue }
+
+
+    //region your codes 2
 
 	//endregion your codes 2
 

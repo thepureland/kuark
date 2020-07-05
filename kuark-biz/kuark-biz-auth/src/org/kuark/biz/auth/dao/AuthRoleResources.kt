@@ -14,12 +14,14 @@ import org.kuark.data.jdbc.support.StringIdTable
 object AuthRoleResources: StringIdTable<AuthRoleResource>("auth_role_resource") {
 //endregion your codes 1
 
-	/** 角色id */
-	var roleId = varchar("role_id").bindTo { it.roleId }
-	/** 资源id */
-	var resourceId = varchar("resource_id").bindTo { it.resourceId }
+    /** 角色id */
+    var roleId = varchar("role_id").bindTo { it.roleId }
 
-	//region your codes 2
+    /** 资源id */
+    var resourceId = varchar("resource_id").bindTo { it.resourceId }
+
+
+    //region your codes 2
 
 	//endregion your codes 2
 

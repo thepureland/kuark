@@ -14,12 +14,14 @@ import org.kuark.data.jdbc.support.StringIdTable
 object AuthUserGroupUsers: StringIdTable<AuthUserGroupUser>("auth_user_group_user") {
 //endregion your codes 1
 
-	/** 用户组id */
-	var groupId = varchar("group_id").bindTo { it.groupId }
-	/** 用户id */
-	var userId = varchar("user_id").bindTo { it.userId }
+    /** 用户组id */
+    var groupId = varchar("group_id").bindTo { it.groupId }
 
-	//region your codes 2
+    /** 用户id */
+    var userId = varchar("user_id").bindTo { it.userId }
+
+
+    //region your codes 2
 
 	//endregion your codes 2
 

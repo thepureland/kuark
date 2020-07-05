@@ -1,7 +1,7 @@
 package org.kuark.biz.auth.po
 
+import org.kuark.data.jdbc.support.DbEntityFactory
 import org.kuark.data.jdbc.support.IDbEntity
-
 
 /**
  * 用户组-用户关系数据库实体
@@ -13,12 +13,16 @@ import org.kuark.data.jdbc.support.IDbEntity
 interface AuthUserGroupUser: IDbEntity<String, AuthUserGroupUser> {
 //endregion your codes 1
 
-	/** 用户组id */
-	var groupId: String
-	/** 用户id */
-	var userId: String
+    companion object : DbEntityFactory<AuthUserGroupUser>()
 
-	//region your codes 2
+    /** 用户组id */
+    var groupId: String
+
+    /** 用户id */
+    var userId: String
+
+
+    //region your codes 2
 
 	//endregion your codes 2
 

@@ -1,5 +1,6 @@
 package org.kuark.biz.sys.po
 
+import org.kuark.data.jdbc.support.DbEntityFactory
 import org.kuark.data.jdbc.support.IMaintainableDbEntity
 
 /**
@@ -12,18 +13,25 @@ import org.kuark.data.jdbc.support.IMaintainableDbEntity
 interface SysParam: IMaintainableDbEntity<String, SysParam> {
 //endregion your codes 1
 
-	/** 模块 */
-	var module: String
-	/** 参数名称 */
-	var paramName: String
-	/** 参数值，或其国际化key */
-	var paramValue: String
-	/** 默认参数值，或其国际化key */
-	var defaultValue: String
-	/** 序号 */
-	var seqNo: Int
+    companion object : DbEntityFactory<SysParam>()
 
-	//region your codes 2
+    /** 模块 */
+    var module: String
+
+    /** 参数名称 */
+    var paramName: String
+
+    /** 参数值，或其国际化key */
+    var paramValue: String
+
+    /** 默认参数值，或其国际化key */
+    var defaultValue: String
+
+    /** 序号 */
+    var seqNo: Int
+
+
+    //region your codes 2
 
 	//endregion your codes 2
 

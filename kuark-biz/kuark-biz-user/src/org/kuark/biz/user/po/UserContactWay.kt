@@ -1,5 +1,6 @@
 package org.kuark.biz.user.po
 
+import org.kuark.data.jdbc.support.DbEntityFactory
 import org.kuark.data.jdbc.support.IMaintainableDbEntity
 
 /**
@@ -12,18 +13,25 @@ import org.kuark.data.jdbc.support.IMaintainableDbEntity
 interface UserContactWay: IMaintainableDbEntity<String, UserContactWay> {
 //endregion your codes 1
 
-	/** 外键，用户账号id，user_account表主键 */
-	var userId: String
-	/** 联系方式代码 */
-	var contactWayDictCode: String
-	/** 联系方式值 */
-	var contactWayValue: String
-	/** 联系方式状态代码 */
-	var contactWayStatusDictCode: String
-	/** 优先级 */
-	var priority: Int
+    companion object : DbEntityFactory<UserContactWay>()
 
-	//region your codes 2
+    /** 外键，用户账号id，user_account表主键 */
+    var userId: String
+
+    /** 联系方式代码 */
+    var contactWayDictCode: String
+
+    /** 联系方式值 */
+    var contactWayValue: String
+
+    /** 联系方式状态代码 */
+    var contactWayStatusDictCode: String
+
+    /** 优先级 */
+    var priority: Int
+
+
+    //region your codes 2
 
 	//endregion your codes 2
 

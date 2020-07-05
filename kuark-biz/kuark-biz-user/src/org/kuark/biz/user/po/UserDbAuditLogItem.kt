@@ -1,5 +1,6 @@
 package org.kuark.biz.user.po
 
+import org.kuark.data.jdbc.support.DbEntityFactory
 import org.kuark.data.jdbc.support.IDbEntity
 
 /**
@@ -12,18 +13,25 @@ import org.kuark.data.jdbc.support.IDbEntity
 interface UserDbAuditLogItem: IDbEntity<String, UserDbAuditLogItem> {
 //endregion your codes 1
 
-	/** 外键，数据库操作审计日志id，user_db_audit_log表主键 */
-	var dbAuditLogId: String
-	/** 记录的主键值 */
-	var recordId: String
-	/** update的列名 */
-	var columnName: String
-	/** update前的值 */
-	var oldValue: String
-	/** update后的值 */
-	var newValue: String
+    companion object : DbEntityFactory<UserDbAuditLogItem>()
 
-	//region your codes 2
+    /** 外键，数据库操作审计日志id，user_db_audit_log表主键 */
+    var dbAuditLogId: String
+
+    /** 记录的主键值 */
+    var recordId: String
+
+    /** update的列名 */
+    var columnName: String
+
+    /** update前的值 */
+    var oldValue: String
+
+    /** update后的值 */
+    var newValue: String
+
+
+    //region your codes 2
 
 	//endregion your codes 2
 

@@ -14,14 +14,17 @@ import org.kuark.data.jdbc.support.MaintainableTable
 object SysDicts: MaintainableTable<SysDict>("sys_dict") {
 //endregion your codes 1
 
-	/** 模块 */
-	var module = varchar("module").bindTo { it.module }
-	/** 字典类型 */
-	var dictType = varchar("dict_type").bindTo { it.dictType }
-	/** 字典名称，或其国际化key */
-	var dictName = varchar("dict_name").bindTo { it.dictName }
+    /** 模块 */
+    var module = varchar("module").bindTo { it.module }
 
-	//region your codes 2
+    /** 字典类型 */
+    var dictType = varchar("dict_type").bindTo { it.dictType }
+
+    /** 字典名称，或其国际化key */
+    var dictName = varchar("dict_name").bindTo { it.dictName }
+
+
+    //region your codes 2
 
 	//endregion your codes 2
 

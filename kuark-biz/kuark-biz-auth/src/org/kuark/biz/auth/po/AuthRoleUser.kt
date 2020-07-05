@@ -1,7 +1,7 @@
 package org.kuark.biz.auth.po
 
+import org.kuark.data.jdbc.support.DbEntityFactory
 import org.kuark.data.jdbc.support.IDbEntity
-
 
 /**
  * 角色-用户关系数据库实体
@@ -13,12 +13,16 @@ import org.kuark.data.jdbc.support.IDbEntity
 interface AuthRoleUser: IDbEntity<String, AuthRoleUser> {
 //endregion your codes 1
 
-	/** 角色id */
-	var roleId: String
-	/** 用户id */
-	var userId: String
+    companion object : DbEntityFactory<AuthRoleUser>()
 
-	//region your codes 2
+    /** 角色id */
+    var roleId: String
+
+    /** 用户id */
+    var userId: String
+
+
+    //region your codes 2
 
 	//endregion your codes 2
 

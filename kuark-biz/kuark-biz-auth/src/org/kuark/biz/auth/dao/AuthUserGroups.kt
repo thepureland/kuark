@@ -14,14 +14,17 @@ import org.kuark.data.jdbc.support.MaintainableTable
 object AuthUserGroups: MaintainableTable<AuthUserGroup>("auth_user_group") {
 //endregion your codes 1
 
-	/** 用户组名 */
-	var groupName = varchar("group_name").bindTo { it.groupName }
-	/** 子系统代码 */
-	var subSysDictCode = varchar("sub_sys_dict_code").bindTo { it.subSysDictCode }
-	/** 所有者id，依业务可以是店铺id、站点id、商户id等 */
-	var ownerId = varchar("owner_id").bindTo { it.ownerId }
+    /** 用户组名 */
+    var groupName = varchar("group_name").bindTo { it.groupName }
 
-	//region your codes 2
+    /** 子系统代码 */
+    var subSysDictCode = varchar("sub_sys_dict_code").bindTo { it.subSysDictCode }
+
+    /** 所有者id，依业务可以是店铺id、站点id、商户id等 */
+    var ownerId = varchar("owner_id").bindTo { it.ownerId }
+
+
+    //region your codes 2
 
 	//endregion your codes 2
 

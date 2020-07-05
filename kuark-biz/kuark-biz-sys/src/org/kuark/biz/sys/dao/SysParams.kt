@@ -14,18 +14,23 @@ import org.kuark.data.jdbc.support.MaintainableTable
 object SysParams: MaintainableTable<SysParam>("sys_param") {
 //endregion your codes 1
 
-	/** 模块 */
-	var module = varchar("module").bindTo { it.module }
-	/** 参数名称 */
-	var paramName = varchar("param_name").bindTo { it.paramName }
-	/** 参数值，或其国际化key */
-	var paramValue = varchar("param_value").bindTo { it.paramValue }
-	/** 默认参数值，或其国际化key */
-	var defaultValue = varchar("default_value").bindTo { it.defaultValue }
-	/** 序号 */
-	var seqNo = int("seq_no").bindTo { it.seqNo }
+    /** 模块 */
+    var module = varchar("module").bindTo { it.module }
 
-	//region your codes 2
+    /** 参数名称 */
+    var paramName = varchar("param_name").bindTo { it.paramName }
+
+    /** 参数值，或其国际化key */
+    var paramValue = varchar("param_value").bindTo { it.paramValue }
+
+    /** 默认参数值，或其国际化key */
+    var defaultValue = varchar("default_value").bindTo { it.defaultValue }
+
+    /** 序号 */
+    var seqNo = int("seq_no").bindTo { it.seqNo }
+
+
+    //region your codes 2
 
 	//endregion your codes 2
 

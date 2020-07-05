@@ -6,6 +6,12 @@ import org.springframework.cache.Cache
 import org.springframework.data.redis.core.RedisTemplate
 import java.util.concurrent.Callable
 
+/**
+ * 混合缓存(两级缓存: 本地+远程)
+ *
+ * @author K
+ * @since 1.0.0
+ */
 class MixCache(
     private val strategy: CacheStrategy,
     private val localCache: Cache?,

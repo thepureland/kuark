@@ -1,3 +1,4 @@
 dependencies {
-    api(project(":kuark-config"))
+    api(project(":kuark-data:kuark-data-redis"))
+    api("org.redisson:redisson")
 }

@@ -6,6 +6,12 @@ import org.springframework.stereotype.Component
 import kotlin.reflect.full.createType
 import kotlin.reflect.full.declaredMemberProperties
 
+/**
+ * 缓存名称处理
+ *
+ * @author K
+ * @since 1.0.0
+ */
 @Component
 class CacheNameResolver: ApplicationContextAware {
 

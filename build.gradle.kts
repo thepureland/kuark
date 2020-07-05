@@ -141,6 +141,9 @@ subprojects {
                 exclude("org.junit.vintage:junit-vintage-engine")
             }
 
+            // redis
+            dependency("org.redisson:redisson:3.13.2")
+
             // data
             dependency("me.liuwj.ktorm:ktorm-core:$ktorm_version")
             dependency("me.liuwj.ktorm:ktorm-jackson:$ktorm_version")

@@ -7,6 +7,12 @@ import org.springframework.data.redis.listener.KeyExpirationEventMessageListener
 import org.springframework.data.redis.listener.RedisMessageListenerContainer
 import org.springframework.stereotype.Component
 
+/**
+ * redis缓存key过期监听器
+ *
+ * @author K
+ * @since 1.0.0
+ */
 @Component
 class RedisKeyExpirationListener(
     @Autowired listenerContainer: RedisMessageListenerContainer,

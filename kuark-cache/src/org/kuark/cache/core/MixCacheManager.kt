@@ -11,6 +11,12 @@ import org.springframework.cache.transaction.AbstractTransactionSupportingCacheM
 import org.springframework.context.annotation.Primary
 import org.springframework.stereotype.Component
 
+/**
+ * 混合缓存(两级缓存: 本地+远程)管理器
+ *
+ * @author K
+ * @since 1.0.0
+ */
 @Primary
 @Component("cacheManager")
 class MixCacheManager : AbstractTransactionSupportingCacheManager() {

@@ -10,6 +10,12 @@ import org.springframework.cache.CacheManager
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Service
 
+/**
+ * 混合缓存(两级缓存: 本地+远程)测试用例
+ *
+ * @author K
+ * @since 1.0.0
+ */
 @SpringBootTest
 @SpringBootApplication
 open class MixCacheTest {
@@ -20,7 +26,7 @@ open class MixCacheTest {
     @Autowired
     private lateinit var cacheManager: CacheManager
 
-    private val logger = LogFactory.getLog(LoggerTest::class)
+    private val logger = LogFactory.getLog(MixCacheTest::class)
 
     @Test
     fun test1() {
@@ -33,7 +39,7 @@ open class MixCacheTest {
             logger.info(cache.toString())
             logger.info(cache?.get("1", String::class.java).toString())
         }).start()
-        Thread.sleep(1000000)
+        Thread.sleep(1000)
     }
 
     @Service

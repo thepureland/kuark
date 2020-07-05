@@ -10,7 +10,12 @@ import org.springframework.cache.caffeine.CaffeineCacheManager
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
-
+/**
+ * 本地缓存(第一级缓存)springboot配置类
+ *
+ * @author K
+ * @since 1.0.0
+ */
 @Configuration
 @ConditionalOnBean(MixCacheConfiguration::class)
 @ConditionalOnExpression("'\${cache.config.strategy}'.equals('SINGLE_LOCAL') || '\${cache.config.strategy}'.equals('LOCAL_REMOTE')")

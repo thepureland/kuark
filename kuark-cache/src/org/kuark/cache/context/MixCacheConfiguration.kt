@@ -14,6 +14,12 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
 
+/**
+ * 混合缓存(两级缓存: 本地+远程)springboot配置类
+ *
+ * @author K
+ * @since 1.0.0
+ */
 @Configuration
 @ConditionalOnProperty(prefix = "cache.config", name = ["enabled"], havingValue = "true", matchIfMissing = false)
 @ComponentScan(basePackages = ["org.kuark"])

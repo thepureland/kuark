@@ -2,6 +2,12 @@ package org.kuark.cache.core
 
 import java.io.Serializable
 
+/**
+ * 缓存通知消息对象
+ *
+ * @author K
+ * @since 1.0.0
+ */
 open class CacheMessage() : Serializable {
 
     lateinit var cacheName: String

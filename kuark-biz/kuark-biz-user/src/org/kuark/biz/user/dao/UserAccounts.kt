@@ -11,7 +11,7 @@ import org.kuark.data.jdbc.support.MaintainableTable
  * @since 1.0.0
  */
 //region your codes 1
-object UserAccounts: MaintainableTable<UserAccount>("user_account") {
+object UserAccounts : MaintainableTable<UserAccount>("user_account") {
 //endregion your codes 1
 
     /** 子系统代码 */
@@ -65,6 +65,6 @@ object UserAccounts: MaintainableTable<UserAccount>("user_account") {
 
     //region your codes 2
 
-	//endregion your codes 2
+    //endregion your codes 2
 
 }

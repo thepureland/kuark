@@ -147,10 +147,10 @@ create table "sys_resource"
         primary key,
     "name"                VARCHAR(64)                    not null,
     "url"                 VARCHAR(128),
-    "resource_type__code" CHAR(1)                        not null,
+    "resource_type_dict_code" CHAR(1)                        not null,
     "parent_id"           CHAR(36),
     "seq_no"              TINYINT,
-    "sub_sys__code"       VARCHAR(32),
+    "sub_sys_dict_code"       VARCHAR(32),
     "permission"          VARCHAR(64),
     "icon_url"            VARCHAR(128),
     "remark"              VARCHAR(128),
@@ -170,13 +170,13 @@ comment on column "sys_resource"."name" is '名称，或其国际化key';
 
 comment on column "sys_resource"."url" is 'url';
 
-comment on column "sys_resource"."resource_type__code" is '资源类型字典代码';
+comment on column "sys_resource"."resource_type_dict_code" is '资源类型字典代码';
 
 comment on column "sys_resource"."parent_id" is '父id';
 
 comment on column "sys_resource"."seq_no" is '在同父节点下的排序号';
 
-comment on column "sys_resource"."sub_sys__code" is '子系统代码';
+comment on column "sys_resource"."sub_sys_dict_code" is '子系统代码';
 
 comment on column "sys_resource"."permission" is '权限表达式';
 
@@ -197,7 +197,7 @@ comment on column "sys_resource"."update_user" is '更新用户';
 comment on column "sys_resource"."update_time" is '更新时间';
 
 create unique index "uq_sys_resource__name_sub_sys"
-    on "sys_resource" ("name", "sub_sys__code");
+    on "sys_resource" ("name", "sub_sys_dict_code");
 
 create table "sys_data_source"
 (
@@ -258,16 +258,16 @@ create table "user_account"
 (
     "id"                        CHAR(36) default RANDOM_UUID() not null
         primary key,
-    "sub_sys__code"             VARCHAR(32),
-    "user_status__code"         CHAR(2),
+    "sub_sys_dict_code"             VARCHAR(32),
+    "user_status_dict_code"         CHAR(2),
     "user_status_reason"        VARCHAR(128),
-    "user_type__code"           CHAR(2),
+    "user_type_dict_code"           CHAR(2),
     "freeze_time_start"         TIMESTAMP,
     "freeze_time_end"           TIMESTAMP,
     "last_login_time"           TIMESTAMP,
     "last_logout_time"          TIMESTAMP,
     "last_login_ip"             CHAR(39),
-    "last_login_terminal__code" VARCHAR(16),
+    "last_login_terminal_dict_code" VARCHAR(16),
     "total_online_time"         REAL,
     "register_ip"               CHAR(39),
     "register_url"              VARCHAR(128),
@@ -287,13 +287,13 @@ comment on table "user_account" is '用户账号';
 
 comment on column "user_account"."id" is '主键';
 
-comment on column "user_account"."sub_sys__code" is '子系统代码';
+comment on column "user_account"."sub_sys_dict_code" is '子系统代码';
 
-comment on column "user_account"."user_status__code" is '用户状态代码';
+comment on column "user_account"."user_status_dict_code" is '用户状态代码';
 
 comment on column "user_account"."user_status_reason" is '用户状态原因';
 
-comment on column "user_account"."user_type__code" is '用户类型代码';
+comment on column "user_account"."user_type_dict_code" is '用户类型代码';
 
 comment on column "user_account"."freeze_time_start" is '账号冻结时间起';
 
@@ -305,7 +305,7 @@ comment on column "user_account"."last_logout_time" is '最后一次登出时间
 
 comment on column "user_account"."last_login_ip" is '最后一次登入ip(标准ipv6全格式)';
 
-comment on column "user_account"."last_login_terminal__code" is '最后一次登入终端代码';
+comment on column "user_account"."last_login_terminal_dict_code" is '最后一次登入终端代码';
 
 comment on column "user_account"."total_online_time" is '总在线时长(小时)';
 
@@ -338,9 +338,9 @@ create table "user_account_auth"
     "id"                  CHAR(36) default RANDOM_UUID() not null
         primary key,
     "user_account_id"     CHAR(36)                       not null,
-    "identity_type__code" VARCHAR(16)                    not null,
+    "identity_type_dict_code" VARCHAR(16)                    not null,
     "identifier"          VARCHAR(64)                    not null,
-    "sub_sys__code"       VARCHAR(32),
+    "sub_sys_dict_code"       VARCHAR(32),
     "owner_id"       VARCHAR(36),
     "credential"          VARCHAR(64)                    not null,
     "is_verified"         BOOLEAN  default FALSE         not null,
@@ -359,11 +359,11 @@ comment on table "user_account_auth" is '用户账号授权';
 
 comment on column "user_account_auth"."user_account_id" is '外键，用户账号id，user_account表主键';
 
-comment on column "user_account_auth"."identity_type__code" is '身份类型代码';
+comment on column "user_account_auth"."identity_type_dict_code" is '身份类型代码';
 
 comment on column "user_account_auth"."identifier" is '唯一身份标识';
 
-comment on column "user_account_auth"."sub_sys__code" is '子系统代码';
+comment on column "user_account_auth"."sub_sys_dict_code" is '子系统代码';
 
 comment on column "user_account_auth"."credential" is '本系统账号是密码、第三方的是Token';
 
@@ -385,7 +385,7 @@ comment on column "user_account_auth"."update_time" is '更新时间';
 COMMENT ON COLUMN "user_account_auth"."owner_id" IS '所有者id，依业务可以是店铺id、站点id、商户id等';
 
 create unique index "uq_u_a_a__identifier_id_type_sub_sys_owner"
-    on "user_account_auth" ("identifier", "identity_type__code", "sub_sys__code", "owner_id");
+    on "user_account_auth" ("identifier", "identity_type_dict_code", "sub_sys_dict_code", "owner_id");
 
 create table "user_db_audit_log"
 (
@@ -394,7 +394,7 @@ create table "user_db_audit_log"
     "user_account_id"    CHAR(36)                       not null,
     "table_name"         VARCHAR(64)                    not null,
     "operate_time"       TIMESTAMP                      not null,
-    "operate_type__code" CHAR(1)                        not null,
+    "operate_type_dict_code" CHAR(1)                        not null,
     constraint "fk_user_db_audit_log"
         foreign key ("user_account_id") references "user_account" ("id")
 );
@@ -407,7 +407,7 @@ comment on column "user_db_audit_log"."table_name" is '表名';
 
 comment on column "user_db_audit_log"."operate_time" is '操作时间';
 
-comment on column "user_db_audit_log"."operate_type__code" is '操作类型代码';
+comment on column "user_db_audit_log"."operate_type_dict_code" is '操作类型代码';
 
 create table "user_db_audit_log_item"
 (
@@ -439,10 +439,10 @@ create table "user_biz_audit_log"
     "id"                    CHAR(36) default RANDOM_UUID() not null
         primary key,
     "user_account_id"       CHAR(36)                       not null,
-    "identity_type__code"   VARCHAR(16)                    not null,
+    "identity_type_dict_code"   VARCHAR(16)                    not null,
     "identity_type"         VARCHAR(32)                    not null,
     "identifier"            VARCHAR(64)                    not null,
-    "sub_sys__code"         VARCHAR(32),
+    "sub_sys_dict_code"         VARCHAR(32),
     "sub_sys"               VARCHAR(64),
     "module"                VARCHAR(64),
     "operate_time"          TIMESTAMP                      not null,
@@ -450,7 +450,7 @@ create table "user_biz_audit_log"
     "client_ip_isp"         VARCHAR(128),
     "client_region_code"    VARCHAR(12),
     "client_region_name"    VARCHAR(128),
-    "client_terminal__code" VARCHAR(16),
+    "client_terminal_dict_code" VARCHAR(16),
     "client_terminal"       VARCHAR(32),
     "client_os"             VARCHAR(64),
     "client_browser"        VARCHAR(64),
@@ -462,13 +462,13 @@ comment on table "user_biz_audit_log" is '用户审计日志';
 
 comment on column "user_biz_audit_log"."user_account_id" is '外键，用户账号id，user_account表主键';
 
-comment on column "user_biz_audit_log"."identity_type__code" is '身份类型代码';
+comment on column "user_biz_audit_log"."identity_type_dict_code" is '身份类型代码';
 
 comment on column "user_biz_audit_log"."identity_type" is '身份类型';
 
 comment on column "user_biz_audit_log"."identifier" is '唯一身份标识';
 
-comment on column "user_biz_audit_log"."sub_sys__code" is '子系统代码';
+comment on column "user_biz_audit_log"."sub_sys_dict_code" is '子系统代码';
 
 comment on column "user_biz_audit_log"."sub_sys" is '子系统';
 
@@ -484,7 +484,7 @@ comment on column "user_biz_audit_log"."client_region_code" is '客户端区域�
 
 comment on column "user_biz_audit_log"."client_region_name" is '客户端区域';
 
-comment on column "user_biz_audit_log"."client_terminal__code" is '客户端终端类型代码';
+comment on column "user_biz_audit_log"."client_terminal_dict_code" is '客户端终端类型代码';
 
 comment on column "user_biz_audit_log"."client_terminal" is '客户端终端类型';
 
@@ -498,24 +498,24 @@ create table "user_personal_info"
         primary key,
     "real_name"                 VARCHAR(64),
     "nickname"                  VARCHAR(64),
-    "sex__code"                 CHAR(1) default '9'   not null,
+    "sex_dict_code"                 CHAR(1) default '9'   not null,
     "birthday"                  DATE,
     "id_card_no"                VARCHAR(32),
-    "constellation__code"       VARCHAR(11),
+    "constellation_dict_code"       VARCHAR(11),
     "country_id"                CHAR(3),
-    "nation__code"              VARCHAR(3),
+    "nation_dict_code"              VARCHAR(3),
     "region_code"               VARCHAR(12),
-    "user_status__code"         CHAR(2),
+    "user_status_dict_code"         CHAR(2),
     "user_status_reason"        VARCHAR(128),
-    "user_type__code"           CHAR(2),
+    "user_type_dict_code"           CHAR(2),
     "avatar_url"                VARCHAR(128),
-    "sub_sys__code"             VARCHAR(32),
+    "sub_sys_dict_code"             VARCHAR(32),
     "freeze_time_start"         TIMESTAMP,
     "freeze_time_end"           TIMESTAMP,
     "last_login_time"           TIMESTAMP,
     "last_logout_time"          TIMESTAMP,
     "last_login_ip"             CHAR(39),
-    "last_login_terminal__code" VARCHAR(16),
+    "last_login_terminal_dict_code" VARCHAR(16),
     "total_online_time"         REAL,
     "register_ip"               CHAR(39),
     "register_url"              VARCHAR(128),
@@ -537,17 +537,17 @@ comment on column "user_personal_info"."real_name" is '真实姓名';
 
 comment on column "user_personal_info"."nickname" is '昵称';
 
-comment on column "user_personal_info"."sex__code" is '性别代码';
+comment on column "user_personal_info"."sex_dict_code" is '性别代码';
 
 comment on column "user_personal_info"."birthday" is '生日';
 
 comment on column "user_personal_info"."id_card_no" is '身份证号';
 
-comment on column "user_personal_info"."constellation__code" is '星座代码';
+comment on column "user_personal_info"."constellation_dict_code" is '星座代码';
 
 comment on column "user_personal_info"."country_id" is '国家id';
 
-comment on column "user_personal_info"."nation__code" is '民族代码';
+comment on column "user_personal_info"."nation_dict_code" is '民族代码';
 
 comment on column "user_personal_info"."region_code" is '地区编码';
 
@@ -572,9 +572,9 @@ create table "user_contact_way"
     "id"                       CHAR(36) default RANDOM_UUID() not null
         primary key,
     "user_id"                  CHAR(36)                       not null,
-    "contact_way__code"        CHAR(3)                        not null,
+    "contact_way_dict_code"        CHAR(3)                        not null,
     "contact_way_value"        VARCHAR(128)                   not null,
-    "contact_way_status__code" CHAR(2)  default '00'          not null,
+    "contact_way_status_dict_code" CHAR(2)  default '00'          not null,
     "priority"                 TINYINT,
     "remark"                   VARCHAR(128),
     "is_active"                BOOLEAN  default TRUE          not null,
@@ -591,11 +591,11 @@ comment on table "user_contact_way" is '用户联系方式';
 
 comment on column "user_contact_way"."user_id" is '外键，用户账号id，user_account表主键';
 
-comment on column "user_contact_way"."contact_way__code" is '联系方式代码';
+comment on column "user_contact_way"."contact_way_dict_code" is '联系方式代码';
 
 comment on column "user_contact_way"."contact_way_value" is '联系方式值';
 
-comment on column "user_contact_way"."contact_way_status__code" is '联系方式状态代码';
+comment on column "user_contact_way"."contact_way_status_dict_code" is '联系方式状态代码';
 
 comment on column "user_contact_way"."priority" is '优先级';
 
@@ -614,7 +614,7 @@ comment on column "user_contact_way"."update_user" is '更新用户';
 comment on column "user_contact_way"."update_time" is '更新时间';
 
 create unique index "uq_user_contact_way__user_id_code"
-    on "user_contact_way" ("user_id", "contact_way__code");
+    on "user_contact_way" ("user_id", "contact_way_dict_code");
 
 create table "user_account_protection"
 (
@@ -745,14 +745,14 @@ create table "geo_country"
     "capital"                 VARCHAR(64),
     "capital_latitude"        VARCHAR(7),
     "capital_longitude"       VARCHAR(7),
-    "locale__code" VARCHAR(5),
-    "continent_ocean__code"   VARCHAR(16),
-    "currency__code"          CHAR(3),
+    "locale_dict_code" VARCHAR(5),
+    "continent_ocean_dict_code"   VARCHAR(16),
+    "currency_dict_code"          CHAR(3),
     "calling_code"            VARCHAR(5),
     "timezone_utc"            VARCHAR(32),
     "date_format"             VARCHAR(16),
     "founding_day"            DATE,
-    "driving_side__code"      VARCHAR(16),
+    "driving_side_dict_code"      VARCHAR(16),
     "remark"                  VARCHAR(128),
     "is_active"               BOOLEAN default TRUE  not null,
     "is_built_in"             BOOLEAN default FALSE not null,
@@ -792,11 +792,11 @@ comment on column "geo_country"."capital_latitude" is '首府纬度';
 
 comment on column "geo_country"."capital_longitude" is '首府经度';
 
-comment on column "geo_country"."locale__code" is '官方语言代码';
+comment on column "geo_country"."locale_dict_code" is '官方语言代码';
 
-comment on column "geo_country"."continent_ocean__code" is '所属大洲大洋代码';
+comment on column "geo_country"."continent_ocean_dict_code" is '所属大洲大洋代码';
 
-comment on column "geo_country"."currency__code" is '币种代码';
+comment on column "geo_country"."currency_dict_code" is '币种代码';
 
 comment on column "geo_country"."calling_code" is '国际电话区号';
 
@@ -806,7 +806,7 @@ comment on column "geo_country"."date_format" is '日期格式';
 
 comment on column "geo_country"."founding_day" is '建国日';
 
-comment on column "geo_country"."driving_side__code" is '驾驶方向代码';
+comment on column "geo_country"."driving_side_dict_code" is '驾驶方向代码';
 
 comment on column "geo_country"."remark" is '备注，或其国际化key';
 
@@ -895,7 +895,7 @@ comment on column "geo_region"."update_user" is '更新用户';
 
 comment on column "geo_region"."update_time" is '更新时间';
 
-create unique index "uq_geo_region__code_country_id"
+create unique index "uq_geo_region_dict_code_country_id"
     on "geo_region" ("code", "country_id");
 
 create index IDX_GEO_REGION__NAME
@@ -906,7 +906,7 @@ create table "auth_user_group"
     "id"          CHAR(36) default RANDOM_UUID() not null
         primary key,
     "group_name"  VARCHAR(64)                    not null,
-    "sub_sys__code"       VARCHAR(32),
+    "sub_sys_dict_code"       VARCHAR(32),
     "remark"      VARCHAR(128),
     "is_active"   BOOLEAN  default TRUE          not null,
     "is_built_in" BOOLEAN  default FALSE         not null,
@@ -923,7 +923,7 @@ comment on column "auth_user_group"."id" is '主键';
 
 comment on column "auth_user_group"."group_name" is '用户组名';
 
-comment on column "auth_user_group"."sub_sys__code" is '子系统代码';
+comment on column "auth_user_group"."sub_sys_dict_code" is '子系统代码';
 
 comment on column "auth_user_group"."remark" is '备注，或其国际化key';
 
@@ -961,7 +961,7 @@ create table "auth_role"
     "id"          CHAR(36) default RANDOM_UUID() not null
         primary key,
     "role_name"   VARCHAR(64)                    not null,
-    "sub_sys__code"       VARCHAR(32),
+    "sub_sys_dict_code"       VARCHAR(32),
     "remark"      VARCHAR(128),
     "is_active"   BOOLEAN  default TRUE          not null,
     "is_built_in" BOOLEAN  default FALSE         not null,
@@ -978,7 +978,7 @@ comment on column "auth_role"."id" is '主键';
 
 comment on column "auth_role"."role_name" is '角色名';
 
-comment on column "auth_role"."sub_sys__code" is '子系统代码';
+comment on column "auth_role"."sub_sys_dict_code" is '子系统代码';
 
 comment on column "auth_role"."remark" is '备注，或其国际化key';
 
@@ -1048,11 +1048,11 @@ comment on column "auth_role_resource"."resource_id" is '资源id';
 
 CREATE TABLE "msg_template" (
   "id"       CHAR(36) default RANDOM_UUID() not null primary key,
-  "send_type__code" varchar(6) NOT NULL,
-  "event_type__code" varchar(32) NOT NULL,
-  "msg_type__code" varchar(16) NOT NULL,
+  "send_type_dict_code" varchar(6) NOT NULL,
+  "event_type_dict_code" varchar(32) NOT NULL,
+  "msg_type_dict_code" varchar(16) NOT NULL,
   "group_code" char(36),
-  "locale__code" varchar(5),
+  "locale_dict_code" varchar(5),
   "title" varchar(128),
   "content" varchar,
   "is_default_active" bool NOT NULL DEFAULT false,
@@ -1063,11 +1063,11 @@ CREATE TABLE "msg_template" (
 
 COMMENT ON TABLE "msg_template" IS '消息模板';
 COMMENT ON COLUMN "msg_template"."id" IS '主键';
-COMMENT ON COLUMN "msg_template"."msg_type__code" IS '发送类型代码';
-COMMENT ON COLUMN "msg_template"."event_type__code" IS '事件类型代码。send_type__code为auto时，字典类型为auto_event_type;为manual时，则为manual_event_type';
-COMMENT ON COLUMN "msg_template"."msg_type__code" IS '消息类型代码';
+COMMENT ON COLUMN "msg_template"."msg_type_dict_code" IS '发送类型代码';
+COMMENT ON COLUMN "msg_template"."event_type_dict_code" IS '事件类型代码。send_type_dict_code为auto时，字典类型为auto_event_type;为manual时，则为manual_event_type';
+COMMENT ON COLUMN "msg_template"."msg_type_dict_code" IS '消息类型代码';
 COMMENT ON COLUMN "msg_template"."group_code" IS '模板分组编码,uuid,用于区分同一事件下不同操作原因的多套模板';
-COMMENT ON COLUMN "msg_template"."locale__code" IS '国家-语言代码';
+COMMENT ON COLUMN "msg_template"."locale_dict_code" IS '国家-语言代码';
 COMMENT ON COLUMN "msg_template"."title" IS '模板标题';
 COMMENT ON COLUMN "msg_template"."content" IS '模板内容';
 COMMENT ON COLUMN "msg_template"."is_default_active" IS '是否启用默认值';
@@ -1079,13 +1079,13 @@ COMMENT ON COLUMN "msg_template"."owner_id" IS '所有者id，依业务可以是
 
 CREATE TABLE "msg_instance" (
   "id"       CHAR(36) default RANDOM_UUID() not null primary key,
-  "locale__code" varchar(5),
+  "locale_dict_code" varchar(5),
   "title" varchar(128),
   "content" varchar,
   "template_id" CHAR(36),
-  "send_type__code" varchar(6),
-  "event_type__code" varchar(32),
-  "msg_type__code" varchar(16),
+  "send_type_dict_code" varchar(6),
+  "event_type_dict_code" varchar(32),
+  "msg_type_dict_code" varchar(16),
   "valid_time_start" TIMESTAMP default now() not null,
   "valid_time_end" TIMESTAMP default (now()+99999) not null,
   "owner_id" VARCHAR(36),
@@ -1095,13 +1095,13 @@ CREATE TABLE "msg_instance" (
 
 COMMENT ON TABLE "msg_instance" IS '消息实例';
 COMMENT ON COLUMN "msg_instance"."id" IS '主键';
-COMMENT ON COLUMN "msg_instance"."locale__code" IS '国家-语言代码';
+COMMENT ON COLUMN "msg_instance"."locale_dict_code" IS '国家-语言代码';
 COMMENT ON COLUMN "msg_instance"."title" IS '标题，可能还含有用户名等实际要发送时才能确定的模板变量';
 COMMENT ON COLUMN "msg_instance"."content" IS '通知内容，可能还含有用户名等实际要发送时才能确定的模板变量';
 COMMENT ON COLUMN "msg_instance"."template_id" IS '消息模板id，为null时表示没有依赖静态模板，可能是依赖动态模板或无模板';
-COMMENT ON COLUMN "msg_instance"."send_type__code" IS '发送类型代码';
-COMMENT ON COLUMN "msg_instance"."event_type__code" IS '事件类型代码';
-COMMENT ON COLUMN "msg_instance"."msg_type__code" IS '消息类型代码';
+COMMENT ON COLUMN "msg_instance"."send_type_dict_code" IS '发送类型代码';
+COMMENT ON COLUMN "msg_instance"."event_type_dict_code" IS '事件类型代码';
+COMMENT ON COLUMN "msg_instance"."msg_type_dict_code" IS '消息类型代码';
 COMMENT ON COLUMN "msg_instance"."valid_time_start" IS '有效期起';
 COMMENT ON COLUMN "msg_instance"."valid_time_end" IS '有效期止';
 COMMENT ON COLUMN "msg_instance"."owner_id" IS '所有者id，依业务可以是店铺id、站点id、商户id等';
@@ -1110,7 +1110,7 @@ COMMENT ON COLUMN "msg_instance"."owner_id" IS '所有者id，依业务可以是
 
 CREATE TABLE "msg_receiver_group" (
   "id"       CHAR(36) default RANDOM_UUID() not null primary key,
-  "receiver_group_type__code" varchar(16) not null,
+  "receiver_group_type_dict_code" varchar(16) not null,
   "define_table" varchar(64) not null,
   "name_column" varchar(64) not null,
   "remark"      VARCHAR(128),
@@ -1122,11 +1122,11 @@ CREATE TABLE "msg_receiver_group" (
   "update_time" TIMESTAMP
 );
 
-create unique index "uq_msg_receiver_group__type_code" on "msg_receiver_group" ("receiver_group_type__code");
+create unique index "uq_msg_receiver_group__type_code" on "msg_receiver_group" ("receiver_group_type_dict_code");
 
 COMMENT ON TABLE "msg_receiver_group" IS '消息接收者群组';
 COMMENT ON COLUMN "msg_receiver_group"."id" IS '主键';
-COMMENT ON COLUMN "msg_receiver_group"."receiver_group_type__code" IS '接收者群组类型代码';
+COMMENT ON COLUMN "msg_receiver_group"."receiver_group_type_dict_code" IS '接收者群组类型代码';
 COMMENT ON COLUMN "msg_receiver_group"."define_table" IS '群组定义的表';
 COMMENT ON COLUMN "msg_receiver_group"."name_column" IS '群组名称在具体群组表中的字段名';
 comment on column "msg_receiver_group"."remark" is '备注，或其国际化key';
@@ -1140,12 +1140,12 @@ comment on column "msg_receiver_group"."update_time" is '更新时间';
 
 CREATE TABLE "msg_send" (
   "id"       CHAR(36) default RANDOM_UUID() not null primary key,
-  "receiver_group_type__code" varchar(16) NOT NULL,
+  "receiver_group_type_dict_code" varchar(16) NOT NULL,
   "receiver_group_id" VARCHAR(36),
   "instance_id" CHAR(36) NOT NULL,
-  "msg_type__code" varchar(16) NOT NULL,
-  "locale__code" varchar(5),
-  "send_status__code" varchar(2) NOT NULL,
+  "msg_type_dict_code" varchar(16) NOT NULL,
+  "locale_dict_code" varchar(5),
+  "send_status_dict_code" varchar(2) NOT NULL,
   "create_time" timestamp NOT NULL,
   "update_time" timestamp,
   "success_count" int4 DEFAULT 0,
@@ -1158,12 +1158,12 @@ CREATE TABLE "msg_send" (
 
 COMMENT ON TABLE "msg_send" IS '消息发送';
 COMMENT ON COLUMN "msg_send"."id" IS '主键';
-COMMENT ON COLUMN "msg_send"."receiver_group_type__code" IS '接收者群组类型代码';
+COMMENT ON COLUMN "msg_send"."receiver_group_type_dict_code" IS '接收者群组类型代码';
 COMMENT ON COLUMN "msg_send"."receiver_group_id" IS '接收者群组id';
 COMMENT ON COLUMN "msg_send"."instance_id" IS '消息实例id';
-COMMENT ON COLUMN "msg_send"."msg_type__code" IS '消息类型代码';
-COMMENT ON COLUMN "msg_send"."locale__code" IS '国家-语言代码';
-COMMENT ON COLUMN "msg_send"."send_status__code" IS '发送状态代码';
+COMMENT ON COLUMN "msg_send"."msg_type_dict_code" IS '消息类型代码';
+COMMENT ON COLUMN "msg_send"."locale_dict_code" IS '国家-语言代码';
+COMMENT ON COLUMN "msg_send"."send_status_dict_code" IS '发送状态代码';
 COMMENT ON COLUMN "msg_send"."create_time" IS '创建时间';
 COMMENT ON COLUMN "msg_send"."update_time" IS '更新时间';
 COMMENT ON COLUMN "msg_send"."success_count" IS '发送成功数量';
@@ -1177,7 +1177,7 @@ CREATE TABLE "msg_site_msg_receive" (
   "id"       CHAR(36) default RANDOM_UUID() not null primary key,
   "receiver_id" CHAR(36) NOT NULL,
   "send_id" CHAR(36) NOT NULL,
-  "receive_status__code" varchar(2) NOT NULL,
+  "receive_status_dict_code" varchar(2) NOT NULL,
   "create_time" timestamp NOT NULL,
   "update_time" timestamp,
   "owner_id" VARCHAR(36),
@@ -1188,7 +1188,7 @@ COMMENT ON TABLE "msg_site_msg_receive" IS '消息接收';
 COMMENT ON COLUMN "msg_site_msg_receive"."id" IS '主键';
 COMMENT ON COLUMN "msg_site_msg_receive"."receiver_id" IS '接收者id';
 COMMENT ON COLUMN "msg_site_msg_receive"."send_id" IS '发送id';
-COMMENT ON COLUMN "msg_site_msg_receive"."receive_status__code" IS '接收状态代码';
+COMMENT ON COLUMN "msg_site_msg_receive"."receive_status_dict_code" IS '接收状态代码';
 COMMENT ON COLUMN "msg_site_msg_receive"."create_time" IS '创建时间';
 COMMENT ON COLUMN "msg_site_msg_receive"."update_time" IS '更新时间';
 COMMENT ON COLUMN "msg_site_msg_receive"."owner_id" IS '所有者id，依业务可以是店铺id、站点id、商户id等';

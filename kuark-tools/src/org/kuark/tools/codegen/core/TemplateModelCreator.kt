@@ -38,7 +38,7 @@ open class TemplateModelCreator {
             }
         }
         determinPoDaoSuperClass(templateModel, origColumns)
-        initOtherParameters(templateModel, origColumns)
+        initOtherParameters(templateModel, templateModel["columns"] as Collection<Column>)
         return templateModel
     }
 
@@ -56,15 +56,20 @@ open class TemplateModelCreator {
                     // 包括所有维护字段，po实现IMaintainableDbEntity，dao实现MaintainableTable
                     poSuperClass = "IMaintainableDbEntity"
                     daoSuperClass = "MaintainableTable"
+                    // 过滤掉父类中已有的列
+                    templateModel["columns"] = origColumns.filter { !maintainColumns.contains(it.name) }
                 } else {
                     daoSuperClass = "StringIdTable"
+                    templateModel["columns"] = origColumns.filter { it.name != "id" } // 过滤掉父类中已有的id列
                 }
             }
             Int::class -> {
                 daoSuperClass = "IntIdTable"
+                templateModel["columns"] = origColumns.filter { it.name != "id" } // 过滤掉父类中已有的id列
             }
             Long::class -> {
                 daoSuperClass = "LongIdTable"
+                templateModel["columns"] = origColumns.filter { it.name != "id" } // 过滤掉父类中已有的id列
             }
             else -> daoSuperClass = "Table"
         }

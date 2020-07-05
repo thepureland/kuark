@@ -58,13 +58,13 @@ class Wizard constructor(owner: Any?, title: String = "") {
 
     //    private final ValidationSupport validationSupport = new ValidationSupport();
     //
-    private val BUTTON_PREVIOUS = ButtonType("Previous", ButtonData.BACK_PREVIOUS)
+    private val BUTTON_PREVIOUS = ButtonType("上一步", ButtonData.BACK_PREVIOUS)
     private val BUTTON_PREVIOUS_ACTION_HANDLER = EventHandler { actionEvent: ActionEvent ->
         actionEvent.consume()
         currentPage = Optional.ofNullable(if (pageHistory.isEmpty()) null else pageHistory.pop())
         updatePage(dialog, false)
     }
-    private val BUTTON_NEXT = ButtonType("Next", ButtonData.NEXT_FORWARD)
+    private val BUTTON_NEXT = ButtonType("下一步", ButtonData.NEXT_FORWARD)
     private val BUTTON_NEXT_ACTION_HANDLER = EventHandler { actionEvent: ActionEvent ->
         actionEvent.consume()
         currentPage.ifPresent { page: WizardPane -> pageHistory.push(page) }

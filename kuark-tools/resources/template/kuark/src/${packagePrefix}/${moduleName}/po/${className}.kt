@@ -33,17 +33,14 @@ import java.sql.RowId
 import java.sql.SQLXML
 </#if>
 
-
 <@generateClassComment table.comment+"数据库实体"/>
 //region your codes 1
 interface ${className}: ${poSuperClass}<${pkColumn.kotlinTypeName}, ${className}> {
 //endregion your codes 1
 
 	<#list columns as column>
-	<#if column.name != "id" && (poSuperClass == "IDbEntity" || poSuperClass == "IMaintainableDbEntity" && !["create_time", "create_user", "update_time", "update_user", "is_active", "is_built_in", "remark"]?seq_contains(column.name))>
 	/** ${column.comment!""} */
 	var ${column.columnHumpName}: ${column.kotlinTypeName}
-	</#if>
 	</#list>
 
 	//region your codes 2

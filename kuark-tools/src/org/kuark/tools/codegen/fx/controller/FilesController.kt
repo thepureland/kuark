@@ -79,7 +79,8 @@ class FilesController : Initializable {
      */
     private val jarFiles: Collection<File>
         private get() {
-            val resources = ClassPathScanner.scanForResources(CodeGeneratorContext.config.getTemplateInfo()!!.rootDir, "", "")
+            val resources =
+                ClassPathScanner.scanForResources(CodeGeneratorContext.config.getTemplateInfo()!!.rootDir, "", "")
             val files = mutableListOf<File>()
             for (resource in resources) {
                 if (resource.filename.isNotBlank() && !resource.filename.contains("macro.include")) {
@@ -91,17 +92,29 @@ class FilesController : Initializable {
 
     @FXML
     fun generate(actionEvent: ActionEvent?) {
+        val filePathModel = createFilePathModel()
+        if (filePathModel.isEmpty()) {
+            Alert(Alert.AlertType.ERROR, "未选择任何文件！").show()
+            return
+        }
+
         try {
-            CodeGenerator(templateModel, createFilePathModel()).generate()
+            CodeGenerator(templateModel, filePathModel).generate()
         } catch (e: Exception) {
             e.printStackTrace()
             Alert(Alert.AlertType.ERROR, "生成失败！").show()
         }
     }
 
+    @FXML
+    fun generateAll(actionEvent: ActionEvent?) {
+        selectAll(null)
+        generate(null)
+    }
+
     private fun createFilePathModel(): List<GenFile> {
         val genFiles = mutableListOf<GenFile>()
-        fileTable.items.forEach {
+        fileTable.items.filter { it.getGenerate() }.forEach {
             genFiles.add(it)
         }
         return genFiles

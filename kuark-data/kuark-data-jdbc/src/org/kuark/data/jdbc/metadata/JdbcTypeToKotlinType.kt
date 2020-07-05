@@ -41,14 +41,16 @@ object JdbcTypeToKotlinType {
         Types.REF to java.sql.Ref::class,
         Types.REF_CURSOR to Any::class,
         Types.ROWID to java.sql.RowId::class,
-        Types.SMALLINT to Short::class,
+//        Types.SMALLINT to Short::class,
+        Types.SMALLINT to Int::class,
         Types.SQLXML to java.sql.SQLXML::class,
         Types.STRUCT to Any::class,
         Types.TIME to java.time.LocalTime::class,
         Types.TIMESTAMP to java.time.LocalDateTime::class,
         Types.TIMESTAMP_WITH_TIMEZONE to java.time.LocalDateTime::class,
         Types.TIME_WITH_TIMEZONE to java.time.LocalDateTime::class,
-        Types.TINYINT to Byte::class,
+//        Types.TINYINT to Byte::class,
+        Types.TINYINT to Int::class,
         Types.VARBINARY to Array<Byte>::class,
         Types.VARCHAR to String::class
     )
@@ -58,8 +60,8 @@ object JdbcTypeToKotlinType {
             RdbType.H2 -> {
                 when (column.jdbcTypeName) {
                     "BOOLEAN", "BIT", "BOOL" -> Boolean::class
-                    "TINYINT" -> Byte::class
-                    "SMALLINT", "INT2", "YEAR" -> Short::class
+                    "TINYINT" -> Int::class // Byte::class
+                    "SMALLINT", "INT2", "YEAR" -> Int::class // Short::class
                     "INT", "INTEGER", "MEDIUMINT", "INT4", "SIGNED" -> Int::class
                     "BIGINT", "INT8", "IDENTITY" -> Long::class
                     "REAL" -> Float::class
@@ -98,8 +100,8 @@ object JdbcTypeToKotlinType {
             RdbType.ORACLE -> {
                 when (column.jdbcTypeName) {
                     "BOOL", "BOOLEAN", "NUMBER(1)", "NUMBER(1,0)" -> Boolean::class
-                    "NUMBER(2)", "NUMBER(2,0)" -> Byte::class
-                    "NUMBER(3)", "NUMBER(3,0)", "NUMBER(4)", "NUMBER(4,0)" -> Short::class
+                    "NUMBER(2)", "NUMBER(2,0)" -> Int::class // Byte::class
+                    "NUMBER(3)", "NUMBER(3,0)", "NUMBER(4)", "NUMBER(4,0)" -> Int::class // Short::class
                     "INTEGER", "INT", "SMALLINT", "NUMBER_INTEGER", "NUMBER(5)", "NUMBER(6)", "NUMBER(7)", "NUMBER(8)", "NUMBER(9)", "NUMBER(10)",
                     "NUMBER(5,0)", "NUMBER(6,0)", "NUMBER(7,0)", "NUMBER(8,0)", "NUMBER(9,0)", "NUMBER(10,0)" -> Int::class
                     "NUMBER_LONG", "NUMBER(11)", "NUMBER(12)", "NUMBER(13)", "NUMBER(14)", "NUMBER(15)", "NUMBER(16)", "NUMBER(17)", "NUMBER(18)", "NUMBER(19)",

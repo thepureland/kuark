@@ -23,7 +23,7 @@ object SysParams: MaintainableTable<SysParam>("sys_param") {
 	/** 默认参数值，或其国际化key */
 	var defaultValue = varchar("default_value").bindTo { it.defaultValue }
 	/** 序号 */
-	var seqNo = ("seq_no").bindTo { it.seqNo }
+	var seqNo = int("seq_no").bindTo { it.seqNo }
 
 	//region your codes 2
 

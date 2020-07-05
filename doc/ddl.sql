@@ -61,7 +61,7 @@ create table "sys_dict_item"
         foreign key ("dict_id") references "sys_dict" ("id")
 );
 
-comment on table "sys_dict_item" is '字典子表';
+comment on table "sys_dict_item" is '字典项';
 
 comment on column "sys_dict_item"."id" is '主键';
 

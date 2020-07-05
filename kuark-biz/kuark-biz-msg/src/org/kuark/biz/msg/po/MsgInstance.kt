@@ -3,7 +3,6 @@ package org.kuark.biz.msg.po
 import org.kuark.data.jdbc.support.IDbEntity
 import java.time.LocalDateTime
 
-
 /**
  * 消息实例数据库实体
  *

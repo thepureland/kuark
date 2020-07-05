@@ -21,7 +21,7 @@ interface SysParam: IMaintainableDbEntity<String, SysParam> {
 	/** 默认参数值，或其国际化key */
 	var defaultValue: String
 	/** 序号 */
-	var seqNo: Short
+	var seqNo: Int
 
 	//region your codes 2
 

@@ -3,7 +3,7 @@ package org.kuark.biz.sys.po
 import org.kuark.data.jdbc.support.IMaintainableDbEntity
 
 /**
- * 字典子表数据库实体
+ * 字典项数据库实体
  *
  * @author K
  * @since 1.0.0

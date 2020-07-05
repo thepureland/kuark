@@ -5,7 +5,7 @@ import org.kuark.biz.sys.po.SysDictItem
 import org.kuark.data.jdbc.support.MaintainableTable
 
 /**
- * 字典子表数据库实体DAO
+ * 字典项数据库实体DAO
  *
  * @author K
  * @since 1.0.0

@@ -1,8 +1,6 @@
 package org.kuark.biz.msg.po
 
 import org.kuark.data.jdbc.support.IMaintainableDbEntity
-import java.time.LocalDateTime
-
 
 /**
  * 消息接收者群组数据库实体

@@ -2,7 +2,6 @@ package org.kuark.biz.msg.po
 
 import org.kuark.data.jdbc.support.IDbEntity
 
-
 /**
  * 消息模板数据库实体
  *

@@ -39,6 +39,11 @@ class ContextParam {
     var clientInfo = ClientInfo()
 
     /**
+     *
+     */
+    var content: ByteArray? = null
+
+    /**
      * 其他信息
      */
     var otherInfos = hashMapOf<String, Any>()

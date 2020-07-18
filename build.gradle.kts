@@ -155,7 +155,7 @@ subprojects {
             // cache
             dependency("com.github.ben-manes.caffeine:caffeine:2.8.1")
             dependency("org.springframework.boot:spring-boot-starter-cache:$spring_boot_version")
-//            dependency("com.alibaba:fastjson:1.2.68")
+            dependency("com.alibaba:fastjson:1.2.72")
 
             // session
             dependency("org.springframework.session:spring-session-data-redis:2.2.2.RELEASE")
@@ -174,7 +174,9 @@ subprojects {
             dependency("io.ktor:ktor-client-apache:$ktor_version")
             dependency("io.ktor:ktor-server-tests:$ktor_version")
 
+            // validation
             dependency("javax.validation:validation-api:2.0.1.Final")
+            dependency("org.hibernate.validator:hibernate-validator:6.1.5.Final")
 
             // javafx
 //            dependency("de.roskenet:springboot-javafx-support:2.1.6")

@@ -47,3 +47,4 @@ include("kuark-tools")
 include("kuark-ui")
 include("kuark-ui:kuark-ui-jfx")
 findProject(":kuark-ui:kuark-ui-jfx")?.name = "kuark-ui-jfx"
+include("kuark-validation")

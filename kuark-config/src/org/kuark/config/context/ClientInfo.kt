@@ -31,9 +31,14 @@ class ClientInfo {
     var params: String? = null
 
     /**
-     * 请求的数据
+     * 请求内容字节数据表示
      */
-    var requestData: String? = null
+    var requestContent: ByteArray? = null
+
+    /**
+     * 请求内容字符串表示
+     */
+    var requestContentString: String? = requestContent?.toString() ?: null
 
     /**
      * 请求referer

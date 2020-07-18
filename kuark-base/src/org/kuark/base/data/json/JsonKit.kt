@@ -51,7 +51,7 @@ object JsonKit {
      * @return Class的实例，出错时返回null
      * @see .fromJson
      */
-    fun <T : Any> fromJson(json: String, clazz: KClass<T>): T? = fromJson(json, clazz.java, null)
+    fun <T : Any> fromJson(json: String, clazz: KClass<T>): T? = fromJson(json, clazz, null)
 
     /**
      * 反序列化, 将json串解析为指定Class的实例
@@ -72,7 +72,7 @@ object JsonKit {
      * @return Class的实例，出错时返回null
      * @see .fromJson
      */
-    fun <T> fromJson(json: String, clazz: Class<T>?, mapper: ObjectMapper?): T? {
+    fun <T: Any> fromJson(json: String, clazz: KClass<T>, mapper: ObjectMapper?): T? {
         if (json.isBlank()) {
             return null
         }
@@ -81,7 +81,7 @@ object JsonKit {
             mapper = createDefaultMapper()
         }
         try {
-            return mapper.readValue(json, clazz)
+            return mapper.readValue(json, clazz.java)
         } catch (e: Exception) {
             LOG.error(e, "json解析为对象出错！json: $json")
         }

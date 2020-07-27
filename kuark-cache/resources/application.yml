@@ -1,9 +1,3 @@
-logging:
-  level:
-    root: debug
-    org.kuark.xxx: debug
-
 spring:
-  cache:
-    caffeine:
-      spec: maximumSize=500, expireAfterAccess=3600s
+  profiles:
+    active: config-dev,cache-dev

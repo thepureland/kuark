@@ -1,6 +1,7 @@
 package org.kuark.data.jdbc.context
 
 import com.zaxxer.hikari.HikariDataSource
+import org.kuark.base.io.PathKit
 import org.kuark.base.log.LogFactory
 import org.kuark.base.net.NetworkKit
 import org.kuark.config.annotation.ConfigValue
@@ -16,7 +17,6 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Primary
 import org.springframework.core.env.Environment
-import java.nio.file.Paths
 import javax.sql.DataSource
 
 
@@ -62,19 +62,27 @@ open class LocalH2Configuration {
     /**
      * 自动启动本机H2数据库及其web控制台
      */
-    fun startH2() {
+    private fun startH2() {
         val local = dbUrl.contains("tcp") && (dbUrl.contains("localhost") || dbUrl.contains("127.0.0.1"))
         if (local) {
+            resolveDbUrl()
             val tcpPort = Regex(":(\\d+)/").findAll(dbUrl).toList().flatMap(MatchResult::groupValues).last().toInt()
             val running = NetworkKit.isPortActive("localhost", tcpPort)
             if (!running) {
-                val path = Paths.get(".").toAbsolutePath().normalize().toString()
-                val process =
-                    Runtime.getRuntime().exec("cmd /E:ON /c start ${path}/kuark-data/kuark-data-jdbc/h2/h2.bat") //TODO multiple OS support
-                process.waitFor()
+                org.h2.tools.Console.main()
                 logger.debug("H2数据库及其web控制台自动启动完成")
             }
         }
+    }
+
+    /**
+     * 处理配置的h2数据库url
+     * 为了方便开发者，kuark实现了开箱即用，在application-data-jdbc-dev.yml文件中spring.datasource.url配置的是相对路径，
+     * 这样免去开发者下载完源码运行kuark之前，需要将h2数据库所在位置改为绝对路径的麻烦。但由此带来的问题是，除非开发者在当前模块运行代码，
+     * 否则，这个相对路径将是错误的，它是相对于开发者运行位置而言的。因此，这里需要动态的将其处理为绝对路径。
+     */
+    private fun resolveDbUrl() {
+        dbUrl = dbUrl.replace(".", PathKit.getClasspath(LocalH2Configuration::class).substringBefore("/build"))
     }
 
 }

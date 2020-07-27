@@ -1,6 +1,6 @@
 package org.kuark.validation.constraints
 
-import org.kuark.validation.constraints.impl.SeriesValidator
+import org.kuark.validation.constraints.validator.SeriesValidator
 import org.kuark.validation.constraints.support.SeriesType
 import java.lang.annotation.Documented
 import java.lang.annotation.Retention

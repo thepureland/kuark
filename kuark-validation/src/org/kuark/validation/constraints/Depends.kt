@@ -1,6 +1,6 @@
 package org.kuark.validation.constraints
 
-import org.kuark.validation.constraints.impl.DependsValidator
+import org.kuark.validation.constraints.validator.DependsValidator
 import org.kuark.validation.constraints.support.AndOr
 import org.kuark.validation.constraints.support.Operator
 import java.lang.annotation.Documented

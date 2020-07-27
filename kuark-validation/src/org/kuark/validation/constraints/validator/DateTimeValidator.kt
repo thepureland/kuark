@@ -1,4 +1,4 @@
-package org.kuark.validation.constraints.impl
+package org.kuark.validation.constraints.validator
 
 import org.kuark.validation.constraints.DateTime
 import java.text.ParseException

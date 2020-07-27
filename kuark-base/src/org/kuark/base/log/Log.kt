@@ -14,7 +14,7 @@ interface Log {
      * @param args java字符串模板参数
      * @since 1.0.0
      */
-    fun trace(msg: String, vararg args: Any?)
+    fun trace(msg: String?, vararg args: Any?)
 
     /**
      * 记录调试日志
@@ -22,7 +22,7 @@ interface Log {
      * @param args java字符串模板参数
      * @since 1.0.0
      */
-    fun debug(msg: String, vararg args: Any?)
+    fun debug(msg: String?, vararg args: Any?)
 
     /**
      * 记录一般日志
@@ -30,7 +30,7 @@ interface Log {
      * @param args java字符串模板参数
      * @since 1.0.0
      */
-    fun info(msg: String, vararg args: Any?)
+    fun info(msg: String?, vararg args: Any?)
 
     /**
      * 记录警告日志
@@ -38,7 +38,7 @@ interface Log {
      * @param args java字符串模板参数
      * @since 1.0.0
      */
-    fun warn(msg: String, vararg args: Any?)
+    fun warn(msg: String?, vararg args: Any?)
 
     /**
      * 记录错误日志
@@ -46,7 +46,7 @@ interface Log {
      * @param args java字符串模板参数
      * @since 1.0.0
      */
-    fun error(msg: String, vararg args: Any?)
+    fun error(msg: String?, vararg args: Any?)
 
     /**
      * 记录错误日志
@@ -55,7 +55,7 @@ interface Log {
      * @param args java字符串模板参数
      * @since 1.0.0
      */
-    fun error(e: Throwable, msg: String, vararg args: Any?)
+    fun error(e: Throwable, msg: String?, vararg args: Any?)
 
     /**
      * 记录错误日志

@@ -1,4 +1,4 @@
-package org.kuark.validation.constraints.impl
+package org.kuark.validation.constraints.validator
 
 import org.kuark.base.log.LogFactory
 import org.kuark.validation.constraints.InEnum

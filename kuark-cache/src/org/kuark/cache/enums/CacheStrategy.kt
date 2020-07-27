@@ -12,7 +12,7 @@ enum class CacheStrategy {
     SINGLE_LOCAL,
     /** 远程缓存 */
     REMOTE,
-    /** 本地-远程两级混合缓存 */
+    /** 本地-远程两级联动缓存 */
     LOCAL_REMOTE
 
 }

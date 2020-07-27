@@ -1,4 +1,4 @@
-package org.kuark.config.kit
+package org.kuark.config.spring
 
 import org.springframework.context.ApplicationContext
 import org.springframework.context.ApplicationContextAware
@@ -17,10 +17,11 @@ object SpringKit : ApplicationContextAware {
     private lateinit var applicationContext: ApplicationContext
 
     override fun setApplicationContext(applicationContext: ApplicationContext) {
-        this.applicationContext = applicationContext
+        SpringKit.applicationContext = applicationContext
     }
 
-    fun getApplicationContext(): ApplicationContext = applicationContext
+    fun getApplicationContext(): ApplicationContext =
+        applicationContext
 
     fun getBean(beanName: String): Any = applicationContext.getBean(beanName)
 

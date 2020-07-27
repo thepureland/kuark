@@ -1,4 +1,4 @@
-package org.kuark.validation.constraints.impl
+package org.kuark.validation.constraints.validator
 
 import com.alibaba.fastjson.JSON
 import com.alibaba.fastjson.JSONObject

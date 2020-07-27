@@ -21,7 +21,7 @@ open class MaintainableTable<E : IMaintainableDbEntity<String, E>>(tableName: St
     /** 是否启用 */
     val isActive = boolean("is_active").bindTo { it.isActive }
     /** 是否内置 */
-    val isBuiltIn = boolean("is_builtIn").bindTo { it.isBuiltIn }
+    val isBuiltIn = boolean("is_built_in").bindTo { it.isBuiltIn }
     /** 备注 */
     val remark = varchar("remark").bindTo { it.remark }
 

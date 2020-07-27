@@ -1,0 +1,25 @@
+logging:
+  level:
+    root: debug
+    org.kuark.xxx: debug
+
+spring:
+  datasource:
+#    auto-commit: true
+    platform: h2
+#    platform: info.jesseyang.config.SQLiteDialect
+    username: sa
+    password:
+    url: "jdbc:h2:tcp://localhost:9092/./h2/h2;DATABASE_TO_UPPER=false"
+    driver-class-name: org.h2.Driver
+#    url: "jdbc:sqlite:C:\\db\\sqlite\\db.db"
+#    driver-class-name: org.sqlite.JDBC
+#    schema: "classpath*:sql/schema.sql"
+#    data: "classpath*:sql/data.sql"
+#    initialization-mode: always
+    hikari:
+      maxPoolSize: 5
+      minIdle: 5
+      idleTimeout: 600000
+      connectionTimeout: 30000
+      maxLifetime: 1800000

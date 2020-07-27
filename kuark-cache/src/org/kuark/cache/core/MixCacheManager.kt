@@ -1,5 +1,6 @@
 package org.kuark.cache.core
 
+import org.kuark.base.log.LogFactory
 import org.kuark.cache.context.CacheNameResolver
 import org.kuark.cache.enums.CacheStrategy
 import org.kuark.config.annotation.ConfigValue
@@ -33,6 +34,8 @@ class MixCacheManager : AbstractTransactionSupportingCacheManager() {
     @Autowired
     private lateinit var cacheNameResolver: CacheNameResolver
 
+    private val log = LogFactory.getLog(this::class)
+
     override fun loadCaches(): MutableCollection<out Cache> {
         val caches = mutableListOf<Cache>()
         val strategy = try {
@@ -43,18 +46,21 @@ class MixCacheManager : AbstractTransactionSupportingCacheManager() {
         val cacheNames = cacheNameResolver.resolve()
         when (strategy) {
             CacheStrategy.SINGLE_LOCAL -> {
+                log.info("缓存策略为【单节点本地缓存】")
                 cacheNames.forEach { name ->
                     val localCache = localCacheManager.getCache(name)
                     caches.add(MixCache(strategy, localCache, null))
                 }
             }
             CacheStrategy.REMOTE -> {
+                log.info("缓存策略为【远程缓存】")
                 cacheNames.forEach { name ->
                     val remoteCache = remoteCacheManager.getCache(name)
                     caches.add(MixCache(strategy, null, remoteCache))
                 }
             }
             CacheStrategy.LOCAL_REMOTE -> {
+                log.info("缓存策略为【本地-远程两级联动缓存】")
                 cacheNames.forEach { name ->
                     val localCache = localCacheManager.getCache(name)
                     val remoteCache = remoteCacheManager.getCache(name)

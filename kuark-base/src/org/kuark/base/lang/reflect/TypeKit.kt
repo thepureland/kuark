@@ -5,6 +5,7 @@ import java.lang.reflect.*
 import java.math.BigDecimal
 import java.math.BigInteger
 import java.util.*
+import kotlin.reflect.KClass
 
 /**
  * 类型工具类
@@ -21,54 +22,20 @@ object TypeKit {
      * @param returnType 目标类型
      * @return 指定类型的值
      */
-    fun valueOfStr(valueStr: String, returnType: Class<*>?): Any? { //TODO junit
-        if (returnType == String::class.java) {
-            return valueStr
-        }
-        if (valueStr.isBlank() && !returnType!!.isPrimitive || returnType == null) {
-            return null
-        }
-        return if (returnType == Int::class.java) {
-            Integer.valueOf(valueStr)
-        } else if (returnType == Double::class.java) {
-            java.lang.Double.valueOf(valueStr)
-        } else if (returnType == Boolean::class.java) {
-            valueStr.toBoolean()
-        } else if (returnType == Date::class.java) {
-            TODO()
-//            LocaleDateKit.parse(valueStr, CommonContext.get().getLocale(), CommonContext.get().getTimeZone())
-        } else if (returnType == Long::class.java) {
-            java.lang.Long.valueOf(valueStr)
-        } else if (returnType == Float::class.java) {
-            java.lang.Float.valueOf(valueStr)
-        } else if (returnType == BigDecimal::class.java) {
-            BigDecimal(valueStr)
-        } else if (returnType == Short::class.java) {
-            valueStr.toShort()
-        } else if (returnType == BigInteger::class.java) {
-            valueStr.toBigDecimal()
-        } else if (returnType == Byte::class.java) {
-            java.lang.Byte.valueOf(valueStr)
-        } else if (returnType == Char::class.java) {
-            Character.getNumericValue(Integer.valueOf(valueStr))
-        } else if (returnType == Int::class.javaPrimitiveType) {
-            valueStr.toInt()
-        } else if (returnType == Double::class.javaPrimitiveType) {
-            valueStr.toDouble()
-        } else if (returnType == Boolean::class.javaPrimitiveType) {
-            valueStr.toBoolean()
-        } else if (returnType == Long::class.javaPrimitiveType) {
-            valueStr.toLong()
-        } else if (returnType == Float::class.javaPrimitiveType) {
-            valueStr.toFloat()
-        } else if (returnType == Short::class.javaPrimitiveType) {
-            valueStr.toShort()
-        } else if (returnType == Byte::class.javaPrimitiveType) {
-            valueStr.toByte()
-        } else if (returnType == Char::class.javaPrimitiveType) {
-            valueStr.toInt()
-        } else {
-            valueStr
+    fun <T: Any> valueOf(valueStr: String, returnType: KClass<out T>): T { //TODO junit
+        return when (returnType) {
+            String::class -> valueStr as T
+            Byte::class -> valueStr.toByte() as T
+            Char::class -> valueStr.toCharArray().first() as T
+            Short::class -> valueStr.toShort() as T
+            Int::class -> valueStr.toInt() as T
+            Boolean::class -> valueStr.toBoolean() as T
+            Long::class -> valueStr.toLong() as T
+            Float::class -> valueStr.toFloat() as T
+            Double::class -> valueStr.toDouble() as T
+            BigDecimal::class -> valueStr.toBigDecimal() as T
+            BigInteger::class -> valueStr.toBigInteger() as T
+            else -> throw Exception("不支持的类型【$returnType】!")
         }
     }
     // vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv

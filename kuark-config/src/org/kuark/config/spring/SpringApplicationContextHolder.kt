@@ -1,4 +1,6 @@
-package org.kuark.config.context
+package org.kuark.config.spring
+
+import org.kuark.config.context.KuarkContext
 
 /**
  * spring应用上下文持有者

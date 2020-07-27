@@ -1,10 +1,9 @@
-package org.kuark.validation.constraints.impl
+package org.kuark.validation.constraints.validator
 
 import com.alibaba.fastjson.JSON
 import com.alibaba.fastjson.JSONObject
 import org.hibernate.validator.internal.engine.constraintvalidation.ConstraintValidatorContextImpl
 import org.hibernate.validator.internal.engine.path.PathImpl
-import org.kuark.base.data.json.JsonKit
 import org.kuark.base.lang.reflect.MethodKit
 import org.kuark.config.context.KuarkContext
 import org.kuark.validation.constraints.AtLeast

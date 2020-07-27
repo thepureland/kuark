@@ -1,6 +1,7 @@
 package org.kuark.base.collections
 
 import org.apache.commons.lang3.ArrayUtils
+import org.kuark.base.lang.reflect.TypeKit
 import kotlin.reflect.KClass
 
 /**
@@ -12,8 +13,7 @@ import kotlin.reflect.KClass
 
 
 /**
- * 将字符串数组转化为指定数值类型的数组 <br></br>
- * 注：只支持基本数值类型：Byte, Short, Int, Long, Float, Double
+ * 将字符串数组转化为指定数值类型的数组
  *
  * @param clazz 转化后的数组元素类型
  * @param <T> 转化后的数组元素类型
@@ -21,18 +21,7 @@ import kotlin.reflect.KClass
  */
 inline fun <reified T : Number> Array<String>.toNumberArray(clazz: KClass<T>): Array<T> {
     val list = mutableListOf<T>()
-    for (str in this) {
-        val value = when (clazz) {
-            Byte::class -> str.toByte()
-            Short::class -> str.toShort()
-            Int::class -> str.toInt()
-            Long::class -> str.toLong()
-            Float::class -> str.toFloat()
-            Double::class -> str.toDouble()
-            else -> throw Exception("不支持的类型【${clazz}】!")
-        }
-        list.add(value as T)
-    }
+    this.forEach { list.add(TypeKit.valueOf(it, clazz)) }
     return list.toTypedArray()
 }
 

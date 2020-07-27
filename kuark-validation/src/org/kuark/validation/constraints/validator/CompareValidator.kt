@@ -1,4 +1,4 @@
-package org.kuark.validation.constraints.impl
+package org.kuark.validation.constraints.validator
 
 import com.alibaba.fastjson.JSON
 import com.alibaba.fastjson.JSONObject
@@ -43,7 +43,7 @@ class CompareValidator : ConstraintValidator<Compare, Any?> {
                 for (i in propertyPath.indices) {
                     if (i == propertyPath.size - 1) {
                         val anotherValueStr: String = bodyParams.getString(propertyPath[i])
-                        anotherValue = TypeKit.valueOfStr(anotherValueStr, value.javaClass)
+                        anotherValue = TypeKit.valueOf(anotherValueStr, value.javaClass)
                     } else {
                         bodyParams = bodyParams.getJSONObject(propertyPath[i])
                     }
@@ -52,7 +52,7 @@ class CompareValidator : ConstraintValidator<Compare, Any?> {
         } else {
             val anotherValueStr: String = bodyParams.getString(anotherProperty)
             if (value != null) {
-                anotherValue = TypeKit.valueOfStr(anotherValueStr, value.javaClass)
+                anotherValue = TypeKit.valueOf(anotherValueStr, value.javaClass)
             }
         }
         return compare(value, anotherValue, compare.logic)

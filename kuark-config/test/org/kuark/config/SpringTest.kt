@@ -2,7 +2,7 @@ package org.kuark.config
 
 import org.junit.jupiter.api.Test
 import org.kuark.config.annotation.ConfigValue
-import org.kuark.config.kit.SpringKit
+import org.kuark.config.spring.SpringKit
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.test.context.SpringBootTest
 

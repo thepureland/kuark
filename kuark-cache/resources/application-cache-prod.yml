@@ -1,0 +1,14 @@
+logging:
+  level:
+    root: debug
+    org.kuark.xxx: debug
+
+cache:
+  config:
+    enabled: true
+    strategy: LOCAL_REMOTE
+
+spring:
+  cache:
+    caffeine:
+      spec: maximumSize=500, expireAfterAccess=3600s

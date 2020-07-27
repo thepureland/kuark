@@ -1,7 +1,10 @@
 package org.kuark.cache.core
 
 import org.kuark.base.log.LogFactory
+import org.kuark.cache.context.LocalCacheConfiguration
+import org.kuark.cache.context.RemoteCacheConfiguration
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.data.redis.connection.Message
 import org.springframework.data.redis.listener.KeyExpirationEventMessageListener
 import org.springframework.data.redis.listener.RedisMessageListenerContainer
@@ -14,10 +17,11 @@ import org.springframework.stereotype.Component
  * @since 1.0.0
  */
 @Component
+@ConditionalOnBean(value = [LocalCacheConfiguration::class, RemoteCacheConfiguration::class])
 class RedisKeyExpirationListener(
     @Autowired listenerContainer: RedisMessageListenerContainer,
-    @Autowired private val mixCacheManager: MixCacheManager) :
-    KeyExpirationEventMessageListener(listenerContainer) {
+    @Autowired private val mixCacheManager: MixCacheManager
+) : KeyExpirationEventMessageListener(listenerContainer) {
 
     private val logger = LogFactory.getLog(this::class)
 

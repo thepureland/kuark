@@ -1,6 +1,6 @@
 package org.kuark.validation.constraints
 
-import org.kuark.validation.constraints.impl.RemoteValidator
+import org.kuark.validation.constraints.validator.RemoteValidator
 import java.lang.annotation.Documented
 import java.lang.annotation.Retention
 import java.lang.annotation.RetentionPolicy

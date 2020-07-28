@@ -1,8 +1,11 @@
 package org.kuark.session.context
 
 import org.kuark.base.log.LogFactory
+import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.event.EventListener
+import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer
+import org.springframework.data.redis.serializer.RedisSerializer
 import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession
 import org.springframework.session.events.SessionCreatedEvent
 import org.springframework.session.events.SessionDeletedEvent
@@ -10,8 +13,8 @@ import org.springframework.session.events.SessionExpiredEvent
 
 
 @Configuration
-@EnableRedisHttpSession(maxInactiveIntervalInSeconds = 120)
-class SessionConfig {
+@EnableRedisHttpSession(redisNamespace = "kuark:session")
+open class SessionConfig {
 
     private val logger = LogFactory.getLog(this::class)
 
@@ -43,6 +46,16 @@ class SessionConfig {
     fun onSessionDeleted(deletedEvent: SessionDeletedEvent) {
         val sessionId = deletedEvent.sessionId
         logger.info("删除Session事件:$sessionId")
+    }
+
+    /**
+     * 更换序列化器
+     *
+     * @return
+     */
+    @Bean("springSessionDefaultRedisSerializer")
+    open fun setSerializer(): RedisSerializer<*> {
+        return GenericJackson2JsonRedisSerializer()
     }
 
 }

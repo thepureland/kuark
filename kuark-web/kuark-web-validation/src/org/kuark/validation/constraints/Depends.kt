@@ -22,7 +22,7 @@ import kotlin.reflect.KClass
 @Retention(RetentionPolicy.RUNTIME)
 annotation class Depends(
 
-    val message: String = "{org.kuark.validation.constraints.Depends.message}",
+    val message: String = "{Depends.message}",
     val groups: Array<KClass<*>> = [],
     val payload: Array<KClass<out Payload>> = [],
 

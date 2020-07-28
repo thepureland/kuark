@@ -24,7 +24,7 @@ annotation class InEnum(
      * @return 实现 EnumValuable 接口的
      */
     val value: KClass<*> = Class::class,
-    val message: String = "{org.kuark.validation.constraints.InEnum.message}",  /* 值不可为空 */
+    val message: String = "{InEnum.message}",  /* 值不可为空 */
     val notNull: Boolean = false,
     val groups: Array<KClass<*>> = [], // 约束注解在验证时所属的组别
     val payload: Array<KClass<out Payload>> = [] // 约束注解的有效负载

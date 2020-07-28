@@ -1,6 +1,6 @@
 package org.kuark.validation.constraints
 
-import org.kuark.validation.constraints.validator.CellPhoneValidator
+import org.kuark.validation.constraints.validator.QqValidator
 import java.lang.annotation.Documented
 import java.lang.annotation.Retention
 import java.lang.annotation.RetentionPolicy
@@ -12,11 +12,11 @@ import kotlin.reflect.KClass
  * Create by (admin) on 2015/1/22.
  */
 @Documented
-@Constraint(validatedBy = [CellPhoneValidator::class])
+@Constraint(validatedBy = [QqValidator::class])
 @Target(AnnotationTarget.FUNCTION, AnnotationTarget.PROPERTY_GETTER, AnnotationTarget.PROPERTY_SETTER)
 @Retention(RetentionPolicy.RUNTIME)
-annotation class CellPhone(
-    val message: String = "{org.kuark.validation.constraints.CellPhone.message}",
+annotation class Qq(
+    val message: String = "{Qq.message}",
     val groups: Array<KClass<*>> = [],
     val payload: Array<KClass<out Payload>> = []
 ) {
@@ -27,5 +27,5 @@ annotation class CellPhone(
     )
     @Retention(RetentionPolicy.RUNTIME)
     @Documented
-    annotation class List(vararg val value: CellPhone)
+    annotation class List(vararg val value: Qq)
 }

@@ -10,9 +10,6 @@ include("kuark-data:kuark-data-mongo")
 findProject(":kuark-data:kuark-data-mongo")?.name = "kuark-data-mongo"
 include("kuark-cache")
 include("kuark-auth")
-include("kuark-session")
-include("kuark-service")
-include("kuark-web")
 include("kuark-biz")
 include("kuark-biz:kuark-biz-sys")
 findProject(":kuark-biz:kuark-biz-sys")?.name = "kuark-biz-sys"
@@ -47,4 +44,10 @@ include("kuark-tools")
 include("kuark-ui")
 include("kuark-ui:kuark-ui-jfx")
 findProject(":kuark-ui:kuark-ui-jfx")?.name = "kuark-ui-jfx"
-include("kuark-validation")
+include("kuark-web")
+include("kuark-web:kuark-web-session")
+findProject(":kuark-web:kuark-web-session")?.name = "kuark-web-session"
+include("kuark-web:kuark-web-validation")
+findProject(":kuark-web:kuark-web-validation")?.name = "kuark-web-validation"
+include("kuark-web:kuark-web-ktor")
+findProject(":kuark-web:kuark-web-ktor")?.name = "kuark-web-ktor"

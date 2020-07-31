@@ -4,5 +4,5 @@ dependencies {
     api("org.springframework.boot:spring-boot-starter-data-redis")
     api("org.springframework.boot:spring-boot-starter-cache")
 //    api("com.alibaba:fastjson")
-    testApi("org.springframework.boot:spring-boot-starter-test")
+    testApi(project(":kuark-test"))
 }

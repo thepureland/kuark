@@ -23,5 +23,5 @@ dependencies {
     implementation("org.slf4j:log4j-over-slf4j")
     implementation("ch.qos.logback:logback-classic")
 
-    testApi("org.springframework.boot:spring-boot-starter-test")
+    testApi(project(":kuark-test"))
 }

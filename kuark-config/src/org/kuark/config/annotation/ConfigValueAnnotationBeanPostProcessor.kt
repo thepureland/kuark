@@ -67,8 +67,7 @@ class ConfigValueAnnotationBeanPostProcessor :
             val key = environment!!.resolvePlaceholders(key1)
             val newValue = environment!!.getProperty(key) ?: continue
             for (target in beanPropertyList) {
-                val md5String =
-                    MD5.getInstance().getMD5String(newValue)
+                val md5String = MD5.getInstance().getMD5String(newValue)
                 val isUpdate = target.lastMD5 != md5String
                 if (isUpdate) {
                     target.updateLastMD5(md5String)

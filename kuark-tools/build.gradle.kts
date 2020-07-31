@@ -2,6 +2,7 @@ dependencies {
     implementation(project(":kuark-data:kuark-data-jdbc"))
     implementation(project(":kuark-ui:kuark-ui-jfx"))
     implementation("org.freemarker:freemarker")
+    testApi(project(":kuark-test"))
 }
 
 javafx {

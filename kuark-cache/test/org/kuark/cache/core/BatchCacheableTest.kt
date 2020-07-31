@@ -3,7 +3,7 @@ package org.kuark.cache.core
 import org.junit.jupiter.api.Test
 import org.kuark.base.log.LogFactory
 import org.kuark.cache.context.CacheNames
-import org.kuark.config.spring.JunitApplication
+import org.kuark.test.JunitApplication
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.cache.annotation.CacheConfig

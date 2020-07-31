@@ -1,4 +1,4 @@
-package org.kuark.config.spring
+package org.kuark.test
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 

@@ -10,7 +10,6 @@ import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.response.respondText
 import io.ktor.sessions.*
-import io.ktor.util.KtorExperimentalAPI
 import org.kuark.config.annotation.ConfigValue
 import org.kuark.config.spring.SpringKit
 import org.kuark.web.session.MixCacheSessionStorage
@@ -30,8 +29,12 @@ class KtorHttpintercept : KtorMiddleware {
 
     override fun Application.middleware() {
 
+        var sessionStorage: SessionStorage = SpringKit.getBean(MixCacheSessionStorage::class)
+        if (sessionStorage == null) {
+            sessionStorage = directorySessionStorage(File(".sessions"))
+        }
         install(Sessions) {
-            header<WebSession>(sessionIdName, SpringKit.getBean(MixCacheSessionStorage::class)) {
+            header<WebSession>(sessionIdName, sessionStorage) {
                 transform(SessionTransportTransformerMessageAuthentication(sessionSecretKey.toByteArray())) // sign the ID that travels to client
             }
         }

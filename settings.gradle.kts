@@ -51,3 +51,4 @@ include("kuark-web:kuark-web-validation")
 findProject(":kuark-web:kuark-web-validation")?.name = "kuark-web-validation"
 include("kuark-web:kuark-web-ktor")
 findProject(":kuark-web:kuark-web-ktor")?.name = "kuark-web-ktor"
+include("kuark-test")

@@ -9,3 +9,7 @@ nacos:
     enabled: false
     server-addr: "127.0.0.1:8848"
     context-path: nacos
+
+context:
+  listener:
+    classes: org.kuark.config.spring.LocalEnvironmentPrepareEventListener

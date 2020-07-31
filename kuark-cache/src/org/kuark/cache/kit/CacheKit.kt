@@ -23,7 +23,9 @@ object CacheKit {
      * @return 缓存对象
      */
     fun getCache(name: String): Cache? {
-        val cache = SpringKit.getBean(MixCacheManager::class).getCache(name)
+//        val cacheManager = SpringKit.getBean(MixCacheManager::class) //??? 在suspend方法中，会阻塞，原因不明
+        val cacheManager = SpringKit.getBean("cacheManager") as MixCacheManager
+        val cache = cacheManager.getCache(name)
         if (cache == null) {
             log.warn("缓存【$name】不存在！")
         }
@@ -73,6 +75,16 @@ object CacheKit {
      */
     fun putIfAbsent(cacheName: String, key: Any, value: Any?) {
         getCache(cacheName)!!.putIfAbsent(key, value)
+    }
+
+    /**
+     * 踢除缓存
+     *
+     * @param cacheName 缓存名称
+     * @param key 缓存key
+     */
+    fun evict(cacheName: String, key: Any) {
+        getCache(cacheName)!!.evict(key)
     }
 
 }

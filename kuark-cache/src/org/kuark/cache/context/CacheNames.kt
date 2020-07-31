@@ -20,6 +20,9 @@ object CacheNames: ICacheNames {
     /** 参数 */
     const val SYS_PARAM = "sys_param"
 
+    /** Session */
+    const val SESSION = "session"
+
 }
 
 

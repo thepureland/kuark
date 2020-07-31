@@ -164,6 +164,7 @@ subprojects {
             dependency("org.apache.shiro:shiro-spring:1.5.2")
 
             // ktor
+            dependency("io.ktor:ktor-server-sessions:$ktor_version")
             dependency("io.ktor:ktor-server-netty:$ktor_version")
 //            dependency("io.ktor:ktor-server-tomcat:$ktor_version")
             dependency("io.ktor:ktor-server-core:$ktor_version")

@@ -1,0 +1,15 @@
+logging:
+  level:
+    root: debug
+    org.kuark.xxx: debug
+
+
+web:
+  ktor:
+    container:
+      type: NETTY # NETTY,JETTY,TOMCAT,CIO四选一
+      host: 127.0.0.1
+      port: 8080
+    session:
+      id-name: sessionId
+      secret-key: __Kuark__

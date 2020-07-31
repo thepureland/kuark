@@ -1,0 +1,3 @@
+spring:
+  profiles:
+    active: config-dev,cache-dev,web-ktor-dev

@@ -27,35 +27,36 @@ class CompareValidator : ConstraintValidator<Compare, Any?> {
         value: Any?,
         constraintValidatorContext: ConstraintValidatorContext
     ): Boolean {
-        val depends: Depends = compare.depends
-        if (depends != null && depends.property.isNotEmpty()) {
-            if (!DependsValidator.Companion.pass(depends)) {
-                return true
-            }
-        }
-        val anotherProperty: String = compare.anotherProperty
-        val body = KuarkContext.get().clientInfo.requestContentString
-        var bodyParams: JSONObject = JSON.parseObject(body)
-        var anotherValue: Any? = null
-        if (anotherProperty.contains(".")) {
-            val propertyPath = anotherProperty.split("\\.").toTypedArray()
-            if (value != null) {
-                for (i in propertyPath.indices) {
-                    if (i == propertyPath.size - 1) {
-                        val anotherValueStr: String = bodyParams.getString(propertyPath[i])
-                        anotherValue = TypeKit.valueOf(anotherValueStr, value.javaClass)
-                    } else {
-                        bodyParams = bodyParams.getJSONObject(propertyPath[i])
-                    }
-                }
-            }
-        } else {
-            val anotherValueStr: String = bodyParams.getString(anotherProperty)
-            if (value != null) {
-                anotherValue = TypeKit.valueOf(anotherValueStr, value.javaClass)
-            }
-        }
-        return compare(value, anotherValue, compare.logic)
+//        val depends: Depends = compare.depends
+//        if (depends != null && depends.property.isNotEmpty()) {
+//            if (!DependsValidator.Companion.pass(depends)) {
+//                return true
+//            }
+//        }
+//        val anotherProperty: String = compare.anotherProperty
+//        val body = KuarkContext.get().clientInfo.requestContentString
+//        var bodyParams: JSONObject = JSON.parseObject(body)
+//        var anotherValue: Any? = null
+//        if (anotherProperty.contains(".")) {
+//            val propertyPath = anotherProperty.split("\\.").toTypedArray()
+//            if (value != null) {
+//                for (i in propertyPath.indices) {
+//                    if (i == propertyPath.size - 1) {
+//                        val anotherValueStr: String = bodyParams.getString(propertyPath[i])
+//                        anotherValue = TypeKit.valueOf(anotherValueStr, value.javaClass)
+//                    } else {
+//                        bodyParams = bodyParams.getJSONObject(propertyPath[i])
+//                    }
+//                }
+//            }
+//        } else {
+//            val anotherValueStr: String = bodyParams.getString(anotherProperty)
+//            if (value != null) {
+//                anotherValue = TypeKit.valueOf(anotherValueStr, value.javaClass)
+//            }
+//        }
+//        return compare(value, anotherValue, compare.logic)
+        return true
     }
 
     companion object {

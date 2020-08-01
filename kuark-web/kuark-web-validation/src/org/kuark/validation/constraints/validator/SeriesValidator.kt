@@ -23,7 +23,7 @@ class SeriesValidator : ConstraintValidator<Series, Any?> {
             return true
         }
         if (o is Array<*>) {
-            val values = o as Array<Any>
+            val values = o as Array<Any?>
             if (values.size <= 1) {
                 return true
             }
@@ -55,14 +55,12 @@ class SeriesValidator : ConstraintValidator<Series, Any?> {
     }
 
     private fun adaptCompareLogic(seriesType: SeriesType): CompareLogic {
-        when (seriesType) {
-            SeriesType.INC -> return CompareLogic.GT
-            SeriesType.DESC -> return CompareLogic.LT
-            SeriesType.INC_EQ -> return CompareLogic.GE
-            SeriesType.DESC_EQ -> return CompareLogic.LE
-            SeriesType.DIFF -> return CompareLogic.NE
-            else -> {
-            }
+        return when (seriesType) {
+            SeriesType.INC -> CompareLogic.GT
+            SeriesType.DESC -> CompareLogic.LT
+            SeriesType.INC_EQ -> CompareLogic.GE
+            SeriesType.DESC_EQ -> CompareLogic.LE
+            SeriesType.DIFF -> CompareLogic.NE
         }
         throw Exception("不支持的SeriesType类型：$seriesType")
     }

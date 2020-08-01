@@ -11,7 +11,7 @@ import org.kuark.base.enums.ICodeEnum
  * @time 2012-6-19 下午9:51:19
  * @since 1.0.0
  */
-enum class Operator @JvmOverloads constructor(
+enum class Operator constructor(
     override val code: String,
     override val trans: String,
     // 值是否可接受null
@@ -294,37 +294,37 @@ enum class Operator @JvmOverloads constructor(
     }
 
     private fun `in`(v1: Any?, v2: Any?): Boolean {
-        var v1 = v1
-        var v2 = v2
-        if (v1 is String && v2 is String) {
-            val elems = v2.split(",").toTypedArray()
-            return elems.contains(v1)
+        var value1 = v1
+        var value2 = v2
+        if (value1 is String && value2 is String) {
+            val elems = value2.split(",").toTypedArray()
+            return elems.contains(value1)
         }
-        if (v1 is Array<*>) {
-            v1 = listOf(v1)
+        if (value1 is Array<*>) {
+            value1 = listOf(value1)
         }
-        if (v2 is Array<*>) {
-            v2 = listOf(v2)
+        if (value2 is Array<*>) {
+            value2 = listOf(value2)
         }
-        if (v2 is Collection<*>) {
-            return if (v1 is Collection<*>) {
-                v2.containsAll((v1 as Collection<*>?)!!)
+        if (value2 is Collection<*>) {
+            return if (value1 is Collection<*>) {
+                value2.containsAll((value1 as Collection<*>?)!!)
             } else {
-                v2.contains(v1)
+                value2.contains(value1)
             }
         }
-        return if (v1 is Map<*, *> && v2 is Map<*, *>) {
-            (v2 as Map<Any?, Any?>).containsAll(v2)
+        return if (value1 is Map<*, *> && value2 is Map<*, *>) {
+            (value2 as Map<Any?, Any?>).containsAll(value2)
         } else false
     }
 
     companion object {
         fun enumOf(code: String): Operator? {
-            var code = code
-            if (code.isNotBlank()) {
-                code = code.toUpperCase()
+            var codeStr = code
+            if (codeStr.isNotBlank()) {
+                codeStr = codeStr.toUpperCase()
             }
-            return EnumKit.enumOf(Operator::class, code)
+            return EnumKit.enumOf(Operator::class, codeStr)
         }
     }
 

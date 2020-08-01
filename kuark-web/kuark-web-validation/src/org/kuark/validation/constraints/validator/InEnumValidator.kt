@@ -52,8 +52,7 @@ class InEnumValidator : ConstraintValidator<InEnum, String?> {
         context.disableDefaultConstraintViolation() // 禁用默认的 message 的值
         // 重新添加错误提示语句
         context.buildConstraintViolationWithTemplate(
-            context.defaultConstraintMessageTemplate
-                .replace("\\{value}".toRegex(), codeList.toString())
+            context.defaultConstraintMessageTemplate.replace("\\{value}".toRegex(), codeList.toString())
         ).addConstraintViolation()
         return false
     }

@@ -65,7 +65,7 @@ class AtLeastValidator : ConstraintValidator<AtLeast, Any?> {
         for (readMethod in readMethods) {
             if (readMethod.isAnnotationPresent(AtLeast::class.java)) {
                 val annotation = readMethod.getAnnotation(AtLeast::class.java)
-                if (annotation.groups.any { it in atLeast!!.groups }) {
+                if (annotation.groups.any { it in atLeast.groups }) {
                     properties.add(MethodKit.getReadProperty(readMethod)!!)
                 }
             }

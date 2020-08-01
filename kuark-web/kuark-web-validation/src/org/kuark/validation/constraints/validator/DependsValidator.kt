@@ -50,7 +50,7 @@ class DependsValidator : ConstraintValidator<Depends, Any?> {
                 if (form.containsKey(property)) {
                     v1 = form.getString(property)
                 }
-                var v2: String = depends.value.get(i)
+                var v2: String = depends.value[i]
                 if (v2.startsWith("[") && v2.endsWith("]")) {
                     v2 = v2.replaceFirst("\\['".toRegex(), "").replaceFirst("'\\]".toRegex(), "")
                         .replace("',\\s*'".toRegex(), ",")

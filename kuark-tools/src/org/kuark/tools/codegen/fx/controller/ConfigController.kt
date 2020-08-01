@@ -9,7 +9,7 @@ import org.kuark.base.io.FilenameKit
 import org.kuark.base.io.PathKit
 import org.kuark.base.lang.SystemKit
 import org.kuark.base.support.PropertiesLoader
-import org.kuark.config.context.KuarkContext
+import org.kuark.context.core.KuarkContext
 import org.kuark.data.jdbc.datasource.DataSourceKit
 import org.kuark.data.jdbc.datasource.setCurrentDataSource
 import org.kuark.data.jdbc.support.RdbKit

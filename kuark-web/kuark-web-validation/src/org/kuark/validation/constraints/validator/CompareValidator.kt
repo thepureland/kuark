@@ -5,7 +5,7 @@ import com.alibaba.fastjson.JSONObject
 import org.kuark.base.bean.BeanKit
 import org.kuark.base.lang.reflect.TypeKit
 import org.kuark.base.log.LogFactory
-import org.kuark.config.context.KuarkContext
+import org.kuark.context.core.KuarkContext
 import org.kuark.validation.constraints.Compare
 import org.kuark.validation.constraints.Depends
 import org.kuark.validation.constraints.support.CompareLogic

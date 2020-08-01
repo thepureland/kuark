@@ -4,7 +4,7 @@ import com.zaxxer.hikari.HikariDataSource
 import org.kuark.base.io.PathKit
 import org.kuark.base.log.LogFactory
 import org.kuark.base.net.NetworkKit
-import org.kuark.config.annotation.ConfigValue
+import org.kuark.context.annotation.ConfigValue
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.autoconfigure.AutoConfigureBefore

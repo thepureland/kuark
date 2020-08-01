@@ -10,8 +10,8 @@ import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.response.respondText
 import io.ktor.sessions.*
-import org.kuark.config.annotation.ConfigValue
-import org.kuark.config.spring.SpringKit
+import org.kuark.context.annotation.ConfigValue
+import org.kuark.context.spring.SpringKit
 import org.kuark.web.session.MixCacheSessionStorage
 import org.kuark.web.session.WebSession
 import org.kuark.web.support.KtorMiddleware

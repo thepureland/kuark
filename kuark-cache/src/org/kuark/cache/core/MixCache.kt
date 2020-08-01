@@ -1,7 +1,7 @@
 package org.kuark.cache.core
 
 import org.kuark.cache.enums.CacheStrategy
-import org.kuark.config.spring.SpringKit
+import org.kuark.context.spring.SpringKit
 import org.springframework.cache.Cache
 import org.springframework.data.redis.core.RedisTemplate
 import java.util.concurrent.Callable

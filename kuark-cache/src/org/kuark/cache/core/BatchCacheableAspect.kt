@@ -8,7 +8,7 @@ import org.aspectj.lang.annotation.Pointcut
 import org.aspectj.lang.reflect.MethodSignature
 import org.kuark.base.lang.reflect.TypeKit
 import org.kuark.cache.kit.CacheKit
-import org.kuark.config.spring.SpringKit
+import org.kuark.context.spring.SpringKit
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.context.annotation.Lazy
 import org.springframework.stereotype.Component

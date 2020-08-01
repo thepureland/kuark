@@ -4,7 +4,7 @@ import io.ktor.routing.routing
 import io.ktor.server.engine.ApplicationEngine
 import io.ktor.server.engine.ApplicationEngineFactory
 import io.ktor.server.engine.embeddedServer
-import org.kuark.config.annotation.ConfigValue
+import org.kuark.context.annotation.ConfigValue
 import org.kuark.web.support.KtorMiddleware
 import org.kuark.web.support.KtorRouter
 import org.springframework.context.ApplicationContext

@@ -1,8 +1,7 @@
-package org.kuark.config.spring
+package org.kuark.context.spring
 
 import org.junit.jupiter.api.Test
-import org.kuark.config.annotation.ConfigValue
-import org.kuark.config.spring.SpringKit
+import org.kuark.context.annotation.ConfigValue
 import org.kuark.test.SpringTest
 
 

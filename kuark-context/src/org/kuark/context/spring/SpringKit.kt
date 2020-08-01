@@ -1,4 +1,4 @@
-package org.kuark.config.spring
+package org.kuark.context.spring
 
 import org.springframework.context.ApplicationContext
 import org.springframework.context.ApplicationContextAware

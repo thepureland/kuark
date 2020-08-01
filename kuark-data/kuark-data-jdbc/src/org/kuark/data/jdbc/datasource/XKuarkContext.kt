@@ -1,7 +1,7 @@
 package org.kuark.data.jdbc.datasource
 
-import org.kuark.config.context.KuarkContext
-import org.kuark.config.spring.SpringKit
+import org.kuark.context.core.KuarkContext
+import org.kuark.context.spring.SpringKit
 import javax.sql.DataSource
 
 /**

@@ -2,7 +2,7 @@ package org.kuark.validation.constraints.validator
 
 import com.alibaba.fastjson.JSON
 import com.alibaba.fastjson.JSONObject
-import org.kuark.config.context.KuarkContext
+import org.kuark.context.core.KuarkContext
 import org.kuark.validation.constraints.Depends
 import org.kuark.validation.constraints.support.AndOr
 import org.kuark.validation.constraints.support.FormPropertyConverter

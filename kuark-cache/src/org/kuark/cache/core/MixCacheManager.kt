@@ -3,7 +3,7 @@ package org.kuark.cache.core
 import org.kuark.base.log.LogFactory
 import org.kuark.cache.context.CacheNameResolver
 import org.kuark.cache.enums.CacheStrategy
-import org.kuark.config.annotation.ConfigValue
+import org.kuark.context.annotation.ConfigValue
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.cache.Cache

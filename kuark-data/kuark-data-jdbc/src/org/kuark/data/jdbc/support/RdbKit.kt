@@ -3,7 +3,7 @@ package org.kuark.data.jdbc.support
 import me.liuwj.ktorm.database.Database
 import org.kuark.base.lang.string.deleteWhitespace
 import org.kuark.base.lang.string.substringBetween
-import org.kuark.config.context.KuarkContext
+import org.kuark.context.core.KuarkContext
 import org.kuark.data.jdbc.datasource.currentDataSource
 import org.kuark.data.jdbc.metadata.RdbType
 import java.sql.Connection

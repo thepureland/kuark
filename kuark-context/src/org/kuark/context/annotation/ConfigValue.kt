@@ -1,4 +1,4 @@
-package org.kuark.config.annotation
+package org.kuark.context.annotation
 
 /**
  * 配置项注解，用于从spring配置文件或nacos读取配置信息

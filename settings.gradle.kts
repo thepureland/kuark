@@ -1,6 +1,6 @@
 rootProject.name = "kuark"
 include("kuark-base")
-include("kuark-config")
+include("kuark-context")
 include("kuark-data")
 include("kuark-data:kuark-data-jdbc")
 findProject(":kuark-data:kuark-data-jdbc")?.name = "kuark-data-jdbc"

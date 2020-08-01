@@ -1,6 +1,6 @@
 package org.kuark.data.jdbc.datasource
 
-import org.kuark.config.context.KuarkContext
+import org.kuark.context.core.KuarkContext
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource
 

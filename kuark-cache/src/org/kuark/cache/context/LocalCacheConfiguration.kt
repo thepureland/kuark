@@ -2,7 +2,7 @@ package org.kuark.cache.context
 
 import com.github.benmanes.caffeine.cache.Caffeine
 import com.github.benmanes.caffeine.cache.CaffeineSpec
-import org.kuark.config.annotation.ConfigValue
+import org.kuark.context.annotation.ConfigValue
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression
 import org.springframework.cache.CacheManager

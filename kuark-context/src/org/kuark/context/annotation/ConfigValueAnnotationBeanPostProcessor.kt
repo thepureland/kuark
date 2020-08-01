@@ -1,4 +1,4 @@
-package org.kuark.config.annotation
+package org.kuark.context.annotation
 
 import com.alibaba.nacos.client.config.utils.MD5
 import com.alibaba.nacos.spring.context.event.config.NacosConfigReceivedEvent

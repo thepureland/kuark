@@ -1,4 +1,4 @@
-package org.kuark.config.context
+package org.kuark.context.core
 
 import com.alibaba.nacos.spring.context.annotation.config.EnableNacosConfig
 import com.alibaba.nacos.spring.context.annotation.config.NacosPropertySource

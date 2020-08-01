@@ -1,4 +1,4 @@
-package org.kuark.config.kit
+package org.kuark.context.kit
 
 import org.kuark.base.lang.ClassKit
 import org.kuark.base.log.LogFactory

@@ -5,7 +5,7 @@ import com.alibaba.fastjson.JSONObject
 import org.hibernate.validator.internal.engine.constraintvalidation.ConstraintValidatorContextImpl
 import org.hibernate.validator.internal.engine.path.PathImpl
 import org.kuark.base.lang.reflect.MethodKit
-import org.kuark.config.context.KuarkContext
+import org.kuark.context.core.KuarkContext
 import org.kuark.validation.constraints.AtLeast
 import org.kuark.validation.constraints.support.FormPropertyConverter
 import java.lang.reflect.Method

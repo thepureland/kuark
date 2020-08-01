@@ -1,10 +1,8 @@
 package org.kuark.data.jdbc.datasource
 
 import com.zaxxer.hikari.HikariDataSource
-import org.kuark.base.lang.string.startsWithAny
-import org.kuark.config.context.KuarkContext
+import org.kuark.context.core.KuarkContext
 import org.kuark.data.jdbc.support.RdbKit
-import org.kuark.data.jdbc.metadata.RdbType
 import javax.sql.DataSource
 
 /**

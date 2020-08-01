@@ -47,8 +47,6 @@ findProject(":kuark-ui:kuark-ui-jfx")?.name = "kuark-ui-jfx"
 include("kuark-web")
 include("kuark-web:kuark-web-session")
 findProject(":kuark-web:kuark-web-session")?.name = "kuark-web-session"
-include("kuark-web:kuark-web-validation")
-findProject(":kuark-web:kuark-web-validation")?.name = "kuark-web-validation"
 include("kuark-web:kuark-web-ktor")
 findProject(":kuark-web:kuark-web-ktor")?.name = "kuark-web-ktor"
 include("kuark-test")

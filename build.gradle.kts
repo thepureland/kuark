@@ -135,6 +135,12 @@ subprojects {
             dependency("org.slf4j:log4j-over-slf4j:$slf4j_version")
             dependency("ch.qos.logback:logback-classic:$logback_version")
 
+            // validation
+            dependency("javax.validation:validation-api:2.0.1.Final")
+            dependency("org.hibernate.validator:hibernate-validator:6.1.5.Final")
+            dependency("javax.el:javax.el-api:3.0.1-b06")
+            dependency("org.glassfish.web:javax.el:2.2.6")
+
             // springboot
             dependency("org.springframework.boot:spring-boot-starter-aop:$spring_boot_version")
             dependency("org.springframework.boot:spring-boot-starter-test:$spring_boot_version") {
@@ -174,12 +180,6 @@ subprojects {
             dependency("io.ktor:ktor-client-core-jvm:$ktor_version")
             dependency("io.ktor:ktor-client-apache:$ktor_version")
             dependency("io.ktor:ktor-server-tests:$ktor_version")
-
-            // validation
-            dependency("javax.validation:validation-api:2.0.1.Final")
-            dependency("org.hibernate.validator:hibernate-validator:6.1.5.Final")
-            dependency("javax.el:javax.el-api:3.0.1-b06")
-            dependency("org.glassfish.web:javax.el:2.2.6")
 
             // javafx
 //            dependency("de.roskenet:springboot-javafx-support:2.1.6")

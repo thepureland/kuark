@@ -43,13 +43,13 @@ class ClassPathResource(override val location: String?) : Comparable<ClassPathRe
      * @return The url of this resource.
      */
     private val url: URL?
-        private get() = classLoader.getResource(location)
+        get() = classLoader.getResource(location)
 
     /**
      * @return The classloader to load the resource with.
      */
     private val classLoader: ClassLoader
-        private get() = Thread.currentThread().contextClassLoader
+        get() = Thread.currentThread().contextClassLoader
 
     override fun loadAsString(encoding: String): String? {
         val inputStream = classLoader.getResourceAsStream(location)
@@ -71,14 +71,14 @@ class ClassPathResource(override val location: String?) : Comparable<ClassPathRe
         return url != null
     }
 
-    override fun equals(o: Any?): Boolean {
-        if (this === o) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) {
             return true
         }
-        if (o == null || javaClass != o.javaClass) {
+        if (other == null || javaClass != other.javaClass) {
             return false
         }
-        val that = o as ClassPathResource
+        val that = other as ClassPathResource
         return location == that.location
     }
 
@@ -86,8 +86,8 @@ class ClassPathResource(override val location: String?) : Comparable<ClassPathRe
         return location!!.hashCode()
     }
 
-    override fun compareTo(o: ClassPathResource): Int {
-        return location!!.compareTo(o.location!!)
+    override fun compareTo(other: ClassPathResource): Int {
+        return location!!.compareTo(other.location!!)
     }
 
 }

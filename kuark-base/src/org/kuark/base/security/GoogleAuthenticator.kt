@@ -76,7 +76,7 @@ class GoogleAuthenticator {
          * @return secret key
          */
         fun generateSecretKey(): String? {
-            var sr: SecureRandom? = null
+            var sr: SecureRandom?
             try {
                 sr = SecureRandom.getInstance(RANDOM_NUMBER_ALGORITHM)
                 sr.setSeed(Base64.decodeBase64(SEED))

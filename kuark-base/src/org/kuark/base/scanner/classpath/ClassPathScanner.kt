@@ -184,7 +184,7 @@ object ClassPathScanner {
      * @return The classloader to use to scan the classpath.
      */
     private val classLoader: ClassLoader
-        private get() = Thread.currentThread().contextClassLoader
+        get() = Thread.currentThread().contextClassLoader
 
     /**
      * Filters this list of resource names to only include the ones whose

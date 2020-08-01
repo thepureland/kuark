@@ -67,17 +67,17 @@ class TreeNode<T> : Serializable {
         return result
     }
 
-    override fun equals(obj: Any?): Boolean {
-        if (this === obj) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) {
             return true
         }
-        if (obj == null) {
+        if (other == null) {
             return false
         }
-        if (javaClass != obj.javaClass) {
+        if (javaClass != other.javaClass) {
             return false
         }
-        val other = obj as TreeNode<T?>
+        val other = other as TreeNode<T?>
         if (`object` == null) {
             if (other.`object` != null) {
                 return false

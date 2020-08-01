@@ -321,8 +321,8 @@ object MethodKit {
      * @since 1.0.0
      */
     fun getMatchingAccessibleMethod(cls: KClass<*>, methodName: String, vararg parameterTypes: KClass<*>?): Method {
-        val javaClasses = arrayOfNulls<Class<*>>(parameterTypes?.size ?: 0)
-        parameterTypes?.forEachIndexed { index, kClass -> javaClasses[index] = kClass!!.java }
+        val javaClasses = arrayOfNulls<Class<*>>(parameterTypes.size)
+        parameterTypes.forEachIndexed { index, kClass -> javaClasses[index] = kClass!!.java }
         return MethodUtils.getMatchingAccessibleMethod(cls.java, methodName, *javaClasses)
     }
 

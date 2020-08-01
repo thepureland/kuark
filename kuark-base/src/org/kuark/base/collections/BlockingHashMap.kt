@@ -122,8 +122,7 @@ class BlockingHashMap<K, V> : IBlockingMap<K, V> {
 
         @Throws(InterruptedException::class)
         fun poll(timeout: Long): E? {
-            var timeout = timeout
-            timeout = TimeUnit.MILLISECONDS.toNanos(timeout)
+            var timeoutNanos = TimeUnit.MILLISECONDS.toNanos(timeout)
             val x: E
             val lock = this.lock
             lock.lockInterruptibly()
@@ -133,11 +132,11 @@ class BlockingHashMap<K, V> : IBlockingMap<K, V> {
                         x = obj!!
                         break
                     }
-                    if (timeout <= 0) {
+                    if (timeoutNanos <= 0) {
                         return null
                     }
-                    timeout = try {
-                        cond.awaitNanos(timeout)
+                    timeoutNanos = try {
+                        cond.awaitNanos(timeoutNanos)
                     } catch (ie: InterruptedException) {
                         cond.signal()
                         throw ie

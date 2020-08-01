@@ -155,7 +155,7 @@ object I18nKit {
                 continue
             }
             val keyValueMap = moduleMap[module]
-            for ((key, value) in keyValueMapDef!!) {
+            for ((key, value) in keyValueMapDef) {
                 if (!keyValueMap!!.containsKey(key) || keyValueMap[key] == null || keyValueMap[key]!!.isBlank()) {
                     keyValueMap[key] = value
                     //                    LOG.debug("i18n:缺失语言:{0},类型:{1},模块:{2},键:{3}",locale,type,module,key);
@@ -177,7 +177,7 @@ object I18nKit {
             val list = ArrayList<Resource>()
             resourceGroup[locale as String] = list
             for (resource in resources) {
-                if (resource.filename.indexOf(locale) !== -1) {
+                if (resource.filename.indexOf(locale) != -1) {
                     list.add(resource)
                 }
             }
@@ -196,7 +196,7 @@ object I18nKit {
     ) {
         val moduleAndLocale = getModuleAndLocale(resource)
         val moduleName: String = moduleAndLocale.first
-        val locale: String = moduleAndLocale.second
+//        val locale: String = moduleAndLocale.second
         val resPrefix = "$DEFAULT_BASE_PATH$type/"
         val bundle = bundle(resPrefix + resource.filename)
         val map = createMapByModule(moduleMap, moduleName)
@@ -239,11 +239,11 @@ object I18nKit {
      * value:  key:[i18n-key] value:[i18n]
      */
     fun getI18nMap(locale: String?): Map<String, MutableMap<String, MutableMap<String, String?>>> {
-        var locale = locale
-        if (!isSupport(locale)) {
-            LOG.error("出现未支持的国际化地区:[{0}]", locale)
+        var localeStr = locale
+        if (!isSupport(localeStr)) {
+            LOG.error("出现未支持的国际化地区:[{0}]", localeStr)
         }
-        return i18nMap[locale]!!
+        return i18nMap[localeStr]!!
     }
 
     /**

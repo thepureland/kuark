@@ -1,9 +1,6 @@
 package org.kuark.cache.core
 
-import java.lang.annotation.Documented
 import java.lang.annotation.Inherited
-import java.lang.annotation.Retention
-import java.lang.annotation.RetentionPolicy
 import kotlin.reflect.KClass
 
 /**
@@ -24,9 +21,9 @@ import kotlin.reflect.KClass
  * @author K
  * @since 1.0.0
  */
-@Documented
+@MustBeDocumented
 @Inherited
-@Retention(RetentionPolicy.RUNTIME)
+@Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.FUNCTION, AnnotationTarget.PROPERTY_GETTER, AnnotationTarget.PROPERTY_SETTER)
 annotation class BatchCacheable(
 

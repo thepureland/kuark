@@ -184,7 +184,7 @@ object Base36Kit {
 
     //数组排序
     private fun sortArr(arr: Array<Array<String?>>, col: Int): Array<Array<String?>> {
-        var temp = arrayOfNulls<String>(arr[0].size)
+        var temp: Array<String?>
         for (i in 0 until arr.size - 1) {
             for (j in arr.size - 1 downTo i + 1) {
                 if (arr[j][col]!!.toInt() < arr[j - 1][col]!!.toInt()) {
@@ -199,18 +199,18 @@ object Base36Kit {
 
     //字符串转换
     private fun transStr(inStr: String, transNum: Long, plus_minus: Boolean, band36_62: Boolean): String {
-        var inStr = inStr
+        var s = inStr
         var band = 62
         if (band36_62) {
             band = 36
             //36进制不包括小写字母，小写字母以大写字母来处理
-            inStr = inStr.toUpperCase()
+            s = s.toUpperCase()
         }
-        val len1 = inStr.length
+        val len1 = s.length
         val len2 = transNum.toString().length
         val len = if (len1 < len2) len1 else len2
-        val outStr = String()
-        val ch = inStr.toCharArray()
+//        val outStr = String()
+        val ch = s.toCharArray()
         for (i in 0 until len) {
             val j = len1 - 1 - i
             //转为自定义的36位或/62位编码

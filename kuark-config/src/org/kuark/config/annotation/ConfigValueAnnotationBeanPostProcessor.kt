@@ -130,23 +130,23 @@ class ConfigValueAnnotationBeanPostProcessor :
     }
 
     private fun resolvePlaceholder(placeholder: String): String? {
-        var placeholder = placeholder
-        if (!placeholder.startsWith(PLACEHOLDER_PREFIX)) {
+        var placeholderStr = placeholder
+        if (!placeholderStr.startsWith(PLACEHOLDER_PREFIX)) {
             return null
         }
-        if (!placeholder.endsWith(PLACEHOLDER_SUFFIX)) {
+        if (!placeholderStr.endsWith(PLACEHOLDER_SUFFIX)) {
             return null
         }
-        if (placeholder.length <= PLACEHOLDER_PREFIX.length + PLACEHOLDER_SUFFIX.length) {
+        if (placeholderStr.length <= PLACEHOLDER_PREFIX.length + PLACEHOLDER_SUFFIX.length) {
             return null
         }
         val beginIndex = PLACEHOLDER_PREFIX.length
-        val endIndex = placeholder.length - PLACEHOLDER_PREFIX.length + 1
-        placeholder = placeholder.substring(beginIndex, endIndex)
-        val separatorIndex = placeholder.indexOf(VALUE_SEPARATOR)
+        val endIndex = placeholderStr.length - PLACEHOLDER_PREFIX.length + 1
+        placeholderStr = placeholderStr.substring(beginIndex, endIndex)
+        val separatorIndex = placeholderStr.indexOf(VALUE_SEPARATOR)
         return if (separatorIndex != -1) {
-            placeholder.substring(0, separatorIndex)
-        } else placeholder
+            placeholderStr.substring(0, separatorIndex)
+        } else placeholderStr
     }
 
     private fun <K, V> put2ListMap(map: MutableMap<K, MutableList<V>>, key: K, value: V) {

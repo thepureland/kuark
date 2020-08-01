@@ -653,7 +653,7 @@ object FilenameKit {
      * @see IOCase#SYSTEM
      * @since 1.0.0
      */
-    open fun wildcardMatchOnSystem(filename: String?, wildcardMatcher: String?): Boolean =
+    fun wildcardMatchOnSystem(filename: String?, wildcardMatcher: String?): Boolean =
         FilenameUtils.wildcardMatchOnSystem(filename, wildcardMatcher)
 
     /**
@@ -670,7 +670,7 @@ object FilenameKit {
         FilenameUtils.wildcardMatch(filename, wildcardMatcher, adaptCaseSensitivity(caseSensitivity))
     //endregion wildcard
 
-    private inline fun adaptCaseSensitivity(caseSensitivity: Boolean?): IOCase =
+    private fun adaptCaseSensitivity(caseSensitivity: Boolean?): IOCase =
         when (caseSensitivity) {
             null -> IOCase.SYSTEM
             true -> IOCase.SENSITIVE

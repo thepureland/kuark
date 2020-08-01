@@ -141,7 +141,7 @@ internal class SoftHashMap<K, V> constructor(retentionSize: Int = DEFAULT_RETENT
      */
     private fun processQueue() {
         lateinit var sv: SoftValue<V, K>
-        while ((queue.poll() as SoftValue<V, K>)?.also { sv = it } != null) {
+        while ((queue.poll() as SoftValue<V, K>).also { sv = it } != null) {
             // noinspection SuspiciousMethodCalls
             map.remove(sv.key) // we can access private data!
         }
@@ -163,12 +163,12 @@ internal class SoftHashMap<K, V> constructor(retentionSize: Int = DEFAULT_RETENT
         return values.contains(value)
     }
 
-    override fun putAll(m: Map<out K, V>) {
-        if (m == null || m.isEmpty()) {
+    override fun putAll(map: Map<out K, V>) {
+        if (map.isEmpty()) {
             processQueue()
             return
         }
-        for ((key, value) in m) {
+        for ((key, value) in map) {
             put(key, value)
         }
     }

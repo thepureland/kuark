@@ -47,11 +47,11 @@ object NetworkKit {
         // The Runtime.exec() method returns an instance of a subclass of Process
         val myProc: Process
         // surround with a try catch block
-        var currentLine = ""
+        var currentLine: String
         // the operating systems name as referenced by the System
         val osName = SystemKit.getOSName()
         // a regular expression used to match the area of text we want
-        var macRegExp = ""
+        var macRegExp: String
         if (osName.startsWith("windows")) { // Windows operating system will run this
             // the regular expression we will be matching for the Mac address on Windows
             macRegExp = "[\\da-zA-Z]{1,2}\\-[\\da-zA-Z]{1,2}\\-[\\da-zA-Z]" +
@@ -72,7 +72,7 @@ object NetworkKit {
         // compile the macRegExp string into a Pattern
         val macPattern = Pattern.compile(".*($macRegExp).*")
         // a Matcher object for matching the regular expression to the string
-        var macMtch: Matcher? = null
+        var macMtch: Matcher?
         while (`in`.readLine().also {
                 currentLine = it
             } != null) { // walk through each line and try to match the pattern

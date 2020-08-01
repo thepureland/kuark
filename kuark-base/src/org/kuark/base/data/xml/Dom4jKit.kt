@@ -311,15 +311,15 @@ object Dom4jKit {
      * @since 1.0.0
      */
     fun asXml(elem: Element?, charset: String): String? {
-        var charset = charset
+        var s = charset
         if (elem == null) {
             LOG.error("调用Dom4jTool.asXml方法时传入的elem参数为null！")
             return null
         }
-        if (charset.isBlank()) {
-            charset = "UTF-8"
+        if (s.isBlank()) {
+            s = "UTF-8"
         }
-        return """<?xml version="1.0" encoding="$charset"?>
+        return """<?xml version="1.0" encoding="$s"?>
             ${elementToString(elem)}"""
     }
 

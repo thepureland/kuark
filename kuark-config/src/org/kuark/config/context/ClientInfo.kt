@@ -38,7 +38,7 @@ class ClientInfo {
     /**
      * 请求内容字符串表示
      */
-    var requestContentString: String? = requestContent?.toString() ?: null
+    var requestContentString: String? = requestContent?.toString()
 
     /**
      * 请求referer

@@ -3,9 +3,8 @@ package org.kuark.cache.core
 import org.junit.jupiter.api.Test
 import org.kuark.base.log.LogFactory
 import org.kuark.cache.context.CacheNames
-import org.kuark.test.JunitApplication
+import org.kuark.test.SpringTest
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Service
@@ -19,8 +18,7 @@ import java.util.concurrent.CountDownLatch
  * @author K
  * @since 1.0.0
  */
-@SpringBootTest(classes = [JunitApplication::class])
-internal class BatchCacheableTest {
+internal class BatchCacheableTest : SpringTest() {
 
     @Autowired
     private lateinit var testCacheService: TestCacheService
@@ -58,7 +56,7 @@ internal class BatchCacheableTest {
     }
 
     @Service
-    @CacheConfig(cacheNames = [CacheNames.DEMO])
+    @CacheConfig(cacheNames = [CacheNames.TEST])
     open class TestCacheService {
 
         private val log = LogFactory.getLog(this::class)
@@ -112,6 +110,6 @@ internal class BatchCacheableTest {
         val name: String,
         var time: LocalDateTime?,
         val type: Int
-    ): Serializable
+    ) : Serializable
 
 }

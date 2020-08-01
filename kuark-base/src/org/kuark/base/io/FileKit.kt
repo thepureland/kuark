@@ -54,7 +54,7 @@ object FileKit {
                 input = FileInputStream(file)
                 zipOut = ZipOutputStream(FileOutputStream(zipFile))
                 zipOut.putNextEntry(ZipEntry(file.name))
-                var temp: Int = 0
+                var temp: Int
                 while ((input.read().also { temp = it }) != -1) {
                     zipOut.write(temp)
                 }

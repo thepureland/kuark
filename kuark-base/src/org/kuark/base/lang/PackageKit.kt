@@ -109,7 +109,7 @@ object PackageKit {
         packageName: String, packageDirName: String, url: URL,
         recursive: Boolean, action: Action
     ) {
-        var packageName = packageName
+        var pkgName = packageName
         val jar: JarFile
         try {
             // 获取jar
@@ -132,7 +132,7 @@ object PackageKit {
                     // 如果以"/"结尾 是一个包
                     if (idx != -1) {
                         // 获取包名 把"/"替换成"."
-                        packageName = name.substring(0, idx).replace('/', '.')
+                        pkgName = name.substring(0, idx).replace('/', '.')
                     }
                     // 如果可以迭代下去 并且是一个包
                     if (idx != -1 || recursive) {
@@ -140,17 +140,17 @@ object PackageKit {
                             // 如果是一个.class文件 而且不是目录
                             if (name.endsWith(".class") && !entry.isDirectory) {
                                 // 去掉后面的".class" 获取真正的类名
-                                val className = name.substring(packageName.length + 1, name.length - 6)
+                                val className = name.substring(pkgName.length + 1, name.length - 6)
                                 try {
                                     // 添加到classes
-                                    action.addClass(Class.forName("$packageName.$className"))
+                                    action.addClass(Class.forName("$pkgName.$className"))
                                 } catch (e: ClassNotFoundException) {
                                     LOG.error(e)
                                 }
                             }
                         } else { // 获取包名
                             if (entry.isDirectory) {
-                                action.addPackage(packageName)
+                                action.addPackage(pkgName)
                             }
                         }
                     }

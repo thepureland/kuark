@@ -179,8 +179,7 @@ object JaxbKit {
     }
 
     private fun getJaxbContext(clazz: KClass<*>): JAXBContext {
-        var jaxbContext = jaxbContexts[clazz]
-        jaxbContext = JAXBContext.newInstance(clazz.java, CollectionWrapper::class.java)
+        var jaxbContext = JAXBContext.newInstance(clazz.java, CollectionWrapper::class.java)
         jaxbContexts.putIfAbsent(clazz, jaxbContext)
         return jaxbContext
     }

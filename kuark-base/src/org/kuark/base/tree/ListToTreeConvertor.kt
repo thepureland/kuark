@@ -27,7 +27,7 @@ object ListToTreeConvertor {
         val treeNodeList = ArrayList<TreeNode<E>>()
         for (obj in objectList) {
             val node = treeNodeMap[obj.selfUniqueIdentifier]
-            val pId = obj!!.parentUniqueIdentifier
+            val pId = obj.parentUniqueIdentifier
             if (pId == null || "" == pId) { // 根
                 treeNodeList.add(node!!)
             } else {

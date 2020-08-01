@@ -58,7 +58,7 @@ object Registry {
      * @param objs
      */
     fun register(key: String, vararg objs: Any) {
-        if (objs == null || objs.isEmpty()) {
+        if (objs.isEmpty()) {
             return
         }
         val resultList: MutableList<Any> = lookup(key)

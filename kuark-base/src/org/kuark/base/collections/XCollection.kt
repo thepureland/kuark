@@ -19,16 +19,16 @@ import org.apache.commons.collections.CollectionUtils
  * @since 1.0.0
  */
 fun Collection<*>.eachToString(prefix: String? = null, postfix: String? = null): String {
-    var prefix = prefix
-    var postfix = postfix
+    var prefixStr = prefix
+    var postfixStr = postfix
     if (this.isEmpty()) {
         return ""
     }
-    prefix = prefix ?: ""
-    postfix = postfix ?: ""
+    prefixStr = prefixStr ?: ""
+    postfixStr = postfixStr ?: ""
     val builder = StringBuilder()
     for (o in this) {
-        builder.append(prefix).append(o).append(postfix)
+        builder.append(prefixStr).append(o).append(postfixStr)
     }
 
     return builder.toString()

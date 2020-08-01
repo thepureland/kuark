@@ -2,12 +2,10 @@ package org.kuark.biz.sys.service
 
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Test
-import org.kuark.test.JunitApplication
+import org.kuark.test.SpringTest
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
 
-@SpringBootTest(classes = [JunitApplication::class])
-internal open class SysParamServiceTest {
+internal class SysParamServiceTest : SpringTest() {
 
     @Autowired
     private lateinit var sysParamService: SysParamService

@@ -72,8 +72,7 @@ object PathKit {
         if (baseDir == file) {
             return ""
         }
-        var templateFile = ""
-        templateFile = if (baseDir.parentFile == null) {
+        var templateFile = if (baseDir.parentFile == null) {
             file.absolutePath.substring(baseDir.absolutePath.length)
         } else {
             file.absolutePath.substring(baseDir.absolutePath.length + 1)

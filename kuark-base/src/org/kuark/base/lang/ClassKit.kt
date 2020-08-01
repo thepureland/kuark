@@ -29,7 +29,7 @@ object ClassKit {
         Class.forName(className, true, classLoader).getDeclaredConstructor().newInstance()
 
     private val classLoader: ClassLoader
-        private get() = Thread.currentThread().contextClassLoader
+        get() = Thread.currentThread().contextClassLoader
 
     /**
      * 确认指定名称的类是否存在并且可被加载。当它自己或它依赖的类不存在或不能被加载时，将返回false

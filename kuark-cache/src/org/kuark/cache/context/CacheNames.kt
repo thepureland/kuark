@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component
 object CacheNames: ICacheNames {
 
     /** 测试用 */
-    const val DEMO = "c"
+    const val TEST = "test"
 
     /** 字典项 */
     const val SYS_DICT_ITEM = "sys_dict_item"

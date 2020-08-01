@@ -35,10 +35,8 @@ class FileSystemResource(location: String?) : Resource, Comparable<FileSystemRes
     override val location: String?
         get() {
             var path = loc.path.replace("\\", "/")
-            if (path != null) {
-                if (!path.startsWith("/")) {
-                    path = "/$path"
-                }
+            if (!path.startsWith("/")) {
+                path = "/$path"
             }
             return path
         }
@@ -96,8 +94,8 @@ class FileSystemResource(location: String?) : Resource, Comparable<FileSystemRes
         return loc.exists()
     }
 
-    override fun compareTo(o: FileSystemResource): Int {
-        return loc.compareTo(o.loc)
+    override fun compareTo(other: FileSystemResource): Int {
+        return loc.compareTo(other.loc)
     }
 
     /**

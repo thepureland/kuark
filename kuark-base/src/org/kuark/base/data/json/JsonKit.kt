@@ -76,12 +76,12 @@ object JsonKit {
         if (json.isBlank()) {
             return null
         }
-        var mapper = mapper
-        if (mapper == null) {
-            mapper = createDefaultMapper()
+        var objectMapper = mapper
+        if (objectMapper == null) {
+            objectMapper = createDefaultMapper()
         }
         try {
-            return mapper.readValue(json, clazz.java)
+            return objectMapper.readValue(json, clazz.java)
         } catch (e: Exception) {
             LOG.error(e, "json解析为对象出错！json: $json")
         }
@@ -98,15 +98,15 @@ object JsonKit {
      * @see .fromJson
      */
     fun <T> fromJson(json: String, typeReference: TypeReference<T>?, mapper: ObjectMapper?): T? {
-        var mapper: ObjectMapper? = mapper
+        var objectMapper: ObjectMapper? = mapper
         if (json.isBlank()) {
             return null
         }
-        if (mapper == null) {
-            mapper = createDefaultMapper()
+        if (objectMapper == null) {
+            objectMapper = createDefaultMapper()
         }
         try {
-            return mapper.readValue(json, typeReference)
+            return objectMapper.readValue(json, typeReference)
         } catch (e: Exception) {
             LOG.error(e, "json解析为对象出错！json: $json")
         }
@@ -125,15 +125,15 @@ object JsonKit {
      * @since 1.0.0
      */
     fun fromJson(jsonString: String, javaType: JavaType?, mapper: ObjectMapper?): Any? {
-        var mapper: ObjectMapper? = mapper
+        var objectMapper: ObjectMapper? = mapper
         if (StringUtils.isEmpty(jsonString)) {
             return null
         }
-        if (mapper == null) {
-            mapper = createDefaultMapper()
+        if (objectMapper == null) {
+            objectMapper = createDefaultMapper()
         }
         return try {
-            mapper.readValue(jsonString, javaType)
+            objectMapper.readValue(jsonString, javaType)
         } catch (e: IOException) {
             LOG.error(e, "反序列化json串出错:$jsonString")
             null
@@ -167,11 +167,11 @@ object JsonKit {
     fun createCollectionType(
         mapper: ObjectMapper?, collectionClass: Class<*>, vararg elemClasses: Class<*>?
     ): JavaType {
-        var mapper: ObjectMapper? = mapper
-        if (mapper == null) {
-            mapper = createDefaultMapper()
+        var objectMapper: ObjectMapper? = mapper
+        if (objectMapper == null) {
+            objectMapper = createDefaultMapper()
         }
-        return mapper.typeFactory.constructParametricType(collectionClass, *elemClasses)
+        return objectMapper.typeFactory.constructParametricType(collectionClass, *elemClasses)
     }
 
     /**
@@ -221,10 +221,10 @@ object JsonKit {
      * @return Class的实例，出错时返回null
      */
     fun <T : Any> fromJson(jsonFile: File, clazz: KClass<T>, mapper: ObjectMapper?): T? {
-        var mapper = mapper
-        mapper = mapper ?: createDefaultMapper()
+        var objectMapper = mapper
+        objectMapper = objectMapper ?: createDefaultMapper()
         try {
-            return mapper.readValue(jsonFile, clazz.java)
+            return objectMapper.readValue(jsonFile, clazz.java)
         } catch (e: Exception) {
             LOG.error(e, "json解析为对象出错！")
         }
@@ -240,10 +240,10 @@ object JsonKit {
      * @return Class的实例，出错时返回null
      */
     fun <T> fromJson(jsonFile: File, typeReference: TypeReference<T>, mapper: ObjectMapper?): T? {
-        var mapper = mapper
-        mapper = mapper ?: createDefaultMapper()
+        var objectMapper = mapper
+        objectMapper = objectMapper ?: createDefaultMapper()
         try {
-            return mapper.readValue(jsonFile, typeReference)
+            return objectMapper.readValue(jsonFile, typeReference)
         } catch (e: Exception) {
             LOG.error(e, "json解析为对象出错！")
         }
@@ -260,10 +260,10 @@ object JsonKit {
      */
     @JvmOverloads
     fun toJson(`object`: Any?, mapper: ObjectMapper? = null): String? {
-        var mapper = mapper
-        mapper = mapper ?: createDefaultMapper()
+        var objectMapper = mapper
+        objectMapper = objectMapper ?: createDefaultMapper()
         return try {
-            mapper.writeValueAsString(`object`)
+            objectMapper.writeValueAsString(`object`)
         } catch (e: IOException) {
             LOG.error(e)
             null
@@ -317,10 +317,10 @@ object JsonKit {
      * @since 1.0.0
      */
     fun <T> updateBean(jsonString: String, `object`: T, mapper: ObjectMapper?): T? {
-        var mapper = mapper
-        mapper = mapper ?: createDefaultMapper()
+        var objectMapper = mapper
+        objectMapper = objectMapper ?: createDefaultMapper()
         try {
-            return mapper.readerForUpdating(`object`).readValue(jsonString)
+            return objectMapper.readerForUpdating(`object`).readValue(jsonString)
         } catch (e: Exception) {
             LOG.error(e, "将json串:{0}更新到对象:{1}时出错.", jsonString, `object`)
         }

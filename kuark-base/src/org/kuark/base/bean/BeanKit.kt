@@ -71,7 +71,7 @@ object BeanKit {
             for ((srcField, destFieldStr) in entrySet) {
                 if (srcField.isNotBlank() && destFieldStr.isNotBlank()) {
                     val result = getProperty(srcObj, srcField)
-                    result?.let { copyProperty(destObj, destFieldStr, it) }
+                    copyProperty(destObj, destFieldStr, result)
                 }
             }
         } catch (e: Exception) {
@@ -127,11 +127,11 @@ object BeanKit {
      * @since 1.0.0
      */
     fun <T:Any> copyPropertiesExclude(source: Any?, target: T, vararg excludeProperties: String?): T {
-        val beanInfo = Introspector.getBeanInfo(target!!.javaClass)
+        val beanInfo = Introspector.getBeanInfo(target.javaClass)
         val targetPds = beanInfo.propertyDescriptors
-        val ignoreList = if (excludeProperties != null) Arrays.asList(*excludeProperties) else null
+        val ignoreList = listOf(*excludeProperties)
         for (targetPd in targetPds) {
-            if (targetPd.writeMethod != null && (excludeProperties == null || !ignoreList!!.contains(targetPd.name))) {
+            if (targetPd.writeMethod != null && !ignoreList!!.contains(targetPd.name)) {
                 val sourcePd: PropertyDescriptor = PropertyUtils.getPropertyDescriptor(source, targetPd.name)
                 sourcePd.readMethod?.run {
                     if (!Modifier.isPublic(declaringClass.modifiers)) {

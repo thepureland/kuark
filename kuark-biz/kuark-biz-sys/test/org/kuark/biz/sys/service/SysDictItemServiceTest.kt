@@ -2,12 +2,10 @@ package org.kuark.biz.sys.service
 
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
-import org.kuark.test.JunitApplication
+import org.kuark.test.SpringTest
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
 
-@SpringBootTest(classes = [JunitApplication::class])
-internal open class SysDictItemServiceTest {
+internal class SysDictItemServiceTest : SpringTest() {
 
     @Autowired
     private lateinit var sysDictItemService: SysDictItemService

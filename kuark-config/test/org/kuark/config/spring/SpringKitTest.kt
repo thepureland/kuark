@@ -1,16 +1,12 @@
-package org.kuark.config
+package org.kuark.config.spring
 
 import org.junit.jupiter.api.Test
 import org.kuark.config.annotation.ConfigValue
 import org.kuark.config.spring.SpringKit
-import org.springframework.boot.autoconfigure.SpringBootApplication
-import org.springframework.boot.test.context.SpringBootTest
+import org.kuark.test.SpringTest
 
 
-@SpringBootTest
-@SpringBootApplication
-//@ComponentScan("org.kuark.config")
-open class SpringTest {
+internal class SpringKitTest : SpringTest() {
 
     @ConfigValue(value = "\${nacos.test:123}", autoRefreshed = true)
     private val testProperties: String? = null

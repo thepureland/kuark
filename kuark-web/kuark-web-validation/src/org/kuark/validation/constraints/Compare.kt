@@ -2,9 +2,6 @@ package org.kuark.validation.constraints
 
 import org.kuark.validation.constraints.validator.CompareValidator
 import org.kuark.validation.constraints.support.CompareLogic
-import java.lang.annotation.Documented
-import java.lang.annotation.Retention
-import java.lang.annotation.RetentionPolicy
 import javax.validation.Constraint
 import javax.validation.Payload
 import kotlin.reflect.KClass
@@ -12,10 +9,10 @@ import kotlin.reflect.KClass
 /**
  * Create by (admin) on 2015/1/22.
  */
-@Documented
+@MustBeDocumented
 @Constraint(validatedBy = [CompareValidator::class])
 @Target(AnnotationTarget.FUNCTION, AnnotationTarget.PROPERTY_GETTER, AnnotationTarget.PROPERTY_SETTER)
-@Retention(RetentionPolicy.RUNTIME)
+@Retention(AnnotationRetention.RUNTIME)
 annotation class Compare(
 
     val message: String,
@@ -52,7 +49,7 @@ annotation class Compare(
         AnnotationTarget.PROPERTY_GETTER,
         AnnotationTarget.PROPERTY_SETTER
     )
-    @Retention(RetentionPolicy.RUNTIME)
-    @Documented
+    @Retention(AnnotationRetention.RUNTIME)
+    @MustBeDocumented
     annotation class List(vararg val value: Compare)
 }

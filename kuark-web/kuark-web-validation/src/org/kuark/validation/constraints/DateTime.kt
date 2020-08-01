@@ -1,9 +1,6 @@
 package org.kuark.validation.constraints
 
 import org.kuark.validation.constraints.validator.DateTimeValidator
-import java.lang.annotation.Documented
-import java.lang.annotation.Retention
-import java.lang.annotation.RetentionPolicy
 import javax.validation.Constraint
 import javax.validation.Payload
 import kotlin.reflect.KClass
@@ -11,10 +8,10 @@ import kotlin.reflect.KClass
 /**
  * Create by (admin) on 2015/1/23.
  */
-@Documented
+@MustBeDocumented
 @Constraint(validatedBy = [DateTimeValidator::class])
 @Target(AnnotationTarget.FUNCTION, AnnotationTarget.PROPERTY_GETTER, AnnotationTarget.PROPERTY_SETTER)
-@Retention(RetentionPolicy.RUNTIME)
+@Retention(AnnotationRetention.RUNTIME)
 annotation class DateTime(
     val message: String = "{DateTime.message}",
     val groups: Array<KClass<*>> = [],
@@ -26,7 +23,7 @@ annotation class DateTime(
         AnnotationTarget.PROPERTY_GETTER,
         AnnotationTarget.PROPERTY_SETTER
     )
-    @Retention(RetentionPolicy.RUNTIME)
-    @Documented
+    @Retention(AnnotationRetention.RUNTIME)
+    @MustBeDocumented
     annotation class List(vararg val value: DateTime)
 }

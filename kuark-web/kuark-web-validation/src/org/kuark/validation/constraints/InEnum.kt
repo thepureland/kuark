@@ -1,9 +1,6 @@
 package org.kuark.validation.constraints
 
 import org.kuark.validation.constraints.validator.InEnumValidator
-import java.lang.annotation.Documented
-import java.lang.annotation.Retention
-import java.lang.annotation.RetentionPolicy
 import javax.validation.Constraint
 import javax.validation.Payload
 import kotlin.reflect.KClass
@@ -16,8 +13,8 @@ import kotlin.reflect.KClass
 @Target(
     AnnotationTarget.FUNCTION, AnnotationTarget.PROPERTY_GETTER, AnnotationTarget.PROPERTY_SETTER
 )
-@Retention(RetentionPolicy.RUNTIME)
-@Documented
+@Retention(AnnotationRetention.RUNTIME)
+@MustBeDocumented
 @Constraint(validatedBy = [InEnumValidator::class])
 annotation class InEnum(
     /**
@@ -38,7 +35,7 @@ annotation class InEnum(
         AnnotationTarget.CONSTRUCTOR,
         AnnotationTarget.VALUE_PARAMETER
     ) // 约束注解应用的目标元素类型(METHOD, FIELD, TYPE, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER等)
-    @Retention(RetentionPolicy.RUNTIME)
-    @Documented
+    @Retention(AnnotationRetention.RUNTIME)
+    @MustBeDocumented
     annotation class List(vararg val value: InEnum)
 }

@@ -3,9 +3,6 @@ package org.kuark.validation.constraints
 import org.kuark.validation.constraints.validator.DependsValidator
 import org.kuark.validation.constraints.support.AndOr
 import org.kuark.validation.constraints.support.Operator
-import java.lang.annotation.Documented
-import java.lang.annotation.Retention
-import java.lang.annotation.RetentionPolicy
 import javax.validation.Constraint
 import javax.validation.Payload
 import kotlin.reflect.KClass
@@ -16,10 +13,10 @@ import kotlin.reflect.KClass
  * @author admin
  * @time 8/12/15 5:28 PM
  */
-@Documented
+@MustBeDocumented
 @Constraint(validatedBy = [DependsValidator::class])
 @Target(AnnotationTarget.FUNCTION, AnnotationTarget.PROPERTY_GETTER, AnnotationTarget.PROPERTY_SETTER)
-@Retention(RetentionPolicy.RUNTIME)
+@Retention(AnnotationRetention.RUNTIME)
 annotation class Depends(
 
     val message: String = "{Depends.message}",
@@ -59,7 +56,7 @@ annotation class Depends(
         AnnotationTarget.PROPERTY_GETTER,
         AnnotationTarget.PROPERTY_SETTER
     )
-    @Retention(RetentionPolicy.RUNTIME)
-    @Documented
+    @Retention(AnnotationRetention.RUNTIME)
+    @MustBeDocumented
     annotation class List(vararg val value: Depends)
 }

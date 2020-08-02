@@ -1,8 +1,8 @@
-package org.kuark.base.validation.validator
+package org.kuark.base.validation.constraint.validator
 
 import com.alibaba.fastjson.JSON
 import com.alibaba.fastjson.JSONObject
-import org.kuark.base.validation.annotaions.Depends
+import org.kuark.base.validation.constraint.annotaions.Depends
 import org.kuark.base.validation.support.AndOr
 import org.kuark.base.validation.support.FormPropertyConverter
 import javax.validation.ConstraintValidator

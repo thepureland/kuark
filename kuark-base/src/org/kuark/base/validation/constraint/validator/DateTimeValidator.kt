@@ -1,6 +1,6 @@
-package org.kuark.base.validation.validator
+package org.kuark.base.validation.constraint.validator
 
-import org.kuark.base.validation.annotaions.DateTime
+import org.kuark.base.validation.constraint.annotaions.DateTime
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import javax.validation.ConstraintValidator

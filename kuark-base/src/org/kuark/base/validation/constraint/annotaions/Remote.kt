@@ -1,6 +1,6 @@
-package org.kuark.base.validation.annotaions
+package org.kuark.base.validation.constraint.annotaions
 
-import org.kuark.base.validation.validator.RemoteValidator
+import org.kuark.base.validation.constraint.validator.RemoteValidator
 import javax.validation.Constraint
 import javax.validation.Payload
 import kotlin.reflect.KClass

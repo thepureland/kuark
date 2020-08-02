@@ -65,7 +65,7 @@ object BeanKit {
      * @return 目标类的对象
      * @since 1.0.0
      */
-    fun <T> copyProperties(destObj: T?, srcObj: Any?, propertyMap: Map<String, String>): T? {
+    fun <T> copyProperties(destObj: T, srcObj: Any, propertyMap: Map<String, String>): T {
         try {
             val entrySet = propertyMap.entries
             for ((srcField, destFieldStr) in entrySet) {
@@ -87,12 +87,12 @@ object BeanKit {
      * @param srcObj 源对象
      * @param targetClass 目标类
      * @return 目标类的对象
-     * InvocationTargetException 对被调用方法的包装异常
-     * IllegalAccessException 如果请求的方法不能通过反射访问
+     * @InvocationTargetException 对被调用方法的包装异常
+     * @IllegalAccessException 如果请求的方法不能通过反射访问
      * InstantiationException 实例化异常
      * @since 1.0.0
      */
-    fun <T: Any> copyProperties(srcObj: Any?, targetClass: KClass<T>): T {
+    fun <T: Any> copyProperties(srcObj: Any, targetClass: KClass<T>): T {
         val target = targetClass.java.getDeclaredConstructor().newInstance()
         return copyProperties(srcObj, target)
     }
@@ -103,11 +103,11 @@ object BeanKit {
      *  @param src 源对象
      * @param dest 目标对象
      * @return 目标类的对象
-     * InvocationTargetException 对被调用方法的包装异常
-     * IllegalAccessException 如果请求的方法不能通过反射访问
+     * @InvocationTargetException 对被调用方法的包装异常
+     * @IllegalAccessException 如果请求的方法不能通过反射访问
      * @since 1.0.0
      */
-    fun <T> copyPropertiesExcludeId(src: IIdEntity<T>?, dest: IIdEntity<T>): IIdEntity<T> {
+    fun <T> copyPropertiesExcludeId(src: IIdEntity<T>, dest: IIdEntity<T>): IIdEntity<T> {
         val id = dest.id
         copyProperties(src, dest)
         dest.id = id
@@ -120,9 +120,9 @@ object BeanKit {
      * @param source 源对象
      * @param target 目标对象
      * @param excludeProperties 不拷贝的属性可变数组
-     * InvocationTargetException 对被调用方法的包装异常 <br></br>
-     * IllegalAccessException 如果请求的方法不能通过反射访问 <br></br>
-     * NoSuchMethodException 如果找不到指定的可访问的方法 <br></br>
+     * @InvocationTargetException 对被调用方法的包装异常
+     * @IllegalAccessException 如果请求的方法不能通过反射访问
+     * @NoSuchMethodException 如果找不到指定的可访问的方法
      * IntrospectionException 内省异常
      * @since 1.0.0
      */
@@ -153,8 +153,8 @@ object BeanKit {
      * 重置所有的非id属性的值
      *
      * @param entity 目标bean
-     * InvocationTargetException 对被调用方法的包装异常
-     * IllegalAccessException 如果请求的方法不能通过反射访问
+     * @InvocationTargetException 对被调用方法的包装异常
+     * @IllegalAccessException 如果请求的方法不能通过反射访问
      * InstantiationException 实例化异常
      * @since 1.0.0
      */
@@ -176,7 +176,7 @@ object BeanKit {
     fun <T: Any> batchCopyProperties(targetClass: KClass<T>, srcObjs: Collection<*>): List<T> {
         val targetList = mutableListOf<T>()
         for (srcObj in srcObjs) {
-            targetList.add(copyProperties(srcObj, targetClass))
+            targetList.add(copyProperties(srcObj!!, targetClass))
         }
         return targetList
     }
@@ -187,9 +187,9 @@ object BeanKit {
      *
      * @param bean 被克隆的bean
      * @return 克隆后的bean
-     * InvocationTargetException 对被调用方法的包装异常 <br></br>
-     * IllegalAccessException 如果请求的方法不能通过反射访问 <br></br>
-     * NoSuchMethodException 如果找不到指定的可访问的方法 <br></br>
+     * @InvocationTargetException 对被调用方法的包装异常
+     * @IllegalAccessException 如果请求的方法不能通过反射访问
+     * @NoSuchMethodException 如果找不到指定的可访问的方法
      * InstantiationException 实例化异常
      * @since 1.0.0
      */
@@ -201,8 +201,8 @@ object BeanKit {
 //     * @param orig 源bean
 //     * @param dest 目标bean
 //     * @return 目标对象
-//     * InvocationTargetException 对被调用方法的包装异常 <br></br>
-//     * IllegalAccessException 如果请求的方法不能通过反射访问 <br></br>
+//     * @InvocationTargetException 对被调用方法的包装异常
+//     * @IllegalAccessException 如果请求的方法不能通过反射访问
 //     * @since 1.0.0
 //     */
 //    fun <T> copyProperties(orig: Any?, dest: T): T {
@@ -218,12 +218,12 @@ object BeanKit {
      * @param orig 源bean
      * @param dest 目标bean
      * @return 目标对象
-     * InvocationTargetException 对被调用方法的包装异常 <br></br>
-     * IllegalAccessException 如果请求的方法不能通过反射访问 <br></br>
-     * NoSuchMethodException 如果找不到指定的可访问的方法 <br></br>
+     * @InvocationTargetException 对被调用方法的包装异常
+     * @IllegalAccessException 如果请求的方法不能通过反射访问
+     * @NoSuchMethodException 如果找不到指定的可访问的方法
      * @since 1.0.0
      */
-    fun <T> copyProperties(orig: Any?, dest: T): T = PropertyUtils.copyProperties(dest, orig) as T
+    fun <T> copyProperties(orig: Any, dest: T): T = PropertyUtils.copyProperties(dest, orig) as T
 
     /**
      * 拷贝(浅克隆)一个指定的属性值到指定的目标bean, 能进行类型转换
@@ -232,8 +232,8 @@ object BeanKit {
      * @param name 属性名(可以嵌套/索引/映射/组合)
      * @param value 属性值
      * @return 目标bean
-     * InvocationTargetException 对被调用方法的包装异常 <br></br>
-     * IllegalAccessException 如果请求的方法不能通过反射访问 <br></br>
+     * @InvocationTargetException 对被调用方法的包装异常
+     * @IllegalAccessException 如果请求的方法不能通过反射访问
      * @since 1.0.0
      */
     fun <T> copyProperty(bean: T, name: String?, value: Any?): T = BeanUtils.copyProperty(bean, name, value) as T
@@ -243,12 +243,12 @@ object BeanKit {
      *
      * @param bean 被提取属性的bean
      * @return Map<属性名，属性值>
-     * InvocationTargetException 对被调用方法的包装异常 <br></br>
-     * IllegalAccessException 如果请求的方法不能通过反射访问 <br></br>
-     * NoSuchMethodException 如果找不到指定的可访问的方法 <br></br>
+     * @InvocationTargetException 对被调用方法的包装异常
+     * @IllegalAccessException 如果请求的方法不能通过反射访问
+     * @NoSuchMethodException 如果找不到指定的可访问的方法
      * @since 1.0.0
      */
-    fun extract(bean: Any?): Map<String, Any> = PropertyUtils.describe(bean)
+    fun extract(bean: Any): Map<String, Any> = PropertyUtils.describe(bean)
 
     /**
      * 返回指定属性的值
@@ -256,12 +256,12 @@ object BeanKit {
      * @param bean 目标bean
      * @param name 属性名(可以嵌套/索引/映射/组合)
      * @return 属性值
-     * InvocationTargetException 对被调用方法的包装异常 <br></br>
-     * IllegalAccessException 如果请求的方法不能通过反射访问 <br></br>
-     * NoSuchMethodException 如果找不到指定的可访问的方法 <br></br>
+     * @InvocationTargetException 对被调用方法的包装异常
+     * @IllegalAccessException 如果请求的方法不能通过反射访问
+     * @NoSuchMethodException 如果找不到指定的可访问的方法
      * @since 1.0.0
      */
-    fun getProperty(bean: Any?, name: String?): Any = PropertyUtils.getProperty(bean, name)
+    fun getProperty(bean: Any, name: String?): Any = PropertyUtils.getProperty(bean, name)
 
     //endregion 封装org.apache.commons.beanutils.BeanUtils和PropertyUtils
 

@@ -1,7 +1,7 @@
 package org.kuark.base.validation
 
 import org.hibernate.validator.group.GroupSequenceProvider
-import org.kuark.validation.constraints.DateTime
+import org.kuark.base.validation.constraint.annotaions.DateTime
 import java.time.LocalDate
 import javax.validation.constraints.DecimalMin
 import javax.validation.constraints.NotEmpty

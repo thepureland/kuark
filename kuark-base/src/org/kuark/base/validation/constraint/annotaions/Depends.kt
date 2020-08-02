@@ -1,8 +1,8 @@
-package org.kuark.base.validation.annotaions
+package org.kuark.base.validation.constraint.annotaions
 
 import org.kuark.base.validation.support.AndOr
 import org.kuark.base.validation.support.Operator
-import org.kuark.base.validation.validator.DependsValidator
+import org.kuark.base.validation.constraint.validator.DependsValidator
 import javax.validation.Constraint
 import javax.validation.Payload
 import kotlin.reflect.KClass

@@ -1,7 +1,7 @@
-package org.kuark.base.validation.validator
+package org.kuark.base.validation.constraint.validator
 
 import org.kuark.base.log.LogFactory
-import org.kuark.base.validation.annotaions.InEnum
+import org.kuark.base.validation.constraint.annotaions.InEnum
 import java.lang.reflect.Method
 import java.util.*
 import javax.validation.ConstraintValidator

@@ -1,7 +1,7 @@
-package org.kuark.base.validation.annotaions
+package org.kuark.base.validation.constraint.annotaions
 
 import org.kuark.base.validation.support.SeriesType
-import org.kuark.base.validation.validator.SeriesValidator
+import org.kuark.base.validation.constraint.validator.SeriesValidator
 import javax.validation.Constraint
 import javax.validation.Payload
 import kotlin.reflect.KClass

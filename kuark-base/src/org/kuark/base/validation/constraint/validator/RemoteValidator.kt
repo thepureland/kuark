@@ -1,6 +1,6 @@
-package org.kuark.base.validation.validator
+package org.kuark.base.validation.constraint.validator
 
-import org.kuark.base.validation.annotaions.Remote
+import org.kuark.base.validation.constraint.annotaions.Remote
 import javax.validation.ConstraintValidator
 import javax.validation.ConstraintValidatorContext
 

@@ -1,6 +1,6 @@
-package org.kuark.base.validation.validator
+package org.kuark.base.validation.constraint.validator
 
-import org.kuark.base.validation.annotaions.Series
+import org.kuark.base.validation.constraint.annotaions.Series
 import org.kuark.base.validation.support.CompareLogic
 import org.kuark.base.validation.support.SeriesType
 import javax.validation.ConstraintValidator
@@ -41,10 +41,10 @@ class SeriesValidator : ConstraintValidator<Series, Any?> {
                     if (value == null) {
                         throw Exception("@Series表单验证规则限制数组中每个元素均不能为null！数组为：$values")
                     }
-                    val compare: Boolean = CompareValidator.Companion.compare(value, preValue, logic)
-                    if (!compare) {
-                        return false
-                    }
+//                    val compare: Boolean = CompareValidator.compare(value, preValue, logic)
+//                    if (!compare) {
+//                        return false
+//                    }
                 }
                 preValue = value
             }

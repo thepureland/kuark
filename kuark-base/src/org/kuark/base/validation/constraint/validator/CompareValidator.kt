@@ -35,7 +35,7 @@ class CompareValidator : ConstraintValidator<Compare, Any> {
         if (firstValue::class != secondValue::class && firstValue !is Comparable<*>) {
             error("【Compare】约束注解校验的两个属性类型必须相同，且都实现【Comparablere】接口！")
         }
-        return compare(firstValue as Comparable<Any>, secondValue as Comparable<Any>, compare.logic)
+        return compare(firstValue as Comparable<Any>, secondValue as Comparable<Any>, compare.logic) //TODO 多值比较
     }
 
     fun <T : Comparable<T>> compare(firstValue: T?, secondValue: T?, logic: CompareLogic): Boolean {

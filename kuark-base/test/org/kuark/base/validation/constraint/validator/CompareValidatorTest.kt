@@ -46,12 +46,28 @@ internal class CompareValidatorTest {
     @Test
     fun validateMultiValues() {
         // 两组密码一样
-        val bean1 = ComparesTestBean(arrayOf("1", "2"), arrayOf("1", "2"))
+        val bean1 = CompareValuesTestBean(arrayOf("1", "2"), arrayOf("1", "2"))
         assert(ValidationKit.validateBean(bean1).isEmpty())
 
         // 两组密码存在一样的
-        val bean2 = ComparesTestBean(arrayOf("1", "2"), arrayOf("1", "3"))
+        val bean2 = CompareValuesTestBean(arrayOf("1", "2"), arrayOf("1", "3"))
         assert(ValidationKit.validateBean(bean2).isNotEmpty())
+    }
+
+    /**
+     * 测试校验多组Compare约束
+     */
+    @Test
+    fun validateMultiCompares() {
+        // 两组Compare约束均通过
+        val bean1 = ComparesTestBean( "123456", "123456", "abcdef", "abcdef")
+        assert(ValidationKit.validateBean(bean1).isEmpty())
+
+        // 其中组Compare约束不通过
+        val bean2 = ComparesTestBean( "123456", "123456", "abcdef", "abc")
+        val violations = ValidationKit.validateBean(bean2)
+        assert(violations.isNotEmpty())
+        assert(violations.first().message == "两次代码不同")
     }
 
     @Compare(
@@ -67,15 +83,40 @@ internal class CompareValidatorTest {
         val confirmPassword: String?
     )
 
+
+    @Compare.List(
+        Compare(
+            firstProperty = "password",
+            secondProperty = "confirmPassword",
+            logic = CompareLogic.EQ,
+            message = "两次密码不同"
+        ),
+        Compare(
+            firstProperty = "code",
+            secondProperty = "confirmCode",
+            logic = CompareLogic.EQ,
+            message = "两次代码不同"
+        )
+    )
+    data class ComparesTestBean(
+        val password: String?,
+        val confirmPassword: String?,
+
+        val code: String?,
+        val confirmCode: String?
+    )
+
+
     @Compare(
         firstProperty = "passwords",
         secondProperty = "confirmPasswords",
         logic = CompareLogic.EQ,
         message = "两组密码不同"
     )
-    data class ComparesTestBean(
+    data class CompareValuesTestBean(
         val passwords: Array<String>? = null,
         val confirmPasswords: Array<String>? = null
     )
+
 
 }

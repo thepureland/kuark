@@ -17,7 +17,6 @@ import kotlin.reflect.KClass
 @Constraint(validatedBy = [CompareValidator::class])
 @Target(AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.RUNTIME)
-@Repeatable //TODO kotlin尚未支持Retention为非SOURCE时的重复注解
 annotation class Compare(
 
     /** 比较的第一个属性(左操作数) */

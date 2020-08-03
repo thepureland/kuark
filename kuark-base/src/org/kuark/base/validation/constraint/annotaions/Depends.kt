@@ -8,10 +8,10 @@ import javax.validation.Payload
 import kotlin.reflect.KClass
 
 /**
- * 表单验证条件(依赖)规则注解，该注解表达式成立时，其对应的属性的其他注解才能生效
+ * 依赖约束注解（类级别），当前属性的其它约束是否应用，取决于该依赖约束是否成立
  *
- * @author admin
- * @time 8/12/15 5:28 PM
+ * @author K
+ * @since 1.0.0
  */
 @MustBeDocumented
 @Constraint(validatedBy = [DependsValidator::class])

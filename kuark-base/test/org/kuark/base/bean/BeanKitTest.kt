@@ -75,7 +75,7 @@ internal class BeanKitTest {
 
     @Test
     fun testExtract() {
-        val map: Map<String, Any> = BeanKit.extract(person)
+        val map: Map<String, Any?> = BeanKit.extract(person)
         assertEquals(person.age, map["age"])
         assertEquals(person.name, map["name"])
         assertEquals(person.sex, map["sex"])

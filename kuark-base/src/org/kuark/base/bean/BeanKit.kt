@@ -248,7 +248,7 @@ object BeanKit {
      * @NoSuchMethodException 如果找不到指定的可访问的方法
      * @since 1.0.0
      */
-    fun extract(bean: Any): Map<String, Any> = PropertyUtils.describe(bean)
+    fun extract(bean: Any): Map<String, Any?> = PropertyUtils.describe(bean)
 
     /**
      * 返回指定属性的值
@@ -261,7 +261,7 @@ object BeanKit {
      * @NoSuchMethodException 如果找不到指定的可访问的方法
      * @since 1.0.0
      */
-    fun getProperty(bean: Any, name: String?): Any = PropertyUtils.getProperty(bean, name)
+    fun getProperty(bean: Any, name: String?): Any? = PropertyUtils.getProperty(bean, name)
 
     //endregion 封装org.apache.commons.beanutils.BeanUtils和PropertyUtils
 

@@ -3,11 +3,12 @@ package org.kuark.base.validation.constraint.validator
 import org.kuark.base.bean.BeanKit
 import org.kuark.base.validation.constraint.annotaions.Compare
 import org.kuark.base.validation.support.CompareLogic
+import org.kuark.base.validation.support.ValidationContext
 import javax.validation.ConstraintValidator
 import javax.validation.ConstraintValidatorContext
 
 /**
- * 比较约束的验证器
+ * Compare约束的验证器
  *
  * @author K
  * @since 1.0.0
@@ -20,7 +21,9 @@ class CompareValidator : ConstraintValidator<Compare, Any> {
         this.compare = compare
     }
 
-    override fun isValid(bean: Any, constraintValidatorContext: ConstraintValidatorContext): Boolean {
+    override fun isValid(value: Any, constraintValidatorContext: ConstraintValidatorContext): Boolean {
+       val bean = ValidationContext.get(constraintValidatorContext)
+
         // 依赖的前提条件不成立时，代表无须校验比较约束，直接放行
         val depends = compare.depends
         if (depends.property.isNotEmpty()) {
@@ -30,31 +33,51 @@ class CompareValidator : ConstraintValidator<Compare, Any> {
         }
 
         // 比较
-        val firstValue = BeanKit.getProperty(bean, compare.firstProperty)
-        val secondValue = BeanKit.getProperty(bean, compare.secondProperty)
-        if (firstValue::class != secondValue::class && firstValue !is Comparable<*>) {
-            error("【Compare】约束注解校验的两个属性类型必须相同，且都实现【Comparablere】接口！")
-        }
-        return compare(firstValue as Comparable<Any>, secondValue as Comparable<Any>, compare.logic) //TODO 多值比较
-    }
-
-    fun <T : Comparable<T>> compare(firstValue: T?, secondValue: T?, logic: CompareLogic): Boolean {
-        if (firstValue == null && secondValue == null) {
+        val anotherValue = BeanKit.getProperty(bean, compare.anotherProperty)
+        if (value == null && anotherValue == null) {
             return true
         }
-        if (firstValue == null || secondValue == null) {
+        if (value == null || anotherValue == null) {
             return false
         }
+        if (value::class != anotherValue::class) {
+            error("【Compare】约束注解校验的两个属性类型必须相同！")
+        }
+        if (value is Array<*> && anotherValue is Array<*>) {
+            // 处理值是数组的情况
+            if (value.size != anotherValue.size) {
+                error("【Compare】约束注解校验的两个数组的大小必须相等！")
+            }
+            value.forEachIndexed { index, v ->
+                if (v !is Comparable<*> || anotherValue[index] !is Comparable<*>) {
+                    error("【Compare】约束注解校验的两个数组中的每个元素的类型必须都实现【Comparablere】接口！")
+                }
+                val result = compare(v as Comparable<Any>, anotherValue[index] as Comparable<Any>, compare.logic)
+                if (!result) { // 只要数组中一对元素校验不通过，就当整个校验不过
+                    return false
+                }
+            }
+            return true
+        } else {
+            // 处理值不是数组的情况
+            if (value !is Comparable<*>) {
+                error("【Compare】约束注解校验的两个属性类型必须都实现【Comparablere】接口！")
+            }
+            return compare(value as Comparable<Any>, anotherValue as Comparable<Any>, compare.logic)
+        }
+    }
+
+    fun <T : Comparable<T>> compare(value: T, anotherValue: T, logic: CompareLogic): Boolean {
         return when (logic) {
-            CompareLogic.EQ -> firstValue == secondValue
-            CompareLogic.NE -> firstValue != secondValue
-            CompareLogic.GT -> firstValue > secondValue
-            CompareLogic.GE -> firstValue >= secondValue
-            CompareLogic.LT -> firstValue < secondValue
-            CompareLogic.LE -> firstValue <= secondValue
+            CompareLogic.EQ -> value == anotherValue
+            CompareLogic.NE -> value != anotherValue
+            CompareLogic.GT -> value > anotherValue
+            CompareLogic.GE -> value >= anotherValue
+            CompareLogic.LT -> value < anotherValue
+            CompareLogic.LE -> value <= anotherValue
             CompareLogic.IEQ -> {
-                if (firstValue is CharSequence || firstValue is Char) {
-                    firstValue.toString().equals(secondValue.toString(), ignoreCase = true)
+                if (value is CharSequence || value is Char) {
+                    value.toString().equals(anotherValue.toString(), ignoreCase = true)
                 } else {
                     error("操作符【CompareLogic.IEQ】只能用于类型【CharSequence或Char】的比较逻辑！")
                 }

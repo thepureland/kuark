@@ -13,7 +13,7 @@ import javax.validation.ConstraintValidatorContext
  * @author K
  * @since 1.0.0
  */
-class CompareValidator : ConstraintValidator<Compare, Any> {
+class CompareValidator : ConstraintValidator<Compare, Any?> {
 
     private lateinit var compare: Compare
 
@@ -21,13 +21,13 @@ class CompareValidator : ConstraintValidator<Compare, Any> {
         this.compare = compare
     }
 
-    override fun isValid(value: Any, constraintValidatorContext: ConstraintValidatorContext): Boolean {
+    override fun isValid(value: Any?, constraintValidatorContext: ConstraintValidatorContext): Boolean {
        val bean = ValidationContext.get(constraintValidatorContext)
-
+        constraintValidatorContext.disableDefaultConstraintViolation()
         // 依赖的前提条件不成立时，代表无须校验比较约束，直接放行
         val depends = compare.depends
         if (depends.property.isNotEmpty()) {
-            if (!DependsValidator.pass(depends)) {
+            if (!DependsValidator.pass(depends, bean)) {
                 return true
             }
         }

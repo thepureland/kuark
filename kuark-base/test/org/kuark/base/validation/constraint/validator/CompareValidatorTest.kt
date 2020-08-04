@@ -93,7 +93,7 @@ internal class CompareValidatorTest {
         val password: String?,
 
         @get:Compare(
-            depends = Depends(property = ["validate"]),
+            depends = Depends(property = ["validate"], value = ["true"]),
             anotherProperty = "password",
             logic = CompareLogic.EQ,
             message = "两次密码不同"

@@ -13,7 +13,6 @@ import kotlin.reflect.KClass
  * @author K
  * @since 1.0.0
  */
-@GroupSequenceProvider(value = GSequenceProvider::class)
 object ValidationKit {
 
     /**
@@ -29,15 +28,21 @@ object ValidationKit {
         vararg groups: KClass<*> = arrayOf(),
         failFast: Boolean = true
     ): Set<ConstraintViolation<T>> {
-        val provider = Validation.byProvider(HibernateValidator::class.java)
-//        provider.providerResolver(DefaultValidationPro)
-        val configure = provider.configure().failFast(failFast)
-        configure.messageInterpolator(configure.defaultMessageInterpolator)
-        configure.traversableResolver(configure.defaultTraversableResolver)
-        configure.constraintValidatorFactory(configure.defaultConstraintValidatorFactory)
-        configure.parameterNameProvider(configure.defaultParameterNameProvider)
-        val validatorFactory = configure.buildValidatorFactory()
-        ValidationContext.set(validatorFactory, bean)
+//        val provider = Validation.byProvider(HibernateValidator::class.java)
+////        provider.providerResolver(DefaultValidationPro)
+//        val configure = provider.configure().failFast(failFast)
+//        configure.messageInterpolator(configure.defaultMessageInterpolator)
+//        configure.traversableResolver(configure.defaultTraversableResolver)
+//        configure.constraintValidatorFactory(configure.defaultConstraintValidatorFactory)
+//        configure.parameterNameProvider(configure.defaultParameterNameProvider)
+//        val validatorFactory = configure.buildValidatorFactory()
+//        ValidationContext.set(validatorFactory, bean)
+
+        val validatorFactory = Validation.byProvider(HibernateValidator::class.java)
+            .configure()
+            .failFast(failFast)
+            .buildValidatorFactory()
+
         val classes = groups.map { it.java }.toTypedArray()
         return validatorFactory.validator.validate(bean, *classes)
     }

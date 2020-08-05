@@ -1,5 +1,6 @@
 package org.kuark.base.validation.constraint.validator
 
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.kuark.base.validation.constraint.annotaions.Compare
@@ -38,8 +39,7 @@ internal class CompareValidatorTest {
         // Depends约束校验通过且密码不同的情况
         val bean2 = CompareTestBean(true, "123456", "123")
         val violations = ValidationKit.validate(bean2)
-        assert(violations.isNotEmpty())
-        assert(violations.first().message == "两次密码不同")
+        assertEquals("两次密码不同", violations.first().message)
     }
 
     /**
@@ -54,8 +54,7 @@ internal class CompareValidatorTest {
         // 两组密码存在一样的
         val bean2 = CompareValuesTestBean(arrayOf("1", "2"), arrayOf("1", "3"))
         val violations = ValidationKit.validate(bean2)
-        assert(violations.isNotEmpty())
-        assert(violations.first().message == "两组密码不同")
+        assertEquals("两组密码不同", violations.first().message)
 
         // 数组长度不一致
         val bean3 = CompareValuesTestBean(arrayOf("1", "2"), arrayOf("1"))
@@ -82,12 +81,11 @@ internal class CompareValidatorTest {
         // 其中一组Compare约束不通过
         val bean2 = ComparesTestBean("x", "xxx", "xx")
         val violations = ValidationKit.validate(bean2)
-        assert(violations.isNotEmpty())
-        assert(violations.first().message == "medium必须小于large")
+        assertEquals("medium必须小于large", violations.first().message)
     }
 
 
-    data class CompareTestBean(
+    internal data class CompareTestBean(
         val validate: Boolean?,
 
         val password: String?,
@@ -102,7 +100,7 @@ internal class CompareValidatorTest {
     )
 
 
-    data class ComparesTestBean(
+    internal data class ComparesTestBean(
         val small: String?,
 
         @get:Compare.List(
@@ -123,7 +121,7 @@ internal class CompareValidatorTest {
     )
 
 
-    data class CompareValuesTestBean(
+    internal data class CompareValuesTestBean(
         val passwords: Array<String>? = null,
 
         @get:Compare(
@@ -138,7 +136,7 @@ internal class CompareValidatorTest {
     }
 
 
-    data class CompareValuesTestBean1(
+    internal data class CompareValuesTestBean1(
         val passwords: Array<String>? = null,
 
         @get:Compare(
@@ -153,7 +151,7 @@ internal class CompareValidatorTest {
     }
 
 
-    data class CompareValuesTestBean2(
+    internal data class CompareValuesTestBean2(
         val passwords: IntArray? = null,
 
         @get:Compare(

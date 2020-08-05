@@ -35,7 +35,7 @@ internal class DependsValidatorTest {
         @get:NotNull // 该约束因为group=Default::class，并未生效
         val validate: Boolean,
 
-        @get:Depends(property = ["validate"], operator = [Operator.EQ], value = ["true"], groups = [Group.First::class])
+//        @get:Depends(property = ["validate"], operator = [Operator.EQ], value = ["true"], groups = [Group.First::class])
         @get:Length(min = 6, max = 32, message = "name长度必须在6到32之间", groups = [Group.Second::class])
         val name: String?
     )

@@ -49,8 +49,10 @@ annotation class Compare(
      * 校验组能够让你在验证的时候选择应用哪些约束条件. 这样在某些情况下( 例如向导 ) 就可以对每一步进行校验的时候, 选取对应这步的那些约束条件进行验证了.
      * 校验组是通过可变参数传递给validate, validateProperty 和 validateValue的.如果某个约束条件属于多个组,那么各个组在校验时候的顺序是不可预知的.
      * 如果一个约束条件没有被指明属于哪个组,那么它就会被归类到默认组(javax.validation.groups.Default).
-     * @GroupSequence 定义组别之间校验的顺序
-     * @GroupSequenceProvider 根据对象状态动态重定义默认分组
+     * @GroupSequence 定义组别之间校验的顺序，使用注意事项：
+     * 1.不能包含javax.validation.groups.Default::class分组
+     * 2.不能没有待验证的Bean的Class的分组
+     * @GroupSequenceProvider 根据对象状态动态重定义默认分组，实现类返回的分组必须包含待验证的Bean的Class的分组
      */
     val groups: Array<KClass<*>> = [],
 

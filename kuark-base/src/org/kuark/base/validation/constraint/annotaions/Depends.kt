@@ -9,7 +9,7 @@ import javax.validation.Payload
 import kotlin.reflect.KClass
 
 /**
- * 依赖约束注解，当前属性的其它约束是否应用，取决于该依赖约束是否成立。
+ * 依赖约束注解，当前属性的其它约束是否应用，取决于该依赖约束表达式是否成立。
  *
  * 使用该注解必须指定分组，然后用@GroupSequence保证@Depends的优先级高于当前属性的其它约束注解的优先级。
  * @GroupSequence使用注意事项：

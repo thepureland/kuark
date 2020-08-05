@@ -1,6 +1,7 @@
 package org.kuark.base.validation.kit
 
 import org.hibernate.validator.HibernateValidator
+import org.hibernate.validator.group.GroupSequenceProvider
 import org.kuark.base.validation.support.ValidationContext
 import javax.validation.ConstraintViolation
 import javax.validation.Validation
@@ -12,6 +13,7 @@ import kotlin.reflect.KClass
  * @author K
  * @since 1.0.0
  */
+@GroupSequenceProvider(value = GSequenceProvider::class)
 object ValidationKit {
 
     /**
@@ -27,10 +29,14 @@ object ValidationKit {
         vararg groups: KClass<*> = arrayOf(),
         failFast: Boolean = true
     ): Set<ConstraintViolation<T>> {
-        val validatorFactory = Validation.byProvider(HibernateValidator::class.java)
-            .configure()
-            .failFast(failFast)
-            .buildValidatorFactory()
+        val provider = Validation.byProvider(HibernateValidator::class.java)
+//        provider.providerResolver(DefaultValidationPro)
+        val configure = provider.configure().failFast(failFast)
+        configure.messageInterpolator(configure.defaultMessageInterpolator)
+        configure.traversableResolver(configure.defaultTraversableResolver)
+        configure.constraintValidatorFactory(configure.defaultConstraintValidatorFactory)
+        configure.parameterNameProvider(configure.defaultParameterNameProvider)
+        val validatorFactory = configure.buildValidatorFactory()
         ValidationContext.set(validatorFactory, bean)
         val classes = groups.map { it.java }.toTypedArray()
         return validatorFactory.validator.validate(bean, *classes)

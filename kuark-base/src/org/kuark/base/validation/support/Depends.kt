@@ -1,4 +1,4 @@
-package org.kuark.base.validation.constraint.annotaions
+package org.kuark.base.validation.support
 
 import org.kuark.base.validation.support.AndOr
 import org.kuark.base.validation.support.Operator

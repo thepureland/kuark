@@ -1,8 +1,6 @@
-package org.kuark.base.validation.constraint.validator
+package org.kuark.base.validation.support
 
 import org.kuark.base.bean.BeanKit
-import org.kuark.base.validation.constraint.annotaions.Depends
-import org.kuark.base.validation.support.AndOr
 
 /**
  * Depends约束验证器，由其他一级约束Validator调用

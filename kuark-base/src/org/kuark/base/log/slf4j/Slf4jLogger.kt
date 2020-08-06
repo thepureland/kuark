@@ -36,7 +36,7 @@ class Slf4jLogger : Log {
         logger.log(null, FQCN, LocationAwareLogger.INFO_INT, getMsg(msg, *args), null, null)
 
     override fun warn(msg: String?, vararg args: Any?) =
-        logger.log(null, FQCN, LocationAwareLogger.INFO_INT, getMsg(msg, *args), null, null)
+        logger.log(null, FQCN, LocationAwareLogger.WARN_INT, getMsg(msg, *args), null, null)
 
     override fun error(msg: String?, vararg args: Any?) =
         logger.log(null, FQCN, LocationAwareLogger.ERROR_INT, getMsg(msg, *args), null, null)

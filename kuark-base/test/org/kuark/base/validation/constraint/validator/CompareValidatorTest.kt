@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.kuark.base.validation.constraint.annotaions.Compare
-import org.kuark.base.validation.constraint.annotaions.Depends
+import org.kuark.base.validation.support.Depends
 import org.kuark.base.validation.kit.ValidationKit
 import org.kuark.base.validation.support.CompareLogic
 import javax.validation.ValidationException
@@ -91,7 +91,10 @@ internal class CompareValidatorTest {
         val password: String?,
 
         @get:Compare(
-            depends = Depends(property = ["validate"], value = ["true"]),
+            depends = Depends(
+                property = ["validate"],
+                value = ["true"]
+            ),
             anotherProperty = "password",
             logic = CompareLogic.EQ,
             message = "两次密码不同"

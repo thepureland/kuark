@@ -3,6 +3,7 @@ package org.kuark.base.validation.constraint.validator
 import org.kuark.base.bean.BeanKit
 import org.kuark.base.validation.constraint.annotaions.Compare
 import org.kuark.base.validation.support.CompareLogic
+import org.kuark.base.validation.support.DependsValidator
 import org.kuark.base.validation.support.ValidationContext
 import javax.validation.ConstraintValidator
 import javax.validation.ConstraintValidatorContext

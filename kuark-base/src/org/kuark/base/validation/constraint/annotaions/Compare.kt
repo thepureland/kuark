@@ -2,6 +2,7 @@ package org.kuark.base.validation.constraint.annotaions
 
 import org.kuark.base.validation.support.CompareLogic
 import org.kuark.base.validation.constraint.validator.CompareValidator
+import org.kuark.base.validation.support.Depends
 import javax.validation.Constraint
 import javax.validation.Payload
 import kotlin.reflect.KClass
@@ -31,7 +32,9 @@ annotation class Compare(
     val logic: CompareLogic,
 
     /** 比较依赖的前提条件, 条件成立才进一步进行比较校验 */
-    val depends: Depends = Depends(property = []),
+    val depends: Depends = Depends(
+        property = []
+    ),
 
 
     /**

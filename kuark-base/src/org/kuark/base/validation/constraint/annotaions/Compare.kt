@@ -21,6 +21,7 @@ import kotlin.reflect.KClass
 @Target(AnnotationTarget.FUNCTION, AnnotationTarget.PROPERTY_GETTER, AnnotationTarget.PROPERTY_SETTER)
 @Retention(AnnotationRetention.RUNTIME)
 @MustBeDocumented
+@Repeatable
 annotation class Compare(
 
     /** 比较的第二个属性(右操作数) */
@@ -50,9 +51,12 @@ annotation class Compare(
      * 校验组是通过可变参数传递给validate, validateProperty 和 validateValue的.如果某个约束条件属于多个组,那么各个组在校验时候的顺序是不可预知的.
      * 如果一个约束条件没有被指明属于哪个组,那么它就会被归类到默认组(javax.validation.groups.Default).
      * @GroupSequence 定义组别之间校验的顺序，使用注意事项：
-     * 1.不能包含javax.validation.groups.Default::class分组
-     * 2.不能没有待验证的Bean的Class的分组
-     * @GroupSequenceProvider 根据对象状态动态重定义默认分组，实现类返回的分组必须包含待验证的Bean的Class的分组
+     * 1.作用于类上时,不能包含javax.validation.groups.Default::class分组，作用于接口上可以
+     * 2.作用于类上时,不能没有待验证的Bean的Class的分组
+     * @GroupSequenceProvider 根据对象状态动态重定义默认分组，实现类返回的分组必须包含待验证的Bean的Class的分组(因为如果`Default`组对T进行验证，
+     * 则实际验证的实例将传递给此类以确定默认组序列)。
+     * 注：在使用组序列验证的时候，如果序列前边的组验证失败，则后面的组将不再给予验证！
+     * 注：同一分组间的约束校验是无序的
      */
     val groups: Array<KClass<*>> = [],
 

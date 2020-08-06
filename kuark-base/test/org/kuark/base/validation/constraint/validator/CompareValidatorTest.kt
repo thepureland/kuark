@@ -24,7 +24,7 @@ internal class CompareValidatorTest {
     fun validateDepends() {
         // Depends约束校验不通过，无须进一步校验Compare约束
         val bean1 = CompareTestBean(null, "123456", "123")
-        assert(ValidationKit.validate(bean1).isEmpty())
+        assert(ValidationKit.validateBean(bean1).isEmpty())
     }
 
     /**
@@ -34,11 +34,11 @@ internal class CompareValidatorTest {
     fun validateDependsSingleValue() {
         // Depends约束校验通过且密码相同的情况
         val bean1 = CompareTestBean(true, "123456", "123456")
-        assert(ValidationKit.validate(bean1).isEmpty())
+        assert(ValidationKit.validateBean(bean1).isEmpty())
 
         // Depends约束校验通过且密码不同的情况
         val bean2 = CompareTestBean(true, "123456", "123")
-        val violations = ValidationKit.validate(bean2)
+        val violations = ValidationKit.validateBean(bean2)
         assertEquals("两次密码不同", violations.first().message)
     }
 
@@ -49,24 +49,24 @@ internal class CompareValidatorTest {
     fun validateMultiValues() {
         // 两组密码一样
         val bean1 = CompareValuesTestBean(arrayOf("1", "2"), arrayOf("1", "2"))
-        assert(ValidationKit.validate(bean1).isEmpty())
+        assert(ValidationKit.validateBean(bean1).isEmpty())
 
         // 两组密码存在一样的
         val bean2 = CompareValuesTestBean(arrayOf("1", "2"), arrayOf("1", "3"))
-        val violations = ValidationKit.validate(bean2)
+        val violations = ValidationKit.validateBean(bean2)
         assertEquals("两组密码不同", violations.first().message)
 
         // 数组长度不一致
         val bean3 = CompareValuesTestBean(arrayOf("1", "2"), arrayOf("1"))
-        assertThrows<ValidationException> { ValidationKit.validate(bean3) }
+        assertThrows<ValidationException> { ValidationKit.validateBean(bean3) }
 
         // 数组元素不是Compare类型
         val bean4 = CompareValuesTestBean1(arrayOf("1", "2"), arrayOf(arrayOf("1")))
-        assertThrows<ValidationException> { ValidationKit.validate(bean4) }
+        assertThrows<ValidationException> { ValidationKit.validateBean(bean4) }
 
         // 不是数组类型
         val bean5 = CompareValuesTestBean2(intArrayOf(1, 2), intArrayOf(1, 2))
-        assertThrows<ValidationException> { ValidationKit.validate(bean5) }
+        assertThrows<ValidationException> { ValidationKit.validateBean(bean5) }
     }
 
     /**
@@ -76,11 +76,11 @@ internal class CompareValidatorTest {
     fun validateMultiCompares() {
         // 两组Compare约束均通过
         val bean1 = ComparesTestBean("x", "xx", "xxx")
-        assert(ValidationKit.validate(bean1).isEmpty())
+        assert(ValidationKit.validateBean(bean1).isEmpty())
 
         // 其中一组Compare约束不通过
         val bean2 = ComparesTestBean("x", "xxx", "xx")
-        val violations = ValidationKit.validate(bean2)
+        val violations = ValidationKit.validateBean(bean2)
         assertEquals("medium必须小于large", violations.first().message)
     }
 

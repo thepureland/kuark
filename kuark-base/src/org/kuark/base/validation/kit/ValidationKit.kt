@@ -61,14 +61,14 @@ object ValidationKit {
      * @return Set<ConstraintViolation<Bean>>
      */
     fun <T : Any> validateValue(
-        beanClass: Class<T>,
+        beanClass: KClass<T>,
         property: String,
         value: Any?,
         vararg groups: KClass<*> = arrayOf(),
         failFast: Boolean = true
     ): Set<ConstraintViolation<T>> {
         val classes = groups.map { it.java }.toTypedArray()
-        return getValidator(failFast).validateValue(beanClass, property, value, *classes)
+        return getValidator(failFast).validateValue(beanClass.java, property, value, *classes)
     }
 
     /**

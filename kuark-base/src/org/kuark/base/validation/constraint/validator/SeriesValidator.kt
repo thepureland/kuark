@@ -1,14 +1,16 @@
 package org.kuark.base.validation.constraint.validator
 
 import org.kuark.base.validation.constraint.annotaions.Series
-import org.kuark.base.validation.support.CompareLogic
 import org.kuark.base.validation.support.SeriesType
+import java.math.BigDecimal
 import javax.validation.ConstraintValidator
 import javax.validation.ConstraintValidatorContext
 
 /**
- * @author admin
- * @time 9/19/15 6:50 PM
+ * Series约束验证器
+ *
+ * @author K
+ * @since 1.0.0
  */
 class SeriesValidator : ConstraintValidator<Series, Any?> {
 
@@ -18,50 +20,56 @@ class SeriesValidator : ConstraintValidator<Series, Any?> {
         this.series = series
     }
 
-    override fun isValid(o: Any?, context: ConstraintValidatorContext): Boolean {
-        if (o == null) {
+    override fun isValid(value: Any?, context: ConstraintValidatorContext): Boolean {
+        if (value == null) {
             return true
         }
-        if (o is Array<*>) {
-            val values = o as Array<Any?>
-            if (values.size <= 1) {
+        if (value is Array<*>) {
+            if (value.size <= 1) {
                 return true
             }
-            //            Object firstValue = values[0];
-//            Class<?> elemClass = null;
-//            if (firstValue == null) {
-//                throw new SystemException("@Series表单验证规则限制数组中每个元素均不能为null！数组为：" + values);
-//            } else {
-//                elemClass = firstValue.getClass();
-//            }
-            val logic = adaptCompareLogic(series!!.type)
-            var preValue: Any? = null
-            for (value in values) {
-                if (preValue != null) {
-                    if (value == null) {
-                        throw Exception("@Series表单验证规则限制数组中每个元素均不能为null！数组为：$values")
-                    }
-//                    val compare: Boolean = CompareValidator.compare(value, preValue, logic)
-//                    if (!compare) {
-//                        return false
-//                    }
-                }
-                preValue = value
+            value.forEach {
+                it ?: error("@Series约束注解限制数组中每个元素均不能为null！数组为：$value")
             }
+
+            // 将数组元素全部转为String，方便用BigDecimal进行高精度运算
+            val values = value.map { it.toString() }.toTypedArray()
+            return validate(series.type, series.step, *values)
         } else {
-            throw Exception("@Series表单验证规则只能设置在返回值为数组的get方法上！")
+            error("@Series约束注解只能设置在返回值类型为数组的get方法上！")
         }
         return true
     }
 
-    private fun adaptCompareLogic(seriesType: SeriesType): CompareLogic {
-        return when (seriesType) {
-            SeriesType.INC -> CompareLogic.GT
-            SeriesType.DESC -> CompareLogic.LT
-            SeriesType.INC_EQ -> CompareLogic.GE
-            SeriesType.DESC_EQ -> CompareLogic.LE
-            SeriesType.DIFF -> CompareLogic.NE
+    private fun validate(type: SeriesType, step: Double, vararg values: String): Boolean {
+        return when (type) {
+            SeriesType.INC_DIFF -> {
+                var preValue: String? = null
+                for (value in values) {
+                    if (preValue != null) {
+                        if (step == 0.0) { // 不应用步进
+                            if (BigDecimal(preValue) >= BigDecimal(value)) {
+                                return false
+                            }
+                        } else {
+                            if (BigDecimal(preValue) + BigDecimal(step) != BigDecimal(value)) {
+                                return false
+                            }
+                        }
+                    }
+                    preValue = value
+                }
+                true
+            }
+            SeriesType.DESC_DIFF -> true
+            SeriesType.INC_DESC_DIFF -> true
+            SeriesType.DESC_INC_DIFF -> true
+            SeriesType.DIFF -> true
+            SeriesType.INC_EQ -> true
+            SeriesType.DESC_EQ -> true
+            SeriesType.INC_EQ_DESC_EQ -> true
+            SeriesType.DESC_EQ_INC_EQ -> true
+            SeriesType.EQ -> true
         }
-        throw Exception("不支持的SeriesType类型：$seriesType")
     }
 }

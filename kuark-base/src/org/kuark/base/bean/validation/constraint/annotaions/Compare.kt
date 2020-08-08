@@ -33,7 +33,7 @@ annotation class Compare(
 
     /** 比较依赖的前提条件, 条件成立才进一步进行比较校验 */
     val depends: Depends = Depends(
-        property = []
+        properties = []
     ),
 
 

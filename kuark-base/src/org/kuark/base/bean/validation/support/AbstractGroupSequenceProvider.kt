@@ -2,6 +2,7 @@ package org.kuark.base.bean.validation.support
 
 import org.hibernate.validator.spi.group.DefaultGroupSequenceProvider
 import org.kuark.base.lang.GenericKit
+import kotlin.reflect.KClass
 
 /**
  * 抽象的分组顺序提供者。
@@ -16,11 +17,11 @@ abstract class AbstractGroupSequenceProvider<T : Any?> : DefaultGroupSequencePro
 
     override fun getValidationGroups(bean: T?): MutableList<Class<*>> {
         val defaultGroupSequence = mutableListOf<Class<*>>()
-        val beanClass = GenericKit.getSuperClassGenricType(this.javaClass)
-        defaultGroupSequence.add(beanClass!!) // 必须添加Bean类自己，否则Default分组都不会执行了，会抛错
+        val beanClass = GenericKit.getSuperClassGenricType(this::class)
+        defaultGroupSequence.add(beanClass!!.java) // 必须添加Bean类自己，否则Default分组都不会执行了，会抛错
 
         if (bean != null) {
-            defaultGroupSequence.addAll(getGroups(bean))
+            getGroups(bean).forEach { defaultGroupSequence.add(it.java) }
         }
 
         return defaultGroupSequence
@@ -32,6 +33,6 @@ abstract class AbstractGroupSequenceProvider<T : Any?> : DefaultGroupSequencePro
      * @param bean 待校验的bean对象
      * @return 分组列表
      */
-    abstract fun getGroups(bean: T?): List<Class<*>>
+    abstract fun getGroups(bean: T): List<KClass<*>>
 
 }

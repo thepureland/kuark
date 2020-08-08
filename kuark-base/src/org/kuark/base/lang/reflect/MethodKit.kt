@@ -8,7 +8,6 @@ import java.lang.reflect.InvocationTargetException
 import java.lang.reflect.Method
 import java.util.*
 import kotlin.reflect.KClass
-
 /**
  * 方法工具类
  *
@@ -294,8 +293,10 @@ object MethodKit {
      * @return 可访问的方法
      * @since 1.0.0
      */
-    fun getAccessibleMethod(cls: KClass<*>, methodName: String, vararg parameterTypes: Class<*>?): Method =
-        MethodUtils.getAccessibleMethod(cls.java, methodName, *parameterTypes)
+    fun getAccessibleMethod(cls: KClass<*>, methodName: String, vararg parameterTypes: KClass<*>): Method {
+        val paramTypes = parameterTypes.map { it.java }.toTypedArray()
+        return MethodUtils.getAccessibleMethod(cls.java, methodName, *paramTypes)
+    }
 
     /**
      * 返回一个实现了指定方法的可访问(能够通过反射调用)的方法. <br></br>
@@ -330,3 +331,4 @@ object MethodKit {
     // 封装org.apache.commons.lang3.reflect.MethodUtils
     // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 }
+

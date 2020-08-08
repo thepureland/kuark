@@ -1,6 +1,6 @@
-package org.kuark.base.support;
+package org.kuark.base.support
 
-import java.io.Serializable;
+import java.io.Serializable
 
 /**
  * 回调接口
@@ -8,14 +8,12 @@ import java.io.Serializable;
  * @author K
  * @since 1.0.0
  */
-public interface ICallback<P, R> extends Serializable{
-
+interface ICallback<P, R> : Serializable {
     /**
      * 回调行为
      *
      * @param p 参数
      * @return 返回值
      */
-    R execute(P p);
-
+    fun execute(p: P): R
 }

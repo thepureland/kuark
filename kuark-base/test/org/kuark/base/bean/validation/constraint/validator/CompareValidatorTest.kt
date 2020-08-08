@@ -92,8 +92,8 @@ internal class CompareValidatorTest {
 
         @get:Compare(
             depends = Depends(
-                property = ["validate"],
-                value = ["true"]
+                properties = ["validate"],
+                values = ["true"]
             ),
             anotherProperty = "password",
             logic = CompareLogic.EQ,

@@ -13,6 +13,7 @@ import javax.validation.constraints.Min
 import javax.validation.constraints.NotNull
 import javax.validation.constraints.Pattern
 import javax.validation.groups.Default
+import kotlin.reflect.KClass
 
 /**
  * 分组校验测试用例
@@ -144,17 +145,13 @@ internal class GroupValidationTest {
     ) {
         class GroupSequenceProvider : AbstractGroupSequenceProvider<TestGroupSequenceProviderBean>() {
 
-            override fun getGroups(bean: TestGroupSequenceProviderBean?): List<Class<*>> {
-                val defaultGroupSequence = mutableListOf<Class<*>>()
-                defaultGroupSequence.add(TestGroupSequenceProviderBean::class.java) // 必须添加Bean类自己，否则Default分组都不会执行了，会抛错
-
-                if (bean != null) { // 这块判空请务必要做
-                    if (bean.name == "123") {
-                        defaultGroupSequence.add(Group.First::class.java)
-                        defaultGroupSequence.add(Group.Second::class.java)
-                    } else {
-                        defaultGroupSequence.add(Group.Second::class.java)
-                    }
+            override fun getGroups(bean: TestGroupSequenceProviderBean): List<KClass<*>> {
+                val defaultGroupSequence = mutableListOf<KClass<*>>()
+                if (bean.name == "123") {
+                    defaultGroupSequence.add(Group.First::class)
+                    defaultGroupSequence.add(Group.Second::class)
+                } else {
+                    defaultGroupSequence.add(Group.Second::class)
                 }
                 return defaultGroupSequence
             }

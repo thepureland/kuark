@@ -1,13 +1,14 @@
 package org.kuark.base.validation.constraint.annotaions
 
-import org.kuark.base.validation.support.SeriesType
 import org.kuark.base.validation.constraint.validator.SeriesValidator
+import org.kuark.base.validation.support.SeriesType
 import javax.validation.Constraint
 import javax.validation.Payload
 import kotlin.reflect.KClass
 
 /**
- * 数列约束注解，属性级别
+ * 数列约束注解，属性级别。
+ * 用于验证List和Array，其元素类型支持Byte、Short、Int、BigInteger、Long、Float、Double、BigDecimal、String。
  *
  * @author K
  * @since 1.0.0
@@ -21,8 +22,11 @@ annotation class Series(
     /** 数列类型，默认为"递增且互不相等" */
     val type: SeriesType = SeriesType.INC_DIFF,
 
-    /** 步进，相邻两个元素不相同时的差值。对SeriesType.EQ无意义. 值为0.0表示不应用步进。*/
+    /** 步进绝对值，相邻两个元素不相同时的差值。不能为负数。对SeriesType.EQ无意义. 值为0.0表示不应用步进。*/
     val step: Double = 0.0,
+
+    /** 数列大小，仅当为正整数时才会生效。 */
+    val size: Int = 0,
 
 
     /**
@@ -53,4 +57,4 @@ annotation class Series(
 
     /** 约束注解的有效负载(通常用来将一些元数据信息与该约束注解相关联，常用的一种情况是用负载表示验证结果的严重程度) */
     val payload: Array<KClass<out Payload>> = []
-) 
+)

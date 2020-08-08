@@ -15,10 +15,10 @@ enum class SeriesType {
     DESC_DIFF,
 
     /** 先增后减且互不相等 */
-    INC_DESC_DIFF,
+    INC_DIFF_DESC_DIFF,
 
     /** 先减后增且互不相等 */
-    DESC_INC_DIFF,
+    DESC_DIFF_INC_DIFF,
 
     /** 互不相等 */
     DIFF,

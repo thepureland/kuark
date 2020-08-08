@@ -20,7 +20,7 @@ object GenericKit {
     /**
      *
      *
-     * 获取指定类的父类的泛型参数的实际类型. 如: NameAndAge extends Pair<String></String>, Integer>
+     * 获取指定类的父类的泛型参数的实际类型. 如: NameAndAge extends Pair<String, Integer>
      *
      *
      * @param clazz 需要获取泛型参数实际类型的类, 该类必须继承泛型父类
@@ -56,7 +56,7 @@ object GenericKit {
             LOG.error("输入的索引" + if (index < 0) "不能小于0" else "超出了参数的总数")
             return null
         }
-        return if (params[index] is Class<*> == false) {
+        return if (params[index] !is Class<*>) {
             Any::class.java
         } else params[index] as Class<*>
     }

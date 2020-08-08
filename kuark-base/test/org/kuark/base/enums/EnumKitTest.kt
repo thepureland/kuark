@@ -97,7 +97,7 @@ internal class EnumKitTest {
         }
     }
 
-    internal enum class TimeUnit(override val code: String, override var trans: String) : ICodeEnum {
+    internal enum class TimeUnit(override val code: String, override var trans: String) : IDictEnum {
         YEAR("1", "年"),
         MONTH("2", "月"),
         WEEK("3", "周"),

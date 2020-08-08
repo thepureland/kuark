@@ -46,7 +46,7 @@ object EnumKit {
      * @throws IllegalArgumentException enumClass参数为null时
      * @since 1.0.0
      */
-    fun <E : ICodeEnum> enumOf(enumClass: KClass<E>, code: String): E? {
+    fun <E : IDictEnum> enumOf(enumClass: KClass<E>, code: String): E? {
         for (e in enumClass.java.enumConstants) {
             if (e.code == code) {
                 return e
@@ -65,7 +65,7 @@ object EnumKit {
      * @throws IllegalArgumentException 参数为空或根据参数查找失败时
      * @since 1.0.0
      */
-    fun enumOf(enumClass: String, code: String): ICodeEnum? {
+    fun enumOf(enumClass: String, code: String): IDictEnum? {
         val enumClazz = getCodeEnumClass(enumClass)
         return enumOf(enumClazz, code)
     }
@@ -78,7 +78,7 @@ object EnumKit {
      * @throws IllegalArgumentException 参数为null时
      * @since 1.0.0
      */
-    fun getCodeMap(enumClass: KClass<out ICodeEnum>): Map<String, String?> {
+    fun getCodeMap(enumClass: KClass<out IDictEnum>): Map<String, String?> {
         val enumConstants = enumClass.java.enumConstants
         val codeMap = LinkedHashMap<String, String?>()
         for (e in enumConstants) {
@@ -108,7 +108,7 @@ object EnumKit {
      * @throws IllegalArgumentException 参数为空或根据参数查找失败时
      * @since 1.0.0
      */
-    fun getCodeEnumClass(enumClass: String): KClass<out ICodeEnum> {
+    fun getCodeEnumClass(enumClass: String): KClass<out IDictEnum> {
         require(!enumClass.isBlank()) { "enumClass参数不能为空！" }
         val enumClazz = try {
             Class.forName(enumClass)
@@ -116,8 +116,8 @@ object EnumKit {
             throw IllegalArgumentException(enumClass + "不存在！")
         }
         require(enumClazz.isEnum) { enumClass + "不是枚举！" }
-        require(ICodeEnum::class.java.isAssignableFrom(enumClazz)) { enumClass + "没有实现" + ICodeEnum::class }
-        return enumClazz.kotlin as KClass<out ICodeEnum>
+        require(IDictEnum::class.java.isAssignableFrom(enumClazz)) { enumClass + "没有实现" + IDictEnum::class }
+        return enumClazz.kotlin as KClass<out IDictEnum>
     }
 
     // vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv

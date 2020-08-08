@@ -6,7 +6,7 @@ package org.kuark.base.enums
  * @author K
  * @since 1.0.0
  */
-enum class YesNot(val bool: Boolean, override val code: String, override var trans: String?) : ICodeEnum {
+enum class YesNot(val bool: Boolean, override val code: String, override var trans: String?) : IDictEnum {
 
     YES(true, "1", "是"),
     NOT(false, "0", "否");

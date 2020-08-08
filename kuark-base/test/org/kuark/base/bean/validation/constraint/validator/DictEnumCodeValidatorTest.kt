@@ -2,7 +2,7 @@ package org.kuark.base.bean.validation.constraint.validator
 
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
-import org.kuark.base.enums.IDictEnum
+import org.kuark.base.support.enums.IDictEnum
 import org.kuark.base.bean.validation.constraint.annotaions.DictEnumCode
 import org.kuark.base.bean.validation.kit.ValidationKit
 

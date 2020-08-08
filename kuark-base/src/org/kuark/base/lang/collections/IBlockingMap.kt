@@ -1,4 +1,4 @@
-package org.kuark.base.collections
+package org.kuark.base.lang.collections
 
 /**
  * 阻塞的Map接口，支持通过Key获取对应Value的阻塞功能，及阻塞过期功能

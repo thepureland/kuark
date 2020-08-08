@@ -1,4 +1,4 @@
-package org.kuark.base.collections
+package org.kuark.base.lang.collections
 
 import org.apache.commons.collections.Factory
 import org.apache.commons.collections.ListUtils

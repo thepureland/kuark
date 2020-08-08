@@ -6,7 +6,7 @@ import org.junit.jupiter.api.assertThrows
 import org.kuark.base.bean.validation.constraint.annotaions.Compare
 import org.kuark.base.bean.validation.support.Depends
 import org.kuark.base.bean.validation.kit.ValidationKit
-import org.kuark.base.bean.validation.support.CompareLogic
+import org.kuark.base.support.logic.CompareLogic
 import javax.validation.ValidationException
 
 /**

@@ -2,7 +2,7 @@ package org.kuark.base.bean.validation.constraint.validator
 
 import org.kuark.base.bean.BeanKit
 import org.kuark.base.bean.validation.constraint.annotaions.Compare
-import org.kuark.base.bean.validation.support.CompareLogic
+import org.kuark.base.support.logic.CompareLogic
 import org.kuark.base.bean.validation.support.DependsValidator
 import org.kuark.base.bean.validation.support.ValidationContext
 import javax.validation.ConstraintValidator

@@ -1,6 +1,6 @@
 package org.kuark.base.bean.validation.constraint.validator
 
-import org.kuark.base.enums.EnumKit
+import org.kuark.base.lang.EnumKit
 import org.kuark.base.bean.validation.constraint.annotaions.DictEnumCode
 import javax.validation.ConstraintValidator
 import javax.validation.ConstraintValidatorContext

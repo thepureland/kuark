@@ -1,4 +1,4 @@
-package org.kuark.base.collections
+package org.kuark.base.lang.collections
 
 import org.apache.commons.lang3.ArrayUtils
 import org.kuark.base.lang.reflect.TypeKit

@@ -1,4 +1,4 @@
-package org.kuark.base.collections
+package org.kuark.base.lang.collections
 
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ConcurrentMap

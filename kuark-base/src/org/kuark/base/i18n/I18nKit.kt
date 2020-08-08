@@ -348,10 +348,10 @@ object I18nKit {
     init {
         TODO()
 //        for (locale in I18nLocale.values()) {
-//            Registry.register(Registry.I18N_KEY_LOCALES, org.kuark.base.enums.locale.getCode())
+//            Registry.register(Registry.I18N_KEY_LOCALES, org.kuark.base.support.enums.locale.getCode())
 //        }
 //        for (i18nType in I18nType.values()) {
-//            Registry.register(Registry.I18N_TYPE_KEY, org.kuark.base.enums.i18nType.getCode())
+//            Registry.register(Registry.I18N_TYPE_KEY, org.kuark.base.support.enums.i18nType.getCode())
 //        }
     }
 

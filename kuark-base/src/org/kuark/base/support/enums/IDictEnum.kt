@@ -1,4 +1,4 @@
-package org.kuark.base.enums
+package org.kuark.base.support.enums
 
 /**
  * 字典枚举的接口

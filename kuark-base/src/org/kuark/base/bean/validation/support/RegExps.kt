@@ -1,11 +1,12 @@
 package org.kuark.base.bean.validation.support
 
 /**
- * 正则表达式常量
+ * 常用正则表达式常量
  *
- * Create by (admin) on 2015/2/4.
+ * @author K
+ * @since 1.0.0
  */
-object RegExpConstants {
+object RegExps {
 
     /**
      * 手机号码

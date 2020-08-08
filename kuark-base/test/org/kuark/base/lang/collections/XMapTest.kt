@@ -1,4 +1,4 @@
-package org.kuark.base.collections
+package org.kuark.base.lang.collections
 
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test

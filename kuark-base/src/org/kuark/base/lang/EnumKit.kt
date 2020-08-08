@@ -1,7 +1,8 @@
-package org.kuark.base.enums
+package org.kuark.base.lang
 
 import org.apache.commons.lang3.EnumUtils
 import org.kuark.base.log.LogFactory
+import org.kuark.base.support.enums.IDictEnum
 import java.util.*
 import kotlin.reflect.KClass
 

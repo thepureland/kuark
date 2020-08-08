@@ -1,4 +1,4 @@
-package org.kuark.base.bean.validation.support
+package org.kuark.base.support.logic
 
 /**
  * 比较逻辑枚举

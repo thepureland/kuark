@@ -1,4 +1,4 @@
-package org.kuark.base.math
+package org.kuark.base.lang.math
 
 import org.apache.commons.lang3.math.NumberUtils
 

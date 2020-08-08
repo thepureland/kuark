@@ -1,6 +1,6 @@
 package org.kuark.base.bean.validation.constraint.annotaions
 
-import org.kuark.base.enums.IDictEnum
+import org.kuark.base.support.enums.IDictEnum
 import org.kuark.base.bean.validation.constraint.validator.DictEnumCodeValidator
 import javax.validation.Constraint
 import javax.validation.Payload

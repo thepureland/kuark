@@ -1,6 +1,6 @@
 package org.kuark.base.bean.validation.constraint.annotaions
 
-import org.kuark.base.bean.validation.support.CompareLogic
+import org.kuark.base.support.logic.CompareLogic
 import org.kuark.base.bean.validation.constraint.validator.CompareValidator
 import org.kuark.base.bean.validation.support.Depends
 import javax.validation.Constraint

@@ -1,7 +1,8 @@
-package org.kuark.base.enums
+package org.kuark.base.support.enums
 
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
+import org.kuark.base.lang.EnumKit
 import kotlin.reflect.KClass
 
 /**

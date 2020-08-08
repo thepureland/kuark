@@ -1,5 +1,8 @@
 package org.kuark.base.bean.validation.support
 
+import org.kuark.base.support.logic.AndOr
+import org.kuark.base.support.logic.Operator
+
 /**
  * 依赖约束注解，非一级约束注解，只作为其它一级注解的属性，代表所从属一级注解的前提条件(当Depends的条件表达式成立时，才应用该一级注解)，可参考@Compare。
  * 作为非一级约束注解，无法由validation验证框架自动调用其Validator进行校验，必须在所属一级注解的Validator中，手动调用该注解validator的对应的校验方法。

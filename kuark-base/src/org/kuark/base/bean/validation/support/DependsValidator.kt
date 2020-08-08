@@ -1,6 +1,7 @@
 package org.kuark.base.bean.validation.support
 
 import org.kuark.base.bean.BeanKit
+import org.kuark.base.support.logic.AndOr
 
 /**
  * Depends约束验证器，由其他一级约束Validator调用

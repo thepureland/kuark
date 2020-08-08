@@ -1,4 +1,4 @@
-package org.kuark.base.collections
+package org.kuark.base.lang.collections
 
 import java.lang.ref.ReferenceQueue
 import java.lang.ref.SoftReference

@@ -1,6 +1,6 @@
 package org.kuark.base.bean.validation.constraint.validator
 
-import org.kuark.base.collections.subarray
+import org.kuark.base.lang.collections.subarray
 import org.kuark.base.bean.validation.constraint.annotaions.Series
 import org.kuark.base.bean.validation.support.SeriesType
 import java.math.BigDecimal

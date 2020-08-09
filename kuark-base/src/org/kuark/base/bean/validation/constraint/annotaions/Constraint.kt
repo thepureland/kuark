@@ -1,23 +1,23 @@
 package org.kuark.base.bean.validation.constraint.annotaions
 
-import org.kuark.base.bean.validation.constraint.validator.RemoteValidator
+import org.kuark.base.bean.validation.constraint.validator.ConstraintValidator
 import org.kuark.base.bean.validation.support.IBeanValidator
 import javax.validation.Constraint
 import javax.validation.Payload
 import kotlin.reflect.KClass
 
 /**
- * 远程约束注解，属性级别注解。支持
+ * 通用约束注解，可以由用户自行实现校验逻辑，属性级别注解。
  *
  *
  * Create by (admin) on 2015/1/22.
  */
-@Constraint(validatedBy = [RemoteValidator::class])
+@Constraint(validatedBy = [ConstraintValidator::class])
 @Target(AnnotationTarget.FUNCTION, AnnotationTarget.PROPERTY_GETTER, AnnotationTarget.PROPERTY_SETTER)
 @Retention(AnnotationRetention.RUNTIME)
 @MustBeDocumented
 @Repeatable
-annotation class Remote(
+annotation class Constraint(
 
     /** 执行逻辑校验的类 */
     val checkClass: KClass<out IBeanValidator<*>>, //!!! 名称不能以valid开头，会报HV000073: Parameters starting with 'valid' are not allowed in a constraint.
@@ -61,5 +61,5 @@ annotation class Remote(
     @Target(AnnotationTarget.FUNCTION, AnnotationTarget.PROPERTY_GETTER, AnnotationTarget.PROPERTY_SETTER)
     @Retention(AnnotationRetention.RUNTIME)
     @MustBeDocumented
-    annotation class List(vararg val value: Remote)
+    annotation class List(vararg val value: org.kuark.base.bean.validation.constraint.annotaions.Constraint)
 }

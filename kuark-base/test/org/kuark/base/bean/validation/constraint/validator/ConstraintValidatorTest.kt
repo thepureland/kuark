@@ -3,17 +3,17 @@ package org.kuark.base.bean.validation.constraint.validator
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Test
-import org.kuark.base.bean.validation.constraint.annotaions.Remote
+import org.kuark.base.bean.validation.constraint.annotaions.Constraint
 import org.kuark.base.bean.validation.kit.ValidationKit
 import org.kuark.base.bean.validation.support.IBeanValidator
 
 /**
- * Remote约束验证器测试用例
+ * Constraint约束验证器测试用例
  *
  * @author K
  * @since 1.0.0
  */
-internal class RemoteValidatorTest {
+internal class ConstraintValidatorTest {
 
     @Test
     fun validate() {
@@ -29,14 +29,14 @@ internal class RemoteValidatorTest {
 
     internal data class TestRemoteBean(
 
-        @get:Remote(checkClass = ExistValidator::class, message = "用户名已存在")
+        @get:Constraint(checkClass = ExistValidator::class, message = "用户名已存在")
         val username: String?,
 
         val mockExist: Boolean = false, // 模拟用户名是否存在
 
-        @get:Remote.List(
-            Remote(checkClass = Rule1Validator::class, message = "不满足规则1"),
-            Remote(checkClass = Rule2Validator::class, message = "不满足规则2")
+        @get:Constraint.List(
+            Constraint(checkClass = Rule1Validator::class, message = "不满足规则1"),
+            Constraint(checkClass = Rule2Validator::class, message = "不满足规则2")
         )
         val address: String?
     )

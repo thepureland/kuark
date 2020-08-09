@@ -1,8 +1,8 @@
 package org.kuark.base.security
 
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-
-import org.junit.jupiter.api.Assertions.*
+import org.kuark.base.lang.string.EncodeKit
 
 internal class CryptoKitTest {
 
@@ -12,6 +12,21 @@ internal class CryptoKitTest {
 
     @Test
     fun isMacValid() {
+        val input = "foo message"
+
+        //key可为任意字符串
+        //byte[] key = "a foo key".getBytes();
+
+        //key可为任意字符串
+        //byte[] key = "a foo key".getBytes();
+        val key = CryptoKit.generateHmacSha1Key()
+        assertEquals(20, key.size.toLong())
+
+        val macResult = CryptoKit.hmacSha1(input.toByteArray(), key)
+        println("hmac-sha1 key in hex      :" + EncodeKit.encodeHex(key))
+        println("hmac-sha1 in hex result   :" + EncodeKit.encodeHex(macResult))
+
+        assert(CryptoKit.isMacValid(macResult, input.toByteArray(), key))
     }
 
     @Test

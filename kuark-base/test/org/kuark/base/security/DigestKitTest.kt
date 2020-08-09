@@ -1,8 +1,8 @@
 package org.kuark.base.security
 
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-
-import org.junit.jupiter.api.Assertions.*
+import org.kuark.base.lang.string.EncodeKit
 
 internal class DigestKitTest {
 
@@ -24,6 +24,15 @@ internal class DigestKitTest {
 
     @Test
     fun sha1() {
+        val input = "user"
+        val salt = DigestKit.generateSalt(8) // 随机盐
+
+        assertEquals(
+            "12dea96fec20593566ab75692c9949596833adc9", EncodeKit.encodeHex(DigestKit.sha1(input.toByteArray()))
+        )
+
+        println(EncodeKit.encodeHex(DigestKit.sha1(input.toByteArray(), salt)))
+        println(EncodeKit.encodeHex(DigestKit.sha1(input.toByteArray(), salt, 1024)))
     }
 
     @Test

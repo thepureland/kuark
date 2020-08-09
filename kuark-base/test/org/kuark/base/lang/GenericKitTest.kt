@@ -1,10 +1,10 @@
 package org.kuark.base.lang
 
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-
-import org.junit.jupiter.api.Assertions.*
 import org.kuark.base.lang.reflect.FieldKit
 import org.kuark.base.lang.reflect.MethodKit
+import org.kuark.base.lang.reflect.PropertyKit
 import org.kuark.base.support.ICallback
 import java.io.Serializable
 import kotlin.reflect.KClass
@@ -26,12 +26,16 @@ internal class GenericKitTest {
         // 有父类
         assertEquals(String::class, GenericKit.getSuperClassGenricType(TestGeneric2::class, 0))
         assertEquals(Double::class, GenericKit.getSuperClassGenricType(TestGeneric2::class, 1))
+
+        // 索引越界
+        assertEquals(null, GenericKit.getSuperClassGenricType(TestGeneric2::class, 2))
     }
 
     @Test
     fun getMethodGenericReturnType() {
         val method = MethodKit.getAccessibleMethod(TestGeneric1::class, "execute", Int::class)
         assertEquals(String::class, GenericKit.getMethodGenericReturnType(method, 0))
+        assertEquals(null, GenericKit.getMethodGenericReturnType(method, 2))
     }
 
     @Test
@@ -39,13 +43,15 @@ internal class GenericKitTest {
         val method = MethodKit.getAccessibleMethod(TestGeneric2::class, "m", String::class, Map::class)
         assertEquals(listOf<KClass<*>>(), GenericKit.getMethodGenericParameterTypes(method, 0))
         assertEquals(listOf(String::class, Boolean::class), GenericKit.getMethodGenericParameterTypes(method, 1))
+        assertEquals(null, GenericKit.getMethodGenericParameterTypes(method, 2))
     }
 
     @Test
     fun getFieldGenericType() {
-        val field = FieldKit.getField(TestGeneric2::class, "f")
-        assertEquals(Int::class, GenericKit.getFieldGenericType(field, 0))
-        assertEquals(Float::class, GenericKit.getFieldGenericType(field, 1))
+        val field = FieldKit.getDeclaredField(TestGeneric2::class, "field", true)!!
+        assertEquals(Int::class, GenericKit.getPropertyGenericType(field, 0))
+        assertEquals(Float::class, GenericKit.getPropertyGenericType(field, 1))
+        assertEquals(null, GenericKit.getPropertyGenericType(field, 2))
     }
 
     internal class TestGeneric1: ICallback<Int, Map<String, Boolean>>, Serializable {
@@ -54,10 +60,9 @@ internal class GenericKitTest {
 
     internal class TestGeneric2: Serializable, HashMap<String, Double>() {
 
-        val f: Map<Int, Float>? = null
+        val field: Map<Int, Float>? = null
 
         fun m(str: String, map: Map<String, Boolean>) {
-
         }
 
     }

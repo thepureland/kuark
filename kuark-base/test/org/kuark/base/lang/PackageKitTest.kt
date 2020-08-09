@@ -2,7 +2,6 @@ package org.kuark.base.lang
 
 import org.apache.commons.lang3.BooleanUtils
 import org.apache.commons.lang3.StringUtils
-import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.kuark.base.lang.string.EncodeKit
 
@@ -19,26 +18,26 @@ internal class PackageKitTest {
         // in file
         val packageName = PackageKit::class.java.getPackage().name
         var classes = PackageKit.getClassesInPackage(packageName, true)
-        assertTrue(classes.contains(PackageKit::class.java))
-        assertTrue(classes.contains(EncodeKit::class.java))
-        assertTrue(classes.contains(SystemKit::class.java))
+        assert(classes.contains(PackageKit::class))
+        assert(classes.contains(EncodeKit::class))
+        assert(classes.contains(SystemKit::class))
 
         // in jar
         classes = PackageKit.getClassesInPackage("org.apache.commons.lang3", true)
-        assertTrue(classes.contains(StringUtils::class.java))
-        assertTrue(classes.contains(BooleanUtils::class.java))
+        assert(classes.contains(StringUtils::class))
+        assert(classes.contains(BooleanUtils::class))
     }
 
     @Test
     fun testGetPackages() {
         // in file
         var packages = PackageKit.getPackages("org.kuark.base.*", true)
-        assertTrue(packages.contains("org.kuark.base.lang"))
-        assertTrue(packages.contains("org.kuark.base.log"))
+        assert(packages.contains("org.kuark.base.lang"))
+        assert(packages.contains("org.kuark.base.log"))
 
         // in jar using package pattern
         packages = PackageKit.getPackages("org.apache.**.lang3", true)
-        assertTrue(packages.contains("org.apache.commons.lang3"))
+        assert(packages.contains("org.apache.commons.lang3"))
     }
     
 }

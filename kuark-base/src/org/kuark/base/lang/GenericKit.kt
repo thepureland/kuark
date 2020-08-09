@@ -115,7 +115,7 @@ object GenericKit {
      * @return 泛型参数的实际类型, 如果没有实现ParameterizedType接口，即不支持泛型，将直接返回Any::class, 如果索引越界返回null
      * @since 1.0.0
      */
-    fun getFieldGenericType(field: Field, index: Int = 0): KClass<*>? {
+    fun getPropertyGenericType(field: Field, index: Int = 0): KClass<*>? {
         val genericFieldType = field.genericType
         if (genericFieldType is ParameterizedType) {
             val fieldArgTypes = genericFieldType.actualTypeArguments

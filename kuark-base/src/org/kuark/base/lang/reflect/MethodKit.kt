@@ -8,6 +8,7 @@ import java.lang.reflect.InvocationTargetException
 import java.lang.reflect.Method
 import java.util.*
 import kotlin.reflect.KClass
+
 /**
  * 方法工具类
  *
@@ -133,13 +134,11 @@ object MethodKit {
         val names = StringUtils.split(propertyName, ".")
         for (i in names.indices) {
             if (i < names.size - 1) {
-                val getterMethodName =
-                    GETTER_PREFIX + StringUtils.capitalize(names[i])
+                val getterMethodName = GETTER_PREFIX + StringUtils.capitalize(names[i])
                 `object` = invokeExactMethod(`object`, getterMethodName)
             } else {
-                val setterMethodName =
-                    SETTER_PREFIX + StringUtils.capitalize(names[i])
-                invokeMethod(`object`, setterMethodName, *arrayOf(value))
+                val setterMethodName = SETTER_PREFIX + StringUtils.capitalize(names[i])
+                invokeMethod(`object`, setterMethodName, value)
             }
         }
     }
@@ -173,7 +172,7 @@ object MethodKit {
      * @throws InvocationTargetException
      * @throws IllegalAccessException
      */
-    fun forceInvoke(target: Any, methodName: String, argTypes: Array<KClass<*>>?, vararg args: Any?): Any {
+    fun forceInvoke(target: Any, methodName: String, argTypes: Array<KClass<*>>?, vararg args: Any?): Any? {
         val javaClasses = arrayOfNulls<Class<*>>(argTypes?.size ?: 0)
         argTypes?.forEachIndexed { index, kClass -> javaClasses[index] = kClass.java }
         val m = target.javaClass.getDeclaredMethod(methodName, *javaClasses)
@@ -189,7 +188,7 @@ object MethodKit {
      * 在指定的对象上调用一个指定方法名和匹配参数类型的方法
      * 该方法是[方法的代理][.getMatchingAccessibleMethod]
      */
-    fun invokeMethod(`object`: Any, methodName: String, vararg args: Any?): Any =
+    fun invokeMethod(`object`: Any, methodName: String, vararg args: Any): Any? =
         MethodUtils.invokeMethod(`object`, methodName, *args)
 
     /**

@@ -8,39 +8,35 @@ import java.net.URL
 import java.net.URLDecoder
 import java.util.*
 import java.util.jar.JarFile
+import kotlin.reflect.KClass
 
 /**
- * java包工具类
+ * 包工具类
  *
  * @author K
  * @since 1.0.0
  */
 object PackageKit {
+
     private val LOG = LogFactory.getLog(PackageKit::class)
 
     /**
-     *
-     *
      * 获取指定包名下的所有类
      *
-     *
-     * @param pkg 以"."分隔的java标准包名
+     * @param pkg 以"."分隔的标准包名
      * @param recursive 是否循环迭代
      * @return Set<类>
      * @since 1.0.0
      */
-    fun getClassesInPackage(pkg: String, recursive: Boolean): Set<Class<*>> {
+    fun getClassesInPackage(pkg: String, recursive: Boolean): Set<KClass<*>> {
         val action = Action(true)
         find(pkg, recursive, action)
-        return action.getClasses()
+        return action.getClasses().map { it.kotlin }.toSet()
     }
 
     /**
-     *
-     *
-     * 根据正则表达式获取匹配的所有包 <br></br>
+     * 根据正则表达式获取匹配的所有包
      * 包的开头部分必须明确指定
-     *
      *
      * @param pkgPattern 包正则表达式
      * @param recursive 是否递归地获取子包
@@ -52,14 +48,8 @@ object PackageKit {
         val packagePrefix = getPackagePrefix(pkgPattern)
         find(packagePrefix, recursive, action)
         val pkgs = action.getPkgs()
-        val packs: MutableSet<String> = LinkedHashSet()
         val regExp = pkgPattern.replace("\\*".toRegex(), ".*")
-        for (pack in pkgs) {
-            if (pack.matches(Regex(regExp))) {
-                packs.add(pack)
-            }
-        }
-        return packs
+        return pkgs.filter { it.matches(Regex(regExp)) }.toSet()
     }
 
     private fun getPackagePrefix(pkgPattern: String): String {
@@ -106,8 +96,7 @@ object PackageKit {
     }
 
     private fun findAndAddClassesInPackageByJar(
-        packageName: String, packageDirName: String, url: URL,
-        recursive: Boolean, action: Action
+        packageName: String, packageDirName: String, url: URL, recursive: Boolean, action: Action
     ) {
         var pkgName = packageName
         val jar: JarFile
@@ -166,14 +155,13 @@ object PackageKit {
      * 以文件的形式来获取包下的所有Class
      */
     private fun findAndAddClassesInPackageByFile(
-        packageName: String, packagePath: String,
-        recursive: Boolean, action: Action
+        packageName: String, packagePath: String, recursive: Boolean, action: Action
     ) {
         // 获取此包的目录 建立一个File
         val dir = File(packagePath)
         // 如果不存在或者 也不是目录就直接返回
         if (dir.exists() && dir.isDirectory) {
-            if (action.isRetrieveClass == false) {
+            if (!action.isRetrieveClass) {
                 action.addPackage(packageName)
             }
         } else {

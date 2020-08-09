@@ -1,10 +1,32 @@
 package org.kuark.base.data.json
 
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-
-import org.junit.jupiter.api.Assertions.*
+import org.kuark.base.bean.Address
+import org.kuark.base.bean.Person
+import org.kuark.base.tree.TreeKit
+import java.util.*
 
 internal class JsonKitTest {
+
+    private lateinit var person: Person
+
+    @BeforeEach
+    fun setUp() {
+        person = Person()
+        with(person) {
+            id = "id"
+            name = "Mike"
+            sex = "male"
+            age = 25
+            birthday = Date(60528873600000L)
+            this.address = Address("hunan", "changsha", "wuyilu", "410000")
+            this.goods = listOf("sporting", "singing", "dancing")
+            this.contact = mapOf("student" to "Tom", "teacher" to "Lucy")
+        }
+
+    }
 
     @Test
     fun jsonToDisplay() {
@@ -12,6 +34,10 @@ internal class JsonKitTest {
 
     @Test
     fun fromJson() {
+        val json = "[\"abc\",\"cde\"]"
+        val strings = JsonKit.fromJson(json, Array<String>::class)!!
+        assertEquals(strings[0], "abc")
+        assertEquals(strings[1], "cde")
     }
 
     @Test
@@ -64,6 +90,10 @@ internal class JsonKitTest {
 
     @Test
     fun testToJson() {
+        val persons = listOf(person)
+        val treeNodes = TreeKit.convertListToTree(persons)
+        val s = JsonKit.toJson(treeNodes)
+        println(s)
     }
 
     @Test

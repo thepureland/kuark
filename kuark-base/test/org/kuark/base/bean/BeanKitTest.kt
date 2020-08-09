@@ -17,15 +17,6 @@ internal class BeanKitTest {
 
     @BeforeEach
     fun setUp() {
-        val address = Address()
-        with(address) {
-            province = "hunan"
-            city = "changsha"
-            street = "wuyilu"
-            zipcode = "410000"
-        }
-        val goods = mutableListOf("sporting", "singing", "dancing")
-        val contact = mapOf("student" to "Tom", "teacher" to "Lucy")
         person = Person()
         with(person) {
             selfUniqueIdentifier = "id"
@@ -33,9 +24,9 @@ internal class BeanKitTest {
             sex = "male"
             age = 25
             birthday = Date(60528873600000L)
-            this.address = address
-            this.goods = goods
-            this.contact = contact
+            this.address = Address("hunan", "changsha", "wuyilu", "410000")
+            this.goods = listOf("sporting", "singing", "dancing")
+            this.contact = mapOf("student" to "Tom", "teacher" to "Lucy")
         }
     }
 
@@ -97,7 +88,7 @@ internal class BeanKitTest {
     fun testCopyPropertiesByMap() {
         val list = listOf("1", "2")
         val srcObj = Pair("key", list)
-        val propertyMap = mapOf("first" to "second","second[0]" to "first")
+        val propertyMap = mapOf("first" to "second", "second[0]" to "first")
 
         val dest = BeanKit.copyProperties(Pair::class, srcObj, propertyMap)
         assertEquals(srcObj.first, dest?.second)

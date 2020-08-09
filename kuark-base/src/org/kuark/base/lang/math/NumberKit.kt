@@ -31,7 +31,6 @@ object NumberKit {
      * @throws NumberFormatException 如果字符串不能被转换
      * @since 1.0.0
      */
-    @Throws(NumberFormatException::class)
     fun createNumber(str: String?): Number = NumberUtils.createNumber(str)
 
     /**

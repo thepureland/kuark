@@ -151,7 +151,9 @@ object DigestKit {
      */
     fun digest(input: ByteArray, algorithm: String, salt: ByteArray?, iterations: Int): ByteArray {
         val digest = MessageDigest.getInstance(algorithm)
-        salt ?: digest.update(salt)
+        if (salt != null) {
+            digest.update(salt)
+        }
         var result = digest.digest(input)
         for (i in 1 until iterations) {
             digest.reset()

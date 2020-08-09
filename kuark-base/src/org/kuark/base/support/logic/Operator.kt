@@ -43,27 +43,6 @@ enum class Operator constructor(
     /** 小于 */
     LT("<", "小于"),
 
-    /** 等于属性 */
-    EQ_P("P=", "等于属性", false, false),
-
-    /** 不等于属性 */
-    NE_P("P!=", "不等于属性", false, false),
-
-    /** 小于大于(不等于)属性 */
-    LG_P("P<>", "小于大于(不等于)属性", false, false),
-
-    /** 大于等于属性 */
-    GE_P("P>=", "大于等于属性", false, false),
-
-    /** 小于等于属性 */
-    LE_P("P<=", "小于等于属性", false, false),
-
-    /** 大于属性 */
-    GT_P("P>", "大于属性", false, false),
-
-    /** 小于属性 */
-    LT_P("P<", "小于属性", false, false),
-
     /** 匹配字符串任意位置 */
     LIKE("LIKE", "任意位置匹配", false, true),
 
@@ -100,14 +79,37 @@ enum class Operator constructor(
     /** 是否不为空串 */
     IS_NOT_EMPTY("!=''", "不等于空串", true, true);
 
+//    /** 等于属性 */
+//    EQ_P("P=", "等于属性", false, false),
+//
+//    /** 不等于属性 */
+//    NE_P("P!=", "不等于属性", false, false),
+//
+//    /** 小于大于(不等于)属性 */
+//    LG_P("P<>", "小于大于(不等于)属性", false, false),
+//
+//    /** 大于等于属性 */
+//    GE_P("P>=", "大于等于属性", false, false),
+//
+//    /** 小于等于属性 */
+//    LE_P("P<=", "小于等于属性", false, false),
+//
+//    /** 大于属性 */
+//    GT_P("P>", "大于属性", false, false),
+//
+//    /** 小于属性 */
+//    LT_P("P<", "小于属性", false, false),
+
+
+
     /**
-     * 根据当前操作符比较两个值
+     * 根据当前操作符作断言
      *
      * @param v1 左值
-     * @param v2 右值
+     * @param v2 右值 (对于IS_NULL、IS_NOT_NULL、IS_EMPTY、IS_NOT_EMPTY来说无意义)
      * @return 是否满足逻辑关系
      */
-    fun compare(v1: Any?, v2: Any?): Boolean {
+    fun assert(v1: Any?, v2: Any? = null): Boolean {
         return when (this) {
             EQ -> {
                 if (v1 == null && v2 == null) {
@@ -202,11 +204,11 @@ enum class Operator constructor(
             IS_NULL -> v1 == null
             IS_NOT_NULL -> v1 != null
             IS_NOT_EMPTY -> {
-                if (v1 != null) {
+                if (v1 == null) {
                     return true
                 }
                 if (v1 is String) {
-                    return !(v1 as String?)!!.isEmpty()
+                    return (v1 as String?)!!.isNotEmpty()
                 }
                 if (v1 is Array<*>) {
                     return (v1 as Array<Any?>).isNotEmpty()
@@ -247,10 +249,10 @@ enum class Operator constructor(
             return elems.contains(value1)
         }
         if (value1 is Array<*>) {
-            value1 = listOf(value1)
+            value1 = listOf(*value1)
         }
         if (value2 is Array<*>) {
-            value2 = listOf(value2)
+            value2 = listOf(*value2)
         }
         if (value2 is Collection<*>) {
             return if (value1 is Collection<*>) {

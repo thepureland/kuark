@@ -30,11 +30,11 @@ object DependsValidator {
      * @param leftValues 左值数组
      * @param rightValues 右值数组
      * @param operators 操作符数组
-     * @param andOr 多组值间的逻辑关系
+     * @param andOr 多组值间的逻辑关系，默认为”与“
      * @return 逻辑是否成立
      */
     fun validate(
-        leftValues: Array<Any?>, rightValues: Array<String>, operators: Array<Operator>, andOr: AndOr
+        leftValues: Array<Any?>, rightValues: Array<String>, operators: Array<Operator>, andOr: AndOr = AndOr.AND
     ): Boolean {
         if (leftValues.size != rightValues.size || rightValues.size != operators.size) {
             error("左值数组、右值数组、操作符数组的大小必须一致！")
@@ -51,7 +51,7 @@ object DependsValidator {
                     .replace("',\\s*'".toRegex(), ",")
             }
 
-            val compare: Boolean = operators[index].compare(leftValue?.toString(), rightValue)
+            val compare: Boolean = operators[index].assert(leftValue?.toString(), rightValue)
             if (andOr === AndOr.AND) {
                 if (!compare) {
                     return false

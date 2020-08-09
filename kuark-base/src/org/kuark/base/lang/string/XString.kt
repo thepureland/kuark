@@ -34,7 +34,7 @@ fun String.replaceEach(map: Map<String?, String?>): String {
  * @return 转换后的十六进制表示的字符串
  * @since 1.0.0
  */
-fun CharSequence.toHexStr(): CharSequence = String(CryptoKit.encodeHex(this.toString().toByteArray()))
+fun String.toHexStr(): CharSequence = String(CryptoKit.encodeHex(this.toString().toByteArray()))
 
 /**
  * 解码十六进制表示的字符串
@@ -42,7 +42,7 @@ fun CharSequence.toHexStr(): CharSequence = String(CryptoKit.encodeHex(this.toSt
  * @return 解码后的字符串
  * @since 1.0.0
  */
-fun CharSequence.decodeHexStr(): CharSequence = String(CryptoKit.decodeHex(this.toString().toByteArray()))
+fun String.decodeHexStr(): CharSequence = String(CryptoKit.decodeHex(this.toString().toByteArray()))
 
 /**
  * 对字符串进行MD5加密后，再进行十六进制编码
@@ -51,7 +51,7 @@ fun CharSequence.decodeHexStr(): CharSequence = String(CryptoKit.decodeHex(this.
  * @return 加密的字符串
  * @since 1.0.0
  */
-fun CharSequence.toMd5HexStr(saltStr: CharSequence): String = DigestKit.getMD5(this.toString(), saltStr.toString())
+fun String.toMd5HexStr(saltStr: CharSequence): String = DigestKit.getMD5(this.toString(), saltStr.toString())
 
 /**
  * 将字符串按给定的长度均分(最后一组可能不是等分的)
@@ -68,7 +68,7 @@ fun CharSequence.toMd5HexStr(saltStr: CharSequence): String = DigestKit.getMD5(t
  * @return 等分后每个分组组成的数组
  * @since 1.0.0
  */
-fun CharSequence.divideAverage(groupLen: Int): Array<String?> {
+fun String.divideAverage(groupLen: Int): Array<String?> {
     if (groupLen <= 0) {
         return arrayOf()
     }
@@ -99,7 +99,7 @@ fun CharSequence.divideAverage(groupLen: Int): Array<String?> {
  * @return “_”分割的字符串, 并且是大写的
  * @since 1.0.0
  */
-fun CharSequence.humpToUnderscore(): String {
+fun String.humpToUnderscore(): String {
     val sb = StringBuilder()
     sb.append(this[0])
     for (i in 1 until this.length) {
@@ -123,7 +123,7 @@ fun CharSequence.humpToUnderscore(): String {
  * @return “驼峰”式写法的字符串
  * @since 1.0.0
  */
-fun CharSequence.underscoreToHump(): String {
+fun String.underscoreToHump(): String {
     val sb = StringBuilder()
     val words = this.split("_")
     for (word in words) {
@@ -139,7 +139,7 @@ fun CharSequence.underscoreToHump(): String {
  * @return 替换后的字符串
  * @since 1.0.0
  */
-fun CharSequence.fillTemplateByObjectMap(paramMap: Map<String, Any>): CharSequence {
+fun String.fillTemplateByObjectMap(paramMap: Map<String, Any>): CharSequence {
     var templateStr = this.toString()
     for ((paramName, value) in paramMap) {
         templateStr = templateStr.replace(
@@ -160,7 +160,7 @@ fun CharSequence.fillTemplateByObjectMap(paramMap: Map<String, Any>): CharSequen
  * @return true：如果字符串非空至少包含1个空白字符, false： 如果不包含
  * @since 1.0.0
  */
-fun CharSequence.containsWhitespace(): Boolean = StringUtils.containsWhitespace(this)
+fun String.containsWhitespace(): Boolean = StringUtils.containsWhitespace(this)
 
 
 //region ContainsAny
@@ -179,7 +179,7 @@ fun CharSequence.containsWhitespace(): Boolean = StringUtils.containsWhitespace(
  * @return true：任何给定的字符被找到，false：未找到
  * @since 1.0.0
  */
-fun CharSequence.containsAny(vararg searchChars: Char): Boolean = StringUtils.containsAny(this, *searchChars)
+fun String.containsAny(vararg searchChars: Char): Boolean = StringUtils.containsAny(this, *searchChars)
 
 /**
  * 检查是否字符序列包含给定的字符组 searchChars 的任何一个字符
@@ -196,7 +196,7 @@ fun CharSequence.containsAny(vararg searchChars: Char): Boolean = StringUtils.co
  * @return true：任何给定的字符被找到，false：未找到
  * @since 1.0.0
  */
-fun CharSequence.containsAny(searchChars: CharSequence?): Boolean = StringUtils.containsAny(this, searchChars)
+fun String.containsAny(searchChars: CharSequence?): Boolean = StringUtils.containsAny(this, searchChars)
 //endregion ContainsAny
 
 //region IndexOfAnyBut chars
@@ -215,7 +215,7 @@ fun CharSequence.containsAny(searchChars: CharSequence?): Boolean = StringUtils.
  * @return 任何第一次不匹配的字符的下标。如果没有找到，将返回-1
  * @since 1.0.0
  */
-fun CharSequence.indexOfAnyBut(vararg searchChars: Char): Int = StringUtils.indexOfAnyBut(this, *searchChars)
+fun String.indexOfAnyBut(vararg searchChars: Char): Int = StringUtils.indexOfAnyBut(this, *searchChars)
 
 /**
  * 在字符序列中查找给定的一组字符 searchChars，返回第一次不出现给定的任何字符的位置
@@ -232,7 +232,7 @@ fun CharSequence.indexOfAnyBut(vararg searchChars: Char): Int = StringUtils.inde
  * @return 任何第一次不匹配的字符的下标。如果没有找，将返回-1
  * @since 1.0.0
  */
-fun CharSequence.indexOfAnyBut(searchChars: CharSequence): Int = StringUtils.indexOfAnyBut(this, searchChars)
+fun String.indexOfAnyBut(searchChars: CharSequence): Int = StringUtils.indexOfAnyBut(this, searchChars)
 //endregion IndexOfAnyBut chars
 
 //region ContainsOnly
@@ -251,7 +251,7 @@ fun CharSequence.indexOfAnyBut(searchChars: CharSequence): Int = StringUtils.ind
  * @return true: 如果只由valid中的字符组成或cs为空串， false: 包含其他字符
  * @since 1.0.0
  */
-fun CharSequence.containsOnly(vararg valid: Char): Boolean = StringUtils.containsOnly(this, *valid)
+fun String.containsOnly(vararg valid: Char): Boolean = StringUtils.containsOnly(this, *valid)
 
 /**
  * 检查字符序列是否只由 validChars 中的字符组成
@@ -268,7 +268,7 @@ fun CharSequence.containsOnly(vararg valid: Char): Boolean = StringUtils.contain
  * @return true: 如果只由validChars中的字符组成或为空串， false: 包含其他字符
  * @since 1.0.0
  */
-fun CharSequence.containsOnly(validChars: String?): Boolean = StringUtils.containsOnly(this, validChars)
+fun String.containsOnly(validChars: String?): Boolean = StringUtils.containsOnly(this, validChars)
 //endregion ContainsOnly
 
 //region ContainsNone
@@ -287,7 +287,7 @@ fun CharSequence.containsOnly(validChars: String?): Boolean = StringUtils.contai
  * @return true: 如果都不由searchChars中的字符组成或为空串，false: 包含searchChars中的任何字符
  * @since 1.0.0
  */
-fun CharSequence.containsNone(vararg searchChars: Char): Boolean = StringUtils.containsNone(this, *searchChars)
+fun String.containsNone(vararg searchChars: Char): Boolean = StringUtils.containsNone(this, *searchChars)
 
 /**
  * 检查字符序列是否都不由字符串 invalidChars 中的字符组成
@@ -304,7 +304,7 @@ fun CharSequence.containsNone(vararg searchChars: Char): Boolean = StringUtils.c
  * @return true: 如果都不由searchChars中的字符组成或为空串, false: 包含searchChars中的任何字符
  * @since 1.0.0
  */
-fun CharSequence.containsNone(invalidChars: String): Boolean = StringUtils.containsNone(this, invalidChars)
+fun String.containsNone(invalidChars: String): Boolean = StringUtils.containsNone(this, invalidChars)
 //endregion ContainsNone
 
 
@@ -748,7 +748,7 @@ fun String.swapCase(): String? = StringUtils.swapCase(this)
  * @return 子串出现的次数
  * @since 1.0.0
  */
-fun CharSequence.countMatches(sub: CharSequence?): Int = StringUtils.countMatches(this, sub)
+fun String.countMatches(sub: CharSequence?): Int = StringUtils.countMatches(this, sub)
 
 //region Character Tests
 /**
@@ -765,7 +765,7 @@ fun CharSequence.countMatches(sub: CharSequence?): Int = StringUtils.countMatche
  * @return true: 只包含Unicode字母
  * @since 1.0.0
  */
-fun CharSequence.isAlpha(): Boolean = StringUtils.isAlpha(this)
+fun String.isAlpha(): Boolean = StringUtils.isAlpha(this)
 
 /**
  * 测试字符序列是否只包含Unicode字母或空格
@@ -782,7 +782,7 @@ fun CharSequence.isAlpha(): Boolean = StringUtils.isAlpha(this)
  * @return true: 只包含Unicode字母或空格
  * @since 1.0.0
  */
-fun CharSequence.isAlphaSpace(): Boolean = StringUtils.isAlphaSpace(this)
+fun String.isAlphaSpace(): Boolean = StringUtils.isAlphaSpace(this)
 
 /**
  * 测试字符序列是否只包含Unicode字母或数字
@@ -799,7 +799,7 @@ fun CharSequence.isAlphaSpace(): Boolean = StringUtils.isAlphaSpace(this)
  * @return true: 只包含Unicode字母或数字
  * @since 1.0.0
  */
-fun CharSequence.isAlphanumeric(): Boolean = StringUtils.isAlpha(this)
+fun String.isAlphanumeric(): Boolean = StringUtils.isAlpha(this)
 
 /**
  * 测试字符序列是否只包含Unicode字母、空格或数字
@@ -816,7 +816,7 @@ fun CharSequence.isAlphanumeric(): Boolean = StringUtils.isAlpha(this)
  * @return true: 只包含Unicode字母、空格或数字
  * @since 1.0.0
  */
-fun CharSequence.isAlphanumericSpace(): Boolean = StringUtils.isAlphanumeric(this)
+fun String.isAlphanumericSpace(): Boolean = StringUtils.isAlphanumeric(this)
 
 /**
  * 测试字符序列是否只包含ASCII码的可打印的字符
@@ -837,7 +837,7 @@ fun CharSequence.isAlphanumericSpace(): Boolean = StringUtils.isAlphanumeric(thi
  * @return true: 每个字符都在32到126的范围内
  * @since 1.0.0
  */
-fun isAsciiPrintable(cs: CharSequence?): Boolean = StringUtils.isAsciiPrintable(cs)
+fun String.isAsciiPrintable(): Boolean = StringUtils.isAsciiPrintable(this)
 
 /**
  * 测试字符序列是否只包含Unicode数字。 十进制的小数不是Unicode数字。
@@ -855,7 +855,7 @@ fun isAsciiPrintable(cs: CharSequence?): Boolean = StringUtils.isAsciiPrintable(
  * @return true: 只包含Unicode数字
  * @since 1.0.0
  */
-fun CharSequence.isNumeric(): Boolean = StringUtils.isNumeric(this)
+fun String.isNumeric(): Boolean = StringUtils.isNumeric(this)
 
 /**
  * 测试字符序列是否只包含Unicode数字或空格。 十进制的小数不是Unicode数字。
@@ -873,7 +873,7 @@ fun CharSequence.isNumeric(): Boolean = StringUtils.isNumeric(this)
  * @return true: 只包含Unicode数字或空格
  * @since 1.0.0
  */
-fun CharSequence.isNumericSpace(): Boolean = StringUtils.isNumeric(this)
+fun String.isNumericSpace(): Boolean = StringUtils.isNumeric(this)
 
 /**
  * 测试字符序列是否只包含空白字符
@@ -889,7 +889,7 @@ fun CharSequence.isNumericSpace(): Boolean = StringUtils.isNumeric(this)
  * @return true：只包含空白字符
  * @since 1.0.0
  */
-fun CharSequence.isWhitespace(): Boolean = StringUtils.isWhitespace(this)
+fun String.isWhitespace(): Boolean = StringUtils.isWhitespace(this)
 
 /**
  * 测试字符序列是否只包含小写字母
@@ -904,7 +904,7 @@ fun CharSequence.isWhitespace(): Boolean = StringUtils.isWhitespace(this)
  * @return true：只包含小写字母
  * @since 1.0.0
  */
-fun CharSequence.isAllLowerCase(): Boolean = StringUtils.isAllLowerCase(this)
+fun String.isAllLowerCase(): Boolean = StringUtils.isAllLowerCase(this)
 
 /**
  * 测试字符序列是否只包含大写字母
@@ -919,7 +919,7 @@ fun CharSequence.isAllLowerCase(): Boolean = StringUtils.isAllLowerCase(this)
  * @return true：只包含大写字母
  * @since 1.0.0
  */
-fun CharSequence.isAllUpperCase(): Boolean = StringUtils.isAllUpperCase(this)
+fun String.isAllUpperCase(): Boolean = StringUtils.isAllUpperCase(this)
 
 //endregion Character Tests
 
@@ -1054,7 +1054,7 @@ fun String.difference(str2: String): String? = StringUtils.difference(this, str2
  * @return 开始不同时的下标; 如果两字符串相同返回-1
  * @since 1.0.0
  */
-fun CharSequence.indexOfDifference(cs2: CharSequence): Int = StringUtils.indexOfDifference(this, cs2)
+fun String.indexOfDifference(cs2: CharSequence): Int = StringUtils.indexOfDifference(this, cs2)
 
 /**
  * 比较数组中的每个字符串，并返回它们开始不同时的下标
@@ -1081,7 +1081,7 @@ fun CharSequence.indexOfDifference(cs2: CharSequence): Int = StringUtils.indexOf
  * @return 开始不同时的下标; 如果字符串都相同返回-1
  * @since 1.0.0
  */
-fun Array<CharSequence?>.indexOfDifference(): Int = StringUtils.indexOfDifference(*this)
+fun Array<String?>.indexOfDifference(): Int = StringUtils.indexOfDifference(*this)
 //endregion Difference
 
 /**
@@ -1132,7 +1132,7 @@ fun Array<String?>.getCommonPrefix(): String = StringUtils.getCommonPrefix(*this
  * @throws IllegalArgumentException 两参数之一为null时
  * @since 1.0.0
  */
-fun CharSequence.getLevenshteinDistance(t: CharSequence): Int = StringUtils.getLevenshteinDistance(this, t)
+fun String.getLevenshteinDistance(t: CharSequence): Int = StringUtils.getLevenshteinDistance(this, t)
 
 /**
  * 如果两个字符串的“距离”(相似度)小于等于给定的极限值，就返回该“距离”，否则返回-1。
@@ -1157,7 +1157,7 @@ fun CharSequence.getLevenshteinDistance(t: CharSequence): Int = StringUtils.getL
  * @throws IllegalArgumentException 极限值为负数时
  * @since 1.0.0
  */
-fun CharSequence.getLevenshteinDistance(t: CharSequence, threshold: Int): Int =
+fun String.getLevenshteinDistance(t: CharSequence, threshold: Int): Int =
     StringUtils.getLevenshteinDistance(this, t, threshold)
 //endregion Misc
 
@@ -1175,7 +1175,7 @@ fun CharSequence.getLevenshteinDistance(t: CharSequence, threshold: Int): Int =
  * @return true: 任何一个为字符串的前缀(大小写不敏感)
  * @since 1.0.0
  */
-fun CharSequence.startsWithAny(vararg searchStrings: CharSequence?): Boolean =
+fun String.startsWithAny(vararg searchStrings: CharSequence?): Boolean =
     StringUtils.startsWithAny(this, *searchStrings)
 
 /**
@@ -1192,7 +1192,7 @@ fun CharSequence.startsWithAny(vararg searchStrings: CharSequence?): Boolean =
  * @return 任何一个为字符串的后缀(大小写不敏感)
  * @since 1.0.0
  */
-fun CharSequence.endsWithAny(vararg searchStrings: CharSequence?): Boolean =
+fun String.endsWithAny(vararg searchStrings: CharSequence?): Boolean =
     StringUtils.endsWithAny(this, *searchStrings)
 
 /**

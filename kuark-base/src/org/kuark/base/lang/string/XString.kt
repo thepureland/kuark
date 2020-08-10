@@ -3,8 +3,11 @@ package org.kuark.base.lang.string
 import org.apache.commons.lang3.StringUtils
 import org.kuark.base.security.CryptoKit
 import org.kuark.base.security.DigestKit
+import java.math.BigDecimal
+import java.math.BigInteger
 import java.util.regex.Matcher
 import kotlin.math.ceil
+import kotlin.reflect.KClass
 
 
 /**
@@ -13,6 +16,30 @@ import kotlin.math.ceil
  * @author K
  * @since 1.0.0
  */
+
+
+/**
+ * 将String类型的值转为指定类型的值
+ *
+ * @param returnType 目标类型
+ * @return 指定类型的值
+ */
+fun <T: Any> String.toType(returnType: KClass<out T>): T { //TODO junit
+    return when (returnType) {
+        String::class -> this as T
+        Byte::class -> this.toByte() as T
+        Char::class -> this.toCharArray().first() as T
+        Short::class -> this.toShort() as T
+        Int::class -> this.toInt() as T
+        Boolean::class -> this.toBoolean() as T
+        Long::class -> this.toLong() as T
+        Float::class -> this.toFloat() as T
+        Double::class -> this.toDouble() as T
+        BigDecimal::class -> this.toBigDecimal() as T
+        BigInteger::class -> this.toBigInteger() as T
+        else -> throw Exception("不支持的类型【$returnType】!")
+    }
+}
 
 
 /**

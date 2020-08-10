@@ -21,6 +21,7 @@ import kotlin.reflect.KClass
  * @since 1.0.0
  */
 object BeanKit {
+
     private val LOG = LogFactory.getLog(BeanKit::class)
 
     /**

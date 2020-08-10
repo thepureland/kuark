@@ -1,7 +1,7 @@
 package org.kuark.base.lang.collections
 
 import org.apache.commons.lang3.ArrayUtils
-import org.kuark.base.lang.reflect.TypeKit
+import org.kuark.base.lang.string.toType
 import kotlin.reflect.KClass
 
 /**
@@ -20,8 +20,7 @@ import kotlin.reflect.KClass
  * @return
  */
 inline fun <reified T : Number> Array<String>.toNumberArray(clazz: KClass<T>): Array<T> {
-    val list = mutableListOf<T>()
-    this.forEach { list.add(TypeKit.valueOf(it, clazz)) }
+    val list = this.map { it.toType(clazz) }
     return list.toTypedArray()
 }
 

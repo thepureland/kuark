@@ -1,7 +1,7 @@
 package org.kuark.web.form.validation.js.converter
 
 /**
- * 约束转换器接口
+ * 约束转换器接口，负责将注解约束转换为Javascript约束
  *
  * @author K
  * @since 1.0.0
@@ -9,11 +9,11 @@ package org.kuark.web.form.validation.js.converter
 interface IConstraintConverter {
 
     /**
-     * 将Bean约束转换为前端JS校验规则
+     * 将注解约束转换为Javascript约束
      *
      * @param context 上下文
-     * @return js校验规则
+     * @return javascript约束
      */
-    fun convert(context: RuleConvertContext): JsConstraintResult
+    fun convert(context: ConstraintConvertContext): JsConstraint
 
 }

@@ -1,7 +1,7 @@
 package org.kuark.web.form.validation.js.converter.impl
 
 import org.kuark.web.form.validation.js.converter.AbstractConstraintConverter
-import org.kuark.web.form.validation.js.converter.RuleConvertContext
+import org.kuark.web.form.validation.js.converter.ConstraintConvertContext
 import org.soul.commons.lang.string.StringTool
 import org.soul.commons.query.enums.Operator
 import org.soul.commons.validation.form.support.AndOr
@@ -41,7 +41,7 @@ class DependsRuleConverter(annotation: Annotation) : AbstractConstraintConverter
                 "   }" +
                 "}"
 
-        fun createDependsJsExp(depends: Depends, context: RuleConvertContext): String {
+        fun createDependsJsExp(depends: Depends, context: ConstraintConvertContext): String {
             var jsExps = "" // 绝大多数情况下只有一个表达式
             val properties: Array<String> = depends.property()
             val jsValueExps: Array<String> = depends.jsValueExp()
@@ -73,7 +73,7 @@ class DependsRuleConverter(annotation: Annotation) : AbstractConstraintConverter
             operator: Operator,
             value: String,
             jsValueExp: String?,
-            context: RuleConvertContext
+            context: ConstraintConvertContext
         ): String {
             var value: String? = value
             var propValExp =

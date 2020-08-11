@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServletRequest
  */
 @Controller
 class ValidateRuleExportController {
+
     @Autowired
     @Qualifier(BaseWebConf.BEAN_NAME)
     private val baseWebConf: BaseWebConf? = null

@@ -1,9 +1,9 @@
 package org.kuark.web.form.validation.export
 
 import org.apache.commons.collections.Predicate
-import org.kuark.web.form.validation.js.JsRuleCreator
-import org.kuark.web.form.validation.js.converter.JsConstraintResult
-import org.kuark.web.form.validation.js.converter.RuleConvertContext
+import org.kuark.web.form.validation.js.JsConstraintCreator
+import org.kuark.web.form.validation.js.converter.JsConstraint
+import org.kuark.web.form.validation.js.converter.ConstraintConvertContext
 import org.soul.commons.collections.CollectionTool
 import org.soul.commons.lang.PackageTool
 import org.soul.commons.lang.reflect.MethodTool
@@ -72,7 +72,7 @@ object ValidateRuleExporter {
         validateFormVo.setFormName(formName)
         val annotations: MutableMap<String, MutableList<Annotation>> =
             HashMap() // Map<属性名, List<getter上的注解对象>>
-        JsRuleCreator.parseAnnotations(annotations, clazz, null) // Map<属性名, List<getter上的注解对象>>
+        JsConstraintCreator.parseAnnotations(annotations, clazz, null) // Map<属性名, List<getter上的注解对象>>
         val readMethods: List<Method> = MethodTool.getReadMethods(clazz)
         for (getter in readMethods) {
             val property: String = MethodTool.getReadProperty(getter)
@@ -88,8 +88,8 @@ object ValidateRuleExporter {
                     validatePropertyVo.setPropertyName(cmt)
                     for (anno in annoes) {
                         val converter: IRuleConverter = RuleConverterFactory.getInstance(anno)
-                        val context = RuleConvertContext(property, null, clazz)
-                        val ruleResult: JsConstraintResult = converter.convert(context)
+                        val context = ConstraintConvertContext(property, null, clazz)
+                        val ruleResult: JsConstraint = converter.convert(context)
                         val rulesStr = ruleResult.rule
                         val msgsStr = ruleResult.msg
                         println("msgsStr: $msgsStr")

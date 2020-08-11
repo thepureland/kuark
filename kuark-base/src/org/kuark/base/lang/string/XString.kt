@@ -742,7 +742,7 @@ fun String.center(size: Int, padStr: String?): String? = StringUtils.center(this
  * @return 首字母小写的字符串
  * @since 1.0.0
  */
-fun String.uncapitalize(): String? = StringUtils.uncapitalize(this)
+fun String.uncapitalize(): String = StringUtils.uncapitalize(this)
 
 /**
  * 将源字符串中的大写转成小写，小写转成大写
@@ -755,7 +755,7 @@ fun String.uncapitalize(): String? = StringUtils.uncapitalize(this)
  * @return 转换后的字符串
  * @since 1.0.0
  */
-fun String.swapCase(): String? = StringUtils.swapCase(this)
+fun String.swapCase(): String = StringUtils.swapCase(this)
 
 //endregion Case conversion
 

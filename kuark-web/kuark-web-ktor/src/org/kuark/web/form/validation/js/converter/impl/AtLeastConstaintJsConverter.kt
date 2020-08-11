@@ -2,58 +2,65 @@ package org.kuark.web.form.validation.js.converter.impl
 
 import org.kuark.base.bean.validation.constraint.annotaions.AtLeast
 import org.kuark.web.form.validation.js.converter.AbstractConstraintConverter
+import org.kuark.web.form.validation.support.FormPropertyConverter
 import java.lang.reflect.Method
 import java.text.MessageFormat
 import java.util.*
+import kotlin.reflect.full.memberProperties
 
 /**
+ * AtLeast注解约束->js约束的转换器
  *
- *
- * @author admin
- * @time 8/15/15 10:45 AM
+ * @author K
+ * @since 1.0.0
  */
-class AtLeastConverter(annotation: Annotation) : AbstractConstraintConverter(annotation) {
+class AtLeastConstaintJsConverter(annotation: Annotation) : AbstractConstraintConverter(annotation) {
 
-    private val atLeast: AtLeast
+    private val atLeast = annotation as AtLeast
 
     // Map<属性名,获取javascript值的表达式>
-    protected override val rulePatternMap: Map<String, Any>
-        protected get() {
+    override val rulePatternMap: Map<String, Any>
+        get() {
             // Map<属性名,获取javascript值的表达式>
             val properties = fetchSameGroupProperties()
             val sb = StringBuilder()
             for (entry in properties.entries) {
                 var property = entry.key
-                property = FormPropertyConverter.toPotQuote(property, context.getPropertyPrefix())
+                property = FormPropertyConverter.toPotQuote(property, context.propertyPrefix)
                 val jsValueExp = entry.value
                 var pattern = EXP_PATTERN
                 if (properties.size == 1) {
                     pattern = EXP_PATTERN_ONE_ATTR
-                    val propValExp = if (StringTool.isBlank(jsValueExp)) pattern else jsValueExp
+                    val propValExp = if (jsValueExp.isBlank()) pattern else jsValueExp
                     val propertyStart = property.substring(0, property.indexOf("]"))
                     val propertyEnd = property.substring(property.indexOf("]"), property.length)
                     sb.append(MessageFormat.format(propValExp, "$propertyStart'", "'$propertyEnd")).append(",")
                 } else {
-                    val propValExp = if (StringTool.isBlank(jsValueExp)) pattern else jsValueExp
+                    val propValExp = if (jsValueExp.isBlank()) pattern else jsValueExp
                     sb.append(MessageFormat.format(propValExp, property)).append(",")
                 }
             }
             sb.deleteCharAt(sb.length - 1)
             val map: MutableMap<String, Any> = HashMap(1, 1f)
-            map["required"] = MessageFormat.format(RULE_PATTERN, sb.toString(), atLeast.count())
+            map["required"] = MessageFormat.format(RULE_PATTERN, sb.toString(), atLeast.count)
             return map
         }
 
-    protected fun getRuleValue(methodName: String): Any {
+    override fun getRuleValue(methodName: String): Any {
         // require content
         return methodName
     }
 
     private fun fetchSameGroupProperties(): Map<String, String> {
-        val properties: MutableMap<String, String> =
-            HashMap()
-        val readMethods: List<Method> =
-            MethodTool.getReadMethods(context.getFormClass())
+        val properties = mutableMapOf<String, String>()
+        val memberProperties = context.formClass.memberProperties
+        memberProperties.forEach { prop ->
+            if (prop.annotations.any { it.annotationClass == AtLeast::class }) {
+//                if (atLeast.groups.)
+            }
+        }
+
+        val readMethods: List<Method> = MethodTool.getReadMethods()
         for (readMethod in readMethods) {
             if (readMethod.isAnnotationPresent(AtLeast::class.java)) {
                 val annotation: AtLeast = readMethod.getAnnotation(AtLeast::class.java)
@@ -75,7 +82,4 @@ class AtLeastConverter(annotation: Annotation) : AbstractConstraintConverter(ann
                 "}"
     }
 
-    init {
-        atLeast = annotation as AtLeast
-    }
 }

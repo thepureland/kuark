@@ -1,47 +1,36 @@
 package org.kuark.web.form.validation.js.converter
 
 import org.kuark.web.form.validation.support.FormPropertyConverter
-import java.lang.reflect.Method
+import kotlin.reflect.full.memberFunctions
 import kotlin.reflect.full.memberProperties
 
 /**
- * 抽象的Bean约束转换器
+ * 抽象的注解约束->js约束的转换器
  *
  * @author K
  * @since 1.0.0
  */
 abstract class AbstractConstraintConverter(protected var annotation: Annotation) : IConstraintConverter {
 
-    protected var context: RuleConvertContext? = null
+    protected lateinit var context: ConstraintConvertContext
     protected abstract val rulePatternMap: Map<String, Any>
 
     private val errMsg: String
-        protected get() {
+        get() {
             val annoClass = annotation.annotationClass
-            val first = annoClass.memberProperties.first { it.name == "message" }
-
-
-
-            return try {
-                val m = annoClass.getMethod()
-                m.invoke(annotation).toString() + ""
-            } catch (e: Exception) {
-                throw SystemException(e)
-            }
+            val property = annoClass.memberProperties.first { it.name == "message" }
+            return property.call() as String
         }
 
     protected open fun appendRule(ruleName: String, ruleValue: Any): String? {
         var ruleValue = ruleValue
         if (ruleValue is String) {
             // 不是数值和js对象
-            if (!(ruleValue.toString() + "").matches("\\d+\\.?\\d*".toRegex()) && !(ruleValue.startsWith("{") && ruleValue.endsWith(
-                    "}"
-                ))
-            ) {
+            if (!ruleValue.matches("\\d+\\.?\\d*".toRegex()) && !(ruleValue.startsWith("{") && ruleValue.endsWith("}"))) {
                 ruleValue = "'$ruleValue'"
             }
             if (ruleName == PROPERTY_KEY) {
-                ruleValue = FormPropertyConverter.toPotQuote(ruleValue, context.getPropertyPrefix())
+                ruleValue = FormPropertyConverter.toPotQuote(ruleValue, context.propertyPrefix)
             }
         } else if (ruleValue is Map<*, *>) {
             return "$ruleName:{"
@@ -54,8 +43,11 @@ abstract class AbstractConstraintConverter(protected var annotation: Annotation)
         if (property.startsWith("_")) {
             property = property.substring(1)
         } else {
-            val propertyPrefix = context.getPropertyPrefix()
-            if (StringTool.isNotBlank(propertyPrefix) && !property.contains("_") && !property.startsWith("'$propertyPrefix.")) {
+            val propertyPrefix = context.propertyPrefix
+            if (propertyPrefix != null && propertyPrefix.isNotBlank() && !property.contains("_") && !property.startsWith(
+                    "'$propertyPrefix."
+                )
+            ) {
                 property = "'$propertyPrefix.$property'"
             }
             // 有带"_"的为表单提交时属性名带"."的
@@ -67,7 +59,7 @@ abstract class AbstractConstraintConverter(protected var annotation: Annotation)
         return property
     }
 
-    override fun convert(context: RuleConvertContext?): JsConstraintResult {
+    override fun convert(context: ConstraintConvertContext): JsConstraint {
         this.context = context
         val rulePatternMap = rulePatternMap
         val ruleSb = StringBuilder()
@@ -76,15 +68,11 @@ abstract class AbstractConstraintConverter(protected var annotation: Annotation)
         recursion(rulePatternMap, false, ruleSb, msgSb, errMsg)
         val rule = ruleSb.toString().replaceFirst(",$".toRegex(), "")
         val msg = msgSb.toString().replaceFirst(",$".toRegex(), "")
-        return JsConstraintResult(rule, msg)
+        return JsConstraint(rule, msg)
     }
 
     protected fun recursion(
-        rulePatternMap: Map<String, Any>,
-        nested: Boolean,
-        ruleSb: StringBuilder,
-        msgSb: StringBuilder,
-        errMsg: String?
+        rulePatternMap: Map<String, Any>, nested: Boolean, ruleSb: StringBuilder, msgSb: StringBuilder, errMsg: String?
     ) {
         for (entry in rulePatternMap.entries) {
             val ruleName = entry.key
@@ -105,17 +93,14 @@ abstract class AbstractConstraintConverter(protected var annotation: Annotation)
         }
     }
 
-    protected open fun getRuleValue(methodName: String?): Any {
-        val method: Method = MethodTool.getAccessibleMethod(annotation.annotationType(), methodName)
-        return try {
-            var value = method.invoke(annotation)
-            if (value is Enum<*>) {
-                value = value.toString()
-            }
-            value
-        } catch (e: Exception) {
-            throw SystemException(e)
+    protected open fun getRuleValue(methodName: String): Any {
+        val annoClass = annotation.annotationClass
+        val function = annoClass.memberFunctions.first { it.name == methodName }
+        var value = function.call(annotation)
+        if (value is Enum<*>) {
+            value = value.toString()
         }
+        return value!!
     }
 
     companion object {

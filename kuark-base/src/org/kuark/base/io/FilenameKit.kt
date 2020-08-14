@@ -315,10 +315,10 @@ object FilenameKit {
      *  输出结果在不同操作系统上将是一致的。如：无论Unix还是Windows，都不管前缀的匹配
      *
      * @param filename 待查找的路径, null将返回null
-     * @return 路径的前缀, 路径无效或为null将返回null
+     * @return 路径的前缀
      * @since 1.0.0
      */
-    fun getPrefix(filename: String?): String? = FilenameUtils.getPrefix(filename)
+    fun getPrefix(filename: String): String? = FilenameUtils.getPrefix(filename)
 
     /**
      * 返回文件名的扩展名
@@ -334,10 +334,10 @@ object FilenameKit {
      * 输出结果在不同操作系统上将是一致的。
      *
      * @param filename 要获取扩展名的文件名
-     * @return 文件的扩展名，没有将返回空串，路径为null将返回null
+     * @return 文件的扩展名，没有将返回空串
      * @since 1.0.0
      */
-    fun getExtension(filename: String?): String? = FilenameUtils.getExtension(filename)
+    fun getExtension(filename: String): String? = FilenameUtils.getExtension(filename)
 
     //region getPath
     /**

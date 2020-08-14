@@ -25,7 +25,7 @@ import java.security.MessageDigest
  */
 object Base36Kit {
 
-    private const val key = 999999999999999999L
+    private const val KEY = 999966699996669999L
 
     /**
      * 对源字符串进行加密，并在头部增加一个字符作为源字符串的校验码
@@ -35,7 +35,7 @@ object Base36Kit {
      * @return
      */
     fun encryptIgnoreCase(src: String): String {
-        return encryptIgnoreCase(src, key)
+        return encryptIgnoreCase(src, KEY)
     }
 
     /**
@@ -63,7 +63,7 @@ object Base36Kit {
      * @return
      */
     fun decryptIgnoreCase(srcString: String): String {
-        return decryptIgnoreCase(srcString, key)
+        return decryptIgnoreCase(srcString, KEY)
     }
 
     /**

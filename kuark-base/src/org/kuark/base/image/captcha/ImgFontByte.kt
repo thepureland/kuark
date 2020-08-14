@@ -14,7 +14,7 @@ class ImgFontByte {
     }
 
     private fun hex2byte(str: String): ByteArray? {
-        var str = str ?: return null
+        var str = str
         str = str.trim { it <= ' ' }
         val len = str.length
         if (len == 0 || len % 2 == 1) {

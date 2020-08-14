@@ -15,6 +15,7 @@ abstract class AbstractConstraintConverter(protected var annotation: Annotation)
     protected lateinit var context: ConstraintConvertContext
     protected abstract val rulePatternMap: Map<String, Any>
 
+
     private val errMsg: String
         get() {
             val annoClass = annotation.annotationClass

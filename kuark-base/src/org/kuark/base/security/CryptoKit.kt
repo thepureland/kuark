@@ -56,7 +56,7 @@ object CryptoKit {
      * @since 1.0.0
      */
     fun hmacSha1(input: ByteArray, key: ByteArray): ByteArray {
-        val secretKey: SecretKey = SecretKeySpec(key, HMACSHA1)
+        val secretKey = SecretKeySpec(key, HMACSHA1)
         val mac = Mac.getInstance(HMACSHA1)
         mac.init(secretKey)
         return mac.doFinal(input)
@@ -244,7 +244,7 @@ object CryptoKit {
      */
     fun encryptDES3(str: String, saltTxt: String): String {
         val md5Key = getMd5(saltTxt) //16bytes
-        val key: SecretKey = SecretKeySpec(md5Key, "DESede")
+        val key = SecretKeySpec(md5Key, "DESede")
         val ecipher = Cipher.getInstance("DESede/ECB/PKCS5Padding")
         ecipher.init(Cipher.ENCRYPT_MODE, key)
         val data = str.toByteArray(charset(CHARSET))
@@ -261,7 +261,7 @@ object CryptoKit {
     fun decryptDES3(encryptedString: String, saltTxt: String): String {
         val encryptedArray: ByteArray = Base64.decodeBase64(encryptedString)
         val md5Key = getMd5(saltTxt) //16bytes
-        val key: SecretKey = SecretKeySpec(md5Key, "DESede")
+        val key = SecretKeySpec(md5Key, "DESede")
         val dcipher = Cipher.getInstance("DESede/ECB/PKCS5Padding")
         dcipher.init(Cipher.DECRYPT_MODE, key)
         val decryptArray = dcipher.doFinal(encryptedArray)

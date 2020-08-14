@@ -128,6 +128,7 @@ subprojects {
             dependency("javax.xml.bind:jaxb-api:2.3.1")
             dependency("com.sun.xml.bind:jaxb-impl:2.3.1")
             dependency("org.glassfish.jaxb:jaxb-runtime:2.3.1")
+            dependency("com.google.zxing:core:3.4.0")
 
             // log
             dependency("org.slf4j:slf4j-api:$slf4j_version")

@@ -16,6 +16,7 @@ dependencies {
     implementation("javax.xml.bind:jaxb-api")
     implementation("com.sun.xml.bind:jaxb-impl")
     implementation("org.glassfish.jaxb:jaxb-runtime")
+    implementation("com.google.zxing:core")
 
     // log
     implementation("org.slf4j:slf4j-api")

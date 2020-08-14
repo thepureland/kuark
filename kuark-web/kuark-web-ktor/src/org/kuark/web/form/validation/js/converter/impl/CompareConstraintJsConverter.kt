@@ -25,7 +25,7 @@ class CompareConstraintJsConverter(compare: Annotation) : AbstractConstraintConv
             if (StringTool.isNotBlank(compare.isNumber())) {
                 nestedMap["isNumber"] = compare.isNumber()
             } else {
-                val property: String = context.originalProperty
+                val property = context.originalProperty
                 val readMethod: Method = MethodTool.getReadMethod(formClass, property)
                 val returnType = readMethod.returnType
                 if (returnType == String::class.java) {

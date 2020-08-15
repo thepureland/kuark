@@ -1,14 +1,15 @@
-package org.kuark.web.form.validation.support
+package org.kuark.base.bean.validation.teminal
 
 import java.util.regex.Matcher
+import kotlin.reflect.full.memberProperties
 
 /**
- * Form表单属性名转换器
+ * 属性名处理工具
  *
  * @author K
  * @since 1.0.0
  */
-object FormPropertyConverter {
+object PropertyResolver {
 
     /**
      * 转成以点分隔的属性名(以单引号括起来)
@@ -88,4 +89,12 @@ object FormPropertyConverter {
     fun isArrayProperty(property: String): Boolean {
         return property.matches("^.+\\[\\d+\\].*$".toRegex())
     }
+}
+
+data class Test(val age: Int)
+
+fun main() {
+    val prop = Test::class.memberProperties.first { it.name == "age" }
+    val returnType = prop.returnType
+    println(returnType)
 }

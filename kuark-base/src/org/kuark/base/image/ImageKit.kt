@@ -9,11 +9,13 @@ import java.awt.image.BufferedImage
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.File
+import java.net.URI
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.util.*
 import javax.imageio.ImageIO
-import javax.swing.*
+import javax.swing.JFrame
+import javax.swing.JPanel
 
 
 /**
@@ -24,17 +26,79 @@ import javax.swing.*
  */
 object ImageKit {
 
-    fun readImage(imagePath: String): BufferedImage = ImageIO.read(Files.newInputStream(Paths.get(imagePath)))
+    /**
+     * 从文件读取图片
+     *
+     * @param imageFile 图片文件
+     * @return BufferedImage对象
+     */
+    fun readImageFromFile(imageFile: File): BufferedImage = readImageFromFile(imageFile.path)
 
+    /**
+     * 从文件读取图片
+     *
+     * @param imagePath 图片路径
+     * @return BufferedImage对象
+     */
+    fun readImageFromFile(imagePath: String): BufferedImage = ImageIO.read(Files.newInputStream(Paths.get(imagePath)))
+
+    /**
+     * 从URI读取文件
+     *
+     * @param imageUri 图片uri
+     * @return BufferedImage对象
+     */
+    fun readImageFromUri(imageUri: URI): BufferedImage = ImageIO.read(imageUri.toURL().openStream())
+
+    /**
+     * 从URI读取文件
+     *
+     * @param imageUriStr 图片网络地址
+     * @return BufferedImage对象
+     */
+    fun readImageFromUri(imageUriStr: String): BufferedImage = readImageFromUri(URI.create(imageUriStr))
+
+    /**
+     * 写图片到文件
+     *
+     * @param bufferedImage BufferedImage对象
+     * @param imageFormat 图片类型(如png,jpg,gif等)
+     * @param imagePath 图片目标文件路径
+     */
     fun writeImage(bufferedImage: BufferedImage, imageFormat: String, imagePath: String) =
         ImageIO.write(bufferedImage, imageFormat, Files.newOutputStream(Paths.get(imagePath)))
 
-
-    fun imageToString(imagePath: String, imageFormat: String): String {
-        val bufferedImage = readImage(imagePath)
+    /**
+     * 将图片转换为字符串表示
+     *
+     * @param imageFile 图片文件
+     * @param imageFormat 图片类型(如png,jpg,gif等)
+     * @return 图片的字符串表示
+     */
+    fun imageToString(imageFile: File, imageFormat: String): String {
+        val bufferedImage = readImageFromFile(imageFile)
         return imageToString(bufferedImage, imageFormat)
     }
 
+    /**
+     * 将图片转换为字符串表示
+     *
+     * @param imageUri 图片uri
+     * @param imageFormat 图片类型(如png,jpg,gif等)
+     * @return 图片的字符串表示
+     */
+    fun imageToString(imageUri: URI, imageFormat: String): String {
+        val bufferedImage = readImageFromUri(imageUri)
+        return imageToString(bufferedImage, imageFormat)
+    }
+
+    /**
+     * 将图片转换为字符串表示
+     *
+     * @param bufferedImage BufferedImage对象
+     * @param imageFormat 图片类型(如png,jpg,gif等)
+     * @return 图片的字符串表示(Base64编码)
+     */
     fun imageToString(bufferedImage: BufferedImage, imageFormat: String): String {
         return ByteArrayOutputStream().use {
             ImageIO.write(bufferedImage, imageFormat, it)
@@ -43,6 +107,12 @@ object ImageKit {
         }
     }
 
+    /**
+     * 将字符串表示转换为图片对象
+     *
+     * @param imgStr 图片的字符串表示(Base64编码)
+     * @return BufferedImage对象
+     */
     fun stringToImage(imgStr: String): BufferedImage {
         val decoder = Base64.getDecoder()
         val imageByte = decoder.decode(imgStr)
@@ -93,6 +163,11 @@ object ImageKit {
         return destImage as BufferedImage
     }
 
+    /**
+     * 图形化展现图片对象
+     *
+     * @param bufferedImage BufferedImage对象
+     */
     fun showImage(bufferedImage: BufferedImage) {
         class ImagePanel(var image: BufferedImage) : JPanel() {
 
@@ -107,13 +182,14 @@ object ImageKit {
             }
         }
 
-        val test = ImagePanel(bufferedImage)
+        val panel = ImagePanel(bufferedImage)
         val f = JFrame()
         f.defaultCloseOperation = JFrame.EXIT_ON_CLOSE
-        f.add(JScrollPane(test))
-        f.setSize(400, 400)
+        f.add(panel)
         f.setLocation(200, 200)
         f.isVisible = true
+        f.pack()
     }
+
 
 }

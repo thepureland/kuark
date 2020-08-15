@@ -35,7 +35,7 @@ object QrCodeKit {
      */
     fun genQrCode(
         content: String, destImagePath: String, logoImagePath: String, sideLength: Int = 300,
-        logoSideLength: Int = sideLength / 5, margin: Int = 2
+        logoSideLength: Int = sideLength / 5, margin: Int = 0
     ) {
         val formatName = FilenameKit.getExtension(destImagePath)
         ImageIO.write(
@@ -57,10 +57,10 @@ object QrCodeKit {
      */
     fun genQrCode(
         content: String, logoImagePath: String,
-        sideLength: Int = 300, logoSideLength: Int = sideLength / 5, margin: Int = 2
+        sideLength: Int = 300, logoSideLength: Int = sideLength / 5, margin: Int = 0
     ): BufferedImage {
         val logoImage = ImageKit.scale(logoImagePath, logoSideLength, logoSideLength, true)
-        return genQrCode(content, logoImage, sideLength)
+        return genQrCode(content, logoImage, sideLength, margin)
     }
 
     /**
@@ -72,12 +72,12 @@ object QrCodeKit {
      * @param margin 页边空白宽度(像素)，缺省为2像素
      * @return 二维码BufferedImage对象
      */
-    fun genQrCode(content: String, logoImage: BufferedImage, sideLength: Int = 300, margin: Int = 2): BufferedImage {
+    fun genQrCode(content: String, logoImage: BufferedImage, sideLength: Int = 300, margin: Int = 0): BufferedImage {
         // 读取源图像
-        val srcPixels = Array(sideLength) { IntArray(sideLength) }
+        val logoPixels = Array(logoImage.width) { IntArray(logoImage.height) }
         for (i in 0 until logoImage.width) {
             for (j in 0 until logoImage.height) {
-                srcPixels[i][j] = logoImage.getRGB(i, j)
+                logoPixels[i][j] = logoImage.getRGB(i, j)
             }
         }
 
@@ -90,21 +90,21 @@ object QrCodeKit {
         // 二维矩阵转为一维像素数组
         val halfW = matrix.width / 2
         val halfH = matrix.height / 2
-        val imageHalfWidth = sideLength / 2
-        val value1 = halfW - imageHalfWidth - margin
-        val value2 = halfW - imageHalfWidth + margin
-        val value3 = halfW + imageHalfWidth + margin
-        val value4 = halfW + imageHalfWidth - margin
-        val value5 = halfH - imageHalfWidth - margin
-        val value6 = halfH - imageHalfWidth + margin
-        val value7 = halfH + imageHalfWidth + margin
-        val value8 = halfH + imageHalfWidth - margin
+        val logoHalfWidth = logoImage.width / 2
+        val value1 = halfW - logoHalfWidth - margin
+        val value2 = halfW - logoHalfWidth + margin
+        val value3 = halfW + logoHalfWidth + margin
+        val value4 = halfW + logoHalfWidth - margin
+        val value5 = halfH - logoHalfWidth - margin
+        val value6 = halfH - logoHalfWidth + margin
+        val value7 = halfH + logoHalfWidth + margin
+        val value8 = halfH + logoHalfWidth - margin
         val pixels = IntArray(sideLength * sideLength)
         for (y in 0 until matrix.height) {
             for (x in 0 until matrix.width) {
                 // 读取图片
-                if (x > halfW - imageHalfWidth && x < halfW + imageHalfWidth && y > halfH - imageHalfWidth && y < halfH + imageHalfWidth) {
-                    pixels[y * sideLength + x] = srcPixels[x - halfW + imageHalfWidth][y - halfH + imageHalfWidth]
+                if (x > halfW - logoHalfWidth && x < halfW + logoHalfWidth && y > halfH - logoHalfWidth && y < halfH + logoHalfWidth) {
+                    pixels[y * sideLength + x] = logoPixels[x - halfW + logoHalfWidth][y - halfH + logoHalfWidth]
                 } else if (x in (value1 + 1) until value2 && y > value5 && y < value7
                     || x in (value4 + 1) until value3 && y > value5 && y < value7
                     || x in (value1 + 1) until value3 && y > value5 && y < value6
@@ -126,6 +126,6 @@ object QrCodeKit {
 
 fun main() {
     //将1.png作为logo放在2.png中间   生成扫码图片2.png变成二维码
-    QrCodeKit.genQrCode("http://www.baidu.com", "D:/1.png", "D:/2.png")
+    QrCodeKit.genQrCode("http://www.baidu.com", "D:/2.png", "D:/1.png")
     println("成功！！！")
 }

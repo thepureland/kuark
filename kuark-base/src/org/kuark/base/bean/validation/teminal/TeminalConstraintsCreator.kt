@@ -2,7 +2,11 @@ package org.kuark.base.bean.validation.teminal
 
 import org.kuark.base.bean.validation.teminal.convert.ConstraintConvertContext
 import org.kuark.base.bean.validation.teminal.convert.ConstraintConverterFactory
+import org.kuark.base.bean.validation.teminal.convert.converter.impl.CompareConstraintJsConverter
 import org.kuark.base.lang.SystemKit
+import org.kuark.base.lang.getDirectSuperClass
+import org.kuark.base.lang.getMemberProperty
+import org.kuark.base.lang.isAnnotationPresent
 import org.kuark.base.log.LogFactory
 import java.text.MessageFormat
 import javax.validation.Constraint
@@ -36,10 +40,11 @@ object TeminalConstraintsCreator {
         if (teminalConstraints == null || SystemKit.isDebug()) {
             val annotations = mutableMapOf<String, MutableList<Annotation>>() // Map<属性名, List<getter上的注解对象>>
             parseAnnotations(annotations, beanClass, null)
-            teminalConstraints = genRule(annotations, propertyPrefix, beanClass)
-            constrainCacheMap[cacheKey] = teminalConstraints
+            println(annotations)
+//            teminalConstraints = genRule(annotations, propertyPrefix, beanClass)
+//            constrainCacheMap[cacheKey] = teminalConstraints
         }
-        return teminalConstraints
+        return ""
     }
 
     fun parseAnnotations(
@@ -51,7 +56,7 @@ object TeminalConstraintsCreator {
 
         for (prop in clazz.memberProperties) {
             if (prop.returnType != Any::class.starProjectedType) {
-                if (prop.annotations.any { it.annotationClass == Valid::class }) { // 级联验证
+                if (prop.getter.isAnnotationPresent(Valid::class)) { // 级联验证
                     parentProperty = prop
                     val parentClazz = clazz
                     clazz = prop.returnType.classifier as KClass<*>
@@ -66,15 +71,19 @@ object TeminalConstraintsCreator {
                         val paramType = prop.typeParameters
                         clazz = paramType[1].starProjectedType.classifier as KClass<*>
                     }
-                    parseAnnotations(annotations, clazz, parentProperty)
+                    parseAnnotations(annotations, clazz, parentProperty) // 递归解析所有类中的注解
                     clazz = parentClazz
                     parentProperty = null
                 } else {
-                    val propName = if (parentProperty == null) prop.name else "'$parentProperty.${prop.name}'"
+                    val propName = if (parentProperty == null) {
+                        prop.name
+                    } else {
+                        "'${parentProperty.name}.${prop.name}'"
+                    }
                     if (propName.split("\\.").toTypedArray().size > 2) {
                         error("属性嵌套层次超过1层：$propName")
                     }
-                    val annoList = getAnnotationsOnProperty(clazz, prop.name)
+                    val annoList = getAnnotationsOnGetter(clazz, prop.name)
                     val classAnnoList = annotations[propName]
                     if (classAnnoList != null) {
                         annoList.addAll(classAnnoList)
@@ -87,51 +96,56 @@ object TeminalConstraintsCreator {
         }
     }
 
-    private fun genRule(
-        annotations: Map<String, MutableList<Annotation>>, propertyPrefix: String, beanClass: KClass<*>
-    ): String {
-        if (annotations.isEmpty()) {
-            return ""
-        }
-        val rules = StringBuilder()
-        val messages = StringBuilder()
-        for ((originalProperty, value) in annotations) {
-            val property = PropertyResolver.toPotQuote(originalProperty, propertyPrefix)
-            rules.append(property).append(":{")
-            messages.append(property).append(":{")
-            for (anno in value) {
-                val converter = ConstraintConverterFactory.getInstance(anno)
-                val context = ConstraintConvertContext(originalProperty, property, propertyPrefix, beanClass)
-                val ruleResult = converter.convert(context)
-                rules.append(ruleResult.rule).append(",")
-//                messages.append(ruleResult.msg).append(",")
-            }
-            val prop = beanClass.memberProperties.first { it.name == property }
-            if (prop.returnType == Array<Any>::class.starProjectedType || prop.returnType.isSubtypeOf(List::class.starProjectedType)) {
-                rules.append("type:'array'").append(",")
-            }
-            rules.deleteCharAt(rules.length - 1).append("},")
-            messages.deleteCharAt(messages.length - 1).append("},")
-        }
-        return MessageFormat.format(
-            RESULT_PATTERN,
-            rules.deleteCharAt(rules.length - 1),
-            messages.deleteCharAt(messages.length - 1)
-        )
-    }
+//    private fun genRule(
+//        annotations: Map<String, MutableList<Annotation>>, propertyPrefix: String, beanClass: KClass<*>
+//    ): String {
+//        if (annotations.isEmpty()) {
+//            return ""
+//        }
+//        val rules = StringBuilder()
+//        val messages = StringBuilder()
+//        for ((originalProperty, value) in annotations) {
+//            val property = PropertyResolver.toPotQuote(originalProperty, propertyPrefix)
+//            rules.append(property).append(":{")
+//            messages.append(property).append(":{")
+//            for (anno in value) {
+//                val converter = ConstraintConverterFactory.getInstance(anno)
+//                val context = ConstraintConvertContext(originalProperty, property, propertyPrefix, beanClass)
+//                val ruleResult = converter.convert(context)
+//                rules.append(ruleResult.rule).append(",")
+////                messages.append(ruleResult.msg).append(",")
+//            }
+//            val prop = beanClass.getMemberProperty(property)
+//            if (prop.returnType == Array<Any>::class.starProjectedType || prop.returnType.isSubtypeOf(List::class.starProjectedType)) {
+//                rules.append("type:'array'").append(",")
+//            }
+//            rules.deleteCharAt(rules.length - 1).append("},")
+//            messages.deleteCharAt(messages.length - 1).append("},")
+//        }
+//        return MessageFormat.format(
+//            RESULT_PATTERN,
+//            rules.deleteCharAt(rules.length - 1),
+//            messages.deleteCharAt(messages.length - 1)
+//        )
+//    }
 
+    /**
+     * 获取类级别的约束注解
+     *
+     * @param clazz Bean类
+     * @return Map<属性名，List<约束注解>>
+     */
     private fun getAnnotationsOnClass(clazz: KClass<*>): Map<String, MutableList<Annotation>> {
         val annotationMap = mutableMapOf<String, MutableList<Annotation>>()
         for (annotation in clazz.annotations) {
-            val prop = annotation::class.declaredMemberProperties.first { it.name == "property" }
+            val prop = annotation::class.getMemberProperty("properties")
             if (prop != null) {
-                val value = prop.call() as String
-                var annoList = annotationMap[value] ?: mutableListOf()
-                annotationMap[value] = annoList
-                for (anno in annotation.annotationClass.annotations) {
-                    if (anno.annotationClass == Constraint::class) {
+                val propertyNames = prop.call(annotation) as Array<String>
+                propertyNames.forEach { propertyName ->
+                    var annoList = annotationMap[propertyName] ?: mutableListOf()
+                    annotationMap[propertyName] = annoList
+                    if (annotation.annotationClass.isAnnotationPresent(Constraint::class)) { // 是约束注解
                         annoList.add(annotation)
-                        break
                     }
                 }
             }
@@ -139,25 +153,33 @@ object TeminalConstraintsCreator {
         return annotationMap
     }
 
-    private fun getAnnotationsOnProperty(clazz: KClass<*>, property: String): MutableList<Annotation> {
+    /**
+     * 获取Getter上的约束注解
+     *
+     * @param clazz Bean类
+     * @return Map<属性名，List<约束注解>>
+     */
+    private fun getAnnotationsOnGetter(clazz: KClass<*>, property: String): MutableList<Annotation> {
         val annotationList = mutableListOf<Annotation>()
         if (clazz != Any::class && !clazz.isAbstract) {
-            val prop = clazz.memberProperties.first { it.name == property }
+            val prop = clazz.getMemberProperty(property)
             if (prop == null) {
-                val superclass = clazz.superclasses.first { !it.isAbstract }
-                return getAnnotationsOnProperty(superclass, property)
+                return getAnnotationsOnGetter(clazz.getDirectSuperClass(), property)
             } else {
-                val annotations = prop.annotations
+                val annotations = prop.getter.annotations
                 for (annotation in annotations) {
-                    for (anno in annotation.annotationClass.annotations) {
-                        if (anno.annotationClass == Constraint::class) {
-                            annotationList.add(annotation)
-                            break
-                        }
+                    if (annotation.annotationClass.isAnnotationPresent(Constraint::class)) { // 是约束注解
+                        annotationList.add(annotation)
                     }
                 }
             }
         }
         return annotationList
     }
+}
+
+fun main() {
+    val superclasses = CompareConstraintJsConverter::class.superclasses
+    superclasses.forEach { println(it.constructors.size) }
+    print(superclasses)
 }

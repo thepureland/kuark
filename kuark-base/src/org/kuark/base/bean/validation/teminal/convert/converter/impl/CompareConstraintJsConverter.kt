@@ -2,6 +2,7 @@ package org.kuark.base.bean.validation.teminal.convert.converter.impl
 
 import org.kuark.base.bean.validation.constraint.annotaions.Compare
 import org.kuark.base.bean.validation.teminal.convert.converter.AbstractConstraintConverter
+import java.io.Serializable
 import kotlin.reflect.KClass
 import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.full.memberProperties
@@ -13,7 +14,7 @@ import kotlin.reflect.full.starProjectedType
  * @author K
  * @since 1.0.0
  */
-class CompareConstraintJsConverter(annotation: Annotation) : AbstractConstraintConverter(annotation) {
+class CompareConstraintJsConverter(annotation: Annotation) : Cloneable, AbstractConstraintConverter(annotation),Serializable {
 
     override fun getRule(constraintAnnotation: Annotation): MutableMap<String, Any> {
         val compare = constraintAnnotation as Compare

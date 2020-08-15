@@ -62,7 +62,7 @@ internal class TeminalConstraintsCreatorTest {
         @get:Series(type = SeriesType.INC_DIFF, step = 2.0, message = "机器人识别问题回答错误")
         val question: Array<Int>?,
 
-        @Valid
+        @get:Valid
         val address: Address
 
     ) {

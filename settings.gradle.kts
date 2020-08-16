@@ -10,17 +10,17 @@ include("kuark-data:kuark-data-mongo")
 findProject(":kuark-data:kuark-data-mongo")?.name = "kuark-data-mongo"
 include("kuark-cache")
 include("kuark-auth")
-include("kuark-biz")
-include("kuark-biz:kuark-biz-sys")
-findProject(":kuark-biz:kuark-biz-sys")?.name = "kuark-biz-sys"
-include("kuark-biz:kuark-biz-geo")
-findProject(":kuark-biz:kuark-biz-geo")?.name = "kuark-biz-geo"
-include("kuark-biz:kuark-biz-user")
-findProject(":kuark-biz:kuark-biz-user")?.name = "kuark-biz-user"
-include("kuark-biz:kuark-biz-auth")
-findProject(":kuark-biz:kuark-biz-auth")?.name = "kuark-biz-auth"
-include("kuark-biz:kuark-biz-msg")
-findProject(":kuark-biz:kuark-biz-msg")?.name = "kuark-biz-msg"
+include("kuark-resource")
+include("kuark-resource:kuark-resource-sys")
+findProject(":kuark-resource:kuark-resource-sys")?.name = "kuark-resource-sys"
+include("kuark-resource:kuark-resource-geo")
+findProject(":kuark-resource:kuark-resource-geo")?.name = "kuark-resource-geo"
+include("kuark-resource:kuark-resource-user")
+findProject(":kuark-resource:kuark-resource-user")?.name = "kuark-resource-user"
+include("kuark-resource:kuark-resource-auth")
+findProject(":kuark-resource:kuark-resource-auth")?.name = "kuark-resource-auth"
+include("kuark-resource:kuark-resource-msg")
+findProject(":kuark-resource:kuark-resource-msg")?.name = "kuark-resource-msg"
 include("kuark-distributed")
 include("kuark-distributed:kuark-distributed-registry")
 findProject(":kuark-distributed:kuark-distributed-registry")?.name = "kuark-distributed-registry"

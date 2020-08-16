@@ -169,6 +169,9 @@ subprojects {
 
             // auth
             dependency("org.apache.shiro:shiro-spring:1.5.2")
+            dependency("org.apache.oltu.oauth2:org.apache.oltu.oauth2.authzserver:1.0.2")
+            dependency("org.apache.oltu.oauth2:org.apache.oltu.oauth2.resourceserver:1.0.2")
+            dependency("org.apache.oltu.oauth2:org.apache.oltu.oauth2.client:1.0.2")
 
             // ktor
             dependency("io.ktor:ktor-server-sessions:$ktor_version")

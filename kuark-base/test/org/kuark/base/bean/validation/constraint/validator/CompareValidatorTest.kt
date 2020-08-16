@@ -4,9 +4,9 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.kuark.base.bean.validation.constraint.annotaions.Compare
-import org.kuark.base.bean.validation.support.Depends
 import org.kuark.base.bean.validation.kit.ValidationKit
-import org.kuark.base.support.logic.CompareLogic
+import org.kuark.base.bean.validation.support.Depends
+import org.kuark.base.support.logic.LogicOperator
 import javax.validation.ValidationException
 
 /**
@@ -96,7 +96,7 @@ internal class CompareValidatorTest {
                 values = ["true"]
             ),
             anotherProperty = "password",
-            logic = CompareLogic.EQ,
+            logic = LogicOperator.EQ,
             message = "两次密码不同"
         )
         val confirmPassword: String?
@@ -109,12 +109,12 @@ internal class CompareValidatorTest {
         @get:Compare.List(
             Compare(
                 anotherProperty = "small",
-                logic = CompareLogic.GT,
+                logic = LogicOperator.GT,
                 message = "medium必须大于small"
             ),
             Compare(
                 anotherProperty = "large",
-                logic = CompareLogic.LT,
+                logic = LogicOperator.LT,
                 message = "medium必须小于large"
             )
         )
@@ -129,7 +129,7 @@ internal class CompareValidatorTest {
 
         @get:Compare(
             anotherProperty = "passwords",
-            logic = CompareLogic.EQ,
+            logic = LogicOperator.EQ,
             message = "两组密码不同"
         )
         val confirmPasswords: Array<String>? = null
@@ -144,7 +144,7 @@ internal class CompareValidatorTest {
 
         @get:Compare(
             anotherProperty = "passwords",
-            logic = CompareLogic.EQ,
+            logic = LogicOperator.EQ,
             message = "两组密码不同"
         )
         val confirmPasswords: Array<Array<String>>? = null
@@ -159,7 +159,7 @@ internal class CompareValidatorTest {
 
         @get:Compare(
             anotherProperty = "passwords",
-            logic = CompareLogic.EQ,
+            logic = LogicOperator.EQ,
             message = "两组密码不同"
         )
         val confirmPasswords: IntArray? = null

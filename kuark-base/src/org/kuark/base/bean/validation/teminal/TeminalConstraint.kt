@@ -1,6 +1,9 @@
 package org.kuark.base.bean.validation.teminal
 
+import com.fasterxml.jackson.annotation.JsonIgnore
+
 data class TeminalConstraint(
+    @JsonIgnore
     val prop: String,
     val constraint: String,
     val rule: Array<Map<String, Any>>

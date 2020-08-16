@@ -1,8 +1,8 @@
 package org.kuark.base.bean.validation.constraint.annotaions
 
-import org.kuark.base.support.logic.CompareLogic
 import org.kuark.base.bean.validation.constraint.validator.CompareValidator
 import org.kuark.base.bean.validation.support.Depends
+import org.kuark.base.support.logic.LogicOperator
 import javax.validation.Constraint
 import javax.validation.Payload
 import kotlin.reflect.KClass
@@ -29,7 +29,7 @@ annotation class Compare(
     val anotherProperty: String,
 
     /** 比较的逻辑 */
-    val logic: CompareLogic,
+    val logic: LogicOperator,
 
     /** 比较依赖的前提条件, 条件成立才进一步进行比较校验 */
     val depends: Depends = Depends(

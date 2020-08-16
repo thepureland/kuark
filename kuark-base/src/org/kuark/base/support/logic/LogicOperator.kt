@@ -10,7 +10,7 @@ import org.kuark.base.support.enums.IDictEnum
  * @author K
  * @since 1.0.0
  */
-enum class Operator constructor(
+enum class LogicOperator constructor(
     override val code: String,
     override val trans: String,
     // 值是否可接受null
@@ -237,7 +237,6 @@ enum class Operator constructor(
                     v1.isEmpty()
                 } else v1.toString().isEmpty()
             }
-            else -> false
         }
     }
 
@@ -267,12 +266,12 @@ enum class Operator constructor(
     }
 
     companion object {
-        fun enumOf(code: String): Operator? {
+        fun enumOf(code: String): LogicOperator? {
             var codeStr = code
             if (codeStr.isNotBlank()) {
                 codeStr = codeStr.toUpperCase()
             }
-            return EnumKit.enumOf(Operator::class, codeStr)
+            return EnumKit.enumOf(LogicOperator::class, codeStr)
         }
     }
 

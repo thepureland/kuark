@@ -9,7 +9,7 @@ import org.kuark.base.bean.validation.teminal.convert.ConstraintConvertContext
  * @author K
  * @since 1.0.0
  */
-interface IConstraintConverter {
+interface IConstraintConvertor {
 
     /**
      * 将注解约束转换为终端约束

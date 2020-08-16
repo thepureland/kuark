@@ -1,19 +1,20 @@
 package org.kuark.base.bean.validation.teminal
 
 import org.kuark.base.bean.validation.teminal.convert.ConstraintConvertContext
-import org.kuark.base.bean.validation.teminal.convert.ConstraintConverterFactory
-import org.kuark.base.bean.validation.teminal.convert.converter.impl.CompareConstraintJsConverter
+import org.kuark.base.bean.validation.teminal.convert.ConstraintConvertorFactory
+import org.kuark.base.data.json.JsonKit
 import org.kuark.base.lang.SystemKit
 import org.kuark.base.lang.getDirectSuperClass
 import org.kuark.base.lang.getMemberProperty
 import org.kuark.base.lang.isAnnotationPresent
-import org.kuark.base.log.LogFactory
-import java.text.MessageFormat
 import javax.validation.Constraint
 import javax.validation.Valid
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
-import kotlin.reflect.full.*
+import kotlin.reflect.full.companionObject
+import kotlin.reflect.full.isSubclassOf
+import kotlin.reflect.full.memberProperties
+import kotlin.reflect.full.starProjectedType
 
 /**
  * 终端约束创建者
@@ -23,34 +24,38 @@ import kotlin.reflect.full.*
  */
 object TeminalConstraintsCreator {
 
-    private val LOG = LogFactory.getLog(TeminalConstraintsCreator::class)
     private val constrainCacheMap = mutableMapOf<String, String>()
-    private const val RESULT_PATTERN = "rules:'{'{0}},messages:'{'{1}'},"
 
     /**
      * 生成Bean类对应的终端验证规则
      *
      * @param beanClass 待校验的bean类
      * @param propertyPrefix 属性名前缀
-     * @return 验证规则文本，包含错误提示信息，最后以逗号结尾
+     * @return 验证规则json文本
      */
     fun create(beanClass: KClass<*>, propertyPrefix: String = ""): String {
         val cacheKey = "${beanClass.qualifiedName}-$propertyPrefix"
-        var teminalConstraints = constrainCacheMap[cacheKey]
-        if (teminalConstraints == null || SystemKit.isDebug()) {
-            val annotations = mutableMapOf<String, MutableList<Annotation>>() // Map<属性名, List<getter上的注解对象>>
+        var rules = constrainCacheMap[cacheKey]
+        if (rules == null || SystemKit.isDebug()) {
+            val annotations = mutableMapOf<String, MutableList<Annotation>>()
             parseAnnotations(annotations, beanClass, null)
-            println(annotations)
-//            teminalConstraints = genRule(annotations, propertyPrefix, beanClass)
-//            constrainCacheMap[cacheKey] = teminalConstraints
+            rules = genRule(annotations, propertyPrefix, beanClass)
+            constrainCacheMap[cacheKey] = rules
         }
-        return ""
+        return rules
     }
 
-    fun parseAnnotations(
-        annotations: MutableMap<String, MutableList<Annotation>>, clazz: KClass<*>, parentProperty: KProperty<*>?
+    /**
+     * 解析注解
+     *
+     * @param annotations MutableMap<属性名, MutableList<注解对象>>
+     * @param beanClass 待校验的bean类
+     * @param parentProperty 父属性对象
+     */
+    private fun parseAnnotations(
+        annotations: MutableMap<String, MutableList<Annotation>>, beanClass: KClass<*>, parentProperty: KProperty<*>?
     ) {
-        var clazz = clazz
+        var clazz = beanClass
         var parentProperty = parentProperty
         annotations.putAll(getAnnotationsOnClass(clazz))
 
@@ -96,38 +101,34 @@ object TeminalConstraintsCreator {
         }
     }
 
-//    private fun genRule(
-//        annotations: Map<String, MutableList<Annotation>>, propertyPrefix: String, beanClass: KClass<*>
-//    ): String {
-//        if (annotations.isEmpty()) {
-//            return ""
-//        }
-//        val rules = StringBuilder()
-//        val messages = StringBuilder()
-//        for ((originalProperty, value) in annotations) {
-//            val property = PropertyResolver.toPotQuote(originalProperty, propertyPrefix)
-//            rules.append(property).append(":{")
-//            messages.append(property).append(":{")
-//            for (anno in value) {
-//                val converter = ConstraintConverterFactory.getInstance(anno)
-//                val context = ConstraintConvertContext(originalProperty, property, propertyPrefix, beanClass)
-//                val ruleResult = converter.convert(context)
-//                rules.append(ruleResult.rule).append(",")
-////                messages.append(ruleResult.msg).append(",")
-//            }
-//            val prop = beanClass.getMemberProperty(property)
-//            if (prop.returnType == Array<Any>::class.starProjectedType || prop.returnType.isSubtypeOf(List::class.starProjectedType)) {
-//                rules.append("type:'array'").append(",")
-//            }
-//            rules.deleteCharAt(rules.length - 1).append("},")
-//            messages.deleteCharAt(messages.length - 1).append("},")
-//        }
-//        return MessageFormat.format(
-//            RESULT_PATTERN,
-//            rules.deleteCharAt(rules.length - 1),
-//            messages.deleteCharAt(messages.length - 1)
-//        )
-//    }
+    /**
+     * 获取校验规则，按属性合并，并将结果转为json
+     *
+     * @param annotationsMap MutableMap<属性名, MutableList<注解对象>>
+     * @param propertyPrefix 属性名前缀
+     * @param beanClass 待校验的bean类
+     * @return 验证规则json文本
+     */
+    private fun genRule(
+        annotationsMap: Map<String, MutableList<Annotation>>, propertyPrefix: String, beanClass: KClass<*>
+    ): String {
+        if (annotationsMap.isEmpty()) {
+            return ""
+        }
+        val ruleMap = mutableMapOf<String, MutableList<TeminalConstraint>>()
+        for ((originalProperty, annotations) in annotationsMap) {
+            val property = PropertyResolver.toPotQuote(originalProperty, propertyPrefix)
+            val context = ConstraintConvertContext(originalProperty, property, propertyPrefix, beanClass)
+            annotations.forEach {
+                val converter = ConstraintConvertorFactory.getInstance(it)
+                val teminalConstraint = converter.convert(context)
+                val teminalConstraints = ruleMap[property] ?: mutableListOf()
+                teminalConstraints.add(teminalConstraint)
+                ruleMap[property] = teminalConstraints
+            }
+        }
+        return JsonKit.toJson(ruleMap)
+    }
 
     /**
      * 获取类级别的约束注解
@@ -138,13 +139,15 @@ object TeminalConstraintsCreator {
     private fun getAnnotationsOnClass(clazz: KClass<*>): Map<String, MutableList<Annotation>> {
         val annotationMap = mutableMapOf<String, MutableList<Annotation>>()
         for (annotation in clazz.annotations) {
-            val prop = annotation::class.getMemberProperty("properties")
+            val prop = annotation::class.getMemberProperty("properties") // 自定义的类级别约束注解中, 代表类属性数组的属性名定义统一用properties
             if (prop != null) {
                 val propertyNames = prop.call(annotation) as Array<String>
                 propertyNames.forEach { propertyName ->
                     var annoList = annotationMap[propertyName] ?: mutableListOf()
                     annotationMap[propertyName] = annoList
-                    if (annotation.annotationClass.isAnnotationPresent(Constraint::class)) { // 是约束注解
+                    if (annotation.annotationClass.isAnnotationPresent(Constraint::class)
+                        || annotation.annotationClass.qualifiedName!!.endsWith(".List")
+                    ) { // 是约束注解
                         annoList.add(annotation)
                     }
                 }
@@ -168,7 +171,9 @@ object TeminalConstraintsCreator {
             } else {
                 val annotations = prop.getter.annotations
                 for (annotation in annotations) {
-                    if (annotation.annotationClass.isAnnotationPresent(Constraint::class)) { // 是约束注解
+                    if (annotation.annotationClass.isAnnotationPresent(Constraint::class)
+                        || annotation.annotationClass.qualifiedName!!.endsWith(".List")
+                    ) { // 是约束注解
                         annotationList.add(annotation)
                     }
                 }
@@ -176,10 +181,4 @@ object TeminalConstraintsCreator {
         }
         return annotationList
     }
-}
-
-fun main() {
-    val superclasses = CompareConstraintJsConverter::class.superclasses
-    superclasses.forEach { println(it.constructors.size) }
-    print(superclasses)
 }

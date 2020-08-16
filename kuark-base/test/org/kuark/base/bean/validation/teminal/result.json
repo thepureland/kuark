@@ -1,0 +1,482 @@
+{
+  "mobile": [
+    {
+      "constraint": "Pattern",
+      "rule": [
+        {
+          "flags": [],
+          "message": "手机号码格式错误",
+          "regexp": "^[0-9]*$"
+        }
+      ]
+    },
+    {
+      "constraint": "AtLeast",
+      "rule": [
+        {
+          "count": 1,
+          "message": "必须至少提供一种联系方式",
+          "properties": [
+            "mobile",
+            "email"
+          ]
+        }
+      ]
+    }
+  ],
+  "email": [
+    {
+      "constraint": "Pattern",
+      "rule": [
+        {
+          "flags": [],
+          "message": "电子邮箱格式错误",
+          "regexp": "^[a-zA-Z0-9]+([._\\-]*[a-zA-Z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$"
+        }
+      ]
+    },
+    {
+      "constraint": "AtLeast",
+      "rule": [
+        {
+          "count": 1,
+          "message": "必须至少提供一种联系方式",
+          "properties": [
+            "mobile",
+            "email"
+          ]
+        }
+      ]
+    }
+  ],
+  "'address.country'": [
+    {
+      "constraint": "NotNull",
+      "rule": [
+        {
+          "message": "{javax.validation.constraints.NotNull.message}"
+        }
+      ]
+    }
+  ],
+  "'address.province'": [
+    {
+      "constraint": "NotNull",
+      "rule": [
+        {
+          "message": "{javax.validation.constraints.NotNull.message}"
+        }
+      ]
+    }
+  ],
+  "age": [
+    {
+      "constraint": "Min",
+      "rule": [
+        {
+          "value": 18,
+          "message": "未满18周岁不能注册"
+        }
+      ]
+    },
+    {
+      "constraint": "Max",
+      "rule": [
+        {
+          "value": 60,
+          "message": "超过60周岁不能注册"
+        }
+      ]
+    }
+  ],
+  "barcode": [
+    {
+      "constraint": "EAN",
+      "rule": [
+        {
+          "message": "{org.hibernate.validator.constraints.EAN.message}",
+          "type": "EAN13"
+        }
+      ]
+    }
+  ],
+  "confirmPassword": [
+    {
+      "constraint": "Compare",
+      "rule": [
+        {
+          "anotherProperty": "password",
+          "depends": {
+            "andOr": "AND",
+            "logics": [
+              "IS_NOT_NULL"
+            ],
+            "properties": [
+              "validate"
+            ],
+            "values": [
+              "true"
+            ]
+          },
+          "logic": "EQ",
+          "message": "两次密码不同"
+        },
+        {
+          "anotherProperty": "username",
+          "logic": "IN",
+          "message": "密码不能包含用户名"
+        }
+      ]
+    }
+  ],
+  "creditCardNumber": [
+    {
+      "constraint": "CreditCardNumber",
+      "rule": [
+        {
+          "ignoreNonDigitCharacters": false,
+          "message": "{org.hibernate.validator.constraints.CreditCardNumber.message}"
+        }
+      ]
+    }
+  ],
+  "currency": [
+    {
+      "constraint": "Currency",
+      "rule": [
+        {
+          "value": [],
+          "message": "{org.hibernate.validator.constraints.Currency.message}"
+        }
+      ]
+    }
+  ],
+  "date1": [
+    {
+      "constraint": "PastOrPresent",
+      "rule": [
+        {
+          "message": "{javax.validation.constraints.PastOrPresent.message}"
+        }
+      ]
+    }
+  ],
+  "date2": [
+    {
+      "constraint": "FutureOrPresent",
+      "rule": [
+        {
+          "message": "{javax.validation.constraints.FutureOrPresent.message}"
+        }
+      ]
+    }
+  ],
+  "error": [
+    {
+      "constraint": "Null",
+      "rule": [
+        {
+          "message": "{javax.validation.constraints.Null.message}"
+        }
+      ]
+    }
+  ],
+  "expireDate": [
+    {
+      "constraint": "Future",
+      "rule": [
+        {
+          "message": "{javax.validation.constraints.Future.message}"
+        }
+      ]
+    }
+  ],
+  "eyesight": [
+    {
+      "constraint": "Positive",
+      "rule": [
+        {
+          "message": "视力必须为正数"
+        }
+      ]
+    },
+    {
+      "constraint": "Digits",
+      "rule": [
+        {
+          "fraction": 1,
+          "integer": 1,
+          "message": "视力值必须是1位整数和1位小数组成"
+        }
+      ]
+    }
+  ],
+  "greduateDate": [
+    {
+      "constraint": "Past",
+      "rule": [
+        {
+          "message": "{javax.validation.constraints.Past.message}"
+        }
+      ]
+    }
+  ],
+  "guest": [
+    {
+      "constraint": "AssertFalse",
+      "rule": [
+        {
+          "message": "{javax.validation.constraints.AssertFalse.message}"
+        }
+      ]
+    }
+  ],
+  "height": [
+    {
+      "constraint": "Range",
+      "rule": [
+        {
+          "message": "身高值必须在30cm到270cm之间",
+          "min": 30,
+          "max": 270
+        }
+      ]
+    }
+  ],
+  "hobbies": [
+    {
+      "constraint": "Size",
+      "rule": [
+        {
+          "message": "业余爱好必须选3到6项",
+          "min": 3,
+          "max": 6
+        }
+      ]
+    }
+  ],
+  "password": [
+    {
+      "constraint": "NotNull",
+      "rule": [
+        {
+          "message": "{javax.validation.constraints.NotNull.message}"
+        }
+      ]
+    },
+    {
+      "constraint": "Length",
+      "rule": [
+        {
+          "message": "密码长度必须在8到32间",
+          "min": 8,
+          "max": 32
+        }
+      ]
+    }
+  ],
+  "question": [
+    {
+      "constraint": "NotEmpty",
+      "rule": [
+        {
+          "message": "{javax.validation.constraints.NotEmpty.message}"
+        }
+      ]
+    },
+    {
+      "constraint": "Series",
+      "rule": [
+        {
+          "message": "机器人识别问题回答错误",
+          "size": 0,
+          "step": 2.0,
+          "type": "INC_DIFF"
+        }
+      ]
+    }
+  ],
+  "richText": [
+    {
+      "constraint": "SafeHtml",
+      "rule": [
+        {
+          "baseURI": "",
+          "whitelistType": "RELAXED",
+          "additionalTagsWithAttributes": [],
+          "message": "{org.hibernate.validator.constraints.SafeHtml.message}",
+          "additionalTags": []
+        }
+      ]
+    }
+  ],
+  "sex": [
+    {
+      "constraint": "DictEnumCode",
+      "rule": [
+        {
+          "message": "性别错误",
+          "values": [
+            "0",
+            "1",
+            "9"
+          ]
+        }
+      ]
+    }
+  ],
+  "string1": [
+    {
+      "constraint": "LuhnCheck",
+      "rule": [
+        {
+          "ignoreNonDigitCharacters": true,
+          "endIndex": 2147483647,
+          "startIndex": 0,
+          "message": "{org.hibernate.validator.constraints.LuhnCheck.message}",
+          "checkDigitIndex": -1
+        }
+      ]
+    }
+  ],
+  "string2": [
+    {
+      "constraint": "Mod10Check",
+      "rule": [
+        {
+          "startIndex": 0,
+          "message": "{org.hibernate.validator.constraints.Mod10Check.message}",
+          "checkDigitIndex": -1,
+          "ignoreNonDigitCharacters": true,
+          "endIndex": 2147483647,
+          "multiplier": 3,
+          "weight": 1
+        }
+      ]
+    }
+  ],
+  "string3": [
+    {
+      "constraint": "Mod11Check",
+      "rule": [
+        {
+          "startIndex": 0,
+          "message": "{org.hibernate.validator.constraints.Mod11Check.message}",
+          "threshold": 2147483647,
+          "checkDigitIndex": -1,
+          "ignoreNonDigitCharacters": false,
+          "processingDirection": "RIGHT_TO_LEFT",
+          "endIndex": 2147483647,
+          "treatCheck10As": "X",
+          "treatCheck11As": "0"
+        }
+      ]
+    }
+  ],
+  "time1": [
+    {
+      "constraint": "DurationMax",
+      "rule": [
+        {
+          "millis": 0,
+          "days": 0,
+          "minutes": 0,
+          "message": "{org.hibernate.validator.constraints.time.DurationMax.message}",
+          "hours": 0,
+          "seconds": 0,
+          "inclusive": true,
+          "nanos": 0
+        }
+      ]
+    }
+  ],
+  "time2": [
+    {
+      "constraint": "DurationMin",
+      "rule": [
+        {
+          "millis": 0,
+          "days": 0,
+          "minutes": 0,
+          "message": "{org.hibernate.validator.constraints.time.DurationMin.message}",
+          "hours": 0,
+          "seconds": 0,
+          "inclusive": true,
+          "nanos": 0
+        }
+      ]
+    }
+  ],
+  "username": [
+    {
+      "constraint": "NotBlank",
+      "rule": [
+        {
+          "message": "{javax.validation.constraints.NotBlank.message}"
+        }
+      ]
+    }
+  ],
+  "validate": [
+    {
+      "constraint": "AssertTrue",
+      "rule": [
+        {
+          "message": "{javax.validation.constraints.AssertTrue.message}"
+        }
+      ]
+    }
+  ],
+  "value1": [
+    {
+      "constraint": "Negative",
+      "rule": [
+        {
+          "message": "{javax.validation.constraints.Negative.message}"
+        }
+      ]
+    }
+  ],
+  "value2": [
+    {
+      "constraint": "NegativeOrZero",
+      "rule": [
+        {
+          "message": "{javax.validation.constraints.NegativeOrZero.message}"
+        }
+      ]
+    }
+  ],
+  "value3": [
+    {
+      "constraint": "PositiveOrZero",
+      "rule": [
+        {
+          "message": "{javax.validation.constraints.PositiveOrZero.message}"
+        }
+      ]
+    }
+  ],
+  "weigth": [
+    {
+      "constraint": "DecimalMin",
+      "rule": [
+        {
+          "value": "50.0",
+          "message": "体重必须大于50.0KG",
+          "inclusive": true
+        }
+      ]
+    },
+    {
+      "constraint": "DecimalMax",
+      "rule": [
+        {
+          "value": "100.0",
+          "message": "体重必须小于100.0KG",
+          "inclusive": true
+        }
+      ]
+    }
+  ]
+}

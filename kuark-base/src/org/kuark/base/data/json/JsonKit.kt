@@ -258,16 +258,10 @@ object JsonKit {
      * @return 序列化后的json串
      * @since 1.0.0
      */
-    @JvmOverloads
-    fun toJson(`object`: Any?, mapper: ObjectMapper? = null): String? {
+    fun toJson(`object`: Any, mapper: ObjectMapper? = null): String {
         var objectMapper = mapper
         objectMapper = objectMapper ?: createDefaultMapper()
-        return try {
-            objectMapper.writeValueAsString(`object`)
-        } catch (e: IOException) {
-            LOG.error(e)
-            null
-        }
+        return objectMapper.writeValueAsString(`object`)
     }
 
     /**

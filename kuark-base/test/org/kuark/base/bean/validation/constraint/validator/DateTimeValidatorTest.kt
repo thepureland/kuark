@@ -1,6 +1,6 @@
 package org.kuark.base.bean.validation.constraint.validator
 
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.kuark.base.bean.validation.constraint.annotaions.DateTime
 import org.kuark.base.bean.validation.kit.ValidationKit

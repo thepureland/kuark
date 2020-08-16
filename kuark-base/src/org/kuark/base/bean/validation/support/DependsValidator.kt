@@ -2,7 +2,7 @@ package org.kuark.base.bean.validation.support
 
 import org.kuark.base.bean.BeanKit
 import org.kuark.base.support.logic.AndOr
-import org.kuark.base.support.logic.Operator
+import org.kuark.base.support.logic.LogicOperator
 
 /**
  * Depends约束验证器，由其他一级约束Validator调用
@@ -21,7 +21,7 @@ object DependsValidator {
      */
     fun validate(depends: Depends, bean: Any): Boolean {
         val leftValues = depends.properties.map { BeanKit.getProperty(bean, it) }.toTypedArray()
-        return validate(leftValues, depends.values, depends.operators, depends.andOr)
+        return validate(leftValues, depends.values, depends.logics, depends.andOr)
     }
 
     /**
@@ -34,7 +34,7 @@ object DependsValidator {
      * @return 逻辑是否成立
      */
     fun validate(
-        leftValues: Array<Any?>, rightValues: Array<String>, operators: Array<Operator>, andOr: AndOr = AndOr.AND
+        leftValues: Array<Any?>, rightValues: Array<String>, operators: Array<LogicOperator>, andOr: AndOr = AndOr.AND
     ): Boolean {
         if (leftValues.size != rightValues.size || rightValues.size != operators.size) {
             error("左值数组、右值数组、操作符数组的大小必须一致！")

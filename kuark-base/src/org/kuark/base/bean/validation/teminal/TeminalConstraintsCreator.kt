@@ -4,9 +4,9 @@ import org.kuark.base.bean.validation.teminal.convert.ConstraintConvertContext
 import org.kuark.base.bean.validation.teminal.convert.ConstraintConvertorFactory
 import org.kuark.base.data.json.JsonKit
 import org.kuark.base.lang.SystemKit
-import org.kuark.base.lang.getDirectSuperClass
-import org.kuark.base.lang.getMemberProperty
-import org.kuark.base.lang.isAnnotationPresent
+import org.kuark.base.lang.reflect.getDirectSuperClass
+import org.kuark.base.lang.reflect.getMemberProperty
+import org.kuark.base.lang.reflect.isAnnotationPresent
 import javax.validation.Constraint
 import javax.validation.Valid
 import kotlin.reflect.KClass

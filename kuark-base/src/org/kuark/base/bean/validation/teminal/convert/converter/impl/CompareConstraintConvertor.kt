@@ -1,7 +1,7 @@
 package org.kuark.base.bean.validation.teminal.convert.converter.impl
 
 import org.kuark.base.bean.validation.constraint.annotaions.Compare
-import org.kuark.base.lang.getMemberProperty
+import org.kuark.base.lang.reflect.getMemberProperty
 import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.full.starProjectedType
 

@@ -1,4 +1,4 @@
-package org.kuark.base.lang
+package org.kuark.base.lang.reflect
 
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty

@@ -20,7 +20,7 @@ annotation class Depends(
     val properties: Array<String>,
 
     /** 表达式的逻辑操作符枚举 */
-    val logics: Array<LogicOperator> = [LogicOperator.IS_NOT_NULL],
+    val logics: Array<LogicOperator> = [LogicOperator.EQ],
 
     /**
      * 表达式的值, 必须可转为依赖属性的类型，不能申明为Array<Any>的原因是注解中都必须为常量。

@@ -10,6 +10,8 @@ import kotlin.reflect.KClass
  * 动态NotNull约束注解，属性级别注解。
  *
  * 当前属性的值是否可以为null，取决于定义的表达式。表达式为false，属性值可为null，即非必填选项；表达式为true，属性值必填。
+ * 注意：此约束注解不可与 @NotNull 一起使用
+ * 注意：不可类似地实现如 NotEmptyOn 和 NotBlankOn 约束注解。NotNullOn之所以可行是因为各约束注解在校验时值为null都返回true。
  *
  * @author K
  * @since 1.0.0
@@ -34,7 +36,7 @@ annotation class NotNullOn(
      * 然后将占位符和这个文件中定义的resource进行匹配,如果匹配不成功的话,那么它会继续匹配Hibernate Validator自带的位于
      * /org/hibernate/validator/ValidationMessages.properties的ResourceBundle, 依次类推,递归的匹配所有的占位符.
      */
-    val message: String,
+    val message: String = "{org.kuark.base.bean.validation.constraint.annotaions.NotNullOn.message}",
 
     /**
      * 该校验规则所从属的分组类，通过分组可以过滤校验规则或排序校验顺序。默认值必须是空数组。
@@ -54,15 +56,4 @@ annotation class NotNullOn(
     /** 约束注解的有效负载(通常用来将一些元数据信息与该约束注解相关联，常用的一种情况是用负载表示验证结果的严重程度) */
     val payload: Array<KClass<out Payload>> = []
 
-) {
-
-    /**
-     * 多个NotNullOn约束
-     * 使用该约束注解时，Bean Validation 将 Compare 数组里面的每一个元素都处理为一个普通的约束注解，并对其进行验证，所有约束条件均符合时才会验证通过
-     */
-    @Target(AnnotationTarget.FUNCTION, AnnotationTarget.PROPERTY_GETTER, AnnotationTarget.PROPERTY_SETTER)
-    @Retention(AnnotationRetention.RUNTIME)
-    @MustBeDocumented
-    annotation class List(vararg val value: NotNullOn)
-
-}
+)

@@ -21,7 +21,7 @@ class NotNullOnValidator : ConstraintValidator<NotNullOn, Any?> {
     }
 
     override fun isValid(value: Any?, context: ConstraintValidatorContext): Boolean {
-        val bean = ValidationContext.get(context)
+        val bean = ValidationContext.get(context)!!
         val depends = notNullOn.depends
         return if (!DependsValidator.validate(depends, bean)) { // 表达式为false，属性值可为null，即非必填选项，放行
             true

@@ -22,7 +22,7 @@ class CompareValidator : ConstraintValidator<Compare, Any?> {
     }
 
     override fun isValid(value: Any?, constraintValidatorContext: ConstraintValidatorContext): Boolean {
-        val bean = ValidationContext.get(constraintValidatorContext)
+        val bean = ValidationContext.get(constraintValidatorContext)!!
 
         // 依赖的前提条件不成立时，代表无须校验比较约束，直接放行
         val depends = compare.depends

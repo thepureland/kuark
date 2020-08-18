@@ -4,6 +4,12 @@ import org.junit.jupiter.api.Test
 import org.kuark.base.bean.validation.constraint.annotaions.CnIdCardNo
 import org.kuark.base.bean.validation.kit.ValidationKit
 
+/**
+ * CnIdCardNoValidator测试用例
+ *
+ * @author K
+ * @since 1.0.0
+ */
 internal class CnIdCardNoValidatorTest {
 
     @Test

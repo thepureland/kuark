@@ -6,6 +6,12 @@ import org.kuark.base.support.enums.IDictEnum
 import org.kuark.base.bean.validation.constraint.annotaions.DictEnumCode
 import org.kuark.base.bean.validation.kit.ValidationKit
 
+/**
+ * DictEnumCodeValidator测试用例
+ *
+ * @author K
+ * @since 1.0.0
+ */
 internal class DictEnumCodeValidatorTest {
 
     @Test

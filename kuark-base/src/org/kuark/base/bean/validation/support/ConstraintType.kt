@@ -2,6 +2,12 @@ package org.kuark.base.bean.validation.support
 
 import kotlin.reflect.KClass
 
+/**
+ * Kuark支持的所有约束类型枚举
+ *
+ * @author K
+ * @since 1.0.0
+ */
 enum class ConstraintType(val annotationClass: KClass<out Annotation>) {
 
     // javax.validation定义的约束
@@ -31,7 +37,7 @@ enum class ConstraintType(val annotationClass: KClass<out Annotation>) {
     // hibernate定义的约束
     CodePointLength(org.hibernate.validator.constraints.CodePointLength::class),
     CreditCardNumber(org.hibernate.validator.constraints.CreditCardNumber::class),
-//    Currency(org.hibernate.validator.constraints.Currency::class), //kuark暂不支持
+    Currency(org.hibernate.validator.constraints.Currency::class),
     EAN(org.hibernate.validator.constraints.EAN::class),
     ISBN(org.hibernate.validator.constraints.ISBN::class),
     Length(org.hibernate.validator.constraints.Length::class),

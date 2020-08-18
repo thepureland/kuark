@@ -33,59 +33,106 @@ import kotlin.reflect.KClass
 @Repeatable
 annotation class Constraints(
 
+    /** 约束类型数组，只校验定义的约束，且按定义的顺序依次做校验 */
     val values: Array<ConstraintType>,
 
+    /** 各约束间的逻辑关系，为AND时所有约束校验通过才算通过，为OR时只要其中一个约束校验通过就算通过 */
     val andOr: AndOr = AndOr.AND,
 
     // javax.validation定义的约束
+    /**  */
     val assertFalse: AssertFalse = AssertFalse(),
+    /**  */
     val assertTrue: AssertTrue = AssertTrue(),
+    /**  */
     val decimalMax: DecimalMax = DecimalMax(""),
+    /**  */
     val decimalMin: DecimalMin = DecimalMin(""),
+    /**  */
     val digits: Digits = Digits(integer = 0, fraction = 0),
+    /**  */
     val email: Email = Email(),
+    /**  */
     val future: Future = Future(),
+    /**  */
     val futureOrPresent: FutureOrPresent = FutureOrPresent(),
+    /**  */
     val max: Max = Max(0),
+    /**  */
     val min: Min = Min(0),
+    /**  */
     val negative: Negative = Negative(),
+    /**  */
     val negativeOrZero: NegativeOrZero = NegativeOrZero(),
+    /**  */
     val notBlank: NotBlank = NotBlank(),
+    /**  */
     val notEmpty: NotEmpty = NotEmpty(),
+    /**  */
     val notNull: NotNull = NotNull(),
+    /**  */
     val beNull: Null = Null(),
+    /**  */
     val past: Past = Past(),
+    /**  */
     val pastOrPresent: PastOrPresent = PastOrPresent(),
+    /**  */
     val pattern: Pattern = Pattern(regexp = ""),
+    /**  */
     val positive: Positive = Positive(),
+    /**  */
     val positiveOrZero: PositiveOrZero = PositiveOrZero(),
+    /**  */
     val size: Size = Size(),
 
     // hibernate定义的约束
+    /**  */
     val codePointLength: CodePointLength = CodePointLength(),
+    /**  */
     val creditCardNumber: CreditCardNumber = CreditCardNumber(),
-//    val currency: Currency = Currency(), //kuark暂不支持
+    /**  */
+    val currency: Currency = Currency(),
+    /**  */
     val ean: EAN = EAN(),
+    /**  */
     val isbn: ISBN = ISBN(),
+    /**  */
     val length: Length = Length(),
+    /**  */
     val luhnCheck: LuhnCheck = LuhnCheck(),
+    /**  */
     val mod10Check: Mod10Check = Mod10Check(),
+    /**  */
     val mod11Check: Mod11Check = Mod11Check(),
+    /**  */
     val parameterScriptAssert: ParameterScriptAssert = ParameterScriptAssert(lang = "", script = ""),
+    /**  */
     val range: Range = Range(),
+    /**  */
     val scriptAssert: ScriptAssert = ScriptAssert(lang = "", script = ""),
+    /**  */
     val uniqueElements: UniqueElements = UniqueElements(),
+    /**  */
     val url: URL = URL(),
 
     // kuark定义的约束
+    /**  */
     val atLeast: AtLeast = AtLeast([]),
+    /**  */
     val cnIdCardNo: CnIdCardNo = CnIdCardNo(),
+    /**  */
     val compare: Compare = Compare(""),
+    /**  */
     val customConstraint: CustomConstraint = CustomConstraint(IBeanValidator::class),
+    /**  */
     val dateTime: DateTime = DateTime(""),
+    /**  */
     val dictEnumCode: DictEnumCode = DictEnumCode(IDictEnum::class),
+    /**  */
 //    val each: Each = Each(Constraints([])),
+    /**  */
     val notNullOn: NotNullOn = NotNullOn(Depends([])),
+    /**  */
     val series: Series = Series(),
 
 

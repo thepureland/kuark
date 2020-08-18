@@ -43,9 +43,9 @@ object ValidationContext {
      * @param constraintValidatorContext 约束验证器上下文
      * @return 待校验的Bean
      */
-    fun get(constraintValidatorContext: ConstraintValidatorContext): Any {
+    fun get(constraintValidatorContext: ConstraintValidatorContext): Any? {
         val descriptor = (constraintValidatorContext as ConstraintValidatorContextImpl).constraintDescriptor
-        return beanMap.remove(descriptor.hashCode())!!
+        return beanMap.remove(descriptor.hashCode())
     }
 
     /**

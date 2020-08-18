@@ -20,6 +20,12 @@ import javax.validation.constraints.*
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotEmpty
 
+/**
+ * TeminalConstraintsCreator测试用例
+ *
+ * @author K
+ * @since 1.0.0
+ */
 internal class TeminalConstraintsCreatorTest {
 
     @Test

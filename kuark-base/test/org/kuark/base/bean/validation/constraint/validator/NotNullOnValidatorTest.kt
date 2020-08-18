@@ -6,6 +6,12 @@ import org.kuark.base.bean.validation.constraint.annotaions.NotNullOn
 import org.kuark.base.bean.validation.kit.ValidationKit
 import org.kuark.base.bean.validation.support.Depends
 
+/**
+ * NotNullOnValidator测试用例
+ *
+ * @author K
+ * @since 1.0.0
+ */
 internal class NotNullOnValidatorTest {
 
     @Test

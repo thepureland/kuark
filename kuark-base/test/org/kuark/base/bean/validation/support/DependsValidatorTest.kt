@@ -5,7 +5,10 @@ import org.kuark.base.support.logic.AndOr
 import org.kuark.base.support.logic.LogicOperator
 
 /**
+ * DependsValidator测试用例
  *
+ * @author K
+ * @since 1.0.0
  */
 internal class DependsValidatorTest {
 

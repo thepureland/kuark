@@ -7,6 +7,12 @@ import org.kuark.base.bean.validation.teminal.convert.ConstraintConvertContext
 import org.kuark.base.support.logic.LogicOperator
 import kotlin.reflect.full.memberProperties
 
+/**
+ * CompareConstraintConvertor测试用例
+ *
+ * @author K
+ * @since 1.0.0
+ */
 internal class CompareConstraintConvertorTest {
 
     @Test

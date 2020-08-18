@@ -6,6 +6,7 @@ import org.hibernate.validator.constraints.Range
 import org.hibernate.validator.internal.constraintvalidators.bv.*
 import org.hibernate.validator.internal.constraintvalidators.bv.EmailValidator
 import org.hibernate.validator.internal.constraintvalidators.bv.NotBlankValidator
+import org.hibernate.validator.internal.constraintvalidators.bv.money.*
 import org.hibernate.validator.internal.constraintvalidators.bv.notempty.*
 import org.hibernate.validator.internal.constraintvalidators.bv.number.bound.*
 import org.hibernate.validator.internal.constraintvalidators.bv.number.bound.decimal.*
@@ -29,10 +30,12 @@ import java.time.chrono.JapaneseDate
 import java.time.chrono.MinguoDate
 import java.time.chrono.ThaiBuddhistDate
 import java.util.*
+import javax.money.MonetaryAmount
 import javax.validation.ConstraintValidator
 import javax.validation.ConstraintValidatorContext
 import javax.validation.constraints.Max
 import javax.validation.constraints.Min
+import javax.validation.constraints.NotNull
 import kotlin.reflect.full.declaredMemberProperties
 import kotlin.reflect.full.starProjectedType
 
@@ -51,11 +54,6 @@ class ConstraintsValidator : ConstraintValidator<Constraints, Any?> {
     }
 
     override fun isValid(value: Any?, context: ConstraintValidatorContext): Boolean {
-        //TODO 处理null
-        if (value == null) {
-            return true
-        }
-
         val annotations = linkedMapOf<ConstraintType, Annotation>()
         constraints.values.forEach { type ->
             val annotationType = type.annotationClass.starProjectedType
@@ -94,11 +92,15 @@ class ConstraintsValidator : ConstraintValidator<Constraints, Any?> {
     private fun validate(
         constraintType: ConstraintType,
         annotation: Annotation,
-        value: Any,
-        bean: Any,
+        value: Any?,
+        bean: Any?,
         context: ConstraintValidatorContext
-    ): Boolean =
-        when (constraintType) {
+    ): Boolean {
+        if (value == null) {
+            return annotation.annotationClass != NotNull::class
+        }
+
+        return when (constraintType) {
             // javax.validation定义的约束
             ConstraintType.AssertFalse -> doValidate(AssertFalseValidator(), annotation, value, context)
             ConstraintType.AssertTrue -> doValidate(AssertTrueValidator(), annotation, value, context)
@@ -114,6 +116,7 @@ class ConstraintsValidator : ConstraintValidator<Constraints, Any?> {
                     is Long -> DecimalMaxValidatorForLong()
                     is Number -> DecimalMaxValidatorForNumber()
                     is Short -> DecimalMaxValidatorForShort()
+                    is MonetaryAmount -> DecimalMaxValidatorForMonetaryAmount()
                     else -> error("DecimalMax约束注解不支持【${value::class}】类型的校验！")
                 }
                 doValidate(validator, annotation, value, context)
@@ -130,6 +133,7 @@ class ConstraintsValidator : ConstraintValidator<Constraints, Any?> {
                     is Long -> DecimalMinValidatorForLong()
                     is Number -> DecimalMinValidatorForNumber()
                     is Short -> DecimalMinValidatorForShort()
+                    is MonetaryAmount -> DecimalMinValidatorForMonetaryAmount()
                     else -> error("DecimalMin约束注解不支持【${value::class}】类型的校验！")
                 }
                 doValidate(validator, annotation, value, context)
@@ -138,6 +142,7 @@ class ConstraintsValidator : ConstraintValidator<Constraints, Any?> {
                 val validator = when (value) {
                     is CharSequence -> DigitsValidatorForCharSequence()
                     is Number -> DigitsValidatorForNumber()
+                    is MonetaryAmount -> DigitsValidatorForMonetaryAmount()
                     else -> error("Digits约束注解不支持【${value::class}】类型的校验！")
                 }
                 doValidate(validator, annotation, value, context)
@@ -203,6 +208,7 @@ class ConstraintsValidator : ConstraintValidator<Constraints, Any?> {
                     is Long -> MaxValidatorForLong()
                     is Short -> MaxValidatorForShort()
                     is Number -> MaxValidatorForNumber()
+                    is MonetaryAmount -> MaxValidatorForMonetaryAmount()
                     else -> error("Max约束注解不支持【${value::class}】类型的校验！")
                 }
                 doValidate(validator, annotation, value, context)
@@ -219,6 +225,7 @@ class ConstraintsValidator : ConstraintValidator<Constraints, Any?> {
                     is Long -> MinValidatorForLong()
                     is Short -> MinValidatorForShort()
                     is Number -> MinValidatorForNumber()
+                    is MonetaryAmount -> MinValidatorForMonetaryAmount()
                     else -> error("Min约束注解不支持【${value::class}】类型的校验！")
                 }
                 doValidate(validator, annotation, value, context)
@@ -235,6 +242,7 @@ class ConstraintsValidator : ConstraintValidator<Constraints, Any?> {
                     is Long -> NegativeValidatorForLong()
                     is Short -> NegativeValidatorForShort()
                     is Number -> NegativeValidatorForNumber()
+                    is MonetaryAmount -> NegativeValidatorForMonetaryAmount()
                     else -> error("Negative约束注解不支持【${value::class}】类型的校验！")
                 }
                 doValidate(validator, annotation, value, context)
@@ -251,6 +259,7 @@ class ConstraintsValidator : ConstraintValidator<Constraints, Any?> {
                     is Long -> NegativeOrZeroValidatorForLong()
                     is Short -> NegativeOrZeroValidatorForShort()
                     is Number -> NegativeOrZeroValidatorForNumber()
+                    is MonetaryAmount -> NegativeOrZeroValidatorForMonetaryAmount()
                     else -> error("NegativeOrZero约束注解不支持【${value::class}】类型的校验！")
                 }
                 doValidate(validator, annotation, value, context)
@@ -337,6 +346,7 @@ class ConstraintsValidator : ConstraintValidator<Constraints, Any?> {
                     is Long -> PositiveValidatorForLong()
                     is Short -> PositiveValidatorForShort()
                     is Number -> PositiveValidatorForNumber()
+                    is MonetaryAmount -> PositiveValidatorForMonetaryAmount()
                     else -> error("Positive约束注解不支持【${value::class}】类型的校验！")
                 }
                 doValidate(validator, annotation, value, context)
@@ -353,6 +363,7 @@ class ConstraintsValidator : ConstraintValidator<Constraints, Any?> {
                     is Long -> PositiveOrZeroValidatorForLong()
                     is Short -> PositiveOrZeroValidatorForShort()
                     is Number -> PositiveOrZeroValidatorForNumber()
+                    is MonetaryAmount -> PositiveOrZeroValidatorForMonetaryAmount()
                     else -> error("PositiveOrZero约束注解不支持【${value::class}】类型的校验！")
                 }
                 doValidate(validator, annotation, value, context)
@@ -385,7 +396,9 @@ class ConstraintsValidator : ConstraintValidator<Constraints, Any?> {
                 val luhnCheck = constructor.callBy(mapOf(constructor.parameters[3] to ignoreNonDigitCharacters))
                 doValidate(LuhnCheckValidator(), luhnCheck, value, context)
             }
-//            ConstraintType.Currency -> true //kuark暂不支持
+            ConstraintType.Currency -> {
+                doValidate(CurrencyValidatorForMonetaryAmount(), annotation, value, context)
+            }
             ConstraintType.EAN -> doValidate(EANValidator(), annotation, value, context)
             ConstraintType.ISBN -> doValidate(ISBNValidator(), annotation, value, context)
             ConstraintType.Length -> doValidate(LengthValidator(), annotation, value, context)
@@ -440,6 +453,8 @@ class ConstraintsValidator : ConstraintValidator<Constraints, Any?> {
             ConstraintType.NotNullOn -> doValidate(NotNullOnValidator(), annotation, value, context)
             ConstraintType.Series -> doValidate(SeriesValidator(), annotation, value, context)
         }
+    }
+
 
     private fun doValidate(
         validator: Any, annotation: Annotation, value: Any?, context: ConstraintValidatorContext

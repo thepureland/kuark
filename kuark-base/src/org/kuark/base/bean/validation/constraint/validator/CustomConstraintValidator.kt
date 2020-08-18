@@ -26,7 +26,7 @@ class CustomConstraintValidator : ConstraintValidator<CustomConstraint, Any?> {
             return true
         }
 
-        val bean = ValidationContext.get(constraintValidatorContext)
+        val bean = ValidationContext.get(constraintValidatorContext)!!
         val validatorClass = customConstraint.checkClass as KClass<IBeanValidator<Any>>
         val validator = validatorClass.java.getDeclaredConstructor().newInstance()
         return validator.validate(bean)

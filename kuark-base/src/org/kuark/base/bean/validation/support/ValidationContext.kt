@@ -5,14 +5,18 @@ import javax.validation.ConstraintValidatorContext
 import javax.validation.Validator
 
 /**
- * Bean校验的上下文，用于传递Bean给ConstraintValidator，因为hibernate validation的ConstraintValidatorContext取不到Bean
+ * Bean校验的上下文
  *
  * @author K
  * @since 1.0.0
  */
 object ValidationContext {
 
+    /** 用于传递Bean给ConstraintValidator，因为hibernate validation的ConstraintValidatorContext取不到Bean */
     private val beanMap = mutableMapOf<Int, Any>() // Map<ConstraintDescriptor对象的hashcode，Bean对象>
+
+    /** 是否快速失败模式 */
+    private val failFastThreadLocal = InheritableThreadLocal<Boolean>()
 
 
     /**
@@ -43,5 +47,19 @@ object ValidationContext {
         val descriptor = (constraintValidatorContext as ConstraintValidatorContextImpl).constraintDescriptor
         return beanMap.remove(descriptor.hashCode())!!
     }
+
+    /**
+     * 设置快速失败模式
+     *
+     * @param failFast true：快速失败模式, false: 非快速失败模式
+     */
+    fun setFailFast(failFast: Boolean) = failFastThreadLocal.set(failFast)
+
+    /**
+     * 返回快速失败模式
+     *
+     * @return true：快速失败模式, false: 非快速失败模式
+     */
+    fun isFailFast(): Boolean = failFastThreadLocal.get()
 
 }

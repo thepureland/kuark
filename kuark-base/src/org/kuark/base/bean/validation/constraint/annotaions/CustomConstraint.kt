@@ -33,7 +33,7 @@ annotation class CustomConstraint(
      * 然后将占位符和这个文件中定义的resource进行匹配,如果匹配不成功的话,那么它会继续匹配Hibernate Validator自带的位于
      * /org/hibernate/validator/ValidationMessages.properties的ResourceBundle, 依次类推,递归的匹配所有的占位符.
      */
-    val message: String,
+    val message: String = "{org.kuark.base.bean.validation.constraint.annotaions.CustomConstraint.message}",
 
     /**
      * 该校验规则所从属的分组类，通过分组可以过滤校验规则或排序校验顺序。默认值必须是空数组。

@@ -17,6 +17,7 @@ dependencies {
     implementation("com.sun.xml.bind:jaxb-impl")
     implementation("org.glassfish.jaxb:jaxb-runtime")
     implementation("com.google.zxing:core")
+    implementation("org.javamoney:moneta")
 
     // log
     implementation("org.slf4j:slf4j-api")

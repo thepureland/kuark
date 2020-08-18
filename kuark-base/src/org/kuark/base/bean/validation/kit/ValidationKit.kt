@@ -92,7 +92,7 @@ object ValidationKit {
 //        configure.parameterNameProvider(configure.defaultParameterNameProvider)
 //        val validatorFactory = configure.buildValidatorFactory()
 //        ValidationContext.set(validatorFactory, bean)
-
+        ValidationContext.setFailFast(failFast)
         val validatorFactory = Validation.byProvider(HibernateValidator::class.java)
             .configure()
             .failFast(failFast)

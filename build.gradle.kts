@@ -14,8 +14,8 @@ plugins {
     id("org.springframework.boot") version "2.2.5.RELEASE"
     id("io.spring.dependency-management") version "1.0.9.RELEASE"
     id("org.openjfx.javafxplugin") version "0.0.8"
-    kotlin("jvm") version "1.3.72"
-    kotlin("plugin.spring") version "1.3.72"
+    kotlin("jvm") version "1.4.0"
+    kotlin("plugin.spring") version "1.4.0"
 }
 
 /* 插件的配置需要在buildscript元素中 */

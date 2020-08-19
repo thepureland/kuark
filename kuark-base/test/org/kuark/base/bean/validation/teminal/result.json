@@ -350,11 +350,11 @@
         "message": "{org.hibernate.validator.constraints.Mod11Check.message}",
         "threshold": 2147483647,
         "startIndex": 0,
-        "processingDirection": "RIGHT_TO_LEFT",
         "ignoreNonDigitCharacters": false,
-        "treatCheck10As": "X",
+        "processingDirection": "RIGHT_TO_LEFT",
         "checkDigitIndex": -1,
-        "treatCheck11As": "0"
+        "treatCheck11As": "0",
+        "treatCheck10As": "X"
       }
     ]
   },
@@ -398,6 +398,12 @@
         "max": 32,
         "message": "用户名字符数必须在6-32之间",
         "normalizationStrategy": "NONE"
+      }
+    ],
+    "Remote": [
+      {
+        "message": "用户名已存在",
+        "requestUrl": "/isUserAvailable"
       }
     ]
   },

@@ -20,6 +20,7 @@ object ConstraintConvertorFactory {
             Each::class -> EachConstraintConvertor(annotation)
             Exist::class -> ExistConstraintConvertor(annotation)
             Constraints::class -> ConstraintsConstraintConvertor(annotation)
+            Remote::class -> RemoteConstraintConvertor(annotation)
             else -> DefaultConstaintConvertor(annotation)
         }
 

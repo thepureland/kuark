@@ -7,7 +7,7 @@ import javax.validation.Payload
 import kotlin.reflect.KClass
 
 /**
- * 自定义约束注解，可以由用户自行实现校验逻辑，属性级别注解。
+ * 远程约束注解，由终端向服务端发起校验请求，在服务端可以由用户自行实现校验逻辑，属性级别注解。
  *
  * @author K
  * @since 1.0.0
@@ -17,11 +17,13 @@ import kotlin.reflect.KClass
 @Retention(AnnotationRetention.RUNTIME)
 @MustBeDocumented
 @Repeatable
-annotation class Custom(
+annotation class Remote(
 
     /** 执行逻辑校验的类 */
     val checkClass: KClass<out IBeanValidator<*>>, //!!! 名称不能以valid开头，会报HV000073: Parameters starting with 'valid' are not allowed in a constraint.
 
+    /** 校验请求url */
+    val requestUrl: String,
 
     /**
      * 校验不通过时的提示，或其国际化key。
@@ -32,7 +34,7 @@ annotation class Custom(
      * 然后将占位符和这个文件中定义的resource进行匹配,如果匹配不成功的话,那么它会继续匹配Hibernate Validator自带的位于
      * /org/hibernate/validator/ValidationMessages.properties的ResourceBundle, 依次类推,递归的匹配所有的占位符.
      */
-    val message: String = "{org.kuark.base.bean.validation.constraint.annotaions.Custom.message}",
+    val message: String = "{org.kuark.base.bean.validation.constraint.annotaions.Remote.message}",
 
     /**
      * 该校验规则所从属的分组类，通过分组可以过滤校验规则或排序校验顺序。默认值必须是空数组。
@@ -61,5 +63,5 @@ annotation class Custom(
     @Target(AnnotationTarget.FUNCTION, AnnotationTarget.PROPERTY_GETTER, AnnotationTarget.PROPERTY_SETTER)
     @Retention(AnnotationRetention.RUNTIME)
     @MustBeDocumented
-    annotation class List(vararg val value: org.kuark.base.bean.validation.constraint.annotaions.Custom)
+    annotation class List(vararg val value: org.kuark.base.bean.validation.constraint.annotaions.Remote)
 }

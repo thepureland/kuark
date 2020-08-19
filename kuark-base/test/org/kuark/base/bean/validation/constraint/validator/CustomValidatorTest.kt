@@ -8,12 +8,12 @@ import org.kuark.base.bean.validation.kit.ValidationKit
 import org.kuark.base.bean.validation.support.IBeanValidator
 
 /**
- * Constraint约束验证器测试用例
+ * CustomValidator测试用例
  *
  * @author K
  * @since 1.0.0
  */
-internal class CustomConstraintValidatorTest {
+internal class CustomValidatorTest {
 
     @Test
     fun validate() {

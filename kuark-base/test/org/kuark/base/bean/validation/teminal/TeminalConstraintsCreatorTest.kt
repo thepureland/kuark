@@ -49,7 +49,7 @@ internal class TeminalConstraintsCreatorTest {
 
         @get:NotBlank
         @get:CodePointLength(min = 6, max = 32, message = "用户名字符数必须在6-32之间")
-        @get:Custom(UsernameValidator::class)
+        @get:Remote(checkClass = UsernameValidator::class, requestUrl = "/isUserAvailable", message = "用户名已存在")
         val username: String?,
 
         @get:NotNull

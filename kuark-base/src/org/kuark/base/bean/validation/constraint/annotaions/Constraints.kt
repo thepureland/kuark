@@ -2,7 +2,6 @@ package org.kuark.base.bean.validation.constraint.annotaions
 
 import org.hibernate.validator.constraints.*
 import org.kuark.base.bean.validation.constraint.validator.ConstraintsValidator
-import org.kuark.base.bean.validation.support.ConstraintType
 import org.kuark.base.bean.validation.support.Depends
 import org.kuark.base.bean.validation.support.IBeanValidator
 import org.kuark.base.support.enums.IDictEnum
@@ -17,8 +16,8 @@ import kotlin.reflect.KClass
 
 /**
  * 组合约束注解，可以实现以下目的：
- * 1.按定义的注解顺序校验
- * 2.支持其中一个约束通过就算校验通过
+ * 1.按定义的注解顺序校验(可以替代@GroupSequence和@GroupSequenceProvider)
+ * 2.支持其中一个约束通过就算校验通过(AndOr.Or)
  *
  * 使用限制：
  * 1.尚不支持约束注解中的List规范
@@ -27,113 +26,119 @@ import kotlin.reflect.KClass
  * @since 1.0.0
  */
 @Constraint(validatedBy = [ConstraintsValidator::class])
-@Target(AnnotationTarget.TYPE, AnnotationTarget.FUNCTION, AnnotationTarget.PROPERTY_GETTER, AnnotationTarget.PROPERTY_SETTER)
+@Target(
+    AnnotationTarget.TYPE,
+    AnnotationTarget.FUNCTION,
+    AnnotationTarget.PROPERTY_GETTER,
+    AnnotationTarget.PROPERTY_SETTER
+)
 @Retention(AnnotationRetention.RUNTIME)
 @MustBeDocumented
 @Repeatable
 annotation class Constraints(
 
-    /** 约束类型数组，只校验定义的约束，且按定义的顺序依次做校验 */
-    val values: Array<ConstraintType>,
+    /** 子约束的校验顺序 */
+    val order: Array<KClass<out Annotation>> = [],
 
     /** 各约束间的逻辑关系，为AND时所有约束校验通过才算通过，为OR时只要其中一个约束校验通过就算通过 */
     val andOr: AndOr = AndOr.AND,
 
     // javax.validation定义的约束
     /**  */
-    val assertFalse: AssertFalse = AssertFalse(),
+    val assertFalse: AssertFalse = AssertFalse(message = MESSAGE),
     /**  */
-    val assertTrue: AssertTrue = AssertTrue(),
+    val assertTrue: AssertTrue = AssertTrue(message = MESSAGE),
     /**  */
-    val decimalMax: DecimalMax = DecimalMax(""),
+    val decimalMax: DecimalMax = DecimalMax("", message = MESSAGE),
     /**  */
-    val decimalMin: DecimalMin = DecimalMin(""),
+    val decimalMin: DecimalMin = DecimalMin("", message = MESSAGE),
     /**  */
-    val digits: Digits = Digits(integer = 0, fraction = 0),
+    val digits: Digits = Digits(integer = 0, fraction = 0, message = MESSAGE),
     /**  */
-    val email: Email = Email(),
+    val email: Email = Email(message = MESSAGE),
     /**  */
-    val future: Future = Future(),
+    val future: Future = Future(message = MESSAGE),
     /**  */
-    val futureOrPresent: FutureOrPresent = FutureOrPresent(),
+    val futureOrPresent: FutureOrPresent = FutureOrPresent(message = MESSAGE),
     /**  */
-    val max: Max = Max(0),
+    val max: Max = Max(0, message = MESSAGE),
     /**  */
-    val min: Min = Min(0),
+    val min: Min = Min(0, message = MESSAGE),
     /**  */
-    val negative: Negative = Negative(),
+    val negative: Negative = Negative(message = MESSAGE),
     /**  */
-    val negativeOrZero: NegativeOrZero = NegativeOrZero(),
+    val negativeOrZero: NegativeOrZero = NegativeOrZero(message = MESSAGE),
     /**  */
-    val notBlank: NotBlank = NotBlank(),
+    val notBlank: NotBlank = NotBlank(message = MESSAGE),
     /**  */
-    val notEmpty: NotEmpty = NotEmpty(),
+    val notEmpty: NotEmpty = NotEmpty(message = MESSAGE),
     /**  */
-    val notNull: NotNull = NotNull(),
+    val notNull: NotNull = NotNull(message = MESSAGE),
     /**  */
-    val beNull: Null = Null(),
+    val beNull: Null = Null(message = MESSAGE),
     /**  */
-    val past: Past = Past(),
+    val past: Past = Past(message = MESSAGE),
     /**  */
-    val pastOrPresent: PastOrPresent = PastOrPresent(),
+    val pastOrPresent: PastOrPresent = PastOrPresent(message = MESSAGE),
     /**  */
-    val pattern: Pattern = Pattern(regexp = ""),
+    val pattern: Pattern = Pattern(regexp = "", message = MESSAGE),
     /**  */
-    val positive: Positive = Positive(),
+    val positive: Positive = Positive(message = MESSAGE),
     /**  */
-    val positiveOrZero: PositiveOrZero = PositiveOrZero(),
+    val positiveOrZero: PositiveOrZero = PositiveOrZero(message = MESSAGE),
     /**  */
-    val size: Size = Size(),
+    val size: Size = Size(message = MESSAGE),
 
     // hibernate定义的约束
     /**  */
-    val codePointLength: CodePointLength = CodePointLength(),
+    val codePointLength: CodePointLength = CodePointLength(message = MESSAGE),
     /**  */
-    val creditCardNumber: CreditCardNumber = CreditCardNumber(),
+    val creditCardNumber: CreditCardNumber = CreditCardNumber(message = MESSAGE),
     /**  */
-    val currency: Currency = Currency(),
+    val currency: Currency = Currency(message = MESSAGE),
     /**  */
-    val ean: EAN = EAN(),
+    val ean: EAN = EAN(message = MESSAGE),
     /**  */
-    val isbn: ISBN = ISBN(),
+    val isbn: ISBN = ISBN(message = MESSAGE),
     /**  */
-    val length: Length = Length(),
+    val length: Length = Length(message = MESSAGE),
     /**  */
-    val luhnCheck: LuhnCheck = LuhnCheck(),
+    val luhnCheck: LuhnCheck = LuhnCheck(message = MESSAGE),
     /**  */
-    val mod10Check: Mod10Check = Mod10Check(),
+    val mod10Check: Mod10Check = Mod10Check(message = MESSAGE),
     /**  */
-    val mod11Check: Mod11Check = Mod11Check(),
+    val mod11Check: Mod11Check = Mod11Check(message = MESSAGE),
     /**  */
-    val parameterScriptAssert: ParameterScriptAssert = ParameterScriptAssert(lang = "", script = ""),
+    val parameterScriptAssert: ParameterScriptAssert = ParameterScriptAssert(lang = "", script = "", message = MESSAGE),
     /**  */
-    val range: Range = Range(),
+    val range: Range = Range(message = MESSAGE),
+//    /**  */
+//    val scriptAssert: ScriptAssert = ScriptAssert(lang = "", script = ""), //kuark暂不支持
     /**  */
-    val scriptAssert: ScriptAssert = ScriptAssert(lang = "", script = ""),
+    val uniqueElements: UniqueElements = UniqueElements(message = MESSAGE),
     /**  */
-    val uniqueElements: UniqueElements = UniqueElements(),
-    /**  */
-    val url: URL = URL(),
+    val url: URL = URL(message = MESSAGE),
 
     // kuark定义的约束
     /**  */
-    val atLeast: AtLeast = AtLeast([]),
+    val atLeast: AtLeast = AtLeast([], message = MESSAGE),
     /**  */
-    val cnIdCardNo: CnIdCardNo = CnIdCardNo(),
+    val cnIdCardNo: CnIdCardNo = CnIdCardNo(message = MESSAGE),
     /**  */
-    val compare: Compare = Compare(""),
+    val compare: Compare = Compare("", message = MESSAGE),
     /**  */
-    val customConstraint: CustomConstraint = CustomConstraint(IBeanValidator::class),
+    val customConstraint: CustomConstraint = CustomConstraint(IBeanValidator::class, message = MESSAGE),
     /**  */
-    val dateTime: DateTime = DateTime(""),
+    val dateTime: DateTime = DateTime("", message = MESSAGE),
     /**  */
-    val dictEnumCode: DictEnumCode = DictEnumCode(IDictEnum::class),
+    val dictEnumCode: DictEnumCode = DictEnumCode(IDictEnum::class, message = MESSAGE),
     /**  */
-//    val each: Each = Each(Constraints([])),
+    val notNullOn: NotNullOn = NotNullOn(Depends([]), message = MESSAGE),
     /**  */
-    val notNullOn: NotNullOn = NotNullOn(Depends([])),
-    /**  */
-    val series: Series = Series(),
+    val series: Series = Series(message = MESSAGE),
+
+//  val each: Each = Each(Constraints(), message = MESSAGE),  // 会循环引用，而且本身就是组合约束，没必要作为Constraints的子约束了
+//  val exist: Exist = Exist(Constraints(), message = MESSAGE),  // 会循环引用，而且本身就是组合约束，没必要作为Constraints的子约束了
 
 
     /**
@@ -159,4 +164,10 @@ annotation class Constraints(
     /** 约束注解的有效负载(通常用来将一些元数据信息与该约束注解相关联，常用的一种情况是用负载表示验证结果的严重程度) */
     val payload: Array<KClass<out Payload>> = []
 
-)
+) {
+
+    companion object {
+        const val MESSAGE = "TEMP_MSG" // 利用该值来确定用户定义了哪些子约束
+    }
+
+}

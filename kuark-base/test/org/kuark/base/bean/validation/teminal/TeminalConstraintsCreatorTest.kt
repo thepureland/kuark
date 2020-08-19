@@ -4,10 +4,7 @@ import org.hibernate.validator.constraints.*
 import org.hibernate.validator.constraints.time.DurationMax
 import org.hibernate.validator.constraints.time.DurationMin
 import org.junit.jupiter.api.Test
-import org.kuark.base.bean.validation.constraint.annotaions.AtLeast
-import org.kuark.base.bean.validation.constraint.annotaions.Compare
-import org.kuark.base.bean.validation.constraint.annotaions.DictEnumCode
-import org.kuark.base.bean.validation.constraint.annotaions.Series
+import org.kuark.base.bean.validation.constraint.annotaions.*
 import org.kuark.base.bean.validation.support.Depends
 import org.kuark.base.bean.validation.support.RegExps
 import org.kuark.base.bean.validation.support.SeriesType
@@ -15,8 +12,10 @@ import org.kuark.base.support.enums.Sex
 import org.kuark.base.support.logic.LogicOperator
 import java.time.LocalDate
 import java.time.LocalDateTime
+import javax.money.MonetaryAmount
 import javax.validation.Valid
 import javax.validation.constraints.*
+import javax.validation.constraints.Email
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.NotEmpty
 
@@ -48,10 +47,11 @@ internal class TeminalConstraintsCreatorTest {
         val error: String?,
 
         @get:NotBlank
+        @get:CodePointLength(min = 6, max = 32, message = "用户名字符数必须在6-32之间")
         val username: String?,
 
         @get:NotNull
-        @get:Length(min = 8, max = 32, message = "密码长度必须在8到32间")
+        @get:Length(min = 8, max = 32, message = "密码长度必须在8到32之间")
         val password: String?,
 
         @get:Compare.List(
@@ -76,8 +76,7 @@ internal class TeminalConstraintsCreatorTest {
         @get:Pattern(regexp = RegExps.MOBILE, message = "手机号码格式错误")
         val mobile: String?,
 
-//        @get:Email  //统一用Pattern代替
-        @get:Pattern(regexp = RegExps.EMAIL, message = "电子邮箱格式错误")
+        @get:Email
         val email: String?,
 
         @get:Min(18, message = "未满18周岁不能注册")
@@ -106,7 +105,7 @@ internal class TeminalConstraintsCreatorTest {
         @get:DecimalMax("100.0", message = "体重必须小于100.0KG")
         val weigth: Double?,
 
-        @get:Range(min=30, max = 270, message = "身高值必须在30cm到270cm之间")
+        @get:Range(min = 30, max = 270, message = "身高值必须在30cm到270cm之间")
         val height: Double?,
 
         @get:Positive(message = "视力必须为正数")
@@ -126,7 +125,7 @@ internal class TeminalConstraintsCreatorTest {
         val creditCardNumber: String?,
 
         @get:Currency
-        val currency: String?,
+        val currency: MonetaryAmount?,
 
         @get:EAN
         val barcode: String?,
@@ -140,10 +139,13 @@ internal class TeminalConstraintsCreatorTest {
         @get:Mod11Check
         val string3: String?,
 
-        @get:SafeHtml
+        @get:ISBN
+        val bookIsbn: String?,
+
+        @get:ParameterScriptAssert(lang = "javascript", script = "1==1")
         val richText: String?,
 
-//        @get:URL  //统一用Pattern代替
+        @get:URL
         val photo: String?,
 
         @get:Size(min = 3, max = 6, message = "业余爱好必须选3到6项")
@@ -155,6 +157,33 @@ internal class TeminalConstraintsCreatorTest {
         @get:NotEmpty
         @get:Series(type = SeriesType.INC_DIFF, step = 2.0, message = "机器人识别问题回答错误")
         val question: Array<Int>?,
+
+        @get:NotNullOn(Depends(properties = ["age"], logics = [LogicOperator.GE], values = ["18"]))
+        val job: String?,
+
+        @get:Each(
+            Constraints(
+                order = [NotBlank::class, Pattern::class],
+                notBlank = NotBlank(), message = "特长都不能为空",
+                pattern = Pattern(regexp = "[a-zA-Z]+", message = "特长必须为英文字母")
+            )
+        )
+        val abilities: Array<String>?,
+
+        @get:Exist(
+            Constraints(notBlank = NotBlank()),
+            message = "安全问题至少要填写一个"
+        )
+        @get:UniqueElements
+        val safeQuestions: List<String?>?,
+
+        @get:Constraints(
+            order = [NotBlank::class, Pattern::class],
+            notBlank = NotBlank(message = "备注不能为空"),
+            pattern = Pattern(regexp = "[a-zA-Z0-9]+", message = "备注不能包含特殊字符")
+        )
+        val remark: String?,
+
 
         @get:Valid
         val address: Address

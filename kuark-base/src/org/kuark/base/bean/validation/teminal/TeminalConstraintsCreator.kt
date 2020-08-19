@@ -115,16 +115,16 @@ object TeminalConstraintsCreator {
         if (annotationsMap.isEmpty()) {
             return ""
         }
-        val ruleMap = mutableMapOf<String, MutableList<TeminalConstraint>>()
+        val ruleMap = mutableMapOf<String, LinkedHashMap<String, Array<Map<String, Any>>>>()
         for ((originalProperty, annotations) in annotationsMap) {
             val property = PropertyResolver.toPotQuote(originalProperty, propertyPrefix)
             val context = ConstraintConvertContext(originalProperty, property, propertyPrefix, beanClass)
             annotations.forEach {
                 val converter = ConstraintConvertorFactory.getInstance(it)
                 val teminalConstraint = converter.convert(context)
-                val teminalConstraints = ruleMap[property] ?: mutableListOf()
-                teminalConstraints.add(teminalConstraint)
-                ruleMap[property] = teminalConstraints
+                val map = ruleMap[property] ?: linkedMapOf()
+                map[teminalConstraint.constraint] = teminalConstraint.rule
+                ruleMap[property] = map
             }
         }
         return JsonKit.toJson(ruleMap)

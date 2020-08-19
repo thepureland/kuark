@@ -1,8 +1,7 @@
 package org.kuark.base.bean.validation.constraint.validator
 
-import org.hibernate.validator.constraints.CreditCardNumber
-import org.hibernate.validator.constraints.LuhnCheck
-import org.hibernate.validator.constraints.Range
+import org.hibernate.validator.constraints.*
+import org.hibernate.validator.constraints.Currency
 import org.hibernate.validator.internal.constraintvalidators.bv.*
 import org.hibernate.validator.internal.constraintvalidators.bv.EmailValidator
 import org.hibernate.validator.internal.constraintvalidators.bv.NotBlankValidator
@@ -17,10 +16,10 @@ import org.hibernate.validator.internal.constraintvalidators.bv.time.futureorpre
 import org.hibernate.validator.internal.constraintvalidators.bv.time.past.*
 import org.hibernate.validator.internal.constraintvalidators.bv.time.pastorpresent.*
 import org.hibernate.validator.internal.constraintvalidators.hv.*
-import org.kuark.base.bean.validation.constraint.annotaions.Constraints
-import org.kuark.base.bean.validation.support.ConstraintType
+import org.kuark.base.bean.validation.constraint.annotaions.*
 import org.kuark.base.bean.validation.support.ValidationContext
 import org.kuark.base.lang.reflect.getMemberProperty
+import org.kuark.base.lang.reflect.getMemberPropertyValue
 import org.kuark.base.support.logic.AndOr
 import java.math.BigDecimal
 import java.math.BigInteger
@@ -34,8 +33,10 @@ import javax.money.MonetaryAmount
 import javax.validation.ConstraintValidator
 import javax.validation.ConstraintValidatorContext
 import javax.validation.constraints.*
+import javax.validation.constraints.Email
+import javax.validation.constraints.NotBlank
+import javax.validation.constraints.NotEmpty
 import kotlin.reflect.full.declaredMemberProperties
-import kotlin.reflect.full.starProjectedType
 
 /**
  * Constraints约束验证器
@@ -52,23 +53,15 @@ class ConstraintsValidator : ConstraintValidator<Constraints, Any?> {
     }
 
     override fun isValid(value: Any?, context: ConstraintValidatorContext): Boolean {
-        val annotations = linkedMapOf<ConstraintType, Annotation>()
-        constraints.values.forEach { type ->
-            val annotationType = type.annotationClass.starProjectedType
-            val prop = constraints.annotationClass.declaredMemberProperties.first {
-                it.returnType == annotationType
-            }
-            annotations[type] = prop.call(constraints) as Annotation
-        }
-
+        val annotations = getAnnotations(constraints)
         val bean = ValidationContext.get(context)
         if (constraints.andOr == AndOr.AND) {
             val failFast = ValidationContext.isFailFast()
             var pass = true
             annotations.forEach {
-                pass = validate(it.key, it.value, value, bean, context)
+                pass = validate(it, value, bean, context)
                 if (!pass) {
-                    addViolation(context, it.value)
+                    addViolation(context, it)
                     if (failFast) {
                         return false
                     }
@@ -78,7 +71,7 @@ class ConstraintsValidator : ConstraintValidator<Constraints, Any?> {
         } else { // 有一个约束成功就算通过，并且不受failFast影响
             var pass = false
             annotations.forEach {
-                pass = validate(it.key, it.value, value, bean, context)
+                pass = validate(it, value, bean, context)
                 if (pass) {
                     return true
                 }
@@ -87,8 +80,40 @@ class ConstraintsValidator : ConstraintValidator<Constraints, Any?> {
         }
     }
 
+    companion object {
+        fun getAnnotations(constraints: Constraints): List<Annotation> {
+            // 获取定义的子约束
+            val annotations = mutableListOf<Annotation>()
+            constraints.annotationClass.declaredMemberProperties.forEach {
+                if (it.name != "order" && it.name != "andOr" && it.name != "message" && it.name != "groups" && it.name != "payload") {
+                    val annotation = it.call(constraints) as Annotation
+                    val message = annotation.annotationClass.getMemberPropertyValue(annotation, "message")
+                    if (message != Constraints.MESSAGE) {
+                        annotations.add(annotation)
+                    }
+                }
+            }
+
+            // 根据指定的顺序排序子约束
+            return if (constraints.order.isNotEmpty()) {
+                val sequenceAnnotations = linkedSetOf<Annotation>() // 有指定顺序的子约束
+                constraints.order.forEach { clazz ->
+                    val annotation = annotations.firstOrNull { it.annotationClass == clazz }
+                    if (annotation == null) {
+                        error("Constraints约束sequence中指定的【$clazz】子约束未定义规则！")
+                    } else {
+                        sequenceAnnotations.add(annotation)
+                    }
+                }
+                sequenceAnnotations.addAll(annotations) // 合并未指定顺序的子约束
+                sequenceAnnotations.toList()
+            } else {
+                annotations
+            }
+        }
+    }
+
     private fun validate(
-        constraintType: ConstraintType,
         annotation: Annotation,
         value: Any?,
         bean: Any?,
@@ -99,11 +124,11 @@ class ConstraintsValidator : ConstraintValidator<Constraints, Any?> {
                     && annotation.annotationClass != NotBlank::class
         }
 
-        return when (constraintType) {
+        return when (annotation) {
             // javax.validation定义的约束
-            ConstraintType.AssertFalse -> doValidate(AssertFalseValidator(), annotation, value, context)
-            ConstraintType.AssertTrue -> doValidate(AssertTrueValidator(), annotation, value, context)
-            ConstraintType.DecimalMax -> {
+            is AssertFalse -> doValidate(AssertFalseValidator(), annotation, value, context)
+            is AssertTrue -> doValidate(AssertTrueValidator(), annotation, value, context)
+            is DecimalMax -> {
                 val validator = when (value) {
                     is BigDecimal -> DecimalMaxValidatorForBigDecimal()
                     is BigInteger -> DecimalMaxValidatorForBigInteger()
@@ -120,7 +145,7 @@ class ConstraintsValidator : ConstraintValidator<Constraints, Any?> {
                 }
                 doValidate(validator, annotation, value, context)
             }
-            ConstraintType.DecimalMin -> {
+            is DecimalMin -> {
                 val validator = when (value) {
                     is BigDecimal -> DecimalMinValidatorForBigDecimal()
                     is BigInteger -> DecimalMinValidatorForBigInteger()
@@ -137,7 +162,7 @@ class ConstraintsValidator : ConstraintValidator<Constraints, Any?> {
                 }
                 doValidate(validator, annotation, value, context)
             }
-            ConstraintType.Digits -> {
+            is Digits -> {
                 val validator = when (value) {
                     is CharSequence -> DigitsValidatorForCharSequence()
                     is Number -> DigitsValidatorForNumber()
@@ -146,8 +171,8 @@ class ConstraintsValidator : ConstraintValidator<Constraints, Any?> {
                 }
                 doValidate(validator, annotation, value, context)
             }
-            ConstraintType.Email -> doValidate(EmailValidator(), annotation, value, context)
-            ConstraintType.Future -> {
+            is Email -> doValidate(EmailValidator(), annotation, value, context)
+            is Future -> {
                 val validator = when (value) {
                     is Calendar -> FutureValidatorForCalendar()
                     is Date -> FutureValidatorForDate()
@@ -171,7 +196,7 @@ class ConstraintsValidator : ConstraintValidator<Constraints, Any?> {
                 }
                 doValidate(validator, annotation, value, context)
             }
-            ConstraintType.FutureOrPresent -> {
+            is FutureOrPresent -> {
                 val validator = when (value) {
                     is Calendar -> FutureOrPresentValidatorForCalendar()
                     is Date -> FutureOrPresentValidatorForDate()
@@ -195,7 +220,7 @@ class ConstraintsValidator : ConstraintValidator<Constraints, Any?> {
                 }
                 doValidate(validator, annotation, value, context)
             }
-            ConstraintType.Max -> {
+            is Max -> {
                 val validator = when (value) {
                     is BigDecimal -> MaxValidatorForBigDecimal()
                     is BigInteger -> MaxValidatorForBigInteger()
@@ -212,7 +237,7 @@ class ConstraintsValidator : ConstraintValidator<Constraints, Any?> {
                 }
                 doValidate(validator, annotation, value, context)
             }
-            ConstraintType.Min -> {
+            is Min -> {
                 val validator = when (value) {
                     is BigDecimal -> MinValidatorForBigDecimal()
                     is BigInteger -> MinValidatorForBigInteger()
@@ -229,7 +254,7 @@ class ConstraintsValidator : ConstraintValidator<Constraints, Any?> {
                 }
                 doValidate(validator, annotation, value, context)
             }
-            ConstraintType.Negative -> {
+            is Negative -> {
                 val validator = when (value) {
                     is BigDecimal -> NegativeValidatorForBigDecimal()
                     is BigInteger -> NegativeValidatorForBigInteger()
@@ -246,7 +271,7 @@ class ConstraintsValidator : ConstraintValidator<Constraints, Any?> {
                 }
                 doValidate(validator, annotation, value, context)
             }
-            ConstraintType.NegativeOrZero -> {
+            is NegativeOrZero -> {
                 val validator = when (value) {
                     is BigDecimal -> NegativeOrZeroValidatorForBigDecimal()
                     is BigInteger -> NegativeOrZeroValidatorForBigInteger()
@@ -263,8 +288,8 @@ class ConstraintsValidator : ConstraintValidator<Constraints, Any?> {
                 }
                 doValidate(validator, annotation, value, context)
             }
-            ConstraintType.NotBlank -> doValidate(NotBlankValidator(), annotation, value, context)
-            ConstraintType.NotEmpty -> {
+            is NotBlank -> doValidate(NotBlankValidator(), annotation, value, context)
+            is NotEmpty -> {
                 val validator = when (value) {
                     is Array<*> -> NotEmptyValidatorForArray()
                     is BooleanArray -> NotEmptyValidatorForArraysOfBoolean()
@@ -282,9 +307,9 @@ class ConstraintsValidator : ConstraintValidator<Constraints, Any?> {
                 }
                 doValidate(validator, annotation, value, context)
             }
-            ConstraintType.NotNull -> doValidate(NotNullValidator(), annotation, value, context)
-            ConstraintType.Null -> doValidate(NullValidator(), annotation, value, context)
-            ConstraintType.Past -> {
+            is NotNull -> doValidate(NotNullValidator(), annotation, value, context)
+            is Null -> doValidate(NullValidator(), annotation, value, context)
+            is Past -> {
                 val validator = when (value) {
                     is Calendar -> PastValidatorForCalendar()
                     is Date -> PastValidatorForDate()
@@ -308,7 +333,7 @@ class ConstraintsValidator : ConstraintValidator<Constraints, Any?> {
                 }
                 doValidate(validator, annotation, value, context)
             }
-            ConstraintType.PastOrPresent -> {
+            is PastOrPresent -> {
                 val validator = when (value) {
                     is Calendar -> PastOrPresentValidatorForCalendar()
                     is Date -> PastOrPresentValidatorForDate()
@@ -332,8 +357,8 @@ class ConstraintsValidator : ConstraintValidator<Constraints, Any?> {
                 }
                 doValidate(validator, annotation, value, context)
             }
-            ConstraintType.Pattern -> doValidate(PatternValidator(), annotation, value, context)
-            ConstraintType.Positive -> {
+            is Pattern -> doValidate(PatternValidator(), annotation, value, context)
+            is Positive -> {
                 val validator = when (value) {
                     is BigDecimal -> PositiveValidatorForBigDecimal()
                     is BigInteger -> PositiveValidatorForBigInteger()
@@ -350,7 +375,7 @@ class ConstraintsValidator : ConstraintValidator<Constraints, Any?> {
                 }
                 doValidate(validator, annotation, value, context)
             }
-            ConstraintType.PositiveOrZero -> {
+            is PositiveOrZero -> {
                 val validator = when (value) {
                     is BigDecimal -> PositiveOrZeroValidatorForBigDecimal()
                     is BigInteger -> PositiveOrZeroValidatorForBigInteger()
@@ -367,7 +392,7 @@ class ConstraintsValidator : ConstraintValidator<Constraints, Any?> {
                 }
                 doValidate(validator, annotation, value, context)
             }
-            ConstraintType.Size -> {
+            is Size -> {
                 val validator = when (value) {
                     is Array<*> -> SizeValidatorForArray()
                     is BooleanArray -> SizeValidatorForArraysOfBoolean()
@@ -388,25 +413,25 @@ class ConstraintsValidator : ConstraintValidator<Constraints, Any?> {
 
 
             // hibernate定义的约束
-            ConstraintType.CodePointLength -> doValidate(CodePointLengthValidator(), annotation, value, context)
-            ConstraintType.CreditCardNumber -> {
+            is CodePointLength -> doValidate(CodePointLengthValidator(), annotation, value, context)
+            is CreditCardNumber -> {
                 val ignoreNonDigitCharacters = (annotation as CreditCardNumber).ignoreNonDigitCharacters
                 val constructor = LuhnCheck::class.constructors.first()
                 val luhnCheck = constructor.callBy(mapOf(constructor.parameters[3] to ignoreNonDigitCharacters))
                 doValidate(LuhnCheckValidator(), luhnCheck, value, context)
             }
-            ConstraintType.Currency -> {
+            is Currency -> {
                 doValidate(CurrencyValidatorForMonetaryAmount(), annotation, value, context)
             }
-            ConstraintType.EAN -> doValidate(EANValidator(), annotation, value, context)
-            ConstraintType.ISBN -> doValidate(ISBNValidator(), annotation, value, context)
-            ConstraintType.Length -> doValidate(LengthValidator(), annotation, value, context)
-            ConstraintType.LuhnCheck -> doValidate(LuhnCheckValidator(), annotation, value, context)
-            ConstraintType.Mod10Check -> doValidate(Mod10CheckValidator(), annotation, value, context)
-            ConstraintType.Mod11Check -> doValidate(Mod11CheckValidator(), annotation, value, context)
-            ConstraintType.ParameterScriptAssert ->
+            is EAN -> doValidate(EANValidator(), annotation, value, context)
+            is ISBN -> doValidate(ISBNValidator(), annotation, value, context)
+            is Length -> doValidate(LengthValidator(), annotation, value, context)
+            is LuhnCheck -> doValidate(LuhnCheckValidator(), annotation, value, context)
+            is Mod10Check -> doValidate(Mod10CheckValidator(), annotation, value, context)
+            is Mod11Check -> doValidate(Mod11CheckValidator(), annotation, value, context)
+            is ParameterScriptAssert ->
                 doValidate(ParameterScriptAssertValidator(), annotation, value, context)
-            ConstraintType.Range -> {
+            is Range -> {
                 annotation as Range
                 val minConstructor = Min::class.constructors.first()
                 val minAnnotation = minConstructor.callBy(mapOf(minConstructor.parameters[3] to annotation.min))
@@ -436,21 +461,22 @@ class ConstraintsValidator : ConstraintValidator<Constraints, Any?> {
                     else -> error("Range约束注解不支持【${value::class}】类型的校验！")
                 }
             }
-            ConstraintType.ScriptAssert -> doValidate(ScriptAssertValidator(), annotation, value, context)
-            ConstraintType.UniqueElements -> doValidate(UniqueElementsValidator(), annotation, value, context)
-            ConstraintType.URL -> doValidate(URLValidator(), annotation, value, context)
+//            is ScriptAssert -> doValidate(ScriptAssertValidator(), annotation, value, context) //kuark暂不支持
+            is UniqueElements -> doValidate(UniqueElementsValidator(), annotation, value, context)
+            is URL -> doValidate(URLValidator(), annotation, value, context)
 
 
             // kuark定义的约束
-            ConstraintType.AtLeast -> doValidate(AtLeastValidator(), annotation, bean, context)
-            ConstraintType.CnIdCardNo -> doValidate(CnIdCardNoValidator(), annotation, value, context)
-            ConstraintType.Compare -> doValidate(CompareValidator(), annotation, value, context)
-            ConstraintType.CustomConstraint -> doValidate(CustomConstraintValidator(), annotation, value, context)
-            ConstraintType.DateTime -> doValidate(DateTimeValidator(), annotation, value, context)
-            ConstraintType.DictEnumCode -> doValidate(DictEnumCodeValidator(), annotation, value, context)
-            ConstraintType.Each -> doValidate(EachValidator(), annotation, value, context)
-            ConstraintType.NotNullOn -> doValidate(NotNullOnValidator(), annotation, value, context)
-            ConstraintType.Series -> doValidate(SeriesValidator(), annotation, value, context)
+            is AtLeast -> doValidate(AtLeastValidator(), annotation, bean, context)
+            is CnIdCardNo -> doValidate(CnIdCardNoValidator(), annotation, value, context)
+            is Compare -> doValidate(CompareValidator(), annotation, value, context)
+            is CustomConstraint -> doValidate(CustomConstraintValidator(), annotation, value, context)
+            is DateTime -> doValidate(DateTimeValidator(), annotation, value, context)
+            is DictEnumCode -> doValidate(DictEnumCodeValidator(), annotation, value, context)
+            is NotNullOn -> doValidate(NotNullOnValidator(), annotation, value, context)
+            is Series -> doValidate(SeriesValidator(), annotation, value, context)
+
+            else -> error("Constraints约束不支持【${annotation.annotationClass}】作为其子约束！")
         }
     }
 

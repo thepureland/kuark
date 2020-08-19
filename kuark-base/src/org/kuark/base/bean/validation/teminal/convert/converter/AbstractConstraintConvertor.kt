@@ -29,9 +29,9 @@ abstract class AbstractConstraintConvertor(
      * 返回具体约束注解的规则
      *
      * @param constraintAnnotation 具体约束注解(不会是其内部注解List)
-     * @return MutableMap<注解属性名，注解属性值>
+     * @return LinkedHashMap<注解属性名，注解属性值>
      */
-    protected abstract fun getRule(constraintAnnotation: Annotation): MutableMap<String, Any>
+    protected abstract fun getRule(constraintAnnotation: Annotation): LinkedHashMap<String, Any>
 
     /**
      * 处理约束注解（可能是约束注解，也可能是约束的内部注解List）

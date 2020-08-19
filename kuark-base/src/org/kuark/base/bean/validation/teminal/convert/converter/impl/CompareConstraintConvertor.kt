@@ -13,7 +13,7 @@ import kotlin.reflect.full.starProjectedType
  */
 class CompareConstraintConvertor(annotation: Annotation) : DefaultConstaintConvertor(annotation) {
 
-    override fun getRule(constraintAnnotation: Annotation): MutableMap<String, Any> {
+    override fun getRule(constraintAnnotation: Annotation): LinkedHashMap<String, Any> {
         val map = super.getRule(constraintAnnotation)
         val beanClass = context.beanClass
         val returnType = beanClass.getMemberProperty(context.property).returnType

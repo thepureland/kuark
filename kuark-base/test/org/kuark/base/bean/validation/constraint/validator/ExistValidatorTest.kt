@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test
 import org.kuark.base.bean.validation.constraint.annotaions.Constraints
 import org.kuark.base.bean.validation.constraint.annotaions.Exist
 import org.kuark.base.bean.validation.kit.ValidationKit
-import org.kuark.base.bean.validation.support.ConstraintType
 import javax.validation.constraints.NotBlank
 
 /**
@@ -36,7 +35,6 @@ internal class ExistValidatorTest {
 
         @get:Exist(
             Constraints(
-                [ConstraintType.NotBlank],
                 notBlank = NotBlank(message = "联系方式不能为空"),
             ),
             message = "联系方式至少填一种"
@@ -44,7 +42,7 @@ internal class ExistValidatorTest {
         val contactWays: Array<String>?,
 
         @get:Exist(
-            Constraints([ConstraintType.NotBlank], notBlank = NotBlank(message = "姓名不能为空"))
+            Constraints(notBlank = NotBlank(message = "姓名不能为空"))
         )
         val name: String?
 

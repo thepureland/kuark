@@ -11,8 +11,8 @@ import kotlin.reflect.full.memberProperties
  */
 open class DefaultConstaintConvertor(annotation: Annotation) : AbstractConstraintConvertor(annotation) {
 
-    override fun getRule(constraintAnnotation: Annotation): MutableMap<String, Any> {
-        val rules = mutableMapOf<String, Any>()
+    override fun getRule(constraintAnnotation: Annotation): LinkedHashMap<String, Any> {
+        val rules = linkedMapOf<String, Any>()
         constraintAnnotation.annotationClass.memberProperties.forEach {
             if (it.name != "groups" && it.name != "payload") {
                 rules[it.name] = it.call(constraintAnnotation)!!

@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test
 import org.kuark.base.bean.validation.constraint.annotaions.Constraints
 import org.kuark.base.bean.validation.constraint.annotaions.Each
 import org.kuark.base.bean.validation.kit.ValidationKit
-import org.kuark.base.bean.validation.support.ConstraintType
 import javax.validation.constraints.NotBlank
 
 /**
@@ -41,7 +40,6 @@ internal class EachValidatorTest {
 
         @get:Each(
             Constraints(
-                [ConstraintType.NotBlank, ConstraintType.Length],
                 notBlank = NotBlank(message = "联系方式都不能为空"),
                 length = Length(min = 8, max = 32, message = "联系方式的长度都必须在8到32之间")
             )
@@ -49,7 +47,7 @@ internal class EachValidatorTest {
         val contactWays: Array<String>?,
 
         @get:Each(
-            Constraints([ConstraintType.NotBlank], notBlank = NotBlank(message = "姓名不能为空"))
+            Constraints(notBlank = NotBlank(message = "姓名不能为空"))
         )
         val name: String?
 

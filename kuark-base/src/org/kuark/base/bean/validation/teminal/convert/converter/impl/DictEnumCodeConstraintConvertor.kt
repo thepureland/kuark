@@ -11,7 +11,7 @@ import org.kuark.base.lang.EnumKit
  */
 class DictEnumCodeConstraintConvertor(annotation: Annotation) : DefaultConstaintConvertor(annotation) {
 
-    override fun getRule(constraintAnnotation: Annotation): MutableMap<String, Any> {
+    override fun getRule(constraintAnnotation: Annotation): LinkedHashMap<String, Any> {
         val map = super.getRule(constraintAnnotation)
         constraintAnnotation as DictEnumCode
         map.remove("enumClass")

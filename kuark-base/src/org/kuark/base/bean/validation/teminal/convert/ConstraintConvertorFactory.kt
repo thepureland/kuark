@@ -1,11 +1,8 @@
 package org.kuark.base.bean.validation.teminal.convert
 
-import org.kuark.base.bean.validation.constraint.annotaions.Compare
-import org.kuark.base.bean.validation.constraint.annotaions.DictEnumCode
+import org.kuark.base.bean.validation.constraint.annotaions.*
 import org.kuark.base.bean.validation.teminal.convert.converter.IConstraintConvertor
-import org.kuark.base.bean.validation.teminal.convert.converter.impl.CompareConstraintConvertor
-import org.kuark.base.bean.validation.teminal.convert.converter.impl.DefaultConstaintConvertor
-import org.kuark.base.bean.validation.teminal.convert.converter.impl.DictEnumCodeConstraintConvertor
+import org.kuark.base.bean.validation.teminal.convert.converter.impl.*
 
 /**
  * 约束注解->终端约束转换器工厂
@@ -19,6 +16,10 @@ object ConstraintConvertorFactory {
         when (annotation.annotationClass) {
             DictEnumCode::class -> DictEnumCodeConstraintConvertor(annotation)
             Compare::class, Compare.List::class -> CompareConstraintConvertor(annotation)
+            NotNullOn::class -> NotNullOnConstraintConvertor(annotation)
+            Each::class -> EachConstraintConvertor(annotation)
+            Exist::class -> ExistConstraintConvertor(annotation)
+            Constraints::class -> ConstraintsConstraintConvertor(annotation)
             else -> DefaultConstaintConvertor(annotation)
         }
 

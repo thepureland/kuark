@@ -1,6 +1,6 @@
 package org.kuark.base.bean.validation.constraint.validator
 
-import org.kuark.base.bean.validation.constraint.annotaions.CustomConstraint
+import org.kuark.base.bean.validation.constraint.annotaions.Custom
 import org.kuark.base.bean.validation.support.IBeanValidator
 import org.kuark.base.bean.validation.support.ValidationContext
 import javax.validation.ConstraintValidator
@@ -13,12 +13,12 @@ import kotlin.reflect.KClass
  * @author K
  * @since 1.0.0
  */
-class CustomConstraintValidator : ConstraintValidator<CustomConstraint, Any?> {
+class CustomConstraintValidator : ConstraintValidator<Custom, Any?> {
 
-    private lateinit var customConstraint: CustomConstraint
+    private lateinit var custom: Custom
 
-    override fun initialize(customConstraint: CustomConstraint) {
-        this.customConstraint = customConstraint
+    override fun initialize(custom: Custom) {
+        this.custom = custom
     }
 
     override fun isValid(value: Any?, constraintValidatorContext: ConstraintValidatorContext): Boolean {
@@ -27,7 +27,7 @@ class CustomConstraintValidator : ConstraintValidator<CustomConstraint, Any?> {
         }
 
         val bean = ValidationContext.get(constraintValidatorContext)!!
-        val validatorClass = customConstraint.checkClass as KClass<IBeanValidator<Any>>
+        val validatorClass = custom.checkClass as KClass<IBeanValidator<Any>>
         val validator = validatorClass.java.getDeclaredConstructor().newInstance()
         return validator.validate(bean)
     }

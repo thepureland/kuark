@@ -9,7 +9,6 @@ import kotlin.reflect.KClass
 /**
  * 自定义约束注解，可以由用户自行实现校验逻辑，属性级别注解。
  *
- *
  * @author K
  * @since 1.0.0
  */
@@ -18,7 +17,7 @@ import kotlin.reflect.KClass
 @Retention(AnnotationRetention.RUNTIME)
 @MustBeDocumented
 @Repeatable
-annotation class CustomConstraint(
+annotation class Custom(
 
     /** 执行逻辑校验的类 */
     val checkClass: KClass<out IBeanValidator<*>>, //!!! 名称不能以valid开头，会报HV000073: Parameters starting with 'valid' are not allowed in a constraint.
@@ -62,5 +61,5 @@ annotation class CustomConstraint(
     @Target(AnnotationTarget.FUNCTION, AnnotationTarget.PROPERTY_GETTER, AnnotationTarget.PROPERTY_SETTER)
     @Retention(AnnotationRetention.RUNTIME)
     @MustBeDocumented
-    annotation class List(vararg val value: org.kuark.base.bean.validation.constraint.annotaions.CustomConstraint)
+    annotation class List(vararg val value: org.kuark.base.bean.validation.constraint.annotaions.Custom)
 }

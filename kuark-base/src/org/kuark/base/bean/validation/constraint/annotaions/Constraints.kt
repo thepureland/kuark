@@ -127,7 +127,7 @@ annotation class Constraints(
     /**  */
     val compare: Compare = Compare("", message = MESSAGE),
     /**  */
-    val customConstraint: CustomConstraint = CustomConstraint(IBeanValidator::class, message = MESSAGE),
+    val custom: Custom = Custom(IBeanValidator::class, message = MESSAGE),
     /**  */
     val dateTime: DateTime = DateTime("", message = MESSAGE),
     /**  */

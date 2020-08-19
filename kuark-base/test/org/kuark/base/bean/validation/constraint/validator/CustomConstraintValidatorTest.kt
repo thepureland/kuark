@@ -3,7 +3,7 @@ package org.kuark.base.bean.validation.constraint.validator
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Test
-import org.kuark.base.bean.validation.constraint.annotaions.CustomConstraint
+import org.kuark.base.bean.validation.constraint.annotaions.Custom
 import org.kuark.base.bean.validation.kit.ValidationKit
 import org.kuark.base.bean.validation.support.IBeanValidator
 
@@ -29,14 +29,14 @@ internal class CustomConstraintValidatorTest {
 
     internal data class TestRemoteBean(
 
-        @get:CustomConstraint(checkClass = ExistValidator::class, message = "用户名已存在")
+        @get:Custom(checkClass = ExistValidator::class, message = "用户名已存在")
         val username: String?,
 
         val mockExist: Boolean = false, // 模拟用户名是否存在
 
-        @get:CustomConstraint.List(
-            CustomConstraint(checkClass = Rule1Validator::class, message = "不满足规则1"),
-            CustomConstraint(checkClass = Rule2Validator::class, message = "不满足规则2")
+        @get:Custom.List(
+            Custom(checkClass = Rule1Validator::class, message = "不满足规则1"),
+            Custom(checkClass = Rule2Validator::class, message = "不满足规则2")
         )
         val address: String?
     )

@@ -470,7 +470,7 @@ class ConstraintsValidator : ConstraintValidator<Constraints, Any?> {
             is AtLeast -> doValidate(AtLeastValidator(), annotation, bean, context)
             is CnIdCardNo -> doValidate(CnIdCardNoValidator(), annotation, value, context)
             is Compare -> doValidate(CompareValidator(), annotation, value, context)
-            is CustomConstraint -> doValidate(CustomConstraintValidator(), annotation, value, context)
+            is Custom -> doValidate(CustomConstraintValidator(), annotation, value, context)
             is DateTime -> doValidate(DateTimeValidator(), annotation, value, context)
             is DictEnumCode -> doValidate(DictEnumCodeValidator(), annotation, value, context)
             is NotNullOn -> doValidate(NotNullOnValidator(), annotation, value, context)

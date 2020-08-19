@@ -6,6 +6,7 @@ import org.hibernate.validator.constraints.time.DurationMin
 import org.junit.jupiter.api.Test
 import org.kuark.base.bean.validation.constraint.annotaions.*
 import org.kuark.base.bean.validation.support.Depends
+import org.kuark.base.bean.validation.support.IBeanValidator
 import org.kuark.base.bean.validation.support.RegExps
 import org.kuark.base.bean.validation.support.SeriesType
 import org.kuark.base.support.enums.Sex
@@ -48,6 +49,7 @@ internal class TeminalConstraintsCreatorTest {
 
         @get:NotBlank
         @get:CodePointLength(min = 6, max = 32, message = "用户名字符数必须在6-32之间")
+        @get:Custom(UsernameValidator::class)
         val username: String?,
 
         @get:NotNull
@@ -204,5 +206,14 @@ internal class TeminalConstraintsCreatorTest {
         val city: String?
 
     )
+
+    internal class UsernameValidator: IBeanValidator<TestRegisterBean> {
+
+        override fun validate(bean: TestRegisterBean): Boolean {
+            // 校验用户名是否可用
+            return true
+        }
+
+    }
 
 }

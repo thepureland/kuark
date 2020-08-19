@@ -33,9 +33,7 @@ import java.util.*
 import javax.money.MonetaryAmount
 import javax.validation.ConstraintValidator
 import javax.validation.ConstraintValidatorContext
-import javax.validation.constraints.Max
-import javax.validation.constraints.Min
-import javax.validation.constraints.NotNull
+import javax.validation.constraints.*
 import kotlin.reflect.full.declaredMemberProperties
 import kotlin.reflect.full.starProjectedType
 
@@ -97,7 +95,8 @@ class ConstraintsValidator : ConstraintValidator<Constraints, Any?> {
         context: ConstraintValidatorContext
     ): Boolean {
         if (value == null) {
-            return annotation.annotationClass != NotNull::class
+            return annotation.annotationClass != NotNull::class && annotation.annotationClass != NotEmpty::class
+                    && annotation.annotationClass != NotBlank::class
         }
 
         return when (constraintType) {

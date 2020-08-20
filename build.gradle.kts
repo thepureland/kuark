@@ -33,7 +33,7 @@ buildscript {
 
 
 allprojects {
-    group = "org.kuark"
+    group = "io.kuark"
     version = "1.0.0-SNAPSHOT"
 
     repositories {

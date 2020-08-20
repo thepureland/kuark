@@ -1,7 +1,7 @@
 logging:
   level:
     root: debug
-    org.kuark.xxx: debug
+    io.kuark.xxx: debug
 
 spring:
   session:

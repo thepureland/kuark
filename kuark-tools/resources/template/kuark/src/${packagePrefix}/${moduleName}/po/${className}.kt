@@ -1,10 +1,10 @@
 package ${packagePrefix}.${moduleName}.po
 
-import org.kuark.data.jdbc.support.DbEntityFactory
+import io.kuark.data.jdbc.support.DbEntityFactory
 <#if poSuperClass == "IDbEntity">
-import org.kuark.data.jdbc.support.IDbEntity
+import io.kuark.data.jdbc.support.IDbEntity
 <#elseif poSuperClass == "IMaintainableDbEntity">
-import org.kuark.data.jdbc.support.IMaintainableDbEntity
+import io.kuark.data.jdbc.support.IMaintainableDbEntity
 </#if>
 <#if containsLocalDateTimeColumn>
 import java.time.LocalDateTime

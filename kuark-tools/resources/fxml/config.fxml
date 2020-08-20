@@ -10,7 +10,7 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0"
             prefWidth="1024.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="org.kuark.tools.codegen.fx.controller.ConfigController">
+            fx:controller="io.kuark.tools.codegen.fx.controller.ConfigController">
     <children>
         <TitledPane animated="false" layoutX="14.0" layoutY="14.0" prefHeight="149.0" prefWidth="572.0" text="数据库"
                     AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0">

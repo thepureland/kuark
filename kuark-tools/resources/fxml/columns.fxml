@@ -3,11 +3,11 @@
 <?import javafx.scene.control.cell.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import org.kuark.tools.codegen.fx.ui.SortComboBoxTableCellFactory?>
-<?import org.kuark.ui.jfx.controls.table.cell.factory.*?>
+<?import io.kuark.tools.codegen.fx.ui.SortComboBoxTableCellFactory?>
+<?import io.kuark.ui.jfx.controls.table.cell.factory.*?>
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0"
             prefWidth="1024.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="org.kuark.tools.codegen.fx.controller.ColumnsController">
+            fx:controller="io.kuark.tools.codegen.fx.controller.ColumnsController">
     <children>
         <TableView fx:id="columnTable" editable="true" layoutX="14.0" layoutY="46.0" prefHeight="339.0"
                    prefWidth="573.0" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="14.0"

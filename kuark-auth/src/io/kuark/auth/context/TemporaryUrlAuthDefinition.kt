@@ -2,6 +2,7 @@ package io.kuark.auth.context
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.stereotype.Component
+import org.springframework.stereotype.Service
 
 /**
  * 临时的Url授权定义, 将被使用者定义的相同bean name的Url授权定义Bean替代。
@@ -9,9 +10,7 @@ import org.springframework.stereotype.Component
  * @author K
  * @since 1.0.0
  */
-@Component("urlAuthDefinition")
-@ConditionalOnMissingBean(type = ["urlAuthDefinition"])
-class TemporaryUrlAuthDefinition : IUrlAuthDefinition {
+open class TemporaryUrlAuthDefinition : IUrlAuthDefinition {
 
     override fun getLoginUrl(): String = "/login"
 

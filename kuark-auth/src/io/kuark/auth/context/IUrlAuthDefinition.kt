@@ -32,4 +32,8 @@ interface IUrlAuthDefinition {
      */
     fun getDefinitionMap(): LinkedHashMap<String, String>
 
+    companion object {
+        const val BEAN_NAME = "urlAuthDefinition"
+    }
+
 }

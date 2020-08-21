@@ -1,18 +1,18 @@
 package io.kuark.auth.context
 
+import org.apache.shiro.mgt.SecurityManager
+import org.apache.shiro.realm.AuthorizingRealm
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.apache.shiro.mgt.SecurityManager
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Qualifier
+import javax.annotation.Resource
 
 @Configuration
 open class AuthConfig {
 
-    @Autowired
-    @Qualifier("urlAuthDefinition")
+    @Resource(name = IUrlAuthDefinition.BEAN_NAME)
     private lateinit var urlAuthDefinition: IUrlAuthDefinition
 
     @Bean(name = ["shiroFilter"])
@@ -39,8 +39,15 @@ open class AuthConfig {
 
     //TODO https://blog.csdn.net/bicheng4769/article/details/86668209
     @Bean
-    fun customRealm(): CustomRealm {
-        return CustomRealm()
+    @ConditionalOnMissingBean
+    open fun customRealm(): AuthorizingRealm {
+        return AuthRealm()
+    }
+
+    @Bean(name = [IUrlAuthDefinition.BEAN_NAME])
+    @ConditionalOnMissingBean
+    open fun urlAuthDefinition(): IUrlAuthDefinition {
+        return TemporaryUrlAuthDefinition()
     }
 
 

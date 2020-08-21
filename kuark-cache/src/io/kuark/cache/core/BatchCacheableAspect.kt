@@ -7,6 +7,7 @@ import org.aspectj.lang.annotation.Aspect
 import org.aspectj.lang.annotation.Pointcut
 import org.aspectj.lang.reflect.MethodSignature
 import io.kuark.base.lang.reflect.TypeKit
+import io.kuark.base.lang.string.toType
 import io.kuark.cache.kit.CacheKit
 import io.kuark.context.spring.SpringKit
 import org.springframework.cache.annotation.CacheConfig
@@ -151,7 +152,7 @@ class BatchCacheableAspect {
                     } else if (paramValue is Array<*>) {
                         firstElemValue = paramValue.first()
                     }
-                    elemValues.add(TypeKit.valueOf(elemValueStr, firstElemValue!!::class))
+                    elemValues.add(elemValueStr.toType(firstElemValue!!::class))
                 }
                 var params: Any? = null
                 when (clazz) {

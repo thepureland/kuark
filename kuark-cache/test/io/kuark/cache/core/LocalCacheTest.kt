@@ -1,11 +1,11 @@
 package io.kuark.cache.core
 
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 import io.kuark.cache.context.CacheNames
 import io.kuark.cache.enums.CacheStrategy
 import io.kuark.test.SpringTest
 import io.kuark.test.TestSpringBootContextLoader
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.cache.CacheManager

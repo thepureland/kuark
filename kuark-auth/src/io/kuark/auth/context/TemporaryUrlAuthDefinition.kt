@@ -1,9 +1,5 @@
 package io.kuark.auth.context
 
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
-import org.springframework.stereotype.Component
-import org.springframework.stereotype.Service
-
 /**
  * 临时的Url授权定义, 将被使用者定义的相同bean name的Url授权定义Bean替代。
  *

@@ -65,7 +65,7 @@ class CodeGenerator(
         conf.defaultEncoding = "UTF-8"
         conf.setClassForTemplateLoading(
             CodeGenerator::class.java,
-            "/template/${_root_ide_package_.io.kuark.tools.codegen.core.CodeGeneratorContext.config.getTemplateInfo()!!.name}"
+            "/template/${CodeGeneratorContext.config.getTemplateInfo()!!.name}"
         )
         val autoIncludes = listOf("macro.include")
         val availableAutoInclude =

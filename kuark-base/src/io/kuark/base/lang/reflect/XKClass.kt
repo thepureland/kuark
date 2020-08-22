@@ -1,7 +1,10 @@
 package io.kuark.base.lang.reflect
 
 import kotlin.reflect.KClass
+import kotlin.reflect.KFunction
 import kotlin.reflect.KProperty
+import kotlin.reflect.KType
+import kotlin.reflect.full.memberFunctions
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.superclasses
 
@@ -45,6 +48,16 @@ fun KClass<*>.getMemberPropertyValue(target: Any, propertyName: String): Any? {
     return memberProperty.call(target)
 }
 
+/**
+ * 返回给定名称的成员函数对象
+ *
+ * @param functionName 成员函数名
+ * @return 成员函数对象
+ * @throws NoSuchElementException 当不存在时
+ */
+fun KClass<*>.getMemberFunction(functionName: String): KFunction<*> =
+    this.memberFunctions.first{ it.name == functionName }
+
 
 /**
  * 返回当前类的直接父类
@@ -52,4 +65,18 @@ fun KClass<*>.getMemberPropertyValue(target: Any, propertyName: String): Any? {
  * @return 直接父类
  * @throws NoSuchElementException 当不存在时
  */
-fun KClass<*>.getDirectSuperClass(): KClass<*> = this.superclasses.first { it.constructors.isNotEmpty() }
+fun KClass<*>.getSuperClass(): KClass<*> = this.superclasses.first { it.constructors.isNotEmpty() }
+
+/**
+ * 返回当前类的直接父接口
+ *
+ * @return 直接父接口列表
+ */
+fun KClass<*>.getSuperInterfaces(): List<KClass<*>> = this.superclasses.filter { it.constructors.isEmpty() }
+
+/**
+ * 匹配第一个与代表当前类的Type
+ *
+ * @return 第一个与代表当前类的Type
+ */
+fun KClass<*>.firstMatchTypeOf(types: Collection<KType>): KType = types.first { it.classifier == this }

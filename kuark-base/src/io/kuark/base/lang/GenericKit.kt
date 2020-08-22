@@ -1,10 +1,12 @@
 package io.kuark.base.lang
 
+import io.kuark.base.lang.reflect.firstMatchTypeOf
+import io.kuark.base.lang.reflect.getSuperClass
+import io.kuark.base.lang.reflect.getSuperInterfaces
 import io.kuark.base.log.LogFactory
-import java.lang.reflect.Field
-import java.lang.reflect.Method
-import java.lang.reflect.ParameterizedType
-import kotlin.reflect.KClass
+import kotlin.reflect.*
+import kotlin.reflect.full.starProjectedType
+import kotlin.reflect.jvm.jvmErasure
 
 /**
  * 泛型工具类
@@ -18,114 +20,81 @@ object GenericKit {
 
 
     /**
-     * 获取指定类的父类的泛型参数的实际类型, 如果没有非Any的父类，取实现的第一个接口。
+     * 获取指定类的直接父类的泛型参数的实际类型, 如果没有非Any的父类，取实现的第一个接口。
      *
      * @param clazz 需要获取泛型参数实际类型的类, 该类必须继承泛型父类或实现泛型接口
      * @param index 泛型参数所在索引, 从0开始.
-     * @return 泛型参数的实际类型. 如果没有实现ParameterizedType接口，即不支持泛型，将直接返回Any::class, 如果索引越界返回null
+     * @return 泛型参数的实际类型。如果不支持泛型，将返回Nothing::class;泛型参数如果为"*"，将返回Any::class;如果索引越界将返回null
      * @since 1.0.0
      */
-    fun getSuperClassGenricType(clazz: KClass<*>, index: Int = 0): KClass<*>? {
+    fun getSuperClassGenricClass(clazz: KClass<*>, index: Int = 0): KClass<*>? {
         if (clazz == Any::class) {
-            return null
+            return Nothing::class
         }
-        var genType = clazz.java.genericSuperclass // 得到泛型父类
-        if (genType == Any::class.java) {
+
+        var directSuperType = clazz.getSuperClass().firstMatchTypeOf(clazz.supertypes)
+        if (directSuperType == Any::class.starProjectedType) {
             // 没有非Any的父类，取实现的第一个接口
-            val genericInterfaces = clazz.java.genericInterfaces
+            val genericInterfaces = clazz.getSuperInterfaces()
             if (genericInterfaces.isNotEmpty()) {
-                genType = genericInterfaces[0]
+                directSuperType = genericInterfaces[0].firstMatchTypeOf(clazz.supertypes)
             }
         }
-        // 如果没有实现ParameterizedType接口，即不支持泛型，直接返回Any::class
-        if (genType !is ParameterizedType) {
-            val superclass = clazz.java.superclass as Class<*>
-            return if (superclass == Any::class.java) {
-                Any::class
-            } else {
-                getSuperClassGenricType(superclass.kotlin, index) // 往父类取
-            }
+
+        val args = directSuperType.arguments
+        if(args.isEmpty()) {
+            // 可能是在父类做的参数化
+            return getSuperClassGenricClass(clazz.getSuperClass(), index) // 往父类取
         }
-        // 返回表示此类型实际类型参数的Type对象的数组,数组里放的都是对应类型的Class,
-        // 如NameAndAge extends Pair<String, Integer>就返回String和Integer类型
-        val params = genType.actualTypeArguments
-        if (index < 0 || index >= params.size) {
+
+        if (args.isEmpty()) return Nothing::class
+        if (index < 0 || index >= args.size) {
             LOG.error("输入的索引" + if (index < 0) "不能小于0" else "超出了参数的总数")
             return null
         }
-        return if (params[index] !is Class<*>) {
-            val typeName = (params[index] as ParameterizedType).rawType.typeName
-            (Class.forName(typeName) as Class<*>).kotlin
-        } else (params[index] as Class<*>).kotlin
+        val type = args[index].type
+        return type?.jvmErasure ?: Any::class // 泛型参数为*时返回Any::class
     }
 
-    /**
-     * 获取方法返回值泛型参数的实际类型.
-     *
-     * @param method 方法
-     * @param index 泛型参数所在索引, 从0开始.
-     * @return 泛型参数的实际类型, 如果没有实现ParameterizedType接口，即不支持泛型，将直接返回Any::class, 如果索引越界返回null
-     * @since 1.0.0
-     */
-    fun getMethodGenericReturnType(method: Method, index: Int = 0): KClass<*>? {
-        val returnType = method.genericReturnType
-        if (returnType is ParameterizedType) {
-            val typeArguments = returnType.actualTypeArguments
-            if (index < 0 || index >= typeArguments.size) {
-                LOG.error("输入的索引" + if (index < 0) "不能小于0" else "超出了参数的总数")
-                return null
-            }
-            return (typeArguments[index] as Class<*>).kotlin
-        }
-        return Any::class
-    }
 
     /**
-     * 获取方法输入参数第index个输入参数的所有泛型参数的实际类型
+     * 获取可调用对象第index个入参类型的所有泛型参数的实际类型
      *
-     * @param method 方法
-     * @param index 第几个输入参数
-     * @return 输入参数的泛型参数的实际类型列表, 如果没有实现ParameterizedType接口，即不支持泛型，将直接返回空列表, 如果索引越界返回null
+     * @param callable 可调用对象，比如：函数
+     * @param index 第几个输入参数。第0个输入参数为调用该函数的对象，隐式传递，所以显示的函数参数是从第1个算起
+     * @return 泛型参数的实际类型列表。如果不支持泛型，元素类型将为Nothing::class;泛型参数如果为"*"，元素类型将为Any::class;如果索引越界元素将为null
      * @since 1.0.0
      */
-    fun getMethodGenericParameterTypes(method: Method, index: Int = 0): List<KClass<*>>? {
-        val results = mutableListOf<KClass<*>>()
-        val genericParameterTypes = method.genericParameterTypes
-        if (index < 0 || index >= genericParameterTypes.size) {
+    fun getParameterTypeGenericClass(callable: KCallable<*>, index: Int = 1): List<KClass<*>>? {
+        if (index < 0 || index >= callable.parameters.size) {
             LOG.error("输入的索引" + if (index < 0) "不能小于0" else "超出了参数的总数")
             return null
         }
-        val genericParameterType = genericParameterTypes[index]
-        if (genericParameterType is ParameterizedType) {
-            val parameterArgTypes = genericParameterType.actualTypeArguments
-            for (parameterArgType in parameterArgTypes) {
-                val parameterArgClass = parameterArgType as Class<*>
-                results.add(parameterArgClass.kotlin)
-            }
-            return results
-        }
-        return results
+        val param = callable.parameters[index]
+        val args = param.type.arguments
+        if (args.isEmpty()) return listOf(Nothing::class)
+        return args.map { it.type?.jvmErasure ?: Any::class }
     }
 
     /**
-     * 获取字段泛型参数的实际类型.
+     * 获取可调用对象返回值泛型参数的实际类型.
      *
-     * @param field 字段
+     * @param callable 可调用对象，比如：属性、函数
      * @param index 泛型参数所在索引, 从0开始.
-     * @return 泛型参数的实际类型, 如果没有实现ParameterizedType接口，即不支持泛型，将直接返回Any::class, 如果索引越界返回null
+     * @return 泛型参数的实际类型。如果不支持泛型，将返回Nothing::class;泛型参数如果为"*"，将返回Any::class;如果索引越界将返回null
      * @since 1.0.0
      */
-    fun getPropertyGenericType(field: Field, index: Int = 0): KClass<*>? {
-        val genericFieldType = field.genericType
-        if (genericFieldType is ParameterizedType) {
-            val fieldArgTypes = genericFieldType.actualTypeArguments
-            if (index < 0 || index >= fieldArgTypes.size) {
-                LOG.error("输入的索引" + if (index < 0) "不能小于0" else "超出了参数的总数")
-                return null
-            }
-            return (fieldArgTypes[index] as Class<*>).kotlin
+    fun getReturnTypeGenericClass(callable: KCallable<*>, index: Int = 0): KClass<*>? {
+        val args = callable.returnType.arguments
+        if (args.isEmpty()) {
+            return Nothing::class
         }
-        return Any::class
+        if (index < 0 || index >= args.size) {
+            LOG.error("输入的索引" + if (index < 0) "不能小于0" else "超出了泛型参数的总数")
+            return null
+        }
+        val type = args[index].type
+        return type?.jvmErasure ?: Any::class // 泛型参数为*时返回Any::class
     }
 
 }

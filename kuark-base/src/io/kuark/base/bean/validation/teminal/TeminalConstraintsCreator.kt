@@ -4,7 +4,7 @@ import io.kuark.base.bean.validation.teminal.convert.ConstraintConvertContext
 import io.kuark.base.bean.validation.teminal.convert.ConstraintConvertorFactory
 import io.kuark.base.data.json.JsonKit
 import io.kuark.base.lang.SystemKit
-import io.kuark.base.lang.reflect.getDirectSuperClass
+import io.kuark.base.lang.reflect.getSuperClass
 import io.kuark.base.lang.reflect.getMemberProperty
 import io.kuark.base.lang.reflect.isAnnotationPresent
 import javax.validation.Constraint
@@ -167,7 +167,7 @@ object TeminalConstraintsCreator {
         if (clazz != Any::class && !clazz.isAbstract) {
             val prop = clazz.getMemberProperty(property)
             if (prop == null) {
-                return getAnnotationsOnGetter(clazz.getDirectSuperClass(), property)
+                return getAnnotationsOnGetter(clazz.getSuperClass(), property)
             } else {
                 val annotations = prop.getter.annotations
                 for (annotation in annotations) {

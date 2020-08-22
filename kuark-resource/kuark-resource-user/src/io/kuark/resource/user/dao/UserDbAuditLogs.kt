@@ -18,7 +18,7 @@ object UserDbAuditLogs: StringIdTable<UserDbAuditLog>("user_db_audit_log") {
     var userAccountId = varchar("user_account_id").bindTo { it.userAccountId }
 
     /** 表名 */
-    var tableName = varchar("table_name").bindTo { it.tableName }
+    var table = varchar("table_name").bindTo { it.tableName } // tableName被Ktorm占用
 
     /** 操作时间 */
     var operateTime = datetime("operate_time").bindTo { it.operateTime }

@@ -19,25 +19,27 @@ import kotlin.reflect.KClass
 
 
 /**
- * 将String类型的值转为指定类型的值
+ * 将字符序列类型的值转为指定类型的值
  *
  * @param returnType 目标类型
  * @return 指定类型的值
  */
-fun <T: Any> String.toType(returnType: KClass<out T>): T { //TODO junit
-    return when (returnType) {
-        String::class -> this as T
-        Byte::class -> this.toByte() as T
-        Char::class -> this.toCharArray().first() as T
-        Short::class -> this.toShort() as T
-        Int::class -> this.toInt() as T
-        Boolean::class -> this.toBoolean() as T
-        Long::class -> this.toLong() as T
-        Float::class -> this.toFloat() as T
-        Double::class -> this.toDouble() as T
-        BigDecimal::class -> this.toBigDecimal() as T
-        BigInteger::class -> this.toBigInteger() as T
-        else -> throw Exception("不支持的类型【$returnType】!")
+fun <T : Any> CharSequence.toType(returnType: KClass<out T>): T { //TODO junit
+    return this.toString().run {
+        when (returnType) {
+            String::class -> this as T
+            Byte::class -> toByte() as T
+            Char::class -> toCharArray().first() as T
+            Short::class -> toShort() as T
+            Int::class -> toInt() as T
+            Boolean::class -> toBoolean() as T
+            Long::class -> toLong() as T
+            Float::class -> toFloat() as T
+            Double::class -> toDouble() as T
+            BigDecimal::class -> toBigDecimal() as T
+            BigInteger::class -> toBigInteger() as T
+            else -> error("不支持的类型【$returnType】!")
+        }
     }
 }
 
@@ -49,10 +51,10 @@ fun <T: Any> String.toType(returnType: KClass<out T>): T { //TODO junit
  * @return 替换后的字符串
  * @since 1.0.0
  */
-fun String.replaceEach(map: Map<String?, String?>): String {
+fun CharSequence.replaceEach(map: Map<String?, String?>): String {
     return if (map.isNotEmpty()) {
         this.replaceEach(map.keys.toTypedArray(), map.values.toTypedArray())
-    } else this
+    } else this.toString()
 }
 
 /**
@@ -61,7 +63,7 @@ fun String.replaceEach(map: Map<String?, String?>): String {
  * @return 转换后的十六进制表示的字符串
  * @since 1.0.0
  */
-fun String.toHexStr(): CharSequence = String(CryptoKit.encodeHex(this.toString().toByteArray()))
+fun CharSequence.toHexStr(): String = String(CryptoKit.encodeHex(this.toString().toByteArray()))
 
 /**
  * 解码十六进制表示的字符串
@@ -69,7 +71,7 @@ fun String.toHexStr(): CharSequence = String(CryptoKit.encodeHex(this.toString()
  * @return 解码后的字符串
  * @since 1.0.0
  */
-fun String.decodeHexStr(): CharSequence = String(CryptoKit.decodeHex(this.toString().toByteArray()))
+fun CharSequence.decodeHexStr(): String = String(CryptoKit.decodeHex(this.toString().toByteArray()))
 
 /**
  * 对字符串进行MD5加密后，再进行十六进制编码
@@ -78,7 +80,7 @@ fun String.decodeHexStr(): CharSequence = String(CryptoKit.decodeHex(this.toStri
  * @return 加密的字符串
  * @since 1.0.0
  */
-fun String.toMd5HexStr(saltStr: CharSequence): String = DigestKit.getMD5(this.toString(), saltStr.toString())
+fun CharSequence.toMd5HexStr(saltStr: CharSequence): String = DigestKit.getMD5(this.toString(), saltStr.toString())
 
 /**
  * 将字符串按给定的长度均分(最后一组可能不是等分的)
@@ -95,7 +97,7 @@ fun String.toMd5HexStr(saltStr: CharSequence): String = DigestKit.getMD5(this.to
  * @return 等分后每个分组组成的数组
  * @since 1.0.0
  */
-fun String.divideAverage(groupLen: Int): Array<String?> {
+fun CharSequence.divideAverage(groupLen: Int): Array<String?> {
     if (groupLen <= 0) {
         return arrayOf()
     }
@@ -126,7 +128,7 @@ fun String.divideAverage(groupLen: Int): Array<String?> {
  * @return “_”分割的字符串, 并且是大写的
  * @since 1.0.0
  */
-fun String.humpToUnderscore(): String {
+fun CharSequence.humpToUnderscore(): String {
     val sb = StringBuilder()
     sb.append(this[0])
     for (i in 1 until this.length) {
@@ -150,7 +152,7 @@ fun String.humpToUnderscore(): String {
  * @return “驼峰”式写法的字符串
  * @since 1.0.0
  */
-fun String.underscoreToHump(): String {
+fun CharSequence.underscoreToHump(): String {
     val sb = StringBuilder()
     val words = this.split("_")
     for (word in words) {
@@ -166,7 +168,7 @@ fun String.underscoreToHump(): String {
  * @return 替换后的字符串
  * @since 1.0.0
  */
-fun String.fillTemplateByObjectMap(paramMap: Map<String, Any>): CharSequence {
+fun CharSequence.fillTemplateByObjectMap(paramMap: Map<String, Any>): CharSequence {
     var templateStr = this.toString()
     for ((paramName, value) in paramMap) {
         templateStr = templateStr.replace(
@@ -187,7 +189,7 @@ fun String.fillTemplateByObjectMap(paramMap: Map<String, Any>): CharSequence {
  * @return true：如果字符串非空至少包含1个空白字符, false： 如果不包含
  * @since 1.0.0
  */
-fun String.containsWhitespace(): Boolean = StringUtils.containsWhitespace(this)
+fun CharSequence.containsWhitespace(): Boolean = StringUtils.containsWhitespace(this)
 
 
 //region ContainsAny
@@ -206,7 +208,7 @@ fun String.containsWhitespace(): Boolean = StringUtils.containsWhitespace(this)
  * @return true：任何给定的字符被找到，false：未找到
  * @since 1.0.0
  */
-fun String.containsAny(vararg searchChars: Char): Boolean = StringUtils.containsAny(this, *searchChars)
+fun CharSequence.containsAny(vararg searchChars: Char): Boolean = StringUtils.containsAny(this, *searchChars)
 
 /**
  * 检查是否字符序列包含给定的字符组 searchChars 的任何一个字符
@@ -223,7 +225,7 @@ fun String.containsAny(vararg searchChars: Char): Boolean = StringUtils.contains
  * @return true：任何给定的字符被找到，false：未找到
  * @since 1.0.0
  */
-fun String.containsAny(searchChars: CharSequence?): Boolean = StringUtils.containsAny(this, searchChars)
+fun CharSequence.containsAny(searchChars: CharSequence?): Boolean = StringUtils.containsAny(this, searchChars)
 //endregion ContainsAny
 
 //region IndexOfAnyBut chars
@@ -242,7 +244,7 @@ fun String.containsAny(searchChars: CharSequence?): Boolean = StringUtils.contai
  * @return 任何第一次不匹配的字符的下标。如果没有找到，将返回-1
  * @since 1.0.0
  */
-fun String.indexOfAnyBut(vararg searchChars: Char): Int = StringUtils.indexOfAnyBut(this, *searchChars)
+fun CharSequence.indexOfAnyBut(vararg searchChars: Char): Int = StringUtils.indexOfAnyBut(this, *searchChars)
 
 /**
  * 在字符序列中查找给定的一组字符 searchChars，返回第一次不出现给定的任何字符的位置
@@ -259,7 +261,7 @@ fun String.indexOfAnyBut(vararg searchChars: Char): Int = StringUtils.indexOfAny
  * @return 任何第一次不匹配的字符的下标。如果没有找，将返回-1
  * @since 1.0.0
  */
-fun String.indexOfAnyBut(searchChars: CharSequence): Int = StringUtils.indexOfAnyBut(this, searchChars)
+fun CharSequence.indexOfAnyBut(searchChars: CharSequence): Int = StringUtils.indexOfAnyBut(this, searchChars)
 //endregion IndexOfAnyBut chars
 
 //region ContainsOnly
@@ -278,7 +280,7 @@ fun String.indexOfAnyBut(searchChars: CharSequence): Int = StringUtils.indexOfAn
  * @return true: 如果只由valid中的字符组成或cs为空串， false: 包含其他字符
  * @since 1.0.0
  */
-fun String.containsOnly(vararg valid: Char): Boolean = StringUtils.containsOnly(this, *valid)
+fun CharSequence.containsOnly(vararg valid: Char): Boolean = StringUtils.containsOnly(this, *valid)
 
 /**
  * 检查字符序列是否只由 validChars 中的字符组成
@@ -295,7 +297,7 @@ fun String.containsOnly(vararg valid: Char): Boolean = StringUtils.containsOnly(
  * @return true: 如果只由validChars中的字符组成或为空串， false: 包含其他字符
  * @since 1.0.0
  */
-fun String.containsOnly(validChars: String?): Boolean = StringUtils.containsOnly(this, validChars)
+fun CharSequence.containsOnly(validChars: String?): Boolean = StringUtils.containsOnly(this, validChars)
 //endregion ContainsOnly
 
 //region ContainsNone
@@ -314,7 +316,7 @@ fun String.containsOnly(validChars: String?): Boolean = StringUtils.containsOnly
  * @return true: 如果都不由searchChars中的字符组成或为空串，false: 包含searchChars中的任何字符
  * @since 1.0.0
  */
-fun String.containsNone(vararg searchChars: Char): Boolean = StringUtils.containsNone(this, *searchChars)
+fun CharSequence.containsNone(vararg searchChars: Char): Boolean = StringUtils.containsNone(this, *searchChars)
 
 /**
  * 检查字符序列是否都不由字符串 invalidChars 中的字符组成
@@ -331,7 +333,7 @@ fun String.containsNone(vararg searchChars: Char): Boolean = StringUtils.contain
  * @return true: 如果都不由searchChars中的字符组成或为空串, false: 包含searchChars中的任何字符
  * @since 1.0.0
  */
-fun String.containsNone(invalidChars: String): Boolean = StringUtils.containsNone(this, invalidChars)
+fun CharSequence.containsNone(invalidChars: String): Boolean = StringUtils.containsNone(this, invalidChars)
 //endregion ContainsNone
 
 
@@ -351,7 +353,7 @@ fun String.containsNone(invalidChars: String): Boolean = StringUtils.containsNon
  * @return 最左边的字符串, 为空串或len为负数将返回空串
  * @since 1.0.0
  */
-fun String.left(len: Int): String? = StringUtils.leftPad(this, len)
+fun CharSequence.left(len: Int): String? = StringUtils.leftPad(this.toString(), len)
 
 /**
  * 返回字符串最右边的 len 个字符
@@ -368,7 +370,7 @@ fun String.left(len: Int): String? = StringUtils.leftPad(this, len)
  * @return 最左边的字符串, 为空串或len为负数将返回空串
  * @since 1.0.0
  */
-fun String.right(len: Int): String? = StringUtils.right(this, len)
+fun CharSequence.right(len: Int): String? = StringUtils.right(this.toString(), len)
 
 /**
  * 返回字符串从 pos 位置开始的 len 个字符
@@ -388,7 +390,7 @@ fun String.right(len: Int): String? = StringUtils.right(this, len)
  * @return 从 pos 位置开始的 len 个字符, 为空串或len为负数将返回空串
  * @since 1.0.0
  */
-fun String.mid(pos: Int, len: Int): String? = StringUtils.mid(this, pos, len)
+fun CharSequence.mid(pos: Int, len: Int): String? = StringUtils.mid(this.toString(), pos, len)
 //endregion Left/Right/Mid
 
 //region Substring between
@@ -406,7 +408,7 @@ fun String.mid(pos: Int, len: Int): String? = StringUtils.mid(this, pos, len)
  * @return 子串, 未找到将返回空串，tag为空串将返回空串
  * @since 1.0.0
  */
-fun String.substringBetween(tag: String): String? = StringUtils.substringBetween(this, tag) ?: ""
+fun CharSequence.substringBetween(tag: String): String? = StringUtils.substringBetween(this.toString(), tag) ?: ""
 
 /**
  * 从字符串中获取嵌在字符串 open 和 close 中间的子串，返回第一次匹配的结果
@@ -426,8 +428,8 @@ fun String.substringBetween(tag: String): String? = StringUtils.substringBetween
  * @return 子串, 未找到将返回空串，open/close为空串将返回空串
  * @since 1.0.0
  */
-fun String.substringBetween(open: String, close: String): String =
-    StringUtils.substringBetween(this, open, close) ?: ""
+fun CharSequence.substringBetween(open: String, close: CharSequence): String =
+    StringUtils.substringBetween(this.toString(), open, close.toString()) ?: ""
 
 /**
  * 从字符串中获取嵌在字符串 open 和 close 中间的子串，返回全部匹配结果
@@ -442,8 +444,8 @@ fun String.substringBetween(open: String, close: String): String =
  * @return 子串数组, 未找到返回空数组
  * @since 1.0.0
  */
-fun String.substringsBetween(open: String, close: String): Array<String> =
-    StringUtils.substringsBetween(this, open, close)
+fun CharSequence.substringsBetween(open: String, close: CharSequence): Array<String> =
+    StringUtils.substringsBetween(this.toString(), open, close.toString())
 //endregion Substring between
 
 //region Splitting
@@ -465,7 +467,7 @@ fun String.substringsBetween(open: String, close: String): Array<String> =
  * @return 子串数组
  * @since 1.0.0
  */
-fun String.splitByCharacterType(): Array<String> = StringUtils.splitByCharacterTypeCamelCase(this)
+fun CharSequence.splitByCharacterType(): Array<String> = StringUtils.splitByCharacterTypeCamelCase(this.toString())
 
 /**
  * 根据字符的类型(由`java.lang.Character.getType(char)`返回)分隔字符串。
@@ -485,7 +487,7 @@ fun String.splitByCharacterType(): Array<String> = StringUtils.splitByCharacterT
  * @return 子串数组
  * @since 1.0.0
  */
-fun String.splitByCharacterTypeCamelCase(): Array<String>? = StringUtils.splitByCharacterType(this)
+fun CharSequence.splitByCharacterTypeCamelCase(): Array<String>? = StringUtils.splitByCharacterType(this.toString())
 //endregion Splitting
 
 /**
@@ -500,7 +502,7 @@ fun String.splitByCharacterTypeCamelCase(): Array<String>? = StringUtils.splitBy
  * @return 没有空白字符的字符串
  * @since 1.0.0
  */
-fun String.deleteWhitespace(): String = StringUtils.deleteWhitespace(this)
+fun CharSequence.deleteWhitespace(): String = StringUtils.deleteWhitespace(this.toString())
 
 //region Remove
 
@@ -521,7 +523,8 @@ fun String.deleteWhitespace(): String = StringUtils.deleteWhitespace(this)
  * @return 去掉开头部分的子串后的字符串
  * @since 1.0.0
  */
-fun String.removePrefixIgnoreCase(remove: String?): String? = StringUtils.removeStart(this, remove)
+fun CharSequence.removePrefixIgnoreCase(remove: CharSequence?): String? =
+    StringUtils.removeStart(this.toString(), remove?.toString() ?: "")
 
 /**
  * 如果子串在主串的末尾（大小写不敏感），则删除该子串，否则返回源主串
@@ -541,7 +544,8 @@ fun String.removePrefixIgnoreCase(remove: String?): String? = StringUtils.remove
  * @return 去掉末尾的子串后的字符串
  * @since 1.0.0
  */
-fun String.removeSuffixIgnoreCase(remove: String?): String? = StringUtils.removeEndIgnoreCase(this, remove)
+fun CharSequence.removeSuffixIgnoreCase(remove: CharSequence?): String? =
+    StringUtils.removeEndIgnoreCase(this.toString(), remove?.toString() ?: "")
 
 //endregion Remove
 
@@ -570,8 +574,8 @@ fun String.removeSuffixIgnoreCase(remove: String?): String? = StringUtils.remove
  * @return 替换后的字符串
  * @since 1.0.0
  */
-fun String.replace(searchString: String?, replacement: String?, max: Int): String =
-    StringUtils.replace(this, searchString, replacement, max)
+fun CharSequence.replace(searchString: CharSequence?, replacement: CharSequence?, max: Int): String =
+    StringUtils.replace(this.toString(), searchString?.toString() ?: "", replacement?.toString() ?: "", max)
 
 /**
  * 查找子串，并用指定字符串替换之（替换所有出现的地方），支持多对替换规则
@@ -594,8 +598,15 @@ fun String.replace(searchString: String?, replacement: String?, max: Int): Strin
  * @throws IllegalArgumentException 如果两个数组的长度不一致时(null或空数组是允许的)
  * @since 1.0.0
  */
-fun String.replaceEach(searchList: Array<String?>?, replacementList: Array<String?>?): String =
-    StringUtils.replaceEach(this, searchList, replacementList)
+fun CharSequence.replaceEach(
+    searchList: Array<out CharSequence?>?,
+    replacementList: Array<out CharSequence?>?
+): String {
+    val sList = searchList?.map { it?.toString() ?: "" } ?: emptyList()
+    val rList = replacementList?.map { it?.toString() ?: "" } ?: emptyList()
+    return StringUtils.replaceEach(this.toString(), sList.toTypedArray(), rList.toTypedArray())
+}
+
 
 /**
  * 查找子串，并用指定字符串循环替换之（替换所有出现的地方），支持多对替换规则
@@ -620,8 +631,14 @@ fun String.replaceEach(searchList: Array<String?>?, replacementList: Array<Strin
  * @throws IllegalArgumentException 如果两个数组的长度不一致时(null或空数组是允许的)
  * @since 1.0.0
  */
-fun String.replaceEachRepeatedly(searchList: Array<String?>?, replacementList: Array<String>?): String =
-    StringUtils.replaceEachRepeatedly(this, searchList, replacementList)
+fun CharSequence.replaceEachRepeatedly(
+    searchList: Array<out CharSequence?>?,
+    replacementList: Array<out CharSequence>?
+): String {
+    val sList = searchList?.map { it?.toString() ?: "" } ?: emptyList()
+    val rList = replacementList?.map { it?.toString() } ?: emptyList()
+    return StringUtils.replaceEachRepeatedly(this.toString(), sList.toTypedArray(), rList.toTypedArray())
+}
 
 //endregion Replacing
 
@@ -644,7 +661,7 @@ fun String.replaceEachRepeatedly(searchList: Array<String?>?, replacementList: A
  * @return 处理后的字符串
  * @since 1.0.0
  */
-fun String.chomp(): String = StringUtils.chomp(this)
+fun CharSequence.chomp(): String = StringUtils.chomp(this.toString())
 
 /**
  * 删除字符串的最后一个字符(如果该字符串是以"\r\n"结尾，同样也删除这两个字符)
@@ -665,7 +682,7 @@ fun String.chomp(): String = StringUtils.chomp(this)
  * @return 处理后的字符串
  * @since 1.0.0
  */
-fun String.chop(): String = StringUtils.chop(this)
+fun CharSequence.chop(): String = StringUtils.chop(this.toString())
 
 /**
  * 字符串自相连指定次数,两两间用分隔串分隔
@@ -682,7 +699,8 @@ fun String.chop(): String = StringUtils.chop(this)
  * @return 自相连后的字符串
  * @since 1.0.0
  */
-fun String.repeatAndSeparate(separator: String?, repeat: Int): String? = StringUtils.repeat(this, separator, repeat)
+fun CharSequence.repeatAndSeparate(separator: CharSequence?, repeat: Int): String? =
+    StringUtils.repeat(this.toString(), separator?.toString() ?: null, repeat)
 
 //region Centering
 
@@ -703,7 +721,7 @@ fun String.repeatAndSeparate(separator: String?, repeat: Int): String? = StringU
  * @return 补全长度后的字符串
  * @since 1.0.0
  */
-fun String.center(size: Int, padChar: Char): String? = StringUtils.center(this, size, padChar)
+fun CharSequence.center(size: Int, padChar: Char): String? = StringUtils.center(this.toString(), size, padChar)
 
 /**
  * 用指定字符串左右补全源字符串到指定长度
@@ -724,7 +742,8 @@ fun String.center(size: Int, padChar: Char): String? = StringUtils.center(this, 
  * @return 补全长度后的字符串
  * @since 1.0.0
  */
-fun String.center(size: Int, padStr: String?): String? = StringUtils.center(this, size, padStr)
+fun CharSequence.center(size: Int, padStr: CharSequence?): String? =
+    StringUtils.center(this.toString(), size, padStr?.toString() ?: "")
 
 //endregion Centering
 
@@ -742,7 +761,7 @@ fun String.center(size: Int, padStr: String?): String? = StringUtils.center(this
  * @return 首字母小写的字符串
  * @since 1.0.0
  */
-fun String.uncapitalize(): String = StringUtils.uncapitalize(this)
+fun CharSequence.uncapitalize(): String = StringUtils.uncapitalize(this.toString())
 
 /**
  * 将源字符串中的大写转成小写，小写转成大写
@@ -755,7 +774,7 @@ fun String.uncapitalize(): String = StringUtils.uncapitalize(this)
  * @return 转换后的字符串
  * @since 1.0.0
  */
-fun String.swapCase(): String = StringUtils.swapCase(this)
+fun CharSequence.swapCase(): String = StringUtils.swapCase(this.toString())
 
 //endregion Case conversion
 
@@ -775,7 +794,7 @@ fun String.swapCase(): String = StringUtils.swapCase(this)
  * @return 子串出现的次数
  * @since 1.0.0
  */
-fun String.countMatches(sub: CharSequence?): Int = StringUtils.countMatches(this, sub)
+fun CharSequence.countMatches(sub: CharSequence?): Int = StringUtils.countMatches(this, sub)
 
 //region Character Tests
 /**
@@ -792,7 +811,7 @@ fun String.countMatches(sub: CharSequence?): Int = StringUtils.countMatches(this
  * @return true: 只包含Unicode字母
  * @since 1.0.0
  */
-fun String.isAlpha(): Boolean = StringUtils.isAlpha(this)
+fun CharSequence.isAlpha(): Boolean = StringUtils.isAlpha(this)
 
 /**
  * 测试字符序列是否只包含Unicode字母或空格
@@ -809,7 +828,7 @@ fun String.isAlpha(): Boolean = StringUtils.isAlpha(this)
  * @return true: 只包含Unicode字母或空格
  * @since 1.0.0
  */
-fun String.isAlphaSpace(): Boolean = StringUtils.isAlphaSpace(this)
+fun CharSequence.isAlphaSpace(): Boolean = StringUtils.isAlphaSpace(this)
 
 /**
  * 测试字符序列是否只包含Unicode字母或数字
@@ -826,7 +845,7 @@ fun String.isAlphaSpace(): Boolean = StringUtils.isAlphaSpace(this)
  * @return true: 只包含Unicode字母或数字
  * @since 1.0.0
  */
-fun String.isAlphanumeric(): Boolean = StringUtils.isAlpha(this)
+fun CharSequence.isAlphanumeric(): Boolean = StringUtils.isAlpha(this)
 
 /**
  * 测试字符序列是否只包含Unicode字母、空格或数字
@@ -843,7 +862,7 @@ fun String.isAlphanumeric(): Boolean = StringUtils.isAlpha(this)
  * @return true: 只包含Unicode字母、空格或数字
  * @since 1.0.0
  */
-fun String.isAlphanumericSpace(): Boolean = StringUtils.isAlphanumeric(this)
+fun CharSequence.isAlphanumericSpace(): Boolean = StringUtils.isAlphanumeric(this)
 
 /**
  * 测试字符序列是否只包含ASCII码的可打印的字符
@@ -864,7 +883,7 @@ fun String.isAlphanumericSpace(): Boolean = StringUtils.isAlphanumeric(this)
  * @return true: 每个字符都在32到126的范围内
  * @since 1.0.0
  */
-fun String.isAsciiPrintable(): Boolean = StringUtils.isAsciiPrintable(this)
+fun CharSequence.isAsciiPrintable(): Boolean = StringUtils.isAsciiPrintable(this)
 
 /**
  * 测试字符序列是否只包含Unicode数字。 十进制的小数不是Unicode数字。
@@ -882,7 +901,7 @@ fun String.isAsciiPrintable(): Boolean = StringUtils.isAsciiPrintable(this)
  * @return true: 只包含Unicode数字
  * @since 1.0.0
  */
-fun String.isNumeric(): Boolean = StringUtils.isNumeric(this)
+fun CharSequence.isNumeric(): Boolean = StringUtils.isNumeric(this)
 
 /**
  * 测试字符序列是否只包含Unicode数字或空格。 十进制的小数不是Unicode数字。
@@ -900,7 +919,7 @@ fun String.isNumeric(): Boolean = StringUtils.isNumeric(this)
  * @return true: 只包含Unicode数字或空格
  * @since 1.0.0
  */
-fun String.isNumericSpace(): Boolean = StringUtils.isNumeric(this)
+fun CharSequence.isNumericSpace(): Boolean = StringUtils.isNumeric(this)
 
 /**
  * 测试字符序列是否只包含空白字符
@@ -916,7 +935,7 @@ fun String.isNumericSpace(): Boolean = StringUtils.isNumeric(this)
  * @return true：只包含空白字符
  * @since 1.0.0
  */
-fun String.isWhitespace(): Boolean = StringUtils.isWhitespace(this)
+fun CharSequence.isWhitespace(): Boolean = StringUtils.isWhitespace(this)
 
 /**
  * 测试字符序列是否只包含小写字母
@@ -931,7 +950,7 @@ fun String.isWhitespace(): Boolean = StringUtils.isWhitespace(this)
  * @return true：只包含小写字母
  * @since 1.0.0
  */
-fun String.isAllLowerCase(): Boolean = StringUtils.isAllLowerCase(this)
+fun CharSequence.isAllLowerCase(): Boolean = StringUtils.isAllLowerCase(this)
 
 /**
  * 测试字符序列是否只包含大写字母
@@ -946,7 +965,7 @@ fun String.isAllLowerCase(): Boolean = StringUtils.isAllLowerCase(this)
  * @return true：只包含大写字母
  * @since 1.0.0
  */
-fun String.isAllUpperCase(): Boolean = StringUtils.isAllUpperCase(this)
+fun CharSequence.isAllUpperCase(): Boolean = StringUtils.isAllUpperCase(this)
 
 //endregion Character Tests
 
@@ -964,7 +983,8 @@ fun String.isAllUpperCase(): Boolean = StringUtils.isAllUpperCase(this)
  * @return 反转后的字符串
  * @since 1.0.0
  */
-fun String.reverseDelimited(separatorChar: Char): String? = StringUtils.reverseDelimited(this, separatorChar)
+fun CharSequence.reverseDelimited(separatorChar: Char): String? =
+    StringUtils.reverseDelimited(this.toString(), separatorChar)
 
 //region Abbreviating
 /**
@@ -989,7 +1009,7 @@ fun String.reverseDelimited(separatorChar: Char): String? = StringUtils.reverseD
  * @return 省略的字符串
  * @since 1.0.0
  */
-fun String.abbreviate(maxWidth: Int): String? = StringUtils.abbreviate(this, maxWidth)
+fun CharSequence.abbreviate(maxWidth: Int): String? = StringUtils.abbreviate(this.toString(), maxWidth)
 
 /**
  * 省略字符串，功能类似`abbreviate(int)`，但可以指定左边界偏移量
@@ -1016,7 +1036,7 @@ fun String.abbreviate(maxWidth: Int): String? = StringUtils.abbreviate(this, max
  * @throws IllegalArgumentException 结果长度小于4时
  * @since 1.0.0
  */
-fun String.abbreviate(offset: Int, maxWidth: Int): String? = StringUtils.abbreviate(this, offset, maxWidth)
+fun CharSequence.abbreviate(offset: Int, maxWidth: Int): String? = StringUtils.abbreviate(this.toString(), offset, maxWidth)
 
 /**
  * 用指定字符串替换源字符串中间的字符，以达到省略源字符串到指定长度的目的
@@ -1039,8 +1059,8 @@ fun String.abbreviate(offset: Int, maxWidth: Int): String? = StringUtils.abbrevi
  * @return 省略的字符串
  * @since 1.0.0
  */
-fun String.abbreviateMiddle(middle: String?, length: Int): String? =
-    StringUtils.abbreviateMiddle(this, middle, length)
+fun CharSequence.abbreviateMiddle(middle: CharSequence?, length: Int): String? =
+    StringUtils.abbreviateMiddle(this.toString(), middle?.toString() ?: null, length)
 
 //endregion Abbreviating
 
@@ -1062,7 +1082,7 @@ fun String.abbreviateMiddle(middle: String?, length: Int): String? =
  * @return 两字符串不同的部分，相同时返回空串
  * @since 1.0.0
  */
-fun String.difference(str2: String): String? = StringUtils.difference(this, str2)
+fun CharSequence.difference(str2: CharSequence): String? = StringUtils.difference(this.toString(), str2.toString())
 
 /**
  * 比较两字符串，并返回它们开始不同时的下标
@@ -1081,7 +1101,7 @@ fun String.difference(str2: String): String? = StringUtils.difference(this, str2
  * @return 开始不同时的下标; 如果两字符串相同返回-1
  * @since 1.0.0
  */
-fun String.indexOfDifference(cs2: CharSequence): Int = StringUtils.indexOfDifference(this, cs2)
+fun CharSequence.indexOfDifference(cs2: CharSequence): Int = StringUtils.indexOfDifference(this, cs2)
 
 /**
  * 比较数组中的每个字符串，并返回它们开始不同时的下标
@@ -1108,7 +1128,7 @@ fun String.indexOfDifference(cs2: CharSequence): Int = StringUtils.indexOfDiffer
  * @return 开始不同时的下标; 如果字符串都相同返回-1
  * @since 1.0.0
  */
-fun Array<String?>.indexOfDifference(): Int = StringUtils.indexOfDifference(*this)
+fun Array<out CharSequence?>.indexOfDifference(): Int = StringUtils.indexOfDifference(*this)
 //endregion Difference
 
 /**
@@ -1136,7 +1156,10 @@ fun Array<String?>.indexOfDifference(): Int = StringUtils.indexOfDifference(*thi
  * @return 相同的前缀
  * @since 1.0.0
  */
-fun Array<String?>.getCommonPrefix(): String = StringUtils.getCommonPrefix(*this)
+fun Array<out CharSequence?>.getCommonPrefix(): String {
+    val array = this.map { it?.toString() ?: null }.toTypedArray()
+    return StringUtils.getCommonPrefix(*array)
+}
 
 //region Misc
 /**
@@ -1159,7 +1182,7 @@ fun Array<String?>.getCommonPrefix(): String = StringUtils.getCommonPrefix(*this
  * @throws IllegalArgumentException 两参数之一为null时
  * @since 1.0.0
  */
-fun String.getLevenshteinDistance(t: CharSequence): Int = StringUtils.getLevenshteinDistance(this, t)
+fun CharSequence.getLevenshteinDistance(t: CharSequence): Int = StringUtils.getLevenshteinDistance(this, t)
 
 /**
  * 如果两个字符串的“距离”(相似度)小于等于给定的极限值，就返回该“距离”，否则返回-1。
@@ -1177,14 +1200,14 @@ fun String.getLevenshteinDistance(t: CharSequence): Int = StringUtils.getLevensh
  * "hippo".getLevenshteinDistance("elephant", 6) = -1
  * </pre>
  *
- * 
+ *
  * @param t         第二个字符串
  * @param threshold 目标上限值, 不能为负数
  * @return 距离或-1
  * @throws IllegalArgumentException 极限值为负数时
  * @since 1.0.0
  */
-fun String.getLevenshteinDistance(t: CharSequence, threshold: Int): Int =
+fun CharSequence.getLevenshteinDistance(t: CharSequence, threshold: Int): Int =
     StringUtils.getLevenshteinDistance(this, t, threshold)
 //endregion Misc
 
@@ -1197,12 +1220,12 @@ fun String.getLevenshteinDistance(t: CharSequence, threshold: Int): Int =
  * abcxyz".startsWithAny({"abc"}) = true
  * abcxyz".startsWithAny({null, "xyz", "abc"}) = true
  * </pre>
- * 
+ *
  * @param searchStrings 待匹配的前缀组,
  * @return true: 任何一个为字符串的前缀(大小写不敏感)
  * @since 1.0.0
  */
-fun String.startsWithAny(vararg searchStrings: CharSequence?): Boolean =
+fun CharSequence.startsWithAny(vararg searchStrings: CharSequence?): Boolean =
     StringUtils.startsWithAny(this, *searchStrings)
 
 /**
@@ -1214,12 +1237,12 @@ fun String.startsWithAny(vararg searchStrings: CharSequence?): Boolean =
  * "abcxyz".endsWithAny(String[] {"xyz"}) = true
  * "abcxyz".endsWithAny(String[] {null, "xyz", "abc"}) = true
  * </pre>
- * 
+ *
  * @param searchStrings 待匹配的前缀组
  * @return 任何一个为字符串的后缀(大小写不敏感)
  * @since 1.0.0
  */
-fun String.endsWithAny(vararg searchStrings: CharSequence?): Boolean =
+fun CharSequence.endsWithAny(vararg searchStrings: CharSequence?): Boolean =
     StringUtils.endsWithAny(this, *searchStrings)
 
 /**
@@ -1231,7 +1254,7 @@ fun String.endsWithAny(vararg searchStrings: CharSequence?): Boolean =
  * http://www.w3.org/TR/xpath/.function-normalize-space](http://www.w3.org/TR/xpath/.function-normalize-space)
  * @since 1.0.0
  */
-fun String.normalizeSpace(): String = StringUtils.normalizeSpace(this)
+fun CharSequence.normalizeSpace(): String = StringUtils.normalizeSpace(this.toString())
 
 // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 // 封装org.apache.commons.lang3.StringUtils

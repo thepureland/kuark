@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test
  * @author K
  * @since 1.0.0
  */
-internal class XStringTest {
+internal class XCharSequenceTest {
 
     @Test
     fun testReplaceEach() {

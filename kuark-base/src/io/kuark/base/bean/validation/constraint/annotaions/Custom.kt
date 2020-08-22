@@ -7,7 +7,7 @@ import javax.validation.Payload
 import kotlin.reflect.KClass
 
 /**
- * 自定义约束注解，可以由用户自行实现校验逻辑，属性级别注解。
+ * 自定义约束注解，可以由用户自行实现校验逻辑，属性级别注解。被校验对象可以为任何类型。
  *
  * @author K
  * @since 1.0.0

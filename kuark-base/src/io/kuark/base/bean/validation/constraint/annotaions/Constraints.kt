@@ -44,97 +44,127 @@ annotation class Constraints(
     val andOr: AndOr = AndOr.AND,
 
     // javax.validation定义的约束
-    /**  */
+    /** 逻辑假约束，被校验对象类型必须为Boolean，且值为false */
     val assertFalse: AssertFalse = AssertFalse(message = MESSAGE),
-    /**  */
+    /** 逻辑真约束，被校验对象类型必须为Boolean，且值为true */
     val assertTrue: AssertTrue = AssertTrue(message = MESSAGE),
-    /**  */
+    /**
+     * 最大值约束，通过String值来定义，可以指定包括或不包括，
+     * 被校验对象类型必须为以下之一或其子类：CharSequence、Double、Integer、Long、Float、Byte、Short、BigDecimal、BigInteger、Number、MonetaryAmount
+     */
     val decimalMax: DecimalMax = DecimalMax("", message = MESSAGE),
-    /**  */
+    /** 
+     * 最小值约束，通过String值来定义，可以指定包括或不包括，
+     * 被校验对象类型必须为以下之一或其子类：CharSequence、Double、Integer、Long、Float、Byte、Short、BigDecimal、BigInteger、Number、MonetaryAmount
+     */
     val decimalMin: DecimalMin = DecimalMin("", message = MESSAGE),
-    /**  */
+    /** 数值约束，可分别指定整数和小数部分位数，被校验对象类型必须为以下之一或其子类：CharSequence、Number、MonetaryAmount */
     val digits: Digits = Digits(integer = 0, fraction = 0, message = MESSAGE),
-    /**  */
+    /** 电子邮箱账号约束，被校验对象类型必须为CharSequence或其子类。如无特殊情况，regexp不需要指定 */
     val email: Email = Email(message = MESSAGE),
-    /**  */
+    /** 
+     * 未来日期时间约束，被校验对象类型必须为以下之一或其子类：LocalDate、LocalDateTime、LocalTime、Instant、Calendar、Date、HijrahDate、
+     * JapaneseDate、MinguoDate、MonthDay、OffsetDateTime、OffsetTime、ThaiBuddhistDate、Year、YearMonth、ZonedDateTime
+     */
     val future: Future = Future(message = MESSAGE),
-    /**  */
+    /**
+     * 未来或现在日期时间约束，被校验对象类型必须为以下之一或其子类：LocalDate、LocalDateTime、LocalTime、Instant、Calendar、Date、HijrahDate、
+     * JapaneseDate、MinguoDate、MonthDay、OffsetDateTime、OffsetTime、ThaiBuddhistDate、Year、YearMonth、ZonedDateTime
+     */
     val futureOrPresent: FutureOrPresent = FutureOrPresent(message = MESSAGE),
-    /**  */
+    /**
+     * 最大值约束，通过long值来定义，被校验对象类型必须为以下之一或其子类：
+     * CharSequence、Double、Integer、Long、Float、Byte、Short、BigDecimal、BigInteger、Number、MonetaryAmount
+     */
     val max: Max = Max(0, message = MESSAGE),
-    /**  */
+    /**
+     * 最小值约束，通过long值来定义，被校验对象类型必须为以下之一或其子类：
+     * CharSequence、Double、Integer、Long、Float、Byte、Short、BigDecimal、BigInteger、Number、MonetaryAmount 
+     */
     val min: Min = Min(0, message = MESSAGE),
-    /**  */
+    /** 负数约束，被校验对象类型必须为以下之一或其子类： CharSequence、Double、Integer、Long、Float、Byte、Short、BigDecimal、BigInteger、Number、MonetaryAmount */
     val negative: Negative = Negative(message = MESSAGE),
-    /**  */
+    /** 负数或零约束，被校验对象类型必须为以下之一或其子类： CharSequence、Double、Integer、Long、Float、Byte、Short、BigDecimal、BigInteger、Number、MonetaryAmount */
     val negativeOrZero: NegativeOrZero = NegativeOrZero(message = MESSAGE),
-    /**  */
+    /** 非空白约束，被校验对象类型必须为CharSequence或其子类 */
     val notBlank: NotBlank = NotBlank(message = MESSAGE),
-    /**  */
+    /** 
+     * 非空约束, 被校验对象类型必须为以下之一或其子类： 
+     * CharSequence、Array<*>、Collection<*>、DoubleArray、IntArray、LongArray、CharArray、FloatArray、BooleanArray、ByteArray、ShortArray、Map<*, *>
+     */
     val notEmpty: NotEmpty = NotEmpty(message = MESSAGE),
-    /**  */
+    /** 非null约束，被校验对象可以是任何类型 */
     val notNull: NotNull = NotNull(message = MESSAGE),
-    /**  */
+    /** null约束，被校验对象可以是任何类型 */
     val beNull: Null = Null(message = MESSAGE),
-    /**  */
+    /**
+     * 过去日期时间约束，被校验对象类型必须为以下之一或其子类：LocalDate、LocalDateTime、LocalTime、Instant、Calendar、Date、HijrahDate、
+     * JapaneseDate、MinguoDate、MonthDay、OffsetDateTime、OffsetTime、ThaiBuddhistDate、Year、YearMonth、ZonedDateTime
+     */
     val past: Past = Past(message = MESSAGE),
-    /**  */
+    /**
+     * 过去或现在日期时间约束，被校验对象类型必须为以下之一或其子类：LocalDate、LocalDateTime、LocalTime、Instant、Calendar、Date、HijrahDate、
+     * JapaneseDate、MinguoDate、MonthDay、OffsetDateTime、OffsetTime、ThaiBuddhistDate、Year、YearMonth、ZonedDateTime
+     */
     val pastOrPresent: PastOrPresent = PastOrPresent(message = MESSAGE),
-    /**  */
+    /** 正则约束，被校验对象类型必须为CharSequence或其子类 */
     val pattern: Pattern = Pattern(regexp = "", message = MESSAGE),
-    /**  */
+    /** 正数约束，被校验对象类型必须为以下之一或其子类： CharSequence、Double、Integer、Long、Float、Byte、Short、BigDecimal、BigInteger、Number、MonetaryAmount */
     val positive: Positive = Positive(message = MESSAGE),
-    /**  */
+    /** 正数约束，被校验对象类型必须为以下之一或其子类： CharSequence、Double、Integer、Long、Float、Byte、Short、BigDecimal、BigInteger、Number、MonetaryAmount */
     val positiveOrZero: PositiveOrZero = PositiveOrZero(message = MESSAGE),
-    /**  */
+    /**
+     * 尺寸约束, 被校验对象类型必须为以下之一或其子类：
+     * CharSequence、Array<*>、Collection<*>、DoubleArray、IntArray、LongArray、CharArray、FloatArray、BooleanArray、ByteArray、ShortArray、Map<*, *>
+     */
     val size: Size = Size(message = MESSAGE),
 
     // hibernate定义的约束
-    /**  */
+    /** 字符串代码点长度(实际字符数)约束，被校验对象类型必须为CharSequence或其子类 */
     val codePointLength: CodePointLength = CodePointLength(message = MESSAGE),
-    /**  */
+    /** 信用卡号约束，被校验对象类型必须为CharSequence或其子类 */
     val creditCardNumber: CreditCardNumber = CreditCardNumber(message = MESSAGE),
-    /**  */
+    /** 货币金额约束，被校验对象类型必须为MonetaryAmount或其子类 */
     val currency: Currency = Currency(message = MESSAGE),
-    /**  */
+    /** EAN商品条码约束，被校验对象类型必须为CharSequence或其子类 */
     val ean: EAN = EAN(message = MESSAGE),
-    /**  */
+    /** 书本条码约束，被校验对象类型必须为CharSequence或其子类 */
     val isbn: ISBN = ISBN(message = MESSAGE),
-    /**  */
+    /** 字符串长度约束，被校验对象类型必须为CharSequence或其子类 */
     val length: Length = Length(message = MESSAGE),
-    /**  */
+    /** 字符串Luhn算法(模10算法)约束，被校验对象类型必须为CharSequence或其子类 */
     val luhnCheck: LuhnCheck = LuhnCheck(message = MESSAGE),
-    /**  */
+    /** 字符串模10算法约束，被校验对象类型必须为CharSequence或其子类 */
     val mod10Check: Mod10Check = Mod10Check(message = MESSAGE),
-    /**  */
+    /** 字符串模11算法约束，被校验对象类型必须为CharSequence或其子类 */
     val mod11Check: Mod11Check = Mod11Check(message = MESSAGE),
-    /**  */
+    /** 参数脚本断言约束，被校验对象类型必须为对象数组 */
     val parameterScriptAssert: ParameterScriptAssert = ParameterScriptAssert(lang = "", script = "", message = MESSAGE),
-    /**  */
+    /** 区间约束，被校验对象类型必须为以下之一或其子类： CharSequence、Double、Integer、Long、Float、Byte、Short、BigDecimal、BigInteger、Number、MonetaryAmount */
     val range: Range = Range(message = MESSAGE),
 //    /**  */
 //    val scriptAssert: ScriptAssert = ScriptAssert(lang = "", script = ""), //kuark暂不支持
-    /**  */
+    /** 集合元素惟一约束，被校验对象类型必须为Collection或其子类 */
     val uniqueElements: UniqueElements = UniqueElements(message = MESSAGE),
-    /**  */
+    /** 网址约束，被校验对象类型必须为CharSequence或其子类 */
     val url: URL = URL(message = MESSAGE),
 
     // kuark定义的约束
-    /**  */
+    /** "至少需要几个"约束，被校验对象可以为任何类型 */
     val atLeast: AtLeast = AtLeast([], message = MESSAGE),
-    /**  */
+    /** 中国居民身份证号约束，被校验对象类型必须为CharSequence或其子类 */
     val cnIdCardNo: CnIdCardNo = CnIdCardNo(message = MESSAGE),
-    /**  */
+    /** 比较约束，比较的两者对象类型都必须实现Comparable接口且类型相同，支持Array<*>类型，但是两个数组的大小必须一致，且数组每个元素必须实现Comparable接口 */
     val compare: Compare = Compare("", message = MESSAGE),
-    /**  */
+    /** 自定义逻辑的约束，被校验对象可以为任何类型 */
     val custom: Custom = Custom(IBeanValidator::class, message = MESSAGE),
-    /**  */
+    /** 字符串日期时间约束，被校验对象类型必须为CharSequence或其子类 */
     val dateTime: DateTime = DateTime("", message = MESSAGE),
-    /**  */
+    /** 字典枚举代码约束，被校验对象类型必须为CharSequence或其子类 */
     val dictEnumCode: DictEnumCode = DictEnumCode(IDictEnum::class, message = MESSAGE),
-    /**  */
+    /** 非null依赖约束，被校验对象可以为任何类型 */
     val notNullOn: NotNullOn = NotNullOn(Depends([]), message = MESSAGE),
-    /**  */
+    /** 数列约束，被校验对象类型必须为以下之一或其子类: List<*>、Array<*> */
     val series: Series = Series(message = MESSAGE),
 
 //  val each: Each = Each(Constraints(), message = MESSAGE),  // 会循环引用，而且本身就是组合约束，没必要作为Constraints的子约束了

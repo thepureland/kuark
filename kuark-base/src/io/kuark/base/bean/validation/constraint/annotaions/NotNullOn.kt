@@ -7,7 +7,7 @@ import javax.validation.Payload
 import kotlin.reflect.KClass
 
 /**
- * 动态NotNull约束注解，属性级别注解。
+ * 非null依赖约束注解，属性级别注解。
  *
  * 当前属性的值是否可以为null，取决于定义的表达式。表达式为false，属性值可为null，即非必填选项；表达式为true，属性值必填。
  * 注意：此约束注解不可与 @NotNull 一起使用

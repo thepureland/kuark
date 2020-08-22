@@ -12,7 +12,7 @@ import javax.validation.ConstraintValidatorContext
  * @author K
  * @since 1.0.0
  */
-class DateTimeValidator : ConstraintValidator<DateTime, String?> {
+class DateTimeValidator : ConstraintValidator<DateTime, CharSequence?> {
 
     private lateinit var dateTime: DateTime
 
@@ -20,7 +20,7 @@ class DateTimeValidator : ConstraintValidator<DateTime, String?> {
         this.dateTime = dateTime
     }
 
-    override fun isValid(value: String?, constraintValidatorContext: ConstraintValidatorContext): Boolean {
+    override fun isValid(value: CharSequence?, constraintValidatorContext: ConstraintValidatorContext): Boolean {
         if (value == null) {
             return true
         }
@@ -28,7 +28,7 @@ class DateTimeValidator : ConstraintValidator<DateTime, String?> {
         var valid = format.length == value.length
         if (valid) {
             try {
-                SimpleDateFormat(format).parse(value)
+                SimpleDateFormat(format).parse(value.toString())
             } catch (e: ParseException) {
                 valid = false
             }

@@ -11,7 +11,7 @@ import javax.validation.ConstraintValidatorContext
  * @author K
  * @since 1.0.0
  */
-class CnIdCardNoValidator: ConstraintValidator<CnIdCardNo, String?> {
+class CnIdCardNoValidator: ConstraintValidator<CnIdCardNo, CharSequence?> {
 
     private lateinit var cnIdCardNo: CnIdCardNo
 
@@ -19,7 +19,7 @@ class CnIdCardNoValidator: ConstraintValidator<CnIdCardNo, String?> {
         this.cnIdCardNo = cnIdCardNo
     }
 
-    override fun isValid(value: String?, p1: ConstraintValidatorContext?): Boolean {
+    override fun isValid(value: CharSequence?, p1: ConstraintValidatorContext?): Boolean {
         if (value == null) {
             return true
         }

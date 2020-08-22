@@ -11,7 +11,7 @@ import javax.validation.ConstraintValidatorContext
  * @author K
  * @since 1.0.0
  */
-class DictEnumCodeValidator : ConstraintValidator<DictEnumCode, String?> {
+class DictEnumCodeValidator : ConstraintValidator<DictEnumCode, CharSequence?> {
 
     private lateinit var dictEnumCode: DictEnumCode
 
@@ -19,7 +19,7 @@ class DictEnumCodeValidator : ConstraintValidator<DictEnumCode, String?> {
         this.dictEnumCode = dictEnumCode
     }
 
-    override fun isValid(value: String?, constraintValidatorContext: ConstraintValidatorContext): Boolean {
+    override fun isValid(value: CharSequence?, constraintValidatorContext: ConstraintValidatorContext): Boolean {
         if (value == null) {
             return true
         }

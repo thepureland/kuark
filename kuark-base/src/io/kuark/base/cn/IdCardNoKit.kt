@@ -88,7 +88,7 @@ object IdCardNoKit {
      * @return true: 为身份证号
      * @since 1.0.0
      */
-    fun isIdCardNo(str: String): Boolean {
+    fun isIdCardNo(str: CharSequence): Boolean {
         return if (str.isBlank()) {
             false
         } else isIdCardNo18(str) || isIdCardNo15(str) || isHkIdCardNo(str) || isMacauIdCardNo(str) || isTwIdCardNo(str)
@@ -101,7 +101,7 @@ object IdCardNoKit {
      * @return true: 为18位身份证号
      * @since 1.0.0
      */
-    fun isIdCardNo18(str: String): Boolean {
+    fun isIdCardNo18(str: CharSequence): Boolean {
         if (str.isBlank()) {
             return false
         }
@@ -134,7 +134,7 @@ object IdCardNoKit {
      * @return true: 为18位身份证号
      * @since 1.0.0
      */
-    fun isIdCardNo15(str: String): Boolean {
+    fun isIdCardNo15(str: CharSequence): Boolean {
         if (str.isBlank()) {
             return false
         }
@@ -177,7 +177,7 @@ object IdCardNoKit {
      * @return true: 为台湾身份证号
      * @since 1.0.0
      */
-    fun isTwIdCardNo(str: String): Boolean {
+    fun isTwIdCardNo(str: CharSequence): Boolean {
         if (str!!.isBlank()) {
             return false
         }
@@ -208,7 +208,7 @@ object IdCardNoKit {
      * @return true: 为香港身份证号
      * @since 1.0.0
      */
-    fun isHkIdCardNo(str: String): Boolean {
+    fun isHkIdCardNo(str: CharSequence): Boolean {
         if (str.isBlank()) {
             return false
         }
@@ -247,7 +247,7 @@ object IdCardNoKit {
      * @return true: 为澳门身份证号
      * @since 1.0.0
      */
-    fun isMacauIdCardNo(str: String): Boolean {
+    fun isMacauIdCardNo(str: CharSequence): Boolean {
         return !str.isBlank() && str.matches("^[1|5|7][0-9]{6}\\(?[0-9A-Z]\\)?$".toRegex())
     }
 

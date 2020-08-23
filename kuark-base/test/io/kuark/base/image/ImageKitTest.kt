@@ -1,9 +1,8 @@
 package io.kuark.base.image
 
-import org.junit.jupiter.api.Test
 import io.kuark.base.io.PathKit
+import org.junit.jupiter.api.Test
 import java.io.File
-import java.net.URI
 
 internal class ImageKitTest {
 

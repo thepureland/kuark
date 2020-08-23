@@ -6,7 +6,7 @@ package io.kuark.base.tree
  * @author K
  * @since 1.0.0
  */
-interface IJsTreeNode : IListToTreeRestrict<String?> {
+interface IJsTreeNode : ITreeable<String?> {
 
     val text: String?
     fun getIcon(): String?

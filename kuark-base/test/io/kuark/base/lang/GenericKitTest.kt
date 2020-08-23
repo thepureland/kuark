@@ -1,10 +1,10 @@
 package io.kuark.base.lang
 
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Test
 import io.kuark.base.lang.reflect.getMemberFunction
 import io.kuark.base.lang.reflect.getMemberProperty
 import io.kuark.base.support.ICallback
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
 import java.io.Serializable
 
 /**

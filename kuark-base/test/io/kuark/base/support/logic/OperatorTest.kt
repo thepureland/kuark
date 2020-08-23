@@ -1,8 +1,7 @@
 package io.kuark.base.support.logic
 
+import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Test
-
-import org.junit.jupiter.api.Assertions.*
 
 /**
  * Operator测试用例

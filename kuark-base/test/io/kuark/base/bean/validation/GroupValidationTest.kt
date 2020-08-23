@@ -1,12 +1,12 @@
 package io.kuark.base.bean.validation
 
+import io.kuark.base.bean.validation.kit.ValidationKit
+import io.kuark.base.bean.validation.support.AbstractGroupSequenceProvider
+import io.kuark.base.bean.validation.support.Group
 import org.hibernate.validator.constraints.Length
 import org.hibernate.validator.group.GroupSequenceProvider
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-import io.kuark.base.bean.validation.kit.ValidationKit
-import io.kuark.base.bean.validation.support.AbstractGroupSequenceProvider
-import io.kuark.base.bean.validation.support.Group
 import javax.validation.GroupSequence
 import javax.validation.constraints.Max
 import javax.validation.constraints.Min

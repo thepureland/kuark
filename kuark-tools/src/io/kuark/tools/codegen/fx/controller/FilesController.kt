@@ -1,6 +1,14 @@
 package io.kuark.tools.codegen.fx.controller
 
 import freemarker.template.Configuration
+import io.kuark.base.io.FileKit
+import io.kuark.base.io.FilenameKit
+import io.kuark.base.scanner.classpath.ClassPathScanner
+import io.kuark.tools.codegen.core.CodeGenerator
+import io.kuark.tools.codegen.core.CodeGeneratorContext
+import io.kuark.tools.codegen.core.FreemarkerKit
+import io.kuark.tools.codegen.service.CodeGenFileService
+import io.kuark.tools.codegen.vo.GenFile
 import javafx.collections.FXCollections
 import javafx.event.ActionEvent
 import javafx.fxml.FXML
@@ -8,15 +16,6 @@ import javafx.fxml.Initializable
 import javafx.scene.control.Alert
 import javafx.scene.control.TableView
 import org.apache.commons.io.filefilter.IOFileFilter
-import io.kuark.base.io.FileKit
-import io.kuark.base.io.FilenameKit
-import io.kuark.base.scanner.classpath.ClassPathScanner
-import io.kuark.tools.codegen.core.CodeGenerator
-import io.kuark.tools.codegen.core.CodeGeneratorContext
-import io.kuark.tools.codegen.core.FreemarkerKit
-import io.kuark.tools.codegen.core.TemplateModelCreator
-import io.kuark.tools.codegen.service.CodeGenFileService
-import io.kuark.tools.codegen.vo.GenFile
 import java.io.File
 import java.net.URL
 import java.util.*

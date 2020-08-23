@@ -1,8 +1,8 @@
 package io.kuark.base.security
 
+import io.kuark.base.lang.string.EncodeKit
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-import io.kuark.base.lang.string.EncodeKit
 
 internal class DigestKitTest {
 

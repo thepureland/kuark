@@ -1,9 +1,9 @@
 package io.kuark.base.bean.validation.constraint.validator
 
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 import io.kuark.base.bean.validation.constraint.annotaions.AtLeast
 import io.kuark.base.bean.validation.kit.ValidationKit
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import javax.validation.ValidationException
 
 /**

@@ -1,12 +1,12 @@
 package io.kuark.base.bean.validation.constraint.validator
 
+import io.kuark.base.bean.validation.constraint.annotaions.Constraints
+import io.kuark.base.bean.validation.kit.ValidationKit
+import io.kuark.base.support.logic.AndOr
 import org.hibernate.validator.constraints.Length
 import org.hibernate.validator.constraints.Range
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-import io.kuark.base.bean.validation.constraint.annotaions.Constraints
-import io.kuark.base.bean.validation.kit.ValidationKit
-import io.kuark.base.support.logic.AndOr
 import javax.validation.constraints.NotNull
 import javax.validation.constraints.Null
 import javax.validation.constraints.Pattern

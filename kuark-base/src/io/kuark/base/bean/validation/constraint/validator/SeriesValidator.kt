@@ -1,8 +1,8 @@
 package io.kuark.base.bean.validation.constraint.validator
 
-import io.kuark.base.lang.collections.subarray
 import io.kuark.base.bean.validation.constraint.annotaions.Series
 import io.kuark.base.bean.validation.support.SeriesType
+import io.kuark.base.lang.collections.subarray
 import java.math.BigDecimal
 import javax.validation.ConstraintValidator
 import javax.validation.ConstraintValidatorContext

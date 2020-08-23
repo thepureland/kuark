@@ -5,7 +5,10 @@ import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
-import kotlin.reflect.full.*
+import kotlin.reflect.full.allSuperclasses
+import kotlin.reflect.full.memberFunctions
+import kotlin.reflect.full.memberProperties
+import kotlin.reflect.full.superclasses
 
 /**
  * kotlin.KClass扩展函数

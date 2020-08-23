@@ -1,8 +1,9 @@
 package io.kuark.resource.msg.dao
 
-import me.liuwj.ktorm.schema.*
-import io.kuark.resource.msg.po.MsgInstance
 import io.kuark.data.jdbc.support.StringIdTable
+import io.kuark.resource.msg.po.MsgInstance
+import me.liuwj.ktorm.schema.datetime
+import me.liuwj.ktorm.schema.varchar
 
 /**
  * 消息实例数据库实体DAO

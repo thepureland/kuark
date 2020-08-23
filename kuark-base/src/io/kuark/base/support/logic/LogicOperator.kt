@@ -1,7 +1,7 @@
 package io.kuark.base.support.logic
 
-import io.kuark.base.lang.collections.containsAll
 import io.kuark.base.lang.EnumKit
+import io.kuark.base.lang.collections.containsAll
 import io.kuark.base.support.enums.IDictEnum
 
 /**

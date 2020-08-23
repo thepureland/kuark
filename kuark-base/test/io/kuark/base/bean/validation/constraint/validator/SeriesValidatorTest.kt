@@ -1,10 +1,10 @@
 package io.kuark.base.bean.validation.constraint.validator
 
-import org.junit.jupiter.api.Assertions.assertFalse
-import org.junit.jupiter.api.Test
 import io.kuark.base.bean.validation.constraint.annotaions.Series
 import io.kuark.base.bean.validation.kit.ValidationKit
 import io.kuark.base.bean.validation.support.SeriesType
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Test
 import java.math.BigDecimal
 import java.math.BigInteger
 

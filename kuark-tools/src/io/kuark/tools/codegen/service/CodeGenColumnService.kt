@@ -1,11 +1,6 @@
 package io.kuark.tools.codegen.service
 
 
-import me.liuwj.ktorm.dsl.batchInsert
-import me.liuwj.ktorm.dsl.eq
-import me.liuwj.ktorm.entity.filter
-import me.liuwj.ktorm.entity.removeIf
-import me.liuwj.ktorm.entity.sequenceOf
 import io.kuark.base.bean.BeanKit
 import io.kuark.data.jdbc.metadata.Column
 import io.kuark.data.jdbc.metadata.RdbMetadataKit
@@ -14,6 +9,11 @@ import io.kuark.tools.codegen.core.CodeGeneratorContext
 import io.kuark.tools.codegen.dao.CodeGenColumns
 import io.kuark.tools.codegen.po.CodeGenColumn
 import io.kuark.tools.codegen.vo.ColumnInfo
+import me.liuwj.ktorm.dsl.batchInsert
+import me.liuwj.ktorm.dsl.eq
+import me.liuwj.ktorm.entity.filter
+import me.liuwj.ktorm.entity.removeIf
+import me.liuwj.ktorm.entity.sequenceOf
 import java.util.*
 
 /**

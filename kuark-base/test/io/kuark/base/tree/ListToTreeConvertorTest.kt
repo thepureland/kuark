@@ -30,7 +30,7 @@ internal class ListToTreeConvertorTest {
         assert(result)
     }
 
-    internal class TestRecord : IListToTreeRestrict<String?> {
+    internal class TestRecord : ITreeable<String?> {
         var id: String? = null
             private set
         var parentId: String? = null

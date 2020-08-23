@@ -11,12 +11,9 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.response.respondText
 import io.ktor.sessions.*
 import io.kuark.context.annotation.ConfigValue
-import io.kuark.context.spring.SpringKit
-import io.kuark.web.session.MixCacheSessionStorage
 import io.kuark.web.session.WebSession
 import io.kuark.web.support.KtorMiddleware
 import org.springframework.stereotype.Component
-import java.io.File
 
 @Component
 class KtorHttpintercept : KtorMiddleware {

@@ -1,11 +1,11 @@
 package io.kuark.base.bean.validation.constraint.validator
 
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertFalse
-import org.junit.jupiter.api.Test
 import io.kuark.base.bean.validation.constraint.annotaions.Custom
 import io.kuark.base.bean.validation.kit.ValidationKit
 import io.kuark.base.bean.validation.support.IBeanValidator
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Test
 
 /**
  * CustomValidator测试用例

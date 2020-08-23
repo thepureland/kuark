@@ -1,9 +1,5 @@
 package io.kuark.base.bean.validation.teminal
 
-import org.hibernate.validator.constraints.*
-import org.hibernate.validator.constraints.time.DurationMax
-import org.hibernate.validator.constraints.time.DurationMin
-import org.junit.jupiter.api.Test
 import io.kuark.base.bean.validation.constraint.annotaions.*
 import io.kuark.base.bean.validation.support.Depends
 import io.kuark.base.bean.validation.support.IBeanValidator
@@ -11,6 +7,10 @@ import io.kuark.base.bean.validation.support.RegExps
 import io.kuark.base.bean.validation.support.SeriesType
 import io.kuark.base.support.enums.Sex
 import io.kuark.base.support.logic.LogicOperator
+import org.hibernate.validator.constraints.*
+import org.hibernate.validator.constraints.time.DurationMax
+import org.hibernate.validator.constraints.time.DurationMin
+import org.junit.jupiter.api.Test
 import java.time.LocalDate
 import java.time.LocalDateTime
 import javax.money.MonetaryAmount

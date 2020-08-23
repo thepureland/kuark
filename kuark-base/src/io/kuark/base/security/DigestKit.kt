@@ -1,8 +1,8 @@
 package io.kuark.base.security
 
-import org.apache.commons.lang3.Validate
 import io.kuark.base.lang.string.EncodeKit
 import io.kuark.base.log.LogFactory
+import org.apache.commons.lang3.Validate
 import java.io.InputStream
 import java.security.MessageDigest
 import java.security.SecureRandom

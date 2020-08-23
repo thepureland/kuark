@@ -19,7 +19,7 @@ object ListToTreeConvertor {
      * @param objectList 结点对象列表
      * @return List<树根结点>
     </树根结点> */
-    fun <T, E : IListToTreeRestrict<T>> convert(objectList: List<E>): List<TreeNode<E>> {
+    fun <T, E : ITreeable<T>> convert(objectList: List<E>): List<TreeNode<E>> {
         val treeNodeMap = HashMap<T, TreeNode<E>>(objectList.size, 1f)
         for (`object` in objectList) {
             treeNodeMap[`object`.selfUniqueIdentifier] = TreeNode(`object`)

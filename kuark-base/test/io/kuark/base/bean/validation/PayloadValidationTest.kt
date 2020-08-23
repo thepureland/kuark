@@ -1,9 +1,9 @@
 package io.kuark.base.bean.validation
 
+import io.kuark.base.bean.validation.kit.ValidationKit
+import io.kuark.base.log.LogFactory
 import org.hibernate.validator.constraints.Length
 import org.junit.jupiter.api.Test
-import io.kuark.base.log.LogFactory
-import io.kuark.base.bean.validation.kit.ValidationKit
 import javax.validation.ConstraintViolation
 import javax.validation.Payload
 import javax.validation.constraints.Max

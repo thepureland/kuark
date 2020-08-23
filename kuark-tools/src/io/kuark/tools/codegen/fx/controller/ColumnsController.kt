@@ -1,5 +1,11 @@
 package io.kuark.tools.codegen.fx.controller
 
+import io.kuark.tools.codegen.core.CodeGeneratorContext
+import io.kuark.tools.codegen.service.CodeGenColumnService
+import io.kuark.tools.codegen.service.CodeGenObjectService
+import io.kuark.tools.codegen.vo.ColumnInfo
+import io.kuark.tools.codegen.vo.Config
+import io.kuark.ui.jfx.controls.AutoCompleteComboBoxListener
 import javafx.application.Platform
 import javafx.beans.value.ObservableValue
 import javafx.collections.FXCollections
@@ -8,12 +14,6 @@ import javafx.fxml.Initializable
 import javafx.scene.control.ComboBox
 import javafx.scene.control.TableView
 import javafx.scene.control.TextField
-import io.kuark.tools.codegen.core.CodeGeneratorContext
-import io.kuark.tools.codegen.service.CodeGenColumnService
-import io.kuark.tools.codegen.service.CodeGenObjectService
-import io.kuark.tools.codegen.vo.ColumnInfo
-import io.kuark.tools.codegen.vo.Config
-import io.kuark.ui.jfx.controls.AutoCompleteComboBoxListener
 import java.net.URL
 import java.util.*
 

@@ -2,8 +2,6 @@ package io.kuark.base.lang.string
 
 import org.junit.jupiter.api.Test
 
-import org.junit.jupiter.api.Assertions.*
-
 internal class RandomStringKitTest {
 
     @Test

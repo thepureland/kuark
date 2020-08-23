@@ -1,8 +1,8 @@
 package io.kuark.base.cn
 
+import io.kuark.base.support.enums.Sex
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
-import io.kuark.base.support.enums.Sex
 
 /**
  * IdCardNoKit测试用例

@@ -1,10 +1,10 @@
 package io.kuark.base.bean.validation.constraint.validator
 
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Test
 import io.kuark.base.bean.validation.constraint.annotaions.Constraints
 import io.kuark.base.bean.validation.constraint.annotaions.Exist
 import io.kuark.base.bean.validation.kit.ValidationKit
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
 import javax.validation.constraints.NotBlank
 
 /**

@@ -1,8 +1,8 @@
 package io.kuark.resource.sys.service
 
+import io.kuark.test.SpringTest
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Test
-import io.kuark.test.SpringTest
 import org.springframework.beans.factory.annotation.Autowired
 
 internal class SysParamServiceTest : SpringTest() {

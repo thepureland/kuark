@@ -1,10 +1,10 @@
 package io.kuark.ui.jfx.controls.table.cell.factory
 
+import io.kuark.ui.jfx.controls.XTextFieldTableCell
 import javafx.scene.control.TableCell
 import javafx.scene.control.TableColumn
 import javafx.util.Callback
 import javafx.util.StringConverter
-import io.kuark.ui.jfx.controls.XTextFieldTableCell
 
 class XTextFieldTableCellFactory<S> : Callback<TableColumn<S, String>?, TableCell<S, String>?> {
 

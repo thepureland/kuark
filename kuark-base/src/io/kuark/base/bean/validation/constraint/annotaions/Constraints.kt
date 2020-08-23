@@ -1,11 +1,11 @@
 package io.kuark.base.bean.validation.constraint.annotaions
 
-import org.hibernate.validator.constraints.*
 import io.kuark.base.bean.validation.constraint.validator.ConstraintsValidator
 import io.kuark.base.bean.validation.support.Depends
 import io.kuark.base.bean.validation.support.IBeanValidator
 import io.kuark.base.support.enums.IDictEnum
 import io.kuark.base.support.logic.AndOr
+import org.hibernate.validator.constraints.*
 import javax.validation.Constraint
 import javax.validation.Payload
 import javax.validation.constraints.*

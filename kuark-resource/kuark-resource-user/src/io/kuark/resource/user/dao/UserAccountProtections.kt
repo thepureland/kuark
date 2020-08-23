@@ -1,8 +1,9 @@
 package io.kuark.resource.user.dao
 
-import me.liuwj.ktorm.schema.*
-import io.kuark.resource.user.po.UserAccountProtection
 import io.kuark.data.jdbc.support.MaintainableTable
+import io.kuark.resource.user.po.UserAccountProtection
+import me.liuwj.ktorm.schema.int
+import me.liuwj.ktorm.schema.varchar
 
 /**
  * 用户账号保护数据库实体DAO

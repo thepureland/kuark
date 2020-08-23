@@ -1,7 +1,7 @@
 package io.kuark.base.bean
 
 import io.kuark.base.support.IIdEntity
-import io.kuark.base.tree.IListToTreeRestrict
+import io.kuark.base.tree.ITreeable
 import java.util.*
 
 /**
@@ -10,7 +10,7 @@ import java.util.*
  * @author K
  * @since 1.0.0
  */
-class Person : IIdEntity<String>, IListToTreeRestrict<String?> {
+class Person : IIdEntity<String>, ITreeable<String?> {
 
     override var selfUniqueIdentifier: String? = null
     override var parentUniqueIdentifier: String? = null

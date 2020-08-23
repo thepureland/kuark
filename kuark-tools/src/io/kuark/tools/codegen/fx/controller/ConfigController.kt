@@ -1,10 +1,5 @@
 package io.kuark.tools.codegen.fx.controller
 
-import javafx.collections.FXCollections
-import javafx.fxml.FXML
-import javafx.fxml.Initializable
-import javafx.scene.control.*
-import javafx.stage.DirectoryChooser
 import io.kuark.base.io.FilenameKit
 import io.kuark.base.io.PathKit
 import io.kuark.base.lang.SystemKit
@@ -14,6 +9,11 @@ import io.kuark.data.jdbc.datasource.DataSourceKit
 import io.kuark.data.jdbc.datasource.setCurrentDataSource
 import io.kuark.data.jdbc.support.RdbKit
 import io.kuark.tools.codegen.vo.Config
+import javafx.collections.FXCollections
+import javafx.fxml.FXML
+import javafx.fxml.Initializable
+import javafx.scene.control.*
+import javafx.stage.DirectoryChooser
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream

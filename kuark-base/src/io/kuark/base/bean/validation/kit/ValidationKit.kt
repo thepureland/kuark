@@ -1,7 +1,7 @@
 package io.kuark.base.bean.validation.kit
 
-import org.hibernate.validator.HibernateValidator
 import io.kuark.base.bean.validation.support.ValidationContext
+import org.hibernate.validator.HibernateValidator
 import javax.validation.ConstraintViolation
 import javax.validation.Validation
 import javax.validation.Validator

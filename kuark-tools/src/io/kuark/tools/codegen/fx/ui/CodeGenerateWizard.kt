@@ -1,12 +1,5 @@
 package io.kuark.tools.codegen.fx.ui
 
-import javafx.application.Application
-import javafx.fxml.FXMLLoader
-import javafx.scene.Parent
-import javafx.scene.control.Alert
-import javafx.scene.control.Button
-import javafx.scene.control.ButtonType
-import javafx.stage.Stage
 import io.kuark.tools.codegen.core.CodeGeneratorContext
 import io.kuark.tools.codegen.core.TemplateModelCreator
 import io.kuark.tools.codegen.fx.controller.ColumnsController
@@ -14,6 +7,13 @@ import io.kuark.tools.codegen.fx.controller.ConfigController
 import io.kuark.tools.codegen.fx.controller.FilesController
 import io.kuark.ui.jfx.controls.wizard.LinearWizardFlow
 import io.kuark.ui.jfx.controls.wizard.Wizard
+import javafx.application.Application
+import javafx.fxml.FXMLLoader
+import javafx.scene.Parent
+import javafx.scene.control.Alert
+import javafx.scene.control.Button
+import javafx.scene.control.ButtonType
+import javafx.stage.Stage
 
 /**
  * 代码生成器向导，用户可继承此类来提供自定的TemplateModelCreator

@@ -1,13 +1,13 @@
 package io.kuark.tools.codegen.service
 
-import me.liuwj.ktorm.dsl.eq
-import me.liuwj.ktorm.dsl.insert
-import me.liuwj.ktorm.entity.*
 import io.kuark.data.jdbc.metadata.RdbMetadataKit
 import io.kuark.data.jdbc.metadata.TableType
 import io.kuark.data.jdbc.support.RdbKit
 import io.kuark.tools.codegen.core.CodeGeneratorContext
 import io.kuark.tools.codegen.dao.CodeGenObjects
+import me.liuwj.ktorm.dsl.eq
+import me.liuwj.ktorm.dsl.insert
+import me.liuwj.ktorm.entity.*
 import java.time.LocalDateTime
 
 /**

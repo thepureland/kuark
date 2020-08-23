@@ -1,11 +1,11 @@
 package io.kuark.base.data.json
 
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
 import io.kuark.base.bean.Address
 import io.kuark.base.bean.Person
 import io.kuark.base.tree.TreeKit
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import java.util.*
 
 internal class JsonKitTest {

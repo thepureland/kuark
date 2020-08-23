@@ -1,9 +1,9 @@
 package io.kuark.base.lang
 
+import io.kuark.base.lang.string.EncodeKit
 import org.apache.commons.lang3.BooleanUtils
 import org.apache.commons.lang3.StringUtils
 import org.junit.jupiter.api.Test
-import io.kuark.base.lang.string.EncodeKit
 
 /**
  * PackageKit测试用例

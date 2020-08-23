@@ -1,9 +1,9 @@
 package io.kuark.base.bean.validation.constraint.validator
 
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Test
 import io.kuark.base.bean.validation.constraint.annotaions.DateTime
 import io.kuark.base.bean.validation.kit.ValidationKit
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
 
 /**
  * DateTime验证器测试用例

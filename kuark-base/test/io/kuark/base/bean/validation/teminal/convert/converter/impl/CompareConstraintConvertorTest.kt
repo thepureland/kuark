@@ -1,10 +1,10 @@
 package io.kuark.base.bean.validation.teminal.convert.converter.impl
 
-import org.junit.jupiter.api.Test
 import io.kuark.base.bean.validation.constraint.annotaions.Compare
 import io.kuark.base.bean.validation.support.Depends
 import io.kuark.base.bean.validation.teminal.convert.ConstraintConvertContext
 import io.kuark.base.support.logic.LogicOperator
+import org.junit.jupiter.api.Test
 import kotlin.reflect.full.memberProperties
 
 /**

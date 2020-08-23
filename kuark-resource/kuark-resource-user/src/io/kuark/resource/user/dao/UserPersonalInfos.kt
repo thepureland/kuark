@@ -1,8 +1,11 @@
 package io.kuark.resource.user.dao
 
-import me.liuwj.ktorm.schema.*
-import io.kuark.resource.user.po.UserPersonalInfo
 import io.kuark.data.jdbc.support.MaintainableTable
+import io.kuark.resource.user.po.UserPersonalInfo
+import me.liuwj.ktorm.schema.date
+import me.liuwj.ktorm.schema.datetime
+import me.liuwj.ktorm.schema.float
+import me.liuwj.ktorm.schema.varchar
 
 /**
  * 用户个人信息数据库实体DAO

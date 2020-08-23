@@ -1,8 +1,8 @@
 package io.kuark.base.bean.validation.support
 
-import org.junit.jupiter.api.Test
 import io.kuark.base.support.logic.AndOr
 import io.kuark.base.support.logic.LogicOperator
+import org.junit.jupiter.api.Test
 
 /**
  * DependsValidator测试用例

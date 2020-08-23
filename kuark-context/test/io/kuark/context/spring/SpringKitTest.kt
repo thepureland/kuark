@@ -1,8 +1,8 @@
 package io.kuark.context.spring
 
-import org.junit.jupiter.api.Test
 import io.kuark.context.annotation.ConfigValue
 import io.kuark.test.SpringTest
+import org.junit.jupiter.api.Test
 
 
 internal class SpringKitTest : SpringTest() {

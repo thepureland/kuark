@@ -3,7 +3,10 @@ package io.kuark.ui.jfx.controls
 import javafx.beans.value.ChangeListener
 import javafx.beans.value.ObservableValue
 import javafx.scene.Node
-import javafx.scene.control.*
+import javafx.scene.control.TablePosition
+import javafx.scene.control.TableView
+import javafx.scene.control.TextField
+import javafx.scene.control.TextInputControl
 import javafx.scene.control.cell.TextFieldTableCell
 import javafx.util.StringConverter
 import java.util.stream.Collectors

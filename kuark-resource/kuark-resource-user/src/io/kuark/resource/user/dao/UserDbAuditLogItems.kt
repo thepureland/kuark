@@ -1,8 +1,8 @@
 package io.kuark.resource.user.dao
 
-import me.liuwj.ktorm.schema.*
-import io.kuark.resource.user.po.UserDbAuditLogItem
 import io.kuark.data.jdbc.support.StringIdTable
+import io.kuark.resource.user.po.UserDbAuditLogItem
+import me.liuwj.ktorm.schema.varchar
 
 /**
  * 用户数据库操作审计日志明细数据库实体DAO

@@ -1,15 +1,14 @@
 package io.kuark.base.security
 
-import org.apache.commons.codec.binary.Base64
 import io.kuark.base.lang.string.EncodeKit
 import io.kuark.base.log.LogFactory
+import org.apache.commons.codec.binary.Base64
 import java.io.UnsupportedEncodingException
 import java.security.MessageDigest
 import java.security.SecureRandom
 import javax.crypto.Cipher
 import javax.crypto.KeyGenerator
 import javax.crypto.Mac
-import javax.crypto.SecretKey
 import javax.crypto.spec.SecretKeySpec
 
 /**

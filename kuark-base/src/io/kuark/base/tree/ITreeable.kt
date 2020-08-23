@@ -8,7 +8,7 @@ import java.io.Serializable
  * @author K
  * @since 1.0.0
  */
-interface IListToTreeRestrict<T> : Serializable {
+interface ITreeable<T> : Serializable {
 
     /**
      * 当前结点的惟一标识

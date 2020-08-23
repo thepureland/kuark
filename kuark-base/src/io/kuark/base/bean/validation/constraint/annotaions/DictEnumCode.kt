@@ -1,7 +1,7 @@
 package io.kuark.base.bean.validation.constraint.annotaions
 
-import io.kuark.base.support.enums.IDictEnum
 import io.kuark.base.bean.validation.constraint.validator.DictEnumCodeValidator
+import io.kuark.base.support.enums.IDictEnum
 import javax.validation.Constraint
 import javax.validation.Payload
 import kotlin.reflect.KClass

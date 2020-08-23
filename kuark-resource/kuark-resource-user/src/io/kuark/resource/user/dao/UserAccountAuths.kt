@@ -1,8 +1,9 @@
 package io.kuark.resource.user.dao
 
-import me.liuwj.ktorm.schema.*
-import io.kuark.resource.user.po.UserAccountAuth
 import io.kuark.data.jdbc.support.MaintainableTable
+import io.kuark.resource.user.po.UserAccountAuth
+import me.liuwj.ktorm.schema.boolean
+import me.liuwj.ktorm.schema.varchar
 
 /**
  * 用户账号授权数据库实体DAO

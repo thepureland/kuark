@@ -1,8 +1,8 @@
 package io.kuark.resource.auth.dao
 
-import me.liuwj.ktorm.schema.*
-import io.kuark.resource.auth.po.AuthRoleUser
 import io.kuark.data.jdbc.support.StringIdTable
+import io.kuark.resource.auth.po.AuthRoleUser
+import me.liuwj.ktorm.schema.varchar
 
 /**
  * 角色-用户关系数据库实体DAO

@@ -1,8 +1,8 @@
 package io.kuark.base.image.barcode
 
-import org.junit.jupiter.api.Test
 import io.kuark.base.image.ImageKit
 import io.kuark.base.io.PathKit
+import org.junit.jupiter.api.Test
 
 internal class QrCodeKitTest {
 

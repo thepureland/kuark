@@ -1,13 +1,9 @@
 package io.kuark.tools.codegen.service
 
-import me.liuwj.ktorm.dsl.*
-import me.liuwj.ktorm.entity.filter
-import me.liuwj.ktorm.entity.isEmpty
-import me.liuwj.ktorm.entity.removeIf
-import me.liuwj.ktorm.entity.sequenceOf
 import io.kuark.data.jdbc.support.RdbKit
 import io.kuark.tools.codegen.core.CodeGeneratorContext
 import io.kuark.tools.codegen.dao.CodeGenFiles
+import me.liuwj.ktorm.dsl.*
 
 /**
  * 生成的文件历史信息服务

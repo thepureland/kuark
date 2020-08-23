@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import io.kuark.tools.codegen.fx.ui.SortComboBoxTableCellFactory?>
+<?import io.kuark.ui.jfx.controls.table.cell.factory.*?>
 <?import javafx.scene.control.cell.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import io.kuark.tools.codegen.fx.ui.SortComboBoxTableCellFactory?>
-<?import io.kuark.ui.jfx.controls.table.cell.factory.*?>
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0"
             prefWidth="1024.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="io.kuark.tools.codegen.fx.controller.ColumnsController">

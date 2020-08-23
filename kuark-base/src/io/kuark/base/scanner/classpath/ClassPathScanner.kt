@@ -41,7 +41,6 @@ object ClassPathScanner {
      * @return The resources that were found.
      * @throws IOException when the location could not be scanned.
      */
-	@JvmStatic
 	fun scanForResources(path: String, prefix: String, suffix: String): Array<Resource> {
         val resources: MutableSet<Resource> = TreeSet()
         try {
@@ -115,7 +114,6 @@ object ClassPathScanner {
      * @return The resource names.
      * @throws IOException when scanning this location failed.
      */
-    @Throws(IOException::class)
     private fun findResourceNames(path: String, prefix: String, suffix: String): Set<String?> {
         val resourceNames: MutableSet<String?> = TreeSet()
         val locationsUrls = getLocationUrlsForPath(path)
@@ -140,7 +138,6 @@ object ClassPathScanner {
      * @return The underlying physical URLs.
      * @throws IOException when the lookup fails.
      */
-    @Throws(IOException::class)
     private fun getLocationUrlsForPath(path: String): List<URL> {
         val locationUrls: MutableList<URL> = ArrayList()
         val urls = classLoader.getResources(path)

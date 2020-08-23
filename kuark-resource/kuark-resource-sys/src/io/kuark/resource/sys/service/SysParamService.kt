@@ -1,10 +1,10 @@
 package io.kuark.resource.sys.service
 
-import me.liuwj.ktorm.dsl.*
-import io.kuark.resource.sys.dao.SysParams
-import io.kuark.resource.sys.po.SysParam
 import io.kuark.cache.context.CacheNames
 import io.kuark.data.jdbc.support.RdbKit
+import io.kuark.resource.sys.dao.SysParams
+import io.kuark.resource.sys.po.SysParam
+import me.liuwj.ktorm.dsl.*
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Service
 

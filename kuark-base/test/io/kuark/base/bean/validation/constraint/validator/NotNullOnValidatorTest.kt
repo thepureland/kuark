@@ -1,10 +1,10 @@
 package io.kuark.base.bean.validation.constraint.validator
 
-import org.hibernate.validator.constraints.Length
-import org.junit.jupiter.api.Test
 import io.kuark.base.bean.validation.constraint.annotaions.NotNullOn
 import io.kuark.base.bean.validation.kit.ValidationKit
 import io.kuark.base.bean.validation.support.Depends
+import org.hibernate.validator.constraints.Length
+import org.junit.jupiter.api.Test
 
 /**
  * NotNullOnValidator测试用例

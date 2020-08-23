@@ -30,6 +30,5 @@ interface ClassPathLocationScanner {
      * @return The system-independent names of the resources on the classpath.
      * @throws IOException when the scanning failed.
      */
-    @Throws(IOException::class)
     fun findResourceNames(location: String, locationUrl: URL): Set<String>
 }

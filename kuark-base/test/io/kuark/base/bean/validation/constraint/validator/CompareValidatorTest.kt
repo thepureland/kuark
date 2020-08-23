@@ -1,12 +1,12 @@
 package io.kuark.base.bean.validation.constraint.validator
 
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 import io.kuark.base.bean.validation.constraint.annotaions.Compare
 import io.kuark.base.bean.validation.kit.ValidationKit
 import io.kuark.base.bean.validation.support.Depends
 import io.kuark.base.support.logic.LogicOperator
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import javax.validation.ValidationException
 
 /**

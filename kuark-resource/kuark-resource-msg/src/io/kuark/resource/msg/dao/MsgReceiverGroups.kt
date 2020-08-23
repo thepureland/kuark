@@ -1,8 +1,8 @@
 package io.kuark.resource.msg.dao
 
-import me.liuwj.ktorm.schema.*
-import io.kuark.resource.msg.po.MsgReceiverGroup
 import io.kuark.data.jdbc.support.MaintainableTable
+import io.kuark.resource.msg.po.MsgReceiverGroup
+import me.liuwj.ktorm.schema.varchar
 
 /**
  * 消息接收者群组数据库实体DAO

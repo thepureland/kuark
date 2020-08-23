@@ -1,7 +1,7 @@
 package io.kuark.base.lang.collections
 
-import org.apache.commons.lang3.ArrayUtils
 import io.kuark.base.lang.string.toType
+import org.apache.commons.lang3.ArrayUtils
 import kotlin.reflect.KClass
 
 /**

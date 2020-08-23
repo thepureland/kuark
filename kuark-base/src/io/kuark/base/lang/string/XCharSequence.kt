@@ -1,8 +1,8 @@
 package io.kuark.base.lang.string
 
-import org.apache.commons.lang3.StringUtils
 import io.kuark.base.security.CryptoKit
 import io.kuark.base.security.DigestKit
+import org.apache.commons.lang3.StringUtils
 import java.math.BigDecimal
 import java.math.BigInteger
 import java.util.regex.Matcher

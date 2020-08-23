@@ -1,9 +1,5 @@
 package io.kuark.base.i18n
 
-import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.api.Test
-import java.util.*
-
 /**
  * I18nKit测试用例
  *

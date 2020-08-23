@@ -1,8 +1,5 @@
 package io.kuark.resource.sys.service
 
-import io.kuark.resource.sys.po.SysDict
-import io.kuark.resource.sys.po.SysDictItem
-import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Service
 
 /**

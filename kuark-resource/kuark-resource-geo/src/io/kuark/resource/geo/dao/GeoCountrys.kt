@@ -1,8 +1,9 @@
 package io.kuark.resource.geo.dao
 
-import me.liuwj.ktorm.schema.*
-import io.kuark.resource.geo.po.GeoCountry
 import io.kuark.data.jdbc.support.MaintainableTable
+import io.kuark.resource.geo.po.GeoCountry
+import me.liuwj.ktorm.schema.date
+import me.liuwj.ktorm.schema.varchar
 
 /**
  * 国家|地区数据库实体DAO

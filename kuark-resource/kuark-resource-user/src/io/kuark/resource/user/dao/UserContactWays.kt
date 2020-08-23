@@ -1,8 +1,9 @@
 package io.kuark.resource.user.dao
 
-import me.liuwj.ktorm.schema.*
-import io.kuark.resource.user.po.UserContactWay
 import io.kuark.data.jdbc.support.MaintainableTable
+import io.kuark.resource.user.po.UserContactWay
+import me.liuwj.ktorm.schema.int
+import me.liuwj.ktorm.schema.varchar
 
 /**
  * 用户联系方式数据库实体DAO

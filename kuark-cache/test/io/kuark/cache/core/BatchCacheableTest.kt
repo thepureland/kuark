@@ -1,9 +1,9 @@
 package io.kuark.cache.core
 
-import org.junit.jupiter.api.Test
 import io.kuark.base.log.LogFactory
 import io.kuark.cache.context.CacheNames
 import io.kuark.test.SpringTest
+import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.Cacheable

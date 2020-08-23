@@ -1,7 +1,7 @@
 package io.kuark.data.jdbc.support
 
-import me.liuwj.ktorm.entity.Entity
 import io.kuark.base.support.IIdEntity
+import me.liuwj.ktorm.entity.Entity
 
 /**
  * 数据库表记录实体接口

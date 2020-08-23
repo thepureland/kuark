@@ -4,8 +4,8 @@ import io.kuark.base.bean.validation.teminal.convert.ConstraintConvertContext
 import io.kuark.base.bean.validation.teminal.convert.ConstraintConvertorFactory
 import io.kuark.base.data.json.JsonKit
 import io.kuark.base.lang.SystemKit
-import io.kuark.base.lang.reflect.getSuperClass
 import io.kuark.base.lang.reflect.getMemberProperty
+import io.kuark.base.lang.reflect.getSuperClass
 import io.kuark.base.lang.reflect.isAnnotationPresent
 import javax.validation.Constraint
 import javax.validation.Valid

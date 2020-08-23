@@ -1,8 +1,10 @@
 package io.kuark.tools.codegen.dao
 
-import me.liuwj.ktorm.schema.*
-import io.kuark.tools.codegen.po.CodeGenObject
 import io.kuark.data.jdbc.support.StringIdTable
+import io.kuark.tools.codegen.po.CodeGenObject
+import me.liuwj.ktorm.schema.datetime
+import me.liuwj.ktorm.schema.int
+import me.liuwj.ktorm.schema.varchar
 
 /**
  * 代码生成-对象信息数据库实体DAO

@@ -2,8 +2,6 @@ package io.kuark.base.security
 
 import org.junit.jupiter.api.Test
 
-import org.junit.jupiter.api.Assertions.*
-
 internal class GoogleAuthenticatorTest {
 
     @Test

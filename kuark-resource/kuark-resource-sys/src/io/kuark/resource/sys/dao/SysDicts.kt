@@ -1,8 +1,8 @@
 package io.kuark.resource.sys.dao
 
-import me.liuwj.ktorm.schema.*
-import io.kuark.resource.sys.po.SysDict
 import io.kuark.data.jdbc.support.MaintainableTable
+import io.kuark.resource.sys.po.SysDict
+import me.liuwj.ktorm.schema.varchar
 
 /**
  * 字典主表数据库实体DAO

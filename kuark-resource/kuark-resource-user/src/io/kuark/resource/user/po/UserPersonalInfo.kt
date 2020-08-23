@@ -2,8 +2,8 @@ package io.kuark.resource.user.po
 
 import io.kuark.data.jdbc.support.DbEntityFactory
 import io.kuark.data.jdbc.support.IMaintainableDbEntity
-import java.time.LocalDateTime
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 /**
  * 用户个人信息数据库实体

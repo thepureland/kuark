@@ -1,7 +1,7 @@
 package io.kuark.base.bean.validation.support
 
-import org.hibernate.validator.spi.group.DefaultGroupSequenceProvider
 import io.kuark.base.lang.GenericKit
+import org.hibernate.validator.spi.group.DefaultGroupSequenceProvider
 import kotlin.reflect.KClass
 
 /**

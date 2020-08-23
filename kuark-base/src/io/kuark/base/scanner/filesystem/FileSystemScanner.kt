@@ -39,7 +39,6 @@ object FileSystemScanner {
      * @return The resources that were found.
      * @throws java.io.IOException when the location could not be scanned.
      */
-    @Throws(IOException::class)
     fun scanForResources(path: String, prefix: String, suffix: String): Array<Resource> {
         logger.debug("Scanning for filesystem resources at '$path' (Prefix: '$prefix', Suffix: '$suffix')")
         if (!File(path).isDirectory) {
@@ -64,7 +63,6 @@ object FileSystemScanner {
      * @return The resource names.
      * @throws java.io.IOException when scanning this location failed.
      */
-    @Throws(IOException::class)
     private fun findResourceNames(path: String, prefix: String, suffix: String): Set<String> {
         val resourceNames = findResourceNamesFromFileSystem(path, File(path))
         return filterResourceNames(resourceNames, prefix, suffix)

@@ -1,11 +1,13 @@
 package io.kuark.tools.main
 
-import javafx.application.Application
 import io.kuark.tools.codegen.fx.ui.CodeGenerateWizard
+import javafx.application.Application
 import org.springframework.boot.autoconfigure.SpringBootApplication
 
 
-@SpringBootApplication //TODO ??? 为什么去掉会报找不到Application类
+//TODO ??? 为什么动不动会报找不到Application类
+
+@SpringBootApplication
 open class CodeGeneraterMain
 
 fun main(args: Array<String>) {

@@ -19,7 +19,7 @@ object TreeKit {
      * @return List<树根结点>
      * @since 1.0.0
      */
-    fun <T, E : IListToTreeRestrict<T>> convertListToTree(objectList: List<E>): List<TreeNode<E>> {
+    fun <T, E : ITreeable<T>> convertListToTree(objectList: List<E>): List<TreeNode<E>> {
         return ListToTreeConvertor.convert(objectList)
     }
 

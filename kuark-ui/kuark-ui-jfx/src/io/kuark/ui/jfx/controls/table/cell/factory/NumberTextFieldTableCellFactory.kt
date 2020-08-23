@@ -1,11 +1,11 @@
 package io.kuark.ui.jfx.controls.table.cell.factory
 
+import io.kuark.base.lang.string.isNumeric
+import io.kuark.ui.jfx.controls.XTextFieldTableCell
 import javafx.scene.control.TableCell
 import javafx.scene.control.TableColumn
 import javafx.util.Callback
 import javafx.util.StringConverter
-import io.kuark.base.lang.string.isNumeric
-import io.kuark.ui.jfx.controls.XTextFieldTableCell
 
 class NumberTextFieldTableCellFactory<S> : Callback<TableColumn<S, Int>?, TableCell<S, Int>?> {
 

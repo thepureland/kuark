@@ -1,6 +1,8 @@
 package io.kuark.tools.codegen.vo
 
-import javafx.beans.property.*
+import javafx.beans.property.SimpleObjectProperty
+import javafx.beans.property.SimpleStringProperty
+import javafx.beans.property.StringProperty
 import javafx.scene.control.SingleSelectionModel
 
 /**

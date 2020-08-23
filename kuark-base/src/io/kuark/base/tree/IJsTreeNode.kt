@@ -8,9 +8,24 @@ package io.kuark.base.tree
  */
 interface IJsTreeNode : ITreeable<String?> {
 
-    val text: String?
+    /**
+     * 结点文本
+     */
+    val text: String
+
+    /**
+     * 结点图标url
+     */
     fun getIcon(): String?
+
+    /**
+     * 孩子结点
+     */
     fun getChildren(): MutableList<IJsTreeNode>
+
+    /**
+     * 结点状态
+     */
     fun getState(): TreeNodeState?
 
 }

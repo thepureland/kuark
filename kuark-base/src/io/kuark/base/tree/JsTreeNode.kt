@@ -10,8 +10,8 @@ import com.fasterxml.jackson.annotation.JsonInclude
  */
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 class JsTreeNode(
-    override var selfUniqueIdentifier: String?,
-    override var text: String?,
+    override var selfUniqueIdentifier: String,
+    override var text: String,
     override var parentUniqueIdentifier: String?
 ) : IJsTreeNode {
 
@@ -19,7 +19,7 @@ class JsTreeNode(
     private var children: MutableList<IJsTreeNode> = mutableListOf()
     private var state: TreeNodeState? = null
 
-    constructor(id: String?, text: String?, parentId: String?, state: TreeNodeState?) : this(id, text, parentId) {
+    constructor(id: String, text: String, parentId: String?, state: TreeNodeState?) : this(id, text, parentId) {
         this.state = state
     }
 
@@ -49,7 +49,7 @@ class JsTreeNode(
     }
 
     companion object {
-        private const val serialVersionUID = -6972101037527773627L
+        private const val serialVersionUID = -6972101021635773627L
     }
 
 }

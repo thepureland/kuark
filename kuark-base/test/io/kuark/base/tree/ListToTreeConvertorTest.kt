@@ -16,17 +16,17 @@ internal class ListToTreeConvertorTest {
         val treeList = ListToTreeConvertor.convert(list)
         var result = treeList.size == 2
         val treeNode10 = treeList[0]
-        result = result && "10" == treeNode10.getObject()!!.id
+        result = result && "10" == treeNode10.getUserObject()!!.id
         result = result && treeNode10.getChildren().size === 2
         val treeNode11 = treeNode10.getChildren()[0]
-        result = result && "11" == treeNode11.getObject()!!.id
+        result = result && "11" == treeNode11.getUserObject()!!.id
         val treeNode12 = treeNode10.getChildren()[1]
-        result = result && "12" == treeNode12.getObject()!!.id
+        result = result && "12" == treeNode12.getUserObject()!!.id
         val treeNode20 = treeList[1]
-        result = result && "20" == treeNode20.getObject()!!.id
+        result = result && "20" == treeNode20.getUserObject()!!.id
         result = result && treeNode20.getChildren().size === 1
         val treeNode21 = treeNode20.getChildren()[0]
-        result = result && "21" == treeNode21.getObject()!!.id
+        result = result && "21" == treeNode21.getUserObject()!!.id
         assert(result)
     }
 

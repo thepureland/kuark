@@ -1,7 +1,6 @@
 package io.kuark.base.tree
 
 import java.io.Serializable
-import java.util.*
 
 /**
  * 通用树结点
@@ -11,9 +10,9 @@ import java.util.*
  */
 class TreeNode<T> : Serializable {
 
-    private var `object`: T? = null // 当前结点对象
-    private var parentObject: T? = null// 父结点对象
-    private var children: MutableList<TreeNode<T>> = ArrayList(0) // 孩子结点集合
+    private var userObject: T? = null // 当前结点用户对象
+    private var parentUserObject: T? = null// 父结点用户对象
+    private var children = mutableListOf<TreeNode<T>>() // 孩子结点集合
 
     /**
      * 空构造器
@@ -23,33 +22,33 @@ class TreeNode<T> : Serializable {
     /**
      * 构造器
      *
-     * @param object 当前结点对象
+     * @param userObject 当前结点对象
      */
-    constructor(`object`: T) {
-        this.`object` = `object`
+    constructor(userObject: T) {
+        this.userObject = userObject
     }
 
     /**
      * 构造器
      *
-     * @param object 当前结点对象
+     * @param userObject 当前结点对象
      * @param parentObject 父结点对象
      */
-    constructor(`object`: T, parentObject: T) {
-        this.`object` = `object`
-        this.parentObject = parentObject
+    constructor(userObject: T, parentObject: T) {
+        this.userObject = userObject
+        this.parentUserObject = parentObject
     }
 
-    fun getObject(): T? = `object`
+    fun getUserObject(): T? = userObject
 
-    fun setObject(`object`: T) {
-        this.`object` = `object`
+    fun setObject(userObject: T) {
+        this.userObject = userObject
     }
 
-    fun getParentObject(): T? = parentObject
+    fun getParentObject(): T? = parentUserObject
 
-    fun setParentObject(parentObject: T) {
-        this.parentObject = parentObject
+    fun setParentUserObject(parentObject: T) {
+        this.parentUserObject = parentObject
     }
 
     fun getChildren(): MutableList<TreeNode<T>> = children
@@ -63,7 +62,7 @@ class TreeNode<T> : Serializable {
     override fun hashCode(): Int {
         val prime = 31
         var result = 1
-        result = prime * result + if (`object` == null) 0 else `object`.hashCode()
+        result = prime * result + if (userObject == null) 0 else userObject.hashCode()
         return result
     }
 
@@ -78,17 +77,17 @@ class TreeNode<T> : Serializable {
             return false
         }
         val other = other as TreeNode<T?>
-        if (`object` == null) {
-            if (other.`object` != null) {
+        if (userObject == null) {
+            if (other.userObject != null) {
                 return false
             }
-        } else if (`object` != other.`object`) {
+        } else if (userObject != other.userObject) {
             return false
         }
         return true
     }
 
     companion object {
-        private const val serialVersionUID = -7315465823402069017L
+        private const val serialVersionUID = -7315465823402887866L
     }
 }

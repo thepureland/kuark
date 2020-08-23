@@ -8,6 +8,12 @@ package io.kuark.base.tree
  */
 interface IJsTreeNodeConvertor<O, N : IJsTreeNode?> {
 
-    fun converter(obj: O): N
+    /**
+     * 将用户对象转换为js树结点对象
+     *
+     * @param userObject 用户对象
+     * @return js树结点对象
+     */
+    fun converter(userObject: O): N
 
 }

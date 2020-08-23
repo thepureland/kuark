@@ -53,6 +53,6 @@ class TreeNodeState : Serializable {
     }
 
     companion object {
-        private const val serialVersionUID = 4133941367895174215L
+        private const val serialVersionUID = 4133941367895177876L
     }
 }

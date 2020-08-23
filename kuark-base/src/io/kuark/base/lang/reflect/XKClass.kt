@@ -1,12 +1,11 @@
 package io.kuark.base.lang.reflect
 
+import java.net.URLDecoder
 import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
-import kotlin.reflect.full.memberFunctions
-import kotlin.reflect.full.memberProperties
-import kotlin.reflect.full.superclasses
+import kotlin.reflect.full.*
 
 /**
  * kotlin.KClass扩展函数
@@ -75,8 +74,40 @@ fun KClass<*>.getSuperClass(): KClass<*> = this.superclasses.first { it.construc
 fun KClass<*>.getSuperInterfaces(): List<KClass<*>> = this.superclasses.filter { it.constructors.isEmpty() }
 
 /**
+ * 返回当前类实现的所有接口
+ *
+ * @return 所有接口
+ */
+fun KClass<*>.getAllInterfaces(): List<KClass<*>> = this.allSuperclasses.filter { it.constructors.isEmpty() }
+
+/**
  * 匹配第一个与代表当前类的Type
  *
+ * @param 待搜索的type集合
  * @return 第一个与代表当前类的Type
  */
 fun KClass<*>.firstMatchTypeOf(types: Collection<KType>): KType = types.first { it.classifier == this }
+
+/**
+ * 返回在指定类的类体系(向上)中，匹配类注解的类
+ *
+ * @param annoClass 注解类
+ * @return 匹配的类
+ */
+fun KClass<*>.getClassUpThatPresentAnnotation(annoClass: KClass<out Annotation>): KClass<*> {
+    val present = this.isAnnotationPresent(annoClass)
+    return if (present) {
+        this
+    } else {
+        this.getSuperClass().getClassUpThatPresentAnnotation(annoClass)
+    }
+}
+
+/**
+ * 获取类在磁盘上的物理位置
+ *
+ * @return 类文件的绝对路径
+ * @since 1.0.0
+ */
+fun KClass<*>.getLocationOnDisk(): String =
+    URLDecoder.decode(this.java.protectionDomain.codeSource.location.path, "UTF-8")

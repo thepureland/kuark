@@ -55,7 +55,7 @@ object ThreadKit {
      * @param timeUnit 时间单位
      * @since 1.0.0
      */
-    fun gracefulShutdown(pool: ExecutorService, shutdownTimeout: Int, shutdownNowTimeout: Int, timeUnit: TimeUnit?) {
+    fun gracefulShutdown(pool: ExecutorService, shutdownTimeout: Int, shutdownNowTimeout: Int, timeUnit: TimeUnit) {
         pool.shutdown() // Disable new tasks from being submitted
         try {
             // Wait a while for existing tasks to terminate

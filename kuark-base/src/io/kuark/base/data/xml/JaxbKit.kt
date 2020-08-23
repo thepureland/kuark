@@ -1,17 +1,16 @@
 package io.kuark.base.data.xml
 
 import org.apache.commons.lang3.StringUtils
-import io.kuark.base.lang.ClassKit
 import org.xml.sax.InputSource
-import org.xml.sax.SAXException
 import java.io.StringReader
 import java.io.StringWriter
 import java.util.concurrent.ConcurrentHashMap
-import java.util.concurrent.ConcurrentMap
-import javax.xml.bind.*
+import javax.xml.bind.JAXBContext
+import javax.xml.bind.JAXBElement
+import javax.xml.bind.Marshaller
+import javax.xml.bind.Unmarshaller
 import javax.xml.bind.annotation.XmlAnyElement
 import javax.xml.namespace.QName
-import javax.xml.parsers.ParserConfigurationException
 import javax.xml.parsers.SAXParserFactory
 import javax.xml.transform.Source
 import javax.xml.transform.sax.SAXSource

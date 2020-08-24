@@ -19,7 +19,8 @@ import kotlin.reflect.full.superclasses
 
 
 /**
- * 是否指定的注解类出现在该类上
+ * 是否指定的注解类出现在该类上。
+ * 注意：对于像SinceKotlin的注解无效!
  *
  * @param annotationClass 注解类
  * @return true: 指定的注解类出现在该类上, false: 指定的注解类没有出现在该类上
@@ -58,7 +59,7 @@ fun KClass<*>.getMemberPropertyValue(target: Any, propertyName: String): Any? {
  * @throws NoSuchElementException 当不存在时
  */
 fun KClass<*>.getMemberFunction(functionName: String): KFunction<*> =
-    this.memberFunctions.first{ it.name == functionName }
+    this.memberFunctions.first { it.name == functionName }
 
 
 /**
@@ -86,24 +87,35 @@ fun KClass<*>.getAllInterfaces(): List<KClass<*>> = this.allSuperclasses.filter 
 /**
  * 匹配第一个与代表当前类的Type
  *
- * @param 待搜索的type集合
+ * @param types 待搜索的type集合
  * @return 第一个与代表当前类的Type
  */
 fun KClass<*>.firstMatchTypeOf(types: Collection<KType>): KType = types.first { it.classifier == this }
 
 /**
  * 返回在指定类的类体系(向上)中，匹配类注解的类
+ * 注意：对于像SinceKotlin的注解无效!
  *
  * @param annoClass 注解类
- * @return 匹配的类
+ * @return 匹配的类的Set
  */
-fun KClass<*>.getClassUpThatPresentAnnotation(annoClass: KClass<out Annotation>): KClass<*> {
-    val present = this.isAnnotationPresent(annoClass)
-    return if (present) {
-        this
-    } else {
-        this.getSuperClass().getClassUpThatPresentAnnotation(annoClass)
+fun KClass<*>.getClassUpThatPresentAnnotation(annoClass: KClass<out Annotation>): Set<KClass<*>> {
+    val results = mutableSetOf<KClass<*>>()
+    getClassUpThatPresentAnnotation(this, annoClass, results)
+    return results
+}
+
+private fun getClassUpThatPresentAnnotation(
+    clazz: KClass<*>, annoClass: KClass<out Annotation>, results: MutableSet<KClass<*>>
+) {
+    if (clazz == Any::class) {
+        return
     }
+    val present = clazz.isAnnotationPresent(annoClass)
+    if (present) {
+        results.add(clazz)
+    }
+    clazz.allSuperclasses.forEach { getClassUpThatPresentAnnotation(it, annoClass, results) }
 }
 
 /**

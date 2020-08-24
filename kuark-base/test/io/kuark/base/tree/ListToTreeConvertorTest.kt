@@ -1,18 +1,18 @@
 package io.kuark.base.tree
 
 import org.junit.jupiter.api.Test
-import java.util.*
 
 internal class ListToTreeConvertorTest {
 
     @Test
     fun testConvert() {
-        val list: MutableList<TestRecord> = ArrayList()
-        list.add(TestRecord("10", null, "根结点10"))
-        list.add(TestRecord("11", "10", "10的子结点11"))
-        list.add(TestRecord("12", "10", "10的子结点12"))
-        list.add(TestRecord("20", null, "根结点20"))
-        list.add(TestRecord("21", "20", "20的子结点21"))
+        val list = listOf(
+            TestRecord("10", null, "根结点10"),
+            TestRecord("11", "10", "10的子结点11"),
+            TestRecord("12", "10", "10的子结点12"),
+            TestRecord("20", null, "根结点20"),
+            TestRecord("21", "20", "20的子结点21")
+        )
         val treeList = ListToTreeConvertor.convert(list)
         var result = treeList.size == 2
         val treeNode10 = treeList[0]

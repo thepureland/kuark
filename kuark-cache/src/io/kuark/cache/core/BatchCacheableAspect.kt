@@ -44,18 +44,14 @@ class BatchCacheableAspect {
      */
     @Around("cut()")
     fun around(joinPoint: ProceedingJoinPoint): Any? {
-        val methodSignature = joinPoint.signature as MethodSignature
-        val parameterTypes = methodSignature.parameterTypes
+        val result = linkedMapOf<String, Any?>()
 
-
-        val function = methodSignature.method.kotlinFunction!!
-
-        val batchCacheable = function.findAnnotation<BatchCacheable>()!! // 拿到方法定义的注解信息
+        // 拿到方法定义的注解信息
+        val function = (joinPoint.signature as MethodSignature).method.kotlinFunction!!
+        val batchCacheable = function.findAnnotation<BatchCacheable>()!!
 
         // 校验约束
         val cacheName = validate(joinPoint, function, batchCacheable)
-
-        val result = linkedMapOf<String, Any?>()
 
         // 得到所有缓存key
         val keys = getAllCacheKeys(joinPoint, function, batchCacheable)
@@ -82,11 +78,11 @@ class BatchCacheableAspect {
      * 校验约束
      */
     private fun validate(joinPoint: ProceedingJoinPoint, function: KFunction<*>, batchCacheable: BatchCacheable): String {
+        var cacheName: String? = null
         val clazz = joinPoint.target::class
 
         // 校验缓存名称是否配置
         val cacheConfig = clazz.findAnnotation<CacheConfig>() // 读取类注解
-        var cacheName: String? = null
         if (batchCacheable.cacheNames.isNotEmpty()) {
             cacheName = batchCacheable.cacheNames.first()
         } else if (cacheConfig != null && cacheConfig.cacheNames.isNotEmpty()) {

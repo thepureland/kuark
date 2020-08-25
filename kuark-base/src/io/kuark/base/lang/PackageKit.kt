@@ -31,7 +31,7 @@ object PackageKit {
     fun getClassesInPackage(pkg: String, recursive: Boolean): Set<KClass<*>> {
         val action = Action(true)
         find(pkg, recursive, action)
-        return action.getClasses().map { it.kotlin }.toSet()
+        return action.classes.toSet()
     }
 
     /**
@@ -47,7 +47,7 @@ object PackageKit {
         val action = Action(false)
         val packagePrefix = getPackagePrefix(pkgPattern)
         find(packagePrefix, recursive, action)
-        val pkgs = action.getPkgs()
+        val pkgs = action.pkgs
         val regExp = pkgPattern.replace("\\*".toRegex(), ".*")
         return pkgs.filter { it.matches(Regex(regExp)) }.toSet()
     }
@@ -132,7 +132,7 @@ object PackageKit {
                                 val className = name.substring(pkgName.length + 1, name.length - 6)
                                 try {
                                     // 添加到classes
-                                    action.addClass(Class.forName("$pkgName.$className"))
+                                    action.addClass(Class.forName("$pkgName.$className").kotlin)
                                 } catch (e: ClassNotFoundException) {
                                     LOG.error(e)
                                 }
@@ -190,8 +190,7 @@ object PackageKit {
                     try {
                         // 添加到集合中去
                         action.addClass(
-                            Thread.currentThread().contextClassLoader
-                                .loadClass("$packageName.$className")
+                            Thread.currentThread().contextClassLoader.loadClass("$packageName.$className").kotlin
                         )
                     } catch (e: ClassNotFoundException) {
                         LOG.error(e)
@@ -203,22 +202,15 @@ object PackageKit {
 
     private class Action(retrieveClass: Boolean) {
         var isRetrieveClass = true
-        private val classes: MutableSet<Class<*>> = LinkedHashSet()
-        private val pkgs: MutableSet<String> = LinkedHashSet()
-        fun addClass(clazz: Class<*>) {
+        val classes = LinkedHashSet<KClass<*>>()
+        val pkgs = LinkedHashSet<String>()
+
+        fun addClass(clazz: KClass<*>) {
             classes.add(clazz)
         }
 
         fun addPackage(pkg: String) {
             pkgs.add(pkg)
-        }
-
-        fun getClasses(): Set<Class<*>> {
-            return classes
-        }
-
-        fun getPkgs(): Set<String> {
-            return pkgs
         }
 
         init {

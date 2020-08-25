@@ -1,7 +1,8 @@
 package io.kuark.cache.core
 
 import org.springframework.stereotype.Component
-import java.lang.reflect.Method
+import kotlin.reflect.KFunction
+import kotlin.reflect.full.findAnnotation
 
 /**
  * 默认的批量缓存key生成器
@@ -24,21 +25,22 @@ import java.lang.reflect.Method
 @Component
 class DefaultKeysGenerator : IKeysGenerator {
 
-    override fun generate(target: Any?, method: Method?, vararg params: Any): List<String> {
+    override fun generate(target: Any?, function: KFunction<*>?, vararg params: Any): List<String> {
         validParamType(*params)
         val totalCount = calTotalCount(*params)
-        return generateKeys(method, totalCount, *params)
+        return generateKeys(function, totalCount, *params)
     }
 
     override fun getDelimiter(): String = ":"
 
-    override fun getParamIndexes(method: Method?, vararg params: Any): List<Int> {
-        var ignoreParamIndexes = if (method == null) {
-            intArrayOf()
-        } else {
-            val batchCacheable = method.getDeclaredAnnotation(BatchCacheable::class.java)
-            batchCacheable.ignoreParamIndexes
-        }
+    override fun getParamIndexes(function: KFunction<*>?, vararg params: Any): List<Int> {
+        var ignoreParamIndexes =
+            if (function == null) {
+                intArrayOf()
+            } else {
+                val batchCacheable = function.findAnnotation<BatchCacheable>()!!
+                batchCacheable.ignoreParamIndexes
+            }
         return params.indices.filter { it !in ignoreParamIndexes }
     }
 
@@ -82,14 +84,14 @@ class DefaultKeysGenerator : IKeysGenerator {
      * 2.以原来参数的元素为分组，重复分组以补足List的大小到totalCount
      * 3.迭代各参数对应的List，将相同下标的元素组装成一个完整的key
      *
-     * @param method 方法
+     * @param function 方法
      * @param totalCount 要生成的key总数
      * @param params 方法参数
      * @return key列表
      */
-    private fun generateKeys(method: Method?, totalCount: Int, vararg params: Any): List<String> {
+    private fun generateKeys(function: KFunction<*>?, totalCount: Int, vararg params: Any): List<String> {
         val keys = mutableListOf<List<Any>>() // List<List<key同一分段的部分>>
-        val paramIndexes = getParamIndexes(method, *params)
+        val paramIndexes = getParamIndexes(function, *params)
         params.filterIndexed { index, _ -> index in paramIndexes }.forEach {
             val parts = mutableListOf<Any>()
             when (it) {

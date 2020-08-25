@@ -6,7 +6,7 @@ logging:
 cache:
   config:
     enabled: true
-    strategy: REMOTE
+    strategy: SINGLE_LOCAL
 
 spring:
   cache:

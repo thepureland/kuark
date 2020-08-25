@@ -22,6 +22,7 @@ import java.io.IOException
 import java.lang.reflect.Modifier
 import java.net.URL
 import java.util.*
+import kotlin.reflect.KClass
 
 /**
  * ClassPath scanner.
@@ -67,8 +68,8 @@ object ClassPathScanner {
      * @return The non-abstract classes that were found.
      * @throws Exception when the location could not be scanned.
      */
-    fun scanForClasses(location: String, implementedInterface: Class<*>): Array<Class<*>> {
-        logger.debug("Scanning for classes at '" + location + "' (Implementing: '" + implementedInterface.name + "')")
+    fun scanForClasses(location: String, implementedInterface: KClass<*>): Array<Class<*>> {
+        logger.debug("Scanning for classes at '" + location + "' (Implementing: '" + implementedInterface.qualifiedName + "')")
         val classes: MutableList<Class<*>> = ArrayList()
         try {
             val resourceNames = findResourceNames(location, "", ".class")
@@ -79,7 +80,7 @@ object ClassPathScanner {
                     logger.debug("Skipping abstract class: $className")
                     continue
                 }
-                if (!implementedInterface.isAssignableFrom(clazz)) {
+                if (!implementedInterface.java.isAssignableFrom(clazz)) {
                     continue
                 }
                 Class.forName(className)

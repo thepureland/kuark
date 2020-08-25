@@ -165,13 +165,14 @@ object JsonKit {
      * @since 1.0.0
      */
     fun createCollectionType(
-        mapper: ObjectMapper?, collectionClass: Class<*>, vararg elemClasses: Class<*>?
+        mapper: ObjectMapper?, collectionClass: KClass<*>, vararg elemClasses: KClass<*>
     ): JavaType {
         var objectMapper: ObjectMapper? = mapper
         if (objectMapper == null) {
             objectMapper = createDefaultMapper()
         }
-        return objectMapper.typeFactory.constructParametricType(collectionClass, *elemClasses)
+        val classes = elemClasses.map { it.java }
+        return objectMapper.typeFactory.constructParametricType(collectionClass.java, *classes.toTypedArray())
     }
 
     /**
@@ -185,7 +186,7 @@ object JsonKit {
      * @return 带有泛型信息的容器类型
      * @since 1.0.0
      */
-    fun createCollectionType(collectionClass: Class<*>, vararg elementClasses: Class<*>?): JavaType =
+    fun createCollectionType(collectionClass: KClass<*>, vararg elementClasses: KClass<*>): JavaType =
         createCollectionType(null, collectionClass, *elementClasses)
 
     /**

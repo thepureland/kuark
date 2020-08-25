@@ -1,6 +1,5 @@
 package io.kuark.cache.core
 
-import io.kuark.base.lang.reflect.getMemberFunction
 import io.kuark.base.lang.string.toType
 import io.kuark.cache.kit.CacheKit
 import io.kuark.context.spring.SpringKit
@@ -18,6 +17,7 @@ import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
 import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.full.isSuperclassOf
+import kotlin.reflect.jvm.kotlinFunction
 
 
 /**
@@ -44,11 +44,11 @@ class BatchCacheableAspect {
      */
     @Around("cut()")
     fun around(joinPoint: ProceedingJoinPoint): Any? {
-        val clazz = joinPoint.target::class
-        val parameterTypes = (joinPoint.signature as MethodSignature).parameterTypes
+        val methodSignature = joinPoint.signature as MethodSignature
+        val parameterTypes = methodSignature.parameterTypes
 
 
-        val function = clazz.getMemberFunction(joinPoint.signature.name) //TODO 方法参数
+        val function = methodSignature.method.kotlinFunction!!
 
         val batchCacheable = function.findAnnotation<BatchCacheable>()!! // 拿到方法定义的注解信息
 
@@ -65,8 +65,7 @@ class BatchCacheableAspect {
         readCachedData(keys, cacheName, batchCacheable, result)
 
         // 没有在缓存中的(参数为集合的，要踢除缓存中读到的部分)，从@BatchCacheable标注的方法读
-        val paramClasses = parameterTypes.map { it.kotlin }.toTypedArray()
-        val data = readUncachedData(result, joinPoint, batchCacheable, function, *paramClasses)
+        val data = readUncachedData(result, joinPoint, batchCacheable, function)
 
         // 缓存从@BatchCacheable标注的方法读取(未缓存)的数据(注意：已存在的缓存并不会被更新)
         data?.forEach { (k, v) -> CacheKit.putIfAbsent(cacheName, k, v) }
@@ -138,14 +137,15 @@ class BatchCacheableAspect {
      */
     private fun readUncachedData(
         result: MutableMap<String, Any?>, joinPoint: ProceedingJoinPoint, batchCacheable: BatchCacheable,
-        function: KFunction<*>, vararg paramClasses: KClass<*>
+        function: KFunction<*>
     ): Map<String, Any?>? {
         val noExistKeys = result.filterValues { it == null }.keys // 不在缓存中的key
         if (noExistKeys.isEmpty()) return null
         val keysGenerator = getKeysGenerator(batchCacheable)
         val delimiter = keysGenerator.getDelimiter()
         val paramIndexes = keysGenerator.getParamIndexes(function, *joinPoint.args)
-        paramClasses.forEachIndexed { index, clazz ->
+        val parameterTypes = (joinPoint.signature as MethodSignature).parameterTypes
+        parameterTypes.forEachIndexed { index, clazz ->
             val paramValue = joinPoint.args[index]
             if (index in paramIndexes && (paramValue is Collection<*> || paramValue is Array<*>)) {
                 val segIndex = paramIndexes.indexOf(index) // 在key中分段索引
@@ -161,7 +161,7 @@ class BatchCacheableAspect {
                     elemValues.add(elemValueStr.toType(firstElemValue!!::class))
                 }
                 var params: Any? = null
-                when (clazz) {
+                when (clazz.kotlin) {
                     List::class -> params = elemValues
                     Set::class -> params = elemValues.toSet()
                     Array<String>::class -> params = (elemValues as List<String>).toTypedArray()

@@ -56,7 +56,7 @@ fun KClass<*>.isAnnotationPresent(annotationClass: KClass<out Annotation>): Bool
  * @return 属性对象
  * @throws NoSuchElementException 当不存在时
  */
-fun <T: Any> KClass<T>.getMemberProperty(propertyName: String): KProperty1<T, Any?> =
+fun <T : Any> KClass<T>.getMemberProperty(propertyName: String): KProperty1<T, Any?> =
     this.memberProperties.first { it.name == propertyName }
 
 /**
@@ -66,7 +66,7 @@ fun <T: Any> KClass<T>.getMemberProperty(propertyName: String): KProperty1<T, An
  * @return 属性对象
  * @throws NoSuchElementException 当不存在时
  */
-fun <T: Any> KClass<T>.getMemberMutableProperty(propertyName: String): KMutableProperty1<T, Any?> =
+fun <T : Any> KClass<T>.getMemberMutableProperty(propertyName: String): KMutableProperty1<T, Any?> =
     this.memberProperties.first { it.name == propertyName } as KMutableProperty1<T, Any?>
 
 /**
@@ -79,7 +79,7 @@ fun <T: Any> KClass<T>.getMemberMutableProperty(propertyName: String): KMutableP
  */
 fun KClass<*>.getMemberPropertyValue(target: Any, propertyName: String): Any? {
     val memberProperty = this.getMemberProperty(propertyName)
-    return memberProperty.call()
+    return memberProperty.call(target)
 }
 
 /**

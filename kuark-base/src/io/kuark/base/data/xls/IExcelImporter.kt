@@ -1,6 +1,6 @@
 package io.kuark.base.data.xls
 
-import java.io.InputStream
+import java.io.File
 
 /**
  * excel数据导入器接口
@@ -8,15 +8,16 @@ import java.io.InputStream
  * @author
  * @since 1.0.0
  */
-interface IExcelImporter {
+interface IExcelImporter<T> {
 
     /**
      * 执行导入
      *
-     * @param inputStream 上传的excel文件的输入流
-     * @return 执行结果信息
+     * @param xlsFile excel文件
+     * @return 导入的行对象列表
+     * @throws IllegalStateException 导入过程有错误发生时
      * @since 1.0.0
      */
-    fun import(inputStream: InputStream): String
+    fun import(xlsFile: File): List<T>
 
 }

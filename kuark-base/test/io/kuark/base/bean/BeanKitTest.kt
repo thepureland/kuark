@@ -17,16 +17,20 @@ internal class BeanKitTest {
 
     @BeforeEach
     fun setUp() {
-        person = Person()
-        with(person) {
-            selfUniqueIdentifier = "id"
+        person = Person().apply {
+            id = "id"
             name = "Mike"
             sex = "male"
             age = 25
             birthday = Date(60528873600000L)
-            this.address = Address("hunan", "changsha", "wuyilu", "410000")
-            this.goods = listOf("sporting", "singing", "dancing")
-            this.contact = mapOf("student" to "Tom", "teacher" to "Lucy")
+            address = Address().apply {
+                province = "hunan"
+                city = "changsha"
+                street = "wuyilu"
+                zipcode = "410000"
+            }
+            goods = listOf("sporting", "singing", "dancing")
+            contact = mapOf("student" to "Tom", "teacher" to "Lucy")
         }
     }
 

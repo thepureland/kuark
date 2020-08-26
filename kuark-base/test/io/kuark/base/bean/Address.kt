@@ -8,12 +8,12 @@ import java.io.Serializable
  * @author K
  * @since 1.0.0
  */
-class Address(
-    var province: String?,
-    var city: String?,
-    var street: String?,
-    var zipcode: String?
-) : Serializable {
+class Address : Serializable {
+
+    var province: String? = null
+    var city: String? = null
+    var street: String? = null
+    var zipcode: String?  = null
 
     override fun hashCode(): Int {
         val prime = 31

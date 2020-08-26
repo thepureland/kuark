@@ -21,6 +21,9 @@ fun <T : Any> KClass<T>.newInstance(vararg args: Any): T {
     if (this.isAbstract) {
         error("抽象的类${this}不能被实例化！")
     }
+    if (this.isCompanion) {
+        error("Companion类${this}不能被实例化！")
+    }
     this.constructors.forEach {
         val parameters = it.parameters
         if (parameters.size == args.size) {
@@ -58,16 +61,6 @@ fun KClass<*>.isAnnotationPresent(annotationClass: KClass<out Annotation>): Bool
  */
 fun <T : Any> KClass<T>.getMemberProperty(propertyName: String): KProperty1<T, Any?> =
     this.memberProperties.first { it.name == propertyName }
-
-/**
- * 返回给定属性名的属性对象
- *
- * @param propertyName 属性名
- * @return 属性对象
- * @throws NoSuchElementException 当不存在时
- */
-fun <T : Any> KClass<T>.getMemberMutableProperty(propertyName: String): KMutableProperty1<T, Any?> =
-    this.memberProperties.first { it.name == propertyName } as KMutableProperty1<T, Any?>
 
 /**
  * 返回属性值

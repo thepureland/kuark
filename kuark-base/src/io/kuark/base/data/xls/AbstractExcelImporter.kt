@@ -26,6 +26,8 @@ import kotlin.reflect.KProperty1
  *    为普通类时，主构造函数参数列表必须为空，属性必须全部定义在类体中，只能是可读可写的(var)。
  * 3. 数据校验的默认实现是Kuark的bean校验方式(ValidationKit)
  * 4. 错误消息全部通过IllegalStateException异常抛出
+ * 5. 如果需要对单元格的值作特殊处理，可重写getPropertyValue方法
+ * 6. 如果需要复杂的校验逻辑，可重写validate方法
  *
  * @author K
  * @since 1.0.0
@@ -99,7 +101,7 @@ abstract class AbstractExcelImporter<T : Any> : IExcelImporter<T> {
     /**
      * 检查模板是否正确
      */
-    private fun checkTemplate() {
+    protected open fun checkTemplate() {
         inputStream.use {
             val workbook = Workbook.getWorkbook(it)
             val sheetName = getSheetName()
@@ -110,7 +112,7 @@ abstract class AbstractExcelImporter<T : Any> : IExcelImporter<T> {
     /**
      * 将excel的每行包装成对象
      */
-    private fun wrapRowObjects(): List<T> {
+    protected open fun wrapRowObjects(): List<T> {
         val rowObjectList = mutableListOf<T>()
         propertyNames = getPropertyNames()
         try {
@@ -145,7 +147,15 @@ abstract class AbstractExcelImporter<T : Any> : IExcelImporter<T> {
         return rowObjectList
     }
 
-    private fun getPropertyValue(rowObjectClass: KClass<T>, columnIndex: Int, cell: Cell): Any {
+    /**
+     * 得到属性值
+     *
+     * @param rowObjectClass 行对象类
+     * @param columnIndex 列序（从0开始）
+     * @param cell 单元格对象
+     * @return 属性值
+     */
+    protected open fun getPropertyValue(rowObjectClass: KClass<T>, columnIndex: Int, cell: Cell): Any {
         val propertyName = propertyNames[columnIndex]
         var prop = propertyMap[propertyName]
         if (prop == null) {

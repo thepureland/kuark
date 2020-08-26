@@ -19,7 +19,8 @@ import kotlin.reflect.KClass
 
 
 /**
- * 将字符序列类型的值转为指定类型的值
+ * 将字符序列类型的值转为指定类型的值，仅支持以下类型：
+ * Double、Int、Long、Float、Short、BigDecimal、BigInteger、Boolean、Byte、Char、String
  *
  * @param returnType 目标类型
  * @return 指定类型的值
@@ -27,17 +28,17 @@ import kotlin.reflect.KClass
 fun <T : Any> CharSequence.toType(returnType: KClass<out T>): T { //TODO junit
     return this.toString().run {
         when (returnType) {
-            String::class -> this as T
-            Byte::class -> toByte() as T
-            Char::class -> toCharArray().first() as T
-            Short::class -> toShort() as T
+            Double::class -> toDouble() as T
             Int::class -> toInt() as T
-            Boolean::class -> toBoolean() as T
             Long::class -> toLong() as T
             Float::class -> toFloat() as T
-            Double::class -> toDouble() as T
+            Short::class -> toShort() as T
             BigDecimal::class -> toBigDecimal() as T
             BigInteger::class -> toBigInteger() as T
+            Boolean::class -> toBoolean() as T
+            Byte::class -> toByte() as T
+            Char::class -> toCharArray().first() as T
+            String::class -> this as T
             else -> error("不支持的类型【$returnType】!")
         }
     }

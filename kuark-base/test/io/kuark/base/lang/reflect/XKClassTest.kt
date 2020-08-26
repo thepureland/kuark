@@ -4,11 +4,23 @@ import io.kuark.base.bean.validation.constraint.annotaions.AtLeast
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 import java.io.Serializable
 import kotlin.reflect.full.starProjectedType
 
 class XKClassTest {
+
+    @Test
+    fun newInstance() {
+        val parrot = Parrot::class.newInstance("name", 3)
+        assertEquals(3, parrot.age)
+
+        val dog = Dog::class.newInstance()
+        assertEquals(0, dog.age)
+
+        assertThrows<IllegalStateException> { Animal::class.newInstance() }
+    }
 
     @Test
     fun isAnnotationPresent() {
@@ -22,9 +34,9 @@ class XKClassTest {
 
     @Test
     fun getMemberProperty() {
-        assert(Parrot::class.getMemberProperty("age") != null)
-        assert(Parrot::class.getMemberProperty("height") != null)
-        assert(Parrot::class.getMemberProperty("name") != null)
+        assertDoesNotThrow { Parrot::class.getMemberProperty("age") }
+        assertDoesNotThrow { Parrot::class.getMemberProperty("height") }
+        assertDoesNotThrow { Parrot::class.getMemberProperty("name") }
         assertThrows<NoSuchElementException> { Parrot::class.getMemberProperty("weight") != null } // private
         assertThrows<NoSuchElementException> { Parrot::class.getMemberProperty("xxxxx") }
         assertThrows<NoSuchElementException> { Parrot::class.getMemberProperty("ageValue") } // 只是参数，未定义为属性
@@ -43,9 +55,10 @@ class XKClassTest {
 
     @Test
     fun getMemberFunction() {
-        assert(Parrot::class.getMemberFunction("sleep") != null)
-        assert(Parrot::class.getMemberFunction("move") != null)
-        assert(Parrot::class.getMemberFunction("fly") != null)
+        assertDoesNotThrow { Parrot::class.getMemberFunction("sleep") }
+        assertDoesNotThrow { Parrot::class.getMemberFunction("move") }
+        assertDoesNotThrow { Parrot::class.getMemberFunction("fly") }
+        assertDoesNotThrow { Parrot::class.getMemberFunction("speak", *Parrot::speak.parameters.toTypedArray()) }
         assertThrows<NoSuchElementException> { Parrot::class.getMemberFunction("xxxxx") }
     }
 
@@ -109,7 +122,7 @@ class XKClassTest {
     }
 
     internal interface Speakable : Organism {
-        fun speak()
+        fun speak(content: String)
     }
 
     @TestAnno
@@ -129,7 +142,16 @@ class XKClassTest {
     }
 
     internal class Parrot(val name: String, ageValue: Int) : Bird(ageValue), Speakable {
-        override fun speak() {}
+        override fun speak(content: String) {}
+    }
+
+    internal class Dog : Animal() {
+        override val age: Int
+            get() = 0
+
+        override fun move() {}
+
+        override fun eat() {}
     }
 
     internal annotation class TestAnno

@@ -9,6 +9,7 @@ import java.io.InputStream
  * @since 1.0.0
  */
 interface IExcelImporter {
+
     /**
      * 执行导入
      *
@@ -16,5 +17,6 @@ interface IExcelImporter {
      * @return 执行结果信息
      * @since 1.0.0
      */
-    fun doImport(inputStream: InputStream?): String
+    fun import(inputStream: InputStream): String
+
 }

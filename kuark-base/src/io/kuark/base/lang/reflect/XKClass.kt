@@ -1,14 +1,8 @@
 package io.kuark.base.lang.reflect
 
 import java.net.URLDecoder
-import kotlin.reflect.KClass
-import kotlin.reflect.KFunction
-import kotlin.reflect.KProperty
-import kotlin.reflect.KType
-import kotlin.reflect.full.allSuperclasses
-import kotlin.reflect.full.memberFunctions
-import kotlin.reflect.full.memberProperties
-import kotlin.reflect.full.superclasses
+import kotlin.reflect.*
+import kotlin.reflect.full.*
 
 /**
  * kotlin.KClass扩展函数
@@ -17,6 +11,33 @@ import kotlin.reflect.full.superclasses
  * @since 1.0.0
  */
 
+/**
+ * 实例化类
+ *
+ * @param args 构造函数参数可变数组
+ * @return 类对象
+ */
+fun <T : Any> KClass<T>.newInstance(vararg args: Any): T {
+    if (this.isAbstract) {
+        error("抽象的类${this}不能被实例化！")
+    }
+    this.constructors.forEach {
+        val parameters = it.parameters
+        if (parameters.size == args.size) {
+            var match = true
+            for (index in parameters.indices) {
+                if (args[index]::class != parameters[index].type.classifier) {
+                    match = false
+                    break
+                }
+            }
+            if (match) {
+                return it.call(*args)
+            }
+        }
+    }
+    error("实例化${this}时，未能找到匹配参数的构造函数！")
+}
 
 /**
  * 是否指定的注解类出现在该类上。
@@ -35,8 +56,18 @@ fun KClass<*>.isAnnotationPresent(annotationClass: KClass<out Annotation>): Bool
  * @return 属性对象
  * @throws NoSuchElementException 当不存在时
  */
-fun KClass<*>.getMemberProperty(propertyName: String): KProperty<*> =
+fun <T: Any> KClass<T>.getMemberProperty(propertyName: String): KProperty1<T, Any?> =
     this.memberProperties.first { it.name == propertyName }
+
+/**
+ * 返回给定属性名的属性对象
+ *
+ * @param propertyName 属性名
+ * @return 属性对象
+ * @throws NoSuchElementException 当不存在时
+ */
+fun <T: Any> KClass<T>.getMemberMutableProperty(propertyName: String): KMutableProperty1<T, Any?> =
+    this.memberProperties.first { it.name == propertyName } as KMutableProperty1<T, Any?>
 
 /**
  * 返回属性值
@@ -48,19 +79,39 @@ fun KClass<*>.getMemberProperty(propertyName: String): KProperty<*> =
  */
 fun KClass<*>.getMemberPropertyValue(target: Any, propertyName: String): Any? {
     val memberProperty = this.getMemberProperty(propertyName)
-    return memberProperty.call(target)
+    return memberProperty.call()
 }
 
 /**
- * 返回给定名称的成员函数对象
+ * 返回给定名称和参数的成员函数对象
  *
  * @param functionName 成员函数名
+ * @param parameters 函数参数可变数组
  * @return 成员函数对象
  * @throws NoSuchElementException 当不存在时
  */
-fun KClass<*>.getMemberFunction(functionName: String): KFunction<*> =
-    this.memberFunctions.first { it.name == functionName }
-
+fun KClass<*>.getMemberFunction(functionName: String, vararg parameters: KParameter): KFunction<*> {
+    val functions = this.memberFunctions.filter { it.name == functionName }
+    if (functions.isEmpty()) {
+        throw NoSuchElementException("类【${this}】中找不到命名为【${functionName}】的方法！")
+    } else if (functions.size == 1) {
+        return functions.first()
+    } else {
+        functions.forEach {
+            var match = true
+            for (index in it.parameters.indices) {
+                if (it.parameters[index].type != parameters[index].type) {
+                    match = false
+                    break
+                }
+            }
+            if (match) {
+                return it
+            }
+        }
+        throw NoSuchElementException("类【${this}】中找不到命名为【${functionName}】且匹配参数类型的方法！")
+    }
+}
 
 /**
  * 返回当前类的直接父类

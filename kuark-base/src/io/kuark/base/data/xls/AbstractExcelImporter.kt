@@ -1,13 +1,16 @@
 package io.kuark.base.data.xls
 
+import io.kuark.base.lang.GenericKit
+import io.kuark.base.lang.reflect.getMemberMutableProperty
+import io.kuark.base.lang.reflect.newInstance
+import io.kuark.base.lang.string.toType
 import io.kuark.base.log.LogFactory
-import jxl.Cell
 import jxl.CellType
 import jxl.Sheet
 import jxl.Workbook
 import java.io.InputStream
-import java.lang.reflect.Method
-import java.util.*
+import kotlin.reflect.KClass
+import kotlin.reflect.KMutableProperty1
 
 /**
  * excel数据导入器抽象类
@@ -15,38 +18,50 @@ import java.util.*
  * @author K
  * @since 1.0.0
  */
-abstract class AbstractExcelImporter : IExcelImporter {
-
-    /**
-     * List<字段名>
-     */
-    protected val fieldList: List<String> = ArrayList()
+abstract class AbstractExcelImporter<T : Any> : IExcelImporter {
 
     /**
      * 上传的excel文件的输入流
      */
-    protected var inputStream: InputStream? = null
+    private lateinit var inputStream: InputStream
 
     /**
      * excel行对象列表
      */
-    protected var rowObjectList: ArrayList<Any>? = null
+    private lateinit var rowObjectList: MutableList<T>
 
     /**
      * 第一个sheet页
      */
-    protected var sheet: Sheet? = null
+    private lateinit var sheet: Sheet
 
     /**
-     * 获取行对象对应的类
+     * 按列顺序返回属性名列表
+     */
+    protected abstract fun getPropertyNames(): List<String>
+
+
+    /**
+     * 导入
+     * @param inputStream
      * @return
      */
-    protected abstract val rowObjectClass: Class<Any>
-
-    /**
-     * 初始化字段名列表
-     */
-    protected abstract fun initFieldList()
+    override fun import(inputStream: InputStream): String {
+        var msg = "导入成功！"
+        this.inputStream = inputStream
+        if (!checkTemplate()) {
+            msg = "请选择正确的模板!"
+        } else {
+            wrapRowObjects()
+            try {
+                check()
+                save()
+            } catch (ex: Exception) {
+                msg = ex.message ?: ex.toString()
+            }
+        }
+        return msg
+    }
 
     /**
      * 检查模板是否正确
@@ -56,9 +71,9 @@ abstract class AbstractExcelImporter : IExcelImporter {
         var success = true
         inputStream.use {
             try {
-                val workbook: Workbook = Workbook.getWorkbook(it)
+                val workbook = Workbook.getWorkbook(it)
                 sheet = workbook.getSheet(0)
-                if (sheetName != sheet!!.name) {
+                if (sheetName != sheet.name) {
                     success = false
                 }
             } catch (ex: Exception) {
@@ -77,47 +92,35 @@ abstract class AbstractExcelImporter : IExcelImporter {
     /**
      * 将excel的每行包装成对象
      */
-    protected fun wrapRowObjects() {
+    private fun wrapRowObjects() {
         try {
-            val rows: Int = sheet!!.rows
-            // 扣掉列头
-            rowObjectList = ArrayList(rows - 1)
-            val setterMap: MutableMap<String, Method?> =
-                HashMap(fieldList.size)
-            val rowObjectClass = rowObjectClass
-            for (row in 1 until rows) {
-                val rowCells: Array<Cell> = sheet!!.getRow(row)
-                val rowObject = rowObjectClass.getDeclaredConstructor().newInstance()
+            val rows: Int = sheet.rows
+            rowObjectList = mutableListOf()
+            val propertyMap = mutableMapOf<String, KMutableProperty1<T, Any?>>()
+            val rowObjectClass = GenericKit.getSuperClassGenricClass(this::class) as KClass<T>
+            val properties = getPropertyNames()
+            for (row in 1 until rows) { // 扣掉列头
+                val rowCells = sheet.getRow(row)
+                val rowObject = rowObjectClass.newInstance()
                 var shouldAdd = false
-                for (column in rowCells.indices) {
-                    val cell: Cell = rowCells[column]
-                    val fieldName = fieldList[column]
-                    var setter = setterMap[fieldName]
-                    if (setter == null) {
-                        val field = rowObjectClass.getDeclaredField(fieldName)
-                        val setterName =
-                            "set" + Character.toTitleCase(fieldName[0]) + fieldName.substring(1)
-                        setter = rowObjectClass.getMethod(setterName, *arrayOf(field.type))
-                        setterMap[fieldName] = setter
+                for (columnIndex in rowCells.indices) {
+                    val cell = rowCells[columnIndex]
+                    val propertyName = properties[columnIndex]
+                    var prop = propertyMap[propertyName]
+                    if (prop == null) {
+                        prop = rowObjectClass.getMemberMutableProperty(propertyName)
+                        propertyMap[propertyName] = prop
                     }
-                    val valueStr: String = cell.getContents()
-                    var value: Any? = valueStr
-                    val type: CellType = cell.getType()
+                    val valueStr = cell.contents
+                    var value: Any = valueStr
+                    val type = cell.type
                     if (type === CellType.NUMBER) {
-                        val argType = setter!!.parameterTypes[0]
-                        if (argType == Int::class.java) {
-                            value = Integer.valueOf(valueStr)
-                        } else if (argType == Long::class.java) {
-                            value = java.lang.Long.valueOf(valueStr)
-                        } else if (argType == Double::class.java) {
-                            value = java.lang.Double.valueOf(valueStr)
-                        } else if (argType == Float::class.java) {
-                            value = java.lang.Float.valueOf(valueStr)
-                        }
+                        val argType = prop.returnType.classifier as KClass<*>
+                        value = valueStr.toType(argType)
                     }
-                    if (value != null && "" != value.toString().trim { it <= ' ' }) {
+                    if ("" != value.toString().trim()) {
                         shouldAdd = true
-                        setter!!.invoke(rowObject, *arrayOf(value))
+                        prop.set(rowObject, value)
                     }
                 }
                 if (shouldAdd) {
@@ -131,45 +134,19 @@ abstract class AbstractExcelImporter : IExcelImporter {
     }
 
     /**
-     * 导入
-     * @param inputStream
-     * @return
-     */
-    override fun doImport(inputStream: InputStream?): String {
-        var msg = "导入成功！"
-        this.inputStream = inputStream
-        if (!checkTemplate()) {
-            msg = "请选择正确的模板!"
-        } else {
-            wrapRowObjects()
-            try {
-                check()
-                save()
-            } catch (ex: Exception) {
-                msg = ex.message!!
-            }
-        }
-        return msg
-    }
-
-    /**
      * 检查数据合法性
      */
     protected abstract fun check()
 
     /**
      * 检查导入的值
+     *
      * @param value 导入的值
      * @param name 名称描述
      * @param regex 正则表达式
      * @param isRequire 是否必填项
      */
-    protected fun check(
-        value: String,
-        name: String,
-        regex: String,
-        isRequire: Boolean
-    ) {
+    protected fun check(value: String, name: String, regex: String, isRequire: Boolean) {
         if (value.isBlank()) {
             if (isRequire) {
                 throw Exception("$name 是必填项！")
@@ -191,7 +168,4 @@ abstract class AbstractExcelImporter : IExcelImporter {
         private val LOG = LogFactory.getLog(AbstractExcelImporter::class)
     }
 
-    init {
-        initFieldList()
-    }
 }

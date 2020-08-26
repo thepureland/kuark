@@ -31,9 +31,8 @@ internal class AbstractExcelImporterTest {
 
         override fun getSheetName(): String = "students"
 
-        override fun save(rowObjects: List<TestStudent>): Boolean {
+        override fun save(rowObjects: List<TestStudent>) {
             // 模拟保存数据到DB
-            return true
         }
 
     }
@@ -60,14 +59,13 @@ internal class AbstractExcelImporterTest {
 
         override fun getSheetName(): String = "students"
 
-        override fun save(rowObjects: List<TestPerson>): Boolean {
+        override fun save(rowObjects: List<TestPerson>) {
             // 模拟保存数据到DB
-            return true
         }
 
     }
 
-    internal class TestPerson() {
+    internal class TestPerson {
 
         @get:NotNull
         var name: String? = null

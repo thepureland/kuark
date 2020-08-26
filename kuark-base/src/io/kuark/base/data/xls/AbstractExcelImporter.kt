@@ -22,7 +22,7 @@ import kotlin.reflect.KProperty1
  * 注意事项：
  * 1. Excel第一行为列描述信息，并非要导入的数据，在导入时第一行会被忽略
  * 2. 行对象类支持数据类和普通类。
- *    为数据类时，属性必须全部定义在主构造函数中，可以是只读的(val);
+ *    为数据类时，属性必须全部定义在主构造函数中，可以是只读的(val)，参数顺序必须跟getPropertyNames()返回的一致；
  *    为普通类时，主构造函数参数列表必须为空，属性必须全部定义在类体中，只能是可读可写的(var)。
  * 3. 数据校验的默认实现是Kuark的bean校验方式(ValidationKit)
  * 4. 错误消息全部通过IllegalStateException异常抛出
@@ -63,9 +63,8 @@ abstract class AbstractExcelImporter<T : Any> : IExcelImporter<T> {
      * 保存数据
      *
      * @param rowObjects 行对象列表
-     * @return 是否保存成功
      */
-    protected abstract fun save(rowObjects: List<T>): Boolean
+    protected abstract fun save(rowObjects: List<T>)
 
     /**
      * 检查数据合法性

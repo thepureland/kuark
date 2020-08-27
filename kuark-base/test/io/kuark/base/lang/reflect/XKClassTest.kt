@@ -7,9 +7,24 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 import java.io.Serializable
+import kotlin.reflect.full.primaryConstructor
 import kotlin.reflect.full.starProjectedType
 
+/**
+ * XKClass测试用例
+ *
+ * @author K
+ * @since 1.0.0
+ */
 class XKClassTest {
+
+    @Test
+    fun getEmptyConstructor() {
+        assert(Dog::class.getEmptyConstructor() != null)
+        assert(Parrot::class.getEmptyConstructor() == null)
+        assert(Person::class.getEmptyConstructor() == null)
+        assert(Student::class.getEmptyConstructor() == null)
+    }
 
     @Test
     fun newInstance() {
@@ -37,7 +52,7 @@ class XKClassTest {
         assertDoesNotThrow { Parrot::class.getMemberProperty("age") }
         assertDoesNotThrow { Parrot::class.getMemberProperty("height") }
         assertDoesNotThrow { Parrot::class.getMemberProperty("name") }
-        assertThrows<NoSuchElementException> { Parrot::class.getMemberProperty("weight") != null } // private
+        assertThrows<NoSuchElementException> { Parrot::class.getMemberProperty("weight") } // private
         assertThrows<NoSuchElementException> { Parrot::class.getMemberProperty("xxxxx") }
         assertThrows<NoSuchElementException> { Parrot::class.getMemberProperty("ageValue") } // 只是参数，未定义为属性
     }
@@ -155,6 +170,14 @@ class XKClassTest {
     }
 
     internal annotation class TestAnno
+
+    private open class Person { // 没有空构造器，也没有主构造器
+        constructor(name:String, age: Int)
+    }
+
+    private class Student: Person { // 没有空构造器，也没有主构造器
+        constructor(name:String, age: Int): super(name, age)
+    }
 
 
 }

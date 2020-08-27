@@ -40,7 +40,7 @@ internal class JsonKitTest {
     @Test
     fun jsonToDisplay() {
         assertEquals("A:b,B:b", JsonKit.jsonToDisplay("""{"A":"b","B":'b'}"""))
-        assertEquals("", " ")
+        assertEquals("", JsonKit.jsonToDisplay(" "))
     }
 
     @Test
@@ -86,7 +86,9 @@ internal class JsonKitTest {
 
     @Test
     fun toJsonP() {
-        //TODO
+        val jsonP =
+            """func({"selfUniqueIdentifier":null,"parentUniqueIdentifier":null,"name":"Mike","sex":"male","age":25,"weight":0.0,"birthday":60528873600000,"address":{"province":"hunan","city":"changsha","street":"wuyilu","zipcode":"410000"},"goods":["sporting","singing","dancing"],"contact":{"student":"Tom","teacher":"Lucy"},"id":null,"pId":null})"""
+        assertEquals(jsonP, JsonKit.toJsonP("func", person))
     }
 
 }

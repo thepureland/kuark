@@ -88,7 +88,7 @@ object JsonKit {
      * 输出jsonP格式的数据
      *
      * @param functionName 函数名
-     * @param obj 待序列化的对象
+     * @param obj 待序列化的对象，其json对象将作为函数的参数
      * @return jsonP字符串
      * @since 1.0.0
      */

@@ -51,7 +51,7 @@ abstract class AbstractExcelImporter<T : Any> : IExcelImporter<T> {
     private lateinit var propertyNames: List<String>
 
     /**
-     * 按列顺序返回属性名列表
+     * 按excel中的列顺序返回对应的属性名列表
      */
     protected abstract fun getPropertyNames(): List<String>
 

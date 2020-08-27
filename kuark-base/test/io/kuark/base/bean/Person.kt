@@ -3,6 +3,7 @@ package io.kuark.base.bean
 import io.kuark.base.support.IIdEntity
 import io.kuark.base.tree.ITreeable
 import java.util.*
+import javax.xml.bind.annotation.XmlRootElement
 
 /**
  * 人物信息(for test)
@@ -10,6 +11,7 @@ import java.util.*
  * @author K
  * @since 1.0.0
  */
+@XmlRootElement
 class Person : IIdEntity<String>, ITreeable<String?> {
 
     override var selfUniqueIdentifier: String? = null

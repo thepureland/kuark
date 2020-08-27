@@ -124,7 +124,6 @@ subprojects {
             dependency("commons-beanutils:commons-beanutils:1.9.4")
             dependency("com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.9.7")
             dependency("net.sourceforge.jexcelapi:jxl:2.6.12")
-            dependency("dom4j:dom4j:1.6.1")
             dependency("javax.xml.bind:jaxb-api:2.3.1")
             dependency("com.sun.xml.bind:jaxb-impl:2.3.1")
             dependency("org.glassfish.jaxb:jaxb-runtime:2.3.1")

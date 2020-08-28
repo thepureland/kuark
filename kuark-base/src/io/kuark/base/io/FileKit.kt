@@ -92,38 +92,6 @@ object FileKit {
     fun getFile(vararg names: String): File = FileUtils.getFile(*names)
 
     /**
-     * 获取系统临时目录
-     *
-     * @return 系统临时目录
-     * @since 1.0.0
-     */
-    fun getTempDirectoryPath(): String = FileUtils.getTempDirectoryPath()
-
-    /**
-     * 获取系统临时目录
-     *
-     * @return 系统临时目录文件对象
-     * @since 1.0.0
-     */
-    fun getTempDirectory(): File = FileUtils.getTempDirectory()
-
-    /**
-     * 获取系统用户根目录
-     *
-     * @return 系统用户根目录
-     * @since 1.0.0
-     */
-    fun getUserDirectoryPath(): String = FileUtils.getUserDirectoryPath()
-
-    /**
-     * 获取系统用户根目录
-     *
-     * @return 系统用户根目录文件对象
-     * @since 1.0.0
-     */
-    fun getUserDirectory(): File = FileUtils.getUserDirectory()
-
-    /**
      * 为指定的文件对象打开一个[FileInputStream]， 比简单地调用
      * `new FileInputStream(file)`提供更好的错误信息。
      * 在方法的结尾，要么流被成功打开，要么抛出一个异常。
@@ -206,16 +174,13 @@ object FileKit {
      *
      * 如果您需要递归搜索子目录，您可以为目录传入一个IOFileFilter。
      * 您不需要绑定一个DirectoryFileFilter(通过逻辑与)到该过滤器上。该方法已经为您完成了。
-     * 例如：如果您想查找所有叫"temp"的目录，那么您传入`FileFilterKit.nameFileFilter("temp")`
      *
      * 该方法另一个常见的用途是在目录树中查找文件，但是忽略CVS生成的目录。
-     * 您可以简单的传入`FileFilterKit.makeCVSAware(null)`
      *
      * @param directory 要检索的目录
      * @param fileFilter 查找文件时要应用的过滤器
      * @param dirFilter 查找子目录时可选的过滤器。如果为null，将不搜索子目录。 TrueFileFilter.INSTANCE将匹配所有目录
      * @return 匹配的文件对应容器
-     * @see FileFilterKit
      * @since 1.0.0
      */
     fun listFiles(directory: File, fileFilter: IOFileFilter, dirFilter: IOFileFilter?): Collection<File> =
@@ -230,7 +195,6 @@ object FileKit {
      * @param fileFilter 查找时使用的过滤器
      * @param dirFilter 查找子目录时可选的过滤器。如果为null，将不搜索子目录。 TrueFileFilter.INSTANCE将匹配所有目录
      * @return 匹配的文件对应容器
-     * @see FileFilterKit
      * @see org.apache.commons.io.filefilter.NameFileFilter
      * @since 1.0.0
      */
@@ -247,7 +211,6 @@ object FileKit {
      * @param fileFilter 查找时使用的过滤器
      * @param dirFilter 查找子目录时可选的过滤器。如果为null，将不搜索子目录。 TrueFileFilter.INSTANCE将匹配所有目录
      * @return  匹配的文件的迭代器
-     * @see FileFilterKit
      * @see org.apache.commons.io.filefilter.NameFileFilter
      * @since 1.0.0
      */
@@ -265,7 +228,6 @@ object FileKit {
      * @param fileFilter 查找时使用的过滤器
      * @param dirFilter 查找子目录时可选的过滤器。如果为null，将不搜索子目录。 TrueFileFilter.INSTANCE将匹配所有目录
      * @return 匹配的文件的迭代器
-     * @see FileFilterKit
      * @see org.apache.commons.io.filefilter.NameFileFilter
      * @since 1.0.0
      */
@@ -472,12 +434,6 @@ object FileKit {
      * <h4>例子: 拷贝目录和txt文件</h4>
      *
      * <pre>
-     * // 创建一个&quot;.txt&quot;文件的过滤器
-     * IOFileFilter txtSuffixFilter = FileFilterKit.suffixFileFilter(&quot;.txt&quot;);
-     * IOFileFilter txtFiles = FileFilterKit.andFileFilter(FileFileFilter.FILE, txtSuffixFilter);
-     *
-     * // 创建一个过滤目录或&quot;.txt&quot;文件的过滤器
-     * FileFilter filter = FileFilterKit.orFileFilter(DirectoryFileFilter.DIRECTORY, txtFiles);
      *
      * // 使用过滤器进行拷贝
      * FileKit.copyDirectory(srcDir, destDir, filter);

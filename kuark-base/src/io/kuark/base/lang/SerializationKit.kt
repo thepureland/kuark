@@ -22,12 +22,12 @@ object SerializationKit {
      * 该方法比直接在对象图中的所有对象重写克隆方法慢很多倍. 但是, 对于复杂的对象图, 或那些不支持深底克隆的对象, 这提供了另一种实现. 当然, 所有对象都必须实现 `Serializable`接口.
      *
      * @param <T> 待克隆的对象的类型
-     * @param object 要克隆的`Serializable`对象
+     * @param obj 要克隆的Serializable对象
      * @return 克隆后的对象
-     * @throws SerializationException (运行时) 如果序列化失败
+     * @throws org.apache.commons.lang3.SerializationException (运行时) 如果序列化失败
      * @since 1.0.0
      */
-    fun <T : Serializable?> clone(`object`: T): T = SerializationUtils.clone(`object`)
+    fun <T : Serializable?> clone(obj: T): T = SerializationUtils.clone(obj)
 
     /**
      * 序列化一个对象到指定的输出流
@@ -37,7 +37,7 @@ object SerializationKit {
      * @param obj 要序列化为字节的对象, 可以为 null
      * @param outputStream 要写入的流, 不能为 null
      * @throws IllegalArgumentException 如果 `outputStream` 为 `null`
-     * @throws SerializationException (运行时) 如果序列化失败
+     * @throws org.apache.commons.lang3.SerializationException (运行时) 如果序列化失败
      * @since 1.0.0
      */
     fun serialize(obj: Serializable?, outputStream: OutputStream?) = SerializationUtils.serialize(obj, outputStream)
@@ -47,7 +47,7 @@ object SerializationKit {
      *
      * @param obj 要序列化为字节的对象, 可以为 null
      * @return 字节数组
-     * @throws SerializationException (运行时) 如果序列化失败
+     * @throws org.apache.commons.lang3.SerializationException (运行时) 如果序列化失败
      * @since 1.0.0
      */
     fun serialize(obj: Serializable?): ByteArray = SerializationUtils.serialize(obj)
@@ -60,7 +60,7 @@ object SerializationKit {
      * @param inputStream 输入流, 不能为 null
      * @return 反序列化后的对象
      * @throws IllegalArgumentException 如果 `inputStream` 为 `null`
-     * @throws SerializationException (运行时) 如果反序列化失败
+     * @throws org.apache.commons.lang3.SerializationException (运行时) 如果反序列化失败
      * @since 1.0.0
      */
     fun deserialize(inputStream: InputStream?): Any = SerializationUtils.deserialize(inputStream)
@@ -71,7 +71,7 @@ object SerializationKit {
      * @param objectData 字节数组, 不能为 null
      * @return 反序列化后的对象
      * @throws IllegalArgumentException 如果 `objectData` 为 `null`
-     * @throws SerializationException (运行时) 如果反序列化失败
+     * @throws org.apache.commons.lang3.SerializationException (运行时) 如果反序列化失败
      * @since 1.0.0
      */
     fun deserialize(objectData: ByteArray?): Any = SerializationUtils.deserialize(objectData)

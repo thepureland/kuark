@@ -12,7 +12,9 @@ import io.kuark.base.log.LogFactory
 import kotlin.reflect.KClass
 
 /**
- * json工具类，底层库使用的是fasterxml
+ * json工具类(基于jackson)
+ * 注意事项：
+ * 1.支持数据类和普通类,必须有空构造函数，要映射的属性必须是可读可写的(var)
  *
  * @author K
  * @since 1.0.0

@@ -2,7 +2,10 @@ package io.kuark.base.lang.reflect
 
 import java.net.URLDecoder
 import kotlin.reflect.*
-import kotlin.reflect.full.*
+import kotlin.reflect.full.allSuperclasses
+import kotlin.reflect.full.memberFunctions
+import kotlin.reflect.full.memberProperties
+import kotlin.reflect.full.superclasses
 
 /**
  * kotlin.KClass扩展函数
@@ -10,6 +13,22 @@ import kotlin.reflect.full.*
  * @author K
  * @since 1.0.0
  */
+
+
+
+/**
+ * 返回空构造器，如果没有返回null
+ *
+ * @return 空构造器
+ */
+fun KClass<*>.getEmptyConstructor(): KFunction<*>? {
+    val constructors = this.constructors.filter { it.parameters.isEmpty() }
+    return if (constructors.isEmpty()) {
+        null
+    } else {
+        constructors.first()
+    }
+}
 
 /**
  * 实例化类

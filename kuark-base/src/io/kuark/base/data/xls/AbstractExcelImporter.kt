@@ -16,15 +16,14 @@ import java.io.InputStream
 import kotlin.reflect.KClass
 import kotlin.reflect.KMutableProperty1
 import kotlin.reflect.KProperty1
+import kotlin.reflect.full.primaryConstructor
 
 /**
  * excel数据导入器抽象类
  * 注意事项：
  * 1. Excel第一行为列描述信息，并非要导入的数据，在导入时第一行会被忽略
- * 2. 行对象类支持普通类和数据类。
- *    为普通类时，主构造函数参数列表必须为空，属性只能是可读可写的(var);
- *    为数据类时，属性可以全部定义在主构造函数中，可以是只读的(val)，参数顺序必须跟getPropertyNames()返回的一致。
- *
+ * 2. 行对象类支持数据类和普通类。
+ *    为数据类时，属性必须全部定义在主构造函数中，可以是只读的(val);为普通类时，必须存在空构造函数，属性只能是可读可写的(var)。
  * 3. 数据校验的默认实现是Kuark的bean校验方式(ValidationKit)
  * 4. 错误消息全部通过IllegalStateException异常抛出
  * 5. 如果需要对单元格的值作特殊处理，可重写getPropertyValue方法
@@ -52,7 +51,7 @@ abstract class AbstractExcelImporter<T : Any> : IExcelImporter<T> {
     private lateinit var propertyNames: List<String>
 
     /**
-     * 按列顺序返回属性名列表
+     * 按excel中的列顺序返回对应的属性名列表
      */
     protected abstract fun getPropertyNames(): List<String>
 
@@ -122,21 +121,23 @@ abstract class AbstractExcelImporter<T : Any> : IExcelImporter<T> {
             lateinit var rowObject: T
             for (row in 1 until rows) { // 扣掉列头
                 val rowCells = sheet.getRow(row)
-                val values = mutableListOf<Any>()
+                val propNameValueMap = mutableMapOf<String, Any>()
                 if (!rowObjectClass.isData) {
                     rowObject = rowObjectClass.newInstance()
                 }
                 for (columnIndex in rowCells.indices) {
                     val cell = rowCells[columnIndex]
                     val value = getPropertyValue(rowObjectClass, columnIndex, cell)
+                    val propertyName = propertyNames[columnIndex]
                     if (rowObjectClass.isData) {
-                        values.add(value)
+                        propNameValueMap[propertyName] = value
                     } else {
-                        val prop = propertyMap[propertyNames[columnIndex]] as KMutableProperty1
+                        val prop = propertyMap[propertyName] as KMutableProperty1
                         prop.set(rowObject, value)
                     }
                 }
                 if (rowObjectClass.isData) {
+                    val values = rowObjectClass.primaryConstructor!!.parameters.map { propNameValueMap[it.name]!! }
                     rowObject = rowObjectClass.newInstance(*values.toTypedArray())
                 }
                 rowObjectList.add(rowObject)

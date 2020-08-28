@@ -40,16 +40,16 @@ internal class AbstractExcelImporterTest {
     internal data class TestStudent(
 
         @get:NotNull
+        val height: Double,
+
+        @get:NotNull
         val name: String,
 
         @get:NotNull
         val sex: String,
 
         @get:NotNull
-        val age: Int,
-
-        @get:NotNull
-        val height: Double
+        val age: Int
 
     )
 

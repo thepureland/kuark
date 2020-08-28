@@ -1,5 +1,6 @@
 package io.kuark.base.io
 
+import org.apache.commons.io.FileUtils
 import java.io.File
 import java.net.URLDecoder
 import kotlin.reflect.KClass
@@ -95,5 +96,37 @@ object PathKit {
      * @since 1.0.0
      */
     fun getRuntimePath(): String = PathKit::class.java.classLoader.getResource(".").path
+
+    /**
+     * 获取系统临时目录
+     *
+     * @return 系统临时目录
+     * @since 1.0.0
+     */
+    fun getTempDirectoryPath(): String = FileUtils.getTempDirectoryPath()
+
+    /**
+     * 获取系统临时目录
+     *
+     * @return 系统临时目录文件对象
+     * @since 1.0.0
+     */
+    fun getTempDirectory(): File = FileUtils.getTempDirectory()
+
+    /**
+     * 获取系统用户根目录
+     *
+     * @return 系统用户根目录
+     * @since 1.0.0
+     */
+    fun getUserDirectoryPath(): String = FileUtils.getUserDirectoryPath()
+
+    /**
+     * 获取系统用户根目录
+     *
+     * @return 系统用户根目录文件对象
+     * @since 1.0.0
+     */
+    fun getUserDirectory(): File = FileUtils.getUserDirectory()
 
 }

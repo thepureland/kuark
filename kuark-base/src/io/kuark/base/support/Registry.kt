@@ -1,7 +1,5 @@
 package io.kuark.base.support
 
-import java.util.*
-
 /**
  * 注册器
  *
@@ -11,20 +9,9 @@ import java.util.*
 object Registry {
 
     /**
-     * 国际化信息类型key, value类型为List<String>
-    </String> */
-    const val I18N_TYPE_KEY = "I18N_TYPE"
-
-    /**
-     * 国际化支持的语言
-     */
-    const val I18N_KEY_LOCALES = "I18N_LOCALES"
-
-    /**
      * 所有注册的对象Map
      */
-    private val map: MutableMap<String, MutableList<Any>> =
-        HashMap()
+    private val map = mutableMapOf<String, MutableList<Any>>() //TODO 线程安全
 
     /**
      * 根据key查询所注册的对象
@@ -32,10 +19,7 @@ object Registry {
      * @param key
      * @return
      */
-    fun lookup(key: String): MutableList<Any> {
-        val resultList = map[key]
-        return resultList ?: mutableListOf()
-    }
+    fun lookup(key: String): MutableList<Any> = map[key] ?: mutableListOf()
 
     /**
      * 注册

@@ -16,6 +16,6 @@ interface IDictEnum {
     /**
      * 译文
      */
-    val trans: String?
+    val trans: String
 
 }

@@ -1,5 +1,6 @@
 package io.kuark.base.lang
 
+import io.kuark.base.lang.reflect.isEnum
 import io.kuark.base.log.LogFactory
 import io.kuark.base.support.enums.IDictEnum
 import org.apache.commons.lang3.EnumUtils
@@ -19,15 +20,12 @@ object EnumKit {
     /**
      * 根据字典枚举全类名字符串和字典代码，取得对应的枚举元素的译文
      *
-     * @param enumClassStr 字典枚举全类名字符串，该枚举类必须实现IDictEnum接口
+     * @param enumClassStr 字典枚举全类名字符串，不能为空白串, 且对应的类必须实现ICodeEnum接口
      * @param code 字典代码
      * @return 字典枚举元素的译文，不存在时返回null
-     * @throws IllegalArgumentException 任一参数为空或空白时
+     * @throws IllegalArgumentException 参数不合法时
      */
     fun trans(enumClassStr: String, code: String): String? {
-        require(!enumClassStr.isBlank()) { "enumClass参数不能为空" }
-        require(!code.isBlank()) { "code参数不能为空" }
-
         val enumClazz = enumOf(enumClassStr, code)
         if (enumClazz != null) {
             return enumClazz.trans
@@ -42,45 +40,48 @@ object EnumKit {
      * @param enumClass 字典枚举类型，该枚举类必须实现IDictEnum接口
      * @param code 字典代码
      * @return 字典枚举元素，不存在时返回null
-     * @throws IllegalArgumentException enumClass参数为null时
+     * @throws IllegalArgumentException 参数不合法时
      * @since 1.0.0
      */
     fun <E : IDictEnum> enumOf(enumClass: KClass<E>, code: String): E? {
-        require(!code.isBlank()) { "code参数不能为空" }
+        require(!enumClass.isEnum()) { "指定的类非枚举类" }
+        require(!code.isBlank()) { "字典代码参数不能为空" }
+
         for (e in enumClass.java.enumConstants) {
             if (e.code == code) {
                 return e
             }
         }
-        LOG.error("${enumClass}不存在code为【$code】的枚举！")
+        LOG.error("枚举类【${enumClass}】不存在code为【$code】的枚举元素！")
         return null
     }
 
     /**
-     * 根据枚举全类名和字典代码，取得对应的枚举
+     * 根据枚举全类名和字典代码，取得对应的枚举元素
      *
-     * @param enumClass 枚举全类名，不能为null或空串, 且对应的类必须实现ICodeEnum接口
-     * @param code 表码，可以为null
-     * @return 枚举，根据字典代码找不到对应枚举时返回null
-     * @throws IllegalArgumentException 参数为空或根据参数查找失败时
+     * @param enumClassStr 字典枚举全类名字符串，不能为空白串, 且对应的类必须实现ICodeEnum接口
+     * @param code 字典代码
+     * @return 字典枚举元素的译文，不存在时返回null
+     * @throws IllegalArgumentException 参数不合法时
      * @since 1.0.0
      */
-    fun enumOf(enumClass: String, code: String): IDictEnum? {
-        val enumClazz = getCodeEnumClass(enumClass)
+    fun enumOf(enumClassStr: String, code: String): IDictEnum? {
+        require(!code.isBlank()) { "字典代码参数不能为空" }
+
+        val enumClazz = getCodeEnumClass(enumClassStr)
         return enumOf(enumClazz, code)
     }
 
     /**
-     * 取得指定表码枚举的所有表码信息
+     * 取得字典枚举的所有代码及其翻译信息
      *
-     * @param enumClass 表码枚举
-     * @return Map<表码，描述>
-     * @throws IllegalArgumentException 参数为null时
+     * @param enumClass 字典枚举类
+     * @return Map<字典代码，译文>
      * @since 1.0.0
      */
-    fun getCodeMap(enumClass: KClass<out IDictEnum>): Map<String, String?> {
+    fun getCodeMap(enumClass: KClass<out IDictEnum>): Map<String, String> {
         val enumConstants = enumClass.java.enumConstants
-        val codeMap = LinkedHashMap<String, String?>()
+        val codeMap = mutableMapOf<String, String>()
         for (e in enumConstants) {
             codeMap[e.code] = e.trans
         }
@@ -88,35 +89,37 @@ object EnumKit {
     }
 
     /**
-     * 取得指定表码枚举的所有表码信息
+     * 取得字典枚举的所有代码及其翻译信息
      *
-     * @param enumClass 表码枚举，不能为null或空串
-     * @return Map<表码，描述>，不会为null
-     * @throws IllegalArgumentException 参数为空或根据参数查找失败时
+     * @param enumClassStr 字典枚举全类名字符串，不能为空白串, 且对应的类必须实现ICodeEnum接口
+     * @return Map<字典代码，译文>
+     * @throws IllegalArgumentException 参数不合法时
      * @since 1.0.0
      */
-    fun getCodeMap(enumClass: String): Map<String, String?> {
-        val enumClazz = getCodeEnumClass(enumClass)
+    fun getCodeMap(enumClassStr: String): Map<String, String> {
+        val enumClazz = getCodeEnumClass(enumClassStr)
         return getCodeMap(enumClazz)
     }
 
     /**
-     * 根据枚举全类名，取得对应的枚举类
+     * 根据枚举全类名，取得对应的枚举元素
      *
-     * @param enumClass 枚举全类名，不能为null或空串, 且对应的类必须实现ICodeEnum接口
-     * @return 枚举类，不会为null
+     * @param enumClassStr 枚举全类名，不能为null或空串, 且对应的类必须实现ICodeEnum接口
+     * @return 枚举类
      * @throws IllegalArgumentException 参数为空或根据参数查找失败时
      * @since 1.0.0
      */
-    fun getCodeEnumClass(enumClass: String): KClass<out IDictEnum> {
-        require(!enumClass.isBlank()) { "enumClass参数不能为空！" }
+    fun getCodeEnumClass(enumClassStr: String): KClass<out IDictEnum> {
+        require(!enumClassStr.isBlank()) { "字典枚举全类名参数不能为空" }
+
+        require(!enumClassStr.isBlank()) { "enumClass参数不能为空！" }
         val enumClazz = try {
-            Class.forName(enumClass)
+            Class.forName(enumClassStr)
         } catch (e: ClassNotFoundException) {
-            throw IllegalArgumentException(enumClass + "不存在！")
+            throw IllegalArgumentException("类【${enumClassStr}】不存在！")
         }
-        require(enumClazz.isEnum) { enumClass + "不是枚举！" }
-        require(IDictEnum::class.java.isAssignableFrom(enumClazz)) { enumClass + "没有实现" + IDictEnum::class }
+        require(enumClazz.isEnum) { "类【${enumClassStr}】不是枚举！" }
+        require(IDictEnum::class.java.isAssignableFrom(enumClazz)) { "类【${enumClassStr}】没有实现【${IDictEnum::class}】接口！" }
         return enumClazz.kotlin as KClass<out IDictEnum>
     }
 

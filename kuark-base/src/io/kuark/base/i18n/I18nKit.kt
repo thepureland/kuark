@@ -18,7 +18,11 @@ import java.util.*
 object I18nKit {
 
     /**
-     * 初始化运行时工程内的所有国际化文件
+     * 初始化，如果不初始化，只支持zh_CN
+     *
+     * @param supportLocales 支持的Locale
+     * @param types 国际化信息类型，自定义，为i18n目录的子目录
+     * @param defaultLocale 默认Locale
      */
     fun initI18n(supportLocales: Set<String>, types: Set<String>, defaultLocale: String = "zh_CN") {
         this.supportLocales = supportLocales
@@ -78,20 +82,11 @@ object I18nKit {
     }
 
     /**
-     * 绑定本地运行环境和资源文件
+     * 是否支持指定的Locale
      *
-     * @param file 资源文件
-     * @since 1.0.0
+     * @param locale Locale
+     * @return true: 支持，false: 不支持
      */
-    @Synchronized
-    fun bundle(file: String): ResourceBundle {
-        I18nKit::class.java.classLoader.getResourceAsStream(file).use { it ->
-            InputStreamReader(it, "UTF-8").use {
-                return PropertyResourceBundle(it)
-            }
-        }
-    }
-
     fun isSupport(locale: String): Boolean = supportLocales.contains(locale)
 
 
@@ -127,6 +122,21 @@ object I18nKit {
         for (type in types) {
             //initI18nByType(type,defaultLocale,Arrays.asList(defaultLocale),"");
             initI18nByType(type, defaultLocale, otherLocales, "")
+        }
+    }
+
+    /**
+     * 绑定本地运行环境和资源文件
+     *
+     * @param file 资源文件
+     * @since 1.0.0
+     */
+    @Synchronized
+    private fun bundle(file: String): ResourceBundle {
+        I18nKit::class.java.classLoader.getResourceAsStream(file).use { it ->
+            InputStreamReader(it, "UTF-8").use {
+                return PropertyResourceBundle(it)
+            }
         }
     }
 

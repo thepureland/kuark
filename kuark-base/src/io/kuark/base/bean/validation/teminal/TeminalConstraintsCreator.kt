@@ -167,7 +167,7 @@ object TeminalConstraintsCreator {
         if (clazz != Any::class && !clazz.isAbstract) {
             val prop = clazz.getMemberProperty(property)
             if (prop == null) {
-                return getAnnotationsOnGetter(clazz.getSuperClass(), property)
+                return getAnnotationsOnGetter(clazz.getSuperClass()!!, property)
             } else {
                 val annotations = prop.getter.annotations
                 for (annotation in annotations) {

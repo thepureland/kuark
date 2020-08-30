@@ -17,52 +17,51 @@ object EnumKit {
     private val LOG = LogFactory.getLog(EnumKit::class)
 
     /**
-     * 根据枚举类型和编码，取得对应的译文
+     * 根据字典枚举全类名字符串和字典代码，取得对应的枚举元素的译文
      *
-     * @param enumClass 枚举类型, 不能为null
-     * @param code 编码，可以为null
-     * @return 枚举，根据编码找不到对应枚举时返回null
-     * @throws IllegalArgumentException enumClass参数为null时
+     * @param enumClassStr 字典枚举全类名字符串，该枚举类必须实现IDictEnum接口
+     * @param code 字典代码
+     * @return 字典枚举元素的译文，不存在时返回null
+     * @throws IllegalArgumentException 任一参数为空或空白时
      */
-    fun trans(enumClass: String, code: String): String? {
-        require(!enumClass.isBlank()) { "enumClass参数不能为空" }
-        if (code.isBlank()) {
-            LOG.error(Exception(), enumClass + "不存在code为【" + code + "】的枚举！")
-            return null
-        }
-        val enumClazz = enumOf(enumClass, code)
+    fun trans(enumClassStr: String, code: String): String? {
+        require(!enumClassStr.isBlank()) { "enumClass参数不能为空" }
+        require(!code.isBlank()) { "code参数不能为空" }
+
+        val enumClazz = enumOf(enumClassStr, code)
         if (enumClazz != null) {
             return enumClazz.trans
         }
-        LOG.error(Exception(), enumClass + "不存在code为【" + code + "】的枚举！")
+        LOG.error("枚举类【${enumClassStr}】，不存在code为【${code}】的枚举元素！")
         return null
     }
 
     /**
-     * 根据枚举类型和编码，取得对应的枚举
+     * 根据字典枚举类型和字典代码，取得对应的枚举元素
      *
-     * @param enumClass 枚举类型, 不能为null
-     * @param code 编码
-     * @return 枚举，根据编码找不到对应枚举时返回null
+     * @param enumClass 字典枚举类型，该枚举类必须实现IDictEnum接口
+     * @param code 字典代码
+     * @return 字典枚举元素，不存在时返回null
      * @throws IllegalArgumentException enumClass参数为null时
      * @since 1.0.0
      */
     fun <E : IDictEnum> enumOf(enumClass: KClass<E>, code: String): E? {
+        require(!code.isBlank()) { "code参数不能为空" }
         for (e in enumClass.java.enumConstants) {
             if (e.code == code) {
                 return e
             }
         }
-        LOG.error(Exception(), "${enumClass.java.name}不存在code为【$code】的枚举！")
+        LOG.error("${enumClass}不存在code为【$code】的枚举！")
         return null
     }
 
     /**
-     * 根据枚举全类名和编码，取得对应的枚举
+     * 根据枚举全类名和字典代码，取得对应的枚举
      *
      * @param enumClass 枚举全类名，不能为null或空串, 且对应的类必须实现ICodeEnum接口
      * @param code 表码，可以为null
-     * @return 枚举，根据编码找不到对应枚举时返回null
+     * @return 枚举，根据字典代码找不到对应枚举时返回null
      * @throws IllegalArgumentException 参数为空或根据参数查找失败时
      * @since 1.0.0
      */
@@ -92,7 +91,7 @@ object EnumKit {
      * 取得指定表码枚举的所有表码信息
      *
      * @param enumClass 表码枚举，不能为null或空串
-     * @return Map<表码></表码>，描述>，不会为null
+     * @return Map<表码，描述>，不会为null
      * @throws IllegalArgumentException 参数为空或根据参数查找失败时
      * @since 1.0.0
      */

@@ -1,6 +1,8 @@
 package io.kuark.base.lang.reflect
 
 import java.net.URLDecoder
+import java.util.*
+import kotlin.NoSuchElementException
 import kotlin.reflect.*
 import kotlin.reflect.full.allSuperclasses
 import kotlin.reflect.full.memberFunctions
@@ -13,7 +15,6 @@ import kotlin.reflect.full.superclasses
  * @author K
  * @since 1.0.0
  */
-
 
 
 /**
@@ -60,6 +61,35 @@ fun <T : Any> KClass<T>.newInstance(vararg args: Any): T {
     }
     error("实例化${this}时，未能找到匹配参数的构造函数！")
 }
+
+/**
+ * 当前类是否为枚举
+ *
+ * @return true: 当前类是为枚举，false：当前类不是枚举
+ */
+fun KClass<*>.isEnum(): Boolean = this.getSuperClass() == Enum::class
+
+/**
+ * 当前类是否为接口
+ *
+ * @return true: 当前类是为接口，false：当前类不是接口
+ */
+fun KClass<*>.isInterface(): Boolean = this.isAbstract && this.constructors.isEmpty()
+
+/**
+ * 当前类是否为抽象类
+ *
+ * @return true: 当前类是为抽象类，false：当前类不是抽象类
+ */
+fun KClass<*>.isAbstractClass(): Boolean = this.isAbstract && this.constructors.isNotEmpty()
+
+/**
+ * 当前类是否为注解
+ *
+ * @return true: 当前类是为注解，false：当前类不是注解
+ */
+fun KClass<*>.isAnnotation(): Boolean =
+    this.isFinal && this.getSuperInterfaces().contains(Annotation::class) && getSuperClass() == Any::class
 
 /**
  * 是否指定的注解类出现在该类上。
@@ -128,10 +158,12 @@ fun KClass<*>.getMemberFunction(functionName: String, vararg parameters: KParame
 /**
  * 返回当前类的直接父类
  *
- * @return 直接父类
- * @throws NoSuchElementException 当不存在时
+ * @return 直接父类，当前类为Any时返回null
  */
-fun KClass<*>.getSuperClass(): KClass<*> = this.superclasses.first { it.constructors.isNotEmpty() }
+fun KClass<*>.getSuperClass(): KClass<*>? {
+    if (this == Any::class) return null
+    return superclasses.first { it.constructors.isNotEmpty() }
+}
 
 /**
  * 返回当前类的直接父接口

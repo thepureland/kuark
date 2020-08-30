@@ -1,6 +1,7 @@
 package io.kuark.base.i18n
 
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -47,6 +48,12 @@ internal class I18nKitTest {
 
         // 不支持的Locale，按默认Locale处理
         assertEquals("中文简体", I18nKit.getLocalStr("language.zh_CN", "kuark-base-test", "test", "zh_cn"))
+    }
+
+    @Test
+    fun isSupport() {
+        assert(I18nKit.isSupport("zh_CN"))
+        assertFalse(I18nKit.isSupport("zh_cn"))
     }
 
     @Test

@@ -31,7 +31,7 @@ object GenericKit {
             return Nothing::class
         }
 
-        var directSuperType = clazz.getSuperClass().firstMatchTypeOf(clazz.supertypes)
+        var directSuperType = clazz.getSuperClass()!!.firstMatchTypeOf(clazz.supertypes)
         if (directSuperType == Any::class.starProjectedType) {
             // 没有非Any的父类，取实现的第一个接口
             val genericInterfaces = clazz.getSuperInterfaces()
@@ -43,7 +43,7 @@ object GenericKit {
         val args = directSuperType.arguments
         if(args.isEmpty()) {
             // 可能是在父类做的参数化
-            return getSuperClassGenricClass(clazz.getSuperClass(), index) // 往父类取
+            return getSuperClassGenricClass(clazz.getSuperClass()!!, index) // 往父类取
         }
 
         if (args.isEmpty()) return Nothing::class

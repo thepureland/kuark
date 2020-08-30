@@ -1,13 +1,15 @@
 package io.kuark.base.lang.reflect
 
 import io.kuark.base.bean.validation.constraint.annotaions.AtLeast
+import io.kuark.base.bean.validation.constraint.annotaions.NotNullOn
+import io.kuark.base.support.enums.IDictEnum
+import io.kuark.base.support.enums.Sex
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 import java.io.Serializable
-import kotlin.reflect.full.primaryConstructor
 import kotlin.reflect.full.starProjectedType
 
 /**
@@ -35,6 +37,44 @@ class XKClassTest {
         assertEquals(0, dog.age)
 
         assertThrows<IllegalStateException> { Animal::class.newInstance() }
+    }
+
+    @Test
+    fun isEnum() {
+        assert(Sex::class.isEnum())
+        assert(Sex.FEMALE::class.isEnum())
+        assertFalse(Any::class.isEnum())
+        assertFalse(XKClassTest::class.isEnum())
+    }
+
+    @Test
+    fun isInterface() {
+        assert(IDictEnum::class.isInterface())
+        assertFalse(NotNullOn::class.isInterface())
+        assertFalse(AbstractList::class.isInterface())
+        assertFalse(XKClassTest::class.isInterface())
+        assertFalse(Sex::class.isInterface())
+        assertFalse(Sex.FEMALE::class.isInterface())
+    }
+
+    @Test
+    fun isAbstractClass() {
+        assert(AbstractList::class.isAbstractClass())
+        assertFalse(IDictEnum::class.isAbstractClass())
+        assertFalse(NotNullOn::class.isAbstractClass())
+        assertFalse(XKClassTest::class.isAbstractClass())
+        assertFalse(Sex::class.isAbstractClass())
+        assertFalse(Sex.FEMALE::class.isAbstractClass())
+    }
+
+    @Test
+    fun isAnnotation() {
+        assert(NotNullOn::class.isAnnotation())
+        assertFalse(AbstractList::class.isAnnotation())
+        assertFalse(IDictEnum::class.isAnnotation())
+        assertFalse(XKClassTest::class.isAnnotation())
+        assertFalse(Sex::class.isAnnotation())
+        assertFalse(Sex.FEMALE::class.isAnnotation())
     }
 
     @Test
@@ -79,6 +119,7 @@ class XKClassTest {
 
     @Test
     fun getSuperClass() {
+        assertEquals(null, Any::class.getSuperClass())
         assertEquals(Bird::class, Parrot::class.getSuperClass())
         assertEquals(Any::class, Animal::class.getSuperClass())
         assertEquals(Any::class, Flyable::class.getSuperClass())

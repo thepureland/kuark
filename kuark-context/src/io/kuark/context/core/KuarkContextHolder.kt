@@ -8,14 +8,12 @@ package io.kuark.context.core
  */
 object KuarkContextHolder {
 
-    private val contextParamThreadLocal = InheritableThreadLocal<ContextParam>()
+    private val contextThreadLocal = InheritableThreadLocal<KuarkContext>()
 
     init {
-        contextParamThreadLocal.set(ContextParam())
+        contextThreadLocal.set(KuarkContext.Builder().build())
     }
 
-    fun get(): ContextParam {
-        return contextParamThreadLocal.get()
-    }
+    fun get(): KuarkContext = contextThreadLocal.get()
 
 }

@@ -4,7 +4,7 @@ import io.kuark.base.io.FilenameKit
 import io.kuark.base.io.PathKit
 import io.kuark.base.lang.SystemKit
 import io.kuark.base.support.PropertiesLoader
-import io.kuark.context.core.KuarkContext
+import io.kuark.context.core.KuarkContextHolder
 import io.kuark.data.jdbc.datasource.DataSourceKit
 import io.kuark.data.jdbc.datasource.setCurrentDataSource
 import io.kuark.data.jdbc.support.RdbKit
@@ -142,7 +142,7 @@ class ConfigController : Initializable {
             userTextField.text.trim(),
             passwordField.text
         )
-        KuarkContext.setCurrentDataSource(dataSource)
+        KuarkContextHolder.setCurrentDataSource(dataSource)
 
         _testDbConnection()
 

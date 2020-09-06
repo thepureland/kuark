@@ -2,7 +2,7 @@ package io.kuark.data.jdbc.support
 
 import io.kuark.base.lang.string.deleteWhitespace
 import io.kuark.base.lang.string.substringBetween
-import io.kuark.context.core.KuarkContext
+import io.kuark.context.core.KuarkContextHolder
 import io.kuark.data.jdbc.datasource.currentDataSource
 import io.kuark.data.jdbc.metadata.RdbType
 import me.liuwj.ktorm.database.Database
@@ -24,7 +24,7 @@ object RdbKit {
      * @return 当前上下文的数据源
      * @since 1.0.0
      */
-    fun getDataSource(): DataSource = KuarkContext.currentDataSource()
+    fun getDataSource(): DataSource = KuarkContextHolder.currentDataSource()
 
     /**
      * 取得当前上下文的数据库对象

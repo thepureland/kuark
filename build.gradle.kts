@@ -106,6 +106,8 @@ subprojects {
         // kotlin
         implementation("org.jetbrains.kotlin:kotlin-reflect:$kotlin_version")
         implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version")
+        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.9")
+        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.3.9")
     }
 
     dependencyManagement {

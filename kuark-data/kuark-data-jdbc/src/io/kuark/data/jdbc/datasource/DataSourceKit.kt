@@ -1,7 +1,7 @@
 package io.kuark.data.jdbc.datasource
 
 import com.zaxxer.hikari.HikariDataSource
-import io.kuark.context.core.KuarkContext
+import io.kuark.context.core.KuarkContextHolder
 import io.kuark.data.jdbc.support.RdbKit
 import javax.sql.DataSource
 
@@ -13,7 +13,7 @@ import javax.sql.DataSource
  */
 object DataSourceKit {
 
-    fun getCurrentDataSource(): DataSource = KuarkContext.currentDataSource()
+    fun getCurrentDataSource(): DataSource = KuarkContextHolder.currentDataSource()
 
     fun getDataSource(dataSourceId: String): DataSource {
         TODO()

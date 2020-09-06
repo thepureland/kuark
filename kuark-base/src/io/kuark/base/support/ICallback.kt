@@ -8,7 +8,7 @@ import java.io.Serializable
  * @author K
  * @since 1.0.0
  */
-interface ICallback<P, R> : Serializable {
+fun interface ICallback<P, R> : Serializable {
     /**
      * 回调行为
      *

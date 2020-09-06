@@ -1,6 +1,6 @@
 package io.kuark.context.spring
 
-import io.kuark.context.core.KuarkContext
+import io.kuark.context.core.KuarkContextHolder
 
 /**
  * spring应用上下文持有者
@@ -16,7 +16,7 @@ class SpringApplicationContextHolder {
 //    }
 
     fun test() {
-        KuarkContext.get()
+        KuarkContextHolder.get()
     }
 
 }

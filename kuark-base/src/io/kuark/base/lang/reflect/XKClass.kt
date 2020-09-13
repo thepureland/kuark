@@ -22,7 +22,7 @@ import kotlin.reflect.full.superclasses
  *
  * @return 空构造器
  */
-fun KClass<*>.getEmptyConstructor(): KFunction<*>? {
+fun <T : Any> KClass<T>.getEmptyConstructor(): KFunction<T>? {
     val constructors = this.constructors.filter { it.parameters.isEmpty() }
     return if (constructors.isEmpty()) {
         null

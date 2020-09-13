@@ -23,6 +23,12 @@ object HttpClientKit {
 
     /**
      * 使用协程发起异步请求(不会阻塞线程)，并等待结果返回
+     *
+     * @param httpClientBuilder HttpClient.Builder对象，通过HttpClient.newBuilder()创建，并链式调用各配置方法
+     * @param httpRequestBuilder HttpRequest.Builder对象，通过HttpRequest.newBuilder()创建，并链式调用各配置方法
+     * @param bodyHandler HttpResponse.BodyHandler对象，通过HttpResponse.BodyHandlers.ofXXXX方法创建
+     * @param T 返回的response body类型
+     * @return 响应结果HttpResponse对象
      */
     fun <T : Any> asyncRequest(
         httpClientBuilder: HttpClient.Builder,

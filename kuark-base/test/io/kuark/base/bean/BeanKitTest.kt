@@ -101,7 +101,7 @@ internal class BeanKitTest {
 
     @Test
     fun testCopyPropertiesToClassInstance() {
-        val p: Person = BeanKit.copyProperties(person, Person::class)
+        val p: Person = BeanKit.copyProperties(Person::class, person)
         assertEquals(person, p)
         assertTrue(person.address === p.address) // 证明是浅克隆
     }

@@ -15,9 +15,11 @@ import kotlin.reflect.KClass
 /**
  * 将字符串数组转化为指定数值类型的数组
  *
+ * @param T 转化后的数组元素类型
  * @param clazz 转化后的数组元素类型
- * @param <T> 转化后的数组元素类型
- * @return
+ * @return 转化后的数组
+ * @author K
+ * @since 1.0.0
  */
 inline fun <reified T : Number> Array<String>.toNumberArray(clazz: KClass<T>): Array<T> {
     val list = this.map { it.toType(clazz) }
@@ -27,8 +29,8 @@ inline fun <reified T : Number> Array<String>.toNumberArray(clazz: KClass<T>): A
 /**
  * 获取一个数组(一维)的字符串值（与toString不一样，前后不会带花括号）
  *
- * @param array 数组
  * @return 数组的字符串表示, 如果传入的数组参数为null将返回空串
+ * @author K
  * @since 1.0.0
  */
 fun Array<*>.toPlainString(): String {
@@ -47,10 +49,11 @@ fun Array<*>.toPlainString(): String {
  * 开始下标有被包括,而结束下标则没有.如果传入的数组为null, 将返回null.
  * 子数组的元素类型与原数组是一样的. 因此, 如果输入的数组元素类型为 `Date`, 下面的用法是意料中的事:
  *
- * @param <T> 数组元素的类型
+ * @param T 数组元素的类型
  * @param startIndexInclusive 开始下标(包括). 小于0当作0处理, 大于数组长度将返回一个空的数组
  * @param endIndexExclusive 结束下标(不包括). 小于开始下标将返回空数组, 大于数组长度当数组长度处理
  * @return 一个包含原数组的从start下标开始到end下标的元素的新数组
+ * @author K
  * @since 1.0.0
  */
 fun <T> Array<T>.subarray(startIndexInclusive: Int, endIndexExclusive: Int): Array<T> =
@@ -69,9 +72,10 @@ fun <T> Array<T>.subarray(startIndexInclusive: Int, endIndexExclusive: Int): Arr
  * ["a", "b", "c"].addAll(["1", "2", "3"]) = ["a", "b", "c", "1", "2", "3"]
  * </pre>
  *
- * @param <T> 数组元素的类型
+ * @param T 数组元素的类型
  * @param array2 第二个它的元素要添加到新数组的数组, 可以为 `null`
  * @return 新的数组
+ * @author K
  * @since 1.0.0
  */
 fun <T> Array<T>.addAll(vararg array2: T?): Array<T> = ArrayUtils.addAll(this, *array2)
@@ -85,9 +89,10 @@ fun <T> Array<T>.addAll(vararg array2: T?): Array<T> = ArrayUtils.addAll(this, *
  * ["a", "b"].add("c") = ["a", "b", "c"]
  * </pre>
  *
- * @param <T> 数组元素类型
+ * @param T 数组元素类型
  * @param element 添加到最后的元素, 可以为 `null`
  * @return 一个包含所有给定数组元素及放在最后的指定的元素的新数组
+ * @author K
  * @since 1.0.0
  */
 fun <T> Array<T>.add(element: T?): Array<T> = ArrayUtils.add(this, element)
@@ -101,11 +106,12 @@ fun <T> Array<T>.add(element: T?): Array<T> = ArrayUtils.add(this, element)
  * ["a", "b"].add(3, "c") = ["a", "b", "c"]
  * </pre>
  *
- * @param <T> 数组元素的类型
+ * @param T 数组元素的类型
  * @param index 插入的位置
  * @param element 要插入的元素
  * @return 一个包含输入数组所有元素及指定元素的数组
  * @throws IndexOutOfBoundsException 如果下标越界 (index < 0 || index > array.length).
+ * @author K
  * @since 1.0.0
  */
 fun <T> Array<T>.add(index: Int, element: T?): Array<T> = ArrayUtils.add(this, index, element)
@@ -120,10 +126,11 @@ fun <T> Array<T>.add(index: Int, element: T?): Array<T> = ArrayUtils.add(this, i
  * ["a", "b", "c"].remove(1) = ["a", "c"]
  * </pre>
  *
- * @param <T> 数组元素类型
+ * @param T 数组元素类型
  * @param index 要移除的元素的下标
  * @return 一个包含原数组除了指定位置对应元素外的所有元素的新数组
  * @throws IndexOutOfBoundsException 如果下标越界 (index < 0 || index >= array.length)
+ * @author K
  * @since 1.0.0
  */
 fun <T> Array<T>.remove(index: Int): Array<T> = ArrayUtils.remove(this, index)
@@ -138,9 +145,10 @@ fun <T> Array<T>.remove(index: Int): Array<T> = ArrayUtils.remove(this, index)
  * ["a", "b", "a"].removeElement("a") = ["b", "a"]
  * </pre>
  *
- * @param <T> 数组元素类型
+ * @param T 数组元素类型
  * @param element 要移除的元素
  * @return 一个包含原数组除了指定位置对应元素外的所有元素的新数组
+ * @author K
  * @since 1.0.0
  */
 fun <T> Array<T>.removeElement(element: T?): Array<T> = ArrayUtils.removeElement(this, element)
@@ -153,10 +161,11 @@ fun <T> Array<T>.removeElement(element: T?): Array<T> = ArrayUtils.removeElement
  * ["a", "b", "c"].removeAll(1, 2) = ["a"]
  * </pre>
  *
- * @param <T> 数组元素类型
+ * @param T 数组元素类型
  * @param indices 要移除的元素的下标可变数组
  * @return 一个包含原数组除了指定位置对应元素外的所有元素的新数组
  * @throws IndexOutOfBoundsException 如果下标越界 (index < 0 || index >= array.length)
+ * @author K
  * @since 1.0.0
  */
 fun <T> Array<T>.removeAll(vararg indices: Int): Array<T> = ArrayUtils.removeAll(this, *indices)
@@ -173,9 +182,10 @@ fun <T> Array<T>.removeAll(vararg indices: Int): Array<T> = ArrayUtils.removeAll
  * ["a", "b", "a"].removeElements("a", "a") = ["b"]
  * </pre>
  *
- * @param <T> 数组元素类型
+ * @param T 数组元素类型
  * @param values 要从数组中移除的值
  * @return 一个包含原数组除了要移除的元素外的所有元素的新数组
+ * @author K
  * @since 1.0.0
  */
 fun <T> Array<T>.removeElements(vararg values: T): Array<T> = ArrayUtils.removeElements(this, *values)

@@ -23,6 +23,7 @@ object IoKit {
      * 关闭一个URLConnection
      *
      * @param conn 要关闭的连接
+     * @author K
      * @since 1.0.0
      */
     fun close(conn: URLConnection?): Unit = IOUtils.close(conn)
@@ -42,6 +43,7 @@ object IoKit {
      * @param input 要被完全缓存的Stream
      * @return 被完全缓存的Stream
      * @throws IOException io错误发生时
+     * @author K
      * @since 1.0.0
      */
     fun toBufferedInputStream(input: InputStream?): InputStream? = IOUtils.toBufferedInputStream(input)
@@ -52,6 +54,7 @@ object IoKit {
      *
      * @param reader 要被包装或直接返回的Reader
      * @return 指定的Reader 或 指定的Reader的一个新的 [BufferedReader]
+     * @author K
      * @since 1.0.0
      */
     fun toBufferedReader(reader: Reader?): BufferedReader? = IOUtils.toBufferedReader(reader)
@@ -67,6 +70,7 @@ object IoKit {
      * @param input 要读取的 `InputStream`
      * @return 字节数组
      * @throws IOException io错误发生时
+     * @author K
      * @since 1.0.0
      */
     fun toByteArray(input: InputStream): ByteArray = IOUtils.toByteArray(input)
@@ -84,6 +88,7 @@ object IoKit {
      * @throws IOException io错误发生或`InputStream`的大小与size参数不一致时
      * @throws IllegalArgumentException 如果size参数小于0或大于Integer.MAX_VALUE
      * @see IoKit.toByteArray
+     * @author K
      * @since 1.0.0
      */
     fun toByteArray(input: InputStream, size: Long): ByteArray = IOUtils.toByteArray(input, size)
@@ -97,6 +102,7 @@ object IoKit {
      * @return 请求的字节数组
      * @throws IOException io错误发生或`InputStream`的大小与size参数不一致时
      * @throws IllegalArgumentException 如果size参数小于0
+     * @author K
      * @since 1.0.0
      */
     fun toByteArray(input: InputStream, size: Int): ByteArray = IOUtils.toByteArray(input, size)
@@ -111,6 +117,7 @@ object IoKit {
      * @return 字节数组
      * @throws IOException io错误发生时
      * @throws java.nio.charset.UnsupportedCharsetException 如果指定的编码不被支持
+     * @author K
      * @since 1.0.0
      */
     fun toByteArray(input: Reader, encoding: String? = null): ByteArray = IOUtils.toByteArray(input, encoding)
@@ -121,6 +128,7 @@ object IoKit {
      * @param uri 要读取的内容的`URI`
      * @return 请求的字节数组
      * @throws IOException io错误发生时
+     * @author K
      * @since 1.0.0
      */
     fun toByteArray(uri: URI): ByteArray = IOUtils.toByteArray(uri)
@@ -131,6 +139,7 @@ object IoKit {
      * @param url 要读取的内容的`URL`
      * @return 请求的字节数组
      * @throws IOException io错误发生时
+     * @author K
      * @since 1.0.0
      */
     fun toByteArray(url: URL): ByteArray = IOUtils.toByteArray(url)
@@ -141,6 +150,7 @@ object IoKit {
      * @param urlConn 要读取的内容的`URLConnection`
      * @return 请求的字节数组
      * @throws IOException io错误发生时
+     * @author K
      * @since 1.0.0
      */
     fun toByteArray(urlConn: URLConnection): ByteArray = IOUtils.toByteArray(urlConn)
@@ -161,6 +171,7 @@ object IoKit {
      * @return 字节数组
      * @throws IOException io错误发生时
      * @throws java.nio.charset.UnsupportedCharsetException 指定编码不被支持时
+     * @author K
      * @since 1.0.0
      */
     fun toCharArray(`is`: InputStream, encoding: String? = null): CharArray = IOUtils.toCharArray(`is`, encoding)
@@ -172,6 +183,7 @@ object IoKit {
      * @param input 要读取的 `Reader`
      * @return 字节数组
      * @throws IOException io错误发生时
+     * @author K
      * @since 1.0.0
      */
     fun toCharArray(input: Reader): CharArray = IOUtils.toCharArray(input)
@@ -191,6 +203,7 @@ object IoKit {
      * @return 请求的字符串
      * @throws IOException io错误发生时
      * @throws java.nio.charset.UnsupportedCharsetException 指定的编码不被支持时
+     * @author K
      * @since 1.0.0
      */
     fun toString(input: InputStream, encoding: String? = null): String = IOUtils.toString(input, encoding)
@@ -202,6 +215,7 @@ object IoKit {
      * @param input 要读取的`Reader`
      * @return 请求的字符串
      * @throws IOException io错误发生时
+     * @author K
      * @since 1.0.0
      */
     fun toString(input: Reader): String = IOUtils.toString(input)
@@ -214,6 +228,7 @@ object IoKit {
      * @return URI指向的内容的字符串表示
      * @throws IOException io错误发生时
      * @throws java.nio.charset.UnsupportedCharsetException 如果指定的编码不被支持
+     * @author K
      * @since 1.0.0
      */
     fun toString(uri: URI, encoding: String? = null): String = IOUtils.toString(uri, encoding)
@@ -226,7 +241,8 @@ object IoKit {
      * @return URI指向的内容的字符串表示
      * @if an I/O exception occurs.
      * @throws IOException io错误发生时
-     * java.nio.charset.UnsupportedCharsetException 如果指定的编码不被支持
+     * @throws java.nio.charset.UnsupportedCharsetException 如果指定的编码不被支持
+     * @author K
      * @since 1.0.0
      */
     fun toString(url: URL, encoding: String? = null): String = IOUtils.toString(url, encoding)
@@ -240,6 +256,7 @@ object IoKit {
      * @param encoding 使用的编码，null表示平台默认的编码
      * @return 请求的字符串
      * @throws IOException io错误发生时
+     * @author K
      * @since 1.0.0
      */
     fun toString(input: ByteArray, encoding: String? = null): String = IOUtils.toString(input, encoding)
@@ -257,6 +274,7 @@ object IoKit {
      * @return 字符串列表，不会为null
      * @throws IOException io错误发生时
      * @throws java.nio.charset.UnsupportedCharsetException 如果指定的编码不被支持
+     * @author K
      * @since 1.0.0
      */
     fun readLines(input: InputStream, encoding: String? = null): List<String> = IOUtils.readLines(input, encoding)
@@ -268,6 +286,7 @@ object IoKit {
      * @param input 要读取的`Reader`, 不能为null
      * @return 字符串列表，不会为null
      * @throws IOException io错误发生时
+     * @author K
      * @since 1.0.0
      */
     fun readLines(input: Reader): List<String> = IOUtils.readLines(input)
@@ -297,6 +316,7 @@ object IoKit {
      * </pre>
      * @param reader 要读取的`Reader`
      * @return 行迭代器
+     * @author K
      * @since 1.0.0
      */
     fun lineIterator(reader: Reader): LineIterator = IOUtils.lineIterator(reader)
@@ -327,6 +347,7 @@ object IoKit {
      * @return 行迭代器
      * @throws IOException io错误发生时
      * @throws java.nio.charset.UnsupportedCharsetException 如果指定的编码不被支持
+     * @author K
      * @since 1.0.0
      */
     fun lineIterator(input: InputStream, encoding: String? = null): LineIterator = IOUtils.lineIterator(input, encoding)
@@ -342,6 +363,7 @@ object IoKit {
      * @return 输入流
      * @throws IOException io错误发生时
      * @throws java.nio.charset.UnsupportedCharsetException 如果指定的编码不被支持
+     * @author K
      * @since 1.0.0
      */
     fun toInputStream(input: CharSequence, encoding: String? = null): InputStream =
@@ -356,6 +378,7 @@ object IoKit {
      * @return 输入流
      * @throws IOException io错误发生时
      * @throws java.nio.charset.UnsupportedCharsetException 如果指定的编码不被支持
+     * @author K
      * @since 1.0.0
      */
     fun toInputStream(input: String, encoding: String? = null): InputStream = IOUtils.toInputStream(input, encoding)
@@ -368,6 +391,7 @@ object IoKit {
      * @param data 待写入的字节数组, 在输出时不会被修改
      * @param output 要写入的 `OutputStream`
      * @throws IOException io错误发生时
+     * @author K
      * @since 1.0.0
      */
     fun write(data: ByteArray, output: OutputStream): Unit = IOUtils.write(data, output)
@@ -383,6 +407,7 @@ object IoKit {
      * @param encoding 使用的编码，null表示平台默认的编码
      * @throws IOException io错误发生时
      * @throws java.nio.charset.UnsupportedCharsetException 如果指定的编码不被支持
+     * @author K
      * @since 1.0.0
      */
     fun write(data: ByteArray, output: Writer, encoding: String? = null): Unit = IOUtils.write(data, output, encoding)
@@ -395,6 +420,7 @@ object IoKit {
      * @param data 待写入的字符数组, 在输出时不会被修改
      * @param output 要写入的`Writer`
      * @throws IOException io错误发生时
+     * @author K
      * @since 1.0.0
      */
     fun write(data: CharArray, output: Writer): Unit = IOUtils.write(data, output)
@@ -410,6 +436,7 @@ object IoKit {
      * @param encoding 使用的编码，null表示平台默认的编码
      * @throws IOException io错误发生时
      * @throws java.nio.charset.UnsupportedCharsetException 如果指定的编码不被支持
+     * @author K
      * @since 1.0.0
      */
     fun write(data: CharArray, output: OutputStream, encoding: String? = null): Unit =
@@ -423,6 +450,7 @@ object IoKit {
      * @param data 待写入的`CharSequence`
      * @param output 要写入的`Writer`
      * @throws IOException io错误发生时
+     * @author K
      * @since 1.0.0
      */
     fun write(data: CharSequence, output: Writer): Unit = IOUtils.write(data, output)
@@ -439,6 +467,7 @@ object IoKit {
      * @param encoding 使用的编码，null表示平台默认的编码
      * @throws IOException io错误发生时
      * @throws java.nio.charset.UnsupportedCharsetException 如果指定的编码不被支持
+     * @author K
      * @since 1.0.0
      */
     fun write(data: CharSequence, output: OutputStream, encoding: String? = null): Unit =
@@ -452,6 +481,7 @@ object IoKit {
      * @param data 待写入的`String`
      * @param output 要写入的`Writer`
      * @throws IOException io错误发生时
+     * @author K
      * @since 1.0.0
      */
     fun write(data: String, output: Writer): Unit = IOUtils.write(data, output)
@@ -467,6 +497,7 @@ object IoKit {
      * @param encoding 使用的编码，null表示平台默认的编码
      * @throws IOException io错误发生时
      * @throws java.nio.charset.UnsupportedCharsetException 如果指定的编码不被支持
+     * @author K
      * @since 1.0.0
      */
     fun write(data: String, output: OutputStream, encoding: String? = null): Unit =
@@ -486,6 +517,7 @@ object IoKit {
      * @param encoding 使用的编码，null表示平台默认的编码
      * @throws IOException io错误发生时
      * @throws java.nio.charset.UnsupportedCharsetException 如果指定的编码不被支持
+     * @author K
      * @since 1.0.0
      */
     fun writeLines(
@@ -499,6 +531,7 @@ object IoKit {
      * @param lineEnding 要使用的行分隔符，null将用系统默认行分隔符
      * @param writer 要写入的`Writer`, 不能为null, 不能是已关闭的
      * @throws IOException io错误发生时
+     * @author K
      * @since 1.0.0
      */
     fun writeLines(lines: Collection<*>, lineEnding: String? = null, writer: Writer): Unit =
@@ -518,6 +551,7 @@ object IoKit {
      * @param output 要写入的`OutputStream`
      * @return 拷贝的字节数, 如果大于Integer.MAX_VALUE返回-1
      * @throws IOException io错误发生时
+     * @author K
      * @since 1.0.0
      */
     fun copy(input: InputStream, output: OutputStream): Int = IOUtils.copy(input, output)
@@ -530,6 +564,7 @@ object IoKit {
      * @param output 要写入的`OutputStream`
      * @return 拷贝的字节数
      * @throws IOException io错误发生时
+     * @author K
      * @since 1.0.0
      */
     fun copyLarge(input: InputStream, output: OutputStream): Long = IOUtils.copyLarge(input, output)
@@ -543,6 +578,7 @@ object IoKit {
      * @param buffer 拷贝时要使用的缓存
      * @return 拷贝的字节数
      * @throws IOException io错误发生时
+     * @author K
      * @since 1.0.0
      */
     fun copyLarge(input: InputStream, output: OutputStream, buffer: ByteArray): Long =
@@ -559,6 +595,7 @@ object IoKit {
      * @param length : 要拷贝的字节数. 负数将拷贝所有
      * @return 拷贝的字节数
      * @throws IOException io错误发生时
+     * @author K
      * @since 1.0.0
      */
     fun copyLarge(input: InputStream, output: OutputStream, inputOffset: Long, length: Long): Long =
@@ -576,6 +613,7 @@ object IoKit {
      * @param buffer 拷贝时要使用的缓存
      * @return 拷贝的字节数
      * @throws IOException io错误发生时
+     * @author K
      * @since 1.0.0
      */
     fun copyLarge(input: InputStream, output: OutputStream, inputOffset: Long, length: Long, buffer: ByteArray): Long =
@@ -592,6 +630,7 @@ object IoKit {
      * @param encoding 使用的编码，null表示平台默认的编码
      * @throws IOException io错误发生时
      * @throws java.nio.charset.UnsupportedCharsetException 如果指定的编码不被支持
+     * @author K
      * @since 1.0.0
      */
     fun copy(input: InputStream, output: Writer, encoding: String? = null): Unit =
@@ -611,6 +650,7 @@ object IoKit {
      * @param output 要写入的`Writer`
      * @return 拷贝的字符数，如果大于Integer.MAX_VALUE将返回-1
      * @throws IOException io错误发生时
+     * @author K
      * @since 1.0.0
      */
     fun copy(input: Reader, output: Writer): Int = IOUtils.copy(input, output)
@@ -623,6 +663,7 @@ object IoKit {
      * @param output 要写入的`Writer`
      * @return 拷贝的字符数
      * @throws IOException io错误发生时
+     * @author K
      * @since 1.0.0
      */
     fun copyLarge(input: Reader, output: Writer): Long = IOUtils.copyLarge(input, output)
@@ -636,6 +677,7 @@ object IoKit {
      * @param buffer 拷贝时使用的缓存
      * @return 拷贝的字符数
      * @throws IOException io错误发生时
+     * @author K
      * @since 1.0.0
      */
     fun copyLarge(input: Reader, output: Writer, buffer: CharArray): Long = IOUtils.copyLarge(input, output, buffer)
@@ -651,6 +693,7 @@ object IoKit {
      * @param length : 要拷贝的字符数. 负数将拷贝所有
      * @return 拷贝的字符数
      * @throws IOException io错误发生时
+     * @author K
      * @since 1.0.0
      */
     fun copyLarge(input: Reader, output: Writer, inputOffset: Long, length: Long): Long =
@@ -668,6 +711,7 @@ object IoKit {
      * @param buffer 拷贝时使用的缓存
      * @return 拷贝的字符数
      * @throws IOException io错误发生时
+     * @author K
      * @since 1.0.0
      */
     fun copyLarge(input: Reader, output: Writer, inputOffset: Long, length: Long, buffer: CharArray): Long =
@@ -686,6 +730,7 @@ object IoKit {
      * @param encoding 使用的编码，null表示平台默认的编码
      * @throws IOException io错误发生时
      * @throws java.nio.charset.UnsupportedCharsetException 如果指定的编码不被支持
+     * @author K
      * @since 1.0.0
      */
     fun copy(input: Reader, output: OutputStream, encoding: String? = null): Unit =
@@ -701,6 +746,7 @@ object IoKit {
      * @param input2 第二个输入流
      * @return true：两个输入流的内容相等，或它们都不存在，否则返回false
      * @throws IOException io错误发生时
+     * @author K
      * @since 1.0.0
      */
     fun contentEquals(input1: InputStream, input2: InputStream): Boolean = IOUtils.contentEquals(input1, input2)
@@ -713,6 +759,7 @@ object IoKit {
      * @param input2 第二个reader
      * @return true：两个reader的内容相等，或它们都不存在，否则返回false
      * @throws IOException io错误发生时
+     * @author K
      * @since 1.0.0
      */
     fun contentEquals(input1: Reader, input2: Reader): Boolean = IOUtils.contentEquals(input1, input2)
@@ -725,6 +772,7 @@ object IoKit {
      * @param input2 第二个reader
      * @return true：两个reader的内容相等(忽略EOL字符)，或它们都不存在，否则返回false
      * @throws IOException io错误发生时
+     * @author K
      * @since 1.0.0
      */
     fun contentEqualsIgnoreEOL(input1: Reader, input2: Reader): Boolean = IOUtils.contentEqualsIgnoreEOL(input1, input2)
@@ -740,6 +788,7 @@ object IoKit {
      * @return 实际跳过的字节数
      * @throws IllegalArgumentException 如果toSkip参数为负数
      * @throws IOException io错误发生时
+     * @author K
      * @since 1.0.0
      */
     fun skip(input: InputStream, toSkip: Long): Long = IOUtils.skip(input, toSkip)
@@ -754,6 +803,7 @@ object IoKit {
      * @see Reader.skip
      * @throws IllegalArgumentException 如果toSkip参数为负数
      * @throws IOException io错误发生时
+     * @author K
      * @since 1.0.0
      */
     fun skip(input: Reader, toSkip: Long): Long = IOUtils.skip(input, toSkip)
@@ -769,6 +819,7 @@ object IoKit {
      * @throws IOException 读取时发生错误
      * @throws IllegalArgumentException 如果指定的字节数为负数
      * @throws EOFException 如果要跳过的字节数不正确
+     * @author K
      * @since 1.0.0
      */
     fun skipFully(input: InputStream, toSkip: Long): Unit = IOUtils.skipFully(input, toSkip)
@@ -784,6 +835,7 @@ object IoKit {
      * @throws IOException 读取时发生错误
      * IllegalArgumentException 如果指定的字符数为负数
      * EOFException 如果要跳过的字符数不正确
+     * @author K
      * @since 1.0.0
      */
     fun skipFully(input: Reader?, toSkip: Long): Unit = IOUtils.skipFully(input, toSkip)
@@ -800,6 +852,7 @@ object IoKit {
      * @param length 要读取的长度, 必须 >= 0
      * @return 实际读取的长度; 可能比请求的小(如果到达文件末尾)
      * @throws IOException 读取时发生错误
+     * @author K
      * @since 1.0.0
      */
     fun read(input: Reader, buffer: CharArray, offset: Int, length: Int): Int =
@@ -813,6 +866,7 @@ object IoKit {
      * @param buffer 目标
      * @return 实际读取的长度; 可能比请求的小(如果到达文件末尾)
      * @throws IOException 读取时发生错误
+     * @author K
      * @since 1.0.0
      */
     fun read(input: Reader, buffer: CharArray): Int? = IOUtils.read(input, buffer)
@@ -827,6 +881,7 @@ object IoKit {
      * @param length 要读取的长度, 必须 >= 0
      * @return 实际读取的长度; 可能比请求的小(如果到达文件末尾)
      * @throws IOException 读取时发生错误
+     * @author K
      * @since 1.0.0
      */
     fun read(input: InputStream, buffer: ByteArray, offset: Int, length: Int): Int =
@@ -840,6 +895,7 @@ object IoKit {
      * @param buffer 目标
      * @return 实际读取的长度; 可能比请求的小(如果到达文件末尾)
      * @throws IOException 读取时发生错误
+     * @author K
      * @since 1.0.0
      */
     fun read(input: InputStream, buffer: ByteArray): Int = IOUtils.read(input, buffer)
@@ -858,6 +914,7 @@ object IoKit {
      * @throws IOException 读取时发生错误
      * @throws IllegalArgumentException 如果指定的字符数为负数
      * @throws EOFException 如果要跳过的字符数不正确
+     * @author K
      * @since 1.0.0
      */
     fun readFully(input: Reader, buffer: CharArray, offset: Int, length: Int): Int =
@@ -874,6 +931,7 @@ object IoKit {
      * @throws IOException 读取时发生错误
      * @throws IllegalArgumentException 如果指定的字符数为负数
      * @throws EOFException 如果要跳过的字符数不正确
+     * @author K
      * @since 1.0.0
      */
     fun readFully(input: Reader, buffer: CharArray): Unit = IOUtils.readFully(input, buffer)
@@ -890,6 +948,7 @@ object IoKit {
      * @throws IOException 读取时发生错误
      * @throws IllegalArgumentException 如果指定的字节数为负数
      * @throws EOFException 如果要跳过的字节数不正确
+     * @author K
      * @since 1.0.0
      */
     fun readFully(input: InputStream, buffer: ByteArray, offset: Int, length: Int): Unit =
@@ -905,6 +964,7 @@ object IoKit {
      * @throws IOException 读取时发生错误
      * @throws IllegalArgumentException 如果指定的字节数为负数
      * @throws EOFException 如果要跳过的字节数不正确
+     * @author K
      * @since 1.0.0
      */
     fun readFully(input: InputStream, buffer: ByteArray): Unit = IOUtils.readFully(input, buffer)

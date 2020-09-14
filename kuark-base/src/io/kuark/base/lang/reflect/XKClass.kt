@@ -20,7 +20,10 @@ import kotlin.reflect.full.superclasses
 /**
  * 返回空构造器，如果没有返回null
  *
+ * @param T 当前类型
  * @return 空构造器
+ * @author K
+ * @since 1.0.0
  */
 fun <T : Any> KClass<T>.getEmptyConstructor(): KFunction<T>? {
     val constructors = this.constructors.filter { it.parameters.isEmpty() }
@@ -34,8 +37,11 @@ fun <T : Any> KClass<T>.getEmptyConstructor(): KFunction<T>? {
 /**
  * 实例化类
  *
+ * @param T 当前类型
  * @param args 构造函数参数可变数组
  * @return 类对象
+ * @author K
+ * @since 1.0.0
  */
 fun <T : Any> KClass<T>.newInstance(vararg args: Any): T {
     if (this.isAbstract) {
@@ -66,6 +72,8 @@ fun <T : Any> KClass<T>.newInstance(vararg args: Any): T {
  * 当前类是否为枚举
  *
  * @return true: 当前类是为枚举，false：当前类不是枚举
+ * @author K
+ * @since 1.0.0
  */
 fun KClass<*>.isEnum(): Boolean = this.getSuperClass() == Enum::class
 
@@ -73,6 +81,8 @@ fun KClass<*>.isEnum(): Boolean = this.getSuperClass() == Enum::class
  * 当前类是否为接口
  *
  * @return true: 当前类是为接口，false：当前类不是接口
+ * @author K
+ * @since 1.0.0
  */
 fun KClass<*>.isInterface(): Boolean = this.isAbstract && this.constructors.isEmpty()
 
@@ -80,6 +90,8 @@ fun KClass<*>.isInterface(): Boolean = this.isAbstract && this.constructors.isEm
  * 当前类是否为抽象类
  *
  * @return true: 当前类是为抽象类，false：当前类不是抽象类
+ * @author K
+ * @since 1.0.0
  */
 fun KClass<*>.isAbstractClass(): Boolean = this.isAbstract && this.constructors.isNotEmpty()
 
@@ -87,6 +99,8 @@ fun KClass<*>.isAbstractClass(): Boolean = this.isAbstract && this.constructors.
  * 当前类是否为注解
  *
  * @return true: 当前类是为注解，false：当前类不是注解
+ * @author K
+ * @since 1.0.0
  */
 fun KClass<*>.isAnnotation(): Boolean =
     this.isFinal && this.getSuperInterfaces().contains(Annotation::class) && getSuperClass() == Any::class
@@ -97,6 +111,8 @@ fun KClass<*>.isAnnotation(): Boolean =
  *
  * @param annotationClass 注解类
  * @return true: 指定的注解类出现在该类上, false: 指定的注解类没有出现在该类上
+ * @author K
+ * @since 1.0.0
  */
 fun KClass<*>.isAnnotationPresent(annotationClass: KClass<out Annotation>): Boolean =
     this.annotations.any { it.annotationClass == annotationClass }
@@ -104,9 +120,12 @@ fun KClass<*>.isAnnotationPresent(annotationClass: KClass<out Annotation>): Bool
 /**
  * 返回给定属性名的属性对象
  *
+ * @param T 当前类型
  * @param propertyName 属性名
  * @return 属性对象
  * @throws NoSuchElementException 当不存在时
+ * @author K
+ * @since 1.0.0
  */
 fun <T : Any> KClass<T>.getMemberProperty(propertyName: String): KProperty1<T, Any?> =
     this.memberProperties.first { it.name == propertyName }
@@ -118,6 +137,8 @@ fun <T : Any> KClass<T>.getMemberProperty(propertyName: String): KProperty1<T, A
  * @param propertyName 属性名
  * @return 属性的值
  * @throws NoSuchElementException 当不存在时
+ * @author K
+ * @since 1.0.0
  */
 fun KClass<*>.getMemberPropertyValue(target: Any, propertyName: String): Any? {
     val memberProperty = this.getMemberProperty(propertyName)
@@ -131,6 +152,8 @@ fun KClass<*>.getMemberPropertyValue(target: Any, propertyName: String): Any? {
  * @param parameters 函数参数可变数组
  * @return 成员函数对象
  * @throws NoSuchElementException 当不存在时
+ * @author K
+ * @since 1.0.0
  */
 fun KClass<*>.getMemberFunction(functionName: String, vararg parameters: KParameter): KFunction<*> {
     val functions = this.memberFunctions.filter { it.name == functionName }
@@ -159,6 +182,8 @@ fun KClass<*>.getMemberFunction(functionName: String, vararg parameters: KParame
  * 返回当前类的直接父类
  *
  * @return 直接父类，当前类为Any时返回null
+ * @author K
+ * @since 1.0.0
  */
 fun KClass<*>.getSuperClass(): KClass<*>? {
     if (this == Any::class) return null
@@ -169,6 +194,8 @@ fun KClass<*>.getSuperClass(): KClass<*>? {
  * 返回当前类的直接父接口
  *
  * @return 直接父接口列表
+ * @author K
+ * @since 1.0.0
  */
 fun KClass<*>.getSuperInterfaces(): List<KClass<*>> = this.superclasses.filter { it.constructors.isEmpty() }
 
@@ -176,6 +203,8 @@ fun KClass<*>.getSuperInterfaces(): List<KClass<*>> = this.superclasses.filter {
  * 返回当前类实现的所有接口
  *
  * @return 所有接口
+ * @author K
+ * @since 1.0.0
  */
 fun KClass<*>.getAllInterfaces(): List<KClass<*>> = this.allSuperclasses.filter { it.constructors.isEmpty() }
 
@@ -184,6 +213,8 @@ fun KClass<*>.getAllInterfaces(): List<KClass<*>> = this.allSuperclasses.filter 
  *
  * @param types 待搜索的type集合
  * @return 第一个与代表当前类的Type
+ * @author K
+ * @since 1.0.0
  */
 fun KClass<*>.firstMatchTypeOf(types: Collection<KType>): KType = types.first { it.classifier == this }
 
@@ -193,6 +224,8 @@ fun KClass<*>.firstMatchTypeOf(types: Collection<KType>): KType = types.first { 
  *
  * @param annoClass 注解类
  * @return 匹配的类的Set
+ * @author K
+ * @since 1.0.0
  */
 fun KClass<*>.getClassUpThatPresentAnnotation(annoClass: KClass<out Annotation>): Set<KClass<*>> {
     val results = mutableSetOf<KClass<*>>()
@@ -217,6 +250,8 @@ private fun getClassUpThatPresentAnnotation(
  * 获取类在磁盘上的物理位置
  *
  * @return 类文件的绝对路径
+ * @since 1.0.0
+ * @author K
  * @since 1.0.0
  */
 fun KClass<*>.getLocationOnDisk(): String =

@@ -1,5 +1,11 @@
 package io.kuark.base.time
 
+/**
+ * 日期/时间格式化模式常量
+ *
+ * @author K
+ * @since 1.0.0
+ */
 object DateTimeFormatPattern {
 
     const val yyMMdd = "yyMMdd"

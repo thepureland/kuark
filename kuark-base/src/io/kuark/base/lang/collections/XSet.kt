@@ -22,6 +22,7 @@ import org.apache.commons.collections.Transformer
  *
  * @param transformer 使用的转换器, 不能为null
  * @return 转换后的集合
+ * @author K
  * @since 1.0.0
  */
 fun Set<*>.transformedSet(transformer: Transformer): Set<*> = SetUtils.transformedSet(this, transformer)

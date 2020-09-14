@@ -16,6 +16,8 @@ import java.time.format.DateTimeFormatter
  *
  * @param pattern 格式模式串，常见的可用DateTimeFormatPattern类中的常量
  * @return 格式化后的字符串
+ * @author K
+ * @since 1.0.0
  */
 fun LocalDate.format(pattern: String): String = this.format(DateTimeFormatter.ofPattern(pattern))
 

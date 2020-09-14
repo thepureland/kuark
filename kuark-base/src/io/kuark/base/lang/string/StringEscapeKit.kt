@@ -29,6 +29,7 @@ object StringEscapeKit {
      *
      * @param input 要转义的字符串, 可以为 null
      * @return 转义后的字符串, `null`将返回`null`
+     * @author K
      * @since 1.0.0
      */
     fun escapeJava(input: String?): String = StringEscapeUtils.escapeJava(input)
@@ -48,6 +49,7 @@ object StringEscapeKit {
      *
      * @param input 要转义的字符串, 可以为 null
      * @return 转义后的字符串, `null`将返回`null`
+     * @author K
      * @since 1.0.0
      */
     fun escapeEcmaScript(input: String?): String = StringEscapeUtils.escapeEcmaScript(input)
@@ -58,6 +60,7 @@ object StringEscapeKit {
      *
      * @param input 要解码转义的字符串, 可以为 null
      * @return 一个新的解码过的字符串 `String`, `null`将返回`null`
+     * @author K
      * @since 1.0.0
      */
     fun unescapeJava(input: String?): String = StringEscapeUtils.unescapeJava(input)
@@ -69,6 +72,7 @@ object StringEscapeKit {
      * @see .unescapeJava
      * @param input 要解码转义的字符串, 可以为 null
      * @return 一个新的解码过的字符串 `String`, `null`将返回`null`
+     * @author K
      * @since 1.0.0
      */
     fun unescapeEcmaScript(input: String?): String = StringEscapeUtils.unescapeEcmaScript(input)
@@ -91,6 +95,7 @@ object StringEscapeKit {
      * @see [HTML 4.0 Character entity references](http://www.w3.org/TR/REC-html40/sgml/entities.html)
      * @see [HTML 4.01 Character References](http://www.w3.org/TR/html401/charset.html.h-5.3)
      * @see [HTML 4.01 Code positions](http://www.w3.org/TR/html401/charset.html.code-position)
+     * @author K
      * @since 1.0.0
      */
     fun escapeHtml4(input: String?): String = StringEscapeUtils.escapeHtml4(input)
@@ -101,6 +106,7 @@ object StringEscapeKit {
      *
      * @param input 要转义的`String` , 可以为null
      * @return 一个新的转义后的字符串, `null`将返回`null`
+     * @author K
      * @since 1.0.0
      */
     fun escapeHtml3(input: String?): String = StringEscapeUtils.escapeHtml3(input)
@@ -112,6 +118,7 @@ object StringEscapeKit {
      *
      * @param input 要解码转义的字符串, 可以为 null
      * @return 一个新的解码过的字符串 `String`, `null`将返回`null`
+     * @author K
      * @since 1.0.0
      */
     fun unescapeHtml4(input: String?): String = StringEscapeUtils.unescapeHtml4(input)
@@ -121,6 +128,7 @@ object StringEscapeKit {
      *
      * @param input 要解码转义的字符串, 可以为 null
      * @return 一个新的解码过的字符串 `String`, `null`将返回`null`
+     * @author K
      * @since 1.0.0
      */
     fun unescapeHtml3(input: String?): String = StringEscapeUtils.unescapeHtml3(input)
@@ -135,6 +143,7 @@ object StringEscapeKit {
      * @param input 要转义的 `String` , 可以为null
      * @return 一个新的转义后的字符串, `null`将返回`null`
      * @see .unescapeXml
+     * @author K
      * @since 1.0.0
      */
     fun escapeXml10(input: String?): String = StringEscapeUtils.escapeXml10(input)
@@ -149,6 +158,7 @@ object StringEscapeKit {
      * @param input 要转义的 `String` , 可以为null
      * @return 一个新的转义后的字符串, `null`将返回`null`
      * @see .unescapeXml
+     * @author K
      * @since 1.0.0
      */
     fun escapeXml11(input: String?): String = StringEscapeUtils.escapeXml11(input)
@@ -161,6 +171,7 @@ object StringEscapeKit {
      * @param input 要解码转义的字符串, 可以为 null
      * @return 一个新的解码过的字符串 `String`, `null`将返回`null`
      * @see .escapeXml
+     * @author K
      * @since 1.0.0
      */
     fun unescapeXml(input: String?): String = StringEscapeUtils.unescapeXml(input)
@@ -175,6 +186,7 @@ object StringEscapeKit {
      *
      * @param input CSV列的值, 可以 null
      * @return 转义后的字符串, `null` 将返回 null
+     * @author K
      * @since 1.0.0
      */
     fun escapeCsv(input: String?): String = StringEscapeUtils.escapeCsv(input)
@@ -188,6 +200,7 @@ object StringEscapeKit {
      *
      * @param input CSV列的值, 可以 null
      * @return 解码过的CSV列的值
+     * @author K
      * @since 1.0.0
      */
     fun unescapeCsv(input: String?): String = StringEscapeUtils.unescapeCsv(input)

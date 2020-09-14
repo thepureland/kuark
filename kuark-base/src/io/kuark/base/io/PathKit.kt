@@ -18,6 +18,7 @@ object PathKit {
      *
      * @param clazz kotlin类
      * @return 类路径, 动态生成的类将返回空串
+     * @author K
      * @since 1.0.0
      */
     fun getClasspathIncludePackage(clazz: KClass<*>): String {
@@ -45,6 +46,7 @@ object PathKit {
      *
      *  @param clazz kotlin类
      *  @return 类路径, 动态生成的类将返回空串
+     *  @author K
      *  @since 1.0.0
      */
     fun getClasspath(clazz: KClass<*>): String {
@@ -67,6 +69,7 @@ object PathKit {
      * @param baseDir 基础路径
      * @param file 待操作路径
      * @return 相对路径
+     * @author K
      * @since 1.0.0
      */
     fun getRelativePath(baseDir: File, file: File): String {
@@ -85,6 +88,7 @@ object PathKit {
      * 得到工程根目录，如果是web项目，得到的是如tomcat的bin目录
      *
      * @return 绝对路径
+     * @author K
      * @since 1.0.0
      */
     fun getProjectRootPath(): String = System.getProperty("user.dir")
@@ -93,6 +97,7 @@ object PathKit {
      * 得到程序运行时的路径
      *
      * @return 绝对路径
+     * @author K
      * @since 1.0.0
      */
     fun getRuntimePath(): String = PathKit::class.java.classLoader.getResource(".").path
@@ -101,6 +106,7 @@ object PathKit {
      * 获取系统临时目录
      *
      * @return 系统临时目录
+     * @author K
      * @since 1.0.0
      */
     fun getTempDirectoryPath(): String = FileUtils.getTempDirectoryPath()
@@ -109,6 +115,7 @@ object PathKit {
      * 获取系统临时目录
      *
      * @return 系统临时目录文件对象
+     * @author K
      * @since 1.0.0
      */
     fun getTempDirectory(): File = FileUtils.getTempDirectory()
@@ -117,6 +124,7 @@ object PathKit {
      * 获取系统用户根目录
      *
      * @return 系统用户根目录
+     * @author K
      * @since 1.0.0
      */
     fun getUserDirectoryPath(): String = FileUtils.getUserDirectoryPath()
@@ -125,6 +133,7 @@ object PathKit {
      * 获取系统用户根目录
      *
      * @return 系统用户根目录文件对象
+     * @author K
      * @since 1.0.0
      */
     fun getUserDirectory(): File = FileUtils.getUserDirectory()

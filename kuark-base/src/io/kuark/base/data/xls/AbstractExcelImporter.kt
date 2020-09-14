@@ -52,12 +52,19 @@ abstract class AbstractExcelImporter<T : Any> : IExcelImporter<T> {
 
     /**
      * 按excel中的列顺序返回对应的属性名列表
+     *
+     * @return List(属性名)
+     * @author K
+     * @since 1.0.0
      */
     protected abstract fun getPropertyNames(): List<String>
 
     /**
-     * 返回sheet页的名称
+     * 返回数据所在sheet页的名称
+     *
      * @return sheet页的名称
+     * @author K
+     * @since 1.0.0
      */
     protected abstract fun getSheetName(): String
 
@@ -65,6 +72,8 @@ abstract class AbstractExcelImporter<T : Any> : IExcelImporter<T> {
      * 保存数据
      *
      * @param rowObjects 行对象列表
+     * @author K
+     * @since 1.0.0
      */
     protected abstract fun save(rowObjects: List<T>)
 
@@ -72,6 +81,8 @@ abstract class AbstractExcelImporter<T : Any> : IExcelImporter<T> {
      * 检查数据合法性
      *
      * @param rowObjects 行对象列表
+     * @author K
+     * @since 1.0.0
      */
     protected open fun validate(rowObjects: List<T>) {
         for (rowObject in rowObjects) {
@@ -85,7 +96,10 @@ abstract class AbstractExcelImporter<T : Any> : IExcelImporter<T> {
     /**
      * 导入
      * @param xlsFile excel文件
-     * @return 提示消息
+     * @return 导入的行对象列表
+     * @throws IllegalStateException 导入过程有错误发生时
+     * @author K
+     * @since 1.0.0
      */
     override fun import(xlsFile: File): List<T> {
         return FileKit.openInputStream(xlsFile).use {
@@ -100,6 +114,10 @@ abstract class AbstractExcelImporter<T : Any> : IExcelImporter<T> {
 
     /**
      * 检查模板是否正确
+     *
+     * @throws IllegalStateException 模板不正确时
+     * @author K
+     * @since 1.0.0
      */
     protected open fun checkTemplate() {
         inputStream.use {
@@ -111,6 +129,10 @@ abstract class AbstractExcelImporter<T : Any> : IExcelImporter<T> {
 
     /**
      * 将excel的每行包装成对象
+     *
+     * @return 导入的行对象列表
+     * @author K
+     * @since 1.0.0
      */
     protected open fun wrapRowObjects(): List<T> {
         val rowObjectList = mutableListOf<T>()
@@ -156,6 +178,8 @@ abstract class AbstractExcelImporter<T : Any> : IExcelImporter<T> {
      * @param columnIndex 列序（从0开始）
      * @param cell 单元格对象
      * @return 属性值
+     * @author K
+     * @since 1.0.0
      */
     protected open fun getPropertyValue(rowObjectClass: KClass<T>, columnIndex: Int, cell: Cell): Any {
         val propertyName = propertyNames[columnIndex]

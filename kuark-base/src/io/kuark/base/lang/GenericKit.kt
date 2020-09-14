@@ -24,6 +24,7 @@ object GenericKit {
      * @param clazz 需要获取泛型参数实际类型的类, 该类必须继承泛型父类或实现泛型接口
      * @param index 泛型参数所在索引, 从0开始.
      * @return 泛型参数的实际类型。如果不支持泛型，将返回Nothing::class;泛型参数如果为"*"，将返回Any::class;如果索引越界将返回null
+     * @author K
      * @since 1.0.0
      */
     fun getSuperClassGenricClass(clazz: KClass<*>, index: Int = 0): KClass<*> {
@@ -61,6 +62,7 @@ object GenericKit {
      * @param callable 可调用对象，比如：函数
      * @param index 第几个输入参数。第0个输入参数为调用该函数的对象，隐式传递，所以显示的函数参数是从第1个算起
      * @return 泛型参数的实际类型列表。如果不支持泛型，元素类型将为Nothing::class;泛型参数如果为"*"，元素类型将为Any::class;如果索引越界元素将为null
+     * @author K
      * @since 1.0.0
      */
     fun getParameterTypeGenericClass(callable: KCallable<*>, index: Int = 1): List<KClass<*>>? {
@@ -79,6 +81,7 @@ object GenericKit {
      * @param callable 可调用对象，比如：属性、函数
      * @param index 泛型参数所在索引, 从0开始.
      * @return 泛型参数的实际类型。如果不支持泛型，将返回Nothing::class;泛型参数如果为"*"，将返回Any::class;如果索引越界将返回null
+     * @author K
      * @since 1.0.0
      */
     fun getReturnTypeGenericClass(callable: KCallable<*>, index: Int = 0): KClass<*>? {

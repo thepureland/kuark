@@ -17,6 +17,8 @@ import kotlin.reflect.KProperty
  *
  * @param annotationClass 注解类
  * @return true: 指定的注解类出现在该属性上, false: 指定的注解类没有出现在该属性上
+ * @author K
+ * @since 1.0.0
  */
 fun KProperty<*>.isAnnotationPresent(annotationClass: KClass<out Annotation>): Boolean =
     this.annotations.any { it.annotationClass == annotationClass }

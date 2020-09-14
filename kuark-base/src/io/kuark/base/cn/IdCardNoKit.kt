@@ -41,6 +41,7 @@ object IdCardNoKit {
      *
      * @param idCardNo15 15位身份编码, 非法值将返回null
      * @return 18位身份编码
+     * @author K
      * @since 1.0.0
      */
     fun convert15To18(idCardNo15: String): String? {
@@ -86,6 +87,7 @@ object IdCardNoKit {
      *
      * @param str 待检查的字符串, 为null返回false
      * @return true: 为身份证号
+     * @author K
      * @since 1.0.0
      */
     fun isIdCardNo(str: CharSequence): Boolean {
@@ -99,6 +101,7 @@ object IdCardNoKit {
      *
      * @param str 待检查的字符串, 为null返回false
      * @return true: 为18位身份证号
+     * @author K
      * @since 1.0.0
      */
     fun isIdCardNo18(str: CharSequence): Boolean {
@@ -132,6 +135,7 @@ object IdCardNoKit {
      *
      * @param str 待检查的字符串, 为null返回false
      * @return true: 为18位身份证号
+     * @author K
      * @since 1.0.0
      */
     fun isIdCardNo15(str: CharSequence): Boolean {
@@ -175,6 +179,7 @@ object IdCardNoKit {
      *
      * @param str 待检查的字符串, 为null返回false
      * @return true: 为台湾身份证号
+     * @author K
      * @since 1.0.0
      */
     fun isTwIdCardNo(str: CharSequence): Boolean {
@@ -206,6 +211,7 @@ object IdCardNoKit {
      *
      * @param str 待检查的字符串, 为null返回false
      * @return true: 为香港身份证号
+     * @author K
      * @since 1.0.0
      */
     fun isHkIdCardNo(str: CharSequence): Boolean {
@@ -245,6 +251,7 @@ object IdCardNoKit {
      *
      * @param str 待检查的字符串, 为null返回false
      * @return true: 为澳门身份证号
+     * @author K
      * @since 1.0.0
      */
     fun isMacauIdCardNo(str: CharSequence): Boolean {
@@ -265,6 +272,7 @@ object IdCardNoKit {
      *
      * @param iArr
      * @return 身份证编码。
+     * @author K
      * @since 1.0.0
      */
     private fun getPowerSum(iArr: IntArray): Int {
@@ -286,6 +294,7 @@ object IdCardNoKit {
      *
      * @param iSum
      * @return 校验位
+     * @author K
      * @since 1.0.0
      */
     private fun getCheckCode18(iSum: Int): String {
@@ -297,6 +306,7 @@ object IdCardNoKit {
      *
      * @param idCardNo 身份证号, 为null或空或不是大陆身份证将返回null
      * @return 生日(yyyyMMdd)
+     * @author K
      * @since 1.0.0
      */
     fun getBirthday(idCardNo: String): String? {
@@ -318,6 +328,7 @@ object IdCardNoKit {
      *
      * @param idCardNo 身份证号，为null返回Sex.UNKNOWN
      * @return 性别枚举
+     * @author K
      * @since 1.0.0
      */
     fun getSex(idCardNo: String): Sex {
@@ -349,6 +360,7 @@ object IdCardNoKit {
      *
      * @param idCardNo 身份证号 为null或空返回null
      * @return 省枚举，未匹配返回null
+     * @author K
      * @since 1.0.0
      */
     fun getProvince(idCardNo: String): Province? {
@@ -379,6 +391,7 @@ object IdCardNoKit {
      * @param iMonth 待验证日期(月 1-12)
      * @param iDate 待验证日期(日)
      * @return 是否有效
+     * @author K
      * @since 1.0.0
      */
     private fun valiDate(iYear: Int, iMonth: Int, iDate: Int): Boolean {

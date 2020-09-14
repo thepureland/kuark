@@ -23,6 +23,8 @@ import java.util.*
 
 /**
  * FileSystem scanner.
+ *
+ * @since 1.0.0
  */
 object FileSystemScanner {
 
@@ -38,6 +40,7 @@ object FileSystemScanner {
      * @param suffix The suffix of the resource names to match.
      * @return The resources that were found.
      * @throws java.io.IOException when the location could not be scanned.
+     * @since 1.0.0
      */
     fun scanForResources(path: String, prefix: String, suffix: String): Array<Resource> {
         logger.debug("Scanning for filesystem resources at '$path' (Prefix: '$prefix', Suffix: '$suffix')")

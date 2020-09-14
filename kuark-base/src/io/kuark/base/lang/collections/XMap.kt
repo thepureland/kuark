@@ -19,6 +19,7 @@ import kotlin.reflect.KClass
  * 把Map转换为二维数组，每行两个元素，按顺序分别为map的key和value
  *
  * @return 二维数组
+ * @author K
  * @since 1.0.0
  */
 fun Map<*, *>.toArrOfArr(): Array<Array<Any?>> {
@@ -39,10 +40,11 @@ fun Map<*, *>.toArrOfArr(): Array<Array<Any?>> {
 /**
  * 是否包含子map(所有key和value都相等)
  *
- * @param subMap 子map，为null或空返回false
  * @param <K> Key
- * @param <V> Value
+ * @param V Value
+ * @param subMap 子map，为null或空返回false
  * @return 所有key和value都相等时返回true，反之返回false
+ * @author K
  * @since 1.0.0
  */
 fun <K, V> Map<K, V?>.containsAll(subMap: Map<K, V>): Boolean {
@@ -71,6 +73,7 @@ fun <K, V> Map<K, V?>.containsAll(subMap: Map<K, V>): Boolean {
  * 将ResourceBundle转为Map
  *
  * @return HashMap
+ * @author K
  * @since 1.0.0
  */
 fun ResourceBundle.toMap(): MutableMap<Any?, Any?>? = MapUtils.toMap(this)
@@ -85,6 +88,7 @@ fun ResourceBundle.toMap(): MutableMap<Any?, Any?>? = MapUtils.toMap(this)
  *
  * @param out   打印要输出的流,
  * @param label 要使用的标签, 可以为null. 为null该标签将不被输出. 它经常代表bean(或类似)的属性名
+ * @author K
  * @since 1.0.0
  */
 fun Map<*, *>.verbosePrint(out: PrintStream, label: Any?) = MapUtils.verbosePrint(out, label, this)
@@ -97,6 +101,7 @@ fun Map<*, *>.verbosePrint(out: PrintStream, label: Any?) = MapUtils.verbosePrin
  *
  * @param out   打印要输出的流
  * @param label 要使用的标签, 可以为null. 为null该标签将不被输出. 它经常代表bean(或类似)的属性名
+ * @author K
  * @since 1.0.0
  */
 fun Map<*, *>.debugPrint(out: PrintStream, label: Any?) = MapUtils.debugPrint(out, label, this)
@@ -109,7 +114,10 @@ fun Map<*, *>.debugPrint(out: PrintStream, label: Any?) = MapUtils.debugPrint(ou
  * 相同值映射到不同key的实体，返回的map将只映射其中一个key
  * 到该value，但是具体是哪一个key是不确定的。
  *
+ * @param K Key
+ * @param V Value
  * @return 一个包含反转后的数据的新HashMap
+ * @author K
  * @since 1.0.0
  */
 fun <K, V> Map<K?, V?>.invertMap(): Map<V?, K?> = MapUtils.invertMap(this) as Map<V?, K?>
@@ -135,8 +143,11 @@ fun <K, V> Map<K?, V?>.invertMap(): Map<V?, K?> = MapUtils.invertMap(this) as Ma
  * 而且， 这个`Date`实例为Map中key为 `"test"`关联的对象。
  *
  *
+ * @param K Key
+ * @param V Value
  * @param factory 创建新对象的工厂
  * @return 指定Map的"懒惰"map
+ * @author K
  * @since 1.0.0
  */
 fun <K : Any?, V : Any?> Map<K, V>.lazyMap(factory: Factory): Map<K, V> = MapUtils.lazyMap(this, factory) as Map<K, V>
@@ -164,8 +175,11 @@ fun <K : Any?, V : Any?> Map<K, V>.lazyMap(factory: Factory): Map<K, V> = MapUti
  * 当要获取的对象不在缓存中时，缓存将自己调用转换工厂来创建该对象，
  * 所有操作都是在同步块中完成的。
  *
+ * @param K Key
+ * @param V Value
  * @param transformerFactory 创建新对象的工厂
  * @return 指定Map的"懒惰"map
+ * @author K
  * @since 1.0.0
  */
 fun <K : Any?, V : Any?> Map<K, V>.lazyMap(transformerFactory: Transformer): Map<K, V> =
@@ -174,20 +188,26 @@ fun <K : Any?, V : Any?> Map<K, V>.lazyMap(transformerFactory: Transformer): Map
 /**
  * 创建一个多值的map，它支持将单值加入(通过调用Map.put(key, value))到key对应的集合中
  *
+ * @param K Key
+ * @param V Value
  * @return 一个多值的Map，它的value的类型为ArrayList
- * @see MultiValueMap
+ * @see org.apache.commons.collections.map.MultiValueMap
+ * @author K
  * @since 1.0.0
  */
-fun <K : Any?, V : Any?> Map<K, MutableCollection<out V>?>.multiValueMap(): Map<K, java.util.ArrayList<V>> =
+fun <K : Any?, V : Any?> Map<K, MutableCollection<out V>?>.multiValueMap(): Map<K, ArrayList<V>> =
     MapUtils.multiValueMap(this) as Map<K, java.util.ArrayList<V>>
 
 /**
  * 创建一个多值的map，它支持将单值加入(通过调用Map.put(key, value))到key对应的集合中
  *
  *
+ * @param K Key
+ * @param V Value
  * @param collectionClass 返回的map的值的类型(必须包含public的无参构造器并且实现Collection接口)
  * @return 一个多值的Map，它的value的类型为指定的collectionClass
- * @see MultiValueMap
+ * @see org.apache.commons.collections.map.MultiValueMap
+ * @author K
  * @since 1.0.0
  */
 fun <K : Any?, V : Any?, C : Collection<V>> Map<K, MutableCollection<out V>?>.multiValueMap(
@@ -198,10 +218,12 @@ fun <K : Any?, V : Any?, C : Collection<V>> Map<K, MutableCollection<out V>?>.mu
  * 创建一个多值的map，它支持将单值加入(通过调用Map.put(key, value))到key对应的集合中
  * 集合将由指定的集合工厂创建
  *
- *
+ * @param K Key
+ * @param V Value
  * @param collectionFactory 创建返回的Map的值的集合的工厂
  * @return 一个多值的Map，它的value的类型为指定的集合工厂创建的集合
- * @see MultiValueMap
+ * @see org.apache.commons.collections.map.MultiValueMap
+ * @author K
  * @since 1.0.0
  */
 fun <K : Any?, V : Any?> Map<K, MutableCollection<V>?>.multiValueMap(

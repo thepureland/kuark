@@ -16,6 +16,7 @@ import org.apache.commons.collections.CollectionUtils
  * @param prefix 要添加的前缀, 可以为null, 为null将被当作空串
  * @param postfix 要添加的后缀, 可以为null, 为null将被当作空串
  * @return 加上前缀和后缀的每个元素的toString值的连接串
+ * @author K
  * @since 1.0.0
  */
 fun Collection<*>.eachToString(prefix: String? = null, postfix: String? = null): String {
@@ -41,7 +42,8 @@ fun Collection<*>.eachToString(prefix: String? = null, postfix: String? = null):
 /**
  * 返回容器中每一个相同的元素出现的次数
  *
- * @return Map<容器中的元素, 出现的次数>
+ * @return Map(容器中的元素, 出现的次数)
+ * @author K
  * @since 1.0.0
  */
 fun <T> Collection<T>.getCardinalityMap(): Map<T, Int> = CollectionUtils.getCardinalityMap(this) as Map<T, Int>
@@ -51,6 +53,7 @@ fun <T> Collection<T>.getCardinalityMap(): Map<T, Int> = CollectionUtils.getCard
  *
  * @param b 第二个容器, 不能为null
  * @return `true` 如果两个容器的大小及其包含的元素全部相等
+ * @author K
  * @since 1.0.0
  */
 fun Collection<*>.isEqualCollection(b: Collection<*>?): Boolean = CollectionUtils.isEqualCollection(this, b)

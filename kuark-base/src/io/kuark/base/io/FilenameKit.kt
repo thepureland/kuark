@@ -47,6 +47,7 @@ object FilenameKit {
      *
      * @param filename 要标准化的文件路径，null将返回null
      * @return 标准化后的文件路径，无效路径将返回null
+     * @author K
      * @since 1.0.0
      */
     fun normalize(filename: String?): String? = FilenameUtils.normalize(filename)
@@ -83,6 +84,7 @@ object FilenameKit {
      * @param filename 要标准化的文件路径
      * @param unixSeparator true: 是否使用unix格式的分隔符。false: 使用windows格式的分隔符
      * @return 标准化后的文件路径，无效路径将返回null
+     * @author K
      * @since 1.0.0
      */
     fun normalize(filename: String, unixSeparator: Boolean): String = FilenameUtils.normalize(filename, unixSeparator)
@@ -118,6 +120,7 @@ object FilenameKit {
      *
      * @param filename 要标准化的文件路径，null将返回null
      * @return 标准化后的文件路径，无效路径将返回null
+     * @author K
      * @since 1.0.0
      */
     fun normalizeNoEndSeparator(filename: String?): String? = FilenameUtils.normalizeNoEndSeparator(filename)
@@ -152,6 +155,7 @@ object FilenameKit {
      * @param filename 要标准化的文件路径，null将返回null
      * @param unixSeparator true: 是否使用unix格式的分隔符。false: 使用windows格式的分隔符
      * @return 标准化后的文件路径，无效路径将返回null
+     * @author K
      * @since 1.0.0
      */
     fun normalizeNoEndSeparator(filename: String?, unixSeparator: Boolean = false): String? =
@@ -186,6 +190,7 @@ object FilenameKit {
      * @param basePath 要被连接的基础路径, 总是被当作路径
      * @param fullFilenameToAdd 要连接到基础路径的文件名（或路径）
      * @return 连接后的路径, 无效路径将返回null
+     * @author K
      * @since 1.0.0
      */
     fun concat(basePath: String?, fullFilenameToAdd: String?): String? =
@@ -202,6 +207,7 @@ object FilenameKit {
      * @param canonicalChild 文件或子目录
      * @return true: 父目录包含指定的子目录或文件，否则返回false
      * @throws IOException 如果请求的方法不能通过反射访问
+     * @author K
      * @since 1.0.0
      */
     fun directoryContains(canonicalParent: String, canonicalChild: String?): Boolean =
@@ -213,6 +219,7 @@ object FilenameKit {
      *
      * @param path 待处理的路径, 为null将返回null
      * @return 更新后的路径
+     * @author K
      * @since 1.0.0
      */
     fun separatorsToUnix(path: String?): String? = FilenameUtils.separatorsToUnix(path)
@@ -222,6 +229,7 @@ object FilenameKit {
      *
      * @param path 待处理的路径, 为null将返回null
      * @return 更新后的路径
+     * @author K
      * @since 1.0.0
      */
     fun separatorsToWindows(path: String?): String? = FilenameUtils.separatorsToWindows(path)
@@ -231,6 +239,7 @@ object FilenameKit {
      *
      * @param path 待处理的路径, 为null将返回null
      * @return 更新后的路径
+     * @author K
      * @since 1.0.0
      */
     fun separatorsToSystem(path: String?): String? = FilenameUtils.separatorsToSystem(path)
@@ -262,6 +271,7 @@ object FilenameKit {
      *
      * @param filename 要查找前缀的路径, null将返回-1
      * @return 路径前缀的长度, 路径无效或null将返回-1
+     * @author K
      * @since 1.0.0
      */
     fun getPrefixLength(filename: String?): Int = FilenameUtils.getPrefixLength(filename)
@@ -274,6 +284,7 @@ object FilenameKit {
      *
      * @param filename 待查找的路径, null将返回-1
      * @return 最后一个目录分隔符的下标, 找不到或路径为null将返回-1
+     * @author K
      * @since 1.0.0
      */
     fun indexOfLastSeparator(filename: String?): Int = FilenameUtils.indexOfLastSeparator(filename)
@@ -286,6 +297,7 @@ object FilenameKit {
      *
      * @param filename 待查找的路径, null将返回-1
      * @return 最后一个扩展分隔符的下标, 找不到或路径为null将返回-1
+     * @author K
      * @since 1.0.0
      */
     fun indexOfExtension(filename: String?): Int = FilenameUtils.indexOfExtension(filename)
@@ -316,6 +328,7 @@ object FilenameKit {
      *
      * @param filename 待查找的路径, null将返回null
      * @return 路径的前缀
+     * @author K
      * @since 1.0.0
      */
     fun getPrefix(filename: String): String? = FilenameUtils.getPrefix(filename)
@@ -335,6 +348,7 @@ object FilenameKit {
      *
      * @param filename 要获取扩展名的文件名
      * @return 文件的扩展名，没有将返回空串
+     * @author K
      * @since 1.0.0
      */
     fun getExtension(filename: String): String? = FilenameUtils.getExtension(filename)
@@ -357,6 +371,7 @@ object FilenameKit {
      *
      * @param filename 待查找的路径, null将返回null
      * @return 不带前缀的路径, 没有将返回空串，路径无效或为null将返回null
+     * @author K
      * @since 1.0.0
      */
     fun getPath(filename: String?): String? = FilenameUtils.getPath(filename)
@@ -378,6 +393,7 @@ object FilenameKit {
      *
      * @param filename 待查找的路径, null将返回null
      * @return 不带前缀的路径, 没有将返回空串，路径无效或为null将返回null
+     * @author K
      * @since 1.0.0
      */
     fun getPathNoEndSeparator(filename: String?): String? = FilenameUtils.getPathNoEndSeparator(filename)
@@ -404,6 +420,7 @@ object FilenameKit {
      *
      * @param filename 待查找的路径, null将返回null
      * @return 不带前缀的路径, 没有将返回空串，路径无效或为null将返回null
+     * @author K
      * @since 1.0.0
      */
     fun getFullPath(filename: String?): String? = FilenameUtils.getFullPath(filename)
@@ -430,6 +447,7 @@ object FilenameKit {
      *
      * @param filename 待查找的路径, null将返回null
      * @return 带前缀的路径, 没有将返回空串，路径无效或为null将返回null
+     * @author K
      * @since 1.0.0
      */
     fun getFullPathNoEndSeparator(filename: String?): String? = FilenameUtils.getFullPathNoEndSeparator(filename)
@@ -451,6 +469,7 @@ object FilenameKit {
      *
      * @param filename 待查找的路径, null将返回null
      * @return 去掉路径的文件名, 没有将返回空串，路径无效或为null将返回null
+     * @author K
      * @since 1.0.0
      */
     fun getName(filename: String?): String? = FilenameUtils.getName(filename)
@@ -470,6 +489,7 @@ object FilenameKit {
      *
      * @param filename 待查找的路径, null将返回null
      * @return 去掉路径和扩展名后的文件名, 没有将返回空串，路径无效或为null将返回null
+     * @author K
      * @since 1.0.0
      */
     fun getBaseName(filename: String?): String? = FilenameUtils.getBaseName(filename)
@@ -490,6 +510,7 @@ object FilenameKit {
      *
      * @param filename 待查找的路径, null将返回null
      * @return 去掉扩展名后的文件名, 路径为null将返回null
+     * @author K
      * @since 1.0.0
      */
     fun removeExtension(filename: String?): String? = FilenameUtils.removeExtension(filename)
@@ -503,6 +524,7 @@ object FilenameKit {
      * @param filename2 要比较的第二个文件名, 可以为null
      * @return true：如果两个文件名相等， 都为null将作相等
      * @see IOCase.SENSITIVE
+     * @author K
      * @since 1.0.0
      */
     fun equals(filename1: String?, filename2: String?): Boolean = FilenameUtils.equals(filename1, filename2)
@@ -515,6 +537,7 @@ object FilenameKit {
      * @param filename2 要比较的第二个文件名, 可以为null
      * @return true：如果两个文件名相等， 都为null将作相等
      * @see IOCase.SYSTEM
+     * @author K
      * @since 1.0.0
      */
     fun equalsOnSystem(filename1: String?, filename2: String?): Boolean =
@@ -528,6 +551,7 @@ object FilenameKit {
      * @param filename2 要比较的第二个文件名, 可以为null
      * @return true：如果两个文件名相等， 都为null将作相等
      * @see IOCase.SENSITIVE
+     * @author K
      * @since 1.0.0
      */
     fun equalsNormalized(filename1: String?, filename2: String?): Boolean =
@@ -542,6 +566,7 @@ object FilenameKit {
      * @param filename2 要比较的第二个文件名, 可以为null
      * @return true：如果两个文件名相等， 都为null将作相等
      * @see IOCase.SYSTEM
+     * @author K
      * @since 1.0.0
      */
     fun equalsNormalizedOnSystem(filename1: String?, filename2: String?): Boolean =
@@ -555,6 +580,7 @@ object FilenameKit {
      * @param normalized 是否对文件名进行标准化
      * @param caseSensitivity 大小写比较规则, null将依赖于系统
      * @return true：如果两个文件名相等， 都为null将作相等
+     * @author K
      * @since 1.0.0
      */
     fun equals(filename1: String?, filename2: String?, normalized: Boolean, caseSensitivity: Boolean?): Boolean =
@@ -569,6 +595,7 @@ object FilenameKit {
      * @param filename 要检查的文件名, 可以为null
      * @param extension 扩展名, null或空串代表对没有扩展名的检查
      * @return true：如果文件名的扩展名为指定的扩展名
+     * @author K
      * @since 1.0.0
      */
     fun isExtension(filename: String?, extension: String?): Boolean = FilenameUtils.isExtension(filename, extension)
@@ -580,6 +607,7 @@ object FilenameKit {
      * @param filename 要检查的文件名, 可以为null
      * @param extension 扩展名数组, null或空串代表对没有扩展名的检查
      * @return true：如果文件名的扩展名为指定的扩展名数组中的一个
+     * @author K
      * @since 1.0.0
      */
     fun isExtension(filename: String?, extensions: Array<String?>?): Boolean =
@@ -592,6 +620,7 @@ object FilenameKit {
      * @param filename 要检查的文件名, 可以为null
      * @param extension 扩展名容器, null或空串代表对没有扩展名的检查
      * @return true：如果文件名的扩展名为指定的扩展名容器中的一个
+     * @author K
      * @since 1.0.0
      */
     fun isExtension(filename: String?, extensions: Collection<String?>?): Boolean =
@@ -622,6 +651,7 @@ object FilenameKit {
      * @param wildcardMatcher 带有通配符的字符串，可以为null
      * @return true：如果匹配，两者都null当作匹配
      * @see IOCase#SENSITIVE
+     * @author K
      * @since 1.0.0
      */
     fun wildcardMatch(filename: String?, wildcardMatcher: String?): Boolean =
@@ -651,6 +681,7 @@ object FilenameKit {
      * @param wildcardMatcher 带有通配符的字符串，可以为null
      * @return true：如果匹配，两者都null当作匹配
      * @see IOCase#SYSTEM
+     * @author K
      * @since 1.0.0
      */
     fun wildcardMatchOnSystem(filename: String?, wildcardMatcher: String?): Boolean =
@@ -664,6 +695,7 @@ object FilenameKit {
      * @param wildcardMatcher 带有通配符的字符串，可以为null
      * @param caseSensitivity 大小写比较规则, null将取决于系统
      * @return true：如果匹配，两者都null当作匹配
+     * @author K
      * @since 1.0.0
      */
     fun wildcardMatch(filename: String?, wildcardMatcher: String?, caseSensitivity: Boolean?): Boolean =

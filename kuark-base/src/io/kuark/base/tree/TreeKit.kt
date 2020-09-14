@@ -20,7 +20,7 @@ object TreeKit {
      * @since 1.0.0
      */
     fun <T, E : ITreeable<T>> convertListToTree(objectList: List<E>): List<TreeNode<E>> {
-        return ListToTreeConvertor.convert(objectList)
+        return ListToTreeConverter.convert(objectList)
     }
 
     /**

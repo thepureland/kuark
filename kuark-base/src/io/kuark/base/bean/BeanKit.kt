@@ -24,8 +24,8 @@ object BeanKit {
      * 深度克隆指定的bean
      * 该方法比直接在对象图中的所有对象重写克隆方法慢很多倍. 但是, 对于复杂的对象图, 或那些不支持深度克隆的对象, 这提供了另一种实现. 当然, 所有对象都必须实现 `Serializable`接口.
      *
-     * @param bean 被克隆的bean
      * @param T bean类型
+     * @param bean 被克隆的bean
      * @return 克隆后的bean
      * @throws org.apache.commons.lang3.SerializationException (运行时) 如果序列化失败
      * @see SerializationKit.clone
@@ -37,10 +37,10 @@ object BeanKit {
     /**
      * 根据字段映射，拷贝源对象的属性，到指定目标类对象的对应属性
      *
+     * @param T 目标类型
      * @param destClass 目标类
      * @param srcObj 源对象
      * @param propertyMap 字段映射 Map(源对象属性名，目标对象属性名)，为null或空将尝试拷贝所有源对象的属性到目标对象的对应属性(如果存在的话)
-     * @param T 目标类型
      * @return 目标类的对象
      * @author K
      * @since 1.0.0
@@ -54,10 +54,10 @@ object BeanKit {
     /**
      * 根据字段映射，拷贝源对象的属性，到指定目标对象的对应属性
      *
+     * @param T 目标类型
      * @param destObj 目标对象
      * @param srcObj 源对象
      * @param propertyMap 字段映射 Map(源对象属性名，目标对象属性名)，为null或空将尝试拷贝所有源对象的属性到目标对象的对应属性(如果存在的话)
-     * @param T 目标类型
      * @return 目标类的对象
      * @author K
      * @since 1.0.0
@@ -83,9 +83,9 @@ object BeanKit {
     /**
      * 拷贝除了主键外的所有其它属性
      *
+     * @param T 实体对象类型
      * @param src 源对象
      * @param dest 目标对象
-     * @param T 实体对象类型
      * @return 目标类的对象
      * @throws java.lang.reflect.InvocationTargetException 目标调用时发生异常
      * @throws IllegalAccessException 如果请求的方法不能通过反射访问
@@ -102,10 +102,10 @@ object BeanKit {
     /**
      * 拷贝对象，排除指定的属性(不支持嵌套/索引/映射/组合)
      *
+     * @param T 目标类型
      * @param source 源对象
      * @param target 目标对象
      * @param excludeProperties 不拷贝的属性可变数组
-     * @param T 目标类型
      * @throws java.lang.reflect.InvocationTargetException 目标调用时发生异常
      * @throws IllegalAccessException 如果请求的方法不能通过反射访问
      * @throws NoSuchMethodException 如果找不到指定的可访问的方法
@@ -138,8 +138,8 @@ object BeanKit {
     /**
      * 重置所有的非id属性的值
      *
-     * @param entity 目标实体bean
      * @param T 实体类型
+     * @param entity 目标实体bean
      * @throws java.lang.reflect.InvocationTargetException 目标调用时发生异常
      * @throws IllegalAccessException 如果请求的方法不能通过反射访问
      * @throws InstantiationException 实例化异常
@@ -156,9 +156,9 @@ object BeanKit {
     /**
      * 批量属性拷贝
      *
+     * @param T 目标类型
      * @param targetClass 目标类
      * @param srcObjs 源对象集合
-     * @param T 目标类型
      * @return List(目标类对象)
      * @author K
      * @since 1.0.0
@@ -170,8 +170,8 @@ object BeanKit {
     /**
      * 基于可用的属性的getters和setters克隆(浅克隆)一个bean，即使该bean本身未实现Cloneable接口
      *
-     * @param bean 被克隆的bean
      * @param T bean类型
+     * @param bean 被克隆的bean
      * @return 克隆后的bean
      * @throws java.lang.reflect.InvocationTargetException 目标调用时发生异常
      * @throws IllegalAccessException 如果请求的方法不能通过反射访问
@@ -204,9 +204,9 @@ object BeanKit {
     /**
      * 拷贝(浅克隆)所有源bean的属性值到目标bean相同的属性值，不能进行类型转换
      *
+     * @param T 目标bean类型
      * @param orig 源bean
      * @param dest 目标bean
-     * @param T 目标bean类型
      * @return 目标对象
      * @throws java.lang.reflect.InvocationTargetException 目标调用时发生异常
      * @throws IllegalAccessException 如果请求的方法不能通过反射访问
@@ -219,10 +219,10 @@ object BeanKit {
     /**
      * 拷贝(浅克隆)一个指定的属性值到指定的目标bean, 能进行类型转换
      *
+     * @param T bean类型
      * @param bean 目标bean
      * @param name 属性名(可以嵌套/索引/映射/组合)
      * @param value 属性值
-     * @param T bean类型
      * @return 目标bean
      * @throws java.lang.reflect.InvocationTargetException 目标调用时发生异常
      * @throws IllegalAccessException

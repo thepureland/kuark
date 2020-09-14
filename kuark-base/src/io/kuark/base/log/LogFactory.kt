@@ -15,8 +15,10 @@ object LogFactory {
 
     /**
      * 获取日志记录器
+     *
      * @param clazz 使用该日志记录器的类
      * @return 指定类的日志记录器
+     * @author K
      * @since 1.0.0
      */
     fun getLog(clazz: KClass<*>): Log = loggerCreator.createLog(clazz)

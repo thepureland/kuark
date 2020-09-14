@@ -19,6 +19,7 @@ object ThreadKit {
      * 让当前线程休眠指定的毫秒数, 并忽略InterruptedException.
      *
      * @param millis 休眠的毫秒数
+     * @author K
      * @since 1.0.0
      */
     fun sleep(millis: Long) {
@@ -34,6 +35,7 @@ object ThreadKit {
      *
      * @param duration 休眠的时间值
      * @param unit 休眠的时间单位
+     * @author K
      * @since 1.0.0
      */
     fun sleep(duration: Long, unit: TimeUnit) {
@@ -53,6 +55,7 @@ object ThreadKit {
      * @param shutdownTimeout 关闭超时时间
      * @param shutdownNowTimeout 现在关闭超时时间
      * @param timeUnit 时间单位
+     * @author K
      * @since 1.0.0
      */
     fun gracefulShutdown(pool: ExecutorService, shutdownTimeout: Int, shutdownNowTimeout: Int, timeUnit: TimeUnit) {
@@ -81,6 +84,7 @@ object ThreadKit {
      * @param pool 线程池
      * @param timeout 超时时间
      * @param timeUnit 时间单位
+     * @author K
      * @since 1.0.0
      */
     fun normalShutdown(pool: ExecutorService, timeout: Int, timeUnit: TimeUnit?) {
@@ -101,6 +105,7 @@ object ThreadKit {
      * 该方法只有在日志级别为DEBUG时才有效
      *
      * @param clazz 类
+     * @author K
      * @since 1.0.0
      */
     fun printStackTraceOnNotCallByClass(clazz: KClass<*>) {
@@ -126,6 +131,7 @@ object ThreadKit {
      * 抛出异常，打印方法调用栈日志.
      * 该方法只有在日志级别为DEBUG时才有效
      *
+     * @author K
      * @since 1.0.0
      */
     fun printStackTrace() {
@@ -140,6 +146,8 @@ object ThreadKit {
      * 获取调用栈
      *
      * @return 调用栈
+     * @author K
+     * @since 1.0.0
      */
     fun getStackTrace(): Array<StackTraceElement> = Thread.currentThread().stackTrace
 

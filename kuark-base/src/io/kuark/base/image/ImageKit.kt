@@ -31,6 +31,8 @@ object ImageKit {
      *
      * @param imageFile 图片文件
      * @return BufferedImage对象
+     * @author K
+     * @since 1.0.0
      */
     fun readImageFromFile(imageFile: File): BufferedImage = readImageFromFile(imageFile.path)
 
@@ -39,6 +41,8 @@ object ImageKit {
      *
      * @param imagePath 图片路径
      * @return BufferedImage对象
+     * @author K
+     * @since 1.0.0
      */
     fun readImageFromFile(imagePath: String): BufferedImage = ImageIO.read(Files.newInputStream(Paths.get(imagePath)))
 
@@ -47,6 +51,8 @@ object ImageKit {
      *
      * @param imageUri 图片uri
      * @return BufferedImage对象
+     * @author K
+     * @since 1.0.0
      */
     fun readImageFromUri(imageUri: URI): BufferedImage = ImageIO.read(imageUri.toURL().openStream())
 
@@ -55,6 +61,8 @@ object ImageKit {
      *
      * @param imageUriStr 图片网络地址
      * @return BufferedImage对象
+     * @author K
+     * @since 1.0.0
      */
     fun readImageFromUri(imageUriStr: String): BufferedImage = readImageFromUri(URI.create(imageUriStr))
 
@@ -64,6 +72,8 @@ object ImageKit {
      * @param bufferedImage BufferedImage对象
      * @param imageFormat 图片类型(如png,jpg,gif等)
      * @param imagePath 图片目标文件路径
+     * @author K
+     * @since 1.0.0
      */
     fun writeImage(bufferedImage: BufferedImage, imageFormat: String, imagePath: String) =
         ImageIO.write(bufferedImage, imageFormat, Files.newOutputStream(Paths.get(imagePath)))
@@ -74,6 +84,8 @@ object ImageKit {
      * @param imageFile 图片文件
      * @param imageFormat 图片类型(如png,jpg,gif等)
      * @return 图片的字符串表示
+     * @author K
+     * @since 1.0.0
      */
     fun imageToString(imageFile: File, imageFormat: String): String {
         val bufferedImage = readImageFromFile(imageFile)
@@ -86,6 +98,8 @@ object ImageKit {
      * @param imageUri 图片uri
      * @param imageFormat 图片类型(如png,jpg,gif等)
      * @return 图片的字符串表示
+     * @author K
+     * @since 1.0.0
      */
     fun imageToString(imageUri: URI, imageFormat: String): String {
         val bufferedImage = readImageFromUri(imageUri)
@@ -98,6 +112,8 @@ object ImageKit {
      * @param bufferedImage BufferedImage对象
      * @param imageFormat 图片类型(如png,jpg,gif等)
      * @return 图片的字符串表示(Base64编码)
+     * @author K
+     * @since 1.0.0
      */
     fun imageToString(bufferedImage: BufferedImage, imageFormat: String): String {
         return ByteArrayOutputStream().use {
@@ -112,6 +128,8 @@ object ImageKit {
      *
      * @param imgStr 图片的字符串表示(Base64编码)
      * @return BufferedImage对象
+     * @author K
+     * @since 1.0.0
      */
     fun stringToImage(imgStr: String): BufferedImage {
         val decoder = Base64.getDecoder()
@@ -129,6 +147,8 @@ object ImageKit {
      * @param height       目标高度
      * @param width        目标宽度
      * @param hasFiller    比例不对时是否需要补白：true为补白（缺省值）; false为不补白;
+     * @author K
+     * @since 1.0.0
      */
     fun scale(srcImageFile: String, height: Int, width: Int, hasFiller: Boolean = true): BufferedImage {
         var ratio = 0.0 // 缩放比例
@@ -167,6 +187,8 @@ object ImageKit {
      * 图形化展现图片对象
      *
      * @param bufferedImage BufferedImage对象
+     * @author K
+     * @since 1.0.0
      */
     fun showImage(bufferedImage: BufferedImage) {
         class ImagePanel(var image: BufferedImage) : JPanel() {

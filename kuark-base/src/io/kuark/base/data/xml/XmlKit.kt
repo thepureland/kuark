@@ -35,6 +35,7 @@ object XmlKit {
      * @param root 待序列化的根对象
      * @param encoding 编码名称,缺省为UTF-8
      * @return 序列化后的xml字符串
+     * @author K
      * @since 1.0.0
      */
     fun toXml(root: Any, encoding: String = "UTF-8"): String {
@@ -46,11 +47,13 @@ object XmlKit {
     /**
      * 序列化(编组)，特别支持Root Element是Collection的情形.
      *
+     * @param T 集合元素类型
      * @param root 待序列化的根容器对象
      * @param rootName 根的名称
      * @param clazz 类
      * @param encoding 编码名称,缺省为UTF-8
      * @return 序列化后的xml字符串
+     * @author K
      * @since 1.0.0
      */
     fun <T: Any> toXml(root: Collection<T>, rootName: String, clazz: KClass<T>, encoding: String = "UTF-8"): String {
@@ -64,10 +67,12 @@ object XmlKit {
     /**
      * 反序列化(解组)，将xml转为指定类的实例
      *
+     * @param T 目标类型
      * @param xml xml字符串
      * @param clazz 实例的类型
      * @param ignoreNameSpace 是否忽略命名空间
      * @return 指定类的实例
+     * @author K
      * @since 1.0.0
      */
     fun <T : Any> fromXml(xml: String, clazz: KClass<T>, ignoreNameSpace: Boolean = false): T {
@@ -85,6 +90,7 @@ object XmlKit {
      * @param clazz 类
      * @param encoding 编码名称,缺省为UTF-8
      * @return Marshaller
+     * @author K
      * @since 1.0.0
      */
     private fun createMarshaller(clazz: KClass<*>, encoding: String = "UTF-8"): Marshaller {
@@ -104,6 +110,7 @@ object XmlKit {
      *
      * @param clazz 类
      * @return UnMarshaller
+     * @author K
      * @since 1.0.0
      */
     private fun createUnmarshaller(clazz: KClass<*>): Unmarshaller = getJaxbContext(clazz).createUnmarshaller()
@@ -116,6 +123,9 @@ object XmlKit {
 
     /**
      * 封装Root Element 是 Collection的情况.
+     *
+     * @author K
+     * @since 1.0.0
      */
     class CollectionWrapper(
         @set:XmlAnyElement

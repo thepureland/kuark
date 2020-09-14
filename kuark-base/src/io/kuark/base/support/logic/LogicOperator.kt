@@ -108,6 +108,8 @@ enum class LogicOperator constructor(
      * @param v1 左值
      * @param v2 右值 (对于IS_NULL、IS_NOT_NULL、IS_EMPTY、IS_NOT_EMPTY来说无意义)
      * @return 是否满足逻辑关系
+     * @author K
+     * @since 1.0.0
      */
     fun assert(v1: Any?, v2: Any? = null): Boolean {
         return when (this) {

@@ -26,6 +26,8 @@ import kotlin.reflect.KClass
 
 /**
  * ClassPath scanner.
+ *
+ * @since 1.0.0
  */
 object ClassPathScanner {
     
@@ -41,6 +43,7 @@ object ClassPathScanner {
      * @param suffix The suffix of the resource names to match.
      * @return The resources that were found.
      * @throws IOException when the location could not be scanned.
+     * @since 1.0.0
      */
 	fun scanForResources(path: String, prefix: String, suffix: String): Array<Resource> {
         val resources: MutableSet<Resource> = TreeSet()
@@ -67,6 +70,7 @@ object ClassPathScanner {
      * implement.
      * @return The non-abstract classes that were found.
      * @throws Exception when the location could not be scanned.
+     * @since 1.0.0
      */
     fun scanForClasses(location: String, implementedInterface: KClass<*>): Array<Class<*>> {
         logger.debug("Scanning for classes at '" + location + "' (Implementing: '" + implementedInterface.qualifiedName + "')")

@@ -32,6 +32,8 @@ object QrCodeKit {
      * @param sideLength 二维码图片(正文形)边长，缺省为300像素
      * @param logoSideLength logo图片(正方形)的边长，缺省为二维码图片边长的1/5
      * @param margin 页边空白宽度(像素)，缺省为2像素
+     * @author K
+     * @since 1.0.0
      */
     fun genQrCode(
         content: String, destImagePath: String, logoImagePath: String, sideLength: Int = 300,
@@ -54,6 +56,8 @@ object QrCodeKit {
      * @param logoSideLength logo图片(正方形)的边长，缺省为二维码图片边长的1/5
      * @param margin 页边空白宽度(像素)，缺省为2像素
      * @return 二维码BufferedImage对象
+     * @author K
+     * @since 1.0.0
      */
     fun genQrCode(
         content: String, logoImagePath: String,
@@ -71,6 +75,9 @@ object QrCodeKit {
      * @param sideLength 二维码图片(正文形)边长，缺省为300像素
      * @param margin 页边空白宽度(像素)，缺省为2像素
      * @return 二维码BufferedImage对象
+     * @author https://www.cnblogs.com/demon7715/p/10984160.html
+     * @author K
+     * @since 1.0.0
      */
     fun genQrCode(content: String, logoImage: BufferedImage, sideLength: Int = 300, margin: Int = 0): BufferedImage {
         // 读取源图像
@@ -122,10 +129,4 @@ object QrCodeKit {
         return image
     }
 
-}
-
-fun main() {
-    //将1.png作为logo放在2.png中间   生成扫码图片2.png变成二维码
-    QrCodeKit.genQrCode("http://www.baidu.com", "D:/2.png", "D:/1.png")
-    println("成功！！！")
 }

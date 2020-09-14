@@ -35,8 +35,10 @@ import org.apache.commons.collections.ListUtils
  * 当上面的代码被执行时，`obj`将包含一个新的`Date`实例。
  * 而且， 这个`Date`实例为列表中的第四个元素。前三个元素将被置为`null`。
  *
+ * @param T 列表元素类型
  * @param factory 创建新对象的工厂
  * @return 指定列表的"懒惰"列表
+ * @author K
  * @since 1.0.0
  */
 fun <T : Any?> List<T>.lazyList(factory: Factory): List<T> = ListUtils.lazyList(this, factory) as List<T>

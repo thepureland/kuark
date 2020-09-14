@@ -16,6 +16,8 @@ interface IConstraintConvertor {
      *
      * @param context 上下文
      * @return 终端约束
+     * @author K
+     * @since 1.0.0
      */
     fun convert(context: ConstraintConvertContext): TeminalConstraint
 

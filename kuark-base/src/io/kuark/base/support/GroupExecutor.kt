@@ -21,6 +21,7 @@ import kotlin.math.ceil
  *
  * </pre>
  *
+ * @param E 集合元素类型
  * @author admin
  * @since 1.0.0
  *
@@ -32,6 +33,9 @@ abstract class GroupExecutor<E>(
 
     /**
      * 执行操作
+     *
+     * @author admin
+     * @since 1.0.0
      */
     fun execute() {
         val size = elems.size
@@ -49,6 +53,8 @@ abstract class GroupExecutor<E>(
      * 分组执行
      *
      * @param subList 分组元素列表
+     * @author admin
+     * @since 1.0.0
      */
     abstract fun groupExecute(subList: List<E>)
 

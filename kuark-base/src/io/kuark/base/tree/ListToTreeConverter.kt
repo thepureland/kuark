@@ -9,15 +9,17 @@ import java.util.*
  * @author K
  * @since 1.0.0
  */
-object ListToTreeConvertor {
+object ListToTreeConverter {
 
-    private val LOG = LogFactory.getLog(ListToTreeConvertor::class)
+    private val LOG = LogFactory.getLog(ListToTreeConverter::class)
 
     /**
      * 将列表结构转为树结构
      *
      * @param objectList 结点对象列表
-     * @return List<树根结点>
+     * @return List(树根结点)
+     * @author K
+     * @since 1.0.0
      */
     fun <T, E : ITreeable<T>> convert(objectList: List<E>): List<TreeNode<E>> {
         val treeNodeMap = HashMap<T, TreeNode<E>>(objectList.size, 1f)
@@ -47,7 +49,9 @@ object ListToTreeConvertor {
      * 将列表结构转为jsTree要求的树结构
      *
      * @param objectList 结点对象列表
-     * @return List<树根结点>
+     * @return List(树根结点)
+     * @author K
+     * @since 1.0.0
      */
     fun <E : IJsTreeNode> convertToJsTree(objectList: List<E>): List<E> {
         val treeNodeMap = mutableMapOf<String, E>()
@@ -75,13 +79,15 @@ object ListToTreeConvertor {
      * 将用户对象列表转换为js树结点对象列表
      *
      * @param objectList 用户对象列表
-     * @param convertor 转换器
+     * @param converter 转换器
      * @return js树结点对象列表
+     * @author K
+     * @since 1.0.0
      */
-    fun <O> convertToJsTree(objectList: List<O>, convertor: IJsTreeNodeConvertor<O, JsTreeNode>): List<JsTreeNode> {
+    fun <O> convertToJsTree(objectList: List<O>, converter: IJsTreeNodeConverter<O, JsTreeNode>): List<JsTreeNode> {
         val nodes = ArrayList<JsTreeNode>(objectList.size)
         for (t in objectList) {
-            nodes.add(convertor.converter(t))
+            nodes.add(converter.convert(t))
         }
         return convertToJsTree(nodes)
     }

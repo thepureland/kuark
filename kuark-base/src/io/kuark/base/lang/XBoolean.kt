@@ -23,6 +23,7 @@ import org.apache.commons.lang3.BooleanUtils
  * </pre>
  *
  * @return `true`返回1, `false`返回0
+ * @author K
  * @since 1.0.0
  */
 fun Boolean.toInt(): Int = BooleanUtils.toInteger(this)
@@ -37,6 +38,7 @@ fun Boolean.toInt(): Int = BooleanUtils.toInteger(this)
  * </pre>
  *
  * @return `'true'`, `'false'`
+ * @author K
  * @since 1.0.0
  */
 fun Boolean.toStringTrueFalse(): String = BooleanUtils.toStringTrueFalse(this)
@@ -50,6 +52,7 @@ fun Boolean.toStringTrueFalse(): String = BooleanUtils.toStringTrueFalse(this)
  * </pre>
  *
  * @return `'on'`, `'off'`
+ * @author K
  * @since 1.0.0
  */
 fun Boolean.toStringOnOff(): String = BooleanUtils.toStringOnOff(this)
@@ -64,6 +67,7 @@ fun Boolean.toStringOnOff(): String = BooleanUtils.toStringOnOff(this)
  *
  * @param bool 要转化的Boolean
  * @return `'yes'`, `'no'`
+ * @author K
  * @since 1.0.0
  */
 fun toStringYesNo(bool: Boolean?): String = BooleanUtils.toStringYesNo(bool)
@@ -79,6 +83,7 @@ fun toStringYesNo(bool: Boolean?): String = BooleanUtils.toStringYesNo(bool)
  * @param trueString 代表 `true`的值(大小写敏感), 可以为 `null`
  * @param falseString 代表 `false`的值(大小写敏感), 可以为 `null`
  * @return 输入的某个匹配的字符串
+ * @author K
  * @since 1.0.0
  */
 fun Boolean.toString(trueString: String?, falseString: String?): String =
@@ -97,6 +102,7 @@ fun Boolean.toString(trueString: String?, falseString: String?): String =
  *
  * @return 逻辑与操作的结果
  * @throws IllegalArgumentException 如果 `array` 为空.
+ * @author K
  * @since 1.0.0
  */
 fun Array<Boolean>.and(): Boolean = BooleanUtils.and(*this)
@@ -116,6 +122,7 @@ fun Array<Boolean>.and(): Boolean = BooleanUtils.and(*this)
  *
  * @return 逻辑或操作的结果
  * @throws IllegalArgumentException 如果 `array` 为空.
+ * @author K
  * @since 1.0.0
  */
 fun Array<Boolean>.or(): Boolean = BooleanUtils.or(*this)
@@ -134,6 +141,7 @@ fun Array<Boolean>.or(): Boolean = BooleanUtils.or(*this)
  *
  * @return 逻辑异或操作的结果
  * @throws IllegalArgumentException 如果 `array` 为空.
+ * @author K
  * @since 1.0.0
  */
 fun Array<Boolean>.xor(): Boolean = BooleanUtils.xor(*this)

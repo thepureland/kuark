@@ -23,6 +23,7 @@ import org.apache.commons.lang3.CharUtils
  * </pre>
  *
  * @return 字符对应Unicode编码的字符串
+ * @author K
  * @since 1.0.0
  */
 fun Char.unicodeEscaped(): String = CharUtils.unicodeEscaped(this)
@@ -40,6 +41,7 @@ fun Char.unicodeEscaped(): String = CharUtils.unicodeEscaped(this)
  * </pre>
  *
  * @return true: 如果ASCII码值小于128
+ * @author K
  * @since 1.0.0
  */
 fun Char.isAscii(): Boolean = CharUtils.isAscii(this)
@@ -57,6 +59,7 @@ fun Char.isAscii(): Boolean = CharUtils.isAscii(this)
  * </pre>
  *
  * @return true: 如果ASCII码值介于32和126之间
+ * @author K
  * @since 1.0.0
  */
 fun Char.isAsciiPrintable(): Boolean = CharUtils.isAsciiPrintable(this)
@@ -74,6 +77,7 @@ fun Char.isAsciiPrintable(): Boolean = CharUtils.isAsciiPrintable(this)
  * </pre>
  *
  * @return true: 如果ASCII码值介于32和127之间
+ * @author K
  * @since 1.0.0
  */
 fun Char.isAsciiControl(): Boolean = CharUtils.isAsciiControl(this)
@@ -91,6 +95,7 @@ fun Char.isAsciiControl(): Boolean = CharUtils.isAsciiControl(this)
  * </pre>
  *
  * @return true: 如果ASCII码值介于65和90之间(大写字母)或97和122之间(小写字母)
+ * @author K
  * @since 1.0.0
  */
 fun Char.isAsciiAlpha(): Boolean = CharUtils.isAsciiAlpha(this)
@@ -108,6 +113,7 @@ fun Char.isAsciiAlpha(): Boolean = CharUtils.isAsciiAlpha(this)
  * </pre>
  *
  * @return true: 如果ASCII码值介于65和90
+ * @author K
  * @since 1.0.0
  */
 fun Char.isAsciiAlphaUpper(): Boolean = CharUtils.isAsciiAlphaUpper(this)
@@ -125,6 +131,7 @@ fun Char.isAsciiAlphaUpper(): Boolean = CharUtils.isAsciiAlphaUpper(this)
  * </pre>
  *
  * @return true: 如果ASCII码值介于97和122之间
+ * @author K
  * @since 1.0.0
  */
 fun Char.isAsciiAlphaLower(): Boolean = CharUtils.isAsciiAlphaLower(this)
@@ -142,6 +149,7 @@ fun Char.isAsciiAlphaLower(): Boolean = CharUtils.isAsciiAlphaLower(this)
  * </pre>
  *
  * @return true: 如果ASCII码值介于48和57之间
+ * @author K
  * @since 1.0.0
  */
 fun Char.isAsciiNumeric(): Boolean = CharUtils.isAsciiNumeric(this)
@@ -159,6 +167,7 @@ fun Char.isAsciiNumeric(): Boolean = CharUtils.isAsciiNumeric(this)
  * </pre>
  *
  * @return true: 如果ASCII码值介于48和57之间(数字)或65和90之间(大写字母)或97和122之间(小写字母)
+ * @author K
  * @since 1.0.0
  */
 fun Char.isAsciiAlphanumeric(): Boolean = CharUtils.isAsciiAlphanumeric(this)

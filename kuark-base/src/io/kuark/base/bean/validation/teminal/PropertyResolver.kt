@@ -1,7 +1,6 @@
 package io.kuark.base.bean.validation.teminal
 
 import java.util.regex.Matcher
-import kotlin.reflect.full.memberProperties
 
 /**
  * 属性名处理工具
@@ -17,6 +16,8 @@ object PropertyResolver {
      * @param property 原属性名
      * @param propertyPrefix 属性名前缀
      * @return 以点分隔的属性名(以单引号括起来)
+     * @author K
+     * @since 1.0.0
      */
     fun toPotQuote(property: String, propertyPrefix: String?): String {
         var property = property
@@ -36,6 +37,8 @@ object PropertyResolver {
      *
      * @param property 原属性名
      * @return 以点分隔的属性名(以单引号括起来)
+     * @author K
+     * @since 1.0.0
      */
     fun toPotQuote(property: String): String {
         var property = property
@@ -51,6 +54,8 @@ object PropertyResolver {
      *
      * @param property 原属性名
      * @return 以点分隔的属性名
+     * @author K
+     * @since 1.0.0
      */
     fun toPot(property: String): String {
         var property = property
@@ -67,6 +72,8 @@ object PropertyResolver {
      *
      * @param property 原属性名
      * @return 以下划线分隔的属性名
+     * @author K
+     * @since 1.0.0
      */
     fun toUnderline(property: String): String {
         var property = property
@@ -85,16 +92,10 @@ object PropertyResolver {
      *
      * @param property 属性名
      * @return true: 是否返回值为数组的属性，反之为false
+     * @author K
+     * @since 1.0.0
      */
     fun isArrayProperty(property: String): Boolean {
         return property.matches("^.+\\[\\d+\\].*$".toRegex())
     }
-}
-
-data class Test(val age: Int)
-
-fun main() {
-    val prop = Test::class.memberProperties.first { it.name == "age" }
-    val returnType = prop.returnType
-    println(returnType)
 }

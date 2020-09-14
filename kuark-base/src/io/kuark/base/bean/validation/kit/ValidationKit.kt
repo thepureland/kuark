@@ -18,10 +18,13 @@ object ValidationKit {
     /**
      * 校验Bean对象
      *
+     * @param T bean类型
      * @param bean 要校验的bean对象
      * @param groups 标识分组的Class数组，不为空将只校验指定分组的约束
      * @param failFast 是否为快速失败模式
-     * @return Set<ConstraintViolation<Bean>>
+     * @return Set(ConstraintViolation(Bean))
+     * @author K
+     * @since 1.0.0
      */
     fun <T : Any> validateBean(
         bean: T,
@@ -37,11 +40,14 @@ object ValidationKit {
     /**
      * 校验Bean对象的单个属性
      *
+     * @param T bean类型
      * @param bean 要校验的bean对象
      * @param property 要校验的属性
      * @param groups 标识分组的Class数组，不为空将只校验指定分组的约束
      * @param failFast 是否为快速失败模式
-     * @return Set<ConstraintViolation<Bean>>
+     * @return Set(ConstraintViolation(Bean))
+     * @author K
+     * @since 1.0.0
      */
     fun <T : Any> validateProperty(
         bean: T,
@@ -58,12 +64,15 @@ object ValidationKit {
     /**
      * 校验Bean类的单个属性
      *
+     * @param T bean类型
      * @param beanClass 要校验的bean类
      * @param property 要校验的属性
      * @param value 要校验的属性值
      * @param groups 标识分组的Class数组，不为空将只校验指定分组的约束
      * @param failFast 是否为快速失败模式
-     * @return Set<ConstraintViolation<Bean>>
+     * @return Set(ConstraintViolation(Bean))
+     * @author K
+     * @since 1.0.0
      */
     fun <T : Any> validateValue(
         beanClass: KClass<T>,
@@ -81,6 +90,8 @@ object ValidationKit {
      *
      * @param failFast 是否为快速失败模式
      * @return 验证器
+     * @author K
+     * @since 1.0.0
      */
     fun getValidator(failFast: Boolean = true): Validator {
         //        val provider = Validation.byProvider(HibernateValidator::class.java)

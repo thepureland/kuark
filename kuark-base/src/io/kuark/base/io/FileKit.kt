@@ -23,6 +23,9 @@ object FileKit {
 
     /**
      * 文件工具类用来生成临时文件时所使用的文件名前缀
+     *
+     * @author K
+     * @since 1.0.0
      */
     const val PREFIX_TEMP_FILE: String = "FileKit_"
 
@@ -33,6 +36,8 @@ object FileKit {
      * @param fileName 压缩包里面文件的完整名字，如果此值为空，则默认取file.getName()。
      * @param password 加密密码，明文传入，如果为空，则不会加密
      * @return 压缩包文件实体 (此File文件实体存储在系统的临时目录，用完请调用file.delete()删除之)
+     * @author K
+     * @since 1.0.0
      */
     fun zip(file: File, fileName: String?, password: String?): File? {
         var filename: String? = fileName
@@ -78,6 +83,7 @@ object FileKit {
      * @param directory 父目录
      * @param names 名字可变数组
      * @return 文件对象
+     * @author K
      * @since 1.0.0
      */
     fun getFile(directory: File, vararg names: String): File = FileUtils.getFile(directory, *names)
@@ -87,6 +93,7 @@ object FileKit {
      *
      * @param names 名字可变数组
      * @return 文件对象
+     * @author K
      * @since 1.0.0
      */
     fun getFile(vararg names: String): File = FileUtils.getFile(*names)
@@ -101,6 +108,7 @@ object FileKit {
      * @throws FileNotFoundException 指定的文件不存在
      * @throws IOException 如果文件存在，但是是一个目录
      * @throws IOException 如果文件存在，但是没法被读取
+     * @author K
      * @since 1.0.0
      */
     fun openInputStream(file: File): FileInputStream = FileUtils.openInputStream(file)
@@ -117,6 +125,7 @@ object FileKit {
      * @param file 待打开为输入流的文件对象
      * @param append `true`: 字节将被添加到文件的末尾而不是覆盖该文件
      * @return 指定文件的一个新的{@link FileOutputStream}
+     * @author K
      * @since 1.0.0
      */
     fun openOutputStream(file: File, append: Boolean = false): FileOutputStream =
@@ -131,6 +140,7 @@ object FileKit {
      * @param size 字节数
      * @return 可读的大小 (单位包括- EB, PB, TB, GB, MB, KB 和 bytes)
      * @see [IO-226 -should the rounding be changed?](https://issues.apache.org/jira/browse/IO-226)
+     * @author K
      * @since 1.0.0
      */
     fun byteCountToDisplaySize(size: BigInteger): String = FileUtils.byteCountToDisplaySize(size)
@@ -144,6 +154,7 @@ object FileKit {
      * @param size 字节数
      * @return 可读的大小 (单位包括- EB, PB, TB, GB, MB, KB 和 bytes)
      * @see [IO-226 -should the rounding be changed?](https://issues.apache.org/jira/browse/IO-226)
+     * @author K
      * @since 1.0.0
      */
     fun byteCountToDisplaySize(size: Long): String = FileUtils.byteCountToDisplaySize(size)
@@ -154,6 +165,7 @@ object FileKit {
      *
      * @param file 待处理的文件
      * @throws IOException 创建失败
+     * @author K
      * @since 1.0.0
      */
     fun touch(file: File): Unit = FileUtils.touch(file)
@@ -164,6 +176,7 @@ object FileKit {
      *
      * @param files 包含File实例的容器
      * @return 包含File实例的数组
+     * @author K
      * @since 1.0.0
      */
     fun convertFileCollectionToFileArray(files: Collection<File>): Array<File> =
@@ -181,6 +194,7 @@ object FileKit {
      * @param fileFilter 查找文件时要应用的过滤器
      * @param dirFilter 查找子目录时可选的过滤器。如果为null，将不搜索子目录。 TrueFileFilter.INSTANCE将匹配所有目录
      * @return 匹配的文件对应容器
+     * @author K
      * @since 1.0.0
      */
     fun listFiles(directory: File, fileFilter: IOFileFilter, dirFilter: IOFileFilter?): Collection<File> =
@@ -196,6 +210,7 @@ object FileKit {
      * @param dirFilter 查找子目录时可选的过滤器。如果为null，将不搜索子目录。 TrueFileFilter.INSTANCE将匹配所有目录
      * @return 匹配的文件对应容器
      * @see org.apache.commons.io.filefilter.NameFileFilter
+     * @author K
      * @since 1.0.0
      */
     fun listFilesAndDirs(directory: File, fileFilter: IOFileFilter, dirFilter: IOFileFilter?): Collection<File> =
@@ -212,6 +227,7 @@ object FileKit {
      * @param dirFilter 查找子目录时可选的过滤器。如果为null，将不搜索子目录。 TrueFileFilter.INSTANCE将匹配所有目录
      * @return  匹配的文件的迭代器
      * @see org.apache.commons.io.filefilter.NameFileFilter
+     * @author K
      * @since 1.0.0
      */
     fun iterateFiles(directory: File, fileFilter: IOFileFilter, dirFilter: IOFileFilter?): Iterator<File> =
@@ -229,6 +245,7 @@ object FileKit {
      * @param dirFilter 查找子目录时可选的过滤器。如果为null，将不搜索子目录。 TrueFileFilter.INSTANCE将匹配所有目录
      * @return 匹配的文件的迭代器
      * @see org.apache.commons.io.filefilter.NameFileFilter
+     * @author K
      * @since 1.0.0
      */
     fun iterateFilesAndDirs(directory: File, fileFilter: IOFileFilter, dirFilter: IOFileFilter?): Iterator<File> =
@@ -241,6 +258,7 @@ object FileKit {
      * @param extensions 扩展名数组, 如： {"java","xml"}. 为null将返回所有文件
      * @param recursive true将查找所有子目录
      * @return 匹配的文件对象的列表
+     * @author K
      * @since 1.0.0
      */
     fun listFiles(directory: File, extensions: Array<String>?, recursive: Boolean): List<File> =
@@ -254,6 +272,7 @@ object FileKit {
      * @param extensions 扩展名数组, 如： {"java","xml"}. 为null将返回所有文件
      * @param recursive true将查找所有子目录
      * @return 匹配的文件对象的迭代器
+     * @author K
      * @since 1.0.0
      */
     fun iterateFiles(directory: File, extensions: Array<String>?, recursive: Boolean): Iterator<File> =
@@ -268,6 +287,7 @@ object FileKit {
      * @param file1 第一个文件
      * @param file2 第二个文件
      * @return true：如果它们的内容都相同或两个文件都不存在，否则返回false
+     * @author K
      * @since 1.0.0
      */
     fun contentEquals(file1: File, file2: File): Boolean = FileUtils.contentEquals(file1, file2)
@@ -282,6 +302,7 @@ object FileKit {
      * @param file2 第二个文件
      * @param charsetName 字符编码. 为null将使用平台的默认编码
      * @return true：如果它们的内容都相同或两个文件都不存在，否则返回false
+     * @author K
      * @since 1.0.0
      */
     fun contentEqualsIgnoreEOL(file1: File, file2: File, charsetName: String?): Boolean =
@@ -292,6 +313,7 @@ object FileKit {
      *
      * @param url 待转换的url
      * @return 等效的`File` 对象, 如果url协议不是`file`则返回 `null`
+     * @author K
      * @since 1.0.0
      */
     fun toFile(url: URL): File? = FileUtils.toFile(url)
@@ -310,6 +332,7 @@ object FileKit {
      *
      * @throws IllegalArgumentException 如果任何url不是file
      * @throws IllegalArgumentException 如果任何url不能被正确编码
+     * @author K
      * @since 1.0.0
      */
     fun toFiles(urls: Array<URL?>): Array<File?> = FileUtils.toFiles(urls)
@@ -321,6 +344,7 @@ object FileKit {
      * @param files 待转化的File数组
      * @return 转换后的URL数组
      * @throws IOException 文件不能被转化时
+     * @author K
      * @since 1.0.0
      */
     fun toURLs(files: Array<File?>): Array<URL?> = FileUtils.toURLs(files)
@@ -339,6 +363,7 @@ object FileKit {
      * @throws IOException 如果源或目标无效
      * @throws IOException 如果出现io错误
      * @see .copyFile
+     * @author K
      * @since 1.0.0
      */
     fun copyFileToDirectory(srcFile: File, destDir: File, preserveFileDate: Boolean = true): Unit =
@@ -358,6 +383,7 @@ object FileKit {
      * @throws IOException 如果源或目标无效
      * @throws IOException 如果拷贝时出现io错误
      * @see .copyFileToDirectory
+     * @author K
      * @since 1.0.0
      */
     fun copyFile(srcFile: File, destFile: File, preserveFileDate: Boolean = true): Unit =
@@ -371,6 +397,7 @@ object FileKit {
      * @param output 要写入的 `OutputStream`
      * @return 拷贝的字节数
      * @throws IOException 如果拷贝时出现io错误
+     * @author K
      * @since 1.0.0
      */
     fun copyFile(input: File, output: OutputStream): Long = FileUtils.copyFile(input, output)
@@ -389,6 +416,7 @@ object FileKit {
      * @param destDir 放置拷贝后的源目标的目标目录
      * @throws IOException 如果源目录或目标目录无效
      * @throws IOException 如果拷贝时出现io错误
+     * @author K
      * @since 1.0.0
      */
     fun copyDirectoryToDirectory(srcDir: File, destDir: File): Unit =
@@ -409,6 +437,7 @@ object FileKit {
      * @param preserveFileDate 是否保留文件原日期
      * @throws IOException 如果源目录或目标目录无效
      * @throws IOException 如果拷贝时出现io错误
+     * @author K
      * @since 1.0.0
      */
     fun copyDirectory(srcDir: File, destDir: File, preserveFileDate: Boolean = true): Unit =
@@ -445,6 +474,7 @@ object FileKit {
      * @param preserveFileDate 是否保留文件日期
      * IOException 如果源目录或目标目录无效
      * IOException 如果拷贝时出现io错误
+     * @author K
      * @since 1.0.0
      */
     fun copyDirectory(srcDir: File, destDir: File, filter: FileFilter?, preserveFileDate: Boolean = true): Unit =
@@ -466,6 +496,7 @@ object FileKit {
      * @throws IOException 如果目标文件不能被写入
      * @throws IOException 如果目标需要被创建但是又创建不了
      * @throws IOException 如果拷贝时发生io错误
+     * @author K
      * @since 1.0.0
      */
     fun copyURLToFile(source: URL, destination: File): Unit = FileUtils.copyURLToFile(source, destination)
@@ -484,6 +515,7 @@ object FileKit {
      * @throws IOException 如果目标文件不能被写入
      * @throws IOException 如果目标需要被创建但是又创建不了
      * @throws IOException 如果拷贝时发生io错误
+     * @author K
      * @since 1.0.0
      */
     fun copyURLToFile(source: URL, destination: File, connectionTimeout: Int, readTimeout: Int): Unit =
@@ -500,6 +532,7 @@ object FileKit {
      * @throws IOException 如果目标文件不能被写入
      * @throws IOException 如果目标需要被创建但是又创建不了
      * @throws IOException 如果拷贝时发生io错误
+     * @author K
      * @since 1.0.0
      */
     fun copyInputStreamToFile(source: InputStream, destination: File): Unit =
@@ -510,6 +543,7 @@ object FileKit {
      *
      * @param directory 待删除的目录
      * @throws IOException 删除操作失败时
+     * @author K
      * @since 1.0.0
      */
     fun deleteDirectory(directory: File): Unit = FileUtils.deleteDirectory(directory)
@@ -523,6 +557,7 @@ object FileKit {
      *
      * @param file 要删除的文件或目录
      * @return `true`： 如果文件或目录被成功删除，否则返回 `false`
+     * @author K
      * @since 1.0.0
      */
     fun deleteQuietly(file: File): Boolean = FileUtils.deleteQuietly(file)
@@ -539,6 +574,7 @@ object FileKit {
      * @return true：父目录包含子目录或文件，否则返回false
      * @throws IOException 检查文件时出现io错误
      * @throws IllegalArgumentException directory不是目录时
+     * @author K
      * @since 1.0.0
      */
     fun directoryContains(directory: File, child: File): Boolean? = FileUtils.directoryContains(directory, child)
@@ -548,6 +584,7 @@ object FileKit {
      *
      * @param directory 待清空的目录
      * IOException 清除不成功时
+     * @author K
      * @since 1.0.0
      */
     fun cleanDirectory(directory: File): Unit = FileUtils.cleanDirectory(directory)
@@ -560,6 +597,7 @@ object FileKit {
      * @param file 要检查的文件
      * @param seconds 等待的最大秒数
      * @return true: 如果文件存在
+     * @author K
      * @since 1.0.0
      */
     fun waitFor(file: File, seconds: Int): Boolean = FileUtils.waitFor(file, seconds)
@@ -572,6 +610,7 @@ object FileKit {
      * @return 文件内容
      * @throws IOException 如果发生io错误
      * @throws UnsupportedEncodingException 指定的编码不被支持时
+     * @author K
      * @since 1.0.0
      */
     fun readFileToString(file: File, encoding: String? = null): String = FileUtils.readFileToString(file, encoding)
@@ -582,6 +621,7 @@ object FileKit {
      * @param file 要读取的文件
      * @return 文件内容的字节数组
      * @throws IOException 如果发生io错误
+     * @author K
      * @since 1.0.0
      */
     fun readFileToByteArray(file: File): ByteArray = FileUtils.readFileToByteArray(file)
@@ -594,6 +634,7 @@ object FileKit {
      * @return 字符串列表，每一个元素代表文件中的每一行
      * @throws IOException 如果发生io错误
      * @throws UnsupportedEncodingException 如果编码不被支持
+     * @author K
      * @since 1.0.0
      */
     fun readLines(file: File, encoding: String? = null): List<String> = FileUtils.readLines(file, encoding)
@@ -624,6 +665,7 @@ object FileKit {
      * @param encoding 要使用的编码, `null` 将使用平台默认的编码
      * @return 代表文件中每行的迭代器
      * @throws IOException 如果发生io错误
+     * @author K
      * @since 1.0.0
      */
     fun lineIterator(file: File, encoding: String? = null): LineIterator = FileUtils.lineIterator(file, encoding)
@@ -636,6 +678,7 @@ object FileKit {
      * @param encoding 要使用的编码, `null` 将使用平台默认的编码
      * @throws IOException 如果发生io错误
      * @throws UnsupportedEncodingException 如果指定的编码不被虚拟机支持
+     * @author K
      * @since 1.0.0
      */
     fun writeStringToFile(file: File, data: String, encoding: String? = null): Unit =
@@ -650,6 +693,7 @@ object FileKit {
      * @param append 字符序列是否被拼接到文件末尾，而不是覆盖原来文件的内容
      * @throws IOException 如果发生io错误
      * @throws UnsupportedEncodingException 如果指定的编码不被虚拟机支持
+     * @author K
      * @since 1.0.0
      */
     fun writeStringToFile(file: File, data: String, encoding: String? = null, append: Boolean): Unit =
@@ -664,6 +708,7 @@ object FileKit {
      * @param append 字符序列是否被拼接到文件末尾，而不是覆盖原来文件的内容
      * @throws IOException 如果发生io错误
      * @throws UnsupportedEncodingException 如果指定的编码不被虚拟机支持
+     * @author K
      * @since 1.0.0
      */
     fun write(file: File, data: CharSequence, encoding: String? = null, append: Boolean = false): Unit =
@@ -676,6 +721,7 @@ object FileKit {
      * @param data 要写入到文件的内容
      * @param append 数据是否被拼接到文件末尾，而不是替换原文件的内容
      * @throws IOException 如果发生io错误
+     * @author K
      * @since 1.0.0
      */
     fun writeByteArrayToFile(file: File, data: ByteArray, append: Boolean = false): Unit =
@@ -693,6 +739,7 @@ object FileKit {
      * @param append 数据是否被拼接到文件末尾，而不是替换原文件的内容
      * @throws IOException 如果发生io错误
      * @throws UnsupportedEncodingException 如果指定的编码不被虚拟机支持
+     * @author K
      * @since 1.0.0
      */
     fun writeLines(
@@ -713,6 +760,7 @@ object FileKit {
      * @param file 要删除的文件或目录
      * @throws FileNotFoundException 如果目录或文件找不到
      * @throws IOException 删除操作失败时
+     * @author K
      * @since 1.0.0
      */
     fun forceDelete(file: File): Unit = FileUtils.forceDelete(file)
@@ -722,6 +770,7 @@ object FileKit {
      *
      * @param file 要删除的文件或目录
      * @throws IOException 删除操作失败时
+     * @author K
      * @since 1.0.0
      */
     fun forceDeleteOnExit(file: File): Unit = FileUtils.forceDeleteOnExit(file)
@@ -733,6 +782,7 @@ object FileKit {
      *
      * @param directory 要创建的目录
      * @throws IOException 如果目录不能被创建或存在但不是一个目录
+     * @author K
      * @since 1.0.0
      */
     fun forceMkdir(directory: File): Unit = FileUtils.forceMkdir(directory)
@@ -746,6 +796,7 @@ object FileKit {
      * @param file 要返回大小的正规文件或目录
      * @return 文件的长度, 或目录的递归大小(字节数)
      * @throws IllegalArgumentException 如果文件不存在
+     * @author K
      * @since 1.0.0
      */
     fun sizeOf(file: File): Long = FileUtils.sizeOf(file)
@@ -759,6 +810,7 @@ object FileKit {
      * @param file 要返回大小的正规文件或目录
      * @return 文件的长度, 或目录的递归大小(字节数)
      * @throws IllegalArgumentException 如果文件不存在
+     * @author K
      * @since 1.0.0
      */
     fun sizeOfAsBigInteger(file: File): BigInteger = FileUtils.sizeOfAsBigInteger(file)
@@ -768,6 +820,7 @@ object FileKit {
      *
      * @param directory 待检查的目录
      * @return 目录的大小(字节数), 如果目录有安全限制返回0, 当总大小大于[Long.MAX_VALUE]时返回一个负数
+     * @author K
      * @since 1.0.0
      */
     fun sizeOfDirectory(directory: File): Long = FileUtils.sizeOfDirectory(directory)
@@ -777,6 +830,7 @@ object FileKit {
      *
      * @param directory 待检查的目录
      * @return 目录的大小(字节数), 如果目录有安全限制返回0
+     * @author K
      * @since 1.0.0
      */
     fun sizeOfDirectoryAsBigInteger(directory: File): BigInteger = FileUtils.sizeOfDirectoryAsBigInteger(directory)
@@ -788,6 +842,7 @@ object FileKit {
      * @param reference 第二个文件
      * @return true：如果文件存在并且比第二个文件新
      * @throws IllegalArgumentException 如果文件不存在
+     * @author K
      * @since 1.0.0
      */
     fun isFileNewer(file: File, reference: File): Boolean = FileUtils.isFileNewer(file, reference)
@@ -799,6 +854,7 @@ object FileKit {
      * @param timeMillis 日期的毫秒表示
      * @return true：如果文件存在并且在指定日期之后被修改
      * @throws IllegalArgumentException 如果文件为 `null`
+     * @author K
      * @since 1.0.0
      */
     fun isFileNewer(file: File, timeMillis: Long): Boolean = FileUtils.isFileNewer(file, timeMillis)
@@ -810,6 +866,7 @@ object FileKit {
      * @param reference 第二个文件
      * @return true：如果文件存在并且比第二个文件旧
      * @throws    IllegalArgumentException 如果文件不存在
+     * @author K
      * @since 1.0.0
      */
     fun isFileOlder(file: File, reference: File): Boolean = FileUtils.isFileOlder(file, reference)
@@ -820,6 +877,7 @@ object FileKit {
      * @param file 待比较的文件
      * @param timeMillis 日期的毫秒表示
      * @return true：如果文件存在并且在指定日期之前被修改
+     * @author K
      * @since 1.0.0
      */
     fun isFileOlder(file: File, timeMillis: Long): Boolean = FileUtils.isFileOlder(file, timeMillis)
@@ -831,6 +889,7 @@ object FileKit {
      * @return 校验和
      * @throws IllegalArgumentException 如果指定的文件是一个目录
      * @throws IOException 读取文件时发生io异常
+     * @author K
      * @since 1.0.0
      */
     fun checksumCRC32(file: File): Long = FileUtils.checksumCRC32(file)
@@ -848,6 +907,7 @@ object FileKit {
      * @return 指定的校验和对象，已经由文件的内容更新过
      * @throws IllegalArgumentException 如果指定的文件是一个目录
      * @throws IOException 读取文件时发生io异常
+     * @author K
      * @since 1.0.0
      */
     fun checksum(file: File, checksum: Checksum): Checksum = FileUtils.checksum(file, checksum)
@@ -861,6 +921,7 @@ object FileKit {
      * @throws FileNotFoundException 如果目标目录存在
      * @throws IOException 源或目标不可用时
      * @throws IOException 如果移动时发生io错误
+     * @author K
      * @since 1.0.0
      */
     fun moveDirectory(srcDir: File, destDir: File): Unit = FileUtils.moveDirectory(srcDir, destDir)
@@ -875,6 +936,7 @@ object FileKit {
      * @throws FileNotFoundException 如果目标目录存在
      * @throws IOException 源或目标不可用时
      * @throws IOException 如果移动时发生io错误
+     * @author K
      * @since 1.0.0
      */
     fun moveDirectoryToDirectory(src: File, destDir: File, createDestDir: Boolean): Unit =
@@ -889,6 +951,7 @@ object FileKit {
      * @throws FileNotFoundException 如果目标文件存在
      * @throws IOException 源或目标不可用时
      * @throws IOException 如果移动时发生io错误
+     * @author K
      * @since 1.0.0
      */
     fun moveFile(srcFile: File, destFile: File): Unit = FileUtils.moveFile(srcFile, destFile)
@@ -903,6 +966,7 @@ object FileKit {
      * @throws FileNotFoundException 如果目标文件存在
      * @throws IOException 源或目标不可用时
      * @throws IOException 如果移动时发生io错误
+     * @author K
      * @since 1.0.0
      */
     fun moveFileToDirectory(srcFile: File, destDir: File, createDestDir: Boolean): Unit =
@@ -917,6 +981,7 @@ object FileKit {
      * @throws FileNotFoundException 如果文件或目录存在于目标目录中
      * @throws IOException 源或目标不可用时
      * @throws IOException 如果移动时发生io错误
+     * @author K
      * @since 1.0.0
      */
     fun moveToDirectory(src: File, destDir: File, createDestDir: Boolean): Unit =
@@ -932,6 +997,7 @@ object FileKit {
      * @param file 要检查的文件
      * @return true：如果文件是一个符号链接
      * @throws IOException 如果检查时发生io错误
+     * @author K
      * @since 1.0.0
      */
     fun isSymlink(file: File): Boolean = FileUtils.isSymlink(file)

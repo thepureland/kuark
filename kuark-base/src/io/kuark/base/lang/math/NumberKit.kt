@@ -30,6 +30,7 @@ object NumberKit {
      * @param str 数值的字符串形式, 可以为null
      * @return 字符串所代表的数值，为 `null` 将返回 `null`
      * @throws NumberFormatException 如果字符串不能被转换
+     * @author K
      * @since 1.0.0
      */
     fun createNumber(str: String?): Number = NumberUtils.createNumber(str)
@@ -40,6 +41,7 @@ object NumberKit {
      *
      * @param str 待检查的字符串
      * @return `true` 指定的字符串只包含Unicode的数字字符
+     * @author K
      * @since 1.0.0
      */
     fun isDigits(str: String?): Boolean = NumberUtils.isDigits(str)
@@ -52,6 +54,7 @@ object NumberKit {
      *
      * @param str 待检查的字符串
      * @return `true` 如果指定的字符串为一个正确格式的数值
+     * @author K
      * @since 1.0.0
      */
     fun isNumber(str: String?): Boolean = NumberUtils.isNumber(str)

@@ -25,7 +25,8 @@ object PackageKit {
      *
      * @param pkg 以"."分隔的标准包名
      * @param recursive 是否循环迭代
-     * @return Set<类>
+     * @return Set(类)
+     * @author K
      * @since 1.0.0
      */
     fun getClassesInPackage(pkg: String, recursive: Boolean): Set<KClass<*>> {
@@ -40,7 +41,8 @@ object PackageKit {
      *
      * @param pkgPattern 包正则表达式
      * @param recursive 是否递归地获取子包
-     * @return Set<包名>
+     * @return Set(包名)
+     * @author K
      * @since 1.0.0
      */
     fun getPackages(pkgPattern: String, recursive: Boolean): Set<String> {

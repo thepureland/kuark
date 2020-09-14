@@ -32,6 +32,8 @@ object TeminalConstraintsCreator {
      * @param beanClass 待校验的bean类
      * @param propertyPrefix 属性名前缀
      * @return 验证规则json文本
+     * @author K
+     * @since 1.0.0
      */
     fun create(beanClass: KClass<*>, propertyPrefix: String = ""): String {
         val cacheKey = "${beanClass.qualifiedName}-$propertyPrefix"
@@ -51,6 +53,8 @@ object TeminalConstraintsCreator {
      * @param annotations MutableMap<属性名, MutableList<注解对象>>
      * @param beanClass 待校验的bean类
      * @param parentProperty 父属性对象
+     * @author K
+     * @since 1.0.0
      */
     private fun parseAnnotations(
         annotations: MutableMap<String, MutableList<Annotation>>, beanClass: KClass<*>, parentProperty: KProperty<*>?
@@ -108,6 +112,8 @@ object TeminalConstraintsCreator {
      * @param propertyPrefix 属性名前缀
      * @param beanClass 待校验的bean类
      * @return 验证规则json文本
+     * @author K
+     * @since 1.0.0
      */
     private fun genRule(
         annotationsMap: Map<String, MutableList<Annotation>>, propertyPrefix: String, beanClass: KClass<*>
@@ -134,7 +140,9 @@ object TeminalConstraintsCreator {
      * 获取类级别的约束注解
      *
      * @param clazz Bean类
-     * @return Map<属性名，List<约束注解>>
+     * @return Map(属性名，List(约束注解))
+     * @author K
+     * @since 1.0.0
      */
     private fun getAnnotationsOnClass(clazz: KClass<*>): Map<String, MutableList<Annotation>> {
         val annotationMap = mutableMapOf<String, MutableList<Annotation>>()
@@ -160,7 +168,9 @@ object TeminalConstraintsCreator {
      * 获取Getter上的约束注解
      *
      * @param clazz Bean类
-     * @return Map<属性名，List<约束注解>>
+     * @return Map(属性名，List(约束注解))
+     * @author K
+     * @since 1.0.0
      */
     private fun getAnnotationsOnGetter(clazz: KClass<*>, property: String): MutableList<Annotation> {
         val annotationList = mutableListOf<Annotation>()

@@ -23,6 +23,8 @@ object I18nKit {
      * @param supportLocales 支持的Locale
      * @param types 国际化信息类型，自定义，为i18n目录的子目录
      * @param defaultLocale 默认Locale
+     * @author K
+     * @since 1.0.0
      */
     fun initI18n(supportLocales: Set<String>, types: Set<String>, defaultLocale: String = "zh_CN") {
         this.supportLocales = supportLocales
@@ -53,7 +55,9 @@ object I18nKit {
      * 根据Locale, 获取其所有类别的国际化Map
      *
      * @param locale 两位小写语言代码_两位大写国家代码
-     * @return MutableMap<type, MutableMap<module, MutableMap<i18n-key, i18n-value>>>
+     * @return MutableMap(type, MutableMap(module, MutableMap(i18n-key, i18n-value)))
+     * @author K
+     * @since 1.0.0
      */
     fun getI18nMap(locale: String = defaultLocale): Map<String, MutableMap<String, MutableMap<String, String>>> {
         return if (!isSupport(locale)) {
@@ -70,6 +74,8 @@ object I18nKit {
      * @param module  模块名
      * @param i18nKey 国际化key
      * @return 国际化后的字符串，如果找不到会直接返回i18nKey的值
+     * @author K
+     * @since 1.0.0
      */
     fun getLocalStr(i18nKey: String, module: String, type: String, locale: String = defaultLocale): String {
         var localeStr = if (!isSupport(locale)) {
@@ -86,6 +92,8 @@ object I18nKit {
      *
      * @param locale Locale
      * @return true: 支持，false: 不支持
+     * @author K
+     * @since 1.0.0
      */
     fun isSupport(locale: String): Boolean = supportLocales.contains(locale)
 
@@ -129,6 +137,7 @@ object I18nKit {
      * 绑定本地运行环境和资源文件
      *
      * @param file 资源文件
+     * @author K
      * @since 1.0.0
      */
     @Synchronized

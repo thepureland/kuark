@@ -52,6 +52,7 @@ object CryptoKit {
      * @param input 原始输入字符数组
      * @param key   HMAC-SHA1密钥
      * @return 签名后的字节数组
+     * @author K
      * @since 1.0.0
      */
     fun hmacSha1(input: ByteArray, key: ByteArray): ByteArray {
@@ -68,6 +69,7 @@ object CryptoKit {
      * @param input    原始输入字符串
      * @param key      密钥
      * @return true: HMAC-SHA1签名正确
+     * @author K
      * @since 1.0.0
      */
     fun isMacValid(expected: ByteArray, input: ByteArray, key: ByteArray): Boolean {
@@ -80,6 +82,7 @@ object CryptoKit {
      * HMAC-SHA1算法对密钥无特殊要求, RFC2401建议最少长度为160位(20字节).
      *
      * @return HMAC-SHA1密钥
+     * @author K
      * @since 1.0.0
      */
     fun generateHmacSha1Key(): ByteArray {
@@ -96,6 +99,7 @@ object CryptoKit {
      * @param input    原始输入字符串.
      * @param password 密钥字符串.
      * @return 加密后的字符串(十六进制表示)
+     * @author K
      * @since 1.0.0
      */
     fun aesEncrypt(input: String, password: String): String {
@@ -112,6 +116,7 @@ object CryptoKit {
      * @param content  使用aes加密字节数组
      * @param password 加密时使用的密钥
      * @return 原字符串的字节数组
+     * @author K
      * @since 1.0.0
      */
     fun aesDecrypt(content: ByteArray, password: String): ByteArray {
@@ -137,6 +142,7 @@ object CryptoKit {
      * @param contentHex 使用aes加密并转为十六进制的字符串
      * @param password   加密时使用的密钥
      * @return 原字符串
+     * @author K
      * @since 1.0.0
      */
     fun aesDecrypt(contentHex: String, password: String): String {
@@ -155,6 +161,7 @@ object CryptoKit {
      *
      * @param input 原始输入字符串.
      * @return 加密后的字符串(十六进制表示)
+     * @author K
      * @since 1.0.0
      */
     fun aesEncrypt(input: String): String = PREFIX + aesEncrypt(input, KEY)
@@ -164,6 +171,7 @@ object CryptoKit {
      *
      * @param contentHex 使用aes加密并转为十六进制的字符串
      * @return 原字符串
+     * @author K
      * @since 1.0.0
      */
     fun aesDecrypt(contentHex: String): String {
@@ -177,14 +185,11 @@ object CryptoKit {
 
     //endregion
 
-    //endregion
     /**
-     *
-     *
      * 生成随机向量,默认大小为cipher.getBlockSize(), 16字节.
      *
-     *
      * @return 向量的字节数组
+     * @author K
      * @since 1.0.0
      */
     fun generateIV(): ByteArray {
@@ -198,6 +203,7 @@ object CryptoKit {
      *
      * @param data 字节数组
      * @return 十六进制表示的字符数组
+     * @author K
      * @since 1.0.0
      */
     fun encodeHex(data: ByteArray): CharArray {
@@ -219,6 +225,7 @@ object CryptoKit {
      *
      * @param bytes 十六进制编码的字节数组
      * @return 解码后的字节数组
+     * @author K
      * @since 1.0.0
      */
     fun decodeHex(bytes: ByteArray): ByteArray {
@@ -232,60 +239,6 @@ object CryptoKit {
             i += 2
         }
         return arrOut
-    }
-
-    /**
-     * DES3加密方法，IM提供的代码
-     *
-     * @param str
-     * @param saltTxt
-     * @return
-     */
-    fun encryptDES3(str: String, saltTxt: String): String {
-        val md5Key = getMd5(saltTxt) //16bytes
-        val key = SecretKeySpec(md5Key, "DESede")
-        val ecipher = Cipher.getInstance("DESede/ECB/PKCS5Padding")
-        ecipher.init(Cipher.ENCRYPT_MODE, key)
-        val data = str.toByteArray(charset(CHARSET))
-        val encryptedArray = ecipher.doFinal(data)
-        return Base64().encodeToString(encryptedArray)
-    }
-
-    /**
-     * DES3解密方法，IM提供的代码
-     * @param encryptedString
-     * @param saltTxt
-     * @return
-     */
-    fun decryptDES3(encryptedString: String, saltTxt: String): String {
-        val encryptedArray: ByteArray = Base64.decodeBase64(encryptedString)
-        val md5Key = getMd5(saltTxt) //16bytes
-        val key = SecretKeySpec(md5Key, "DESede")
-        val dcipher = Cipher.getInstance("DESede/ECB/PKCS5Padding")
-        dcipher.init(Cipher.DECRYPT_MODE, key)
-        val decryptArray = dcipher.doFinal(encryptedArray)
-        return String(decryptArray, charset(CHARSET))
-    }
-
-    /**
-     * MD5加密方法，IM提供的代码
-     *
-     * @param keyString
-     * @return
-     */
-    fun getMd5(keyString: String): ByteArray {
-        val messageDigest: MessageDigest
-        val rawKey = ByteArray(24)
-        try {
-            messageDigest = MessageDigest.getInstance("MD5")
-            messageDigest.update(keyString.toByteArray(charset(CHARSET)), 0, keyString.length)
-            val md5 = messageDigest.digest()
-            System.arraycopy(md5, 0, rawKey, 0, 16)
-            System.arraycopy(md5, 0, rawKey, 16, 8)
-        } catch (e: Exception) {
-            logger.error(e)
-        }
-        return rawKey
     }
 
     /**

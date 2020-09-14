@@ -27,6 +27,7 @@ object EncodeKit {
      *
      * @param input 待Hex编码的字节数组
      * @return 编码后的字符串
+     * @author K
      * @since 1.0.0
      */
     fun encodeHex(input: ByteArray): String = Hex.encodeHexString(input)
@@ -36,6 +37,7 @@ object EncodeKit {
      *
      * @param input 待Hex解码的字符串
      * @return 解码后的字节数组
+     * @author K
      * @since 1.0.0
      */
     fun decodeHex(input: String): ByteArray = Hex.decodeHex(input.toCharArray())
@@ -45,6 +47,7 @@ object EncodeKit {
      *
      * @param input 待Base64编码的字节数组
      * @return 编码后的字符串
+     * @author K
      * @since 1.0.0
      */
     fun encodeBase64(input: ByteArray): String = Base64.encodeBase64String(input)
@@ -54,6 +57,7 @@ object EncodeKit {
      *
      * @param input 待Base64编码的字节数组
      * @return 编码后的字符串
+     * @author K
      * @since 1.0.0
      */
     fun encodeUrlSafeBase64(input: ByteArray): String = Base64.encodeBase64URLSafeString(input)
@@ -63,6 +67,7 @@ object EncodeKit {
      *
      * @param input 待Hex解码的字符串
      * @return 解码后的字节数组
+     * @author K
      * @since 1.0.0
      */
     fun decodeBase64(input: String): ByteArray = Base64.decodeBase64(input)
@@ -72,6 +77,7 @@ object EncodeKit {
      *
      * @param input 待Base62编码的字节数组
      * @return 编码后的字符串
+     * @author K
      * @since 1.0.0
      */
     fun encodeBase62(input: ByteArray): String {
@@ -87,6 +93,7 @@ object EncodeKit {
      *
      * @param part 待编码的部分
      * @return 编码完的字符串
+     * @author K
      * @since 1.0.0
      */
     fun urlEncode(part: String): String = URLEncoder.encode(part, DEFAULT_URL_ENCODING)
@@ -96,6 +103,7 @@ object EncodeKit {
      *
      * @param part 待解码的部分
      * @return 解码后的字符串
+     * @author K
      * @since 1.0.0
      */
     fun urlDecode(part: String): String = URLDecoder.decode(part, DEFAULT_URL_ENCODING)

@@ -16,16 +16,20 @@ object Registry {
     /**
      * 根据key查询所注册的对象
      *
-     * @param key
-     * @return
+     * @param key Key
+     * @return 注册的对象列表
+     * @author K
+     * @since 1.0.0
      */
     fun lookup(key: String): MutableList<Any> = map[key] ?: mutableListOf()
 
     /**
      * 注册
      *
-     * @param key
-     * @param obj
+     * @param key Key
+     * @param obj 注册的对象
+     * @author K
+     * @since 1.0.0
      */
     fun register(key: String, obj: Any) {
         val resultList: MutableList<Any> = lookup(key)
@@ -38,8 +42,10 @@ object Registry {
     /**
      * 批量注册
      *
-     * @param key
-     * @param objs
+     * @param key Key
+     * @param objs 注册的对象可变数组
+     * @author K
+     * @since 1.0.0
      */
     fun register(key: String, vararg objs: Any) {
         if (objs.isEmpty()) {

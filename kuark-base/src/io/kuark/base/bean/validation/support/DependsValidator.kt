@@ -18,6 +18,8 @@ object DependsValidator {
      * @param depends 依赖注解
      * @param bean 待校验的Bean
      * @return 是否校验通过
+     * @author K
+     * @since 1.0.0
      */
     fun validate(depends: Depends, bean: Any): Boolean {
         val leftValues = depends.properties.map { BeanKit.getProperty(bean, it) }.toTypedArray()
@@ -32,6 +34,8 @@ object DependsValidator {
      * @param operators 操作符数组
      * @param andOr 多组值间的逻辑关系，默认为”与“
      * @return 逻辑是否成立
+     * @author K
+     * @since 1.0.0
      */
     fun validate(
         leftValues: Array<Any?>, rightValues: Array<String>, operators: Array<LogicOperator>, andOr: AndOr = AndOr.AND

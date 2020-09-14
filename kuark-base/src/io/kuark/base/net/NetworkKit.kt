@@ -24,6 +24,7 @@ object NetworkKit {
      *
      * @param ip ip地址
      * @param port 端口号
+     * @author K
      * @since 1.0.0
      */
     fun isPortActive(ip: String, port: Int): Boolean {
@@ -39,6 +40,7 @@ object NetworkKit {
      * 获取MAC地址
      *
      * @return 所有网卡的MAC地址列表
+     * @author K
      * @since 1.0.0
      */
     fun getMacAddress(): List<String> {

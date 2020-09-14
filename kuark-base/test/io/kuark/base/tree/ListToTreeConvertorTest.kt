@@ -13,7 +13,7 @@ internal class ListToTreeConvertorTest {
             TestRecord("20", null, "根结点20"),
             TestRecord("21", "20", "20的子结点21")
         )
-        val treeList = ListToTreeConvertor.convert(list)
+        val treeList = ListToTreeConverter.convert(list)
         var result = treeList.size == 2
         val treeNode10 = treeList[0]
         result = result && "10" == treeNode10.getUserObject()!!.id

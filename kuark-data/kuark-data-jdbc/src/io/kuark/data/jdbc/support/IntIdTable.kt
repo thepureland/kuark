@@ -6,6 +6,7 @@ import me.liuwj.ktorm.schema.int
 /**
  * 整型主键的dao
  *
+ * @param E 实体类型
  * @author K
  * @since 1.0.0
  */

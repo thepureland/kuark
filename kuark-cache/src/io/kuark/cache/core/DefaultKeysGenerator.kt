@@ -7,15 +7,24 @@ import kotlin.reflect.full.findAnnotation
 /**
  * 默认的批量缓存key生成器
  *
+ *
  * 适用条件：
+ *
  * 1.缓存方法参数，除集合与数组外，其他类型将被toString()
+ *
  * 2.数组需要用Array<Int>、Array<String>等形式，不要使用IntArray、CharArray等形式
+ *
  * 3.不支持无参
  *
+ *
  * key的组装规则为：
+ *
  * 1.由除ignoreParamIndexes指定的参数索引外的所有参数组成
+ *
  * 2.各部分以半角冒号分隔
+ *
  * 3.各部分顺序同参数顺序
+ *
  * 4.总的key个数为各参数元素个数的积，如各参数分别为："1", listOf(2,3,4), arrayOf("5","6"),7，那么组装完的key共6个，分别为：
  *   "1:2:5:7", "1:3:6:7", "1:4:5:7", "1:2:6:7", "1:3:5:7", "1:4:6:7"
  *
@@ -48,6 +57,8 @@ class DefaultKeysGenerator : IKeysGenerator {
      * 校验参数的类型
      *
      * @param params 方法参数
+     * @author K
+     * @since 1.0.0
      */
     private fun validParamType(vararg params: Any) {
         params.forEach {
@@ -63,6 +74,9 @@ class DefaultKeysGenerator : IKeysGenerator {
      * 计算key的总个数
      *
      * @param params 方法参数
+     * @return key的总数
+     * @author K
+     * @since 1.0.0
      */
     private fun calTotalCount(vararg params: Any): Int {
         var totalCount = 1
@@ -88,6 +102,8 @@ class DefaultKeysGenerator : IKeysGenerator {
      * @param totalCount 要生成的key总数
      * @param params 方法参数
      * @return key列表
+     * @author K
+     * @since 1.0.0
      */
     private fun generateKeys(function: KFunction<*>?, totalCount: Int, vararg params: Any): List<String> {
         val keys = mutableListOf<List<Any>>() // List<List<key同一分段的部分>>

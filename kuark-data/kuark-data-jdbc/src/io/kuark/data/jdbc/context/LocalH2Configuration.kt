@@ -22,6 +22,7 @@ import javax.sql.DataSource
 
 /**
  * 本地H2数据库springboot配置类
+ *
  * 如果数据库配置的是本机tcp模式的H2,将自动启动本机H2数据库及其web控制台
  *
  * @author K
@@ -46,6 +47,11 @@ open class LocalH2Configuration {
     /**
      * springboot本身就默认会以Hikari作为连接池初始化DataSource。
      * 此处的目的是解决因其他Bean自动注入DataSource时，引起的DataSource初始化早于h2数据库的启动(以tcp模式)带来的问题
+     *
+     * @param environment spring Environment
+     * @return 数据源
+     * @author K
+     * @since 1.0.0
      */
     @Bean
     @Qualifier(value = "dataSource")
@@ -61,6 +67,9 @@ open class LocalH2Configuration {
 
     /**
      * 自动启动本机H2数据库及其web控制台
+     *
+     * @author K
+     * @since 1.0.0
      */
     private fun startH2() {
         val local = dbUrl.contains("tcp") && (dbUrl.contains("localhost") || dbUrl.contains("127.0.0.1"))
@@ -80,6 +89,9 @@ open class LocalH2Configuration {
      * 为了方便开发者，kuark实现了开箱即用，在application-data-jdbc-dev.yml文件中spring.datasource.url配置的是相对路径，
      * 这样免去开发者下载完源码运行kuark之前，需要将h2数据库所在位置改为绝对路径的麻烦。但由此带来的问题是，除非开发者在当前模块运行代码，
      * 否则，这个相对路径将是错误的，它是相对于开发者运行位置而言的。因此，这里需要动态的将其处理为绝对路径。
+     *
+     * @author K
+     * @since 1.0.0
      */
     private fun resolveDbUrl() {
         dbUrl = dbUrl.replace(".", PathKit.getClasspath(LocalH2Configuration::class).substringBefore("/build"))

@@ -7,7 +7,7 @@ import kotlin.reflect.full.createType
 import kotlin.reflect.full.declaredMemberProperties
 
 /**
- * 缓存名称处理
+ * 缓存名称处理，用来获取所有实现ICacheNames接口的bean定义的缓存名称。
  *
  * @author K
  * @since 1.0.0

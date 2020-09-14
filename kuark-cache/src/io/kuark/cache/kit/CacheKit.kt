@@ -21,6 +21,8 @@ object CacheKit {
      *
      * @param name 缓存名称
      * @return 缓存对象
+     * @author K
+     * @since 1.0.0
      */
     fun getCache(name: String): Cache? {
 //        val cacheManager = SpringKit.getBean(MixCacheManager::class) //??? 在suspend方法中，会阻塞，原因不明
@@ -39,6 +41,8 @@ object CacheKit {
      * @param key 缓存key
      * @param valueClass 缓存key对应的值的类型
      * @return 缓存key对应的值
+     * @author K
+     * @since 1.0.0
      */
     fun <T : Any> getValue(cacheName: String, key: Any, valueClass: KClass<T>): T? {
         return getCache(cacheName)!!.get(key, valueClass.java)
@@ -50,6 +54,8 @@ object CacheKit {
      * @param cacheName 缓存名称
      * @param key 缓存key
      * @return 缓存key对应的值
+     * @author K
+     * @since 1.0.0
      */
     fun getValue(cacheName: String, key: Any): Cache.ValueWrapper? {
         return getCache(cacheName)!!.get(key)
@@ -61,6 +67,8 @@ object CacheKit {
      * @param cacheName 缓存名称
      * @param key 缓存key
      * @param value 要缓存的值
+     * @author K
+     * @since 1.0.0
      */
     fun put(cacheName: String, key: Any, value: Any?) {
         getCache(cacheName)!!.put(key, value)
@@ -72,6 +80,8 @@ object CacheKit {
      * @param cacheName 缓存名称
      * @param key 缓存key
      * @param value 要缓存的值
+     * @author K
+     * @since 1.0.0
      */
     fun putIfAbsent(cacheName: String, key: Any, value: Any?) {
         getCache(cacheName)!!.putIfAbsent(key, value)
@@ -82,6 +92,8 @@ object CacheKit {
      *
      * @param cacheName 缓存名称
      * @param key 缓存key
+     * @author K
+     * @since 1.0.0
      */
     fun evict(cacheName: String, key: Any) {
         getCache(cacheName)!!.evict(key)

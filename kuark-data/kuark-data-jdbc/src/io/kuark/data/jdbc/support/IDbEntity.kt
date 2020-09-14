@@ -6,6 +6,8 @@ import me.liuwj.ktorm.entity.Entity
 /**
  * 数据库表记录实体接口
  *
+ * @param ID 主键类型
+ * @param E 实体类型
  * @author K
  * @since 1.0.0
  */

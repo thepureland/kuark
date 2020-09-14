@@ -11,6 +11,14 @@ import kotlin.reflect.KClass
  */
 object KtormSqlType {
 
+    /**
+     * 返回kotlin类型对应的Ktorm sql类型函数名
+     *
+     * @param clazz kotlin类型
+     * @return Ktorm sql类型函数名
+     * @author K
+     * @since 1.0.0
+     */
     fun getFunName(clazz: KClass<*>): String =
         when (clazz) {
             Boolean::class -> "boolean"
@@ -37,6 +45,5 @@ object KtormSqlType {
             UUID::class -> "uuid"
             else -> "" //should not reach here
         }
-
 
 }

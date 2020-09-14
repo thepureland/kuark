@@ -8,6 +8,13 @@ package io.kuark.data.jdbc.datasource
  */
 interface IDataSourceRouter {
 
+    /**
+     * 决定数据源id
+     *
+     * @return 数据源id
+     * @author K
+     * @since 1.0.0
+     */
     fun determineDataSourceId(): String?
 
 }

@@ -55,6 +55,15 @@ object JdbcTypeToKotlinType {
         Types.VARCHAR to String::class
     )
 
+    /**
+     * 返回列的指定关系型数据库对应的Kotlin类型
+     *
+     * @param rdbType 关系型数据库枚举
+     * @param column 列
+     * @return Kotlin类型
+     * @author K
+     * @since 1.0.0
+     */
     fun getKotlinType(rdbType: RdbType, column: Column): KClass<*> =
         when (rdbType) {
             RdbType.H2 -> {
@@ -164,6 +173,5 @@ object JdbcTypeToKotlinType {
                 defaultMapping[column.jdbcType] ?: error("未支持JdbcType: ${column.jdbcType}")
             }
         }
-
 
 }

@@ -8,7 +8,7 @@ import java.lang.reflect.Field
 import kotlin.reflect.KClass
 
 /**
- * XClass的扩展函数
+ * 代理操作工具类
  *
  * @author K
  * @since 1.0.0
@@ -22,6 +22,7 @@ object ProxyKit {
      *
      * @param proxy JDK动态代理/CGLIB代理对象
      * @return 代理对象的真实类型, 如果出错将返回null
+     * @author K
      * @since 1.0.0
      */
     fun getTargetClass(proxy: Any): KClass<*>? {

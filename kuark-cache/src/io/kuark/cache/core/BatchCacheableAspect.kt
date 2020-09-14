@@ -33,6 +33,9 @@ class BatchCacheableAspect {
 
     /**
      * 定义切入点
+     *
+     * @author K
+     * @since 1.0.0
      */
     @Pointcut("@annotation(io.kuark.cache.core.BatchCacheable)")
     private fun cut() {
@@ -41,10 +44,14 @@ class BatchCacheableAspect {
 
     /**
      * 环绕通知
+     *
+     * @return Map(缓存key, 缓存值)
+     * @author K
+     * @since 1.0.0
      */
     @Around("cut()")
-    fun around(joinPoint: ProceedingJoinPoint): Any? {
-        val result = linkedMapOf<String, Any?>()
+    fun around(joinPoint: ProceedingJoinPoint): Map<String, Any?> {
+        val result = linkedMapOf<String, Any?>() // Map<缓存key, 缓存值>
 
         // 拿到方法定义的注解信息
         val function = (joinPoint.signature as MethodSignature).method.kotlinFunction!!
@@ -61,7 +68,7 @@ class BatchCacheableAspect {
         readCachedData(keys, cacheName, batchCacheable, result)
 
         // 没有在缓存中的(参数为集合的，要踢除缓存中读到的部分)，从@BatchCacheable标注的方法读
-        val data = readUncachedData(result, joinPoint, batchCacheable, function)
+        val data = readUncachedData(result, joinPoint, function, batchCacheable)
 
         // 缓存从@BatchCacheable标注的方法读取(未缓存)的数据(注意：已存在的缓存并不会被更新)
         data?.forEach { (k, v) -> CacheKit.putIfAbsent(cacheName, k, v) }
@@ -76,6 +83,13 @@ class BatchCacheableAspect {
 
     /**
      * 校验约束
+     *
+     * @param joinPoint 切入点
+     * @param function BatchCacheable所标注的方法
+     * @param batchCacheable BatchCacheable注解
+     * @return 缓存名称
+     * @author K
+     * @since 1.0.0
      */
     private fun validate(joinPoint: ProceedingJoinPoint, function: KFunction<*>, batchCacheable: BatchCacheable): String {
         var cacheName: String? = null
@@ -105,6 +119,13 @@ class BatchCacheableAspect {
 
     /**
      * 得到所有缓存key
+     *
+     * @param joinPoint 切入点
+     * @param function BatchCacheable所标注的方法
+     * @param batchCacheable BatchCacheable注解
+     * @return List(缓存key)
+     * @author K
+     * @since 1.0.0
      */
     private fun getAllCacheKeys(
         joinPoint: ProceedingJoinPoint, function: KFunction<*>, batchCacheable: BatchCacheable
@@ -115,6 +136,12 @@ class BatchCacheableAspect {
 
     /**
      * 读取缓存中存在的数据
+     *
+     * @param keys List(缓存key)
+     * @param batchCacheable BatchCacheable注解
+     * @param result Map(缓存key，缓存值)
+     * @author K
+     * @since 1.0.0
      */
     private fun readCachedData(
         keys: List<String>, cacheName: String, batchCacheable: BatchCacheable, result: MutableMap<String, Any?>
@@ -128,12 +155,21 @@ class BatchCacheableAspect {
     }
 
     /**
-     * 读取未在缓存中的数组
+     * 读取未在缓存中的数据
+     *
      * 没有在缓存中的(参数为集合的，要踢除缓存中读到的部分)，从@BatchCacheable标注的方法读
+     *
+     * @param result 已缓存的数据，Map(缓存key，缓存值)
+     * @param joinPoint 切入点
+     * @param function BatchCacheable所标注的方法
+     * @param batchCacheable BatchCacheable注解
+     * @return 未在缓存中的数据，Map(缓存key，缓存值)
+     * @author K
+     * @since 1.0.0
      */
     private fun readUncachedData(
-        result: MutableMap<String, Any?>, joinPoint: ProceedingJoinPoint, batchCacheable: BatchCacheable,
-        function: KFunction<*>
+        result: MutableMap<String, Any?>, joinPoint: ProceedingJoinPoint, function: KFunction<*>,
+        batchCacheable: BatchCacheable
     ): Map<String, Any?>? {
         val noExistKeys = result.filterValues { it == null }.keys // 不在缓存中的key
         if (noExistKeys.isEmpty()) return null

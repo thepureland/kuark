@@ -8,10 +8,19 @@ package io.kuark.data.jdbc.metadata
  */
 class Table {
 
+    /** 表名 */
     lateinit var name: String
+
+    /** 注释 */
     var comment: String? = null
+
+    /** 所属Schema */
     var schema: String? = null
-    var cat: String? = null
+
+    /** 所属Catalog */
+    var catalog: String? = null
+
+    /** 表类型 */
     lateinit var type: TableType
 
 }

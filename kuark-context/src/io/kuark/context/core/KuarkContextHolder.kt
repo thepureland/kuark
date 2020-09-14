@@ -14,6 +14,13 @@ object KuarkContextHolder {
         contextThreadLocal.set(KuarkContext.Builder().build())
     }
 
+    /**
+     * 返回当前线程关联的KuarkContext
+     *
+     * @return Kuark上下文对象
+     * @since K
+     * @since 1.0.0
+     */
     fun get(): KuarkContext = contextThreadLocal.get()
 
 }

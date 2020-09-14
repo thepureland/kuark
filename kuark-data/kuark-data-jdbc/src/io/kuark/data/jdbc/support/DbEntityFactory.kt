@@ -7,6 +7,7 @@ import me.liuwj.ktorm.entity.Entity
  * 可简化使用(companion object : Entity.Factory<E>() => companion object : DbEntityFactory<E>())
  * 并避免Ktorm相关代码侵入PO0
  *
+ * @param E 实体类型
  * @author K
  * @since 1.0.0
  */

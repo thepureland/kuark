@@ -18,9 +18,25 @@ enum class RdbType(val productName: String, val jdbcDriverName: String) {
 
     companion object {
 
-        fun productNameOf(productName: String): RdbType = values().first { it.productName == productName }
+        /**
+         * 返回产品名称对应的关系型数据库类型枚举
+         *
+         * @param productName 产品名称
+         * @return 关系型数据库类型枚举
+         * @author K
+         * @since 1.0.0
+         */
+        fun ofProductName(productName: String): RdbType = values().first { it.productName == productName }
 
-        fun jdbcDriverNameOf(jdbcDriverName: String): RdbType = values().first { it.jdbcDriverName == jdbcDriverName }
+        /**
+         * 返回JDBC驱动名称对应的关系型数据库类型枚举
+         *
+         * @param jdbcDriverName JDBC驱动名称
+         * @return 关系型数据库类型枚举
+         * @author K
+         * @since 1.0.0
+         */
+        fun ofJdbcDriverName(jdbcDriverName: String): RdbType = values().first { it.jdbcDriverName == jdbcDriverName }
 
     }
 

@@ -17,7 +17,8 @@ object RdbMetadataKit {
      *
      * @param tableTypes 表类型枚举的可变数组
      * @param conn 数据库连接。为null将用当前上下文数据源新建一个连接，在使用完关掉。不为null时由用户自行处理连接的关闭。
-     * @return List<表对象信息>
+     * @return List(表对象信息)
+     * @author K
      * @since 1.0.0
      */
     fun getTablesByType(vararg tableTypes: TableType?, conn: Connection? = null): List<Table> {
@@ -36,6 +37,7 @@ object RdbMetadataKit {
      * @param tableName 表名
      * @param conn 数据库连接。为null将用当前上下文数据源新建一个连接，在使用完关掉。不为null时由用户自行处理连接的关闭。
      * @return 表对象信息，找不到是返回null
+     * @author K
      * @since 1.0.0
      */
     fun getTableByName(tableName: String, conn: Connection? = null): Table? {
@@ -53,7 +55,8 @@ object RdbMetadataKit {
      *
      * @param tableName 表名
      * @param conn 数据库连接。为null将用当前上下文数据源新建一个连接，在使用完关掉。不为null时由用户自行处理连接的关闭。
-     * @return Map<列名, 列对象信息>
+     * @return Map(列名, 列对象信息)
+     * @author K
      * @since 1.0.0
      */
     fun getColumnsByTableName(tableName: String, conn: Connection? = null): Map<String, Column> {
@@ -75,7 +78,7 @@ object RdbMetadataKit {
             while (tableRs.next()) {
                 talbes.add(Table().apply {
                     name = tableRs.getString("TABLE_NAME")
-                    cat = tableRs.getString("TABLE_CAT")
+                    catalog = tableRs.getString("TABLE_CAT")
                     schema = tableRs.getString("TABLE_SCHEM")
                     comment = tableRs.getString("REMARKS")
                     type = TableType.valueOf(tableRs.getString("TABLE_TYPE"))
@@ -92,7 +95,7 @@ object RdbMetadataKit {
             if (rs.next()) {
                 return Table().apply {
                     name = tableName
-                    cat = rs.getString("TABLE_CAT")
+                    catalog = rs.getString("TABLE_CAT")
                     schema = rs.getString("TABLE_SCHEM")
                     comment = rs.getString("REMARKS")
                     type = TableType.valueOf(rs.getString("TABLE_TYPE"))
@@ -104,7 +107,7 @@ object RdbMetadataKit {
 
     private fun _getColumnsByTableName(conn: Connection, tableName: String): Map<String, Column> {
         val dbMetaData = conn.metaData
-        val rdbType = RdbType.productNameOf(dbMetaData.databaseProductName)
+        val rdbType = RdbType.ofProductName(dbMetaData.databaseProductName)
         val linkedMap = linkedMapOf<String, Column>()
 
         // 获取所有列

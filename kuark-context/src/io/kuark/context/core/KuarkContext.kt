@@ -9,25 +9,25 @@ package io.kuark.context.core
 class KuarkContext private constructor(builder: Builder) {
 
     /** 数据源id，为null将根据路由策略决定 */
-    internal var dataSourceId: String? = null
+    var dataSourceId: String? = null
 
     /** 子系统编码 */
-    internal var subSysCode: String? = null
+    var subSysCode: String? = null
 
     /** 所有者id，依业务可以是店铺id、站点id、商户id等 */
-    internal var ownerId: String? = null
+    var ownerId: String? = null
 
     /** 用户id */
-    internal var userId: String? = null
+    var userId: String? = null
 
     /** 日志跟踪关键词串，格式可自定义 */
-    internal var traceKey: String? = null
+    var traceKey: String? = null
 
     /** 客户端信息对象 */
-    internal var clientInfo = ClientInfo.Builder()
+    var clientInfo = ClientInfo.Builder()
 
     /** 其他信息 */
-    internal var otherInfos = hashMapOf<String, Any>()
+    var otherInfos = hashMapOf<String, Any>()
 
     init {
         dataSourceId = builder.dataSourceId

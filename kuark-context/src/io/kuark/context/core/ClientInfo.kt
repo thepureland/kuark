@@ -11,40 +11,40 @@ import java.util.*
 class ClientInfo private constructor(builder: Builder) {
 
     /** 请求的ip */
-    internal var ip: String? = null
+    var ip: String? = null
 
     /** 访问的域名 */
-    internal var domain: String? = null
+    var domain: String? = null
 
     /** 访问的url */
-    internal var url: String? = null
+    var url: String? = null
 
     /** 请求的参数 */
-    internal var params: String? = null
+    var params: String? = null
 
     /** 请求内容字节数据表示 */
-    internal var requestContent: ByteArray? = null
+    var requestContent: ByteArray? = null
 
     /** 请求内容字符串表示 */
-    internal var requestContentString: String? = requestContent?.toString()
+    var requestContentString: String? = requestContent?.toString()
 
     /** 请求referer */
-    internal var requestReferer: String? = null
+    var requestReferer: String? = null
 
     /** 请求类型(GET/POST等) */
-    internal var requestType: String? = null
+    var requestType: String? = null
 
     /** 客户端操作系统 */
-    internal var os: String? = null
+    var os: String? = null
 
     /** 客户端浏览器 */
-    internal var browser: String? = null
+    var browser: String? = null
 
     /** 客户端地区-语言 */
-    internal var locale: Locale? = null
+    var locale: Locale? = null
 
     /** 客户端时区 */
-    internal var timeZone: TimeZone? = null
+    var timeZone: TimeZone? = null
 
 
     init {

@@ -1,52 +1,62 @@
 rootProject.name = "kuark"
+
 include("kuark-base")
+
 include("kuark-context")
-include("kuark-data")
-include("kuark-data:kuark-data-jdbc")
-findProject(":kuark-data:kuark-data-jdbc")?.name = "kuark-data-jdbc"
-include("kuark-data:kuark-data-redis")
-findProject(":kuark-data:kuark-data-redis")?.name = "kuark-data-redis"
-include("kuark-data:kuark-data-mongo")
-findProject(":kuark-data:kuark-data-mongo")?.name = "kuark-data-mongo"
-include("kuark-cache")
-include("kuark-auth")
-include("kuark-resource")
-include("kuark-resource:kuark-resource-sys")
-findProject(":kuark-resource:kuark-resource-sys")?.name = "kuark-resource-sys"
-include("kuark-resource:kuark-resource-geo")
-findProject(":kuark-resource:kuark-resource-geo")?.name = "kuark-resource-geo"
-include("kuark-resource:kuark-resource-user")
-findProject(":kuark-resource:kuark-resource-user")?.name = "kuark-resource-user"
-include("kuark-resource:kuark-resource-auth")
-findProject(":kuark-resource:kuark-resource-auth")?.name = "kuark-resource-auth"
-include("kuark-resource:kuark-resource-msg")
-findProject(":kuark-resource:kuark-resource-msg")?.name = "kuark-resource-msg"
-include("kuark-distributed")
-include("kuark-distributed:kuark-distributed-registry")
-findProject(":kuark-distributed:kuark-distributed-registry")?.name = "kuark-distributed-registry"
-include("kuark-distributed:kuark-distributed-gateway")
-findProject(":kuark-distributed:kuark-distributed-gateway")?.name = "kuark-distributed-gateway"
-include("kuark-distributed:kuark-distributed-tx")
-findProject(":kuark-distributed:kuark-distributed-tx")?.name = "kuark-distributed-tx"
-include("kuark-distributed:kuark-distributed-breaker")
-findProject(":kuark-distributed:kuark-distributed-breaker")?.name = "kuark-distributed-breaker"
-include("kuark-distributed:kuark-distributed-caller")
-findProject(":kuark-distributed:kuark-distributed-caller")?.name = "kuark-distributed-caller"
-include("kuark-distributed:kuark-distributed-loadbalance")
-findProject(":kuark-distributed:kuark-distributed-loadbalance")?.name = "kuark-distributed-loadbalance"
-include("kuark-distributed:kuark-distributed-schedule")
-findProject(":kuark-distributed:kuark-distributed-schedule")?.name = "kuark-distributed-schedule"
-include("kuark-distributed:kuark-distributed-lock")
-findProject(":kuark-distributed:kuark-distributed-lock")?.name = "kuark-distributed-lock"
-include("kuark-distributed:kuark-distributed-monitor")
-findProject(":kuark-distributed:kuark-distributed-monitor")?.name = "kuark-distributed-monitor"
-include("kuark-tools")
+
+include("kuark-ability")
+include("kuark-ability:kuark-ability-auth")
+findProject(":kuark-ability:kuark-ability-auth")?.name = "kuark-ability-auth"
+include("kuark-ability:kuark-ability-cache")
+findProject(":kuark-ability:kuark-ability-cache")?.name = "kuark-ability-cache"
+include("kuark-ability:kuark-ability-data")
+include("kuark-ability:kuark-ability-data:kuark-ability-data-jdbc")
+findProject(":kuark-ability:kuark-ability-data:kuark-ability-data-jdbc")?.name = "kuark-ability-data-jdbc"
+include("kuark-ability:kuark-ability-data:kuark-ability-data-redis")
+findProject(":kuark-ability:kuark-ability-data:kuark-ability-data-redis")?.name = "kuark-ability-data-redis"
+include("kuark-ability:kuark-ability-data:kuark-ability-data-mongo")
+findProject(":kuark-ability:kuark-ability-data:kuark-ability-data-mongo")?.name = "kuark-ability-data-mongo"
+include("kuark-ability:kuark-ability-distributed")
+include("kuark-ability:kuark-ability-distributed:kuark-ability-distributed-registry")
+findProject(":kuark-ability:kuark-ability-distributed:kuark-ability-distributed-registry")?.name = "kuark-ability-distributed-registry"
+include("kuark-ability:kuark-ability-distributed:kuark-ability-distributed-gateway")
+findProject(":kuark-ability:kuark-ability-distributed:kuark-ability-distributed-gateway")?.name = "kuark-ability-distributed-gateway"
+include("kuark-ability:kuark-ability-distributed:kuark-ability-distributed-tx")
+findProject(":kuark-ability:kuark-ability-distributed:kuark-ability-distributed-tx")?.name = "kuark-ability-distributed-tx"
+include("kuark-ability:kuark-ability-distributed:kuark-ability-distributed-breaker")
+findProject(":kuark-ability:kuark-ability-distributed:kuark-ability-distributed-breaker")?.name = "kuark-ability-distributed-breaker"
+include("kuark-ability:kuark-ability-distributed:kuark-ability-distributed-caller")
+findProject(":kuark-ability:kuark-ability-distributed:kuark-ability-distributed-caller")?.name = "kuark-ability-distributed-caller"
+include("kuark-ability:kuark-ability-distributed:kuark-ability-distributed-loadbalance")
+findProject(":kuark-ability:kuark-ability-distributed:kuark-ability-distributed-loadbalance")?.name = "kuark-ability-distributed-loadbalance"
+include("kuark-ability:kuark-ability-distributed:kuark-ability-distributed-schedule")
+findProject(":kuark-ability:kuark-ability-distributed:kuark-ability-distributed-schedule")?.name = "kuark-ability-distributed-schedule"
+include("kuark-ability:kuark-ability-distributed:kuark-ability-distributed-lock")
+findProject(":kuark-ability:kuark-ability-distributed:kuark-ability-distributed-lock")?.name = "kuark-ability-distributed-lock"
+include("kuark-ability:kuark-ability-distributed:kuark-ability-distributed-monitor")
+findProject(":kuark-ability:kuark-ability-distributed:kuark-ability-distributed-monitor")?.name = "kuark-ability-distributed-monitor"
+include("kuark-ability:kuark-ability-web")
+include("kuark-ability:kuark-ability-web:kuark-ability-web-session")
+findProject(":kuark-ability:kuark-ability-web:kuark-ability-web-session")?.name = "kuark-ability-web-session"
+include("kuark-ability:kuark-ability-web:kuark-ability-web-ktor")
+findProject(":kuark-ability:kuark-ability-web:kuark-ability-web-ktor")?.name = "kuark-ability-web-ktor"
+
+include("kuark-service")
+include("kuark-service:kuark-service-sys")
+findProject(":kuark-service:kuark-service-sys")?.name = "kuark-service-sys"
+include("kuark-service:kuark-service-geo")
+findProject(":kuark-service:kuark-service-geo")?.name = "kuark-service-geo"
+include("kuark-service:kuark-service-user")
+findProject(":kuark-service:kuark-service-user")?.name = "kuark-service-user"
+include("kuark-service:kuark-service-auth")
+findProject(":kuark-service:kuark-service-auth")?.name = "kuark-service-auth"
+include("kuark-service:kuark-service-msg")
+findProject(":kuark-service:kuark-service-msg")?.name = "kuark-service-msg"
+
 include("kuark-ui")
 include("kuark-ui:kuark-ui-jfx")
 findProject(":kuark-ui:kuark-ui-jfx")?.name = "kuark-ui-jfx"
-include("kuark-web")
-include("kuark-web:kuark-web-session")
-findProject(":kuark-web:kuark-web-session")?.name = "kuark-web-session"
-include("kuark-web:kuark-web-ktor")
-findProject(":kuark-web:kuark-web-ktor")?.name = "kuark-web-ktor"
+
+include("kuark-tools")
+
 include("kuark-test")

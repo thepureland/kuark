@@ -10,8 +10,8 @@ findProject(":kuark-ability:kuark-ability-auth")?.name = "kuark-ability-auth"
 include("kuark-ability:kuark-ability-cache")
 findProject(":kuark-ability:kuark-ability-cache")?.name = "kuark-ability-cache"
 include("kuark-ability:kuark-ability-data")
-include("kuark-ability:kuark-ability-data:kuark-ability-data-jdbc")
-findProject(":kuark-ability:kuark-ability-data:kuark-ability-data-jdbc")?.name = "kuark-ability-data-jdbc"
+include("kuark-ability:kuark-ability-data:kuark-ability-data-rdb")
+findProject(":kuark-ability:kuark-ability-data:kuark-ability-data-rdb")?.name = "kuark-ability-data-rdb"
 include("kuark-ability:kuark-ability-data:kuark-ability-data-redis")
 findProject(":kuark-ability:kuark-ability-data:kuark-ability-data-redis")?.name = "kuark-ability-data-redis"
 include("kuark-ability:kuark-ability-data:kuark-ability-data-mongo")

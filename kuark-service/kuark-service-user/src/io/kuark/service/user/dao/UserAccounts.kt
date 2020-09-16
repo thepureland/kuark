@@ -1,6 +1,6 @@
 package io.kuark.service.user.dao
 
-import io.kuark.data.jdbc.support.MaintainableTable
+import io.kuark.ability.data.jdbc.support.MaintainableTable
 import io.kuark.service.user.po.UserAccount
 import me.liuwj.ktorm.schema.datetime
 import me.liuwj.ktorm.schema.float
@@ -13,7 +13,7 @@ import me.liuwj.ktorm.schema.varchar
  * @since 1.0.0
  */
 //region your codes 1
-object UserAccounts : MaintainableTable<_root_ide_package_.io.kuark.service.user.po.UserAccount>("user_account") {
+object UserAccounts : MaintainableTable<UserAccount>("user_account") {
 //endregion your codes 1
 
     /** 子系统代码 */

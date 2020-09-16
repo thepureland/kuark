@@ -2,7 +2,7 @@ package io.kuark.ability.cache.core
 
 import io.kuark.base.log.LogFactory
 import io.kuark.ability.cache.context.CacheNameResolver
-import io.kuark.cache.enums.CacheStrategy
+import io.kuark.ability.cache.enums.CacheStrategy
 import io.kuark.context.annotation.ConfigValue
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
@@ -32,7 +32,7 @@ class MixCacheManager : AbstractTransactionSupportingCacheManager() {
     @Qualifier("remoteCacheManager")
     private lateinit var remoteCacheManager: CacheManager
     @Autowired
-    private lateinit var cacheNameResolver: _root_ide_package_.io.kuark.ability.cache.context.CacheNameResolver
+    private lateinit var cacheNameResolver: CacheNameResolver
 
     private val log = LogFactory.getLog(this::class)
 

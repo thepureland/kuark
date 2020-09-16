@@ -53,7 +53,7 @@ object RandomStringKit {
 
     /**
      * 创建一个指定长度的随机串
-     * 字符将从字符集中选择
+     * 字符将从所有字符集中选择
      *
      * @param count 要创建的随机串的长度
      * @return 随机串

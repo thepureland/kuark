@@ -1,10 +1,12 @@
 package io.kuark.ability.auth.third
 
-interface IAuthService {
+interface IAuthBiz {
 
-    fun getToken(params: Map<String, String>): String
+    fun getAuthUrl(authParam: AuthParam): String
 
-    fun getUserInfo(token: String?): AuthUserVO?
+    fun getToken(authParam: AuthParam): String
+
+    fun getUserInfo(token: String): AuthUserVO?
 
     fun checkIsExistsOpenId(openId: String): Boolean
 

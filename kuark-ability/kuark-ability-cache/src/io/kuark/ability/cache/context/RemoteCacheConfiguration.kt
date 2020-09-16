@@ -1,8 +1,8 @@
 package io.kuark.ability.cache.context
 
-import io.kuark.cache.core.CacheMessageListener
-import io.kuark.cache.core.MixCache
-import io.kuark.cache.core.MixCacheManager
+import io.kuark.ability.cache.core.CacheMessageListener
+import io.kuark.ability.cache.core.MixCache
+import io.kuark.ability.cache.core.MixCacheManager
 import io.kuark.ability.data.redis.context.RedisConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression

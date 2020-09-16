@@ -1,7 +1,7 @@
 package io.kuark.service.user.po
 
-import io.kuark.data.jdbc.support.DbEntityFactory
-import io.kuark.data.jdbc.support.IMaintainableDbEntity
+import io.kuark.ability.data.jdbc.support.DbEntityFactory
+import io.kuark.ability.data.jdbc.support.IMaintainableDbEntity
 import java.time.LocalDateTime
 
 /**
@@ -11,10 +11,10 @@ import java.time.LocalDateTime
  * @since 1.0.0
  */
 //region your codes 1
-interface UserAccount : IMaintainableDbEntity<String, _root_ide_package_.io.kuark.service.user.po.UserAccount> {
+interface UserAccount : IMaintainableDbEntity<String, UserAccount> {
 //endregion your codes 1
 
-    companion object : DbEntityFactory<_root_ide_package_.io.kuark.service.user.po.UserAccount>()
+    companion object : DbEntityFactory<UserAccount>()
 
     /** 子系统代码 */
     var subSysDictCode: String

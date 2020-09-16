@@ -22,7 +22,7 @@ class CacheNameResolver: ApplicationContextAware {
     }
 
     fun resolve(): Set<String> {
-        val beans = applicationContext.getBeansOfType(_root_ide_package_.io.kuark.ability.cache.context.ICacheNames::class.java)
+        val beans = applicationContext.getBeansOfType(ICacheNames::class.java)
         val cacheNames = mutableSetOf<String>()
         val stringType = String::class.createType()
         for (bean in beans.values) {

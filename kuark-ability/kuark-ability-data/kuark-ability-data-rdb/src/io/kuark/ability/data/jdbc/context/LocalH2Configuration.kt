@@ -36,7 +36,7 @@ import javax.sql.DataSource
     havingValue = "org.h2.Driver",
     matchIfMissing = false
 )
-@AutoConfigureBefore(_root_ide_package_.io.kuark.ability.data.jdbc.context.KtormConfiguration::class)
+@AutoConfigureBefore(KtormConfiguration::class)
 open class LocalH2Configuration {
 
     private val logger = LogFactory.getLog(this::class)

@@ -1,6 +1,6 @@
 package io.kuark.ability.cache.context
 
-import io.kuark.cache.core.MixCacheManager
+import io.kuark.ability.cache.core.MixCacheManager
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.cache.CacheManager

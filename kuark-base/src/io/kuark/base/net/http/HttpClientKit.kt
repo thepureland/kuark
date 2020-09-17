@@ -10,11 +10,15 @@ import java.net.http.HttpRequest
 import java.net.http.HttpRequest.BodyPublisher
 import java.net.http.HttpResponse
 import java.nio.charset.StandardCharsets
+import java.time.Duration
 
 
 /**
  * Http Client工具类。
- * 用协程封装Java11的异步非阻塞HttpClient
+ *
+ * 封装Java11的HttpClient，其具有以下特点：支持异步，支持reactive streams，同时也支持了HTTP2以及WebSocket
+ *
+ * ???两次调用报：java.io.IOException: 远程主机强迫关闭了一个现有的连接。
  *
  * @author K
  * @since 1.0.0
@@ -45,6 +49,16 @@ object HttpClientKit {
         }
     }
 
+    fun <T : Any> request(
+        httpClientBuilder: HttpClient.Builder,
+        httpRequestBuilder: HttpRequest.Builder,
+        bodyHandler: HttpResponse.BodyHandler<T>
+    ): HttpResponse<T> {
+        val client = createHttpClient(httpClientBuilder)
+        val request = httpRequestBuilder.build()
+        return client.send(request, bodyHandler)
+    }
+
     private suspend fun <T : Any> sendAsyncThenWait(
         httpClientBuilder: HttpClient.Builder,
         httpRequestBuilder: HttpRequest.Builder,
@@ -56,9 +70,16 @@ object HttpClientKit {
         return response.await()
     }
 
-    private fun createHttpClient(httpClientBuilder: HttpClient.Builder): HttpClient = httpClientBuilder.build()
+    private fun createHttpRequest(httpRequestBuilder: HttpRequest.Builder): HttpRequest {
+        return httpRequestBuilder.build()
+    }
+
+    private fun createHttpClient(httpClientBuilder: HttpClient.Builder): HttpClient {
+        return httpClientBuilder.build()
+    }
 
     fun ofFormData(data: Map<Any, Any>): BodyPublisher {
+//        .header("Content-Type","application/x-www-form-urlencoded")
         val builder = StringBuilder()
         data.forEach { (key, value) ->
             if (builder.isNotEmpty()) {

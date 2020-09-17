@@ -1,5 +1,6 @@
 package io.kuark.ability.cache.core
 
+import io.kuark.ability.cache.kit.CacheKit
 import io.kuark.base.lang.string.toType
 import io.kuark.context.spring.SpringKit
 import org.aspectj.lang.ProceedingJoinPoint

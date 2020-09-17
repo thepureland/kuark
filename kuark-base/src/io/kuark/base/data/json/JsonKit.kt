@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.databind.util.JSONPObject
 import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule
 import io.kuark.base.log.LogFactory
+import java.util.regex.Pattern
 import kotlin.reflect.KClass
 
 /**
@@ -22,6 +23,20 @@ import kotlin.reflect.KClass
 object JsonKit {
 
     private val LOG = LogFactory.getLog(JsonKit::class)
+
+    /**
+     * 返回json串中指定属性名的属性值
+     *
+     * @param jsonStr 待解析的json串
+     * @param propertyName 属性名
+     * @return 属性值，如果找不到属性，则返回null
+     * @author K
+     * @since 1.0.0
+     */
+    fun getPropertyValue(jsonStr: String, propertyName: String): Any? {
+        val map = fromJson(jsonStr, Map::class)!!
+        return map[propertyName]
+    }
 
     /**
      * 将简单的Json串格式化成页面显示的字符串(去掉花括号、引号及最后面可能的逗号)

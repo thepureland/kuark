@@ -1,8 +1,8 @@
 package io.kuark.ability.cache.core
 
+import io.kuark.ability.cache.context.LocalCacheConfiguration
+import io.kuark.ability.cache.context.RemoteCacheConfiguration
 import io.kuark.base.log.LogFactory
-import io.kuark.cache.context.LocalCacheConfiguration
-import io.kuark.cache.context.RemoteCacheConfiguration
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.data.redis.connection.Message

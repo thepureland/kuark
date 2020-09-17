@@ -3,6 +3,7 @@ package io.kuark.base.data.json
 import com.fasterxml.jackson.core.type.TypeReference
 import io.kuark.base.bean.Address
 import io.kuark.base.bean.Person
+import io.kuark.base.lang.string.deleteWhitespace
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -35,6 +36,23 @@ internal class JsonKitTest {
             goods = listOf("sporting", "singing", "dancing")
             contact = mapOf("student" to "Tom", "teacher" to "Lucy")
         }
+    }
+
+    @Test
+    fun getPropertyValue() {
+        val jsonStr = """
+            {
+                "active": true ,
+                "status" :  1,
+                "des":  "description " ,
+                "message": "oh, err msg"
+            }
+        """
+        assertEquals(true, JsonKit.getPropertyValue(jsonStr, "active"))
+        assertEquals(1, JsonKit.getPropertyValue(jsonStr, "status"))
+        assertEquals("description ", JsonKit.getPropertyValue(jsonStr, "des"))
+        assertEquals("oh, err msg", JsonKit.getPropertyValue(jsonStr, "message"))
+        assertEquals(null, JsonKit.getPropertyValue(jsonStr, "no_exist"))
     }
 
     @Test

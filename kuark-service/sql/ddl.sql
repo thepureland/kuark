@@ -901,7 +901,7 @@ create unique index "uq_geo_region_dict_code_country_id"
 create index IDX_GEO_REGION__NAME
     on "geo_region" ("name");
 
-create table "auth_user_group"
+create table "user_auth_group"
 (
     "id"          CHAR(36) default RANDOM_UUID() not null
         primary key,
@@ -917,30 +917,30 @@ create table "auth_user_group"
     "owner_id" VARCHAR(36)
 );
 
-comment on table "auth_user_group" is '用户组';
+comment on table "user_auth_group" is '用户组';
 
-comment on column "auth_user_group"."id" is '主键';
+comment on column "user_auth_group"."id" is '主键';
 
-comment on column "auth_user_group"."group_name" is '用户组名';
+comment on column "user_auth_group"."group_name" is '用户组名';
 
-comment on column "auth_user_group"."sub_sys_dict_code" is '子系统代码';
+comment on column "user_auth_group"."sub_sys_dict_code" is '子系统代码';
 
-comment on column "auth_user_group"."remark" is '备注，或其国际化key';
+comment on column "user_auth_group"."remark" is '备注，或其国际化key';
 
-comment on column "auth_user_group"."is_active" is '是否启用';
+comment on column "user_auth_group"."is_active" is '是否启用';
 
-comment on column "auth_user_group"."is_built_in" is '是否内置';
+comment on column "user_auth_group"."is_built_in" is '是否内置';
 
-comment on column "auth_user_group"."create_user" is '创建用户';
+comment on column "user_auth_group"."create_user" is '创建用户';
 
-comment on column "auth_user_group"."create_time" is '创建时间';
+comment on column "user_auth_group"."create_time" is '创建时间';
 
-comment on column "auth_user_group"."update_user" is '更新用户';
+comment on column "user_auth_group"."update_user" is '更新用户';
 
-comment on column "auth_user_group"."update_time" is '更新时间';
-COMMENT ON COLUMN "auth_user_group"."owner_id" IS '所有者id，依业务可以是店铺id、站点id、商户id等';
+comment on column "user_auth_group"."update_time" is '更新时间';
+COMMENT ON COLUMN "user_auth_group"."owner_id" IS '所有者id，依业务可以是店铺id、站点id、商户id等';
 
-create table "auth_user_group_user"
+create table "user_auth_group_user"
 (
     "id"       CHAR(36) default RANDOM_UUID() not null
         primary key,
@@ -948,15 +948,15 @@ create table "auth_user_group_user"
     "user_id"  CHAR(36)                       not null
 );
 
-comment on table "auth_user_group_user" is '用户组-用户关系';
+comment on table "user_auth_group_user" is '用户组-用户关系';
 
-comment on column "auth_user_group_user"."id" is '主键';
+comment on column "user_auth_group_user"."id" is '主键';
 
-comment on column "auth_user_group_user"."group_id" is '用户组id';
+comment on column "user_auth_group_user"."group_id" is '用户组id';
 
-comment on column "auth_user_group_user"."user_id" is '用户id';
+comment on column "user_auth_group_user"."user_id" is '用户id';
 
-create table "auth_role"
+create table "user_auth_role"
 (
     "id"          CHAR(36) default RANDOM_UUID() not null
         primary key,
@@ -972,30 +972,30 @@ create table "auth_role"
     "owner_id" VARCHAR(36)
 );
 
-comment on table "auth_role" is '角色';
+comment on table "user_auth_role" is '角色';
 
-comment on column "auth_role"."id" is '主键';
+comment on column "user_auth_role"."id" is '主键';
 
-comment on column "auth_role"."role_name" is '角色名';
+comment on column "user_auth_role"."role_name" is '角色名';
 
-comment on column "auth_role"."sub_sys_dict_code" is '子系统代码';
+comment on column "user_auth_role"."sub_sys_dict_code" is '子系统代码';
 
-comment on column "auth_role"."remark" is '备注，或其国际化key';
+comment on column "user_auth_role"."remark" is '备注，或其国际化key';
 
-comment on column "auth_role"."is_active" is '是否启用';
+comment on column "user_auth_role"."is_active" is '是否启用';
 
-comment on column "auth_role"."is_built_in" is '是否内置';
+comment on column "user_auth_role"."is_built_in" is '是否内置';
 
-comment on column "auth_role"."create_user" is '创建用户';
+comment on column "user_auth_role"."create_user" is '创建用户';
 
-comment on column "auth_role"."create_time" is '创建时间';
+comment on column "user_auth_role"."create_time" is '创建时间';
 
-comment on column "auth_role"."update_user" is '更新用户';
+comment on column "user_auth_role"."update_user" is '更新用户';
 
-comment on column "auth_role"."update_time" is '更新时间';
-COMMENT ON COLUMN "auth_role"."owner_id" IS '所有者id，依业务可以是店铺id、站点id、商户id等';
+comment on column "user_auth_role"."update_time" is '更新时间';
+COMMENT ON COLUMN "user_auth_role"."owner_id" IS '所有者id，依业务可以是店铺id、站点id、商户id等';
 
-create table "auth_role_user"
+create table "user_auth_role_user"
 (
     "id"      CHAR(36) default RANDOM_UUID() not null
         primary key,
@@ -1003,15 +1003,15 @@ create table "auth_role_user"
     "user_id" CHAR(36)                       not null
 );
 
-comment on table "auth_role_user" is '角色-用户关系';
+comment on table "user_auth_role_user" is '角色-用户关系';
 
-comment on column "auth_role_user"."id" is '主键';
+comment on column "user_auth_role_user"."id" is '主键';
 
-comment on column "auth_role_user"."role_id" is '角色id';
+comment on column "user_auth_role_user"."role_id" is '角色id';
 
-comment on column "auth_role_user"."user_id" is '用户id';
+comment on column "user_auth_role_user"."user_id" is '用户id';
 
-create table "auth_role_user_group"
+create table "user_auth_role_group"
 (
     "id"       CHAR(36) default RANDOM_UUID() not null
         primary key,
@@ -1019,15 +1019,15 @@ create table "auth_role_user_group"
     "group_id" CHAR(36)                       not null
 );
 
-comment on table "auth_role_user_group" is '角色-用户组关系';
+comment on table "user_auth_role_group" is '角色-用户组关系';
 
-comment on column "auth_role_user_group"."id" is '主键';
+comment on column "user_auth_role_group"."id" is '主键';
 
-comment on column "auth_role_user_group"."role_id" is '角色id';
+comment on column "user_auth_role_group"."role_id" is '角色id';
 
-comment on column "auth_role_user_group"."group_id" is '用户组id';
+comment on column "user_auth_role_group"."group_id" is '用户组id';
 
-create table "auth_role_resource"
+create table "user_auth_role_resource"
 (
     "id"          CHAR(36) default RANDOM_UUID() not null
         primary key,
@@ -1035,13 +1035,13 @@ create table "auth_role_resource"
     "resource_id" CHAR(36)                       not null
 );
 
-comment on table "auth_role_resource" is '角色-资源关系';
+comment on table "user_auth_role_resource" is '角色-资源关系';
 
-comment on column "auth_role_resource"."id" is '主键';
+comment on column "user_auth_role_resource"."id" is '主键';
 
-comment on column "auth_role_resource"."role_id" is '角色id';
+comment on column "user_auth_role_resource"."role_id" is '角色id';
 
-comment on column "auth_role_resource"."resource_id" is '资源id';
+comment on column "user_auth_role_resource"."resource_id" is '资源id';
 
 
 

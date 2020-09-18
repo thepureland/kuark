@@ -1,8 +1,8 @@
 package io.kuark.tools.codegen.fx.controller
 
 import io.kuark.tools.codegen.core.CodeGeneratorContext
-import io.kuark.tools.codegen.service.CodeGenColumnService
-import io.kuark.tools.codegen.service.CodeGenObjectService
+import io.kuark.tools.codegen.biz.CodeGenColumnBiz
+import io.kuark.tools.codegen.biz.CodeGenObjectBiz
 import io.kuark.tools.codegen.vo.ColumnInfo
 import io.kuark.tools.codegen.vo.Config
 import io.kuark.ui.jfx.controls.AutoCompleteComboBoxListener
@@ -47,7 +47,7 @@ class ColumnsController : Initializable {
         val table = table
         val tableComment = tableComment
         val items = tableComboBox.items
-        tableMap = CodeGenObjectService.readTables()
+        tableMap = CodeGenObjectBiz.readTables()
         tableComboBox.setItems(FXCollections.observableArrayList(tableMap!!.keys.toSortedSet()))
         AutoCompleteComboBoxListener<Any>(tableComboBox)
         if (items.isEmpty()) {
@@ -60,7 +60,7 @@ class ColumnsController : Initializable {
                             CodeGeneratorContext.tableName = newValue
                             object : Thread() {
                                 override fun run() {
-                                    val columns = CodeGenColumnService.readColumns()
+                                    val columns = CodeGenColumnBiz.readColumns()
                                     Platform.runLater { columnTable.setItems(FXCollections.observableArrayList(columns)) }
                                 }
                             }.start()

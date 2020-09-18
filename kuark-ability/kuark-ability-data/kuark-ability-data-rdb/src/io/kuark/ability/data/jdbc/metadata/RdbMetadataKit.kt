@@ -1,6 +1,6 @@
 package io.kuark.ability.data.jdbc.metadata
 
-import io.kuark.data.jdbc.support.RdbKit
+import io.kuark.ability.data.jdbc.support.RdbKit
 import java.sql.Connection
 import java.sql.DatabaseMetaData
 

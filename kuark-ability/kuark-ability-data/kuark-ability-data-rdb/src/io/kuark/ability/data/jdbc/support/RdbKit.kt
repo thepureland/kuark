@@ -1,10 +1,10 @@
 package io.kuark.ability.data.jdbc.support
 
+import io.kuark.ability.data.jdbc.datasource.currentDataSource
+import io.kuark.ability.data.jdbc.metadata.RdbType
 import io.kuark.base.lang.string.deleteWhitespace
 import io.kuark.base.lang.string.substringBetween
 import io.kuark.context.core.KuarkContextHolder
-import io.kuark.data.jdbc.datasource.currentDataSource
-import io.kuark.data.jdbc.metadata.RdbType
 import me.liuwj.ktorm.database.Database
 import java.sql.Connection
 import java.sql.DriverManager

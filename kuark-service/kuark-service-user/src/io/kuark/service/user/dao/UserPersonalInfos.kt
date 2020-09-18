@@ -1,7 +1,7 @@
 package io.kuark.service.user.dao
 
-import io.kuark.data.jdbc.support.MaintainableTable
-import io.kuark.resource.user.po.UserPersonalInfo
+import io.kuark.ability.data.jdbc.support.MaintainableTable
+import io.kuark.service.user.po.UserPersonalInfo
 import me.liuwj.ktorm.schema.date
 import me.liuwj.ktorm.schema.datetime
 import me.liuwj.ktorm.schema.float

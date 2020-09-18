@@ -1,6 +1,6 @@
 package io.kuark.tools.codegen.dao
 
-import io.kuark.data.jdbc.support.StringIdTable
+import io.kuark.ability.data.jdbc.support.StringIdTable
 import io.kuark.tools.codegen.po.CodeGenFile
 import me.liuwj.ktorm.schema.varchar
 

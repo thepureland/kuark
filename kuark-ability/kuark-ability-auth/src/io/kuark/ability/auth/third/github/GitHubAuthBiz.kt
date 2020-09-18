@@ -7,6 +7,7 @@ import io.kuark.ability.auth.third.core.IAuthBiz
 import io.kuark.base.data.json.JsonKit
 import io.kuark.base.lang.string.RandomStringKit
 import io.kuark.base.net.http.HttpClientKit
+import io.kuark.context.annotation.ConfigValue
 import org.springframework.stereotype.Service
 import java.net.URI
 import java.net.http.HttpClient
@@ -32,12 +33,24 @@ open class GitHubAuthBiz : IAuthBiz {
         private const val GET_USER_URL = "https://api.github.com/user?access_token={0}"
     }
 
-    override fun getAuthUrl(authParam: AuthParam): String {
+    @ConfigValue("\${ability.auth.github.clientId:620413e00b95a0e63eda}")
+    private lateinit var clientId: String
+
+    @ConfigValue("\${ability.auth.github.clientSecret:a64e7e0ac14f86802c8be1663cabbbc620affc38}")
+    private lateinit var clientSecret: String
+
+    @ConfigValue("\${ability.auth.github.redirectUri:http://localhost:8080/oauth/github/callback}")
+    private lateinit var redirectUri: String
+
+
+    override fun getAuthUrl(authParamBuilder: AuthParam.Builder): String {
+        val authParam = authParamBuilder.clientId(clientId).redirectUri(redirectUri).build()
         val state = RandomStringKit.randomAlphanumeric(10)
         return MessageFormat.format(AUTH_URL_PATTERN, authParam.clientId, authParam.redirectUri, state)
     }
 
-    override fun getToken(authParam: AuthParam): IAuthToken? {
+    override fun getToken(authParamBuilder: AuthParam.Builder): IAuthToken? {
+        val authParam = authParamBuilder.clientId(clientId).clientSecret(clientSecret).build()
         val params = mapOf(
             "client_id" to authParam.clientId,
             "client_secret" to authParam.clientSecret,

@@ -7,7 +7,7 @@ import io.kuark.base.scanner.classpath.ClassPathScanner
 import io.kuark.tools.codegen.core.CodeGenerator
 import io.kuark.tools.codegen.core.CodeGeneratorContext
 import io.kuark.tools.codegen.core.FreemarkerKit
-import io.kuark.tools.codegen.service.CodeGenFileService
+import io.kuark.tools.codegen.biz.CodeGenFileBiz
 import io.kuark.tools.codegen.vo.GenFile
 import javafx.collections.FXCollections
 import javafx.event.ActionEvent
@@ -53,7 +53,7 @@ class FilesController : Initializable {
         templateModel = CodeGeneratorContext.templateModelCreator.create()
         val cfg = Configuration()
         val genFiles = mutableListOf<GenFile>()
-        val codeGenFiles = CodeGenFileService.read()
+        val codeGenFiles = CodeGenFileBiz.read()
         for (file in files) {
             val filename = FreemarkerKit.processTemplateString(file.name, templateModel, cfg)
             var directory = FreemarkerKit.processTemplateString(file.parent, templateModel, cfg)

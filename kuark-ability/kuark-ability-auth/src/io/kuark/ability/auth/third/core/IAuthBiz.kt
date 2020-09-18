@@ -2,9 +2,9 @@ package io.kuark.ability.auth.third.core
 
 interface IAuthBiz {
 
-    fun getAuthUrl(authParam: AuthParam): String
+    fun getAuthUrl(authParamBuilder: AuthParam.Builder): String
 
-    fun getToken(authParam: AuthParam): IAuthToken?
+    fun getToken(authParamBuilder: AuthParam.Builder): IAuthToken?
 
     fun getUserInfo(token: String): IAuthUser?
 

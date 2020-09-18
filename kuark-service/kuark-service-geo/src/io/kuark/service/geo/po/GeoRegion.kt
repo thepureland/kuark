@@ -1,7 +1,7 @@
 package io.kuark.service.geo.po
 
-import io.kuark.data.jdbc.support.DbEntityFactory
-import io.kuark.data.jdbc.support.IMaintainableDbEntity
+import io.kuark.ability.data.jdbc.support.DbEntityFactory
+import io.kuark.ability.data.jdbc.support.IMaintainableDbEntity
 
 /**
  * 地区数据库实体

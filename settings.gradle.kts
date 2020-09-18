@@ -48,8 +48,6 @@ include("kuark-service:kuark-service-geo")
 findProject(":kuark-service:kuark-service-geo")?.name = "kuark-service-geo"
 include("kuark-service:kuark-service-user")
 findProject(":kuark-service:kuark-service-user")?.name = "kuark-service-user"
-include("kuark-service:kuark-service-auth")
-findProject(":kuark-service:kuark-service-auth")?.name = "kuark-service-auth"
 include("kuark-service:kuark-service-msg")
 findProject(":kuark-service:kuark-service-msg")?.name = "kuark-service-msg"
 

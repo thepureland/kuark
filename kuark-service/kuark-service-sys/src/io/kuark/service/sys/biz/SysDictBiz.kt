@@ -1,6 +1,7 @@
 package io.kuark.service.sys.biz
 
 import org.springframework.stereotype.Service
+import io.kuark.service.sys.ibiz.ISysDictBiz
 
 /**
  * 字典主表业务
@@ -10,7 +11,7 @@ import org.springframework.stereotype.Service
  */
 @Service
 //region your codes 1
-class SysDictBiz {
+class SysDictBiz: ISysDictBiz {
 //endregion your codes 1
 
     //region your codes 2

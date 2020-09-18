@@ -1,7 +1,7 @@
 package io.kuark.tools.codegen.po
 
-import io.kuark.data.jdbc.support.DbEntityFactory
-import io.kuark.data.jdbc.support.IDbEntity
+import io.kuark.ability.data.jdbc.support.DbEntityFactory
+import io.kuark.ability.data.jdbc.support.IDbEntity
 import java.time.LocalDateTime
 
 /**

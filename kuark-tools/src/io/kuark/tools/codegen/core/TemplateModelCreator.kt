@@ -1,9 +1,9 @@
 package io.kuark.tools.codegen.core
 
+import io.kuark.ability.data.jdbc.metadata.Column
+import io.kuark.ability.data.jdbc.metadata.RdbMetadataKit
 import io.kuark.base.bean.BeanKit
 import io.kuark.base.lang.string.underscoreToHump
-import io.kuark.data.jdbc.metadata.Column
-import io.kuark.data.jdbc.metadata.RdbMetadataKit
 import io.kuark.tools.codegen.vo.Config
 
 /**

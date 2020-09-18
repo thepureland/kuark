@@ -5,6 +5,7 @@ import io.kuark.ability.cache.core.BatchCacheable
 import io.kuark.ability.data.jdbc.support.RdbKit
 import io.kuark.service.sys.dao.SysDictItems
 import io.kuark.service.sys.dao.SysDicts
+import io.kuark.service.sys.ibiz.ISysDictItemBiz
 import io.kuark.service.sys.po.SysDictItem
 import me.liuwj.ktorm.dsl.*
 import org.springframework.cache.annotation.CacheConfig
@@ -20,7 +21,7 @@ import org.springframework.stereotype.Service
 @Service
 //region your codes 1
 @CacheConfig(cacheNames = [CacheNames.SYS_DICT_ITEM])
-open class SysDictItemBiz {
+open class SysDictItemBiz: ISysDictItemBiz {
 //endregion your codes 1
 
     //region yur codes 2

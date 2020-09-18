@@ -7,9 +7,9 @@ import io.kuark.base.io.FileKit
 import io.kuark.base.log.LogFactory
 import io.kuark.tools.codegen.core.merge.CodeMerger
 import io.kuark.tools.codegen.core.merge.PrivateContentEraser
-import io.kuark.tools.codegen.service.CodeGenColumnService
-import io.kuark.tools.codegen.service.CodeGenFileService
-import io.kuark.tools.codegen.service.CodeGenObjectService
+import io.kuark.tools.codegen.biz.CodeGenColumnBiz
+import io.kuark.tools.codegen.biz.CodeGenFileBiz
+import io.kuark.tools.codegen.biz.CodeGenObjectBiz
 import io.kuark.tools.codegen.vo.GenFile
 import javafx.scene.control.Alert
 import java.io.File
@@ -39,12 +39,12 @@ class CodeGenerator(
     }
 
     private fun persistence(): Boolean {
-        var success = CodeGenObjectService.saveOrUpdate()
+        var success = CodeGenObjectBiz.saveOrUpdate()
         if (success) {
-            success = CodeGenColumnService.saveColumns()
+            success = CodeGenColumnBiz.saveColumns()
             if (success) {
                 val filenames = genFiles.filter { it.getGenerate() }.map { it.getFilename() }
-                success = CodeGenFileService.save(filenames)
+                success = CodeGenFileBiz.save(filenames)
             }
         }
         return success

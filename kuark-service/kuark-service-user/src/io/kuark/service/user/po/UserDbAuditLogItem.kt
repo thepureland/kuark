@@ -1,7 +1,7 @@
 package io.kuark.service.user.po
 
-import io.kuark.data.jdbc.support.DbEntityFactory
-import io.kuark.data.jdbc.support.IDbEntity
+import io.kuark.ability.data.jdbc.support.DbEntityFactory
+import io.kuark.ability.data.jdbc.support.IDbEntity
 
 /**
  * 用户数据库操作审计日志明细数据库实体

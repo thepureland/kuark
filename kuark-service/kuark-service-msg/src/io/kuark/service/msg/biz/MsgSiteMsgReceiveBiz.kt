@@ -1,5 +1,6 @@
 package io.kuark.service.msg.biz
 
+import io.kuark.service.msg.ibiz.IMsgSiteMsgReceiveBiz
 import org.springframework.stereotype.Service
 
 /**
@@ -10,7 +11,7 @@ import org.springframework.stereotype.Service
  */
 @Service
 //region your codes 1
-class MsgSiteMsgReceiveBiz {
+class MsgSiteMsgReceiveBiz: IMsgSiteMsgReceiveBiz {
 //endregion your codes 1
 
     //region your codes 2

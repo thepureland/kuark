@@ -3,6 +3,7 @@ package io.kuark.service.sys.biz
 import io.kuark.ability.cache.context.CacheNames
 import io.kuark.ability.data.jdbc.support.RdbKit
 import io.kuark.service.sys.dao.SysParams
+import io.kuark.service.sys.ibiz.ISysParamBiz
 import io.kuark.service.sys.po.SysParam
 import me.liuwj.ktorm.dsl.*
 import org.springframework.cache.annotation.Cacheable
@@ -16,7 +17,7 @@ import org.springframework.stereotype.Service
  */
 @Service
 //region your codes 1
-open class SysParamBiz {
+open class SysParamBiz: ISysParamBiz {
 //endregion your codes 1
 
     //region your codes 2

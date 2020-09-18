@@ -18,8 +18,6 @@ import java.time.Duration
  *
  * 封装Java11的HttpClient，其具有以下特点：支持异步，支持reactive streams，同时也支持了HTTP2以及WebSocket
  *
- * ???两次调用报：java.io.IOException: 远程主机强迫关闭了一个现有的连接。
- *
  * @author K
  * @since 1.0.0
  */

@@ -19,25 +19,25 @@ interface SysResource: IMaintainableDbEntity<String, SysResource> {
     var name: String
 
     /** url */
-    var url: String
+    var url: String?
 
     /** 资源类型字典代码 */
     var resourceTypeDictCode: String
 
     /** 父id */
-    var parentId: String
+    var parentId: String?
 
     /** 在同父节点下的排序号 */
-    var seqNo: Int
+    var seqNo: Int?
 
     /** 子系统代码 */
-    var subSysDictCode: String
+    var subSysDictCode: String?
 
     /** 权限表达式 */
-    var permission: String
+    var permission: String?
 
     /** 图标url */
-    var iconUrl: String
+    var iconUrl: String?
 
 
     //region your codes 2

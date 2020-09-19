@@ -64,10 +64,11 @@ object JdbcTypeToKotlinType {
      * @author K
      * @since 1.0.0
      */
-    fun getKotlinType(rdbType: RdbType, column: Column): KClass<*> =
-        when (rdbType) {
+    fun getKotlinType(rdbType: RdbType, column: Column): KClass<*> {
+        val jdbcType = column.jdbcTypeName.toUpperCase()
+        return when (rdbType) {
             RdbType.H2 -> {
-                when (column.jdbcTypeName) {
+                when (jdbcType) {
                     "BOOLEAN", "BIT", "BOOL" -> Boolean::class
                     "TINYINT" -> Int::class // Byte::class
                     "SMALLINT", "INT2", "YEAR" -> Int::class // Short::class
@@ -90,7 +91,7 @@ object JdbcTypeToKotlinType {
                 }
             }
             RdbType.MYSQL -> {
-                when (column.jdbcTypeName) {
+                when (jdbcType) {
                     "BIT" -> Boolean::class
                     "TINYINT", "SMALLINT", "MEDIUMINT", "BOOLEAN" -> Int::class
                     "INTEGER", "ID" -> Long::class
@@ -107,7 +108,7 @@ object JdbcTypeToKotlinType {
                 }
             }
             RdbType.ORACLE -> {
-                when (column.jdbcTypeName) {
+                when (jdbcType) {
                     "BOOL", "BOOLEAN", "NUMBER(1)", "NUMBER(1,0)" -> Boolean::class
                     "NUMBER(2)", "NUMBER(2,0)" -> Int::class // Byte::class
                     "NUMBER(3)", "NUMBER(3,0)", "NUMBER(4)", "NUMBER(4,0)" -> Int::class // Short::class
@@ -129,14 +130,14 @@ object JdbcTypeToKotlinType {
                     "DATETIME", "TIMESTAMP", "TIMESTAMP WITH TIME ZONE", "TIMESTAMP WITH LOCAL TIME ZONE", "INTERVAL", "INTERVAL YEAR TO MONTH", "INTERVAL DAY TO SECOND", "YEAR" -> java.time.LocalDateTime::class
                     "REF CURSOR" -> java.sql.ResultSet::class
                     else -> {
-                        if (column.jdbcTypeName.matches(Regex("""NUMBER\([1-8],\d+\)"""))) Float::class
-                        if (column.jdbcTypeName.matches(Regex("""NUMBER\(9|([1-9]\d),\d+\)"""))) Double::class
+                        if (jdbcType.matches(Regex("""NUMBER\([1-8],\d+\)"""))) Float::class
+                        if (jdbcType.matches(Regex("""NUMBER\(9|([1-9]\d),\d+\)"""))) Double::class
                         else Any::class
                     }
                 }
             }
             RdbType.POSTGRESQL -> {
-                when (column.jdbcTypeName) {
+                when (jdbcType) {
                     "BIT", "BOOL" -> Boolean::class
                     "INT2", "INT4" -> Int::class
                     "INT8" -> Long::class
@@ -154,7 +155,7 @@ object JdbcTypeToKotlinType {
                 }
             }
             RdbType.SQLITE -> {
-                when (column.jdbcTypeName) {
+                when (jdbcType) {
                     "BOOLEAN" -> Boolean::class
                     "INT", "INT2", "INTEGER", "TINYINT", "SMALLINT", "MEDIUMINT" -> Int::class
                     "BIGINT", "UNSIGNED BIG INT", "INT8" -> Long::class
@@ -173,5 +174,6 @@ object JdbcTypeToKotlinType {
                 defaultMapping[column.jdbcType] ?: error("未支持JdbcType: ${column.jdbcType}")
             }
         }
+    }
 
 }

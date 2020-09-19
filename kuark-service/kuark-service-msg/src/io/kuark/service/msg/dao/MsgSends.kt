@@ -1,7 +1,6 @@
 package io.kuark.service.msg.dao
 
 import io.kuark.ability.data.jdbc.support.StringIdTable
-import io.kuark.service.msg.po.MsgSend
 import me.liuwj.ktorm.schema.datetime
 import me.liuwj.ktorm.schema.int
 import me.liuwj.ktorm.schema.varchar

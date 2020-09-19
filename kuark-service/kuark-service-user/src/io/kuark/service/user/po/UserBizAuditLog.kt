@@ -29,40 +29,40 @@ interface UserBizAuditLog: IDbEntity<String, UserBizAuditLog> {
     var identifier: String
 
     /** 子系统代码 */
-    var subSysDictCode: String
+    var subSysDictCode: String?
 
     /** 子系统 */
-    var subSys: String
+    var subSys: String?
 
     /** 模块 */
-    var module: String
+    var module: String?
 
     /** 操作时间 */
     var operateTime: LocalDateTime
 
     /** 客户端ip，标准全格式ipv6 */
-    var clientIp: String
+    var clientIp: String?
 
     /** 客户端ip的isp */
-    var clientIpIsp: String
+    var clientIpIsp: String?
 
     /** 客户端区域编码 */
-    var clientRegionCode: String
+    var clientRegionCode: String?
 
     /** 客户端区域 */
-    var clientRegionName: String
+    var clientRegionName: String?
 
     /** 客户端终端类型代码 */
-    var clientTerminalDictCode: String
+    var clientTerminalDictCode: String?
 
     /** 客户端终端类型 */
-    var clientTerminal: String
+    var clientTerminal: String?
 
     /** 客户端操作系统 */
-    var clientOs: String
+    var clientOs: String?
 
     /** 客户端浏览器 */
-    var clientBrowser: String
+    var clientBrowser: String?
 
 
     //region your codes 2

@@ -2,8 +2,8 @@ package io.kuark.service.user.po
 
 import io.kuark.ability.data.jdbc.support.DbEntityFactory
 import io.kuark.ability.data.jdbc.support.IMaintainableDbEntity
-import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.LocalDate
 
 /**
  * 用户个人信息数据库实体
@@ -18,76 +18,76 @@ interface UserPersonalInfo: IMaintainableDbEntity<String, UserPersonalInfo> {
     companion object : DbEntityFactory<UserPersonalInfo>()
 
     /** 真实姓名 */
-    var realName: String
+    var realName: String?
 
     /** 昵称 */
-    var nickname: String
+    var nickname: String?
 
     /** 性别代码 */
     var sexDictCode: String
 
     /** 生日 */
-    var birthday: LocalDate
+    var birthday: LocalDate?
 
     /** 身份证号 */
-    var idCardNo: String
+    var idCardNo: String?
 
     /** 星座代码 */
-    var constellationDictCode: String
+    var constellationDictCode: String?
 
     /** 国家id */
-    var countryId: String
+    var countryId: String?
 
     /** 民族代码 */
-    var nationDictCode: String
+    var nationDictCode: String?
 
     /** 地区编码 */
-    var regionCode: String
+    var regionCode: String?
 
     /**  */
-    var userStatusDictCode: String
+    var userStatusDictCode: String?
 
     /**  */
-    var userStatusReason: String
+    var userStatusReason: String?
 
     /**  */
-    var userTypeDictCode: String
+    var userTypeDictCode: String?
 
     /** 头像url */
-    var avatarUrl: String
+    var avatarUrl: String?
 
     /**  */
-    var subSysDictCode: String
+    var subSysDictCode: String?
 
     /**  */
-    var freezeTimeStart: LocalDateTime
+    var freezeTimeStart: LocalDateTime?
 
     /**  */
-    var freezeTimeEnd: LocalDateTime
+    var freezeTimeEnd: LocalDateTime?
 
     /**  */
-    var lastLoginTime: LocalDateTime
+    var lastLoginTime: LocalDateTime?
 
     /**  */
-    var lastLogoutTime: LocalDateTime
+    var lastLogoutTime: LocalDateTime?
 
     /**  */
-    var lastLoginIp: String
+    var lastLoginIp: String?
 
     /**  */
-    var lastLoginTerminalDictCode: String
+    var lastLoginTerminalDictCode: String?
 
     /**  */
-    var totalOnlineTime: Float
+    var totalOnlineTime: Float?
 
     /**  */
-    var registerIp: String
+    var registerIp: String?
 
     /**  */
-    var registerUrl: String
+    var registerUrl: String?
 
     /**  */
-    var dynamicAuthKey: String
+    var dynamicAuthKey: String?
 
 
     //region your codes 2

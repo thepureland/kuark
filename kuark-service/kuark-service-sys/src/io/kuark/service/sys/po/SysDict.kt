@@ -3,7 +3,6 @@ package io.kuark.service.sys.po
 import io.kuark.ability.data.jdbc.support.DbEntityFactory
 import io.kuark.ability.data.jdbc.support.IMaintainableDbEntity
 
-
 /**
  * 字典主表数据库实体
  *
@@ -17,13 +16,13 @@ interface SysDict : IMaintainableDbEntity<String, SysDict> {
     companion object : DbEntityFactory<SysDict>()
 
     /** 模块 */
-    var module: String
+    var module: String?
 
     /** 字典类型 */
     var dictType: String
 
     /** 字典名称，或其国际化key */
-    var dictName: String
+    var dictName: String?
 
 
     //region your codes 2

@@ -28,7 +28,7 @@ interface UserContactWay: IMaintainableDbEntity<String, UserContactWay> {
     var contactWayStatusDictCode: String
 
     /** 优先级 */
-    var priority: Int
+    var priority: Int?
 
 
     //region your codes 2

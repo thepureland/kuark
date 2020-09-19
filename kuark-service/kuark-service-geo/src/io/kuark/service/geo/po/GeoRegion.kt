@@ -25,34 +25,34 @@ interface GeoRegion: IMaintainableDbEntity<String, GeoRegion> {
     var name: String
 
     /** 父编码 */
-    var parentCode: String
+    var parentCode: String?
 
     /** 层级 */
-    var hierarchy: String
+    var hierarchy: String?
 
     /** 区域简称，或其国际化key */
-    var shortName: String
+    var shortName: String?
 
     /** 区域别名，或其国际化key */
-    var aliasName: String
+    var aliasName: String?
 
     /** 邮政编码 */
-    var postcode: String
+    var postcode: String?
 
     /** 经度 */
-    var longitude: String
+    var longitude: String?
 
     /** 纬度 */
-    var latitude: String
+    var latitude: String?
 
     /** 电话区号 */
-    var callingCode: String
+    var callingCode: String?
 
     /** 车牌号前缀 */
-    var licensePlateNoPrefix: String
+    var licensePlateNoPrefix: String?
 
     /** 机场3位编码 */
-    var airportCode: String
+    var airportCode: String?
 
 
     //region your codes 2

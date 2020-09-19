@@ -38,8 +38,7 @@ comment on column "sys_dict"."update_user" is '更新用户';
 
 comment on column "sys_dict"."update_time" is '更新时间';
 
-create unique index "uq_sys_dict__dict_name_module"
-    on "sys_dict" ("dict_name", "module");
+create unique index "uq_sys_dict__dict_name_module" on "sys_dict" ("dict_name", "module");
 
 create table "sys_dict_item"
 (
@@ -89,8 +88,7 @@ comment on column "sys_dict_item"."update_user" is '更新用户';
 
 comment on column "sys_dict_item"."update_time" is '更新时间';
 
-create unique index "uq_sys_dict_item__dict_id_item_code"
-    on "sys_dict_item" ("dict_id", "item_code");
+create unique index "uq_sys_dict_item__dict_id_item_code" on "sys_dict_item" ("dict_id", "item_code");
 
 create table "sys_param"
 (
@@ -138,8 +136,7 @@ comment on column "sys_param"."update_user" is '更新用户';
 
 comment on column "sys_param"."update_time" is '更新时间';
 
-create unique index "uq_sys_param__param_name_module"
-    on "sys_param" ("param_name", "module");
+create unique index "uq_sys_param__param_name_module" on "sys_param" ("param_name", "module");
 
 create table "sys_resource"
 (
@@ -196,8 +193,7 @@ comment on column "sys_resource"."update_user" is '更新用户';
 
 comment on column "sys_resource"."update_time" is '更新时间';
 
-create unique index "uq_sys_resource__name_sub_sys"
-    on "sys_resource" ("name", "sub_sys_dict_code");
+create unique index "uq_sys_resource__name_sub_sys"  on "sys_resource" ("name", "sub_sys_dict_code");
 
 create table "sys_data_source"
 (
@@ -259,6 +255,7 @@ create table "user_account"
     "id"                        CHAR(36) default RANDOM_UUID() not null
         primary key,
     "username"             VARCHAR(63) not null,
+    "password"             VARCHAR(63) not null,
     "sub_sys_dict_code"             VARCHAR(31),
     "user_status_dict_code"         CHAR(2),
     "user_status_reason"        VARCHAR(127),
@@ -273,7 +270,7 @@ create table "user_account"
     "register_ip"               CHAR(39),
     "register_url"              VARCHAR(127),
     "dynamic_auth_key"          VARCHAR(63),
-    "second_password"           VARCHAR(31),
+    "second_password"           VARCHAR(63),
     "remark"                    VARCHAR(127),
     "is_active"                 BOOLEAN  default TRUE          not null,
     "is_built_in"               BOOLEAN  default FALSE         not null,
@@ -284,11 +281,15 @@ create table "user_account"
     "owner_id" VARCHAR(36)
 );
 
+create unique index "uq_user_account__name_subsys_owner" on "user_account" ("username", "sub_sys_dict_code", "owner_id");
+
 comment on table "user_account" is '用户账号';
 
 comment on column "user_account"."id" is '主键';
 
 comment on column "user_account"."username" is '用户名';
+
+comment on column "user_account"."password" is '密码';
 
 comment on column "user_account"."sub_sys_dict_code" is '子系统代码';
 
@@ -336,7 +337,7 @@ comment on column "user_account"."update_time" is '更新时间';
 COMMENT ON COLUMN "user_account"."owner_id" IS '所有者id，依业务可以是店铺id、站点id、商户id等';
 
 
-create table "user_account_third_party_auth"
+create table "user_account_third_party"
 (
     "id"                  CHAR(36) default RANDOM_UUID() not null
         primary key,
@@ -356,33 +357,33 @@ create table "user_account_third_party_auth"
         foreign key ("user_account_id") references "user_account" ("id")
 );
 
-comment on table "user_account_third_party_auth" is '用户账号第三方授权信息';
+comment on table "user_account_third_party" is '用户账号第三方授权信息';
 
-comment on column "user_account_third_party_auth"."user_account_id" is '外键，用户账号id，user_account表主键';
+comment on column "user_account_third_party"."user_account_id" is '外键，用户账号id，user_account表主键';
 
-comment on column "user_account_third_party_auth"."identity_type_dict_code" is '身份类型代码';
+comment on column "user_account_third_party"."identity_type_dict_code" is '身份类型代码';
 
-comment on column "user_account_third_party_auth"."identifier" is '唯一身份标识';
+comment on column "user_account_third_party"."identifier" is '唯一身份标识';
 
-comment on column "user_account_third_party_auth"."sub_sys_dict_code" is '子系统代码';
+comment on column "user_account_third_party"."sub_sys_dict_code" is '子系统代码';
 
-comment on column "user_account_third_party_auth"."remark" is '备注，或其国际化key';
+comment on column "user_account_third_party"."remark" is '备注，或其国际化key';
 
-comment on column "user_account_third_party_auth"."is_active" is '是否启用';
+comment on column "user_account_third_party"."is_active" is '是否启用';
 
-comment on column "user_account_third_party_auth"."is_built_in" is '是否内置';
+comment on column "user_account_third_party"."is_built_in" is '是否内置';
 
-comment on column "user_account_third_party_auth"."create_user" is '创建用户';
+comment on column "user_account_third_party"."create_user" is '创建用户';
 
-comment on column "user_account_third_party_auth"."create_time" is '创建时间';
+comment on column "user_account_third_party"."create_time" is '创建时间';
 
-comment on column "user_account_third_party_auth"."update_user" is '更新用户';
+comment on column "user_account_third_party"."update_user" is '更新用户';
 
-comment on column "user_account_third_party_auth"."update_time" is '更新时间';
-COMMENT ON COLUMN "user_account_third_party_auth"."owner_id" IS '所有者id，依业务可以是店铺id、站点id、商户id等';
+comment on column "user_account_third_party"."update_time" is '更新时间';
+COMMENT ON COLUMN "user_account_third_party"."owner_id" IS '所有者id，依业务可以是店铺id、站点id、商户id等';
 
 create unique index "uq_u_a_a__identifier_id_type_sub_sys_owner"
-    on "user_account_third_party_auth" ("identifier", "identity_type_dict_code", "sub_sys_dict_code", "owner_id");
+    on "user_account_third_party" ("identifier", "identity_type_dict_code", "sub_sys_dict_code", "owner_id");
 
 create table "user_db_audit_log"
 (

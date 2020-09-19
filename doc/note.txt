@@ -2,6 +2,8 @@ h2
 1. 以mem模式运行，只能从程序中访问，数据库只存在于程序运行时内存中
 2. 以file模式运行，也只能从程序中访问
 3. 对象名默认都是大写的，可以在连接时加参数DATABASE_TO_UPPER=false来避免
+4. 创建并拷贝表数据：create table information_schema.schemata as select * from INFORMATION_SCHEMA.SCHEMATA
+5. 修改列名：ALTER TABLE tutorials_tbl ALTER COLUMN title RENAME TO tutorial_title
 
 
 将一个表中的字段值更新到另一个表的字段中:
@@ -17,3 +19,7 @@ Jedis和Lettuce的区别在哪？
    这样每个线程单独使用一个jedis实例, 由此带来的问题时，如果线程数过多，带来redis server的负载加大。有点类似于BIO的模式。
 2、Lettuce的连接是基于Netty的，连接实例可以在多个线程间共享，如果你不知道Netty也没事，大致意思就是一个多线程的应用可以使用同一个连接实例，
   而不用担心并发线程的数量。通过异步的方式可以让我们更好地利用系统资源。有点类似于NIO的模式。
+
+
+
+

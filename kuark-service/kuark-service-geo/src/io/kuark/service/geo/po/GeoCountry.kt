@@ -17,10 +17,10 @@ interface GeoCountry: IMaintainableDbEntity<String, GeoCountry> {
     companion object : DbEntityFactory<GeoCountry>()
 
     /** 从属国家 */
-    var parentId: String
+    var parentId: String?
 
     /** 国家地区3位数字编码，ISO 3166-1 */
-    var digitalCode: String
+    var digitalCode: String?
 
     /** 国家地区2位字母编码(存在重复项)，ISO 3166-1 */
     var letterCode: String
@@ -32,52 +32,52 @@ interface GeoCountry: IMaintainableDbEntity<String, GeoCountry> {
     var name: String
 
     /** 国家地区英文名称 */
-    var englishName: String
+    var englishName: String?
 
     /** 全名，或其国际化key */
-    var fullName: String
+    var fullName: String?
 
     /** 国家地区英文全称 */
-    var englishFullName: String
+    var englishFullName: String?
 
     /** 互联网域名后缀 */
-    var domainSuffix: String
+    var domainSuffix: String?
 
     /** 旗帜url */
-    var flagUrl: String
+    var flagUrl: String?
 
     /** 首都/行政中心名称，或其国际化key */
-    var capital: String
+    var capital: String?
 
     /** 首府纬度 */
-    var capitalLatitude: String
+    var capitalLatitude: String?
 
     /** 首府经度 */
-    var capitalLongitude: String
+    var capitalLongitude: String?
 
     /** 官方语言代码 */
-    var localeDictCode: String
+    var localeDictCode: String?
 
     /** 所属大洲大洋代码 */
-    var continentOceanDictCode: String
+    var continentOceanDictCode: String?
 
     /** 币种代码 */
-    var currencyDictCode: String
+    var currencyDictCode: String?
 
     /** 国际电话区号 */
-    var callingCode: String
+    var callingCode: String?
 
     /** UTC时区，多个以半角逗号分隔 */
-    var timezoneUtc: String
+    var timezoneUtc: String?
 
     /** 日期格式 */
-    var dateFormat: String
+    var dateFormat: String?
 
     /** 建国日 */
-    var foundingDay: LocalDate
+    var foundingDay: LocalDate?
 
     /** 驾驶方向代码 */
-    var drivingSideDictCode: String
+    var drivingSideDictCode: String?
 
 
     //region your codes 2

@@ -10,7 +10,7 @@ import io.kuark.ability.data.jdbc.support.IDbEntity
  * @since 1.0.0
  */
 //region your codes 1
-interface MsgTemplate: IDbEntity<String, MsgTemplate> {
+interface MsgTemplate : IDbEntity<String, MsgTemplate> {
 //endregion your codes 1
 
     companion object : DbEntityFactory<MsgTemplate>()
@@ -25,32 +25,32 @@ interface MsgTemplate: IDbEntity<String, MsgTemplate> {
     var msgTypeDictCode: String
 
     /** 模板分组编码,uuid,用于区分同一事件下不同操作原因的多套模板 */
-    var groupCode: String
+    var groupCode: String?
 
     /** 国家-语言代码 */
-    var localeDictCode: String
+    var localeDictCode: String?
 
     /** 模板标题 */
-    var title: String
+    var title: String?
 
     /** 模板内容 */
-    var content: String
+    var content: String?
 
     /** 是否启用默认值 */
     var isDefaultActive: Boolean
 
     /** 模板标题默认值 */
-    var defaultTitle: String
+    var defaultTitle: String?
 
     /** 模板内容默认值 */
-    var defaultContent: String
+    var defaultContent: String?
 
     /** 所有者id，依业务可以是店铺id、站点id、商户id等 */
-    var ownerId: String
+    var ownerId: String?
 
 
     //region your codes 2
 
-	//endregion your codes 2
+    //endregion your codes 2
 
 }

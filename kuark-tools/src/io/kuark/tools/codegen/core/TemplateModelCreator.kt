@@ -90,7 +90,8 @@ open class TemplateModelCreator {
             "containsRowIdColumn" to java.sql.RowId::class,
             "containsSQLXMLColumn" to java.sql.SQLXML::class
         )
-        for ((key, value) in kotlinTypeMap) templateModel[key] = origColumns.any { it.kotlinType == value }
+        for ((key, value) in kotlinTypeMap)
+            templateModel[key] = origColumns.any { it.kotlinType == value }
     }
 
 }

@@ -22,13 +22,13 @@ interface UserDbAuditLogItem: IDbEntity<String, UserDbAuditLogItem> {
     var recordId: String
 
     /** update的列名 */
-    var columnName: String
+    var columnName: String?
 
     /** update前的值 */
-    var oldValue: String
+    var oldValue: String?
 
     /** update后的值 */
-    var newValue: String
+    var newValue: String?
 
 
     //region your codes 2

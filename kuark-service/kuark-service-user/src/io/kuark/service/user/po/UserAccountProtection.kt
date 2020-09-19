@@ -22,19 +22,19 @@ interface UserAccountProtection: IMaintainableDbEntity<String, UserAccountProtec
     var answer1: String
 
     /** 问题2 */
-    var question2: String
+    var question2: String?
 
     /** 答案2 */
-    var answer2: String
+    var answer2: String?
 
     /** 问题3 */
-    var question3: String
+    var question3: String?
 
     /** 答案3 */
-    var answer3: String
+    var answer3: String?
 
     /** 安全的联系方式id */
-    var safeContactWayId: String
+    var safeContactWayId: String?
 
     /** 总的找回密码次数 */
     var totalValidateCount: Int

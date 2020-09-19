@@ -10,7 +10,7 @@ import io.kuark.ability.data.jdbc.support.IMaintainableDbEntity
  * @since 1.0.0
  */
 //region your codes 1
-interface MsgReceiverGroup: IMaintainableDbEntity<String, MsgReceiverGroup> {
+interface MsgReceiverGroup : IMaintainableDbEntity<String, MsgReceiverGroup> {
 //endregion your codes 1
 
     companion object : DbEntityFactory<MsgReceiverGroup>()
@@ -27,6 +27,6 @@ interface MsgReceiverGroup: IMaintainableDbEntity<String, MsgReceiverGroup> {
 
     //region your codes 2
 
-	//endregion your codes 2
+    //endregion your codes 2
 
 }

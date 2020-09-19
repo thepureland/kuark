@@ -3,9 +3,8 @@ package io.kuark.service.sys.po
 import io.kuark.ability.data.jdbc.support.DbEntityFactory
 import io.kuark.ability.data.jdbc.support.IMaintainableDbEntity
 
-
 /**
- * 字典子表数据库实体
+ * 字典项数据库实体
  *
  * @author K
  * @since 1.0.0
@@ -23,13 +22,13 @@ interface SysDictItem: IMaintainableDbEntity<String, SysDictItem> {
     var itemCode: String
 
     /** 父项编号 */
-    var parentCode: String
+    var parentCode: String?
 
     /** 字典项名称，或其国际化key */
     var itemName: String
 
     /** 该字典编号在同父节点下的排序号 */
-    var seqNo: Int
+    var seqNo: Int?
 
 
     //region your codes 2

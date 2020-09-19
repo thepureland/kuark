@@ -26,46 +26,46 @@ interface UserAccount : IMaintainableDbEntity<String, UserAccount> {
     var subSysDictCode: String?
 
     /** 用户状态代码 */
-    var userStatusDictCode: String
+    var userStatusDictCode: String?
 
     /** 用户状态原因 */
-    var userStatusReason: String
+    var userStatusReason: String?
 
     /** 用户类型代码 */
-    var userTypeDictCode: String
+    var userTypeDictCode: String?
 
     /** 账号冻结时间起 */
-    var freezeTimeStart: LocalDateTime
+    var freezeTimeStart: LocalDateTime?
 
     /** 账号冻结时间止 */
-    var freezeTimeEnd: LocalDateTime
+    var freezeTimeEnd: LocalDateTime?
 
     /** 最后一次登入时间 */
-    var lastLoginTime: LocalDateTime
+    var lastLoginTime: LocalDateTime?
 
     /** 最后一次登出时间 */
-    var lastLogoutTime: LocalDateTime
+    var lastLogoutTime: LocalDateTime?
 
     /** 最后一次登入ip(标准ipv6全格式) */
-    var lastLoginIp: String
+    var lastLoginIp: String?
 
     /** 最后一次登入终端代码 */
-    var lastLoginTerminalDictCode: String
+    var lastLoginTerminalDictCode: String?
 
     /** 总在线时长(小时) */
-    var totalOnlineTime: Float
+    var totalOnlineTime: Float?
 
     /** 注册ip(标准ipv6全格式) */
-    var registerIp: String
+    var registerIp: String?
 
     /** 注册url */
-    var registerUrl: String
+    var registerUrl: String?
 
     /** 动态验证码的密钥 */
-    var dynamicAuthKey: String
+    var dynamicAuthKey: String?
 
     /** 二级密码 */
-    var secondPassword: String
+    var secondPassword: String?
 
     /** 所有者id，依业务可以是店铺id、站点id、商户id等 */
     var ownerId: String?

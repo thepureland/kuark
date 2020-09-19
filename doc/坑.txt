@@ -2,16 +2,15 @@
 [main] TRACE o.s.b.a.condition.OnClassCondition -
 Condition OnClassCondition on org.springframework.boot.autoconfigure.h2.H2ConsoleAutoConfiguration did not match due to
  @ConditionalOnClass did not find required class 'org.h2.server.web.WebServlet'
-答：需要 implementation("org.springframework.boot:spring-boot-starter-web")
+解：需要 implementation("org.springframework.boot:spring-boot-starter-web")
 
 
 2. 用idea的database插件连接h2数据库：
 [90079][90079] org.h2.jdbc.JdbcSQLSyntaxErrorException: Schema "information_schema" not found; SQL statement:
 select catalog_name from information_schema.catalogs [90079-200].
 而用h2自带的控制台连则没有问题。库中是大写的，但idea插件则是以小写去查询。
-添加这些连接参数也依然失败：DATABASE_TO_UPPER=false;IGNORECASE=true;SCHEMA=PUBLIC
-答：未解决
+解: 第一次连接时添加连接参数：DATABASE_TO_LOWER=TRUE
 
 
 3. ktorm，不管是查询还是新增，加上@Transactional事务都会卡住
-答：未解决，可能是它的bug
+解：未解决，可能是它的bug

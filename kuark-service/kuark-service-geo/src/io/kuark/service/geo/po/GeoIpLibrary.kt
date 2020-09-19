@@ -25,10 +25,10 @@ interface GeoIpLibrary: IMaintainableDbEntity<String, GeoIpLibrary> {
     var countryId: String
 
     /** 地区编码 */
-    var regionCode: String
+    var regionCode: String?
 
     /** isp名称，或其国际化key */
-    var ispName: String
+    var ispName: String?
 
     /** 该IP是否是用户修正过 */
     var isRevised: Boolean

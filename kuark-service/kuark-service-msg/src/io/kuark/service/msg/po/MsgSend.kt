@@ -11,7 +11,7 @@ import java.time.LocalDateTime
  * @since 1.0.0
  */
 //region your codes 1
-interface MsgSend: IDbEntity<String, MsgSend> {
+interface MsgSend : IDbEntity<String, MsgSend> {
 //endregion your codes 1
 
     companion object : DbEntityFactory<MsgSend>()
@@ -20,7 +20,7 @@ interface MsgSend: IDbEntity<String, MsgSend> {
     var receiverGroupTypeDictCode: String
 
     /** 接收者群组id */
-    var receiverGroupId: String
+    var receiverGroupId: String?
 
     /** 消息实例id */
     var instanceId: String
@@ -29,7 +29,7 @@ interface MsgSend: IDbEntity<String, MsgSend> {
     var msgTypeDictCode: String
 
     /** 国家-语言代码 */
-    var localeDictCode: String
+    var localeDictCode: String?
 
     /** 发送状态代码 */
     var sendStatusDictCode: String
@@ -38,23 +38,23 @@ interface MsgSend: IDbEntity<String, MsgSend> {
     var createTime: LocalDateTime
 
     /** 更新时间 */
-    var updateTime: LocalDateTime
+    var updateTime: LocalDateTime?
 
     /** 发送成功数量 */
-    var successCount: Int
+    var successCount: Int?
 
     /** 发送失败数量 */
-    var failCount: Int
+    var failCount: Int?
 
     /** 定时任务id */
-    var jobId: String
+    var jobId: String?
 
     /** 所有者id，依业务可以是店铺id、站点id、商户id等 */
-    var ownerId: String
+    var ownerId: String?
 
 
     //region your codes 2
 
-	//endregion your codes 2
+    //endregion your codes 2
 
 }

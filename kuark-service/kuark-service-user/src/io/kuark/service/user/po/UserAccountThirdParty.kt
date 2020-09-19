@@ -10,10 +10,10 @@ import io.kuark.ability.data.jdbc.support.IMaintainableDbEntity
  * @since 1.0.0
  */
 //region your codes 1
-interface UserAccountThirdPartyAuth: IMaintainableDbEntity<String, UserAccountThirdPartyAuth> {
+interface UserAccountThirdParty: IMaintainableDbEntity<String, UserAccountThirdParty> {
 //endregion your codes 1
 
-    companion object : DbEntityFactory<UserAccountThirdPartyAuth>()
+    companion object : DbEntityFactory<UserAccountThirdParty>()
 
     /** 外键，用户账号id，user_account表主键 */
     var userAccountId: String
@@ -25,16 +25,10 @@ interface UserAccountThirdPartyAuth: IMaintainableDbEntity<String, UserAccountTh
     var identifier: String
 
     /** 子系统代码 */
-    var subSysDictCode: String
+    var subSysDictCode: String?
 
     /** 所有者id，依业务可以是店铺id、站点id、商户id等 */
-    var ownerId: String
-
-    /** 本系统账号是密码、第三方的是Token */
-    var credential: String
-
-    /** 授权账号是否被验证 */
-    var isVerified: Boolean
+    var ownerId: String?
 
 
     //region your codes 2

@@ -1,6 +1,6 @@
 #FileLock
-#Fri Mar 27 11:18:14 CST 2020
-server=192.168.0.82\:50411
-hostName=192.168.0.82
+#Sat Sep 19 15:45:37 CST 2020
+server=192.168.203.1\:56669
+hostName=hanfei
 method=file
-id=17119ff45e904eb3a98c3658a87fe28e73da4dd42cf
+id=174a5534a919d6ce3b504ee5db11c8dea1ae975b131

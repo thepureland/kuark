@@ -27,8 +27,8 @@ object CodeGenFileBiz {
         RdbKit.getDatabase().batchInsert(CodeGenFiles) {
             files.filter { !filesInDb.contains(it) }.forEach { file ->
                 item {
-                    it.filename to file
-                    it.objectName to CodeGeneratorContext.tableName
+                    set(it.filename, file)
+                    set(it.objectName, CodeGeneratorContext.tableName)
                 }
             }
         }

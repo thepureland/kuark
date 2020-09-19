@@ -16,13 +16,22 @@ object RandomStringKit {
     private val random = SecureRandom()
 
     /**
-     * 封装JDK自带的UUID, 中间无"-"分割.
+     * 封装java的UUID
+     *
+     * @return 中间有"-"分割的UUID
+     * @author K
+     * @since 1.0.0
+     */
+    fun uuid(): String = UUID.randomUUID().toString()
+
+    /**
+     * 封装java的UUID, 中间无"-"分割.
      *
      * @return 中间无"-"分割的UUID
      * @author K
      * @since 1.0.0
      */
-    fun uuid(): String = UUID.randomUUID().toString().replace("-".toRegex(), "")
+    fun uuidWithoutDelimiter(): String = UUID.randomUUID().toString().replace("-".toRegex(), "")
 
     /**
      * 使用SecureRandom随机生成Long.

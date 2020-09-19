@@ -2,10 +2,10 @@ create table "sys_dict"
 (
     "id"          CHAR(36) default RANDOM_UUID() not null
         primary key,
-    "module"      VARCHAR(64),
-    "dict_type"   VARCHAR(64)                    not null,
-    "dict_name"   VARCHAR(64),
-    "remark"      VARCHAR(128),
+    "module"      VARCHAR(63),
+    "dict_type"   VARCHAR(63)                    not null,
+    "dict_name"   VARCHAR(63),
+    "remark"      VARCHAR(127),
     "is_active"   BOOLEAN  default TRUE          not null,
     "is_built_in" BOOLEAN  default FALSE         not null,
     "create_user" VARCHAR(36),
@@ -46,15 +46,15 @@ create table "sys_dict_item"
     "id"          CHAR(36) default RANDOM_UUID() not null
         primary key,
     "dict_id"     CHAR(36)                       not null,
-    "item_code"   VARCHAR(64)                    not null,
-    "parent_code" VARCHAR(64),
-    "item_name"   VARCHAR(64)                    not null,
+    "item_code"   VARCHAR(63)                    not null,
+    "parent_code" VARCHAR(63),
+    "item_name"   VARCHAR(63)                    not null,
     "seq_no"      INT4,
-    "remark"      VARCHAR(128),
+    "remark"      VARCHAR(127),
     "is_active"   BOOLEAN  default TRUE          not null,
     "is_built_in" BOOLEAN  default FALSE         not null,
     "create_user" VARCHAR(36),
-    "create_time" TIMESTAMP,
+    "create_time" TIMESTAMP default now() not null,
     "update_user" VARCHAR(36),
     "update_time" TIMESTAMP,
     constraint "fk_sys_dict_item"
@@ -96,16 +96,16 @@ create table "sys_param"
 (
     "id"            CHAR(36) default RANDOM_UUID() not null
         primary key,
-    "module"        VARCHAR(64),
-    "param_name"    VARCHAR(32)                    not null,
-    "param_value"   VARCHAR(128)                   not null,
-    "default_value" VARCHAR(128),
+    "module"        VARCHAR(63),
+    "param_name"    VARCHAR(31)                    not null,
+    "param_value"   VARCHAR(127)                   not null,
+    "default_value" VARCHAR(127),
     "seq_no"        INT2,
-    "remark"        VARCHAR(128),
+    "remark"        VARCHAR(127),
     "is_active"     BOOLEAN  default TRUE          not null,
     "is_built_in"   BOOLEAN  default FALSE         not null,
     "create_user"   VARCHAR(36),
-    "create_time"   TIMESTAMP,
+    "create_time"   TIMESTAMP default now() not null,
     "update_user"   VARCHAR(36),
     "update_time"   TIMESTAMP
 );
@@ -145,19 +145,19 @@ create table "sys_resource"
 (
     "id"                  CHAR(36) default RANDOM_UUID() not null
         primary key,
-    "name"                VARCHAR(64)                    not null,
-    "url"                 VARCHAR(128),
+    "name"                VARCHAR(63)                    not null,
+    "url"                 VARCHAR(127),
     "resource_type_dict_code" CHAR(1)                        not null,
     "parent_id"           CHAR(36),
     "seq_no"              TINYINT,
-    "sub_sys_dict_code"       VARCHAR(32),
-    "permission"          VARCHAR(64),
-    "icon_url"            VARCHAR(128),
-    "remark"              VARCHAR(128),
+    "sub_sys_dict_code"       VARCHAR(31),
+    "permission"          VARCHAR(63),
+    "icon_url"            VARCHAR(127),
+    "remark"              VARCHAR(127),
     "is_active"           BOOLEAN  default TRUE          not null,
     "is_built_in"         BOOLEAN  default FALSE         not null,
     "create_user"         VARCHAR(36),
-    "create_time"         TIMESTAMP,
+    "create_time"         TIMESTAMP  default now() not null,
     "update_user"         VARCHAR(36),
     "update_time"         TIMESTAMP
 );
@@ -203,19 +203,19 @@ create table "sys_data_source"
 (
     "id"           VARCHAR(36) default RANDOM_UUID() not null
         primary key,
-    "name"         VARCHAR(32)                       not null,
+    "name"         VARCHAR(31)                       not null,
     "url"          VARCHAR(256)                      not null,
-    "username"     VARCHAR(32)                       not null,
-    "password"     VARCHAR(128)                      not null,
+    "username"     VARCHAR(31)                       not null,
+    "password"     VARCHAR(127)                      not null,
     "initial_size" INT2,
     "max_active"   INT2,
     "min_idle"     INT2,
     "max_wait"     INT2,
-    "remark"       VARCHAR(128),
+    "remark"       VARCHAR(127),
     "is_active"    BOOLEAN     default TRUE          not null,
     "is_built_in"  BOOLEAN     default FALSE         not null,
     "create_user"  VARCHAR(36),
-    "create_time"  TIMESTAMP,
+    "create_time"  TIMESTAMP  default now() not null,
     "update_user"  VARCHAR(36),
     "update_time"  TIMESTAMP
 );
@@ -258,26 +258,27 @@ create table "user_account"
 (
     "id"                        CHAR(36) default RANDOM_UUID() not null
         primary key,
-    "sub_sys_dict_code"             VARCHAR(32),
+    "username"             VARCHAR(63) not null,
+    "sub_sys_dict_code"             VARCHAR(31),
     "user_status_dict_code"         CHAR(2),
-    "user_status_reason"        VARCHAR(128),
+    "user_status_reason"        VARCHAR(127),
     "user_type_dict_code"           CHAR(2),
     "freeze_time_start"         TIMESTAMP,
     "freeze_time_end"           TIMESTAMP,
     "last_login_time"           TIMESTAMP,
     "last_logout_time"          TIMESTAMP,
     "last_login_ip"             CHAR(39),
-    "last_login_terminal_dict_code" VARCHAR(16),
+    "last_login_terminal_dict_code" VARCHAR(15),
     "total_online_time"         REAL,
     "register_ip"               CHAR(39),
-    "register_url"              VARCHAR(128),
-    "dynamic_auth_key"          VARCHAR(64),
-    "second_password"           VARCHAR(32),
-    "remark"                    VARCHAR(128),
+    "register_url"              VARCHAR(127),
+    "dynamic_auth_key"          VARCHAR(63),
+    "second_password"           VARCHAR(31),
+    "remark"                    VARCHAR(127),
     "is_active"                 BOOLEAN  default TRUE          not null,
     "is_built_in"               BOOLEAN  default FALSE         not null,
     "create_user"               VARCHAR(36),
-    "create_time"               TIMESTAMP,
+    "create_time"               TIMESTAMP  default now() not null,
     "update_user"               VARCHAR(36),
     "update_time"               TIMESTAMP,
     "owner_id" VARCHAR(36)
@@ -286,6 +287,8 @@ create table "user_account"
 comment on table "user_account" is '用户账号';
 
 comment on column "user_account"."id" is '主键';
+
+comment on column "user_account"."username" is '用户名';
 
 comment on column "user_account"."sub_sys_dict_code" is '子系统代码';
 
@@ -333,66 +336,60 @@ comment on column "user_account"."update_time" is '更新时间';
 COMMENT ON COLUMN "user_account"."owner_id" IS '所有者id，依业务可以是店铺id、站点id、商户id等';
 
 
-create table "user_account_auth"
+create table "user_account_third_party_auth"
 (
     "id"                  CHAR(36) default RANDOM_UUID() not null
         primary key,
     "user_account_id"     CHAR(36)                       not null,
-    "identity_type_dict_code" VARCHAR(16)                    not null,
-    "identifier"          VARCHAR(64)                    not null,
-    "sub_sys_dict_code"       VARCHAR(32),
+    "identity_type_dict_code" VARCHAR(15)                    not null,
+    "identifier"          VARCHAR(63)                    not null,
+    "sub_sys_dict_code"       VARCHAR(31),
     "owner_id"       VARCHAR(36),
-    "credential"          VARCHAR(64)                    not null,
-    "is_verified"         BOOLEAN  default FALSE         not null,
-    "remark"              VARCHAR(128),
+    "remark"              VARCHAR(127),
     "is_active"           BOOLEAN  default TRUE          not null,
     "is_built_in"         BOOLEAN  default FALSE         not null,
     "create_user"         VARCHAR(36),
-    "create_time"         TIMESTAMP,
+    "create_time"         TIMESTAMP  default now() not null,
     "update_user"         VARCHAR(36),
     "update_time"         TIMESTAMP,
     constraint "fk_user_account_auth"
         foreign key ("user_account_id") references "user_account" ("id")
 );
 
-comment on table "user_account_auth" is '用户账号授权';
+comment on table "user_account_third_party_auth" is '用户账号第三方授权信息';
 
-comment on column "user_account_auth"."user_account_id" is '外键，用户账号id，user_account表主键';
+comment on column "user_account_third_party_auth"."user_account_id" is '外键，用户账号id，user_account表主键';
 
-comment on column "user_account_auth"."identity_type_dict_code" is '身份类型代码';
+comment on column "user_account_third_party_auth"."identity_type_dict_code" is '身份类型代码';
 
-comment on column "user_account_auth"."identifier" is '唯一身份标识';
+comment on column "user_account_third_party_auth"."identifier" is '唯一身份标识';
 
-comment on column "user_account_auth"."sub_sys_dict_code" is '子系统代码';
+comment on column "user_account_third_party_auth"."sub_sys_dict_code" is '子系统代码';
 
-comment on column "user_account_auth"."credential" is '本系统账号是密码、第三方的是Token';
+comment on column "user_account_third_party_auth"."remark" is '备注，或其国际化key';
 
-comment on column "user_account_auth"."is_verified" is '授权账号是否被验证';
+comment on column "user_account_third_party_auth"."is_active" is '是否启用';
 
-comment on column "user_account_auth"."remark" is '备注，或其国际化key';
+comment on column "user_account_third_party_auth"."is_built_in" is '是否内置';
 
-comment on column "user_account_auth"."is_active" is '是否启用';
+comment on column "user_account_third_party_auth"."create_user" is '创建用户';
 
-comment on column "user_account_auth"."is_built_in" is '是否内置';
+comment on column "user_account_third_party_auth"."create_time" is '创建时间';
 
-comment on column "user_account_auth"."create_user" is '创建用户';
+comment on column "user_account_third_party_auth"."update_user" is '更新用户';
 
-comment on column "user_account_auth"."create_time" is '创建时间';
-
-comment on column "user_account_auth"."update_user" is '更新用户';
-
-comment on column "user_account_auth"."update_time" is '更新时间';
-COMMENT ON COLUMN "user_account_auth"."owner_id" IS '所有者id，依业务可以是店铺id、站点id、商户id等';
+comment on column "user_account_third_party_auth"."update_time" is '更新时间';
+COMMENT ON COLUMN "user_account_third_party_auth"."owner_id" IS '所有者id，依业务可以是店铺id、站点id、商户id等';
 
 create unique index "uq_u_a_a__identifier_id_type_sub_sys_owner"
-    on "user_account_auth" ("identifier", "identity_type_dict_code", "sub_sys_dict_code", "owner_id");
+    on "user_account_third_party_auth" ("identifier", "identity_type_dict_code", "sub_sys_dict_code", "owner_id");
 
 create table "user_db_audit_log"
 (
     "id"                 CHAR(36) default RANDOM_UUID() not null
         primary key,
     "user_account_id"    CHAR(36)                       not null,
-    "table_name"         VARCHAR(64)                    not null,
+    "table_name"         VARCHAR(63)                    not null,
     "operate_time"       TIMESTAMP                      not null,
     "operate_type_dict_code" CHAR(1)                        not null,
     constraint "fk_user_db_audit_log"
@@ -415,7 +412,7 @@ create table "user_db_audit_log_item"
         primary key,
     "db_audit_log_id" CHAR(36)                       not null,
     "record_id"       VARCHAR(36)                    not null,
-    "column_name"     VARCHAR(64),
+    "column_name"     VARCHAR(63),
     "old_value"       VARCHAR,
     "new_value"       VARCHAR,
     constraint "fk_user_db_audit_log_item"
@@ -439,21 +436,21 @@ create table "user_biz_audit_log"
     "id"                    CHAR(36) default RANDOM_UUID() not null
         primary key,
     "user_account_id"       CHAR(36)                       not null,
-    "identity_type_dict_code"   VARCHAR(16)                    not null,
-    "identity_type"         VARCHAR(32)                    not null,
-    "identifier"            VARCHAR(64)                    not null,
-    "sub_sys_dict_code"         VARCHAR(32),
-    "sub_sys"               VARCHAR(64),
-    "module"                VARCHAR(64),
+    "identity_type_dict_code"   VARCHAR(15)                    not null,
+    "identity_type"         VARCHAR(31)                    not null,
+    "identifier"            VARCHAR(63)                    not null,
+    "sub_sys_dict_code"         VARCHAR(31),
+    "sub_sys"               VARCHAR(63),
+    "module"                VARCHAR(63),
     "operate_time"          TIMESTAMP                      not null,
     "client_ip"             CHAR(39),
-    "client_ip_isp"         VARCHAR(128),
+    "client_ip_isp"         VARCHAR(127),
     "client_region_code"    VARCHAR(12),
-    "client_region_name"    VARCHAR(128),
-    "client_terminal_dict_code" VARCHAR(16),
-    "client_terminal"       VARCHAR(32),
-    "client_os"             VARCHAR(64),
-    "client_browser"        VARCHAR(64),
+    "client_region_name"    VARCHAR(127),
+    "client_terminal_dict_code" VARCHAR(15),
+    "client_terminal"       VARCHAR(31),
+    "client_os"             VARCHAR(63),
+    "client_browser"        VARCHAR(63),
     constraint "fk_user_biz_audit_log"
         foreign key ("user_account_id") references "user_account" ("id")
 );
@@ -496,35 +493,35 @@ create table "user_personal_info"
 (
     "id"                        CHAR(36)              not null
         primary key,
-    "real_name"                 VARCHAR(64),
-    "nickname"                  VARCHAR(64),
+    "real_name"                 VARCHAR(63),
+    "nickname"                  VARCHAR(63),
     "sex_dict_code"                 CHAR(1) default '9'   not null,
     "birthday"                  DATE,
-    "id_card_no"                VARCHAR(32),
+    "id_card_no"                VARCHAR(31),
     "constellation_dict_code"       VARCHAR(11),
     "country_id"                CHAR(3),
     "nation_dict_code"              VARCHAR(3),
     "region_code"               VARCHAR(12),
     "user_status_dict_code"         CHAR(2),
-    "user_status_reason"        VARCHAR(128),
+    "user_status_reason"        VARCHAR(127),
     "user_type_dict_code"           CHAR(2),
-    "avatar_url"                VARCHAR(128),
-    "sub_sys_dict_code"             VARCHAR(32),
+    "avatar_url"                VARCHAR(127),
+    "sub_sys_dict_code"             VARCHAR(31),
     "freeze_time_start"         TIMESTAMP,
     "freeze_time_end"           TIMESTAMP,
     "last_login_time"           TIMESTAMP,
     "last_logout_time"          TIMESTAMP,
     "last_login_ip"             CHAR(39),
-    "last_login_terminal_dict_code" VARCHAR(16),
+    "last_login_terminal_dict_code" VARCHAR(15),
     "total_online_time"         REAL,
     "register_ip"               CHAR(39),
-    "register_url"              VARCHAR(128),
-    "dynamic_auth_key"          VARCHAR(64),
-    "remark"                    VARCHAR(128),
+    "register_url"              VARCHAR(127),
+    "dynamic_auth_key"          VARCHAR(63),
+    "remark"                    VARCHAR(127),
     "is_active"                 BOOLEAN default TRUE  not null,
     "is_built_in"               BOOLEAN default FALSE not null,
     "create_user"               VARCHAR(36),
-    "create_time"               TIMESTAMP,
+    "create_time"               TIMESTAMP  default now() not null,
     "update_user"               VARCHAR(36),
     "update_time"               TIMESTAMP
 );
@@ -573,14 +570,14 @@ create table "user_contact_way"
         primary key,
     "user_id"                  CHAR(36)                       not null,
     "contact_way_dict_code"        CHAR(3)                        not null,
-    "contact_way_value"        VARCHAR(128)                   not null,
+    "contact_way_value"        VARCHAR(127)                   not null,
     "contact_way_status_dict_code" CHAR(2)  default '00'          not null,
     "priority"                 TINYINT,
-    "remark"                   VARCHAR(128),
+    "remark"                   VARCHAR(127),
     "is_active"                BOOLEAN  default TRUE          not null,
     "is_built_in"              BOOLEAN  default FALSE         not null,
     "create_user"              VARCHAR(36),
-    "create_time"              TIMESTAMP,
+    "create_time"              TIMESTAMP  default now() not null,
     "update_user"              VARCHAR(36),
     "update_time"              TIMESTAMP,
     constraint "fk_user_contact_way"
@@ -620,21 +617,21 @@ create table "user_account_protection"
 (
     "id"                   CHAR(36)              not null
         primary key,
-    "question1"            VARCHAR(64)           not null,
-    "answer1"              VARCHAR(64)           not null,
-    "question2"            VARCHAR(64),
-    "answer2"              VARCHAR(64),
-    "question3"            VARCHAR(64),
-    "answer3"              VARCHAR(64),
+    "question1"            VARCHAR(63)           not null,
+    "answer1"              VARCHAR(63)           not null,
+    "question2"            VARCHAR(63),
+    "answer2"              VARCHAR(63),
+    "question3"            VARCHAR(63),
+    "answer3"              VARCHAR(63),
     "safe_contact_way_id"  CHAR(36),
     "total_validate_count" INT4    default 0     not null,
     "match_question_count" INT4    default 1     not null,
     "error_times"          INT4    default 0     not null,
-    "remark"               VARCHAR(128),
+    "remark"               VARCHAR(127),
     "is_active"            BOOLEAN default TRUE  not null,
     "is_built_in"          BOOLEAN default FALSE not null,
     "create_user"          VARCHAR(36),
-    "create_time"          TIMESTAMP,
+    "create_time"          TIMESTAMP  default now() not null,
     "update_user"          VARCHAR(36),
     "update_time"          TIMESTAMP
 );
@@ -687,13 +684,13 @@ create table "geo_ip_library"
     "ip_end"      CHAR(39)                       not null,
     "country_id"  CHAR(3)                        not null,
     "region_code" VARCHAR(12),
-    "isp_name"    VARCHAR(128),
+    "isp_name"    VARCHAR(127),
     "is_revised"  BOOLEAN  default FALSE         not null,
-    "remark"      VARCHAR(128),
+    "remark"      VARCHAR(127),
     "is_active"   BOOLEAN  default TRUE          not null,
     "is_built_in" BOOLEAN  default FALSE         not null,
     "create_user" VARCHAR(36),
-    "create_time" TIMESTAMP,
+    "create_time" TIMESTAMP  default now() not null,
     "update_user" VARCHAR(36),
     "update_time" TIMESTAMP
 );
@@ -736,28 +733,28 @@ create table "geo_country"
     "digital_code"            CHAR(3),
     "letter_code"             CHAR(2)               not null,
     "gec_code"                CHAR(2)               not null,
-    "name"                    VARCHAR(32)           not null,
-    "english_name"            VARCHAR(64),
-    "full_name"               VARCHAR(64),
-    "english_full_name"       VARCHAR(64),
+    "name"                    VARCHAR(31)           not null,
+    "english_name"            VARCHAR(63),
+    "full_name"               VARCHAR(63),
+    "english_full_name"       VARCHAR(63),
     "domain_suffix"           CHAR(2),
-    "flag_url"                VARCHAR(128),
-    "capital"                 VARCHAR(64),
+    "flag_url"                VARCHAR(127),
+    "capital"                 VARCHAR(63),
     "capital_latitude"        VARCHAR(7),
     "capital_longitude"       VARCHAR(7),
     "locale_dict_code" VARCHAR(5),
-    "continent_ocean_dict_code"   VARCHAR(16),
+    "continent_ocean_dict_code"   VARCHAR(15),
     "currency_dict_code"          CHAR(3),
     "calling_code"            VARCHAR(5),
-    "timezone_utc"            VARCHAR(32),
-    "date_format"             VARCHAR(16),
+    "timezone_utc"            VARCHAR(31),
+    "date_format"             VARCHAR(15),
     "founding_day"            DATE,
-    "driving_side_dict_code"      VARCHAR(16),
-    "remark"                  VARCHAR(128),
+    "driving_side_dict_code"      VARCHAR(15),
+    "remark"                  VARCHAR(127),
     "is_active"               BOOLEAN default TRUE  not null,
     "is_built_in"             BOOLEAN default FALSE not null,
     "create_user"             VARCHAR(36),
-    "create_time"             TIMESTAMP,
+    "create_time"             TIMESTAMP  default now() not null,
     "update_user"             VARCHAR(36),
     "update_time"             TIMESTAMP
 );
@@ -831,22 +828,22 @@ create table "geo_region"
         primary key,
     "country_id"              CHAR(3)                        not null,
     "code"                    VARCHAR(12)                    not null,
-    "name"                    VARCHAR(128)                   not null,
+    "name"                    VARCHAR(127)                   not null,
     "parent_code"             VARCHAR(12),
     "hierarchy"               CHAR(1),
-    "short_name"              VARCHAR(32),
-    "alias_name"              VARCHAR(128),
+    "short_name"              VARCHAR(31),
+    "alias_name"              VARCHAR(127),
     "postcode"                VARCHAR(6),
     "longitude"               VARCHAR(7),
     "latitude"                VARCHAR(7),
     "calling_code"            VARCHAR(5),
     "license_plate_no_prefix" VARCHAR(5),
     "airport_code"            CHAR(3),
-    "remark"                  VARCHAR(128),
+    "remark"                  VARCHAR(127),
     "is_active"               BOOLEAN  default TRUE          not null,
     "is_built_in"             BOOLEAN  default FALSE         not null,
     "create_user"             VARCHAR(36),
-    "create_time"             TIMESTAMP,
+    "create_time"             TIMESTAMP  default now() not null,
     "update_user"             VARCHAR(36),
     "update_time"             TIMESTAMP
 );
@@ -905,13 +902,13 @@ create table "user_auth_group"
 (
     "id"          CHAR(36) default RANDOM_UUID() not null
         primary key,
-    "group_name"  VARCHAR(64)                    not null,
-    "sub_sys_dict_code"       VARCHAR(32),
-    "remark"      VARCHAR(128),
+    "group_name"  VARCHAR(63)                    not null,
+    "sub_sys_dict_code"       VARCHAR(31),
+    "remark"      VARCHAR(127),
     "is_active"   BOOLEAN  default TRUE          not null,
     "is_built_in" BOOLEAN  default FALSE         not null,
     "create_user" VARCHAR(36),
-    "create_time" TIMESTAMP,
+    "create_time" TIMESTAMP  default now() not null,
     "update_user" VARCHAR(36),
     "update_time" TIMESTAMP,
     "owner_id" VARCHAR(36)
@@ -960,13 +957,13 @@ create table "user_auth_role"
 (
     "id"          CHAR(36) default RANDOM_UUID() not null
         primary key,
-    "role_name"   VARCHAR(64)                    not null,
-    "sub_sys_dict_code"       VARCHAR(32),
-    "remark"      VARCHAR(128),
+    "role_name"   VARCHAR(63)                    not null,
+    "sub_sys_dict_code"       VARCHAR(31),
+    "remark"      VARCHAR(127),
     "is_active"   BOOLEAN  default TRUE          not null,
     "is_built_in" BOOLEAN  default FALSE         not null,
     "create_user" VARCHAR(36),
-    "create_time" TIMESTAMP,
+    "create_time" TIMESTAMP  default now() not null,
     "update_user" VARCHAR(36),
     "update_time" TIMESTAMP,
     "owner_id" VARCHAR(36)
@@ -1049,14 +1046,14 @@ comment on column "user_auth_role_resource"."resource_id" is '资源id';
 CREATE TABLE "msg_template" (
   "id"       CHAR(36) default RANDOM_UUID() not null primary key,
   "send_type_dict_code" varchar(6) NOT NULL,
-  "event_type_dict_code" varchar(32) NOT NULL,
-  "msg_type_dict_code" varchar(16) NOT NULL,
+  "event_type_dict_code" VARCHAR(31) NOT NULL,
+  "msg_type_dict_code" VARCHAR(15) NOT NULL,
   "group_code" char(36),
   "locale_dict_code" varchar(5),
-  "title" varchar(128),
+  "title" VARCHAR(127),
   "content" varchar,
   "is_default_active" bool NOT NULL DEFAULT false,
-  "default_title" varchar(128),
+  "default_title" VARCHAR(127),
   "default_content" varchar,
   "owner_id" VARCHAR(36)
 );
@@ -1080,12 +1077,12 @@ COMMENT ON COLUMN "msg_template"."owner_id" IS '所有者id，依业务可以是
 CREATE TABLE "msg_instance" (
   "id"       CHAR(36) default RANDOM_UUID() not null primary key,
   "locale_dict_code" varchar(5),
-  "title" varchar(128),
+  "title" VARCHAR(127),
   "content" varchar,
   "template_id" CHAR(36),
   "send_type_dict_code" varchar(6),
-  "event_type_dict_code" varchar(32),
-  "msg_type_dict_code" varchar(16),
+  "event_type_dict_code" VARCHAR(31),
+  "msg_type_dict_code" VARCHAR(15),
   "valid_time_start" TIMESTAMP default now() not null,
   "valid_time_end" TIMESTAMP default (now()+99999) not null,
   "owner_id" VARCHAR(36),
@@ -1110,14 +1107,14 @@ COMMENT ON COLUMN "msg_instance"."owner_id" IS '所有者id，依业务可以是
 
 CREATE TABLE "msg_receiver_group" (
   "id"       CHAR(36) default RANDOM_UUID() not null primary key,
-  "receiver_group_type_dict_code" varchar(16) not null,
-  "define_table" varchar(64) not null,
-  "name_column" varchar(64) not null,
-  "remark"      VARCHAR(128),
+  "receiver_group_type_dict_code" VARCHAR(15) not null,
+  "define_table" VARCHAR(63) not null,
+  "name_column" VARCHAR(63) not null,
+  "remark"      VARCHAR(127),
   "is_active"   BOOLEAN  default TRUE          not null,
   "is_built_in" BOOLEAN  default FALSE         not null,
   "create_user" VARCHAR(36),
-  "create_time" TIMESTAMP,
+  "create_time" TIMESTAMP  default now() not null,
   "update_user" VARCHAR(36),
   "update_time" TIMESTAMP
 );
@@ -1140,13 +1137,13 @@ comment on column "msg_receiver_group"."update_time" is '更新时间';
 
 CREATE TABLE "msg_send" (
   "id"       CHAR(36) default RANDOM_UUID() not null primary key,
-  "receiver_group_type_dict_code" varchar(16) NOT NULL,
+  "receiver_group_type_dict_code" VARCHAR(15) NOT NULL,
   "receiver_group_id" VARCHAR(36),
   "instance_id" CHAR(36) NOT NULL,
-  "msg_type_dict_code" varchar(16) NOT NULL,
+  "msg_type_dict_code" VARCHAR(15) NOT NULL,
   "locale_dict_code" varchar(5),
   "send_status_dict_code" varchar(2) NOT NULL,
-  "create_time" timestamp NOT NULL,
+  "create_time" timestamp default now() NOT NULL,
   "update_time" timestamp,
   "success_count" int4 DEFAULT 0,
   "fail_count" int4 DEFAULT 0,
@@ -1178,7 +1175,7 @@ CREATE TABLE "msg_site_msg_receive" (
   "receiver_id" CHAR(36) NOT NULL,
   "send_id" CHAR(36) NOT NULL,
   "receive_status_dict_code" varchar(2) NOT NULL,
-  "create_time" timestamp NOT NULL,
+  "create_time" timestamp default now() NOT NULL,
   "update_time" timestamp,
   "owner_id" VARCHAR(36),
   constraint "fk_msg_site_msg_receive"
@@ -1197,8 +1194,8 @@ COMMENT ON COLUMN "msg_site_msg_receive"."owner_id" IS '所有者id，依业务�
 
 CREATE TABLE "code_gen_file" (
   "id" CHAR(36) default RANDOM_UUID() not null primary key,
-  "filename" varchar(64) NOT NULL,
-  "object_name" varchar(64) NOT NULL
+  "filename" VARCHAR(63) NOT NULL,
+  "object_name" VARCHAR(63) NOT NULL
 );
 COMMENT ON TABLE "code_gen_file" IS '代码生成-文件信息';
 COMMENT ON COLUMN "code_gen_file"."id" IS '主键';
@@ -1207,8 +1204,8 @@ COMMENT ON COLUMN "code_gen_file"."object_name" IS '对象名';
 
 CREATE TABLE "code_gen_object" (
   "id" CHAR(36) default RANDOM_UUID() not null primary key,
-  "name" varchar(64) NOT NULL,
-  "comment" varchar(128),
+  "name" VARCHAR(63) NOT NULL,
+  "comment" VARCHAR(127),
   "create_time" timestamp default now() NOT NULL,
   "create_user" varchar(36) NOT NULL,
   "update_time" timestamp,
@@ -1228,13 +1225,13 @@ COMMENT ON COLUMN "code_gen_object"."gen_count" IS '生成次数';
 
 CREATE TABLE "code_gen_column" (
   "id" CHAR(36) default RANDOM_UUID() not null primary key,
-  "name" varchar(64) NOT NULL,
-  "object_name" varchar(64) NOT NULL,
-  "comment" varchar(128),
+  "name" VARCHAR(63) NOT NULL,
+  "object_name" VARCHAR(63) NOT NULL,
+  "comment" VARCHAR(127),
   "is_searchable" bool NOT NULL DEFAULT false,
   "is_sortable" bool NOT NULL DEFAULT false,
   "order_in_list" tinyint,
-  "default_order" varchar(8),
+  "default_order" VARCHAR(7),
   "order_in_edit" tinyint,
   "order_in_view" tinyint
 );

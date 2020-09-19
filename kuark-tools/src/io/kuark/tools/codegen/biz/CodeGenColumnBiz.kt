@@ -67,15 +67,15 @@ object CodeGenColumnBiz {
         return RdbKit.getDatabase().batchInsert(CodeGenColumns) {
             for (column in columnInfos) {
                 item {
-                    it.name to column.getName()
-                    it.objectName to table
-                    it.comment to column.getCustomComment()
-                    it.isSearchable to column.getSearchable()
-                    it.isSortable to column.getSortable()
-                    it.orderInEdit to column.getOrderInEdit()
-                    it.orderInList to column.getOrderInList()
-                    it.orderInView to column.getOrderInView()
-                    it.defaultOrder to column.getDefaultOrder()
+                    set(it.name, column.getName())
+                    set(it.objectName, table)
+                    set(it.comment, column.getCustomComment())
+                    set(it.isSearchable, column.getSearchable())
+                    set(it.isSortable, column.getSortable())
+                    set(it.orderInEdit, column.getOrderInEdit())
+                    set(it.orderInList, column.getOrderInList())
+                    set(it.orderInView, column.getOrderInView())
+                    set(it.defaultOrder, column.getDefaultOrder())
                 }
             }
         }.isNotEmpty()

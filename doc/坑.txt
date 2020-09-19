@@ -5,10 +5,11 @@ Condition OnClassCondition on org.springframework.boot.autoconfigure.h2.H2Consol
 答：需要 implementation("org.springframework.boot:spring-boot-starter-web")
 
 
-2. 用idea的database以tcp的方式连接h2：
+2. 用idea的database插件连接h2数据库：
 [90079][90079] org.h2.jdbc.JdbcSQLSyntaxErrorException: Schema "information_schema" not found; SQL statement:
 select catalog_name from information_schema.catalogs [90079-200].
-而用h2自带的控制台连则没有问题。
+而用h2自带的控制台连则没有问题。库中是大写的，但idea插件则是以小写去查询。
+添加这些连接参数也依然失败：DATABASE_TO_UPPER=false;IGNORECASE=true;SCHEMA=PUBLIC
 答：未解决
 
 

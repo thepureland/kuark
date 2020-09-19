@@ -41,11 +41,11 @@ object CodeGenObjectBiz {
         val codeGenObjects = RdbKit.getDatabase().sequenceOf(CodeGenObjects).filter { it.name eq table }
         return if (codeGenObjects.isEmpty()) {
             RdbKit.getDatabase().insert(CodeGenObjects) {
-                it.name to table
-                it.comment to comment
-                it.createTime to LocalDateTime.now()
-                it.createUser to author
-                it.genCount to 1
+                set(it.name, table)
+                set(it.comment, comment)
+                set(it.createTime, LocalDateTime.now())
+                set(it.createUser, author)
+                set(it.genCount, 1)
             } == 1
         } else {
             val codeGenObject = codeGenObjects.first()

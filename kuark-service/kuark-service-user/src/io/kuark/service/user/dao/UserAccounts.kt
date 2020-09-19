@@ -16,6 +16,12 @@ import me.liuwj.ktorm.schema.varchar
 object UserAccounts : MaintainableTable<UserAccount>("user_account") {
 //endregion your codes 1
 
+    /** 用户名 */
+    var username= varchar("username").bindTo { it.username }
+
+    /** 密码 */
+    var password= varchar("password").bindTo { it.password }
+
     /** 子系统代码 */
     var subSysDictCode = varchar("sub_sys_dict_code").bindTo { it.subSysDictCode }
 

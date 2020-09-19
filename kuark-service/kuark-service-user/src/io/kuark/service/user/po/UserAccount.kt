@@ -16,8 +16,14 @@ interface UserAccount : IMaintainableDbEntity<String, UserAccount> {
 
     companion object : DbEntityFactory<UserAccount>()
 
+    /** 用户名 */
+    var username: String
+
+    /** 密码 */
+    var password: String
+
     /** 子系统代码 */
-    var subSysDictCode: String
+    var subSysDictCode: String?
 
     /** 用户状态代码 */
     var userStatusDictCode: String
@@ -62,7 +68,7 @@ interface UserAccount : IMaintainableDbEntity<String, UserAccount> {
     var secondPassword: String
 
     /** 所有者id，依业务可以是店铺id、站点id、商户id等 */
-    var ownerId: String
+    var ownerId: String?
 
 
     //region your codes 2

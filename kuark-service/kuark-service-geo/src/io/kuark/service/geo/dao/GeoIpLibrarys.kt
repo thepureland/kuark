@@ -1,6 +1,6 @@
 package io.kuark.service.geo.dao
 
-import io.kuark.ability.data.jdbc.support.MaintainableTable
+import io.kuark.ability.data.rdb.support.MaintainableTable
 import io.kuark.service.geo.po.GeoIpLibrary
 import me.liuwj.ktorm.schema.boolean
 import me.liuwj.ktorm.schema.varchar

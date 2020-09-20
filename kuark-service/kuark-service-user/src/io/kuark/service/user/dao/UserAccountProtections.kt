@@ -1,6 +1,6 @@
 package io.kuark.service.user.dao
 
-import io.kuark.ability.data.jdbc.support.MaintainableTable
+import io.kuark.ability.data.rdb.support.MaintainableTable
 import io.kuark.service.user.po.UserAccountProtection
 import me.liuwj.ktorm.schema.int
 import me.liuwj.ktorm.schema.varchar

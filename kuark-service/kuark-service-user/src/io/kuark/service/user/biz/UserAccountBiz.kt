@@ -1,6 +1,6 @@
 package io.kuark.service.user.biz
 
-import io.kuark.ability.data.jdbc.support.RdbKit
+import io.kuark.ability.data.rdb.support.RdbKit
 import io.kuark.service.user.dao.UserAccounts
 import io.kuark.service.user.ibiz.IUserAccountBiz
 import io.kuark.service.user.po.UserAccount

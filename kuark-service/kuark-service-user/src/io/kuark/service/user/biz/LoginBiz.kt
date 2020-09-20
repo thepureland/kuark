@@ -36,7 +36,7 @@ class LoginBiz : ILoginBiz {
 
     }
 
-    fun thirdLogin(type: String, code: String, state: String) {
+    override fun thirdLogin(type: String, code: String, state: String) {
         val authBiz = thirdPartyAuthBizFactory.getAuthBiz(type)
         val context = KuarkContextHolder.get()
         val subSysCode = context.subSysCode

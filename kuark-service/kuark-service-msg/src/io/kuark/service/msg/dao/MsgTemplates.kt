@@ -1,6 +1,6 @@
 package io.kuark.service.msg.dao
 
-import io.kuark.ability.data.jdbc.support.StringIdTable
+import io.kuark.ability.data.rdb.support.StringIdTable
 import me.liuwj.ktorm.schema.boolean
 import me.liuwj.ktorm.schema.varchar
 

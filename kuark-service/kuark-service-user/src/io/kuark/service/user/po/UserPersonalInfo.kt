@@ -1,7 +1,7 @@
 package io.kuark.service.user.po
 
-import io.kuark.ability.data.jdbc.support.DbEntityFactory
-import io.kuark.ability.data.jdbc.support.IMaintainableDbEntity
+import io.kuark.ability.data.rdb.support.DbEntityFactory
+import io.kuark.ability.data.rdb.support.IMaintainableDbEntity
 import java.time.LocalDateTime
 import java.time.LocalDate
 

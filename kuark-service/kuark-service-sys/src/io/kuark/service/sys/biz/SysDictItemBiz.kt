@@ -2,7 +2,7 @@ package io.kuark.service.sys.biz
 
 import io.kuark.ability.cache.context.CacheNames
 import io.kuark.ability.cache.core.BatchCacheable
-import io.kuark.ability.data.jdbc.support.RdbKit
+import io.kuark.ability.data.rdb.support.RdbKit
 import io.kuark.service.sys.dao.SysDictItems
 import io.kuark.service.sys.dao.SysDicts
 import io.kuark.service.sys.ibiz.ISysDictItemBiz

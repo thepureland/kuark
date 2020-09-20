@@ -1,9 +1,9 @@
 package io.kuark.tools.codegen.biz
 
 
-import io.kuark.ability.data.jdbc.metadata.Column
-import io.kuark.ability.data.jdbc.metadata.RdbMetadataKit
-import io.kuark.ability.data.jdbc.support.RdbKit
+import io.kuark.ability.data.rdb.metadata.Column
+import io.kuark.ability.data.rdb.metadata.RdbMetadataKit
+import io.kuark.ability.data.rdb.support.RdbKit
 import io.kuark.base.bean.BeanKit
 import io.kuark.tools.codegen.core.CodeGeneratorContext
 import io.kuark.tools.codegen.dao.CodeGenColumns

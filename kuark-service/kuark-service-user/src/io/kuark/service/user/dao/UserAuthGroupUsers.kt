@@ -1,6 +1,6 @@
 package io.kuark.service.user.dao
 
-import io.kuark.ability.data.jdbc.support.StringIdTable
+import io.kuark.ability.data.rdb.support.StringIdTable
 import io.kuark.service.user.po.UserAuthGroupUser
 import me.liuwj.ktorm.schema.varchar
 

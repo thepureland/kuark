@@ -1,8 +1,8 @@
 package io.kuark.tools.codegen.biz
 
-import io.kuark.ability.data.jdbc.metadata.RdbMetadataKit
-import io.kuark.ability.data.jdbc.metadata.TableType
-import io.kuark.ability.data.jdbc.support.RdbKit
+import io.kuark.ability.data.rdb.metadata.RdbMetadataKit
+import io.kuark.ability.data.rdb.metadata.TableType
+import io.kuark.ability.data.rdb.support.RdbKit
 import io.kuark.tools.codegen.core.CodeGeneratorContext
 import io.kuark.tools.codegen.dao.CodeGenObjects
 import me.liuwj.ktorm.dsl.eq

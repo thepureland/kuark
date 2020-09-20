@@ -30,9 +30,9 @@ class KtorHttpintercept : KtorMiddleware {
     override fun Application.middleware() {
 
         var sessionStorage: SessionStorage = SpringKit.getBean(MixCacheSessionStorage::class)
-        if (sessionStorage == null) {
-            sessionStorage = directorySessionStorage(File(".sessions"))
-        }
+//        if (sessionStorage == null) {
+//            sessionStorage = directorySessionStorage(File(".sessions"))
+//        }
         install(Sessions) {
             header<WebSession>(sessionIdName, sessionStorage) {
                 transform(SessionTransportTransformerMessageAuthentication(sessionSecretKey.toByteArray())) // sign the ID that travels to client

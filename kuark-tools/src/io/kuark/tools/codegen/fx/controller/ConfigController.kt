@@ -1,8 +1,8 @@
 package io.kuark.tools.codegen.fx.controller
 
-import io.kuark.ability.data.jdbc.datasource.DataSourceKit
-import io.kuark.ability.data.jdbc.datasource.setCurrentDataSource
-import io.kuark.ability.data.jdbc.support.RdbKit
+import io.kuark.ability.data.rdb.datasource.DataSourceKit
+import io.kuark.ability.data.rdb.datasource.setCurrentDataSource
+import io.kuark.ability.data.rdb.support.RdbKit
 import io.kuark.base.io.FilenameKit
 import io.kuark.base.io.PathKit
 import io.kuark.base.lang.SystemKit

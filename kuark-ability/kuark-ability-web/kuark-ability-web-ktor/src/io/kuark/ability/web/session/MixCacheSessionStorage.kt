@@ -5,10 +5,10 @@ import io.ktor.util.cio.toByteArray
 import io.ktor.utils.io.ByteReadChannel
 import io.ktor.utils.io.ByteWriteChannel
 import io.ktor.utils.io.writer
-import io.kuark.cache.context.CacheNames
-import io.kuark.cache.context.MixCacheConfiguration
-import io.kuark.cache.core.MixCacheManager
-import io.kuark.cache.kit.CacheKit
+import io.kuark.ability.cache.context.CacheNames
+import io.kuark.ability.cache.context.MixCacheConfiguration
+import io.kuark.ability.cache.core.MixCacheManager
+import io.kuark.ability.cache.kit.CacheKit
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import org.springframework.beans.factory.annotation.Autowired

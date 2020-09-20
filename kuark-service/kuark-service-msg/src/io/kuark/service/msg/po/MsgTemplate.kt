@@ -1,7 +1,7 @@
 package io.kuark.service.msg.po
 
-import io.kuark.ability.data.jdbc.support.DbEntityFactory
-import io.kuark.ability.data.jdbc.support.IDbEntity
+import io.kuark.ability.data.rdb.support.DbEntityFactory
+import io.kuark.ability.data.rdb.support.IDbEntity
 
 /**
  * 消息模板数据库实体

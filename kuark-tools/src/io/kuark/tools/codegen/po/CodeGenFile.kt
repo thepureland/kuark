@@ -1,7 +1,7 @@
 package io.kuark.tools.codegen.po
 
-import io.kuark.ability.data.jdbc.support.DbEntityFactory
-import io.kuark.ability.data.jdbc.support.IDbEntity
+import io.kuark.ability.data.rdb.support.DbEntityFactory
+import io.kuark.ability.data.rdb.support.IDbEntity
 
 /**
  * 代码生成-文件信息数据库实体

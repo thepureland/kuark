@@ -1,7 +1,7 @@
 package io.kuark.service.sys.biz
 
 import io.kuark.ability.cache.context.CacheNames
-import io.kuark.ability.data.jdbc.support.RdbKit
+import io.kuark.ability.data.rdb.support.RdbKit
 import io.kuark.service.sys.dao.SysParams
 import io.kuark.service.sys.ibiz.ISysParamBiz
 import io.kuark.service.sys.po.SysParam

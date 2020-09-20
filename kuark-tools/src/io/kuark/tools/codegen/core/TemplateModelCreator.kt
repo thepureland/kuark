@@ -1,7 +1,7 @@
 package io.kuark.tools.codegen.core
 
-import io.kuark.ability.data.jdbc.metadata.Column
-import io.kuark.ability.data.jdbc.metadata.RdbMetadataKit
+import io.kuark.ability.data.rdb.metadata.Column
+import io.kuark.ability.data.rdb.metadata.RdbMetadataKit
 import io.kuark.base.bean.BeanKit
 import io.kuark.base.lang.string.underscoreToHump
 import io.kuark.tools.codegen.vo.Config

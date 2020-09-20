@@ -1,0 +1,3 @@
+spring:
+  profiles:
+    active: context-test,cache-test,web-ktor-test,service-user-test

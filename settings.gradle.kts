@@ -43,13 +43,25 @@ findProject(":kuark-ability:kuark-ability-web:kuark-ability-web-ktor")?.name = "
 
 include("kuark-service")
 include("kuark-service:kuark-service-sys")
-findProject(":kuark-service:kuark-service-sys")?.name = "kuark-service-sys"
+include("kuark-service:kuark-service-sys:kuark-service-sys-provider")
+findProject(":kuark-service:kuark-service-sys:kuark-service-sys-provider")?.name = "kuark-service-sys-provider"
+include("kuark-service:kuark-service-sys:kuark-service-sys-consumer")
+findProject(":kuark-service:kuark-service-sys:kuark-service-sys-consumer")?.name = "kuark-service-sys-consumer"
 include("kuark-service:kuark-service-geo")
-findProject(":kuark-service:kuark-service-geo")?.name = "kuark-service-geo"
+include("kuark-service:kuark-service-geo:kuark-service-geo-provider")
+findProject(":kuark-service:kuark-service-geo:kuark-service-geo-provider")?.name = "kuark-service-geo-provider"
+include("kuark-service:kuark-service-geo:kuark-service-geo-consumer")
+findProject(":kuark-service:kuark-service-geo:kuark-service-geo-consumer")?.name = "kuark-service-geo-consumer"
 include("kuark-service:kuark-service-user")
-findProject(":kuark-service:kuark-service-user")?.name = "kuark-service-user"
+include("kuark-service:kuark-service-user:kuark-service-user-provider")
+findProject(":kuark-service:kuark-service-user:kuark-service-user-provider")?.name = "kuark-service-user-provider"
+include("kuark-service:kuark-service-user:kuark-service-user-consumer")
+findProject(":kuark-service:kuark-service-user:kuark-service-user-consumer")?.name = "kuark-service-user-consumer"
 include("kuark-service:kuark-service-msg")
-findProject(":kuark-service:kuark-service-msg")?.name = "kuark-service-msg"
+include("kuark-service:kuark-service-msg:kuark-service-msg-provider")
+findProject(":kuark-service:kuark-service-msg:kuark-service-msg-provider")?.name = "kuark-service-msg-provider"
+include("kuark-service:kuark-service-msg:kuark-service-msg-consumer")
+findProject(":kuark-service:kuark-service-msg:kuark-service-msg-consumer")?.name = "kuark-service-msg-consumer"
 
 include("kuark-ui")
 include("kuark-ui:kuark-ui-jfx")

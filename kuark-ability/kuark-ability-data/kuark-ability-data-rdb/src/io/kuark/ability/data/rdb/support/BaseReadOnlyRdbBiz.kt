@@ -9,8 +9,9 @@ import me.liuwj.ktorm.schema.Table
  * @author K
  * @since 1.0.0
  */
-abstract class BaseRdbBiz<E: Entity<E>, T: Table<E>>: BaseReadOnlyRdbBiz<E, T>() {
+abstract class BaseReadOnlyRdbBiz<E: Entity<E>, T: Table<E>> {
 
-//TODO
+    //TODO
+
 
 }

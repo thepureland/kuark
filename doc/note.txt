@@ -27,4 +27,8 @@ Jedis和Lettuce的区别在哪？
 
 
 
+spring cloud
+1. 如不想将服务注册到Eureka Server，只需设置spring.cloud.service-registry.auto-registration.enabled=false，或@EnableDiscoveryClient(autoRegister = false) 即可。
+
+
 

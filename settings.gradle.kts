@@ -17,8 +17,8 @@ findProject(":kuark-ability:kuark-ability-data:kuark-ability-data-memdb")?.name 
 include("kuark-ability:kuark-ability-data:kuark-ability-data-docdb")
 findProject(":kuark-ability:kuark-ability-data:kuark-ability-data-docdb")?.name = "kuark-ability-data-docdb"
 include("kuark-ability:kuark-ability-distributed")
-include("kuark-ability:kuark-ability-distributed:kuark-ability-distributed-registry")
-findProject(":kuark-ability:kuark-ability-distributed:kuark-ability-distributed-registry")?.name = "kuark-ability-distributed-registry"
+include("kuark-ability:kuark-ability-distributed:kuark-ability-distributed-discovery")
+findProject(":kuark-ability:kuark-ability-distributed:kuark-ability-distributed-discovery")?.name = "kuark-ability-distributed-discovery"
 include("kuark-ability:kuark-ability-distributed:kuark-ability-distributed-gateway")
 findProject(":kuark-ability:kuark-ability-distributed:kuark-ability-distributed-gateway")?.name = "kuark-ability-distributed-gateway"
 include("kuark-ability:kuark-ability-distributed:kuark-ability-distributed-tx")
@@ -37,6 +37,8 @@ include("kuark-ability:kuark-ability-distributed:kuark-ability-distributed-strea
 findProject(":kuark-ability:kuark-ability-distributed:kuark-ability-distributed-stream")?.name = "kuark-ability-distributed-stream"
 include("kuark-ability:kuark-ability-distributed:kuark-ability-distributed-bus")
 findProject(":kuark-ability:kuark-ability-distributed:kuark-ability-distributed-bus")?.name = "kuark-ability-distributed-bus"
+include("kuark-ability:kuark-ability-distributed:kuark-ability-distributed-config")
+findProject(":kuark-ability:kuark-ability-distributed:kuark-ability-distributed-config")?.name = "kuark-ability-distributed-config"
 include("kuark-ability:kuark-ability-web")
 include("kuark-ability:kuark-ability-web:kuark-ability-web-session")
 findProject(":kuark-ability:kuark-ability-web:kuark-ability-web-session")?.name = "kuark-ability-web-session"
@@ -67,6 +69,15 @@ findProject(":kuark-service:kuark-service-msg:kuark-service-msg-provider")?.name
 include("kuark-service:kuark-service-msg:kuark-service-msg-consumer")
 findProject(":kuark-service:kuark-service-msg:kuark-service-msg-consumer")?.name = "kuark-service-msg-consumer"
 
+include("kuark-server")
+include("kuark-server:kuark-server-config")
+findProject(":kuark-server:kuark-server-config")?.name = "kuark-server-config"
+include("kuark-server:kuark-server-eureka")
+findProject(":kuark-server:kuark-server-eureka")?.name = "kuark-server-eureka"
+include("kuark-server:kuark-server-hystrix")
+findProject(":kuark-server:kuark-server-hystrix")?.name = "kuark-server-hystrix"
+
+
 include("kuark-ui")
 include("kuark-ui:kuark-ui-jfx")
 findProject(":kuark-ui:kuark-ui-jfx")?.name = "kuark-ui-jfx"
@@ -74,3 +85,4 @@ findProject(":kuark-ui:kuark-ui-jfx")?.name = "kuark-ui-jfx"
 include("kuark-tools")
 
 include("kuark-test")
+

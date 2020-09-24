@@ -6,16 +6,13 @@ logging:
 
 kuark:
   ability:
-    # 注册中心
+    # 使用注册中心
     discovery:
       enabled: false
-    # 配置中心，开启时，注册中心自动为true
+    # 使用配置中心，开启时，注册中心自动为true
     config:
       enabled: false
 
-
-server:
-  port: 9001
 
 eureka:
   client:

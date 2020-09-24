@@ -200,6 +200,7 @@ subprojects {
             dependency("org.freemarker:freemarker:2.3.30")
 
             // spring cloud
+            dependency("org.springframework.cloud:spring-cloud-commons:$spring_cloud_version")
             dependency("org.springframework.cloud:spring-cloud-starter-netflix-eureka-server:$spring_cloud_version")
             dependency("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client:$spring_cloud_version")
             dependency("org.springframework.cloud:spring-cloud-config-server:$spring_cloud_version")

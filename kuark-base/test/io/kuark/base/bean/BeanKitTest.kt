@@ -91,12 +91,12 @@ internal class BeanKitTest {
     @Test
     fun testCopyPropertiesByMap() {
         val list = listOf("1", "2")
-        val srcObj = Pair("key", list)
+        val srcObj = Couple("key", list)
         val propertyMap = mapOf("first" to "second", "second[0]" to "first")
 
-        val dest = BeanKit.copyProperties(Pair::class, srcObj, propertyMap)
+        val dest = BeanKit.copyProperties(Couple::class, srcObj, propertyMap)
         assertEquals(srcObj.first, dest?.second)
-        assertEquals(srcObj.second[0], dest?.first)
+        assertEquals(srcObj.second!![0], dest?.first)
     }
 
     @Test
@@ -141,5 +141,19 @@ internal class BeanKitTest {
         assertEquals(persons.size.toLong(), results.size.toLong())
         assertEquals(persons[0].name, results[0].name)
         assertEquals(persons[1].weight, results[1].weight, 0.0)
+    }
+
+    internal class Couple<F, S> {
+
+        var first: F? = null
+        var second: S? = null
+
+        constructor()
+
+        constructor(first: F?, second: S?) {
+            this.first = first
+            this.second = second
+        }
+
     }
 }

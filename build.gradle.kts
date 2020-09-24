@@ -7,6 +7,7 @@ val logback_version: String by project
 val ktorm_version: String by project
 val spring_boot_version: String by project
 val slf4j_version: String by project
+val spring_cloud_version: String by project
 
 plugins {
 //    application
@@ -146,6 +147,9 @@ subprojects {
 
             // springboot
             dependency("org.springframework.boot:spring-boot-starter-aop:$spring_boot_version")
+            dependency("org.springframework.boot:spring-boot-starter-web:$spring_boot_version")
+            dependency("org.springframework.boot:spring-boot-starter-actuator:$spring_boot_version")
+            dependency("de.codecentric:spring-boot-admin-starter-server:2.3.0")
             dependency("org.springframework.boot:spring-boot-starter-test:$spring_boot_version") {
                 exclude("org.junit.vintage:junit-vintage-engine")
             }
@@ -194,6 +198,14 @@ subprojects {
 
             // tools
             dependency("org.freemarker:freemarker:2.3.30")
+
+            // spring cloud
+            dependency("org.springframework.cloud:spring-cloud-starter-netflix-eureka-server:$spring_cloud_version")
+            dependency("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client:$spring_cloud_version")
+            dependency("org.springframework.cloud:spring-cloud-config-server:$spring_cloud_version")
+            dependency("org.springframework.cloud:spring-cloud-starter-config:$spring_cloud_version")
+            dependency("org.springframework.cloud:spring-cloud-starter-netflix-hystrix-dashboard:$spring_cloud_version")
+
 
             // 依赖maven中不存在的jar
 //            ext.jarTree = fileTree(dir: 'libs', include: '**/*.jar')

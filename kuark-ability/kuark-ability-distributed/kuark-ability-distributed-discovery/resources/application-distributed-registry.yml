@@ -1,17 +1,18 @@
+# 指定运行端口
 server:
-  port: 8206
+  port: 8101
 
+# 指定服务名称
 spring:
   application:
-    name: nacos-user-service
-  cloud:
-    nacos:
-      discovery:
-        # 配置Nacos地址
-        server-addr: http://localhost:8848
+    name: eureka-client
 
-management:
-  endpoints:
-    web:
-      exposure:
-        include: '*'
+eureka:
+  client:
+    # 注册到Eureka的注册中心
+    register-with-eureka: true
+    # 获取注册实例列表
+    fetch-registry: true
+    service-url:
+      # 配置注册中心地址
+      defaultZone: http://localhost:8001/eureka

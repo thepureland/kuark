@@ -1,7 +1,7 @@
 package io.kuark.ability.cache.core
 
-import io.kuark.cache.context.CacheNames
-import io.kuark.cache.enums.CacheStrategy
+import io.kuark.ability.cache.context.CacheNames
+import io.kuark.ability.cache.enums.CacheStrategy
 import io.kuark.test.SpringTest
 import io.kuark.test.TestSpringBootContextLoader
 import org.junit.jupiter.api.Test

@@ -149,7 +149,7 @@ object BeanKit {
     fun <T> resetPropertiesExcludeId(entity: IIdEntity<T>) {
         val id = entity.id
         val emptyEntity: IIdEntity<T> = entity::class.getEmptyConstructor()!!.call()
-        copyProperties(emptyEntity, entity, null)
+        copyProperties(entity, emptyEntity, null)
         entity.id = id
     }
 

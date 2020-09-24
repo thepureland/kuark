@@ -4,9 +4,9 @@ import io.ktor.routing.routing
 import io.ktor.server.engine.ApplicationEngine
 import io.ktor.server.engine.ApplicationEngineFactory
 import io.ktor.server.engine.embeddedServer
-import io.kuark.context.annotation.ConfigValue
 import io.kuark.ability.web.support.KtorMiddleware
 import io.kuark.ability.web.support.KtorRouter
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -15,13 +15,13 @@ import org.springframework.context.annotation.Configuration
 @Configuration
 open class KtorConfiguration {
 
-    @ConfigValue("\${web.ktor.container.type:NETTY}")
+    @Value("\${web.ktor.container.type:NETTY}")
     private lateinit var webContainer: String
 
-    @ConfigValue("\${web.ktor.container.host:127.0.0.1}")
+    @Value("\${web.ktor.container.host:127.0.0.1}")
     private lateinit var webContainerHost: String
 
-    @ConfigValue("\${web.ktor.container.port:8080}")
+    @Value("\${web.ktor.container.port:8080}")
     private lateinit var webContainerPort: String
 
     /**

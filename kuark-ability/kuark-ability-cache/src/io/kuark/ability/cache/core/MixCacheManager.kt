@@ -3,9 +3,9 @@ package io.kuark.ability.cache.core
 import io.kuark.base.log.LogFactory
 import io.kuark.ability.cache.context.CacheNameResolver
 import io.kuark.ability.cache.enums.CacheStrategy
-import io.kuark.context.annotation.ConfigValue
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.cache.Cache
 import org.springframework.cache.CacheManager
 import org.springframework.cache.transaction.AbstractTransactionSupportingCacheManager
@@ -22,7 +22,7 @@ import org.springframework.stereotype.Component
 @Component("cacheManager")
 class MixCacheManager : AbstractTransactionSupportingCacheManager() {
 
-    @ConfigValue("\${cache.config.strategy}")
+    @Value("\${cache.config.strategy}")
     private var strategyStr: String? = null
 
     @Autowired(required = false)

@@ -10,21 +10,21 @@ import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.response.respondText
 import io.ktor.sessions.*
-import io.kuark.context.annotation.ConfigValue
 import io.kuark.context.spring.SpringKit
 import io.kuark.ability.web.session.MixCacheSessionStorage
 import io.kuark.ability.web.session.WebSession
 import io.kuark.ability.web.support.KtorMiddleware
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import java.io.File
 
 @Component
 class KtorHttpintercept : KtorMiddleware {
 
-    @ConfigValue("\${web.ktor.session.id-name:sessionId}")
+    @Value("\${web.ktor.session.id-name:sessionId}")
     private lateinit var sessionIdName: String
 
-    @ConfigValue("\${web.ktor.session.secret-key:__Kuark__}")
+    @Value("\${web.ktor.session.secret-key:__Kuark__}")
     private lateinit var sessionSecretKey: String
 
     override fun Application.middleware() {

@@ -25,6 +25,6 @@ interface ITreeable<T> : Serializable {
      * @author K
      * @since 1.0.0
      */
-    val parentUniqueIdentifier: T
+    val parentUniqueIdentifier: T?
 
 }

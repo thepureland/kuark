@@ -2,7 +2,7 @@ package io.kuark.ability.cache.context
 
 import com.github.benmanes.caffeine.cache.Caffeine
 import com.github.benmanes.caffeine.cache.CaffeineSpec
-import io.kuark.context.annotation.ConfigValue
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression
 import org.springframework.cache.CacheManager
@@ -21,7 +21,7 @@ import org.springframework.context.annotation.Configuration
 @ConditionalOnExpression("'\${cache.config.strategy}'.equals('SINGLE_LOCAL') || '\${cache.config.strategy}'.equals('LOCAL_REMOTE')")
 open class LocalCacheConfiguration {
 
-    @ConfigValue("\${spring.cache.caffeine.spec}")
+    @Value("\${spring.cache.caffeine.spec}")
     private lateinit var caffeineSpec: String
 
     @Bean(name = ["localCacheManager"])

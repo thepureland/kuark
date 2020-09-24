@@ -30,15 +30,15 @@ internal class ListToTreeConvertorTest {
         assert(result)
     }
 
-    internal class TestRecord : ITreeable<String?> {
-        var id: String? = null
+    internal class TestRecord : ITreeable<String> {
+        var id: String
             private set
         var parentId: String? = null
             private set
         var name: String? = null
             private set
 
-        constructor(id: String?, parentId: String?, name: String?) : super() {
+        constructor(id: String, parentId: String?, name: String?) : super() {
             this.id = id
             this.parentId = parentId
             this.name = name
@@ -48,7 +48,7 @@ internal class ListToTreeConvertorTest {
             private const val serialVersionUID = -3832151541461087421L
         }
 
-        override val selfUniqueIdentifier: String?
+        override val selfUniqueIdentifier: String
             get() = id
         override val parentUniqueIdentifier: String?
             get() = parentId

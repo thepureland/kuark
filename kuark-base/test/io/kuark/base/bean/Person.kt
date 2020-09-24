@@ -16,7 +16,6 @@ class Person : IIdEntity<String>, ITreeable<String?> {
 
     override var selfUniqueIdentifier: String? = null
     override var parentUniqueIdentifier: String? = null
-        private set
     var name: String? = null
     var sex: String? = null
     var age = 0

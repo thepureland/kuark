@@ -1,13 +1,13 @@
 package io.kuark.context.spring
 
-import io.kuark.context.annotation.ConfigValue
 import io.kuark.test.SpringTest
 import org.junit.jupiter.api.Test
+import org.springframework.beans.factory.annotation.Value
 
 
 internal class SpringKitTest : SpringTest() {
 
-    @ConfigValue(value = "\${nacos.test:123}", autoRefreshed = true)
+    @Value(value = "\${nacos.test:123}")
     private val testProperties: String? = null
 
     @Test

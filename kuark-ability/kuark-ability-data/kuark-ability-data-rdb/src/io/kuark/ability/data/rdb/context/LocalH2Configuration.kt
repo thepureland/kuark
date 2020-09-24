@@ -4,9 +4,9 @@ import com.zaxxer.hikari.HikariDataSource
 import io.kuark.base.io.PathKit
 import io.kuark.base.log.LogFactory
 import io.kuark.base.net.NetworkKit
-import io.kuark.context.annotation.ConfigValue
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.AutoConfigureBefore
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
@@ -41,7 +41,7 @@ open class LocalH2Configuration {
 
     private val logger = LogFactory.getLog(this::class)
 
-    @ConfigValue("\${spring.datasource.url}")
+    @Value("\${spring.datasource.url}")
     private lateinit var dbUrl: String
 
     /**

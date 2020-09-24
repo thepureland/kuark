@@ -76,6 +76,8 @@ include("kuark-server:kuark-server-eureka")
 findProject(":kuark-server:kuark-server-eureka")?.name = "kuark-server-eureka"
 include("kuark-server:kuark-server-hystrix")
 findProject(":kuark-server:kuark-server-hystrix")?.name = "kuark-server-hystrix"
+include("kuark-server:kuark-server-admin")
+findProject(":kuark-server:kuark-server-admin")?.name = "kuark-server-admin"
 
 
 include("kuark-ui")

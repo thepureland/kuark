@@ -6,7 +6,7 @@ package io.kuark.base.tree
  * @author K
  * @since 1.0.0
  */
-interface IJsTreeNode : ITreeable<String?> {
+interface IJsTreeNode : ITreeable<String> {
 
     /**
      * 结点文本

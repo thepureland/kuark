@@ -1,0 +1,71 @@
+server:
+  port: 8901
+
+spring:
+  application:
+    name: config-server
+  cloud:
+    config:
+      label: master
+      name: config
+      profile: dev
+      server:
+        git:
+          # 配置存储配置信息的Git仓库
+          uri: https://github.com/19840104/kuark-config.git
+          # 获取子目录下的配置
+          search-paths: '{application}'
+          # 开启启动时直接从git获取配置
+          clone-on-start: true
+          # 用户名/密码方式登陆
+          #          username: your_username
+          #          password: 123456 # 可通过java JCE加密
+          # ssh方式登陆
+          host-key-algorithm: ssh-rsa
+          private-key:
+            -----BEGIN OPENSSH PRIVATE KEY-----
+            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
+            -----END OPENSSH PRIVATE KEY-----
+
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8001/eureka/

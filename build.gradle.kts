@@ -117,7 +117,6 @@ subprojects {
 //        }
         dependencies {
             dependency("de.idyl:winzipaes:1.0.1")
-            dependency("com.alibaba.boot:nacos-config-spring-boot-starter:0.2.7")
 
             // commons
             dependency("org.apache.commons:commons-lang3:3.10")

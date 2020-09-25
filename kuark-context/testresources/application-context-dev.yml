@@ -1,9 +1,7 @@
 # 覆写想修改的属性，或新增其它属性
 
-kuark:
-  ability:
-    # 使用配置中心，开启时，注册中心自动为true
-    config:
-      enabled: true
+
+
+
 
 

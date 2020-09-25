@@ -1,9 +1,10 @@
-server:
-  port: 9001
+logging:
+  level:
+    root: debug
+    io.kuark.xxx: debug
+
 
 spring:
-  application:
-    name: config-client
   cloud:
     # config客户端配置
     config:
@@ -15,13 +16,10 @@ spring:
       name: config
       # 配置中心地址
       uri: http://localhost:8901
+#      discovery:
+#        enabled: true
+#        service-id: config
 
-eureka:
-  client:
-    register-with-eureka: true
-    fetch-registry: true
-    service-url:
-      defaultZone: http://localhost:8001/eureka/
 
 # 开启refresh端点
 management:

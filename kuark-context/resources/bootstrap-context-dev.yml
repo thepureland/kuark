@@ -4,29 +4,7 @@ logging:
     io.kuark.xxx: debug
 
 
-kuark:
-  ability:
-    # 使用注册中心
-    discovery:
-      enabled: false
-    # 使用配置中心，开启时，注册中心自动为true
-    config:
-      enabled: false
-
-
-eureka:
-  client:
-    # 注册到Eureka的注册中心
-    register-with-eureka: true
-    # 获取注册实例列表
-    fetch-registry: true
-    service-url:
-      # 配置注册中心地址
-      defaultZone: http://localhost:8001/eureka
-
 spring:
-  application:
-    name: discovery_config—client
   cloud:
     # config客户端配置
     config:
@@ -37,7 +15,11 @@ spring:
       # 配置文件名称
       name: config
       # 配置中心地址
-      uri: http://localhost:8901
+      uri: http://localhost:8900
+#      discovery:
+#        enabled: true
+#        service-id: config
+
 
 # 开启refresh端点
 management:

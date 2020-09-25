@@ -201,10 +201,12 @@ subprojects {
 
             // spring cloud
             dependency("org.springframework.cloud:spring-cloud-commons:$spring_cloud_version")
+            dependency("org.springframework.cloud:spring-cloud-context:$spring_cloud_version")
             dependency("org.springframework.cloud:spring-cloud-starter-netflix-eureka-server:$spring_cloud_version")
             dependency("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client:$spring_cloud_version")
             dependency("org.springframework.cloud:spring-cloud-config-server:$spring_cloud_version")
             dependency("org.springframework.cloud:spring-cloud-starter-config:$spring_cloud_version")
+            dependency("org.springframework.cloud:spring-cloud-config-client:$spring_cloud_version")
             dependency("org.springframework.cloud:spring-cloud-starter-netflix-hystrix-dashboard:$spring_cloud_version")
 
 

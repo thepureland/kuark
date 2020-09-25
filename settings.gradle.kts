@@ -37,8 +37,6 @@ include("kuark-ability:kuark-ability-distributed:kuark-ability-distributed-strea
 findProject(":kuark-ability:kuark-ability-distributed:kuark-ability-distributed-stream")?.name = "kuark-ability-distributed-stream"
 include("kuark-ability:kuark-ability-distributed:kuark-ability-distributed-bus")
 findProject(":kuark-ability:kuark-ability-distributed:kuark-ability-distributed-bus")?.name = "kuark-ability-distributed-bus"
-include("kuark-ability:kuark-ability-distributed:kuark-ability-distributed-config")
-findProject(":kuark-ability:kuark-ability-distributed:kuark-ability-distributed-config")?.name = "kuark-ability-distributed-config"
 include("kuark-ability:kuark-ability-web")
 include("kuark-ability:kuark-ability-web:kuark-ability-web-session")
 findProject(":kuark-ability:kuark-ability-web:kuark-ability-web-session")?.name = "kuark-ability-web-session"

@@ -29,6 +29,7 @@ Jedis和Lettuce的区别在哪？
 
 spring cloud
 1. 如不想将服务注册到Eureka Server，只需设置spring.cloud.service-registry.auto-registration.enabled=false，或@EnableDiscoveryClient(autoRegister = false) 即可。
-
+2. 要加载bootstrap.yml需要引用org.springframework.cloud:spring-cloud-context
+3. @RefreshScope默认是CGLIB代理，可能造成bean被代理两次而导致属性没注入，可使用@RefreshScope(proxyMode = ScopedProxyMode.DEFAULT)解决。
 
 

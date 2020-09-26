@@ -37,11 +37,17 @@ include("kuark-ability:kuark-ability-distributed:kuark-ability-distributed-strea
 findProject(":kuark-ability:kuark-ability-distributed:kuark-ability-distributed-stream")?.name = "kuark-ability-distributed-stream"
 include("kuark-ability:kuark-ability-distributed:kuark-ability-distributed-bus")
 findProject(":kuark-ability:kuark-ability-distributed:kuark-ability-distributed-bus")?.name = "kuark-ability-distributed-bus"
+include("kuark-ability:kuark-ability-distributed:kuark-ability-distributed-client")
+findProject(":kuark-ability:kuark-ability-distributed:kuark-ability-distributed-client")?.name = "kuark-ability-distributed-client"
 include("kuark-ability:kuark-ability-web")
-include("kuark-ability:kuark-ability-web:kuark-ability-web-session")
-findProject(":kuark-ability:kuark-ability-web:kuark-ability-web-session")?.name = "kuark-ability-web-session"
+include("kuark-ability:kuark-ability-web:kuark-ability-web-common")
+findProject(":kuark-ability:kuark-ability-web:kuark-ability-web-common")?.name = "kuark-ability-web-common"
 include("kuark-ability:kuark-ability-web:kuark-ability-web-ktor")
 findProject(":kuark-ability:kuark-ability-web:kuark-ability-web-ktor")?.name = "kuark-ability-web-ktor"
+include("kuark-ability:kuark-ability-web:kuark-ability-web-web")
+findProject(":kuark-ability:kuark-ability-web:kuark-ability-web-web")?.name = "kuark-ability-web-web"
+include("kuark-ability:kuark-ability-web:kuark-ability-web-webflux")
+findProject(":kuark-ability:kuark-ability-web:kuark-ability-web-webflux")?.name = "kuark-ability-web-webflux"
 include("kuark-ability:kuark-ability-mq")
 findProject(":kuark-ability:kuark-ability-mq")?.name = "kuark-ability-mq"
 

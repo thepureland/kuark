@@ -1,0 +1,9 @@
+logging:
+  level:
+    root: debug
+    io.kuark.xxx: debug
+
+
+spring:
+  profiles:
+    active: distributed-discovery-dev

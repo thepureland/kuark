@@ -1,7 +1,6 @@
 
 dependencies {
-    api(project(":kuark-ability:kuark-ability-web"))
-    api(project(":kuark-ability:kuark-ability-cache"))
+    api(project(":kuark-ability:kuark-ability-web:kuark-ability-web-common"))
     api("io.ktor:ktor-server-sessions")
     api("io.ktor:ktor-server-netty")
     api("io.ktor:ktor-server-core")

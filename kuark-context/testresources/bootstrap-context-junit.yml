@@ -1,0 +1,17 @@
+#spring:
+#  profiles:
+#    include: context-default  # 会再当前文件解析完，再加载context-default配置，达不到预期
+
+
+spring:
+  cloud:
+    # config客户端配置
+    config:
+#      # 分支名称
+#      label: master
+#      # 启用配置后缀名称
+#      profile: dev
+#      # 配置文件名称
+#      name: config
+      # 配置中心地址
+      uri: http://localhost:8901

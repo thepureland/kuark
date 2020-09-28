@@ -6,5 +6,6 @@ dependencies {
     api("org.springframework.cloud:spring-cloud-context")
     api("org.springframework.cloud:spring-cloud-config-client")
 
+
     testApi(project(":kuark-test"))
 }

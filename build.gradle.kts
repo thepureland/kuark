@@ -149,13 +149,15 @@ subprojects {
             dependency("org.springframework.boot:spring-boot-starter-web:$spring_boot_version")
             dependency("org.springframework.boot:spring-boot-starter-webflux:$spring_boot_version")
             dependency("org.springframework.boot:spring-boot-starter-actuator:$spring_boot_version")
+            dependency("org.springframework.boot:spring-boot-starter-data-redis-reactive:$spring_boot_version") // 限流用
             dependency("de.codecentric:spring-boot-admin-starter-server:2.3.0")
             dependency("org.springframework.boot:spring-boot-starter-test:$spring_boot_version") {
                 exclude("org.junit.vintage:junit-vintage-engine")
             }
 
             // redis
-            dependency("org.redisson:redisson:3.13.2")
+            dependency("org.redisson:redisson:3.13.4")
+//            dependency("org.redisson:redisson-spring-boot-starter:3.13.4")
 
             // data
             dependency("me.liuwj.ktorm:ktorm-core:$ktorm_version")
@@ -209,6 +211,9 @@ subprojects {
             dependency("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client:$spring_cloud_version")
             dependency("org.springframework.cloud:spring-cloud-starter-openfeign:$spring_cloud_version")
             dependency("org.springframework.cloud:spring-cloud-starter-netflix-hystrix-dashboard:$spring_cloud_version")
+            dependency("org.springframework.cloud:spring-cloud-starter-netflix-hystrix:$spring_cloud_version")
+            dependency("org.springframework.cloud:spring-cloud-starter-gateway:$spring_cloud_version")
+            dependency("org.springframework.cloud:spring-cloud-starter-bus-amqp:$spring_cloud_version")
 
 
 

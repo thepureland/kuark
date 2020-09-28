@@ -6,4 +6,4 @@ logging:
 
 spring:
   profiles:
-    active: context-dev
+    active: distributed-gateway-dev

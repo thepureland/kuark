@@ -48,6 +48,8 @@ include("kuark-ability:kuark-ability-web:kuark-ability-web-web")
 findProject(":kuark-ability:kuark-ability-web:kuark-ability-web-web")?.name = "kuark-ability-web-web"
 include("kuark-ability:kuark-ability-web:kuark-ability-web-webflux")
 findProject(":kuark-ability:kuark-ability-web:kuark-ability-web-webflux")?.name = "kuark-ability-web-webflux"
+include("kuark-ability:kuark-ability-web:kuark-ability-web-springmvc")
+findProject(":kuark-ability:kuark-ability-web:kuark-ability-web-springmvc")?.name = "kuark-ability-web-springmvc"
 include("kuark-ability:kuark-ability-mq")
 findProject(":kuark-ability:kuark-ability-mq")?.name = "kuark-ability-mq"
 

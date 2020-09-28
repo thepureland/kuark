@@ -1,0 +1,11 @@
+logging:
+  level:
+    root: debug
+    io.kuark.xxx: debug
+
+
+spring:
+  redis:
+    redisson:
+      # 配置单点模式
+      config: classpath:distributed-lock-single-dev.yml

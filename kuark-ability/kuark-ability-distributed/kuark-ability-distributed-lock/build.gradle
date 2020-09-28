@@ -1,5 +1,7 @@
 dependencies {
     api(project(":kuark-ability:kuark-ability-data:kuark-ability-data-memdb"))
     api("org.redisson:redisson")
+//    api("org.redisson:redisson-spring-boot-starter")
+
     testApi(project(":kuark-test"))
 }

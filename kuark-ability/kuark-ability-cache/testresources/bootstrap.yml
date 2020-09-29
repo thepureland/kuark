@@ -1,5 +1,5 @@
 spring:
   profiles:
-    active: context-default, ability-cache-junit
+    active: context-default
 
 

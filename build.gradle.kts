@@ -213,7 +213,7 @@ subprojects {
             dependency("org.springframework.cloud:spring-cloud-starter-netflix-hystrix-dashboard:$spring_cloud_version")
             dependency("org.springframework.cloud:spring-cloud-starter-netflix-hystrix:$spring_cloud_version")
             dependency("org.springframework.cloud:spring-cloud-starter-gateway:$spring_cloud_version")
-            dependency("org.springframework.cloud:spring-cloud-starter-bus-amqp:$spring_cloud_version")
+            dependency("org.springframework.cloud:spring-cloud-starter-bus-amqp:2.2.3.RELEASE")
 
 
 

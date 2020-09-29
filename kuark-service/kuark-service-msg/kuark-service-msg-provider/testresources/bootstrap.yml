@@ -1,0 +1,9 @@
+spring:
+  profiles:
+    active:
+    - context-default
+    - ability-cache-default
+    - ability-data-rdb-default
+    - ability-web-ktor-default
+    - service-msg-provider-default
+    - service-msg-provider-junit

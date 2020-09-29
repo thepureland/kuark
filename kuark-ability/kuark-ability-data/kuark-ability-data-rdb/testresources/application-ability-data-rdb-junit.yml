@@ -1,0 +1,9 @@
+spring:
+  datasource:
+    #    auto-commit: true
+    platform: h2
+    #    platform: info.jesseyang.config.SQLiteDialect
+    username: sa
+    password:
+    url: "jdbc:h2:tcp://localhost:9092/./h2/h2;DATABASE_TO_UPPER=false"
+    driver-class-name: org.h2.Driver

@@ -1,0 +1,6 @@
+spring:
+  profiles:
+    active:
+      - context-default
+      - ability-distributed-client-default
+      - ability-distributed-client-junit

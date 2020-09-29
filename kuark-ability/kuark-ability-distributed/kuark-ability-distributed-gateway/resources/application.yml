@@ -1,9 +1,0 @@
-logging:
-  level:
-    root: debug
-    io.kuark.xxx: debug
-
-
-spring:
-  profiles:
-    active: distributed-gateway-dev

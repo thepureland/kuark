@@ -1,0 +1,39 @@
+logging:
+  level:
+    root: debug
+    io.kuark.xxx: debug
+
+
+spring:
+  datasource:
+    #    auto-commit: true
+    platform: h2
+    #    platform: info.jesseyang.config.SQLiteDialect
+    username: sa
+    password:
+    url: "jdbc:h2:tcp://localhost:9092/./h2/h2;DATABASE_TO_UPPER=false"
+    driver-class-name: org.h2.Driver
+  cloud:
+    # config客户端配置
+    config:
+      #      # 分支名称
+      #      label: master
+      #      # 启用配置后缀名称
+      #      profile: dev
+      #      # 配置文件名称
+      #      name: config
+      # 配置中心地址
+      uri: http://localhost:8901
+
+
+cache:
+  config:
+    enabled: true
+    strategy: SINGLE_LOCAL
+
+web:
+  ktor:
+    container:
+      type: NETTY # NETTY,JETTY,TOMCAT,CIO四选一
+      host: 127.0.0.1
+      port: 8082

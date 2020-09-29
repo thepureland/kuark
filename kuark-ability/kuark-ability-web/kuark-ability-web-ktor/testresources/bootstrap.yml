@@ -1,0 +1,6 @@
+spring:
+  profiles:
+    active:
+      - context-default
+      - ability-web-ktor-default
+      - ability-web-ktor-junit

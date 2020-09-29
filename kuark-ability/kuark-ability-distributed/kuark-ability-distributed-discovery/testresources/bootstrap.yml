@@ -1,0 +1,6 @@
+spring:
+  profiles:
+    active:
+      - context-default
+      - ability-distributed-discovery-default
+      - ability-distributed-discovery-junit

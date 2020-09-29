@@ -1,0 +1,14 @@
+logging:
+  level:
+    root: debug
+    io.kuark.xxx: debug
+
+
+spring:
+  profiles:
+    active:
+    - context-default
+  redis:
+    redisson:
+      # 配置单点模式
+      config: classpath:ability-distributed-lock-single-junit.yml

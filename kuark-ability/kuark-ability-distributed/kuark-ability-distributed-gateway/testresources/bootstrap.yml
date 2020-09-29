@@ -1,0 +1,6 @@
+spring:
+  profiles:
+    active:
+      - context-default
+      - ability-distributed-gateway-default
+      - ability-distributed-gateway-junit

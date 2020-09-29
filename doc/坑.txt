@@ -14,3 +14,7 @@ select catalog_name from information_schema.catalogs [90079-200].
 
 3. ktorm，不管是查询还是新增，加上@Transactional事务都会卡住
 解：未解决，可能是它的bug
+
+
+4. spring.profiles.active不能同时出现在bootstrap.yml和application.yml中，会报 Profiles already activated, '[xxxx]' will not be applied
+解：只在bootstrap.yml出现

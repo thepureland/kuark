@@ -1,9 +1,9 @@
 package io.kuark.service.user.provider.biz
 
 import io.kuark.ability.data.rdb.support.RdbKit
-import io.kuark.service.provider.user.dao.UserAccountThirdPartys
-import io.kuark.service.provider.user.ibiz.IUserAccountThirdPartyBiz
-import io.kuark.service.provider.user.po.UserAccountThirdParty
+import io.kuark.service.user.provider.dao.UserAccountThirdPartys
+import io.kuark.service.user.provider.ibiz.IUserAccountThirdPartyBiz
+import io.kuark.service.user.provider.po.UserAccountThirdParty
 import me.liuwj.ktorm.dsl.*
 import me.liuwj.ktorm.entity.add
 import me.liuwj.ktorm.entity.sequenceOf

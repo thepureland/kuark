@@ -1,7 +1,7 @@
 package io.kuark.service.user.provider.dao
 
 import io.kuark.ability.data.rdb.support.MaintainableTable
-import io.kuark.service.provider.user.po.UserAccountThirdParty
+import io.kuark.service.user.provider.po.UserAccountThirdParty
 import me.liuwj.ktorm.schema.varchar
 
 /**

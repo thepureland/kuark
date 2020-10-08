@@ -1,7 +1,7 @@
 package io.kuark.service.provider.sys.biz
 
+import io.kuark.service.provider.sys.ibiz.ISysDictBiz
 import org.springframework.stereotype.Service
-import io.kuark.service.sys.ibiz.ISysDictBiz
 
 /**
  * 字典主表业务

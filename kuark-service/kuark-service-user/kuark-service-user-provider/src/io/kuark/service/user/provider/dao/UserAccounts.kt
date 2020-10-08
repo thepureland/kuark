@@ -1,7 +1,7 @@
 package io.kuark.service.user.provider.dao
 
 import io.kuark.ability.data.rdb.support.MaintainableTable
-import io.kuark.service.provider.user.po.UserAccount
+import io.kuark.service.user.provider.po.UserAccount
 import me.liuwj.ktorm.schema.datetime
 import me.liuwj.ktorm.schema.float
 import me.liuwj.ktorm.schema.varchar

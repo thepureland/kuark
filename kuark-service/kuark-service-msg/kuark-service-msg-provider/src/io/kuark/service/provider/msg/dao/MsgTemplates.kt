@@ -1,6 +1,7 @@
 package io.kuark.service.provider.msg.dao
 
 import io.kuark.ability.data.rdb.support.StringIdTable
+import io.kuark.service.provider.msg.po.MsgTemplate
 import me.liuwj.ktorm.schema.boolean
 import me.liuwj.ktorm.schema.varchar
 

@@ -1,12 +1,11 @@
 package io.kuark.service.provider.sys.biz
 
 import io.kuark.ability.cache.context.CacheNames
-import io.kuark.ability.cache.core.BatchCacheable
 import io.kuark.ability.data.rdb.support.RdbKit
-import io.kuark.service.sys.dao.SysDictItems
-import io.kuark.service.sys.dao.SysDicts
-import io.kuark.service.sys.ibiz.ISysDictItemBiz
-import io.kuark.service.sys.po.SysDictItem
+import io.kuark.service.provider.sys.dao.SysDictItems
+import io.kuark.service.provider.sys.dao.SysDicts
+import io.kuark.service.provider.sys.ibiz.ISysDictItemBiz
+import io.kuark.service.provider.sys.po.SysDictItem
 import me.liuwj.ktorm.dsl.*
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.Cacheable
@@ -34,7 +33,7 @@ open class SysDictItemBiz: ISysDictItemBiz {
      * @return 字典项列表。如果module为空串，且存在多个同名type，将任意返回一个type对应的字典项。查无结果返回空列表。
      */
     @Cacheable(key = "#module.concat(':').concat(#type)", unless = "#result.isEmpty()")
-    open fun getItemsByModuleAndType(module: String, type: String): List<SysDictItem> {
+    override fun getItemsByModuleAndType(module: String, type: String): List<SysDictItem> {
         // 查出对应的dict id
         val ids: List<String> = RdbKit.getDatabase().from(SysDicts)
             .select(SysDicts.id)
@@ -60,10 +59,6 @@ open class SysDictItemBiz: ISysDictItemBiz {
         }
     }
 
-    @BatchCacheable(valueClass = List::class)
-    open fun testBatchCache(subSys: String, modules: List<String>, types: Array<String>): Map<String, List<SysDictItem>> {
-        return mapOf("1" to listOf(), "2" to listOf())
-    }
 
     //endregion your codes 2
 

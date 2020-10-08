@@ -1,6 +1,6 @@
 package io.kuark.service.user.provider.biz
 
-import io.kuark.service.provider.user.ibiz.IUserAccountProtectionBiz
+import io.kuark.service.user.provider.ibiz.IUserAccountProtectionBiz
 import org.springframework.stereotype.Service
 
 /**

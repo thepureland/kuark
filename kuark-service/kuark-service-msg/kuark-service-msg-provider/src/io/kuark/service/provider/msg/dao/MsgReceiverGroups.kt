@@ -1,6 +1,7 @@
 package io.kuark.service.provider.msg.dao
 
 import io.kuark.ability.data.rdb.support.MaintainableTable
+import io.kuark.service.provider.msg.po.MsgReceiverGroup
 import me.liuwj.ktorm.schema.varchar
 
 /**

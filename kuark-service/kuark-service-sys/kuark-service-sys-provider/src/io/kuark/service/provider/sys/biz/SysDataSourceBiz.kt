@@ -1,7 +1,7 @@
 package io.kuark.service.provider.sys.biz
 
+import io.kuark.service.provider.sys.ibiz.ISysDataSourceBiz
 import org.springframework.stereotype.Service
-import io.kuark.service.sys.ibiz.ISysDataSourceBiz
 
 /**
  * 数据源业务

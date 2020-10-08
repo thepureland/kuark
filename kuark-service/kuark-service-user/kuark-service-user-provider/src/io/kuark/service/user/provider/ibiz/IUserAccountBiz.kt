@@ -1,6 +1,6 @@
 package io.kuark.service.user.provider.ibiz
 
-import io.kuark.service.provider.user.po.UserAccount
+import io.kuark.service.user.provider.po.UserAccount
 
 /**
  * 用户账号业务接口

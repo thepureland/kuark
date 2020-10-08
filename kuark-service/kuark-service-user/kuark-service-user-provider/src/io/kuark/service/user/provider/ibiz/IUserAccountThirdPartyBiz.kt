@@ -1,6 +1,6 @@
 package io.kuark.service.user.provider.ibiz
 
-import io.kuark.service.provider.user.po.UserAccountThirdParty
+import io.kuark.service.user.provider.po.UserAccountThirdParty
 
 /**
  * 用户账号第三方授权业务接口

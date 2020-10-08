@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service
  */
 @Service
 //region your codes 1
-class MsgInstanceBiz: _root_ide_package_.io.kuark.service.provider.msg.ibiz.IMsgInstanceBiz {
+class MsgInstanceBiz: IMsgInstanceBiz {
 //endregion your codes 1
 
     //region your codes 2

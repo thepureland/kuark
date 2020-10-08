@@ -1,7 +1,7 @@
 package io.kuark.service.provider.sys.dao
 
 import io.kuark.ability.data.rdb.support.MaintainableTable
-import io.kuark.service.sys.po.SysDict
+import io.kuark.service.provider.sys.po.SysDict
 import me.liuwj.ktorm.schema.varchar
 
 /**

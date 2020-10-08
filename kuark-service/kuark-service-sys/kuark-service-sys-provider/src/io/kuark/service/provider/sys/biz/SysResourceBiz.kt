@@ -1,6 +1,6 @@
 package io.kuark.service.provider.sys.biz
 
-import io.kuark.service.sys.ibiz.ISysResourceBiz
+import io.kuark.service.provider.sys.ibiz.ISysResourceBiz
 import org.springframework.stereotype.Service
 
 /**

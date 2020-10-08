@@ -5,11 +5,11 @@ import io.kuark.ability.auth.third.core.IThirdPartyAuthBizFactory
 import io.kuark.base.lang.string.RandomStringKit
 import io.kuark.base.lang.string.toMd5HexStr
 import io.kuark.context.core.KuarkContextHolder
-import io.kuark.service.provider.user.ibiz.ILoginBiz
-import io.kuark.service.provider.user.ibiz.IUserAccountBiz
-import io.kuark.service.provider.user.ibiz.IUserAccountThirdPartyBiz
-import io.kuark.service.provider.user.po.UserAccount
-import io.kuark.service.provider.user.po.UserAccountThirdParty
+import io.kuark.service.user.provider.ibiz.ILoginBiz
+import io.kuark.service.user.provider.ibiz.IUserAccountBiz
+import io.kuark.service.user.provider.ibiz.IUserAccountThirdPartyBiz
+import io.kuark.service.user.provider.po.UserAccount
+import io.kuark.service.user.provider.po.UserAccountThirdParty
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 

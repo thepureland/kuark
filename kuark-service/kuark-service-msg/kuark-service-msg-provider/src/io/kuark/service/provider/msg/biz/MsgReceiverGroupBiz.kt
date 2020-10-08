@@ -1,6 +1,6 @@
 package io.kuark.service.provider.msg.biz
 
-import io.kuark.service.msg.ibiz.IMsgReceiverGroupBiz
+import io.kuark.service.provider.msg.ibiz.IMsgReceiverGroupBiz
 import org.springframework.stereotype.Service
 
 /**

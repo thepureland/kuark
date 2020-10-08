@@ -1,6 +1,6 @@
 package io.kuark.service.user.provider.biz
 
-import io.kuark.service.provider.user.ibiz.IUserDbAuditLogBiz
+import io.kuark.service.user.provider.ibiz.IUserDbAuditLogBiz
 import org.springframework.stereotype.Service
 
 /**

@@ -2,9 +2,9 @@ package io.kuark.service.provider.msg.dao
 
 import io.kuark.ability.data.rdb.support.StringIdTable
 import io.kuark.service.provider.msg.po.MsgSend
-import me.liuwj.ktorm.schema.datetime
-import me.liuwj.ktorm.schema.int
-import me.liuwj.ktorm.schema.varchar
+import org.ktorm.schema.datetime
+import org.ktorm.schema.int
+import org.ktorm.schema.varchar
 
 /**
  * 消息发送数据库实体DAO

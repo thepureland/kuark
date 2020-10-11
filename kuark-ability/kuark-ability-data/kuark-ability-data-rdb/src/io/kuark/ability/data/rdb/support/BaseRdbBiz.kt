@@ -1,7 +1,7 @@
 package io.kuark.ability.data.rdb.support
 
-import me.liuwj.ktorm.entity.Entity
-import me.liuwj.ktorm.schema.Table
+import org.ktorm.entity.Entity
+import org.ktorm.schema.Table
 
 /**
  *

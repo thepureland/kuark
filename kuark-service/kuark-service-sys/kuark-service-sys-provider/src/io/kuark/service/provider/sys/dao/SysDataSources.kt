@@ -2,8 +2,8 @@ package io.kuark.service.provider.sys.dao
 
 import io.kuark.ability.data.rdb.support.MaintainableTable
 import io.kuark.service.provider.sys.po.SysDataSource
-import me.liuwj.ktorm.schema.int
-import me.liuwj.ktorm.schema.varchar
+import org.ktorm.schema.int
+import org.ktorm.schema.varchar
 
 /**
  * 数据源数据库实体DAO

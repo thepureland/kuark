@@ -5,9 +5,9 @@ import io.kuark.ability.data.rdb.metadata.TableType
 import io.kuark.ability.data.rdb.support.RdbKit
 import io.kuark.tools.codegen.core.CodeGeneratorContext
 import io.kuark.tools.codegen.dao.CodeGenObjects
-import me.liuwj.ktorm.dsl.eq
-import me.liuwj.ktorm.dsl.insert
-import me.liuwj.ktorm.entity.*
+import org.ktorm.dsl.eq
+import org.ktorm.dsl.insert
+import org.ktorm.entity.*
 import java.time.LocalDateTime
 
 /**

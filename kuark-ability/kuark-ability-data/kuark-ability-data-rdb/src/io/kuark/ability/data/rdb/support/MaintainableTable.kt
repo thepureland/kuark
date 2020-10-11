@@ -1,8 +1,8 @@
 package io.kuark.ability.data.rdb.support
 
-import me.liuwj.ktorm.schema.boolean
-import me.liuwj.ktorm.schema.datetime
-import me.liuwj.ktorm.schema.varchar
+import org.ktorm.schema.boolean
+import org.ktorm.schema.datetime
+import org.ktorm.schema.varchar
 
 /**
  * 可维护型的数据库记录的实体

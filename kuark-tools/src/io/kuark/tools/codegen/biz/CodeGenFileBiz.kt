@@ -3,7 +3,7 @@ package io.kuark.tools.codegen.biz
 import io.kuark.ability.data.rdb.support.RdbKit
 import io.kuark.tools.codegen.core.CodeGeneratorContext
 import io.kuark.tools.codegen.dao.CodeGenFiles
-import me.liuwj.ktorm.dsl.*
+import org.ktorm.dsl.*
 
 /**
  * 生成的文件历史信息服务

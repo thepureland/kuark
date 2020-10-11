@@ -2,7 +2,7 @@ package io.kuark.service.user.provider.dao
 
 import io.kuark.ability.data.rdb.support.StringIdTable
 import io.kuark.service.user.provider.po.UserDbAuditLogItem
-import me.liuwj.ktorm.schema.varchar
+import org.ktorm.schema.varchar
 
 /**
  * 用户数据库操作审计日志明细数据库实体DAO

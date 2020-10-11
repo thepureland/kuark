@@ -2,10 +2,10 @@ package io.kuark.service.user.provider.dao
 
 import io.kuark.ability.data.rdb.support.MaintainableTable
 import io.kuark.service.user.provider.po.UserPersonalInfo
-import me.liuwj.ktorm.schema.date
-import me.liuwj.ktorm.schema.datetime
-import me.liuwj.ktorm.schema.float
-import me.liuwj.ktorm.schema.varchar
+import org.ktorm.schema.date
+import org.ktorm.schema.datetime
+import org.ktorm.schema.float
+import org.ktorm.schema.varchar
 
 /**
  * 用户个人信息数据库实体DAO

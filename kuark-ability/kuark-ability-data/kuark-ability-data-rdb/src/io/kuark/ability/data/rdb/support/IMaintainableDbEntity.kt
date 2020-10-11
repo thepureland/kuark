@@ -1,6 +1,6 @@
 package io.kuark.ability.data.rdb.support
 
-import me.liuwj.ktorm.entity.Entity
+import org.ktorm.entity.Entity
 import java.time.LocalDateTime
 
 /**

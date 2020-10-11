@@ -2,9 +2,9 @@ package io.kuark.service.user.provider.dao
 
 import io.kuark.ability.data.rdb.support.MaintainableTable
 import io.kuark.service.user.provider.po.UserAccount
-import me.liuwj.ktorm.schema.datetime
-import me.liuwj.ktorm.schema.float
-import me.liuwj.ktorm.schema.varchar
+import org.ktorm.schema.datetime
+import org.ktorm.schema.float
+import org.ktorm.schema.varchar
 
 /**
  * 用户账号数据库实体DAO

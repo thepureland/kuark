@@ -2,7 +2,7 @@ package io.kuark.service.provider.sys.dao
 
 import io.kuark.ability.data.rdb.support.MaintainableTable
 import io.kuark.service.provider.sys.po.SysDict
-import me.liuwj.ktorm.schema.varchar
+import org.ktorm.schema.varchar
 
 /**
  * 字典主表数据库实体DAO

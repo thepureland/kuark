@@ -1,7 +1,7 @@
 package io.kuark.ability.data.rdb.support
 
-import me.liuwj.ktorm.schema.Table
-import me.liuwj.ktorm.schema.long
+import org.ktorm.schema.Table
+import org.ktorm.schema.long
 
 /**
  * 长整型主键的dao

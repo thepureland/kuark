@@ -2,8 +2,8 @@ package io.kuark.service.provider.geo.dao
 
 import io.kuark.ability.data.rdb.support.MaintainableTable
 import io.kuark.service.provider.geo.po.GeoIpLibrary
-import me.liuwj.ktorm.schema.boolean
-import me.liuwj.ktorm.schema.varchar
+import org.ktorm.schema.boolean
+import org.ktorm.schema.varchar
 
 /**
  * ip库数据库实体DAO

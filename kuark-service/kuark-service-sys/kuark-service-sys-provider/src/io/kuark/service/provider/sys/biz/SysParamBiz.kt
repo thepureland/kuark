@@ -5,7 +5,7 @@ import io.kuark.ability.data.rdb.support.RdbKit
 import io.kuark.service.provider.sys.dao.SysParams
 import io.kuark.service.provider.sys.ibiz.ISysParamBiz
 import io.kuark.service.provider.sys.po.SysParam
-import me.liuwj.ktorm.dsl.*
+import org.ktorm.dsl.*
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Service
 

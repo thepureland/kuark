@@ -160,8 +160,8 @@ subprojects {
 //            dependency("org.redisson:redisson-spring-boot-starter:3.13.4")
 
             // data
-            dependency("me.liuwj.ktorm:ktorm-core:$ktorm_version")
-            dependency("me.liuwj.ktorm:ktorm-jackson:$ktorm_version")
+            dependency("org.ktorm:ktorm-core:$ktorm_version")
+            dependency("org.ktorm:ktorm-jackson:$ktorm_version")
             dependency("org.springframework.boot:spring-boot-starter-data-redis:$spring_boot_version")
             dependency("org.apache.commons:commons-pool2:2.8.0")
 //            dependency("me.liuwj.ktorm:ktorm-support-sqlite:$ktorm_version")

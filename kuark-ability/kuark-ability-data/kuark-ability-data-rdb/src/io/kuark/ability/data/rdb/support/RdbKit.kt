@@ -5,7 +5,7 @@ import io.kuark.ability.data.rdb.metadata.RdbType
 import io.kuark.base.lang.string.deleteWhitespace
 import io.kuark.base.lang.string.substringBetween
 import io.kuark.context.core.KuarkContextHolder
-import me.liuwj.ktorm.database.Database
+import org.ktorm.database.Database
 import java.sql.Connection
 import java.sql.DriverManager
 import javax.sql.DataSource

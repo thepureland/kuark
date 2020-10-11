@@ -2,7 +2,7 @@ package io.kuark.service.provider.geo.dao
 
 import io.kuark.ability.data.rdb.support.MaintainableTable
 import io.kuark.service.provider.geo.po.GeoRegion
-import me.liuwj.ktorm.schema.varchar
+import org.ktorm.schema.varchar
 
 /**
  * 地区数据库实体DAO

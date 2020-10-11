@@ -2,7 +2,7 @@ package io.kuark.service.provider.msg.dao
 
 import io.kuark.ability.data.rdb.support.MaintainableTable
 import io.kuark.service.provider.msg.po.MsgReceiverGroup
-import me.liuwj.ktorm.schema.varchar
+import org.ktorm.schema.varchar
 
 /**
  * 消息接收者群组数据库实体DAO

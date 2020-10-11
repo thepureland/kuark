@@ -2,7 +2,7 @@ package io.kuark.service.user.provider.dao
 
 import io.kuark.ability.data.rdb.support.MaintainableTable
 import io.kuark.service.user.provider.po.UserAccountThirdParty
-import me.liuwj.ktorm.schema.varchar
+import org.ktorm.schema.varchar
 
 /**
  * 用户账号授权数据库实体DAO

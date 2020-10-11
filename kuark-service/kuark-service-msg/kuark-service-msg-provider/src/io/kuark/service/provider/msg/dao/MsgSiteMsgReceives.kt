@@ -2,8 +2,8 @@ package io.kuark.service.provider.msg.dao
 
 import io.kuark.ability.data.rdb.support.StringIdTable
 import io.kuark.service.provider.msg.po.MsgSiteMsgReceive
-import me.liuwj.ktorm.schema.datetime
-import me.liuwj.ktorm.schema.varchar
+import org.ktorm.schema.datetime
+import org.ktorm.schema.varchar
 
 /**
  * 消息接收数据库实体DAO

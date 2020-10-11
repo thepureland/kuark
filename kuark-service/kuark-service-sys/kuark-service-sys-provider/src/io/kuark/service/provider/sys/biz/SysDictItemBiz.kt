@@ -6,7 +6,7 @@ import io.kuark.service.provider.sys.dao.SysDictItems
 import io.kuark.service.provider.sys.dao.SysDicts
 import io.kuark.service.provider.sys.ibiz.ISysDictItemBiz
 import io.kuark.service.provider.sys.po.SysDictItem
-import me.liuwj.ktorm.dsl.*
+import org.ktorm.dsl.*
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Service

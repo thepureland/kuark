@@ -2,8 +2,8 @@ package io.kuark.service.provider.msg.dao
 
 import io.kuark.ability.data.rdb.support.StringIdTable
 import io.kuark.service.provider.msg.po.MsgTemplate
-import me.liuwj.ktorm.schema.boolean
-import me.liuwj.ktorm.schema.varchar
+import org.ktorm.schema.boolean
+import org.ktorm.schema.varchar
 
 /**
  * 消息模板数据库实体DAO

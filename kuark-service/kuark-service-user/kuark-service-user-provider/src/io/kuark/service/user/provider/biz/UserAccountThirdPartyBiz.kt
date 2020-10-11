@@ -4,9 +4,9 @@ import io.kuark.ability.data.rdb.support.RdbKit
 import io.kuark.service.user.provider.dao.UserAccountThirdPartys
 import io.kuark.service.user.provider.ibiz.IUserAccountThirdPartyBiz
 import io.kuark.service.user.provider.po.UserAccountThirdParty
-import me.liuwj.ktorm.dsl.*
-import me.liuwj.ktorm.entity.add
-import me.liuwj.ktorm.entity.sequenceOf
+import org.ktorm.dsl.*
+import org.ktorm.entity.add
+import org.ktorm.entity.sequenceOf
 import org.springframework.stereotype.Service
 
 /**

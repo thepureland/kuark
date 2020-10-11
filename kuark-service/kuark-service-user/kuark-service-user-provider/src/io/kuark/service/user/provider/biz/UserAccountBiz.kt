@@ -4,12 +4,12 @@ import io.kuark.ability.data.rdb.support.RdbKit
 import io.kuark.service.user.provider.dao.UserAccounts
 import io.kuark.service.user.provider.ibiz.IUserAccountBiz
 import io.kuark.service.user.provider.po.UserAccount
-import me.liuwj.ktorm.dsl.eq
-import me.liuwj.ktorm.dsl.from
-import me.liuwj.ktorm.dsl.select
-import me.liuwj.ktorm.dsl.whereWithConditions
-import me.liuwj.ktorm.entity.add
-import me.liuwj.ktorm.entity.sequenceOf
+import org.ktorm.dsl.eq
+import org.ktorm.dsl.from
+import org.ktorm.dsl.select
+import org.ktorm.dsl.whereWithConditions
+import org.ktorm.entity.add
+import org.ktorm.entity.sequenceOf
 import org.springframework.stereotype.Service
 
 /**

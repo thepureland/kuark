@@ -1,7 +1,7 @@
 package io.kuark.ability.data.rdb.support
 
 import io.kuark.base.support.IIdEntity
-import me.liuwj.ktorm.entity.Entity
+import org.ktorm.entity.Entity
 
 /**
  * 数据库表记录实体接口

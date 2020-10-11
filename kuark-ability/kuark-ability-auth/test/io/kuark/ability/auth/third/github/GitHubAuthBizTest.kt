@@ -1,6 +1,7 @@
 package io.kuark.ability.auth.third.github
 
-import io.kuark.ability.auth.third.core.AuthParam
+import io.kuark.ability.auth.login.third.core.AuthParam
+import io.kuark.ability.auth.login.third.github.GitHubAuthBiz
 import org.junit.jupiter.api.Test
 
 internal class GitHubAuthBizTest {

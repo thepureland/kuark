@@ -1,6 +1,6 @@
 package io.kuark.service.user.provider.controller
 
-import io.kuark.service.user.provider.ibiz.ILoginBiz
+import io.kuark.ability.auth.login.third.ibiz.IThirdPatyLoginBiz
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RestController
@@ -9,12 +9,12 @@ import org.springframework.web.bind.annotation.RestController
 class LoginController {
 
     @Autowired
-    private lateinit var loginBiz: ILoginBiz
+    private lateinit var thirdPatyLoginBiz: IThirdPatyLoginBiz
 
 
     @GetMapping("/thirdPartyLogin/github")
     fun githubLogin(code: String, state: String) {
-        loginBiz.thirdLogin("github", code, state)
+        thirdPatyLoginBiz.login("github", code, state)
     }
 
 }

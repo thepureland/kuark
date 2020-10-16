@@ -6,7 +6,7 @@ import org.ktorm.schema.datetime
 import org.ktorm.schema.varchar
 
 /**
- * 消息接收数据库实体DAO
+ * 消息接收数据库表-实体关联对象
  *
  * @author K
  * @since 1.0.0

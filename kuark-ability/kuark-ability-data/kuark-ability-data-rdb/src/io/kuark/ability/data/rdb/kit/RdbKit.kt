@@ -1,4 +1,4 @@
-package io.kuark.ability.data.rdb.support
+package io.kuark.ability.data.rdb.kit
 
 import io.kuark.ability.data.rdb.datasource.currentDataSource
 import io.kuark.ability.data.rdb.metadata.RdbType

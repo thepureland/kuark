@@ -1,7 +1,6 @@
 package io.kuark.service.provider.sys.ibiz
 
-import io.kuark.service.provider.sys.po.SysDictItem
-import org.springframework.cache.annotation.Cacheable
+import io.kuark.service.provider.sys.model.po.SysDictItem
 
 /**
  * 字典子表业务接口

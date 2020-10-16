@@ -1,12 +1,12 @@
-package io.kuark.service.provider.sys.dao
+package io.kuark.service.provider.sys.model.table
 
 import io.kuark.ability.data.rdb.support.MaintainableTable
-import io.kuark.service.provider.sys.po.SysDictItem
+import io.kuark.service.provider.sys.model.po.SysDictItem
 import org.ktorm.schema.int
 import org.ktorm.schema.varchar
 
 /**
- * 字典子表数据库实体DAO
+ * 字典子表数据库表-实体关联对象
  *
  * @author K
  * @since 1.0.0

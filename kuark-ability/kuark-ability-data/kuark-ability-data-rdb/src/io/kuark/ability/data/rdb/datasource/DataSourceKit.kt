@@ -1,7 +1,7 @@
 package io.kuark.ability.data.rdb.datasource
 
 import com.zaxxer.hikari.HikariDataSource
-import io.kuark.ability.data.rdb.support.RdbKit
+import io.kuark.ability.data.rdb.kit.RdbKit
 import io.kuark.context.core.KuarkContextHolder
 import javax.sql.DataSource
 

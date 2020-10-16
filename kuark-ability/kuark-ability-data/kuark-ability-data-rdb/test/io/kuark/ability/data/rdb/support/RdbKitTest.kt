@@ -1,8 +1,7 @@
 package io.kuark.ability.data.rdb.support
 
+import io.kuark.ability.data.rdb.kit.RdbKit
 import org.junit.jupiter.api.Test
-
-import org.junit.jupiter.api.Assertions.*
 
 internal class RdbKitTest {
 

@@ -1,12 +1,11 @@
 package io.kuark.service.provider.sys.biz
 
 import io.kuark.ability.cache.context.CacheNames
-import io.kuark.ability.data.rdb.support.RdbKit
-import io.kuark.service.provider.sys.dao.SysDictItems
-import io.kuark.service.provider.sys.dao.SysDicts
+import io.kuark.service.provider.sys.dao.SysDictDao
+import io.kuark.service.provider.sys.dao.SysDictItemDao
 import io.kuark.service.provider.sys.ibiz.ISysDictItemBiz
-import io.kuark.service.provider.sys.po.SysDictItem
-import org.ktorm.dsl.*
+import io.kuark.service.provider.sys.model.po.SysDictItem
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Service
@@ -20,8 +19,14 @@ import org.springframework.stereotype.Service
 @Service
 //region your codes 1
 @CacheConfig(cacheNames = [CacheNames.SYS_DICT_ITEM])
-open class SysDictItemBiz: ISysDictItemBiz {
+open class SysDictItemBiz : ISysDictItemBiz {
 //endregion your codes 1
+
+    @Autowired
+    private lateinit var sysDictItemDao: SysDictItemDao
+
+    @Autowired
+    private lateinit var sysDictDao: SysDictDao
 
     //region yur codes 2
 
@@ -35,27 +40,13 @@ open class SysDictItemBiz: ISysDictItemBiz {
     @Cacheable(key = "#module.concat(':').concat(#type)", unless = "#result.isEmpty()")
     override fun getItemsByModuleAndType(module: String, type: String): List<SysDictItem> {
         // 查出对应的dict id
-        val ids: List<String> = RdbKit.getDatabase().from(SysDicts)
-            .select(SysDicts.id)
-            .whereWithConditions {
-                it += (SysDicts.dictType eq type) and (SysDicts.isActive eq true)
-                if (module.isNotEmpty()) {
-                    it += SysDicts.module eq module
-                }
-            }
-            .map { row -> row[SysDicts.id] }
-            .toList() as List<String>
+        val ids = sysDictDao.searchIdsByModuleAndType(module, type)
 
         return if (ids.isEmpty()) {
             listOf()
         } else {
             // 查出dict id的所有字典项
-            RdbKit.getDatabase().from(SysDictItems)
-                .select(SysDictItems.columns)
-                .orderBy(SysDictItems.seqNo.asc())
-                .where { SysDictItems.dictId eq ids.first() }
-                .map { row -> SysDictItems.createEntity(row) }
-                .toList()
+            sysDictItemDao.searchByIds(ids)
         }
     }
 

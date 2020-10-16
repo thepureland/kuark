@@ -1,4 +1,4 @@
-package io.kuark.service.provider.sys.po
+package io.kuark.service.provider.sys.model.po
 
 import io.kuark.ability.data.rdb.support.DbEntityFactory
 import io.kuark.ability.data.rdb.support.IMaintainableDbEntity

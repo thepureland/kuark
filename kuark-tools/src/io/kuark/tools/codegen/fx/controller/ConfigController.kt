@@ -2,13 +2,13 @@ package io.kuark.tools.codegen.fx.controller
 
 import io.kuark.ability.data.rdb.datasource.DataSourceKit
 import io.kuark.ability.data.rdb.datasource.setCurrentDataSource
-import io.kuark.ability.data.rdb.support.RdbKit
+import io.kuark.ability.data.rdb.kit.RdbKit
 import io.kuark.base.io.FilenameKit
 import io.kuark.base.io.PathKit
 import io.kuark.base.lang.SystemKit
 import io.kuark.base.support.PropertiesLoader
 import io.kuark.context.core.KuarkContextHolder
-import io.kuark.tools.codegen.vo.Config
+import io.kuark.tools.codegen.model.vo.Config
 import javafx.collections.FXCollections
 import javafx.fxml.FXML
 import javafx.fxml.Initializable

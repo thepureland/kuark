@@ -6,7 +6,7 @@ import org.ktorm.schema.int
 import org.ktorm.schema.varchar
 
 /**
- * 用户联系方式数据库实体DAO
+ * 用户联系方式数据库表-实体关联对象
  *
  * @author K
  * @since 1.0.0

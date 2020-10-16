@@ -2,9 +2,9 @@ package io.kuark.tools.codegen.biz
 
 import io.kuark.ability.data.rdb.metadata.RdbMetadataKit
 import io.kuark.ability.data.rdb.metadata.TableType
-import io.kuark.ability.data.rdb.support.RdbKit
+import io.kuark.ability.data.rdb.kit.RdbKit
 import io.kuark.tools.codegen.core.CodeGeneratorContext
-import io.kuark.tools.codegen.dao.CodeGenObjects
+import io.kuark.tools.codegen.model.table.CodeGenObjects
 import org.ktorm.dsl.eq
 import org.ktorm.dsl.insert
 import org.ktorm.entity.*

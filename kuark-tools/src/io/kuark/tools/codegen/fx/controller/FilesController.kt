@@ -8,7 +8,7 @@ import io.kuark.tools.codegen.core.CodeGenerator
 import io.kuark.tools.codegen.core.CodeGeneratorContext
 import io.kuark.tools.codegen.core.FreemarkerKit
 import io.kuark.tools.codegen.biz.CodeGenFileBiz
-import io.kuark.tools.codegen.vo.GenFile
+import io.kuark.tools.codegen.model.vo.GenFile
 import javafx.collections.FXCollections
 import javafx.event.ActionEvent
 import javafx.fxml.FXML

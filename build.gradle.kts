@@ -155,6 +155,9 @@ subprojects {
                 exclude("org.junit.vintage:junit-vintage-engine")
             }
 
+            // swagger
+            dependency("io.springfox:springfox-boot-starter:3.0.0")
+
             // redis
             dependency("org.redisson:redisson:3.13.4")
 //            dependency("org.redisson:redisson-spring-boot-starter:3.13.4")

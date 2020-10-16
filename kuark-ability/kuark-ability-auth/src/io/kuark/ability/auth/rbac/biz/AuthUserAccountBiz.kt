@@ -1,6 +1,6 @@
 package io.kuark.ability.auth.rbac.biz
 
-import io.kuark.ability.data.rdb.support.RdbKit
+import io.kuark.ability.data.rdb.kit.RdbKit
 import io.kuark.ability.auth.rbac.dao.AuthUserAccounts
 import io.kuark.ability.auth.rbac.ibiz.IAuthUserAccountBiz
 import io.kuark.ability.auth.rbac.po.AuthUserAccount

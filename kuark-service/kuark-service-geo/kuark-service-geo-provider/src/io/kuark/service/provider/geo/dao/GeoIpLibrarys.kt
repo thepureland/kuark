@@ -6,7 +6,7 @@ import org.ktorm.schema.boolean
 import org.ktorm.schema.varchar
 
 /**
- * ip库数据库实体DAO
+ * ip库数据库表-实体关联对象
  *
  * @author K
  * @since 1.0.0

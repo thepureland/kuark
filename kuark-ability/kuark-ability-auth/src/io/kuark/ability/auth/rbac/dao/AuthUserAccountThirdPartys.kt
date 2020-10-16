@@ -5,7 +5,7 @@ import io.kuark.ability.auth.rbac.po.AuthUserAccountThirdParty
 import org.ktorm.schema.varchar
 
 /**
- * 用户账号授权数据库实体DAO
+ * 用户账号授权数据库表-实体关联对象
  *
  * @author K
  * @since 1.0.0

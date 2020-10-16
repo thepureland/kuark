@@ -5,7 +5,7 @@ import io.kuark.service.user.provider.po.UserDbAuditLogItem
 import org.ktorm.schema.varchar
 
 /**
- * 用户数据库操作审计日志明细数据库实体DAO
+ * 用户数据库操作审计日志明细数据库表-实体关联对象
  *
  * @author K
  * @since 1.0.0

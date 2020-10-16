@@ -5,7 +5,7 @@ import io.kuark.service.provider.msg.po.MsgReceiverGroup
 import org.ktorm.schema.varchar
 
 /**
- * 消息接收者群组数据库实体DAO
+ * 消息接收者群组数据库表-实体关联对象
  *
  * @author K
  * @since 1.0.0

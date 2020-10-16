@@ -10,7 +10,7 @@ import io.kuark.tools.codegen.core.merge.PrivateContentEraser
 import io.kuark.tools.codegen.biz.CodeGenColumnBiz
 import io.kuark.tools.codegen.biz.CodeGenFileBiz
 import io.kuark.tools.codegen.biz.CodeGenObjectBiz
-import io.kuark.tools.codegen.vo.GenFile
+import io.kuark.tools.codegen.model.vo.GenFile
 import javafx.scene.control.Alert
 import java.io.File
 import java.net.URL

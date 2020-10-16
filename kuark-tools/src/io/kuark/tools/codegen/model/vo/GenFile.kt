@@ -1,4 +1,4 @@
-package io.kuark.tools.codegen.vo
+package io.kuark.tools.codegen.model.vo
 
 import javafx.beans.property.BooleanProperty
 import javafx.beans.property.SimpleBooleanProperty

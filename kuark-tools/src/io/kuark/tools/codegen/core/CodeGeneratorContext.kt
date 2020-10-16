@@ -1,7 +1,7 @@
 package io.kuark.tools.codegen.core
 
-import io.kuark.tools.codegen.vo.ColumnInfo
-import io.kuark.tools.codegen.vo.Config
+import io.kuark.tools.codegen.model.vo.ColumnInfo
+import io.kuark.tools.codegen.model.vo.Config
 
 /**
  * 代码生成器上下文

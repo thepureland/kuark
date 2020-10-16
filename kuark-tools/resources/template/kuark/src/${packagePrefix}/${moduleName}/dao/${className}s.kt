@@ -7,7 +7,7 @@ import ${packagePrefix}.${moduleName}.po.${className}
 <#elseif daoSuperClass == "LongIdTable">
 </#if>
 
-<@generateClassComment table.comment+"数据库实体DAO"/>
+<@generateClassComment table.comment+"数据库表-实体关联对象"/>
 //region your codes 1
 object ${className}s : ${daoSuperClass}<${className}>("${table.name}") {
 //endregion your codes 1

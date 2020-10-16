@@ -11,30 +11,30 @@ import kotlin.math.ceil
  *
  * val elems: Collection<Any> = ...
  * val groupSize: Int = ...
- * object : GroupExecutor<Any>(elems, groupSize) {
- *
- * override fun groupExecute(subList: List<Any>) {
- * ... // 如分组执行更新
- * }
- *
+ * GroupExecutor(elems, groupSize) {
+ *   ... // 如分组执行更新
  * }.execute()
  *
  * </pre>
  *
  * @param E 集合元素类型
- * @author admin
+ * @author K
  * @since 1.0.0
  *
  */
-abstract class GroupExecutor<E>(
+class GroupExecutor<E>(
+    /** 待分组的集合 */
     private val elems: Collection<E>,
-    private val groupSize: Int = 1000 // 分组大小默认为1000
+    /** 每个分组大小默认为1000 */
+    private val groupSize: Int = 1000,
+    /** 每个分组执行的操作 */
+    private val operation: (List<E>) -> Unit
 ) {
 
     /**
      * 执行操作
      *
-     * @author admin
+     * @author K
      * @since 1.0.0
      */
     fun execute() {
@@ -45,17 +45,9 @@ abstract class GroupExecutor<E>(
             val from = index * groupSize
             val end = if (index == groupCount - 1) elemList.size else from + groupSize
             val subList = elemList.subList(from, end)
-            groupExecute(subList)
+            operation(subList)
         }
     }
 
-    /**
-     * 分组执行
-     *
-     * @param subList 分组元素列表
-     * @author admin
-     * @since 1.0.0
-     */
-    abstract fun groupExecute(subList: List<E>)
 
 }

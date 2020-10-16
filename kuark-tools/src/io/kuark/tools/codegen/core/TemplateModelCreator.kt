@@ -4,7 +4,7 @@ import io.kuark.ability.data.rdb.metadata.Column
 import io.kuark.ability.data.rdb.metadata.RdbMetadataKit
 import io.kuark.base.bean.BeanKit
 import io.kuark.base.lang.string.underscoreToHump
-import io.kuark.tools.codegen.vo.Config
+import io.kuark.tools.codegen.model.vo.Config
 
 /**
  * 模板数据模型创建者，用户可继承此类自定义要填充模板的数据

@@ -5,7 +5,7 @@ import io.kuark.ability.auth.rbac.po.AuthRole
 import org.ktorm.schema.varchar
 
 /**
- * 角色数据库实体DAO
+ * 角色数据库表-实体关联对象
  *
  * @author K
  * @since 1.0.0

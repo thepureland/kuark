@@ -1,8 +1,8 @@
 package io.kuark.tools.codegen.biz
 
-import io.kuark.ability.data.rdb.support.RdbKit
+import io.kuark.ability.data.rdb.kit.RdbKit
 import io.kuark.tools.codegen.core.CodeGeneratorContext
-import io.kuark.tools.codegen.dao.CodeGenFiles
+import io.kuark.tools.codegen.model.table.CodeGenFiles
 import org.ktorm.dsl.*
 
 /**

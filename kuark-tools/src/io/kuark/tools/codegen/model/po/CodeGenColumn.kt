@@ -1,4 +1,4 @@
-package io.kuark.tools.codegen.po
+package io.kuark.tools.codegen.model.po
 
 import io.kuark.ability.data.rdb.support.DbEntityFactory
 import io.kuark.ability.data.rdb.support.IDbEntity

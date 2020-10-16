@@ -1,8 +1,8 @@
 package io.kuark.base.bean.validation
 
 import io.kuark.base.bean.validation.kit.ValidationKit
-import junit.framework.Assert.assertEquals
 import org.hibernate.validator.constraints.Length
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import javax.validation.Valid
 import javax.validation.constraints.Max

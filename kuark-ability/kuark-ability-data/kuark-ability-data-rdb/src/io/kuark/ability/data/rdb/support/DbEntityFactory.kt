@@ -5,7 +5,7 @@ import org.ktorm.entity.Entity
 /**
  * 数据库实体工厂
  * 可简化使用(companion object : Entity.Factory<E>() => companion object : DbEntityFactory<E>())
- * 并避免Ktorm相关代码侵入PO0
+ * 并避免Ktorm相关代码侵入PO
  *
  * @param E 实体类型
  * @author K

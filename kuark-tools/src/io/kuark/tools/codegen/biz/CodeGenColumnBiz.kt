@@ -3,12 +3,12 @@ package io.kuark.tools.codegen.biz
 
 import io.kuark.ability.data.rdb.metadata.Column
 import io.kuark.ability.data.rdb.metadata.RdbMetadataKit
-import io.kuark.ability.data.rdb.support.RdbKit
+import io.kuark.ability.data.rdb.kit.RdbKit
 import io.kuark.base.bean.BeanKit
 import io.kuark.tools.codegen.core.CodeGeneratorContext
-import io.kuark.tools.codegen.dao.CodeGenColumns
-import io.kuark.tools.codegen.po.CodeGenColumn
-import io.kuark.tools.codegen.vo.ColumnInfo
+import io.kuark.tools.codegen.model.table.CodeGenColumns
+import io.kuark.tools.codegen.model.po.CodeGenColumn
+import io.kuark.tools.codegen.model.vo.ColumnInfo
 import org.ktorm.dsl.batchInsert
 import org.ktorm.dsl.eq
 import org.ktorm.entity.filter

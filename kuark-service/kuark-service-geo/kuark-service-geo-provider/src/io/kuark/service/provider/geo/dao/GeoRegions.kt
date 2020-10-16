@@ -5,7 +5,7 @@ import io.kuark.service.provider.geo.po.GeoRegion
 import org.ktorm.schema.varchar
 
 /**
- * 地区数据库实体DAO
+ * 地区数据库表-实体关联对象
  *
  * @author K
  * @since 1.0.0

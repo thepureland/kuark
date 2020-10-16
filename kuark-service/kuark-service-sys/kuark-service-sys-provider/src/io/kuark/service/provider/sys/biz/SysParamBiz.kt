@@ -1,10 +1,10 @@
 package io.kuark.service.provider.sys.biz
 
 import io.kuark.ability.cache.context.CacheNames
-import io.kuark.ability.data.rdb.support.RdbKit
-import io.kuark.service.provider.sys.dao.SysParams
+import io.kuark.ability.data.rdb.kit.RdbKit
+import io.kuark.service.provider.sys.model.table.SysParams
 import io.kuark.service.provider.sys.ibiz.ISysParamBiz
-import io.kuark.service.provider.sys.po.SysParam
+import io.kuark.service.provider.sys.model.po.SysParam
 import org.ktorm.dsl.*
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Service

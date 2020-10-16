@@ -1,11 +1,11 @@
-package io.kuark.tools.codegen.dao
+package io.kuark.tools.codegen.model.table
 
 import io.kuark.ability.data.rdb.support.StringIdTable
-import io.kuark.tools.codegen.po.CodeGenFile
+import io.kuark.tools.codegen.model.po.CodeGenFile
 import org.ktorm.schema.varchar
 
 /**
- * 代码生成-文件信息数据库实体DAO
+ * 代码生成-文件信息数据库表-实体关联对象
  *
  * @author K
  * @since 1.0.0

@@ -1,9 +1,9 @@
 package io.kuark.ability.auth.rbac.biz
 
 import io.kuark.ability.data.rdb.kit.RdbKit
-import io.kuark.ability.auth.rbac.dao.AuthUserAccounts
+import io.kuark.ability.auth.rbac.model.table.AuthUserAccounts
 import io.kuark.ability.auth.rbac.ibiz.IAuthUserAccountBiz
-import io.kuark.ability.auth.rbac.po.AuthUserAccount
+import io.kuark.ability.auth.rbac.model.po.AuthUserAccount
 import org.ktorm.dsl.eq
 import org.ktorm.dsl.from
 import org.ktorm.dsl.select

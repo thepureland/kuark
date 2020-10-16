@@ -1,6 +1,6 @@
 package io.kuark.ability.auth.rbac.ibiz
 
-import io.kuark.ability.auth.rbac.po.AuthUserAccountThirdParty
+import io.kuark.ability.auth.rbac.model.po.AuthUserAccountThirdParty
 
 /**
  * 用户账号第三方授权业务接口

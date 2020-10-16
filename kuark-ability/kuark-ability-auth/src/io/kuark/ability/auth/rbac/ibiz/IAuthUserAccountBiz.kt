@@ -1,6 +1,6 @@
 package io.kuark.ability.auth.rbac.ibiz
 
-import io.kuark.ability.auth.rbac.po.AuthUserAccount
+import io.kuark.ability.auth.rbac.model.po.AuthUserAccount
 
 /**
  * 用户账号业务接口

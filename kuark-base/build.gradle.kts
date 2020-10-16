@@ -1,28 +1,28 @@
 
 dependencies {
 //    // kotlin
-//    implementation("org.jetbrains.kotlin:kotlin-reflect")
-//    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+//    api("org.jetbrains.kotlin:kotlin-reflect")
+//    api("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
-    implementation("org.apache.commons:commons-lang3")
-    implementation("org.apache.commons:commons-text")
-    implementation("commons-io:commons-io")
-    implementation("commons-codec:commons-codec")
-    implementation("commons-beanutils:commons-beanutils")
-    implementation("de.idyl:winzipaes")
-    implementation("com.fasterxml.jackson.module:jackson-module-jaxb-annotations")
-    implementation("net.sourceforge.jexcelapi:jxl")
-    implementation("javax.xml.bind:jaxb-api")
-    implementation("com.sun.xml.bind:jaxb-impl")
-    implementation("org.glassfish.jaxb:jaxb-runtime")
-    implementation("com.google.zxing:core")
-    implementation("org.javamoney:moneta")
+    api("org.apache.commons:commons-lang3")
+    api("org.apache.commons:commons-text")
+    api("commons-io:commons-io")
+    api("commons-codec:commons-codec")
+    api("commons-beanutils:commons-beanutils")
+    api("de.idyl:winzipaes")
+    api("com.fasterxml.jackson.module:jackson-module-jaxb-annotations")
+    api("net.sourceforge.jexcelapi:jxl")
+    api("javax.xml.bind:jaxb-api")
+    api("com.sun.xml.bind:jaxb-impl")
+    api("org.glassfish.jaxb:jaxb-runtime")
+    api("com.google.zxing:core")
+    api("org.javamoney:moneta")
 
     // log
-    implementation("org.slf4j:slf4j-api")
-    implementation("org.slf4j:jcl-over-slf4j")
-    implementation("org.slf4j:log4j-over-slf4j")
-    implementation("ch.qos.logback:logback-classic")
+    api("org.slf4j:slf4j-api")
+    api("org.slf4j:jcl-over-slf4j")
+    api("org.slf4j:log4j-over-slf4j")
+    api("ch.qos.logback:logback-classic")
 
     // validation
     api("javax.validation:validation-api")

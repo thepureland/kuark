@@ -5,8 +5,8 @@ import io.kuark.ability.auth.login.third.core.IThirdPartyAuthBizFactory
 import io.kuark.ability.auth.login.third.ibiz.IThirdPatyLoginBiz
 import io.kuark.ability.auth.rbac.ibiz.IAuthUserAccountBiz
 import io.kuark.ability.auth.rbac.ibiz.IAuthUserAccountThirdPartyBiz
-import io.kuark.ability.auth.rbac.po.AuthUserAccount
-import io.kuark.ability.auth.rbac.po.AuthUserAccountThirdParty
+import io.kuark.ability.auth.rbac.model.po.AuthUserAccount
+import io.kuark.ability.auth.rbac.model.po.AuthUserAccountThirdParty
 import io.kuark.base.lang.string.RandomStringKit
 import io.kuark.base.lang.string.toMd5HexStr
 import io.kuark.context.core.KuarkContextHolder

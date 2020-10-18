@@ -32,6 +32,8 @@ open class BaseDao<PK, E : IDbEntity<PK, E>, T : Table<E>> {
         }
     }
 
+    fun searchAll(): List<E> = entitySequence().toList()
+
     //endregion Search
 
 

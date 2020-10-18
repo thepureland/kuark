@@ -1,7 +1,7 @@
 package io.kuark.service.msg.provider.model.table
 
 import io.kuark.ability.data.rdb.support.MaintainableTable
-import io.kuark.service.provider.msg.model.po.MsgReceiverGroup
+import io.kuark.service.msg.provider.model.po.MsgReceiverGroup
 import org.ktorm.schema.varchar
 
 /**

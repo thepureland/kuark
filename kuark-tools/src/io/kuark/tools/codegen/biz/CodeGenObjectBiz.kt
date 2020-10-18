@@ -2,12 +2,9 @@ package io.kuark.tools.codegen.biz
 
 import io.kuark.ability.data.rdb.metadata.RdbMetadataKit
 import io.kuark.ability.data.rdb.metadata.TableType
-import io.kuark.ability.data.rdb.kit.RdbKit
 import io.kuark.tools.codegen.core.CodeGeneratorContext
-import io.kuark.tools.codegen.model.table.CodeGenObjects
-import org.ktorm.dsl.eq
-import org.ktorm.dsl.insert
-import org.ktorm.entity.*
+import io.kuark.tools.codegen.dao.CodeGenObjectDao
+import io.kuark.tools.codegen.model.po.CodeGenObject
 import java.time.LocalDateTime
 
 /**
@@ -25,7 +22,7 @@ object CodeGenObjectBiz {
         tables.forEach { nameAndComments[it.name] = it.comment }
 
         // from code_gen_object
-        val codeGenObjects = RdbKit.getDatabase().sequenceOf(CodeGenObjects).toList()
+        val codeGenObjects = CodeGenObjectDao.searchAll()
         for (codeGenObject in codeGenObjects) {
             if (nameAndComments.contains(codeGenObject.name)) {
                 nameAndComments[codeGenObject.name] = codeGenObject.comment
@@ -38,24 +35,23 @@ object CodeGenObjectBiz {
         val table = CodeGeneratorContext.tableName
         val comment = CodeGeneratorContext.tableComment
         val author = CodeGeneratorContext.config.getAuthor()
-        val codeGenObjects = RdbKit.getDatabase().sequenceOf(CodeGenObjects).filter { it.name eq table }
-        return if (codeGenObjects.isEmpty()) {
-            RdbKit.getDatabase().insert(CodeGenObjects) {
-                set(it.name, table)
-                set(it.comment, comment)
-                set(it.createTime, LocalDateTime.now())
-                set(it.createUser, author)
-                set(it.genCount, 1)
-            } == 1
+        val codeGenObject = CodeGenObjectDao.searchByName(table)
+        return if (codeGenObject == null) {
+            CodeGenObjectDao.insert(CodeGenObject {
+                name = table
+                this.comment = comment
+                createTime = LocalDateTime.now()
+                createUser = author
+                genCount = 1
+            }) != null
         } else {
-            val codeGenObject = codeGenObjects.first()
             with(codeGenObject) {
                 this.comment = comment
                 updateTime = LocalDateTime.now()
                 updateUser = author
                 genCount = codeGenObject.genCount + 1
             }
-            codeGenObject.flushChanges() == 1
+            CodeGenObjectDao.update(codeGenObject)
         }
     }
 

@@ -3,18 +3,11 @@ package io.kuark.tools.codegen.biz
 
 import io.kuark.ability.data.rdb.metadata.Column
 import io.kuark.ability.data.rdb.metadata.RdbMetadataKit
-import io.kuark.ability.data.rdb.kit.RdbKit
 import io.kuark.base.bean.BeanKit
 import io.kuark.tools.codegen.core.CodeGeneratorContext
-import io.kuark.tools.codegen.model.table.CodeGenColumns
+import io.kuark.tools.codegen.dao.CodeGenColumnDao
 import io.kuark.tools.codegen.model.po.CodeGenColumn
 import io.kuark.tools.codegen.model.vo.ColumnInfo
-import org.ktorm.dsl.batchInsert
-import org.ktorm.dsl.eq
-import org.ktorm.entity.filter
-import org.ktorm.entity.removeIf
-import org.ktorm.entity.sequenceOf
-import java.util.*
 
 /**
  * 生成的文件历史信息服务
@@ -30,11 +23,7 @@ object CodeGenColumnBiz {
         val columns: Map<String, Column> = RdbMetadataKit.getColumnsByTableName(table)
 
         // from code_gen_column table
-        val codeGenColumns = RdbKit.getDatabase().sequenceOf(CodeGenColumns).filter { it.objectName eq table }
-        val columnMap = HashMap<String, CodeGenColumn>(columns.size, 1f)
-        for (column in codeGenColumns) {
-            columnMap[column.name] = column
-        }
+        val columnMap = CodeGenColumnDao.searchCodeGenColumnMap(table)
 
         // merge
         val results = mutableListOf<ColumnInfo>()
@@ -61,26 +50,26 @@ object CodeGenColumnBiz {
         val columnInfos = CodeGeneratorContext.columns
 
         // delete old columns first
-        RdbKit.getDatabase().sequenceOf(CodeGenColumns).removeIf { it.objectName eq table }
+        CodeGenColumnDao.deleteCodeGenColumn(table)
 
         // insert new columns
-        return RdbKit.getDatabase().batchInsert(CodeGenColumns) {
-            for (column in columnInfos) {
-                item {
-                    set(it.name, column.getName())
-                    set(it.objectName, table)
-                    set(it.comment, column.getCustomComment())
-                    set(it.isSearchable, column.getSearchable())
-                    set(it.isSortable, column.getSortable())
-                    set(it.orderInEdit, column.getOrderInEdit())
-                    set(it.orderInList, column.getOrderInList())
-                    set(it.orderInView, column.getOrderInView())
-                    set(it.defaultOrder, column.getDefaultOrder())
+        val codeGenColumns = mutableListOf<CodeGenColumn>()
+        for (column in columnInfos) {
+            codeGenColumns.add(
+                CodeGenColumn {
+                    name = column.getName()!!
+                    objectName = table
+                    comment = column.getCustomComment()!!
+                    isSearchable = column.getSearchable()
+                    isSortable = column.getSortable()
+                    orderInEdit = column.getOrderInEdit()
+                    orderInList = column.getOrderInList()
+                    orderInView = column.getOrderInView()
+                    defaultOrder = column.getDefaultOrder()!!
                 }
-            }
-        }.isNotEmpty()
+            )
+        }
+        return CodeGenColumnDao.batchInsert(codeGenColumns) == codeGenColumns.size
     }
-
-
 
 }

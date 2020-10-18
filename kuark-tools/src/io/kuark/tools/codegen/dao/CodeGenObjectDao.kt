@@ -4,6 +4,7 @@ import io.kuark.ability.data.rdb.support.BaseDao
 import io.kuark.tools.codegen.model.po.CodeGenObject
 import io.kuark.tools.codegen.model.table.CodeGenObjects
 import org.ktorm.dsl.*
+import org.ktorm.entity.first
 import org.springframework.stereotype.Repository
 
 /**
@@ -18,6 +19,14 @@ object CodeGenObjectDao: BaseDao<String, CodeGenObject, CodeGenObjects>() {
 //endregion your codes 1
 
     //region your codes 2
+
+    fun searchByName(name: String): CodeGenObject? {
+        return try {
+            entitySequence().first { it.name eq name }
+        } catch (e: NoSuchElementException) {
+            null
+        }
+    }
 
     //endregion your codes 2
 

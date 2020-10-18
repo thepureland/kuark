@@ -1,9 +1,8 @@
 package io.kuark.tools.codegen.biz
 
-import io.kuark.ability.data.rdb.kit.RdbKit
 import io.kuark.tools.codegen.core.CodeGeneratorContext
-import io.kuark.tools.codegen.model.table.CodeGenFiles
-import org.ktorm.dsl.*
+import io.kuark.tools.codegen.dao.CodeGenFileDao
+import io.kuark.tools.codegen.model.po.CodeGenFile
 
 /**
  * 生成的文件历史信息服务
@@ -14,25 +13,21 @@ import org.ktorm.dsl.*
 object CodeGenFileBiz {
 
     fun read(): List<String> {
-        val results = mutableListOf<String>()
-        RdbKit.getDatabase().from(CodeGenFiles)
-            .select(CodeGenFiles.filename)
-            .where { CodeGenFiles.objectName eq CodeGeneratorContext.tableName }
-            .forEach { results.add(it[CodeGenFiles.filename]!!) }
-        return results
+        return CodeGenFileDao.searchCodeGenFileNames(CodeGeneratorContext.tableName)
     }
 
     fun save(files: Collection<String>): Boolean {
         val filesInDb = read()
-        RdbKit.getDatabase().batchInsert(CodeGenFiles) {
-            files.filter { !filesInDb.contains(it) }.forEach { file ->
-                item {
-                    set(it.filename, file)
-                    set(it.objectName, CodeGeneratorContext.tableName)
+        val codeGenFileList = mutableListOf<CodeGenFile>()
+        files.filter { !filesInDb.contains(it) }.forEach { file ->
+            codeGenFileList.add(
+                CodeGenFile {
+                    filename = file
+                    objectName = CodeGeneratorContext.tableName
                 }
-            }
+            )
         }
-        return true
+        return CodeGenFileDao.batchInsert(codeGenFileList) == codeGenFileList.size
     }
 
 }

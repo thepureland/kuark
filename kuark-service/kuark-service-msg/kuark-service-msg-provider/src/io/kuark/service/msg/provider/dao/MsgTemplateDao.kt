@@ -1,8 +1,8 @@
 package io.kuark.service.msg.provider.dao
 
 import io.kuark.ability.data.rdb.support.BaseDao
-import io.kuark.service.provider.sys.model.po.MsgTemplate
-import io.kuark.service.provider.sys.model.table.MsgTemplates
+import io.kuark.service.msg.provider.model.po.MsgTemplate
+import io.kuark.service.msg.provider.model.table.MsgTemplates
 import org.ktorm.dsl.*
 import org.springframework.stereotype.Repository
 

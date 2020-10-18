@@ -1,7 +1,7 @@
 package io.kuark.service.msg.provider.model.table
 
 import io.kuark.ability.data.rdb.support.StringIdTable
-import io.kuark.service.provider.msg.model.po.MsgSend
+import io.kuark.service.msg.provider.model.po.MsgSend
 import org.ktorm.schema.datetime
 import org.ktorm.schema.int
 import org.ktorm.schema.varchar

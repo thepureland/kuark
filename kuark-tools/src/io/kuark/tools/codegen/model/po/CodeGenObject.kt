@@ -20,7 +20,7 @@ interface CodeGenObject : IDbEntity<String, CodeGenObject> {
     var name: String
 
     /** 注释 */
-    var comment: String
+    var comment: String?
 
     /** 创建时间 */
     var createTime: LocalDateTime
@@ -29,10 +29,10 @@ interface CodeGenObject : IDbEntity<String, CodeGenObject> {
     var createUser: String
 
     /** 更新时间 */
-    var updateTime: LocalDateTime
+    var updateTime: LocalDateTime?
 
     /** 更新用户 */
-    var updateUser: String
+    var updateUser: String?
 
     /** 生成次数 */
     var genCount: Int

@@ -22,7 +22,7 @@ interface CodeGenColumn : IDbEntity<String, CodeGenColumn> {
     var objectName: String
 
     /** 注释 */
-    var comment: String
+    var comment: String?
 
     /** 是否可查询 */
     var isSearchable: Boolean
@@ -31,16 +31,16 @@ interface CodeGenColumn : IDbEntity<String, CodeGenColumn> {
     var isSortable: Boolean
 
     /** 列表中列序 */
-    var orderInList: Int
+    var orderInList: Int?
 
     /** 列表默认排序 */
-    var defaultOrder: String
+    var defaultOrder: String?
 
     /** 编辑页中的顺序 */
-    var orderInEdit: Int
+    var orderInEdit: Int?
 
     /** 详情页中的顺序 */
-    var orderInView: Int
+    var orderInView: Int?
 
 
     //region your codes 2

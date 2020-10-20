@@ -59,13 +59,13 @@ object CodeGenColumnBiz {
                 CodeGenColumn {
                     name = column.getName()!!
                     objectName = table
-                    comment = column.getCustomComment()!!
+                    comment = column.getCustomComment()
                     isSearchable = column.getSearchable()
                     isSortable = column.getSortable()
                     orderInEdit = column.getOrderInEdit()
                     orderInList = column.getOrderInList()
                     orderInView = column.getOrderInView()
-                    defaultOrder = column.getDefaultOrder()!!
+                    defaultOrder = column.getDefaultOrder()
                 }
             )
         }

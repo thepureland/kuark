@@ -304,3 +304,279 @@ Caused by: org.h2.jdbc.JdbcSQLInvalidAuthorizationSpecException: Wrong user name
 	at org.h2.message.DbException.getJdbcSQLException(DbException.java:461)
 	at org.h2.message.DbException.getJdbcSQLException(DbException.java:429)
 	... 9 more
+2020-10-22 16:08:01 database: CREATE CACHED TABLE "public"."sys_dict" COMMENT STRINGDECODE('\u5b57\u5178\u4e3b\u8868')(
+    "id" CHAR(36) DEFAULT RANDOM_UUID() NOT NULL COMMENT STRINGDECODE('\u4e3b\u952e'),
+    "module" VARCHAR(63) COMMENT STRINGDECODE('\u6a21\u5757'),
+    "dict_type" VARCHAR(63) NOT NULL COMMENT STRINGDECODE('\u5b57\u5178\u7c7b\u578b'),
+    "dict_name" VARCHAR(63) COMMENT STRINGDECODE('\u5b57\u5178\u540d\u79f0\uff0c\u6216\u5176\u56fd\u9645\u5316key'),
+    "remark" VARCHAR(127) COMMENT STRINGDECODE('\u5907\u6ce8\uff0c\u6216\u5176\u56fd\u9645\u5316key'),
+    "is_active" BOOLEAN DEFAULT TRUE NOT NULL COMMENT STRINGDECODE('\u662f\u5426\u542f\u7528'),
+    "is_built_in" BOOLEAN DEFAULT FALSE NOT NULL COMMENT STRINGDECODE('\u662f\u5426\u5185\u7f6e'),
+    "create_user" VARCHAR(36) COMMENT STRINGDECODE('\u521b\u5efa\u7528\u6237'),
+    "create_time" TIMESTAMP DEFAULT NOW() COMMENT STRINGDECODE('\u521b\u5efa\u65f6\u95f4'),
+    "update_user" VARCHAR(36) COMMENT STRINGDECODE('\u66f4\u65b0\u7528\u6237'),
+    "update_time" TIMESTAMP COMMENT STRINGDECODE('\u66f4\u65b0\u65f6\u95f4')
+)
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Schema "public" not found; SQL statement:
+CREATE CACHED TABLE "public"."sys_dict" COMMENT STRINGDECODE('\u5b57\u5178\u4e3b\u8868')(
+    "id" CHAR(36) DEFAULT RANDOM_UUID() NOT NULL COMMENT STRINGDECODE('\u4e3b\u952e'),
+    "module" VARCHAR(63) COMMENT STRINGDECODE('\u6a21\u5757'),
+    "dict_type" VARCHAR(63) NOT NULL COMMENT STRINGDECODE('\u5b57\u5178\u7c7b\u578b'),
+    "dict_name" VARCHAR(63) COMMENT STRINGDECODE('\u5b57\u5178\u540d\u79f0\uff0c\u6216\u5176\u56fd\u9645\u5316key'),
+    "remark" VARCHAR(127) COMMENT STRINGDECODE('\u5907\u6ce8\uff0c\u6216\u5176\u56fd\u9645\u5316key'),
+    "is_active" BOOLEAN DEFAULT TRUE NOT NULL COMMENT STRINGDECODE('\u662f\u5426\u542f\u7528'),
+    "is_built_in" BOOLEAN DEFAULT FALSE NOT NULL COMMENT STRINGDECODE('\u662f\u5426\u5185\u7f6e'),
+    "create_user" VARCHAR(36) COMMENT STRINGDECODE('\u521b\u5efa\u7528\u6237'),
+    "create_time" TIMESTAMP DEFAULT NOW() COMMENT STRINGDECODE('\u521b\u5efa\u65f6\u95f4'),
+    "update_user" VARCHAR(36) COMMENT STRINGDECODE('\u66f4\u65b0\u7528\u6237'),
+    "update_time" TIMESTAMP COMMENT STRINGDECODE('\u66f4\u65b0\u65f6\u95f4')
+) [90079-200]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:576)
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:429)
+	at org.h2.message.DbException.get(DbException.java:205)
+	at org.h2.message.DbException.get(DbException.java:181)
+	at org.h2.command.Parser.getSchema(Parser.java:1194)
+	at org.h2.command.Parser.getSchema(Parser.java:1200)
+	at org.h2.command.Parser.parseCreateTable(Parser.java:8368)
+	at org.h2.command.Parser.parseCreate(Parser.java:6276)
+	at org.h2.command.Parser.parsePrepared(Parser.java:903)
+	at org.h2.command.Parser.parse(Parser.java:843)
+	at org.h2.command.Parser.parse(Parser.java:815)
+	at org.h2.command.Parser.prepare(Parser.java:722)
+	at org.h2.engine.Session.prepare(Session.java:622)
+	at org.h2.engine.Session.prepare(Session.java:606)
+	at org.h2.engine.MetaRecord.execute(MetaRecord.java:58)
+	at org.h2.engine.Database.open(Database.java:759)
+	at org.h2.engine.Database.openDatabase(Database.java:307)
+	at org.h2.engine.Database.<init>(Database.java:301)
+	at org.h2.engine.Engine.openSession(Engine.java:74)
+	at org.h2.engine.Engine.openSession(Engine.java:192)
+	at org.h2.engine.Engine.createSessionAndValidate(Engine.java:171)
+	at org.h2.engine.Engine.createSession(Engine.java:166)
+	at org.h2.server.TcpServerThread.run(TcpServerThread.java:168)
+	at java.base/java.lang.Thread.run(Thread.java:834)
+2020-10-22 16:08:01 database: opening D:/dev/kuark/kuark-ability/kuark-ability-data/kuark-ability-data-rdb/h2/h2
+org.h2.message.DbException: Schema "public" not found [90079-200]
+	at org.h2.message.DbException.get(DbException.java:205)
+	at org.h2.message.DbException.get(DbException.java:181)
+	at org.h2.command.Parser.getSchema(Parser.java:1194)
+	at org.h2.command.Parser.getSchema(Parser.java:1200)
+	at org.h2.command.Parser.parseCreateTable(Parser.java:8368)
+	at org.h2.command.Parser.parseCreate(Parser.java:6276)
+	at org.h2.command.Parser.parsePrepared(Parser.java:903)
+	at org.h2.command.Parser.parse(Parser.java:843)
+	at org.h2.command.Parser.parse(Parser.java:815)
+	at org.h2.command.Parser.prepare(Parser.java:722)
+	at org.h2.engine.Session.prepare(Session.java:622)
+	at org.h2.engine.Session.prepare(Session.java:606)
+	at org.h2.engine.MetaRecord.execute(MetaRecord.java:58)
+	at org.h2.engine.Database.open(Database.java:759)
+	at org.h2.engine.Database.openDatabase(Database.java:307)
+	at org.h2.engine.Database.<init>(Database.java:301)
+	at org.h2.engine.Engine.openSession(Engine.java:74)
+	at org.h2.engine.Engine.openSession(Engine.java:192)
+	at org.h2.engine.Engine.createSessionAndValidate(Engine.java:171)
+	at org.h2.engine.Engine.createSession(Engine.java:166)
+	at org.h2.server.TcpServerThread.run(TcpServerThread.java:168)
+	at java.base/java.lang.Thread.run(Thread.java:834)
+Caused by: org.h2.jdbc.JdbcSQLSyntaxErrorException: Schema "public" not found; SQL statement:
+CREATE CACHED TABLE "public"."sys_dict" COMMENT STRINGDECODE('\u5b57\u5178\u4e3b\u8868')(
+    "id" CHAR(36) DEFAULT RANDOM_UUID() NOT NULL COMMENT STRINGDECODE('\u4e3b\u952e'),
+    "module" VARCHAR(63) COMMENT STRINGDECODE('\u6a21\u5757'),
+    "dict_type" VARCHAR(63) NOT NULL COMMENT STRINGDECODE('\u5b57\u5178\u7c7b\u578b'),
+    "dict_name" VARCHAR(63) COMMENT STRINGDECODE('\u5b57\u5178\u540d\u79f0\uff0c\u6216\u5176\u56fd\u9645\u5316key'),
+    "remark" VARCHAR(127) COMMENT STRINGDECODE('\u5907\u6ce8\uff0c\u6216\u5176\u56fd\u9645\u5316key'),
+    "is_active" BOOLEAN DEFAULT TRUE NOT NULL COMMENT STRINGDECODE('\u662f\u5426\u542f\u7528'),
+    "is_built_in" BOOLEAN DEFAULT FALSE NOT NULL COMMENT STRINGDECODE('\u662f\u5426\u5185\u7f6e'),
+    "create_user" VARCHAR(36) COMMENT STRINGDECODE('\u521b\u5efa\u7528\u6237'),
+    "create_time" TIMESTAMP DEFAULT NOW() COMMENT STRINGDECODE('\u521b\u5efa\u65f6\u95f4'),
+    "update_user" VARCHAR(36) COMMENT STRINGDECODE('\u66f4\u65b0\u7528\u6237'),
+    "update_time" TIMESTAMP COMMENT STRINGDECODE('\u66f4\u65b0\u65f6\u95f4')
+) [90079-200]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:576)
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:429)
+	... 22 more
+2020-10-22 16:08:06 database: CREATE CACHED TABLE "public"."sys_dict" COMMENT STRINGDECODE('\u5b57\u5178\u4e3b\u8868')(
+    "id" CHAR(36) DEFAULT RANDOM_UUID() NOT NULL COMMENT STRINGDECODE('\u4e3b\u952e'),
+    "module" VARCHAR(63) COMMENT STRINGDECODE('\u6a21\u5757'),
+    "dict_type" VARCHAR(63) NOT NULL COMMENT STRINGDECODE('\u5b57\u5178\u7c7b\u578b'),
+    "dict_name" VARCHAR(63) COMMENT STRINGDECODE('\u5b57\u5178\u540d\u79f0\uff0c\u6216\u5176\u56fd\u9645\u5316key'),
+    "remark" VARCHAR(127) COMMENT STRINGDECODE('\u5907\u6ce8\uff0c\u6216\u5176\u56fd\u9645\u5316key'),
+    "is_active" BOOLEAN DEFAULT TRUE NOT NULL COMMENT STRINGDECODE('\u662f\u5426\u542f\u7528'),
+    "is_built_in" BOOLEAN DEFAULT FALSE NOT NULL COMMENT STRINGDECODE('\u662f\u5426\u5185\u7f6e'),
+    "create_user" VARCHAR(36) COMMENT STRINGDECODE('\u521b\u5efa\u7528\u6237'),
+    "create_time" TIMESTAMP DEFAULT NOW() COMMENT STRINGDECODE('\u521b\u5efa\u65f6\u95f4'),
+    "update_user" VARCHAR(36) COMMENT STRINGDECODE('\u66f4\u65b0\u7528\u6237'),
+    "update_time" TIMESTAMP COMMENT STRINGDECODE('\u66f4\u65b0\u65f6\u95f4')
+)
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Schema "public" not found; SQL statement:
+CREATE CACHED TABLE "public"."sys_dict" COMMENT STRINGDECODE('\u5b57\u5178\u4e3b\u8868')(
+    "id" CHAR(36) DEFAULT RANDOM_UUID() NOT NULL COMMENT STRINGDECODE('\u4e3b\u952e'),
+    "module" VARCHAR(63) COMMENT STRINGDECODE('\u6a21\u5757'),
+    "dict_type" VARCHAR(63) NOT NULL COMMENT STRINGDECODE('\u5b57\u5178\u7c7b\u578b'),
+    "dict_name" VARCHAR(63) COMMENT STRINGDECODE('\u5b57\u5178\u540d\u79f0\uff0c\u6216\u5176\u56fd\u9645\u5316key'),
+    "remark" VARCHAR(127) COMMENT STRINGDECODE('\u5907\u6ce8\uff0c\u6216\u5176\u56fd\u9645\u5316key'),
+    "is_active" BOOLEAN DEFAULT TRUE NOT NULL COMMENT STRINGDECODE('\u662f\u5426\u542f\u7528'),
+    "is_built_in" BOOLEAN DEFAULT FALSE NOT NULL COMMENT STRINGDECODE('\u662f\u5426\u5185\u7f6e'),
+    "create_user" VARCHAR(36) COMMENT STRINGDECODE('\u521b\u5efa\u7528\u6237'),
+    "create_time" TIMESTAMP DEFAULT NOW() COMMENT STRINGDECODE('\u521b\u5efa\u65f6\u95f4'),
+    "update_user" VARCHAR(36) COMMENT STRINGDECODE('\u66f4\u65b0\u7528\u6237'),
+    "update_time" TIMESTAMP COMMENT STRINGDECODE('\u66f4\u65b0\u65f6\u95f4')
+) [90079-200]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:576)
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:429)
+	at org.h2.message.DbException.get(DbException.java:205)
+	at org.h2.message.DbException.get(DbException.java:181)
+	at org.h2.command.Parser.getSchema(Parser.java:1194)
+	at org.h2.command.Parser.getSchema(Parser.java:1200)
+	at org.h2.command.Parser.parseCreateTable(Parser.java:8368)
+	at org.h2.command.Parser.parseCreate(Parser.java:6276)
+	at org.h2.command.Parser.parsePrepared(Parser.java:903)
+	at org.h2.command.Parser.parse(Parser.java:843)
+	at org.h2.command.Parser.parse(Parser.java:815)
+	at org.h2.command.Parser.prepare(Parser.java:722)
+	at org.h2.engine.Session.prepare(Session.java:622)
+	at org.h2.engine.Session.prepare(Session.java:606)
+	at org.h2.engine.MetaRecord.execute(MetaRecord.java:58)
+	at org.h2.engine.Database.open(Database.java:759)
+	at org.h2.engine.Database.openDatabase(Database.java:307)
+	at org.h2.engine.Database.<init>(Database.java:301)
+	at org.h2.engine.Engine.openSession(Engine.java:74)
+	at org.h2.engine.Engine.openSession(Engine.java:192)
+	at org.h2.engine.Engine.createSessionAndValidate(Engine.java:171)
+	at org.h2.engine.Engine.createSession(Engine.java:166)
+	at org.h2.server.TcpServerThread.run(TcpServerThread.java:168)
+	at java.base/java.lang.Thread.run(Thread.java:834)
+2020-10-22 16:08:06 database: opening D:/dev/kuark/kuark-ability/kuark-ability-data/kuark-ability-data-rdb/h2/h2
+org.h2.message.DbException: Schema "public" not found [90079-200]
+	at org.h2.message.DbException.get(DbException.java:205)
+	at org.h2.message.DbException.get(DbException.java:181)
+	at org.h2.command.Parser.getSchema(Parser.java:1194)
+	at org.h2.command.Parser.getSchema(Parser.java:1200)
+	at org.h2.command.Parser.parseCreateTable(Parser.java:8368)
+	at org.h2.command.Parser.parseCreate(Parser.java:6276)
+	at org.h2.command.Parser.parsePrepared(Parser.java:903)
+	at org.h2.command.Parser.parse(Parser.java:843)
+	at org.h2.command.Parser.parse(Parser.java:815)
+	at org.h2.command.Parser.prepare(Parser.java:722)
+	at org.h2.engine.Session.prepare(Session.java:622)
+	at org.h2.engine.Session.prepare(Session.java:606)
+	at org.h2.engine.MetaRecord.execute(MetaRecord.java:58)
+	at org.h2.engine.Database.open(Database.java:759)
+	at org.h2.engine.Database.openDatabase(Database.java:307)
+	at org.h2.engine.Database.<init>(Database.java:301)
+	at org.h2.engine.Engine.openSession(Engine.java:74)
+	at org.h2.engine.Engine.openSession(Engine.java:192)
+	at org.h2.engine.Engine.createSessionAndValidate(Engine.java:171)
+	at org.h2.engine.Engine.createSession(Engine.java:166)
+	at org.h2.server.TcpServerThread.run(TcpServerThread.java:168)
+	at java.base/java.lang.Thread.run(Thread.java:834)
+Caused by: org.h2.jdbc.JdbcSQLSyntaxErrorException: Schema "public" not found; SQL statement:
+CREATE CACHED TABLE "public"."sys_dict" COMMENT STRINGDECODE('\u5b57\u5178\u4e3b\u8868')(
+    "id" CHAR(36) DEFAULT RANDOM_UUID() NOT NULL COMMENT STRINGDECODE('\u4e3b\u952e'),
+    "module" VARCHAR(63) COMMENT STRINGDECODE('\u6a21\u5757'),
+    "dict_type" VARCHAR(63) NOT NULL COMMENT STRINGDECODE('\u5b57\u5178\u7c7b\u578b'),
+    "dict_name" VARCHAR(63) COMMENT STRINGDECODE('\u5b57\u5178\u540d\u79f0\uff0c\u6216\u5176\u56fd\u9645\u5316key'),
+    "remark" VARCHAR(127) COMMENT STRINGDECODE('\u5907\u6ce8\uff0c\u6216\u5176\u56fd\u9645\u5316key'),
+    "is_active" BOOLEAN DEFAULT TRUE NOT NULL COMMENT STRINGDECODE('\u662f\u5426\u542f\u7528'),
+    "is_built_in" BOOLEAN DEFAULT FALSE NOT NULL COMMENT STRINGDECODE('\u662f\u5426\u5185\u7f6e'),
+    "create_user" VARCHAR(36) COMMENT STRINGDECODE('\u521b\u5efa\u7528\u6237'),
+    "create_time" TIMESTAMP DEFAULT NOW() COMMENT STRINGDECODE('\u521b\u5efa\u65f6\u95f4'),
+    "update_user" VARCHAR(36) COMMENT STRINGDECODE('\u66f4\u65b0\u7528\u6237'),
+    "update_time" TIMESTAMP COMMENT STRINGDECODE('\u66f4\u65b0\u65f6\u95f4')
+) [90079-200]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:576)
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:429)
+	... 22 more
+2020-10-22 16:08:13 database: CREATE CACHED TABLE "public"."sys_dict" COMMENT STRINGDECODE('\u5b57\u5178\u4e3b\u8868')(
+    "id" CHAR(36) DEFAULT RANDOM_UUID() NOT NULL COMMENT STRINGDECODE('\u4e3b\u952e'),
+    "module" VARCHAR(63) COMMENT STRINGDECODE('\u6a21\u5757'),
+    "dict_type" VARCHAR(63) NOT NULL COMMENT STRINGDECODE('\u5b57\u5178\u7c7b\u578b'),
+    "dict_name" VARCHAR(63) COMMENT STRINGDECODE('\u5b57\u5178\u540d\u79f0\uff0c\u6216\u5176\u56fd\u9645\u5316key'),
+    "remark" VARCHAR(127) COMMENT STRINGDECODE('\u5907\u6ce8\uff0c\u6216\u5176\u56fd\u9645\u5316key'),
+    "is_active" BOOLEAN DEFAULT TRUE NOT NULL COMMENT STRINGDECODE('\u662f\u5426\u542f\u7528'),
+    "is_built_in" BOOLEAN DEFAULT FALSE NOT NULL COMMENT STRINGDECODE('\u662f\u5426\u5185\u7f6e'),
+    "create_user" VARCHAR(36) COMMENT STRINGDECODE('\u521b\u5efa\u7528\u6237'),
+    "create_time" TIMESTAMP DEFAULT NOW() COMMENT STRINGDECODE('\u521b\u5efa\u65f6\u95f4'),
+    "update_user" VARCHAR(36) COMMENT STRINGDECODE('\u66f4\u65b0\u7528\u6237'),
+    "update_time" TIMESTAMP COMMENT STRINGDECODE('\u66f4\u65b0\u65f6\u95f4')
+)
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Schema "public" not found; SQL statement:
+CREATE CACHED TABLE "public"."sys_dict" COMMENT STRINGDECODE('\u5b57\u5178\u4e3b\u8868')(
+    "id" CHAR(36) DEFAULT RANDOM_UUID() NOT NULL COMMENT STRINGDECODE('\u4e3b\u952e'),
+    "module" VARCHAR(63) COMMENT STRINGDECODE('\u6a21\u5757'),
+    "dict_type" VARCHAR(63) NOT NULL COMMENT STRINGDECODE('\u5b57\u5178\u7c7b\u578b'),
+    "dict_name" VARCHAR(63) COMMENT STRINGDECODE('\u5b57\u5178\u540d\u79f0\uff0c\u6216\u5176\u56fd\u9645\u5316key'),
+    "remark" VARCHAR(127) COMMENT STRINGDECODE('\u5907\u6ce8\uff0c\u6216\u5176\u56fd\u9645\u5316key'),
+    "is_active" BOOLEAN DEFAULT TRUE NOT NULL COMMENT STRINGDECODE('\u662f\u5426\u542f\u7528'),
+    "is_built_in" BOOLEAN DEFAULT FALSE NOT NULL COMMENT STRINGDECODE('\u662f\u5426\u5185\u7f6e'),
+    "create_user" VARCHAR(36) COMMENT STRINGDECODE('\u521b\u5efa\u7528\u6237'),
+    "create_time" TIMESTAMP DEFAULT NOW() COMMENT STRINGDECODE('\u521b\u5efa\u65f6\u95f4'),
+    "update_user" VARCHAR(36) COMMENT STRINGDECODE('\u66f4\u65b0\u7528\u6237'),
+    "update_time" TIMESTAMP COMMENT STRINGDECODE('\u66f4\u65b0\u65f6\u95f4')
+) [90079-200]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:576)
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:429)
+	at org.h2.message.DbException.get(DbException.java:205)
+	at org.h2.message.DbException.get(DbException.java:181)
+	at org.h2.command.Parser.getSchema(Parser.java:1194)
+	at org.h2.command.Parser.getSchema(Parser.java:1200)
+	at org.h2.command.Parser.parseCreateTable(Parser.java:8368)
+	at org.h2.command.Parser.parseCreate(Parser.java:6276)
+	at org.h2.command.Parser.parsePrepared(Parser.java:903)
+	at org.h2.command.Parser.parse(Parser.java:843)
+	at org.h2.command.Parser.parse(Parser.java:815)
+	at org.h2.command.Parser.prepare(Parser.java:722)
+	at org.h2.engine.Session.prepare(Session.java:622)
+	at org.h2.engine.Session.prepare(Session.java:606)
+	at org.h2.engine.MetaRecord.execute(MetaRecord.java:58)
+	at org.h2.engine.Database.open(Database.java:759)
+	at org.h2.engine.Database.openDatabase(Database.java:307)
+	at org.h2.engine.Database.<init>(Database.java:301)
+	at org.h2.engine.Engine.openSession(Engine.java:74)
+	at org.h2.engine.Engine.openSession(Engine.java:192)
+	at org.h2.engine.Engine.createSessionAndValidate(Engine.java:171)
+	at org.h2.engine.Engine.createSession(Engine.java:166)
+	at org.h2.server.TcpServerThread.run(TcpServerThread.java:168)
+	at java.base/java.lang.Thread.run(Thread.java:834)
+2020-10-22 16:08:13 database: opening D:/dev/kuark/kuark-ability/kuark-ability-data/kuark-ability-data-rdb/h2/h2
+org.h2.message.DbException: Schema "public" not found [90079-200]
+	at org.h2.message.DbException.get(DbException.java:205)
+	at org.h2.message.DbException.get(DbException.java:181)
+	at org.h2.command.Parser.getSchema(Parser.java:1194)
+	at org.h2.command.Parser.getSchema(Parser.java:1200)
+	at org.h2.command.Parser.parseCreateTable(Parser.java:8368)
+	at org.h2.command.Parser.parseCreate(Parser.java:6276)
+	at org.h2.command.Parser.parsePrepared(Parser.java:903)
+	at org.h2.command.Parser.parse(Parser.java:843)
+	at org.h2.command.Parser.parse(Parser.java:815)
+	at org.h2.command.Parser.prepare(Parser.java:722)
+	at org.h2.engine.Session.prepare(Session.java:622)
+	at org.h2.engine.Session.prepare(Session.java:606)
+	at org.h2.engine.MetaRecord.execute(MetaRecord.java:58)
+	at org.h2.engine.Database.open(Database.java:759)
+	at org.h2.engine.Database.openDatabase(Database.java:307)
+	at org.h2.engine.Database.<init>(Database.java:301)
+	at org.h2.engine.Engine.openSession(Engine.java:74)
+	at org.h2.engine.Engine.openSession(Engine.java:192)
+	at org.h2.engine.Engine.createSessionAndValidate(Engine.java:171)
+	at org.h2.engine.Engine.createSession(Engine.java:166)
+	at org.h2.server.TcpServerThread.run(TcpServerThread.java:168)
+	at java.base/java.lang.Thread.run(Thread.java:834)
+Caused by: org.h2.jdbc.JdbcSQLSyntaxErrorException: Schema "public" not found; SQL statement:
+CREATE CACHED TABLE "public"."sys_dict" COMMENT STRINGDECODE('\u5b57\u5178\u4e3b\u8868')(
+    "id" CHAR(36) DEFAULT RANDOM_UUID() NOT NULL COMMENT STRINGDECODE('\u4e3b\u952e'),
+    "module" VARCHAR(63) COMMENT STRINGDECODE('\u6a21\u5757'),
+    "dict_type" VARCHAR(63) NOT NULL COMMENT STRINGDECODE('\u5b57\u5178\u7c7b\u578b'),
+    "dict_name" VARCHAR(63) COMMENT STRINGDECODE('\u5b57\u5178\u540d\u79f0\uff0c\u6216\u5176\u56fd\u9645\u5316key'),
+    "remark" VARCHAR(127) COMMENT STRINGDECODE('\u5907\u6ce8\uff0c\u6216\u5176\u56fd\u9645\u5316key'),
+    "is_active" BOOLEAN DEFAULT TRUE NOT NULL COMMENT STRINGDECODE('\u662f\u5426\u542f\u7528'),
+    "is_built_in" BOOLEAN DEFAULT FALSE NOT NULL COMMENT STRINGDECODE('\u662f\u5426\u5185\u7f6e'),
+    "create_user" VARCHAR(36) COMMENT STRINGDECODE('\u521b\u5efa\u7528\u6237'),
+    "create_time" TIMESTAMP DEFAULT NOW() COMMENT STRINGDECODE('\u521b\u5efa\u65f6\u95f4'),
+    "update_user" VARCHAR(36) COMMENT STRINGDECODE('\u66f4\u65b0\u7528\u6237'),
+    "update_time" TIMESTAMP COMMENT STRINGDECODE('\u66f4\u65b0\u65f6\u95f4')
+) [90079-200]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:576)
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:429)
+	... 22 more

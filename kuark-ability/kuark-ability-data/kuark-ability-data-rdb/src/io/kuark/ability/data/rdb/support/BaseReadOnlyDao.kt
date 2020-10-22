@@ -2,6 +2,7 @@ package io.kuark.ability.data.rdb.support
 
 import io.kuark.ability.data.rdb.kit.RdbKit
 import io.kuark.base.lang.GenericKit
+import org.ktorm.database.Database
 import org.ktorm.dsl.QuerySource
 import org.ktorm.dsl.eq
 import org.ktorm.dsl.from
@@ -30,6 +31,15 @@ open class BaseReadOnlyDao<PK, E : IDbEntity<PK, E>, T : Table<E>> {
         val tableClass = GenericKit.getSuperClassGenricClass(this::class, 2) as KClass<T>
         table = tableClass.objectInstance!!
     }
+
+    /**
+     * 返回当前表所在的数据库对象
+     *
+     * @return 当前表所在的数据库对象
+     * @author K
+     * @since 1.0.0
+     */
+    fun database(): Database = RdbKit.getDatabase()
 
     /**
      * 返回T指定的表的查询源，基于该对象可以进行类似对数据库表的sql一样操作

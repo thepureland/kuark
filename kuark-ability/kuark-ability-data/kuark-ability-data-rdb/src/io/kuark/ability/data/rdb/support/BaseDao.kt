@@ -1,13 +1,12 @@
 package io.kuark.ability.data.rdb.support
 
-import io.kuark.ability.data.rdb.kit.RdbKit
+import io.kuark.base.lang.string.humpToUnderscore
 import io.kuark.base.support.GroupExecutor
-import org.ktorm.dsl.batchInsert
-import org.ktorm.dsl.batchUpdate
-import org.ktorm.dsl.eq
-import org.ktorm.dsl.update
+import org.ktorm.dsl.*
 import org.ktorm.entity.add
 import org.ktorm.entity.removeIf
+import org.ktorm.schema.Column
+import org.ktorm.schema.ColumnDeclaring
 import org.ktorm.schema.Table
 
 /**
@@ -19,7 +18,7 @@ import org.ktorm.schema.Table
  * @author K
  * @since 1.0.0
  */
-open class BaseDao<PK, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadOnlyDao<PK, E, T>() {
+open class BaseDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadOnlyDao<PK, E, T>() {
 
 
     //region Insert
@@ -40,6 +39,8 @@ open class BaseDao<PK, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadOnlyDao<PK,
     /**
      * 批量插入指定实体到当前表。
      *
+     * ktorm底层该方法是基于原生 JDBC 提供的 executeBatch 函数实现
+     *
      * @param entities 实体集合
      * @param countOfEachBatch 每批大小，缺省为1000
      * @return 成功插入的记录数
@@ -49,8 +50,14 @@ open class BaseDao<PK, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadOnlyDao<PK,
     fun batchInsert(entities: Collection<E>, countOfEachBatch: Int = 1000): Int {
         var totalCount = 0
         GroupExecutor(entities, countOfEachBatch) {
-            val counts = RdbKit.getDatabase().batchInsert(table) {
-                it.forEach { _ -> item { entity -> entity } }
+            val counts = database().batchInsert(table) {
+                it.forEach { entity ->
+                    item {
+                        for ((name, value) in entity.properties) {
+                            set(table[name.humpToUnderscore().toLowerCase()], value) //TODO 有没有办法直接取得列名？
+                        }
+                    }
+                }
             }
             totalCount += counts.sum()
         }.execute()
@@ -75,6 +82,8 @@ open class BaseDao<PK, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadOnlyDao<PK,
     /**
      * 批量更新实体对应的记录
      *
+     * ktorm底层该方法是基于原生 JDBC 提供的 executeBatch 函数实现
+     *
      * @param entities 实体集合
      * @param countOfEachBatch 每批大小，缺省为1000
      * @return 更新成功的记录数
@@ -84,7 +93,16 @@ open class BaseDao<PK, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadOnlyDao<PK,
     fun batchUpdate(entities: Collection<E>, countOfEachBatch: Int = 1000): Int {
         var totalCount = 0
         GroupExecutor(entities) {
-            val counts = RdbKit.getDatabase().batchUpdate(table) { it }
+            val counts = database().batchUpdate(table) {
+                for (entity in it) {
+                    item {
+                        entity.properties.filter { it.key != "id" }.forEach { (name, value) ->
+                            set(table[name.humpToUnderscore().toLowerCase()], value) //TODO 有没有办法直接取得列名？
+                        }
+                        where { (table["id"] as Column<PK>) eq (entity.id as ColumnDeclaring<PK>) }
+                    }
+                }
+            }
             totalCount += counts.sum()
         }.execute()
         return totalCount
@@ -127,23 +145,6 @@ open class BaseDao<PK, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadOnlyDao<PK,
         return deleteById(id)
     }
 
-    /**
-     * 批量删除实体对应的记录
-     *
-     * @param entities 实体集合
-     * @return 删除成功的记录数
-     * @author K
-     * @since 1.0.0
-     */
-    fun batchDelete(entities: Collection<E>): Int {
-        var totalCount = 0
-        GroupExecutor(entities) {
-            //TODO
-//            val counts = RdbKit.getDatabase().dele(table) { it }
-//            totalCount += counts.sum()
-        }.execute()
-        return totalCount
-    }
 
     //endregion Delete
 

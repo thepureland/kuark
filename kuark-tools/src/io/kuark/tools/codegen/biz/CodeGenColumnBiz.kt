@@ -10,7 +10,7 @@ import io.kuark.tools.codegen.model.po.CodeGenColumn
 import io.kuark.tools.codegen.model.vo.ColumnInfo
 
 /**
- * 生成的文件历史信息服务
+ * 生成的列信息服务
  *
  * @author K
  * @since 1.0.0

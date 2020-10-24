@@ -1,6 +1,7 @@
 package io.kuark.ability.data.rdb.kit
 
 import io.kuark.ability.data.rdb.datasource.currentDataSource
+import io.kuark.ability.data.rdb.datasource.currentDatabase
 import io.kuark.ability.data.rdb.metadata.RdbType
 import io.kuark.base.lang.string.deleteWhitespace
 import io.kuark.base.lang.string.substringBetween
@@ -34,7 +35,7 @@ object RdbKit {
      * @author K
      * @since 1.0.0
      */
-    fun getDatabase(): Database = Database.connect(getDataSource())
+    fun getDatabase(): Database = KuarkContextHolder.currentDatabase()
 
     /**
      * 新建一个数据源连接

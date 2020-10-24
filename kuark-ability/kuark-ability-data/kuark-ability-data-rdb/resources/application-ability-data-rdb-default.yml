@@ -5,7 +5,7 @@ logging:
 
 spring:
   datasource:
-#    auto-commit: true
+    auto-commit: true
     platform: h2
 #    platform: info.jesseyang.config.SQLiteDialect
     username: sa

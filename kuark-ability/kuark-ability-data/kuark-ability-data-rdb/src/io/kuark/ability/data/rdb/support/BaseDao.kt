@@ -10,7 +10,7 @@ import org.ktorm.schema.ColumnDeclaring
 import org.ktorm.schema.Table
 
 /**
- * 基础数据访问对象，封装某数据库实体的通用操作
+ * 基础数据访问对象，封装某数据库表的通用操作
  *
  * @param PK 实体主键类型
  * @param E 实体类型
@@ -50,11 +50,11 @@ open class BaseDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadOnlyD
     fun batchInsert(entities: Collection<E>, countOfEachBatch: Int = 1000): Int {
         var totalCount = 0
         GroupExecutor(entities, countOfEachBatch) {
-            val counts = database().batchInsert(table) {
+            val counts = database().batchInsert(table()) {
                 it.forEach { entity ->
                     item {
                         for ((name, value) in entity.properties) {
-                            set(table[name.humpToUnderscore().toLowerCase()], value) //TODO 有没有办法直接取得列名？
+                            set(table()[name.humpToUnderscore().toLowerCase()], value) //TODO 有没有办法直接取得列名？
                         }
                     }
                 }
@@ -87,19 +87,24 @@ open class BaseDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadOnlyD
      * @param entities 实体集合
      * @param countOfEachBatch 每批大小，缺省为1000
      * @return 更新成功的记录数
+     * @throws IllegalStateException 存在主键为null时
      * @author K
      * @since 1.0.0
      */
     fun batchUpdate(entities: Collection<E>, countOfEachBatch: Int = 1000): Int {
+        if (entities.filter { it.id == null }.isNotEmpty()) {
+            error("由于存在主键为null的实体，批量更新失败！")
+        }
+
         var totalCount = 0
-        GroupExecutor(entities) {
-            val counts = database().batchUpdate(table) {
+        GroupExecutor(entities, countOfEachBatch) {
+            val counts = database().batchUpdate(table()) {
                 for (entity in it) {
                     item {
                         entity.properties.filter { it.key != "id" }.forEach { (name, value) ->
-                            set(table[name.humpToUnderscore().toLowerCase()], value) //TODO 有没有办法直接取得列名？
+                            set(table()[name.humpToUnderscore().toLowerCase()], value) //TODO 有没有办法直接取得列名？
                         }
-                        where { (table["id"] as Column<PK>) eq (entity.id as ColumnDeclaring<PK>) }
+                        where { (table()["id"] as Column<PK>) eq entity.id!! }
                     }
                 }
             }
@@ -123,9 +128,9 @@ open class BaseDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadOnlyD
      */
     fun deleteById(id: PK): Boolean {
         val count = when (id) {
-            is String -> entitySequence().removeIf { (table as StringIdTable<*>).id eq id }
-            is Int -> entitySequence().removeIf { (table as IntIdTable<*>).id eq id }
-            is Long -> entitySequence().removeIf { (table as LongIdTable<*>).id eq id }
+            is String -> entitySequence().removeIf { (table() as StringIdTable<*>).id eq id }
+            is Int -> entitySequence().removeIf { (table() as IntIdTable<*>).id eq id }
+            is Long -> entitySequence().removeIf { (table() as LongIdTable<*>).id eq id }
             else -> error("不支持的主键类型【${id!!::class}】")
         }
         return count == 1

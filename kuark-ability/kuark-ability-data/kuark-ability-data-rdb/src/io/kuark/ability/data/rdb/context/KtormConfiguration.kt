@@ -1,12 +1,9 @@
 package io.kuark.ability.data.rdb.context
 
 import com.fasterxml.jackson.databind.Module
-import org.ktorm.database.Database
 import org.ktorm.jackson.KtormModule
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import javax.sql.DataSource
 
 /**
  * ktorm sprintboot配置类
@@ -18,13 +15,13 @@ import javax.sql.DataSource
 //@EnableConfigurationProperties
 open class KtormConfiguration {
 
-    @Autowired
-    lateinit var dataSource: DataSource
-
-    @Bean
-    open fun database(): Database {
-        return Database.connectWithSpringSupport(dataSource)
-    }
+//    @Autowired
+//    lateinit var dataSource: DataSource
+//
+//    @Bean
+//    open fun database(): Database {
+//        return Database.connectWithSpringSupport(dataSource)
+//    }
 
     @Bean
     open fun ktormModule(): Module {

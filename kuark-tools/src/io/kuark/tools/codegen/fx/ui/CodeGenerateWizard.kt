@@ -16,7 +16,7 @@ import javafx.scene.control.ButtonType
 import javafx.stage.Stage
 
 /**
- * 代码生成器向导，用户可继承此类来提供自定的TemplateModelCreator
+ * 代码生成器向导，用户可继承此类来提供自定义的TemplateModelCreator
  *
  * @author K
  * @since 1.0.0

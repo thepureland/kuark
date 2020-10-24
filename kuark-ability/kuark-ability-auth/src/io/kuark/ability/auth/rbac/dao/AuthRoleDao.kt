@@ -14,7 +14,7 @@ import org.springframework.stereotype.Repository
  */
 @Repository
 //region your codes 1
-class AuthRoleDao: BaseDao<String, AuthRole, AuthRoles>() {
+open class AuthRoleDao : BaseDao<String, AuthRole, AuthRoles>() {
 //endregion your codes 1
 
     //region your codes 2

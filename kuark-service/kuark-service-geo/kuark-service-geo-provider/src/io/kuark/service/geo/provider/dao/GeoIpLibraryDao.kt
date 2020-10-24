@@ -14,7 +14,7 @@ import org.springframework.stereotype.Repository
  */
 @Repository
 //region your codes 1
-class GeoIpLibraryDao: BaseDao<String, GeoIpLibrary, GeoIpLibrarys>() {
+open class GeoIpLibraryDao : BaseDao<String, GeoIpLibrary, GeoIpLibrarys>() {
 //endregion your codes 1
 
     //region your codes 2

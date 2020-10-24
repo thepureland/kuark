@@ -16,7 +16,7 @@ import org.springframework.stereotype.Repository
 <@generateClassComment table.comment+"数据访问对象"/>
 @Repository
 //region your codes 1
-class ${className}Dao: ${superDao}<${pkColumn.kotlinTypeName}, ${className}, ${className}s>() {
+open class ${className}Dao : ${superDao}<${pkColumn.kotlinTypeName}, ${className}, ${className}s>() {
 //endregion your codes 1
 
     //region your codes 2

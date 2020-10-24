@@ -14,7 +14,7 @@ import org.springframework.stereotype.Repository
  */
 @Repository
 //region your codes 1
-class MsgSendDao: BaseDao<String, MsgSend, MsgSends>() {
+open class MsgSendDao : BaseDao<String, MsgSend, MsgSends>() {
 //endregion your codes 1
 
     //region your codes 2

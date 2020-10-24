@@ -14,7 +14,7 @@ import org.springframework.stereotype.Repository
  */
 @Repository
 //region your codes 1
-class UserDbAuditLogItemDao: BaseDao<String, UserDbAuditLogItem, UserDbAuditLogItems>() {
+open class UserDbAuditLogItemDao : BaseDao<String, UserDbAuditLogItem, UserDbAuditLogItems>() {
 //endregion your codes 1
 
     //region your codes 2

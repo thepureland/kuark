@@ -14,7 +14,7 @@ import org.springframework.stereotype.Repository
  */
 @Repository
 //region your codes 1
-class AuthUserAccountThirdPartyDao: BaseDao<String, AuthUserAccountThirdParty, AuthUserAccountThirdPartys>() {
+open class AuthUserAccountThirdPartyDao : BaseDao<String, AuthUserAccountThirdParty, AuthUserAccountThirdPartys>() {
 //endregion your codes 1
 
     //region your codes 2

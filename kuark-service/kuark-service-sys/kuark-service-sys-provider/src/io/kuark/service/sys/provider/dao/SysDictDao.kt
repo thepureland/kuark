@@ -14,7 +14,7 @@ import org.springframework.stereotype.Repository
  */
 @Repository
 //region your codes 1
-class SysDictDao: BaseDao<String, SysDict, SysDicts>() {
+open class SysDictDao : BaseDao<String, SysDict, SysDicts>() {
 //endregion your codes 1
 
     //region your codes 2

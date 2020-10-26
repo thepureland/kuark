@@ -1,8 +1,7 @@
-package io.kuark.ability.distributed.lock
+package io.kuark.ability.distributed.lock.core
 
 import org.redisson.api.RLock
 import org.redisson.api.RedissonClient
-import org.springframework.beans.factory.annotation.Autowired
 import java.util.concurrent.TimeUnit
 
 
@@ -12,10 +11,7 @@ import java.util.concurrent.TimeUnit
  * @author K
  * @since 1.0.0
  */
-class DistributedLock : IDistributedLock {
-
-    @Autowired
-    private lateinit var redissonClient: RedissonClient
+class RedissonLock(val redissonClient: RedissonClient) : IRedissonLock {
 
     override fun lock(lockKey: String): RLock {
         val lock = redissonClient.getLock(lockKey)

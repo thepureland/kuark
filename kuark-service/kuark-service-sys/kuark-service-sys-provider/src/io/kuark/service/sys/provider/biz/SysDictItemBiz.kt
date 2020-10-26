@@ -46,7 +46,7 @@ open class SysDictItemBiz : ISysDictItemBiz {
             listOf()
         } else {
             // 查出dict id的所有字典项
-            sysDictItemDao.searchByIds(ids)
+            sysDictItemDao.searchByDictId(ids.first())
         }
     }
 

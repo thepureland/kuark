@@ -1,0 +1,9 @@
+# 单节点配置
+redisson:
+  # 是否开启
+  enabled: true
+  # redis使用模式
+  mode: single # 取值：single, cluster
+  singleServerConfig:
+    # 节点地址
+    address: redis://user:@localhost:6379

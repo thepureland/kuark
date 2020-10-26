@@ -1,4 +1,4 @@
-package io.kuark.ability.distributed.lock
+package io.kuark.ability.distributed.lock.core
 
 import org.redisson.api.RLock
 
@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit
  * @author K
  * @since 1.0.0
  */
-interface IDistributedLock {
+interface IRedissonLock {
 
     fun lock(lockKey: String): RLock
 

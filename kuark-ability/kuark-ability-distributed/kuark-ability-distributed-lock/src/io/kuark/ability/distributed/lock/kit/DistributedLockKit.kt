@@ -1,8 +1,8 @@
-package io.kuark.ability.distributed.lock
+package io.kuark.ability.distributed.lock.kit
 
+import io.kuark.ability.distributed.lock.core.IRedissonLock
+import io.kuark.context.spring.SpringKit
 import org.redisson.api.RLock
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.stereotype.Component
 import java.util.concurrent.TimeUnit
 
 
@@ -12,12 +12,10 @@ import java.util.concurrent.TimeUnit
  * @author K
  * @since 1.0.0
  */
-@Component
 object DistributedLockKit {
 
-    @Autowired
-    private lateinit var distributedLock: IDistributedLock
-
+    private val distributedLock = SpringKit.getBean(IRedissonLock::class)
+    
     /**
      * 加锁
      * @param lockKey

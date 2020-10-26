@@ -37,7 +37,7 @@ class BatchCacheableAspect {
      * @author K
      * @since 1.0.0
      */
-    @Pointcut("@annotation(BatchCacheable)")
+    @Pointcut("@annotation(io.kuark.cache.core.BatchCacheable)")
     private fun cut() {
         // do nothing
     }

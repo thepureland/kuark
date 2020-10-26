@@ -7,4 +7,5 @@ logging:
 spring:
   profiles:
     active:
-      - context-default
+      - ability-distributed-lock-default
+      - ability-distributed-lock-junit

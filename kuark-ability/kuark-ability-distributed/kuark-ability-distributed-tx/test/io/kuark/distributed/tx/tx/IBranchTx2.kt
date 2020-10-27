@@ -6,10 +6,15 @@ import org.springframework.web.bind.annotation.RequestParam
 import java.math.BigDecimal
 
 @FeignClient(value = "branch-tx2")
-interface IBranchtx2 {
+interface IBranchTx2 {
+
     /**
      * 增加账户余额
      */
     @RequestMapping("/tx2/increase")
-    fun increase(@RequestParam("userId") userId: Int, @RequestParam("money") money: Double)
+    fun increase(@RequestParam("id") id: Int, @RequestParam("money") money: Double)
+
+    @RequestMapping("/tx2/increaseFail")
+    fun increaseFail(@RequestParam("id") id: Int, @RequestParam("money") money: Double)
+
 }

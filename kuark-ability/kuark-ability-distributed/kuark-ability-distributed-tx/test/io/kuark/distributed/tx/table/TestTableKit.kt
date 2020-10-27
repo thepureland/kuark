@@ -22,13 +22,8 @@ internal object TestTableKit {
         operateTestTable("create")
     }
 
-    fun insert(): IntArray? {
+    fun insert() {
         operateTestTable("insert")
-        val ids = IntArray(11)
-        for (i in 0..10) {
-            ids[i] = i
-        }
-        return ids
     }
 
     fun drop() {

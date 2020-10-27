@@ -1,6 +1,9 @@
 package io.kuark.distributed.tx.tx1
 
+import io.kuark.distributed.tx.table.TestTableDao
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 /**
  *
@@ -9,10 +12,16 @@ import org.springframework.stereotype.Service
  * @since 1.0.0
  */
 @Service
-class BranchTx1 : IBranchTx1 {
+open class BranchTx1 : IBranchTx1 {
 
-    override fun decrease(userId: Int, money: Double) {
-        TODO("Not yet implemented")
+    @Autowired
+    private lateinit var testTableDao: TestTableDao
+
+    @Transactional
+    override fun decrease(id: Int, money: Double) {
+        val entity = testTableDao.getById(id)
+        entity.balance -= money
+        testTableDao.update(entity)
     }
 
 }

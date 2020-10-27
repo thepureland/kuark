@@ -7,9 +7,11 @@ import java.math.BigDecimal
 
 @FeignClient(value = "branch-tx1")
 interface IBranchTx1 {
+
     /**
      * 扣减账户余额
      */
     @RequestMapping("/tx1/decrease")
-    fun decrease(@RequestParam("userId") userId: Int, @RequestParam("money") money: Double)
+    fun decrease(@RequestParam("id") id: Int, @RequestParam("money") money: Double)
+
 }

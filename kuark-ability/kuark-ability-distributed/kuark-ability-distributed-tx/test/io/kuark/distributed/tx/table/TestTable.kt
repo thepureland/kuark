@@ -16,20 +16,8 @@ internal interface TestTable : IDbEntity<Int, TestTable> {
 
     companion object : DbEntityFactory<TestTable>()
 
-    /** 名字 */
-    var name: String
-
-    /** 生日 */
-    var birthday: LocalDateTime?
-
-    /** 是否生效 */
-    var isActive: Boolean?
-
-    /** 体重 */
-    var weight: Double?
-
-    /** 身高 */
-    var height: Int?
+    /** 余额 */
+    var balance: Double
 
 
     //region your codes 2

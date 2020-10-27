@@ -1,6 +1,5 @@
 package io.kuark.distributed.tx.tx2
 
-import io.kuark.distributed.tx.tx1.BranchTx1Application
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration

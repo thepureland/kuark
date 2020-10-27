@@ -1,6 +1,6 @@
 package io.kuark.distributed.tx.tx
 
-import io.kuark.distributed.tx.tx2.IBranchTx2
+import io.kuark.distributed.tx.table.TestTableDao
 import io.seata.spring.annotation.GlobalTransactional
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service
  * @since 1.0.0
  */
 @Service
-class GlobalTx {
+open class GlobalTx {
 
     @Autowired
     private lateinit var branchTx1: IBranchTx1
@@ -21,8 +21,19 @@ class GlobalTx {
     private lateinit var branchTx2: IBranchTx2
 
     @GlobalTransactional(name = "fsp-create-order", rollbackFor = [Exception::class])
-    fun run() {
+    open fun normal() {
 
+        branchTx1.decrease(1, 50.0) // 扣款
+
+        branchTx2.increase(1, 100.0) // 加款
+    }
+
+    @GlobalTransactional(name = "fsp-create-order", rollbackFor = [Exception::class])
+    open fun onError() {
+
+        branchTx1.decrease(1, 50.0) // 扣款
+
+        branchTx2.increaseFail(1, 100.0) // 模拟加款失败
     }
 
 }

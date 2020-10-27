@@ -218,6 +218,9 @@ subprojects {
             dependency("org.springframework.cloud:spring-cloud-starter-gateway:$spring_cloud_version")
             dependency("org.springframework.cloud:spring-cloud-starter-bus-amqp:2.2.3.RELEASE")
 
+            // alibaba
+            dependency("io.seata:seata-all:1.3.0")
+
 
 
             // 依赖maven中不存在的jar

@@ -1,13 +1,13 @@
 package io.kuark.distributed.tx
 
+import io.kuark.distributed.tx.table.TestTableDao
 import io.kuark.distributed.tx.table.TestTableKit
 import io.kuark.distributed.tx.tx.GlobalTx
-import io.kuark.test.SpringTest
-import org.junit.jupiter.api.AfterAll
+import io.kuark.distributed.tx.tx.GlobalTxApplication
+import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.BeforeAll
-import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.context.SpringBootTest
 
 /**
  *
@@ -15,10 +15,15 @@ import org.springframework.beans.factory.annotation.Autowired
  * @author K
  * @since 1.0.0
  */
-class DistributedTxTest : SpringTest() {
+@SpringBootTest(classes = [GlobalTxApplication::class])
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+open class DistributedTxTest {
 
     @Autowired
     private lateinit var globalTx: GlobalTx
+
+    @Autowired
+    private lateinit var testTableDao: TestTableDao
 
     @BeforeAll
     fun setUp() {
@@ -33,12 +38,13 @@ class DistributedTxTest : SpringTest() {
 
     @Test
     fun test() {
-        // 原来余额100，先扣50，后加100，结果150
-        assertEquals(150.0, globalTx.normal())
+        // 当前余额100，先扣50，后加100，结果150
+        globalTx.normal()
+        assertEquals(150.0, testTableDao.getById(1).balance)
 
-        // 原来余额100，先扣50，后加100(此时出错，应全部回滚)，结果100(没变化)
-        assertEquals(100.0, globalTx.onError())
+        // 当前余额150，先扣100，后加100(此时出错，应全部回滚)，结果150(没变化)
+        assertThrows<Exception> { globalTx.onError() }
+        assertEquals(150.0, testTableDao.getById(1).balance)
     }
 
 }
-

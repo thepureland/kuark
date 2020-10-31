@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
-import java.math.BigDecimal
 
 /**
  *
@@ -23,7 +22,8 @@ class BranchTx1Controller {
      * 扣减账户余额
      */
     @RequestMapping("/decrease")
-    fun decrease(@RequestParam("userId") userId: Int, @RequestParam("money") money: Double) {
-        branchTx1.decrease(userId, money)
+    fun decrease(@RequestParam("id") id: Int, @RequestParam("money") money: Double) {
+        branchTx1.decrease(id, money)
     }
+
 }

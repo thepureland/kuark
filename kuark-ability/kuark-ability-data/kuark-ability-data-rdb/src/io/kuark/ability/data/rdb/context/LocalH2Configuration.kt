@@ -8,9 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.AutoConfigureBefore
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.jdbc.DataSourceBuilder
 import org.springframework.context.annotation.Bean
@@ -36,6 +38,7 @@ import javax.sql.DataSource
     havingValue = "org.h2.Driver",
     matchIfMissing = false
 )
+@EnableAutoConfiguration(exclude = [DataSourceAutoConfiguration::class])
 @AutoConfigureBefore(KtormConfiguration::class)
 open class LocalH2Configuration {
 
@@ -53,12 +56,19 @@ open class LocalH2Configuration {
      * @author K
      * @since 1.0.0
      */
+//    @Bean
+//    @Qualifier(value = "dataSource")
+////    @Primary
+//    @ConfigurationProperties(prefix = "spring.datasource")
+//    @ConditionalOnMissingBean
+//    open fun dataSource(@Autowired environment: Environment): DataSource {
+//        return hikariDataSource(environment)
+//    }
+
     @Bean
-    @Qualifier(value = "dataSource")
-    @Primary
     @ConfigurationProperties(prefix = "spring.datasource")
     @ConditionalOnMissingBean
-    open fun dataSource(@Autowired environment: Environment): DataSource {
+    open fun hikariDataSource(@Autowired environment: Environment): HikariDataSource {
         startH2()
         return DataSourceBuilder.create().type(HikariDataSource::class.java)
             .url(dbUrl) // Hikari直接取的连接地址参数是jdbc-url而不是url
@@ -86,7 +96,7 @@ open class LocalH2Configuration {
 
     /**
      * 处理配置的h2数据库url
-     * 为了方便开发者，kuark实现了开箱即用，在application-data-jdbc-dev.yml文件中spring.datasource.url配置的是相对路径，
+     * 为了方便开发者，kuark实现了开箱即用，在application-ability-data-rdb-xxxx.yml文件中spring.datasource.url配置的是相对路径，
      * 这样免去开发者下载完源码运行kuark之前，需要将h2数据库所在位置改为绝对路径的麻烦。但由此带来的问题是，除非开发者在当前模块运行代码，
      * 否则，这个相对路径将是错误的，它是相对于开发者运行位置而言的。因此，这里需要动态的将其处理为绝对路径。
      *

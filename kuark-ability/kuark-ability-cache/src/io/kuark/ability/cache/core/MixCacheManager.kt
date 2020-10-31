@@ -1,11 +1,13 @@
 package io.kuark.ability.cache.core
 
-import io.kuark.base.log.LogFactory
 import io.kuark.ability.cache.context.CacheNameResolver
+import io.kuark.ability.cache.context.MixCacheConfiguration
 import io.kuark.ability.cache.enums.CacheStrategy
+import io.kuark.base.log.LogFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.cache.Cache
 import org.springframework.cache.CacheManager
 import org.springframework.cache.transaction.AbstractTransactionSupportingCacheManager
@@ -20,6 +22,7 @@ import org.springframework.stereotype.Component
  */
 @Primary
 @Component("cacheManager")
+@ConditionalOnBean(MixCacheConfiguration::class)
 class MixCacheManager : AbstractTransactionSupportingCacheManager() {
 
     @Value("\${cache.config.strategy}")

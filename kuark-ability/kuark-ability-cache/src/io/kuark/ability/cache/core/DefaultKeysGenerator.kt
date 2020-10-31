@@ -31,7 +31,6 @@ import kotlin.reflect.full.findAnnotation
  * @author K
  * @since 1.0.0
  */
-@Component
 class DefaultKeysGenerator : IKeysGenerator {
 
     override fun generate(target: Any?, function: KFunction<*>?, vararg params: Any): List<String> {

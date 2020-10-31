@@ -4,4 +4,5 @@ dependencies {
 
     testApi(project(":kuark-test"))
     testApi(project(":kuark-ability:kuark-ability-distributed:kuark-ability-distributed-client"))
+    testApi(project(":kuark-ability:kuark-ability-web:kuark-ability-web-springmvc"))
 }

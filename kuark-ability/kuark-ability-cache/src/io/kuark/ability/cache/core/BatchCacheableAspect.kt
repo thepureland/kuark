@@ -8,6 +8,7 @@ import org.aspectj.lang.annotation.Around
 import org.aspectj.lang.annotation.Aspect
 import org.aspectj.lang.annotation.Pointcut
 import org.aspectj.lang.reflect.MethodSignature
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.context.annotation.Lazy
 import org.springframework.stereotype.Component
@@ -29,6 +30,7 @@ import kotlin.reflect.jvm.kotlinFunction
 @Aspect
 @Component
 @Lazy(false)
+@ConditionalOnBean(MixCacheManager::class)
 class BatchCacheableAspect {
 
     /**
@@ -37,7 +39,7 @@ class BatchCacheableAspect {
      * @author K
      * @since 1.0.0
      */
-    @Pointcut("@annotation(io.kuark.cache.core.BatchCacheable)")
+    @Pointcut("@annotation(io.kuark.ability.cache.core.BatchCacheable)")
     private fun cut() {
         // do nothing
     }

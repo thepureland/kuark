@@ -1,6 +1,7 @@
 package io.kuark.test
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.context.annotation.ComponentScan
 
 /**
  * 单元测试的spring启动类
@@ -8,5 +9,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
  * @author K
  * @since 1.0.0
  */
-@SpringBootApplication(scanBasePackages = ["io.kuark"])
+@SpringBootApplication
+@ComponentScan("io.kuark")
 open class TestApplication

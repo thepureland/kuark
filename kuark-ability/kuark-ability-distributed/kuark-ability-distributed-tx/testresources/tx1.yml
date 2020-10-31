@@ -1,0 +1,29 @@
+spring:
+  application:
+    name: branch-tx1
+  datasource:
+    auto-commit: true
+    platform: h2
+    #    platform: info.jesseyang.config.SQLiteDialect
+    username: sa
+    password:
+    url: "jdbc:h2:tcp://localhost:9092/./h2/h2;DATABASE_TO_LOWER=TRUE;"
+    driver-class-name: org.h2.Driver
+  cloud:
+    alibaba:
+      seata:
+        tx-service-group: my_test_tx_group
+
+
+server:
+  port: 8181
+
+feign:
+  hystrix:
+    enabled: true
+
+
+logging:
+  level:
+    io:
+      seata: info

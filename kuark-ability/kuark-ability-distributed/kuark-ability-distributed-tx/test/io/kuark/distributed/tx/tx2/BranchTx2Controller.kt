@@ -23,7 +23,12 @@ class BranchTx2Controller {
      * 扣减账户余额
      */
     @RequestMapping("/increase")
-    fun increase(@RequestParam("userId") userId: Int, @RequestParam("money") money: Double) {
-        branchTx2.increase(userId, money)
+    fun increase(@RequestParam("id") id: Int, @RequestParam("money") money: Double) {
+        branchTx2.increase(id, money)
+    }
+
+    @RequestMapping("/increaseFail")
+    fun increaseFail(id: Int, money: Double) {
+        branchTx2.increaseFail(id, money)
     }
 }

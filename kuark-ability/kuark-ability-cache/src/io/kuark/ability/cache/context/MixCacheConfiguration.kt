@@ -1,5 +1,6 @@
 package io.kuark.ability.cache.context
 
+import io.kuark.ability.cache.core.DefaultKeysGenerator
 import io.kuark.ability.cache.core.MixCacheManager
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
@@ -35,6 +36,9 @@ open class MixCacheConfiguration : CachingConfigurer {
 
     @Bean
     override fun keyGenerator(): KeyGenerator = SimpleKeyGenerator()
+
+    @Bean
+    open fun keysGenerator(): DefaultKeysGenerator = DefaultKeysGenerator()
 
     override fun cacheResolver(): CacheResolver? {
         return null

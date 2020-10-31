@@ -8,6 +8,7 @@ import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.transaction.annotation.Transactional
 import java.lang.IllegalStateException
 
 /**
@@ -38,7 +39,8 @@ internal open class BaseDaoTest : SpringTest() {
     //region Insert
 
     @Test
-    fun insert() {
+    @Transactional
+    open fun insert() {
         val entity = TestTable {
             id = 0
             name = "name0"
@@ -49,7 +51,8 @@ internal open class BaseDaoTest : SpringTest() {
     }
 
     @Test
-    fun batchInsert() {
+    @Transactional
+    open fun batchInsert() {
         val entities = listOf(
             TestTable {
                 id = 21
@@ -75,7 +78,8 @@ internal open class BaseDaoTest : SpringTest() {
     //region Update
 
     @Test
-    fun update() {
+    @Transactional
+    open fun update() {
         var entity = testTableDao.getById(-1)
         entity.name = "name"
         val success = testTableDao.update(entity)
@@ -85,7 +89,8 @@ internal open class BaseDaoTest : SpringTest() {
     }
 
     @Test
-    fun batchUpdate() {
+    @Transactional
+    open fun batchUpdate() {
         var entities = testTableDao.getByIds(-1, -2, -3)
         entities.forEach {
             it.name = "name"
@@ -107,14 +112,16 @@ internal open class BaseDaoTest : SpringTest() {
     //region Delete
 
     @Test
-    fun deleteById() {
+    @Transactional
+    open fun deleteById() {
         assert(testTableDao.deleteById(-1))
         assertThrows<NoSuchElementException> { testTableDao.getById(-1) }
         assertFalse(testTableDao.deleteById(1))
     }
 
     @Test
-    fun delete() {
+    @Transactional
+    open fun delete() {
         val entity = testTableDao.getById(-1)
         assert(testTableDao.delete(entity))
         assertThrows<NoSuchElementException> { testTableDao.getById(-1) }

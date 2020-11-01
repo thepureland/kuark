@@ -18,7 +18,13 @@ import org.springframework.context.annotation.PropertySource
 @EnableFeignClients
 @EnableDiscoveryClient
 @ComponentScan(
-    basePackages = ["io.kuark"], //!!! 无效
+    basePackages = [
+        "io.kuark.context",
+        "io.kuark.ability.data.rdb",
+        "io.kuark.ability.distributed.tx.context",
+        "io.kuark.distributed.tx.table",
+        "io.kuark.distributed.tx.tx"
+    ], //!!! 不能是io.kuark，不然excludeFilters不会生效
     excludeFilters = [ComponentScan.Filter(
         type = FilterType.REGEX,
         pattern = ["io\\.kuark\\.distributed\\.tx\\.tx1\\.*", "io\\.kuark\\.distributed\\.tx\\.tx2\\.*"]

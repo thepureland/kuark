@@ -1,3 +1,10 @@
+logging:
+  level:
+    root: debug
+    io.kuark.xxx: debug
+    io:
+      seata: info
+
 spring:
   application:
     name: branch-tx1
@@ -14,7 +21,6 @@ spring:
       seata:
         tx-service-group: my_test_tx_group
 
-
 server:
   port: 8181
 
@@ -22,8 +28,14 @@ feign:
   hystrix:
     enabled: true
 
-
-logging:
-  level:
-    io:
-      seata: info
+#seata:
+#  enabled: true
+#  application-id: branch-tx1
+#  tx-service-group: "my_test_tx_group"
+##  enable-auto-data-source-proxy: true
+##  use-jdk-proxy: false
+#  service:
+#    vgroup-mapping.my_test_tx_group: default
+##    grouplist.default=127.0.0.1:8091
+#    enable-degrade: false
+#    disable-global-transaction: false

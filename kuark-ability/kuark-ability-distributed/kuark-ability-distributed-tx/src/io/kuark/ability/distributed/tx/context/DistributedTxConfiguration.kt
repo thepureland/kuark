@@ -1,17 +1,12 @@
 package io.kuark.ability.distributed.tx.context
 
+import com.alibaba.druid.pool.DruidDataSource
 import com.zaxxer.hikari.HikariDataSource
-import io.kuark.context.spring.SpringKit
 import io.seata.rm.datasource.DataSourceProxy
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
-import org.springframework.beans.factory.annotation.Value
-import org.springframework.boot.autoconfigure.AutoConfigureAfter
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
 import org.springframework.boot.context.properties.ConfigurationProperties
-import org.springframework.boot.jdbc.DataSourceBuilder
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Primary
@@ -43,8 +38,13 @@ open class DistributedTxConfiguration {
 //            .build()
 //    }
 
+//    @Bean
+//    @ConfigurationProperties(prefix = "spring.datasource")
+//    open fun druidDataSource(): DruidDataSource {
+//        return DruidDataSource()
+//    }
+
     @Bean
-    @Qualifier(value = "dataSource")
     @Primary
 //    @ConditionalOnMissingBean
     open fun dataSource(hakariDataSource: HikariDataSource): DataSource {

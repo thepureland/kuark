@@ -9,6 +9,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.FilterType
 import org.springframework.context.annotation.PropertySource
+import java.util.*
 
 /**
  *
@@ -16,20 +17,28 @@ import org.springframework.context.annotation.PropertySource
  * @author K
  * @since 1.0.0
  */
-@EnableFeignClients //(basePackages = ["io.kuark"]) // feign如果不是在相同的module 下，就必须加上 自己的扫描范围
-@EnableDiscoveryClient
+//@EnableFeignClients //(basePackages = ["io.kuark"]) // feign如果不是在相同的module 下，就必须加上 自己的扫描范围
+//@EnableDiscoveryClient
 //@ContextConfiguration(loader = BranchTx1Application.LocalCacheTestContextLoader::class) // 未能替换
 @ComponentScan(
-    basePackages = ["io.kuark"],
+    basePackages = [
+        "io.kuark.context",
+        "io.kuark.ability.data.rdb",
+        "io.kuark.ability.distributed.tx.context",
+        "io.kuark.distributed.tx.table",
+        "io.kuark.distributed.tx.tx1",
+    ], //!!! 不能是io.kuark，不然excludeFilters不会生效
     excludeFilters = [ComponentScan.Filter(
         type = FilterType.REGEX,
         pattern = ["io\\.kuark\\.distributed\\.tx\\.tx\\.*", "io\\.kuark\\.distributed\\.tx\\.tx2\\.*"]
     )]
 )
 @PropertySource(
-    "classpath:application-ability-data-rdb-default.yml",
-    "classpath:application-ability-distributed-client-default.yml",
-    "classpath:tx1.yml",
+    value = [
+        "classpath:application-ability-data-rdb-default.yml",
+        "classpath:application-ability-distributed-client-default.yml",
+        "classpath:tx1.yml"
+    ],
     factory = YamlPropertySourceFactory::class
 )
 @SpringBootApplication

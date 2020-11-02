@@ -1,0 +1,22 @@
+${AnsiColor.BRIGHT_YELLOW}${AnsiStyle.BOLD}
+KKKKKKKKK    KKKKKKK                                                      kkkkkkkk
+K:::::::K    K:::::K                                                      k::::::k           
+K:::::::K    K:::::K                                                      k::::::k           
+K:::::::K   K::::::K                                                      k::::::k           
+KK::::::K  K:::::KKKuuuuuu    uuuuuu    aaaaaaaaaaaaa  rrrrr   rrrrrrrrr   k:::::k    kkkkkkk
+  K:::::K K:::::K   u::::u    u::::u    a::::::::::::a r::::rrr:::::::::r  k:::::k   k:::::k
+  K::::::K:::::K    u::::u    u::::u    aaaaaaaaa:::::ar:::::::::::::::::r k:::::k  k:::::k
+  K:::::::::::K     u::::u    u::::u             a::::arr::::::rrrrr::::::rk:::::k k:::::k
+  K:::::::::::K     u::::u    u::::u      aaaaaaa:::::a r:::::r     r:::::rk::::::k:::::k
+  K::::::K:::::K    u::::u    u::::u    aa::::::::::::a r:::::r     rrrrrrrk:::::::::::k
+  K:::::K K:::::K   u::::u    u::::u   a::::aaaa::::::a r:::::r            k:::::::::::k
+KK::::::K  K:::::KKKu:::::uuuu:::::u  a::::a    a:::::a r:::::r            k::::::k:::::k
+K:::::::K   K::::::Ku:::::::::::::::uua::::a    a:::::a r:::::r           k::::::k k:::::k
+K:::::::K    K:::::K u:::::::::::::::ua:::::aaaa::::::a r:::::r           k::::::k  k:::::k
+K:::::::K    K:::::K  uu::::::::uu:::u a::::::::::aa:::ar:::::r           k::::::k   k:::::k
+KKKKKKKKK    KKKKKKK    uuuuuuuu  uuuu  aaaaaaaaaa  aaaarrrrrrr           kkkkkkkk    kkkkkkk
+${AnsiBackground.WHITE}${AnsiColor.RED}${AnsiStyle.UNDERLINE}
+:: Kuark ::                   (v1.0.0.SNAPSHOOT)
+:: Kotlin ::                  (v1.4.10)
+:: Spring Boot ::             (v${spring-boot.version})
+

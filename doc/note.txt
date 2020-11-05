@@ -33,3 +33,16 @@ spring cloud
 3. @RefreshScope默认是CGLIB代理，可能造成bean被代理两次而导致属性没注入，可使用@RefreshScope(proxyMode = ScopedProxyMode.DEFAULT)解决。
 
 
+spring扩展点
+1. BeanDefinitionRegistryPostProcessor： 这个接口扩展了标准的BeanFactoryPostProcessor 接口，允许在普通的BeanFactoryPostProcessor接口实现类执行之前注册更多的BeanDefinition。
+    	特别地是，BeanDefinitionRegistryPostProcessor可以注册BeanFactoryPostProcessor的BeanDefinition。
+2. BeanFactoryPostProcessor： 这个接口允许自定义修改应用程序上下文的BeanDefinition，调整上下文的BeanFactory的bean属性值。应用程序上下文可以在BeanFactory的BeanDefinition中
+	自动检测BeanFactoryPostProcessor bean，并在创建任何其他bean之前应用它们。对于定位于系统管理员的自定义配置文件非常有用，它们将覆盖应用程序上下文中配置的bean属性
+3. InstantiationAwareBeanPostProcessor：这个接口是BeanPostProcessor的子接口，用于在实例化之后，但在设置显式属性或自动装配之前，设置实例化之前的回调函数。通常用于抑制特定目标bean的默认实例化，
+	例如，创建具有特殊TargetSources（池化目标，延迟初始化目标等）的代理，或者实现其他注入策略，例如字段注入。注意：这个接口是一个专用接口，主要用于框架内的内部使用。 建议尽可能实现简单的BeanPostProcessor接口，
+	或者从InstantiationAwareBeanPostProcessorAdapter派生，以便屏蔽此接口的扩展
+4. BeanPostProcessor：这个接口，允许自定义修改新的bean实例，例如检查标记接口或用代理包装，注意，如果有相互依赖的bean，这里可能无法使用代理。
+5. InitializingBean：
+
+
+

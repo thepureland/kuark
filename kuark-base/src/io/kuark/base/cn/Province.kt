@@ -9,7 +9,7 @@ import io.kuark.base.support.enums.IDictEnum
  * @author K
  * @since 1.0.0
  */
-enum class Province(override val code: String, override val trans: String, val abbr: String) : IDictEnum {
+enum class Province(override val code: String, override val trans: String, vararg abbr: String) : IDictEnum {
 
     BEI_JING("11", "北京", "京"),
     TIAN_JIN("12", "天津", "津"),
@@ -33,12 +33,12 @@ enum class Province(override val code: String, override val trans: String, val a
     GUANG_XI("45", "广西", "桂"),
     HAI_NAN("46", "海南", "琼"),
     CHONG_QING("50", "重庆", "渝"),
-    SI_CHUAN("51", "四川", "川"),
-    GUI_ZHOU("52", "贵州", "黔"),
-    YUN_NAN("53", "云南", "滇"),
+    SI_CHUAN("51", "四川", "川", "蜀"),
+    GUI_ZHOU("52", "贵州", "贵", "黔"),
+    YUN_NAN("53", "云南", "云", "滇"),
     XI_ZANG("54", "西藏", "藏"),
-    SHAN__XI("61", "陕西", "陕"),
-    GAN_SU("62", "甘肃", "甘"),
+    SHAN__XI("61", "陕西", "陕", "秦"),
+    GAN_SU("62", "甘肃", "甘", "陇"),
     QING_DAO("63", "青海", "青"),
     NING_XIA("64", "宁夏", "宁"),
     XIN_JIANG("65", "新疆", "新"),

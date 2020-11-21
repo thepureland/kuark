@@ -19,10 +19,13 @@ interface AuthUserAccountThirdParty: IMaintainableDbEntity<String, AuthUserAccou
     var userAccountId: String
 
     /** 身份类型代码 */
-    var identityTypeDictCode: String
+    var principalTypeDictCode: String
 
     /** 唯一身份标识 */
-    var identifier: String
+    var principal: String
+
+    /** 凭证 */
+    var credentials: String?
 
     /** 子系统代码 */
     var subSysDictCode: String?

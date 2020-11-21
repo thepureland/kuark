@@ -86,6 +86,11 @@ include("kuark-server:kuark-server-admin")
 findProject(":kuark-server:kuark-server-admin")?.name = "kuark-server-admin"
 include("kuark-server:kuark-server-seata")
 findProject(":kuark-server:kuark-server-seata")?.name = "kuark-server-seata"
+include("kuark-server:kuark-server-mq")
+include("kuark-server:kuark-server-mq:kuark-server-mq-rocket")
+findProject(":kuark-server:kuark-server-mq:kuark-server-mq-rocket")?.name = "kuark-server-mq-rocket"
+include("kuark-server:kuark-server-mq:kuark-server-mq-rocket-console")
+findProject(":kuark-server:kuark-server-mq:kuark-server-mq-rocket-console")?.name = "kuark-server-mq-rocket-console"
 
 
 include("kuark-ui")

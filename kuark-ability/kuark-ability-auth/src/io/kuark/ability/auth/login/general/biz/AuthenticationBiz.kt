@@ -1,6 +1,7 @@
 package io.kuark.ability.auth.login.general.biz
 
-import io.kuark.ability.auth.login.general.PrincipalsType
+import io.kuark.ability.auth.context.PrincipalToken
+import io.kuark.ability.auth.login.general.PrincipalType
 import io.kuark.ability.auth.login.general.ibiz.IAuthenticationBiz
 import org.apache.shiro.SecurityUtils
 import org.apache.shiro.authc.AuthenticationToken
@@ -12,10 +13,10 @@ open class AuthenticationBiz : IAuthenticationBiz {
 
 
     override fun login(map: Map<String, Any>) {
-        val env = DefaultEnvironment(map)
+        val env = DefaultEnvironment()
         SecurityUtils.setSecurityManager(env.securityManager)
         val principalsTypeCode = map["principalsTypeCode"] as String
-        val principalsType = PrincipalsType.valueOf(principalsTypeCode)
+        val principalsType = PrincipalType.valueOf(principalsTypeCode)
         val principalsIdentifier = map["principalsIdentifier"] as String
         val credentials = map["credentials"] as String
         var token: AuthenticationToken
@@ -24,7 +25,7 @@ open class AuthenticationBiz : IAuthenticationBiz {
 //                token = UsernamePasswordToken(principalsIdentifier, credentials)
 //            }
 //        }
-        token = UsernamePasswordToken(principalsIdentifier, credentials)
+        token = PrincipalToken(principalsIdentifier, credentials, principalsType)
         val subject = SecurityUtils.getSubject()
         subject.login(token)
 

@@ -14,9 +14,13 @@ interface IAuthUserAccountBiz {
 
     //region your codes 2
 
-    fun isUsernameExists(username: String, subSysDictCode: String? = null, ownerId: String? = null): Boolean
+    fun isUsernameExists(username: String): Boolean
 
     fun register(userAccount: AuthUserAccount): Boolean
+
+    fun getByUsername(username: String): AuthUserAccount?
+
+    fun getPermissions(userId: String): Set<String>
 
     //endregion your codes 2
 

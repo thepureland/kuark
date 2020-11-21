@@ -90,8 +90,9 @@ create table "auth_user_account_third_party"
     "id"                  CHAR(36) default RANDOM_UUID() not null
         primary key,
     "user_account_id"     CHAR(36)                       not null,
-    "identity_type_dict_code" VARCHAR(15)                    not null,
-    "identifier"          VARCHAR(63)                    not null,
+    "principal_type_dict_code" VARCHAR(15)                    not null,
+    "principal"          VARCHAR(63)                    not null,
+    "credentials"          VARCHAR(63),
     "sub_sys_dict_code"       VARCHAR(31),
     "owner_id"       VARCHAR(36),
     "remark"              VARCHAR(127),
@@ -109,9 +110,11 @@ comment on table "auth_user_account_third_party" is '用户账号第三方授权
 
 comment on column "auth_user_account_third_party"."user_account_id" is '外键，用户账号id，user_account表主键';
 
-comment on column "auth_user_account_third_party"."identity_type_dict_code" is '身份类型代码';
+comment on column "auth_user_account_third_party"."principal_type_dict_code" is '身份类型代码';
 
-comment on column "auth_user_account_third_party"."identifier" is '唯一身份标识';
+comment on column "auth_user_account_third_party"."principal" is '唯一身份标识';
+
+comment on column "auth_user_account_third_party"."credentials" is '凭证';
 
 comment on column "auth_user_account_third_party"."sub_sys_dict_code" is '子系统代码';
 
@@ -130,8 +133,8 @@ comment on column "auth_user_account_third_party"."update_user" is '更新用户
 comment on column "auth_user_account_third_party"."update_time" is '更新时间';
 COMMENT ON COLUMN "auth_user_account_third_party"."owner_id" IS '所有者id，依业务可以是店铺id、站点id、商户id等';
 
-create unique index "uq_u_a_a__identifier_id_type_sub_sys_owner"
-    on "auth_user_account_third_party" ("identifier", "identity_type_dict_code", "sub_sys_dict_code", "owner_id");
+create unique index "uq_u_a_a__principal_id_type_sub_sys_owner"
+    on "auth_user_account_third_party" ("principal", "principal_type_dict_code", "sub_sys_dict_code", "owner_id");
 
 
 create table "auth_user_group"

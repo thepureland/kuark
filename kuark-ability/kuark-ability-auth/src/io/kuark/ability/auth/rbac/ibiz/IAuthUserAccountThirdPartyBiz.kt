@@ -1,5 +1,6 @@
 package io.kuark.ability.auth.rbac.ibiz
 
+import io.kuark.ability.auth.login.general.PrincipalType
 import io.kuark.ability.auth.rbac.model.po.AuthUserAccountThirdParty
 
 /**
@@ -14,14 +15,11 @@ interface IAuthUserAccountThirdPartyBiz {
 
     //region your codes 2
 
-    fun isIdentifierExists(
-        identityTypeDictCode: String,
-        identifier: String,
-        subSysDictCode: String? = null,
-        ownerId: String? = null
-    ): Boolean
+    fun isIdentifierExists(identityTypeDictCode: String, identifier: String): Boolean
 
     fun save(userAccountThirdParty: AuthUserAccountThirdParty): Boolean
+
+    fun getByPrincipal(principalType: PrincipalType, principal: String): AuthUserAccountThirdParty
 
     //endregion your codes 2
 

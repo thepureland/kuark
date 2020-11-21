@@ -1,8 +1,13 @@
 package io.kuark.base.lang
 
+import io.kuark.base.log.LogFactory
 import org.apache.commons.lang3.SystemUtils
+import java.io.BufferedReader
 import java.io.File
+import java.io.InputStream
+import java.io.InputStreamReader
 import java.lang.management.ManagementFactory
+import java.util.*
 import java.util.regex.Pattern
 
 /**
@@ -12,6 +17,98 @@ import java.util.regex.Pattern
  * @since 1.0.0
  */
 object SystemKit {
+
+    private val log = LogFactory.getLog(this::class)
+
+    /**
+     * 设置系统环境变量
+     *
+     * @param vars Map(变量名，变量值)
+     * @author https://blog.csdn.net/n1007530194/article/details/97130931
+     * @author K
+     * @since 1.0.0
+     */
+    fun setEnvVars(vars: Map<String, String>) {
+        try {
+            val processEnvironmentClass = Class.forName("java.lang.ProcessEnvironment")
+            val theEnvironmentField = processEnvironmentClass.getDeclaredField("theEnvironment")
+            theEnvironmentField.isAccessible = true
+            val env = theEnvironmentField.get(null) as MutableMap<String, String>
+            env.putAll(vars!!)
+            val theCaseInsensitiveEnvironmentField =
+                processEnvironmentClass.getDeclaredField("theCaseInsensitiveEnvironment")
+            theCaseInsensitiveEnvironmentField.isAccessible = true
+            val cienv = theCaseInsensitiveEnvironmentField.get(null) as MutableMap<String, String>
+            cienv.putAll(vars)
+        } catch (e: NoSuchFieldException) {
+            val classes = Collections::class.java.declaredClasses
+            val env = System.getenv()
+            for (cl in classes) {
+                if ("java.util.Collections\$UnmodifiableMap" == cl.name) {
+                    val field = cl.getDeclaredField("m")
+                    field.isAccessible = true
+                    val obj = field.get(env)
+                    val map = obj as MutableMap<String, String>
+                    map.clear()
+                    map.putAll(vars!!)
+                }
+            }
+        }
+    }
+
+    /**
+     * 执行单个系统命令
+     *
+     * @param command 命令组成部分的可变数组
+     * @return Pair(是否执行成功，执行结果信息)
+     * @author K
+     * @since 1.0.0
+     */
+    fun executeCommand(vararg command: String): Pair<Boolean, String?> {
+        var process: Process? = null // 也可用ProcessBuilder构建
+        var message: String? = null
+        val success = try {
+            process = Runtime.getRuntime().exec(command)
+            true
+        } catch (e: Throwable) {
+            message = e.message
+            log.error(e, "执行系统命令【${command.joinToString(" ")}】出错！")
+            false
+        }
+
+//        if (wait) {
+//            try {
+//                process.waitFor()
+//            } catch (e: InterruptedException) {
+//                e.printStackTrace()
+//            }
+//        }
+
+
+        if (process != null) {
+            message = loadStream(process!!.inputStream)
+            val errorMsg = loadStream(process.errorStream)
+            if (errorMsg != null && errorMsg.isNotEmpty()) {
+                message = errorMsg
+            }
+            process.destroy()
+        }
+
+        return success to message
+    }
+
+    private fun loadStream(inputStream: InputStream): String? {
+        inputStream.use { inputStream ->
+            BufferedReader(InputStreamReader(inputStream)).use { reader ->
+                val buffer = StringBuffer()
+                var line: String?
+                while (reader.readLine().also { line = it } != null) {
+                    buffer.append(line).append("\n")
+                }
+                return buffer.toString()
+            }
+        }
+    }
 
     /**
      * 当前系统的回车换行符
@@ -55,7 +152,7 @@ object SystemKit {
      * @author K
      * @since 1.0.0
      */
-    fun isWindowsOs(): Boolean = getOSName().toLowerCase().contains("windows")
+    fun isWindowsOS(): Boolean = getOSName().toLowerCase().contains("windows")
 
     /**
      * 得到系统当前用户

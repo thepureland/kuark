@@ -52,14 +52,12 @@ class ThirdPatyLoginBiz : IThirdPatyLoginBiz {
         thirdPartyUser ?: error("获取用户在第三方的信息失败！")
 
         // 如果第三方账号未在当前系统登陆过，就注册之
-        val identifierExists = userAccountThirdPartyBiz.isIdentifierExists(
-            type, thirdPartyUser.getOpenId(), subSysCode, ownerId
-        )
+        val identifierExists = userAccountThirdPartyBiz.isIdentifierExists(type, thirdPartyUser.getOpenId())
         if (!identifierExists) {
             var loginAccount = thirdPartyUser.loginAccount()
 
             // 确保用户名惟一
-            while (authUserAuthBiz.isUsernameExists(loginAccount, subSysCode, ownerId)) {
+            while (authUserAuthBiz.isUsernameExists(loginAccount)) {
                 loginAccount += RandomStringKit.randomNumeric(3)
             }
 
@@ -81,8 +79,8 @@ class ThirdPatyLoginBiz : IThirdPatyLoginBiz {
                 // 将本地用户与OpenId相关联
                 val userAccountThirdParty = AuthUserAccountThirdParty {
                     userAccountId = userId
-                    identityTypeDictCode = type
-                    identifier = thirdPartyUser.getOpenId()
+                    principalTypeDictCode = type
+                    principal = thirdPartyUser.getOpenId()
                     subSysDictCode = subSysCode
                     this.ownerId = ownerId
                 }

@@ -69,42 +69,42 @@ open class LocalH2Configuration {
 //    @ConfigurationProperties(prefix = "spring.datasource")
 //    @ConditionalOnMissingBean
     open fun hikariDataSource(@Autowired environment: Environment): HikariDataSource {
-//        startH2()
+        startH2()
         return DataSourceBuilder.create().type(HikariDataSource::class.java)
             .url(dbUrl) // Hikari直接取的连接地址参数是jdbc-url而不是url
             .build()
     }
 
-//    /**
-//     * 自动启动本机H2数据库及其web控制台
-//     *
-//     * @author K
-//     * @since 1.0.0
-//     */
-//    private fun startH2() {
-//        val local = dbUrl.contains("tcp") && (dbUrl.contains("localhost") || dbUrl.contains("127.0.0.1"))
-//        if (local) {
-//            resolveDbUrl()
-//            val tcpPort = Regex(":(\\d+)/").findAll(dbUrl).toList().flatMap(MatchResult::groupValues).last().toInt()
-//            val running = NetworkKit.isPortActive("localhost", tcpPort)
-//            if (!running) {
-//                org.h2.tools.Console.main()
-//                logger.debug("H2数据库及其web控制台自动启动完成")
-//            }
-//        }
-//    }
-//
-//    /**
-//     * 处理配置的h2数据库url
-//     * 为了方便开发者，kuark实现了开箱即用，在application-ability-data-rdb-xxxx.yml文件中spring.datasource.url配置的是相对路径，
-//     * 这样免去开发者下载完源码运行kuark之前，需要将h2数据库所在位置改为绝对路径的麻烦。但由此带来的问题是，除非开发者在当前模块运行代码，
-//     * 否则，这个相对路径将是错误的，它是相对于开发者运行位置而言的。因此，这里需要动态的将其处理为绝对路径。
-//     *
-//     * @author K
-//     * @since 1.0.0
-//     */
-//    private fun resolveDbUrl() {
-//        dbUrl = dbUrl.replace(".", PathKit.getClasspath(LocalH2Configuration::class).substringBefore("/build"))
-//    }
+    /**
+     * 自动启动本机H2数据库及其web控制台
+     *
+     * @author K
+     * @since 1.0.0
+     */
+    private fun startH2() {
+        val local = dbUrl.contains("tcp") && (dbUrl.contains("localhost") || dbUrl.contains("127.0.0.1"))
+        if (local) {
+            resolveDbUrl()
+            val tcpPort = Regex(":(\\d+)/").findAll(dbUrl).toList().flatMap(MatchResult::groupValues).last().toInt()
+            val running = NetworkKit.isPortActive("localhost", tcpPort)
+            if (!running) {
+                org.h2.tools.Console.main("-tcp", "-web", "-pg")
+                logger.debug("H2数据库及其web控制台自动启动完成")
+            }
+        }
+    }
+
+    /**
+     * 处理配置的h2数据库url
+     * 为了方便开发者，kuark实现了开箱即用，在application-ability-data-rdb-xxxx.yml文件中spring.datasource.url配置的是相对路径，
+     * 这样免去开发者下载完源码运行kuark之前，需要将h2数据库所在位置改为绝对路径的麻烦。但由此带来的问题是，除非开发者在当前模块运行代码，
+     * 否则，这个相对路径将是错误的，它是相对于开发者运行位置而言的。因此，这里需要动态的将其处理为绝对路径。
+     *
+     * @author K
+     * @since 1.0.0
+     */
+    private fun resolveDbUrl() {
+        dbUrl = dbUrl.replace(".", PathKit.getClasspath(LocalH2Configuration::class).substringBefore("/kuark-ability"))
+    }
 
 }

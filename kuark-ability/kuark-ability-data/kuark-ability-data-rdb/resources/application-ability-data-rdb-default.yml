@@ -10,7 +10,7 @@ spring:
 #    platform: info.jesseyang.config.SQLiteDialect
     username: sa
     password:
-    url: "jdbc:h2:tcp://localhost:9092/./h2/h2;DATABASE_TO_LOWER=TRUE"
+    url: "jdbc:h2:tcp://localhost:9092/./kuark-server/kuark-server-h2/resources/h2;DATABASE_TO_LOWER=TRUE;"
     driver-class-name: org.h2.Driver
 #    url: "jdbc:sqlite:C:\\db\\sqlite\\db.db"
 #    driver-class-name: org.sqlite.JDBC

@@ -38,12 +38,12 @@ allprojects {
     version = "1.0.0-SNAPSHOT"
 
     repositories {
-        mavenLocal()
-        jcenter()
-        maven { url = uri("http://maven.aliyun.com/nexus/content/groups/public/") }
+        maven { url = uri("https://maven.aliyun.com/repository/public") }
         maven { url = uri("https://repo.spring.io/milestone") }
         maven { url = uri("https://kotlin.bintray.com/ktor") }
         maven { url = uri("https://kotlin.bintray.com/kotlin-js-wrappers") }
+        mavenLocal()
+        jcenter()
     }
 
     apply {

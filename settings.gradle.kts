@@ -93,6 +93,8 @@ include("kuark-server:kuark-server-mq:kuark-server-mq-rocket-console")
 findProject(":kuark-server:kuark-server-mq:kuark-server-mq-rocket-console")?.name = "kuark-server-mq-rocket-console"
 include("kuark-server:kuark-server-h2")
 findProject(":kuark-server:kuark-server-h2")?.name = "kuark-server-h2"
+include("kuark-server:kuark-server-nacos")
+findProject(":kuark-server:kuark-server-nacos")?.name = "kuark-server-nacos"
 
 
 include("kuark-ui")

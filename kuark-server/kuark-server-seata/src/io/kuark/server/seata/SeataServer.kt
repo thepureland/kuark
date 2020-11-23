@@ -1,7 +1,7 @@
 package io.kuark.server.seata
 
 /**
- *
+ * 启动Seata Server
  *
  * @author K
  * @since 1.0.0

@@ -75,28 +75,6 @@ findProject(":kuark-service:kuark-service-msg:kuark-service-msg-provider")?.name
 include("kuark-service:kuark-service-msg:kuark-service-msg-consumer")
 findProject(":kuark-service:kuark-service-msg:kuark-service-msg-consumer")?.name = "kuark-service-msg-consumer"
 
-include("kuark-server")
-include("kuark-server:kuark-server-config")
-findProject(":kuark-server:kuark-server-config")?.name = "kuark-server-config"
-include("kuark-server:kuark-server-eureka")
-findProject(":kuark-server:kuark-server-eureka")?.name = "kuark-server-eureka"
-include("kuark-server:kuark-server-hystrix")
-findProject(":kuark-server:kuark-server-hystrix")?.name = "kuark-server-hystrix"
-include("kuark-server:kuark-server-admin")
-findProject(":kuark-server:kuark-server-admin")?.name = "kuark-server-admin"
-include("kuark-server:kuark-server-seata")
-findProject(":kuark-server:kuark-server-seata")?.name = "kuark-server-seata"
-include("kuark-server:kuark-server-mq")
-include("kuark-server:kuark-server-mq:kuark-server-mq-rocket")
-findProject(":kuark-server:kuark-server-mq:kuark-server-mq-rocket")?.name = "kuark-server-mq-rocket"
-include("kuark-server:kuark-server-mq:kuark-server-mq-rocket-console")
-findProject(":kuark-server:kuark-server-mq:kuark-server-mq-rocket-console")?.name = "kuark-server-mq-rocket-console"
-include("kuark-server:kuark-server-h2")
-findProject(":kuark-server:kuark-server-h2")?.name = "kuark-server-h2"
-include("kuark-server:kuark-server-nacos")
-findProject(":kuark-server:kuark-server-nacos")?.name = "kuark-server-nacos"
-
-
 include("kuark-ui")
 include("kuark-ui:kuark-ui-jfx")
 findProject(":kuark-ui:kuark-ui-jfx")?.name = "kuark-ui-jfx"

@@ -5,5 +5,5 @@ spring:
     #    platform: info.jesseyang.config.SQLiteDialect
     username: sa
     password:
-    url: "jdbc:h2:tcp://localhost:9092/./kuark-server/kuark-server-h2/resources/h2;DATABASE_TO_LOWER=TRUE;"
+    url: "jdbc:h2:tcp://localhost:9092/./db/h2;DATABASE_TO_LOWER=TRUE;"
     driver-class-name: org.h2.Driver

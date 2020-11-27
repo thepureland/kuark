@@ -1,5 +1,7 @@
 rootProject.name = "kuark"
 
+include("db")
+
 include("kuark-base")
 
 include("kuark-context")

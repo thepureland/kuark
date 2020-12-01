@@ -222,6 +222,8 @@ subprojects {
             dependency("io.seata:seata-all:1.3.0")
             dependency("com.alibaba.cloud:spring-cloud-alibaba-seata:2.2.0.RELEASE")
 
+            dependency("com.alibaba.boot:nacos-config-spring-boot-starter:0.2.7")
+
 
             // 依赖maven中不存在的jar
 //            ext.jarTree = fileTree(dir: 'libs', include: '**/*.jar')

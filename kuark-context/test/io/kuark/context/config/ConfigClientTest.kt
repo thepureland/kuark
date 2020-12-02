@@ -1,8 +1,12 @@
 package io.kuark.context.config
 
+import com.alibaba.nacos.api.config.annotation.NacosValue
+import com.alibaba.nacos.spring.context.annotation.config.EnableNacosConfig
+import com.alibaba.nacos.spring.context.annotation.config.NacosPropertySource
 import io.kuark.test.SpringTest
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient
 import org.springframework.cloud.context.config.annotation.RefreshScope
 import org.springframework.context.annotation.ScopedProxyMode
 import org.springframework.stereotype.Component
@@ -15,10 +19,16 @@ import org.springframework.stereotype.Component
  */
 @RefreshScope(proxyMode = ScopedProxyMode.DEFAULT)
 @Component
+//@EnableNacosConfig
+//@NacosPropertySource(dataId = "springboot2-nacos-config2.yml", autoRefreshed = true)
+@EnableDiscoveryClient
 open class ConfigClientTest: SpringTest() {
 
-    @Value("\${config.info:DEFAULT_VALUE}")
+    @NacosValue("\${config.info:DEFAULT_VALUE}")
     private val configRemote: String? = null
+
+    @Value("\${config.info:DEFAULT_VALUE}")
+    private val configRemote2: String? = null
 
     @Value("\${spring.cloud.config.uri:DEFAULT_VALUE}")
     private val configLocal: String? = null
@@ -31,7 +41,8 @@ open class ConfigClientTest: SpringTest() {
      */
     @Test
     fun getConfigRemote() {
-        println("configRemote:  $configRemote")
+        println("################################  configRemote:  $configRemote")
+        println("################################  configRemote2:  $configRemote2")
     }
 
     /**

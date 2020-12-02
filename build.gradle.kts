@@ -15,8 +15,8 @@ plugins {
     id("org.springframework.boot") version "2.2.5.RELEASE"
     id("io.spring.dependency-management") version "1.0.9.RELEASE"
     id("org.openjfx.javafxplugin") version "0.0.8"
-    kotlin("jvm") version "1.4.10"
-    kotlin("plugin.spring") version "1.4.10"
+    kotlin("jvm") version "1.4.20"
+    kotlin("plugin.spring") version "1.4.20"
 }
 
 /* 插件的配置需要在buildscript元素中 */
@@ -223,6 +223,8 @@ subprojects {
             dependency("com.alibaba.cloud:spring-cloud-alibaba-seata:2.2.0.RELEASE")
 
             dependency("com.alibaba.boot:nacos-config-spring-boot-starter:0.2.7")
+//            dependency("com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-discovery:2.2.3.RELEASE")
+            dependency("com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-config:2.2.3.RELEASE")
 
 
             // 依赖maven中不存在的jar

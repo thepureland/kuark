@@ -10,8 +10,8 @@ import org.springframework.context.annotation.Configuration
  * @author K
  * @since 1.0.0
  */
-@Configuration
+//@Configuration
 //@EnableNacosConfig(globalProperties = NacosProperties(serverAddr = "127.0.0.1:8844"))
-@EnableNacosConfig
-@NacosPropertySource(dataId = "springboot2-nacos-config", autoRefreshed = true)
+//@EnableNacosConfig
+//@NacosPropertySource(dataId = "springboot2-nacos-config", autoRefreshed = true)
 open class NacosConfiguration

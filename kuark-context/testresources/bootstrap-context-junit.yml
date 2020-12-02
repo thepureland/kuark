@@ -1,17 +1,31 @@
 #spring:
 #  profiles:
-#    include: context-default  # 会再当前文件解析完，再加载context-default配置，达不到预期
+#    include: context-default  # 会在当前文件解析完，再加载context-default配置，达不到预期
+
+
+#spring:
+#  cloud:
+#    # config客户端配置
+
 
 
 spring:
+  application:
+    name: springboot2-nacos-config2
   cloud:
-    # config客户端配置
+    # 配置中心选择Nacos
+#    nacos:
+#      config:
+#        server-addr: 127.0.0.1:8848
+#        prefix: springboot2-nacos-config2
+#        file-extension: yml
+    # 配置中心选择Spring Cloud Config
     config:
-#      # 分支名称
-#      label: master
-#      # 启用配置后缀名称
-#      profile: dev
-#      # 配置文件名称
-#      name: config
+      # 分支名称
+      label: master
+      # 启用配置后缀名称
+      profile: dev
+      # 配置文件名称
+      name: config
       # 配置中心地址
       uri: http://localhost:8901

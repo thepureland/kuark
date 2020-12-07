@@ -5,10 +5,18 @@ server:
 # 指定服务名称
 spring:
   application:
-    name: eureka-client
+    name: kuark-ability-distributed-discovery
+  cloud:
+    # 注册中心选择Nacos
+    nacos:
+      enabled: true
+      discovery:
+        server-addr: 127.0.0.1:8848
 
+# 注册中心选择Eureka
 eureka:
   client:
+#    enabled: false
     # 注册到Eureka的注册中心
     register-with-eureka: true
     # 获取注册实例列表

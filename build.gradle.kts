@@ -223,7 +223,7 @@ subprojects {
             dependency("com.alibaba.cloud:spring-cloud-alibaba-seata:2.2.0.RELEASE")
 
             dependency("com.alibaba.boot:nacos-config-spring-boot-starter:0.2.7")
-//            dependency("com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-discovery:2.2.3.RELEASE")
+            dependency("com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-discovery:2.2.3.RELEASE")
             dependency("com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-config:2.2.3.RELEASE")
 
 

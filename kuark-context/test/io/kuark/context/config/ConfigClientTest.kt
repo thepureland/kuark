@@ -19,8 +19,8 @@ import org.springframework.stereotype.Component
  */
 @RefreshScope(proxyMode = ScopedProxyMode.DEFAULT)
 @Component
-//@EnableNacosConfig
-//@NacosPropertySource(dataId = "springboot2-nacos-config2.yml", autoRefreshed = true)
+@EnableNacosConfig
+@NacosPropertySource(dataId = "springboot2-nacos-config2.yml", autoRefreshed = true)
 @EnableDiscoveryClient
 open class ConfigClientTest: SpringTest() {
 

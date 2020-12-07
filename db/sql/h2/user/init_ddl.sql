@@ -182,7 +182,7 @@ create table "user_contact_way"
 (
     "id"                       CHAR(36) default RANDOM_UUID() not null
         primary key,
-    "user_id"                  CHAR(36)                       not null,
+    "user_id"                  CHAR(36),
     "contact_way_dict_code"        CHAR(3)                        not null,
     "contact_way_value"        VARCHAR(127)                   not null,
     "contact_way_status_dict_code" CHAR(2)  default '00'          not null,
@@ -224,8 +224,6 @@ comment on column "user_contact_way"."update_user" is '更新用户';
 
 comment on column "user_contact_way"."update_time" is '更新时间';
 
-create unique index "uq_user_contact_way__user_id_code"
-    on "user_contact_way" ("user_id", "contact_way_dict_code");
 
 create table "user_account_protection"
 (

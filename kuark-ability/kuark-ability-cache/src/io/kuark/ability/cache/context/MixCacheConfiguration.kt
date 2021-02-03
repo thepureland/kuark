@@ -37,7 +37,7 @@ open class MixCacheConfiguration : CachingConfigurer {
     @Bean
     override fun keyGenerator(): KeyGenerator = SimpleKeyGenerator()
 
-    @Bean
+    @Bean("defaultKeysGenerator")
     open fun keysGenerator(): DefaultKeysGenerator = DefaultKeysGenerator()
 
     override fun cacheResolver(): CacheResolver? {

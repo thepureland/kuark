@@ -59,7 +59,7 @@ class MixCache(
             CacheStrategy.REMOTE -> remoteCache!!.get(key)
             CacheStrategy.LOCAL_REMOTE -> {
                 var value = localCache!!.get(key)
-                if (value == null) {
+                if (value?.get() == null) {
                     value = remoteCache!!.get(key)
                     localCache.put(key, value?.get())
                 }

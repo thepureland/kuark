@@ -1,22 +1,25 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.springframework.boot.gradle.tasks.bundling.BootJar
 
-val ktor_version: String by project
-val kotlin_version: String by project
-val logback_version: String by project
-val ktorm_version: String by project
-val spring_boot_version: String by project
-val slf4j_version: String by project
-val spring_cloud_version: String by project
+object Version {
+    const val KOTLIN = "1.4.21"
+    const val SPRING_BOOT = "2.3.4.RELEASE"
+    const val SPRING_CLOUD = "2.2.5.RELEASE"
+    const val KTORM = "3.2.0"
+    const val LOGBACK = "1.2.3"
+    const val SLF4J = "1.7.30"
+    const val KTOR = "1.4.0"
+}
 
 plugins {
 //    application
 //    java
-    id("org.springframework.boot") version "2.2.5.RELEASE"
+//    id("org.springframework.boot") version this@Build_gradle.SPRING_BOOT_VERSION
+    id("org.springframework.boot") version "2.3.4.RELEASE"
     id("io.spring.dependency-management") version "1.0.9.RELEASE"
     id("org.openjfx.javafxplugin") version "0.0.8"
-    kotlin("jvm") version "1.4.20"
-    kotlin("plugin.spring") version "1.4.20"
+    kotlin("jvm") version "1.4.21"
+    kotlin("plugin.spring") version "1.4.21"
 }
 
 /* 插件的配置需要在buildscript元素中 */
@@ -27,7 +30,7 @@ buildscript {
 //    }
     /* 插件依赖 */
     dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:2.2.5.RELEASE")
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:2.3.4.RELEASE")
         classpath("io.spring.gradle:dependency-management-plugin:1.0.9.RELEASE")
     }
 }
@@ -105,15 +108,15 @@ subprojects {
 
     dependencies {
         // kotlin
-        implementation("org.jetbrains.kotlin:kotlin-reflect:$kotlin_version")
-        implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version")
+        implementation("org.jetbrains.kotlin:kotlin-reflect:${Version.KOTLIN}")
+        implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${Version.KOTLIN}")
         implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.9")
         implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.3.9")
     }
 
     dependencyManagement {
 //        imports {
-//            mavenBom("org.springframework.boot:spring-boot-dependencies:$spring_boot_version")
+//            mavenBom("org.springframework.boot:spring-boot-dependencies:$SPRING_BOOT_VERSION")
 //        }
         dependencies {
             dependency("de.idyl:winzipaes:1.0.1")
@@ -133,10 +136,10 @@ subprojects {
             dependency("org.javamoney:moneta:1.4.2")
 
             // log
-            dependency("org.slf4j:slf4j-api:$slf4j_version")
-            dependency("org.slf4j:jcl-over-slf4j:$slf4j_version")
-            dependency("org.slf4j:log4j-over-slf4j:$slf4j_version")
-            dependency("ch.qos.logback:logback-classic:$logback_version")
+            dependency("org.slf4j:slf4j-api:${Version.SLF4J}")
+            dependency("org.slf4j:jcl-over-slf4j:${Version.SLF4J}")
+            dependency("org.slf4j:log4j-over-slf4j:${Version.SLF4J}")
+            dependency("ch.qos.logback:logback-classic:${Version.LOGBACK}")
 
             // validation
             dependency("javax.validation:validation-api:2.0.1.Final")
@@ -145,13 +148,13 @@ subprojects {
             dependency("org.glassfish.web:javax.el:2.2.6")
 
             // springboot
-            dependency("org.springframework.boot:spring-boot-starter-aop:$spring_boot_version")
-            dependency("org.springframework.boot:spring-boot-starter-web:$spring_boot_version")
-            dependency("org.springframework.boot:spring-boot-starter-webflux:$spring_boot_version")
-            dependency("org.springframework.boot:spring-boot-starter-actuator:$spring_boot_version")
-            dependency("org.springframework.boot:spring-boot-starter-data-redis-reactive:$spring_boot_version") // 限流用
+            dependency("org.springframework.boot:spring-boot-starter-aop:${Version.SPRING_BOOT}")
+            dependency("org.springframework.boot:spring-boot-starter-web:${Version.SPRING_BOOT}")
+            dependency("org.springframework.boot:spring-boot-starter-webflux:${Version.SPRING_BOOT}")
+            dependency("org.springframework.boot:spring-boot-starter-actuator:${Version.SPRING_BOOT}")
+            dependency("org.springframework.boot:spring-boot-starter-data-redis-reactive:${Version.SPRING_BOOT}") // 限流用
             dependency("de.codecentric:spring-boot-admin-starter-server:2.3.0")
-            dependency("org.springframework.boot:spring-boot-starter-test:$spring_boot_version") {
+            dependency("org.springframework.boot:spring-boot-starter-test:${Version.SPRING_BOOT}") {
                 exclude("org.junit.vintage:junit-vintage-engine")
             }
 
@@ -163,16 +166,16 @@ subprojects {
 //            dependency("org.redisson:redisson-spring-boot-starter:3.13.4")
 
             // data
-            dependency("org.ktorm:ktorm-core:$ktorm_version")
-            dependency("org.ktorm:ktorm-jackson:$ktorm_version")
-            dependency("org.springframework.boot:spring-boot-starter-data-redis:$spring_boot_version")
+            dependency("org.ktorm:ktorm-core:${Version.KTORM}")
+            dependency("org.ktorm:ktorm-jackson:${Version.KTORM}")
+            dependency("org.springframework.boot:spring-boot-starter-data-redis:${Version.SPRING_BOOT}")
             dependency("org.apache.commons:commons-pool2:2.8.0")
-//            dependency("me.liuwj.ktorm:ktorm-support-sqlite:$ktorm_version")
-            dependency("org.springframework.boot:spring-boot-starter-jdbc:$spring_boot_version")
+//            dependency("me.liuwj.ktorm:ktorm-support-sqlite:$KTORM_VERSION")
+            dependency("org.springframework.boot:spring-boot-starter-jdbc:${Version.SPRING_BOOT}")
 
             // cache
             dependency("com.github.ben-manes.caffeine:caffeine:2.8.1")
-            dependency("org.springframework.boot:spring-boot-starter-cache:$spring_boot_version")
+            dependency("org.springframework.boot:spring-boot-starter-cache:${Version.SPRING_BOOT}")
             dependency("com.alibaba:fastjson:1.2.72")
 
             // session
@@ -185,16 +188,16 @@ subprojects {
             dependency("org.apache.oltu.oauth2:org.apache.oltu.oauth2.client:1.0.2")
 
             // ktor
-            dependency("io.ktor:ktor-server-sessions:$ktor_version")
-            dependency("io.ktor:ktor-server-netty:$ktor_version")
-//            dependency("io.ktor:ktor-server-tomcat:$ktor_version")
-            dependency("io.ktor:ktor-server-core:$ktor_version")
-            dependency("io.ktor:ktor-html-builder:$ktor_version")
+            dependency("io.ktor:ktor-server-sessions:${Version.KTOR}")
+            dependency("io.ktor:ktor-server-netty:${Version.KTOR}")
+//            dependency("io.ktor:ktor-server-tomcat:${DependencyVersions.KTOR_VERSION}")
+            dependency("io.ktor:ktor-server-core:${Version.KTOR}")
+            dependency("io.ktor:ktor-html-builder:${Version.KTOR}")
             dependency("org.jetbrains:kotlin-css-jvm:1.0.0-pre.31-kotlin-1.2.41")
-            dependency("io.ktor:ktor-client-core:$ktor_version")
-            dependency("io.ktor:ktor-client-core-jvm:$ktor_version")
-            dependency("io.ktor:ktor-client-apache:$ktor_version")
-            dependency("io.ktor:ktor-server-tests:$ktor_version")
+            dependency("io.ktor:ktor-client-core:${Version.KTOR}")
+            dependency("io.ktor:ktor-client-core-jvm:${Version.KTOR}")
+            dependency("io.ktor:ktor-client-apache:${Version.KTOR}")
+            dependency("io.ktor:ktor-server-tests:${Version.KTOR}")
 
             // javafx
 //            dependency("de.roskenet:springboot-javafx-support:2.1.6")
@@ -205,17 +208,17 @@ subprojects {
             dependency("org.freemarker:freemarker:2.3.30")
 
             // spring cloud
-            dependency("org.springframework.cloud:spring-cloud-commons:$spring_cloud_version")
-            dependency("org.springframework.cloud:spring-cloud-context:$spring_cloud_version")
-            dependency("org.springframework.cloud:spring-cloud-config-server:$spring_cloud_version")
-            dependency("org.springframework.cloud:spring-cloud-config-client:$spring_cloud_version")
-            dependency("org.springframework.cloud:spring-cloud-starter-config:$spring_cloud_version")
-            dependency("org.springframework.cloud:spring-cloud-starter-netflix-eureka-server:$spring_cloud_version")
-            dependency("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client:$spring_cloud_version")
-            dependency("org.springframework.cloud:spring-cloud-starter-openfeign:$spring_cloud_version")
+            dependency("org.springframework.cloud:spring-cloud-commons:${Version.SPRING_CLOUD}")
+            dependency("org.springframework.cloud:spring-cloud-context:${Version.SPRING_CLOUD}")
+            dependency("org.springframework.cloud:spring-cloud-config-server:${Version.SPRING_CLOUD}")
+            dependency("org.springframework.cloud:spring-cloud-config-client:${Version.SPRING_CLOUD}")
+            dependency("org.springframework.cloud:spring-cloud-starter-config:${Version.SPRING_CLOUD}")
+            dependency("org.springframework.cloud:spring-cloud-starter-netflix-eureka-server:${Version.SPRING_CLOUD}")
+            dependency("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client:${Version.SPRING_CLOUD}")
+            dependency("org.springframework.cloud:spring-cloud-starter-openfeign:${Version.SPRING_CLOUD}")
             dependency("org.springframework.cloud:spring-cloud-starter-netflix-hystrix-dashboard:2.2.6.RELEASE")
             dependency("org.springframework.cloud:spring-cloud-starter-netflix-hystrix:2.2.6.RELEASE")
-            dependency("org.springframework.cloud:spring-cloud-starter-gateway:$spring_cloud_version")
+            dependency("org.springframework.cloud:spring-cloud-starter-gateway:${Version.SPRING_CLOUD}")
             dependency("org.springframework.cloud:spring-cloud-starter-bus-amqp:2.2.3.RELEASE")
 
             // seata

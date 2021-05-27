@@ -186,7 +186,7 @@ create table "user_contact_way"
     "contact_way_dict_code"        CHAR(3)                        not null,
     "contact_way_value"        VARCHAR(127)                   not null,
     "contact_way_status_dict_code" CHAR(2)  default '00'          not null,
-    "priority"                 TINYINT,
+    "priority"                 INT2,
     "remark"                   VARCHAR(127),
     "is_active"                BOOLEAN  default TRUE          not null,
     "is_built_in"              BOOLEAN  default FALSE         not null,

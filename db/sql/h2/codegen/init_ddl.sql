@@ -37,10 +37,10 @@ CREATE TABLE "code_gen_column" (
   "comment" VARCHAR(127),
   "is_searchable" bool NOT NULL DEFAULT false,
   "is_sortable" bool NOT NULL DEFAULT false,
-  "order_in_list" tinyint,
+  "order_in_list" INT2,
   "default_order" VARCHAR(7),
-  "order_in_edit" tinyint,
-  "order_in_view" tinyint
+  "order_in_edit" INT2,
+  "order_in_view" INT2
 );
 COMMENT ON TABLE "code_gen_column" IS '代码生成-列信息';
 COMMENT ON COLUMN "code_gen_column"."id" IS '主键';

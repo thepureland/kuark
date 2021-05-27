@@ -78,7 +78,7 @@ create table "geo_country"
     "is_active"               BOOLEAN default TRUE  not null,
     "is_built_in"             BOOLEAN default FALSE not null,
     "create_user"             VARCHAR(36),
-    "create_time"             TIMESTAMP  default now() not null,
+    "create_time"             TIMESTAMP  default now(),
     "update_user"             VARCHAR(36),
     "update_time"             TIMESTAMP
 );

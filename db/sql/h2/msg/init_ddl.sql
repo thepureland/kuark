@@ -39,7 +39,7 @@ CREATE TABLE "msg_instance" (
   "event_type_dict_code" VARCHAR(31),
   "msg_type_dict_code" VARCHAR(15),
   "valid_time_start" TIMESTAMP default now() not null,
-  "valid_time_end" TIMESTAMP default (now()+99999) not null,
+  "valid_time_end" TIMESTAMP default (now()+99999) not null,  -- +99999非标准sql，pg不兼容
   "owner_id" VARCHAR(36),
   constraint "fk_msg_instance"
           foreign key ("template_id") references "msg_template" ("id")

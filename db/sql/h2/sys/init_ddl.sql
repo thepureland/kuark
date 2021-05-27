@@ -146,7 +146,7 @@ create table "sys_resource"
     "url"                 VARCHAR(127),
     "resource_type_dict_code" CHAR(1)                        not null,
     "parent_id"           CHAR(36),
-    "seq_no"              TINYINT,
+    "seq_no"              INT2,
     "sub_sys_dict_code"       VARCHAR(31),
     "permission"          VARCHAR(63),
     "icon_url"            VARCHAR(127),

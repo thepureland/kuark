@@ -2,6 +2,7 @@ package io.kuark.base.lang.reflect
 
 import io.kuark.base.bean.validation.constraint.annotaions.AtLeast
 import io.kuark.base.bean.validation.constraint.annotaions.NotNullOn
+import io.kuark.base.cn.Province
 import io.kuark.base.support.enums.IDictEnum
 import io.kuark.base.support.enums.Sex
 import org.junit.jupiter.api.Assertions.assertEquals

@@ -79,7 +79,7 @@ class SeriesValidator : ConstraintValidator<Series, Any?> {
                 validate(SeriesType.INC_DIFF, step, *values.reversed().toTypedArray())
             }
             SeriesType.INC_DIFF_DESC_DIFF -> {
-                val maxValueIndex = values.indexOf(values.max())
+                val maxValueIndex = values.indexOf(values.maxOrNull())
                 if (maxValueIndex == values.lastIndex) {
                     return false
                 }
@@ -93,7 +93,7 @@ class SeriesValidator : ConstraintValidator<Series, Any?> {
                 }
             }
             SeriesType.DESC_DIFF_INC_DIFF -> {
-                val minValueIndex = values.indexOf(values.min())
+                val minValueIndex = values.indexOf(values.minOrNull())
                 if (minValueIndex == values.lastIndex) {
                     return false
                 }
@@ -145,7 +145,7 @@ class SeriesValidator : ConstraintValidator<Series, Any?> {
                 validate(SeriesType.INC_EQ, step, *values.reversed().toTypedArray())
             }
             SeriesType.INC_EQ_DESC_EQ -> {
-                val maxValue = values.max()
+                val maxValue = values.maxOrNull()
                 val maxValueStartIndex = values.indexOf(maxValue)
                 if (maxValueStartIndex == values.lastIndex) {
                     return false
@@ -168,7 +168,7 @@ class SeriesValidator : ConstraintValidator<Series, Any?> {
                 }
             }
             SeriesType.DESC_EQ_INC_EQ -> {
-                val minValue = values.min()
+                val minValue = values.minOrNull()
                 val minValueStartIndex = values.indexOf(minValue)
                 if (minValueStartIndex == values.lastIndex) {
                     return false

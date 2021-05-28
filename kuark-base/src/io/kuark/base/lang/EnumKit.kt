@@ -48,8 +48,8 @@ object EnumKit {
      * @since 1.0.0
      */
     fun <E : IDictEnum> enumOf(enumClass: KClass<E>, code: String): E? {
-        require(!enumClass.isEnum()) { "指定的类非枚举类" }
-        require(!code.isBlank()) { "字典代码参数不能为空" }
+        assert(enumClass.isEnum()) { "指定的类【${enumClass}】非枚举类" }
+        require(code.isNotBlank()) { "字典代码参数不能为空" }
 
         for (e in enumClass.java.enumConstants) {
             if (e.code == code) {
@@ -71,7 +71,7 @@ object EnumKit {
      * @since 1.0.0
      */
     fun enumOf(enumClassStr: String, code: String): IDictEnum? {
-        require(!code.isBlank()) { "字典代码参数不能为空" }
+        require(code.isNotBlank()) { "字典代码参数不能为空" }
 
         val enumClazz = getCodeEnumClass(enumClassStr)
         return enumOf(enumClazz, code)

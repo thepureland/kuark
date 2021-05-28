@@ -95,7 +95,7 @@ class ConstraintsValidator : ConstraintValidator<Constraints, Any?> {
             }
 
             // 根据指定的顺序排序子约束
-            return if (constraints.order.isNotEmpty()) {
+            val result = if (constraints.order.isNotEmpty()) {
                 val sequenceAnnotations = linkedSetOf<Annotation>() // 有指定顺序的子约束
                 constraints.order.forEach { clazz ->
                     val annotation = annotations.firstOrNull { it.annotationClass == clazz }
@@ -110,6 +110,11 @@ class ConstraintsValidator : ConstraintValidator<Constraints, Any?> {
             } else {
                 annotations
             }
+
+            // 强制优先NotBlank、NotEmpty、NotNull、Null
+            result.forEach {  } //TODO
+
+            return result
         }
     }
 

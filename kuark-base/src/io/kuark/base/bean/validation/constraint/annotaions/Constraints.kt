@@ -44,6 +44,17 @@ annotation class Constraints(
     val andOr: AndOr = AndOr.AND,
 
     // javax.validation定义的约束
+    /** 非空白约束，被校验对象类型必须为CharSequence或其子类 */
+    val notBlank: NotBlank = NotBlank(message = MESSAGE),
+    /**
+     * 非空约束, 被校验对象类型必须为以下之一或其子类：
+     * CharSequence、Array<*>、Collection<*>、DoubleArray、IntArray、LongArray、CharArray、FloatArray、BooleanArray、ByteArray、ShortArray、Map<*, *>
+     */
+    val notEmpty: NotEmpty = NotEmpty(message = MESSAGE),
+    /** 非null约束，被校验对象可以是任何类型 */
+    val notNull: NotNull = NotNull(message = MESSAGE),
+    /** null约束，被校验对象可以是任何类型 */
+    val beNull: Null = Null(message = MESSAGE),
     /** 逻辑假约束，被校验对象类型必须为Boolean，且值为false */
     val assertFalse: AssertFalse = AssertFalse(message = MESSAGE),
     /** 逻辑真约束，被校验对象类型必须为Boolean，且值为true */
@@ -86,17 +97,6 @@ annotation class Constraints(
     val negative: Negative = Negative(message = MESSAGE),
     /** 负数或零约束，被校验对象类型必须为以下之一或其子类： CharSequence、Double、Integer、Long、Float、Byte、Short、BigDecimal、BigInteger、Number、MonetaryAmount */
     val negativeOrZero: NegativeOrZero = NegativeOrZero(message = MESSAGE),
-    /** 非空白约束，被校验对象类型必须为CharSequence或其子类 */
-    val notBlank: NotBlank = NotBlank(message = MESSAGE),
-    /** 
-     * 非空约束, 被校验对象类型必须为以下之一或其子类： 
-     * CharSequence、Array<*>、Collection<*>、DoubleArray、IntArray、LongArray、CharArray、FloatArray、BooleanArray、ByteArray、ShortArray、Map<*, *>
-     */
-    val notEmpty: NotEmpty = NotEmpty(message = MESSAGE),
-    /** 非null约束，被校验对象可以是任何类型 */
-    val notNull: NotNull = NotNull(message = MESSAGE),
-    /** null约束，被校验对象可以是任何类型 */
-    val beNull: Null = Null(message = MESSAGE),
     /**
      * 过去日期时间约束，被校验对象类型必须为以下之一或其子类：LocalDate、LocalDateTime、LocalTime、Instant、Calendar、Date、HijrahDate、
      * JapaneseDate、MinguoDate、MonthDay、OffsetDateTime、OffsetTime、ThaiBuddhistDate、Year、YearMonth、ZonedDateTime

@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.springframework.boot.gradle.tasks.bundling.BootJar
 
 object Version {
-    const val KOTLIN = "1.4.21"
+    const val KOTLIN = "1.5.10"
     const val SPRING_BOOT = "2.3.4.RELEASE"
     const val SPRING_CLOUD = "2.2.5.RELEASE"
     const val KTORM = "3.2.0"
@@ -18,8 +18,8 @@ plugins {
     id("org.springframework.boot") version "2.3.4.RELEASE"
     id("io.spring.dependency-management") version "1.0.9.RELEASE"
     id("org.openjfx.javafxplugin") version "0.0.8"
-    kotlin("jvm") version "1.4.21"
-    kotlin("plugin.spring") version "1.4.21"
+    kotlin("jvm") version "1.5.10"
+    kotlin("plugin.spring") version "1.5.10"
 }
 
 /* 插件的配置需要在buildscript元素中 */

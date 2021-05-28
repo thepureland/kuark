@@ -84,12 +84,16 @@ class ConstraintsValidator : ConstraintValidator<Constraints, Any?> {
         fun getAnnotations(constraints: Constraints): List<Annotation> {
             // 获取定义的子约束
             val annotations = mutableListOf<Annotation>()
+            var priorityAnnotation: Annotation? = null // 强制优先NotBlank、NotEmpty、NotNull、Null之一
             constraints.annotationClass.declaredMemberProperties.forEach {
                 if (it.name != "order" && it.name != "andOr" && it.name != "message" && it.name != "groups" && it.name != "payload") {
                     val annotation = it.call(constraints) as Annotation
                     val message = annotation.annotationClass.getMemberPropertyValue(annotation, "message")
                     if (message != Constraints.MESSAGE) {
                         annotations.add(annotation)
+                        if (annotation.annotationClass in setOf(NotBlank::class, NotEmpty::class, NotNull::class, Null::class)) {
+                            priorityAnnotation = annotation
+                        }
                     }
                 }
             }
@@ -112,9 +116,14 @@ class ConstraintsValidator : ConstraintValidator<Constraints, Any?> {
             }
 
             // 强制优先NotBlank、NotEmpty、NotNull、Null
-            result.forEach {  } //TODO
-
-            return result
+            return if (priorityAnnotation != null) {
+                val sequenceAnnotations = linkedSetOf<Annotation>()
+                sequenceAnnotations.add(priorityAnnotation!!)
+                sequenceAnnotations.addAll(result)
+                sequenceAnnotations.toList()
+            } else {
+                result
+            }
         }
     }
 

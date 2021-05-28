@@ -20,12 +20,12 @@ internal class XCharSequenceTest {
 
     @Test
     fun testToHexStr() {
-        assertEquals("4b6576696365", "Kuark".toHexStr())
+        assertEquals("4b7561726b", "Kuark".toHexStr())
     }
 
     @Test
     fun testDecodeHexStr() {
-        assertEquals("Kuark", "4b6576696365".decodeHexStr())
+        assertEquals("Kuark", "4b7561726b".decodeHexStr())
     }
 
     @Test

@@ -5,6 +5,7 @@ import io.kuark.base.security.DigestKit
 import org.apache.commons.lang3.StringUtils
 import java.math.BigDecimal
 import java.math.BigInteger
+import java.util.*
 import java.util.regex.Matcher
 import kotlin.math.ceil
 import kotlin.reflect.KClass
@@ -107,7 +108,7 @@ fun CharSequence.toMd5HexStr(saltStr: CharSequence): String = DigestKit.getMD5(t
  * @since 1.0.0
  */
 fun CharSequence.divideAverage(groupLen: Int): Array<String?> {
-    if (groupLen <= 0) {
+    if (groupLen <= 0 || this.isEmpty()) {
         return arrayOf()
     }
     val strLen = this.length
@@ -139,6 +140,7 @@ fun CharSequence.divideAverage(groupLen: Int): Array<String?> {
  * @since 1.0.0
  */
 fun CharSequence.humpToUnderscore(): String {
+    if (this.isEmpty()) return ""
     val sb = StringBuilder()
     sb.append(this[0])
     for (i in 1 until this.length) {
@@ -164,12 +166,13 @@ fun CharSequence.humpToUnderscore(): String {
  * @since 1.0.0
  */
 fun CharSequence.underscoreToHump(): String {
+    if (this.isBlank()) return this.toString()
     val sb = StringBuilder()
     val words = this.split("_")
     for (word in words) {
-        sb.append(word.toLowerCase().capitalize())
+        sb.append(word.lowercase(Locale.getDefault()).capitalize())
     }
-    return sb.first().toLowerCase() + sb.substring(1)
+    return sb.first().lowercaseChar() + sb.substring(1)
 }
 
 /**
@@ -184,7 +187,7 @@ fun CharSequence.fillTemplateByObjectMap(paramMap: Map<String, Any>): CharSequen
     var templateStr = this.toString()
     for ((paramName, value) in paramMap) {
         templateStr = templateStr.replace(
-            "\\$\\{" + paramName + "\\}".toRegex(), Matcher.quoteReplacement(value.toString())
+            ("\\$\\{$paramName\\}").toRegex(), Matcher.quoteReplacement(value.toString())
         )
     }
     return templateStr

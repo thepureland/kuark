@@ -5,6 +5,7 @@ import io.kuark.base.bean.validation.constraint.annotaions.Exist
 import io.kuark.base.bean.validation.kit.ValidationKit
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import org.springframework.context.annotation.DependsOn
 import javax.validation.constraints.NotBlank
 
 /**
@@ -18,11 +19,13 @@ internal class ExistValidatorTest {
     @Test
     fun validate() {
         // 数组类型，某些元素满足规则
-        assert(ValidationKit.validateValue(TestExistBean::class, "contactWays", arrayOf("", null, "123")).isEmpty())
+//        assert(ValidationKit.validateValue(TestExistBean::class, "contactWays", arrayOf("", null, "123")).isEmpty())
 
         // 数组类型，没有任何一个元素满足规则
-        val violations = ValidationKit.validateValue(TestExistBean::class, "contactWays", arrayOf("", null))
-        assertEquals("联系方式至少填一种", violations.first().message)
+        for (i in 1..10) {
+            val violations = ValidationKit.validateValue(TestExistBean::class, "contactWays", arrayOf("", null))
+            assertEquals("联系方式至少填一种", violations.first().message)
+        }
 
         // 数组类型，返回值为null，直接校验通过
         assert(ValidationKit.validateValue(TestExistBean::class, "contactWays", null).isEmpty())
@@ -39,6 +42,7 @@ internal class ExistValidatorTest {
             ),
             message = "联系方式至少填一种"
         )
+        @get:DependsOn
         val contactWays: Array<String>?,
 
         @get:Exist(

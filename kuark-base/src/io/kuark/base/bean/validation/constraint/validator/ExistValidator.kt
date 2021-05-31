@@ -1,6 +1,8 @@
 package io.kuark.base.bean.validation.constraint.validator
 
 import io.kuark.base.bean.validation.constraint.annotaions.Exist
+import org.hibernate.validator.internal.engine.constraintvalidation.ConstraintValidatorContextImpl
+import org.hibernate.validator.internal.engine.path.PathImpl
 import javax.validation.ConstraintValidator
 import javax.validation.ConstraintValidatorContext
 
@@ -26,20 +28,27 @@ class ExistValidator : ConstraintValidator<Exist, Any?> {
         val constraints = exist.value
         val validator = ConstraintsValidator()
         validator.initialize(constraints)
+
+        val propName = (context as ConstraintValidatorContextImpl).constraintViolationCreationContexts.first().path.leafNode.name
+        // 新建临时context对象的目的是为了避免context会有子约束的错误信息，子约束的message无意义，最终的错误信息是取主约束Exist的message
+        val tempContext = ConstraintValidatorContextImpl(context.clockProvider, PathImpl.createPathFromString(propName),
+            context.constraintDescriptor, null)
+
         val pass = when (value) {
-            is Array<*> -> value.any { validator.isValid(it, context) }
-            is BooleanArray -> value.any { validator.isValid(it, context) }
-            is ByteArray -> value.any { validator.isValid(it, context) }
-            is CharArray -> value.any { validator.isValid(it, context) }
-            is DoubleArray -> value.any { validator.isValid(it, context) }
-            is FloatArray -> value.any { validator.isValid(it, context) }
-            is IntArray -> value.any { validator.isValid(it, context) }
-            is LongArray -> value.any { validator.isValid(it, context) }
-            is ShortArray -> value.any { validator.isValid(it, context) }
-            is Collection<*> -> value.any { validator.isValid(it, context) }
-            is Map<*, *> -> value.values.any { validator.isValid(it, context) }
-            else -> validator.isValid(value, context)
+            is Array<*> -> value.any { validator.isValid(it, tempContext) }
+            is BooleanArray -> value.any { validator.isValid(it, tempContext) }
+            is ByteArray -> value.any { validator.isValid(it, tempContext) }
+            is CharArray -> value.any { validator.isValid(it, tempContext) }
+            is DoubleArray -> value.any { validator.isValid(it, tempContext) }
+            is FloatArray -> value.any { validator.isValid(it, tempContext) }
+            is IntArray -> value.any { validator.isValid(it, tempContext) }
+            is LongArray -> value.any { validator.isValid(it, tempContext) }
+            is ShortArray -> value.any { validator.isValid(it, tempContext) }
+            is Collection<*> -> value.any { validator.isValid(it, tempContext) }
+            is Map<*, *> -> value.values.any { validator.isValid(it, tempContext) }
+            else -> validator.isValid(value, tempContext)
         }
+
         context.disableDefaultConstraintViolation()
         context.buildConstraintViolationWithTemplate(exist.message).addConstraintViolation()
         return pass

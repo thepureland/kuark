@@ -19,7 +19,7 @@ internal class ExistValidatorTest {
     @Test
     fun validate() {
         // 数组类型，某些元素满足规则
-//        assert(ValidationKit.validateValue(TestExistBean::class, "contactWays", arrayOf("", null, "123")).isEmpty())
+        assert(ValidationKit.validateValue(TestExistBean::class, "contactWays", arrayOf("", null, "123")).isEmpty())
 
         // 数组类型，没有任何一个元素满足规则
         for (i in 1..10) {

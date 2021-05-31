@@ -42,7 +42,6 @@ internal class ExistValidatorTest {
             ),
             message = "联系方式至少填一种"
         )
-        @get:DependsOn
         val contactWays: Array<String>?,
 
         @get:Exist(

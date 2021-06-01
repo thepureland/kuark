@@ -1,7 +1,7 @@
 drop TABLE IF EXISTS "test_table";
 CREATE TABLE IF NOT EXISTS "test_table"
 (
-    "id"            int2 not null primary key,
+    "id"            int2 not null,
     "name"          varchar(255) NOT NULL,
     "birthday"      timestamp(6),
     "is_active" bool,

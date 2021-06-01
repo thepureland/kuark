@@ -17,6 +17,6 @@ K:::::::K    K:::::K  uu::::::::uu:::u a::::::::::aa:::ar:::::r           k:::::
 KKKKKKKKK    KKKKKKK    uuuuuuuu  uuuu  aaaaaaaaaa  aaaarrrrrrr           kkkkkkkk    kkkkkkk
 ${AnsiBackground.WHITE}${AnsiColor.RED}${AnsiStyle.UNDERLINE}
 :: Kuark ::                   (v1.0.0.SNAPSHOOT)
-:: Kotlin ::                  (v1.4.10)
+:: Kotlin ::                  (v1.5.10)
 :: Spring Boot ::             (v${spring-boot.version})
 

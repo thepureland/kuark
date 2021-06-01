@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController
 import java.math.BigDecimal
 
 /**
- *
+ * 分支事务2的Controller
  *
  * @author K
  * @since 1.0.0

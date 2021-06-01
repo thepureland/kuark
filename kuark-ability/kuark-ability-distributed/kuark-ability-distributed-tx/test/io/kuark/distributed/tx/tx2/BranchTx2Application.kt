@@ -11,7 +11,7 @@ import org.springframework.context.annotation.FilterType
 import org.springframework.context.annotation.PropertySource
 
 /**
- *
+ * 分支事务2应用
  *
  * @author K
  * @since 1.0.0

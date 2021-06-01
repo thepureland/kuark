@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
 /**
- *
+ * 模拟全局事务
  *
  * @author K
  * @since 1.0.0

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 /**
- *
+ * 模拟分支事务1
  *
  * @author K
  * @since 1.0.0

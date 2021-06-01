@@ -12,7 +12,7 @@ import org.springframework.context.annotation.PropertySource
 import java.util.*
 
 /**
- *
+ * 分支事务1应用
  *
  * @author K
  * @since 1.0.0

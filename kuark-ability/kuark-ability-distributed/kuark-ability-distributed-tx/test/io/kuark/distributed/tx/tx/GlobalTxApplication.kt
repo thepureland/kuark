@@ -10,7 +10,7 @@ import org.springframework.context.annotation.FilterType
 import org.springframework.context.annotation.PropertySource
 
 /**
- *
+ * 全局事务应用
  *
  * @author K
  * @since 1.0.0

@@ -10,12 +10,18 @@ spring:
     name: branch-tx1
   datasource:
     auto-commit: true
-    platform: h2
-    #    platform: info.jesseyang.config.SQLiteDialect
-    username: sa
-    password:
-    url: "jdbc:h2:tcp://localhost:9092/./h2/h2;DATABASE_TO_LOWER=TRUE;"
-    driver-class-name: org.h2.Driver
+
+    #    platform: h2
+    #    username: sa
+    #    password:
+    #    url: "jdbc:h2:tcp://localhost:9092/./h2/h2;DATABASE_TO_LOWER=TRUE;"
+    #    driver-class-name: org.h2.Driver
+
+    platform: postgresql
+    username: postgres
+    password: postgres
+    url: "jdbc:postgresql://192.168.0.200:5432/kuark"
+    driver-class-name: org.postgresql.Driver
   cloud:
     alibaba:
       seata:

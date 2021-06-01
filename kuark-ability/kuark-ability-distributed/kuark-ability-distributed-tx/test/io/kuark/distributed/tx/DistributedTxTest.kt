@@ -10,7 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 
 /**
+ * 分布式事务测试用例
  *
+ * 执行步骤：
+ * 1.启动SeataServer和EurekaServer
+ * 2.启动BranchTx1Application和BranchTx2Application
+ * 3.运行本类DistributedTxTest
  *
  * @author K
  * @since 1.0.0

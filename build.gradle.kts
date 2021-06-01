@@ -222,7 +222,7 @@ subprojects {
             dependency("org.springframework.cloud:spring-cloud-starter-bus-amqp:2.2.3.RELEASE")
 
             // seata
-            dependency("io.seata:seata-all:1.3.0")
+            dependency("io.seata:seata-all:1.4.2")
             dependency("com.alibaba.cloud:spring-cloud-alibaba-seata:2.2.0.RELEASE")
 
             dependency("com.alibaba.boot:nacos-config-spring-boot-starter:0.2.7")

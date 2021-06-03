@@ -1,0 +1,13 @@
+logging:
+  level:
+    root: debug
+    io.kuark.xxx: debug
+
+spring:
+  application:
+    name: service1
+
+
+server:
+  port: 9191
+

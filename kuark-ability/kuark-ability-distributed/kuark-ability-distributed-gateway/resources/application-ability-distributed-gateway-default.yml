@@ -4,68 +4,6 @@ server:
 service-url:
   user-service: http://localhost:8201
 
-spring:
-  cloud:
-    gateway:
-      discovery:
-        locator:
-          #开启从注册中心动态创建路由的功能
-          enabled: true
-          #使用小写服务名，默认是大写
-          lower-case-service-id: true
-      routes:
-        - id: prefixpath_route # 路由的ID
-          uri: lb://user-service # 在结合注册中心使用过滤器的时候，uri的协议必须为lb，这样才能启用Gateway的负载均衡功能
-          predicates:
-            - Method=GET
-          filters:
-            - PrefixPath=/user
-        - id: weight_high
-          uri: http://localhost:8201
-          predicates:
-            - Weight=group1, 8
-        - id: weight_low
-          # 匹配后路由地址
-          uri: http://localhost:8202
-#          filters:
-#            - AddRequestParameter=username, jourwon
-#            - StripPrefix=2
-#            - PrefixPath=/user
-#            - name: Hystrix
-#                args:
-#                  name: fallbackcmd
-#                  fallback-uri: forward:/fallback
-#            - name: RequestRateLimiter
-#                args:
-#                  # 每秒允许处理的请求数量
-#                  redis-rate-limiter.replenishRate: 1
-#                  # 每秒最大处理的请求数量
-#                  redis-rate-limiter.burstCapacity: 2
-#                  # 限流策略，对应策略的Bean
-#                  key-resolver: "#{@ipKeyResolver}"
-#            - name: Retry
-#                args:
-#                  retries: 1 #需要进行重试的次数
-#                  statuses: BAD_GATEWAY #返回哪个状态码需要进行重试，返回状态码为5XX进行重试
-#                  backoff:
-#                    firstBackoff: 10ms
-#                    maxBackoff: 50ms
-#                    factor: 2
-#                    basedOnPreviousValue: false
-#          predicates: # 断言
-#            - Weight=group1, 2
-#            - Path=/user/{id}
-#            - After=2019-12-29T18:30:00+08:00[Asia/Shanghai]
-#            - Before=2019-12-29T18:30:00+08:00[Asia/Shanghai]
-#            - Between=2019-12-29T18:30:00+08:00[Asia/Shanghai], 2019-12-30T18:30:00+08:00[Asia/Shanghai]
-#            - Cookie=username,jourwon
-#            - Header=X-Request-Id, \d+
-#            - Host=**.jourwon.com
-#            - Method=GET
-#            - Path=/user/{id}
-#            - Query=username
-#            - RemoteAddr=192.168.1.1/24
-
 
 eureka:
   client:

@@ -3,8 +3,9 @@ import org.springframework.boot.gradle.tasks.bundling.BootJar
 
 object Version {
     const val KOTLIN = "1.5.10"
-    const val SPRING_BOOT = "2.3.4.RELEASE"
-    const val SPRING_CLOUD = "2.2.5.RELEASE"
+    const val SPRING_BOOT = "2.4.6"
+    const val SPRING_CLOUD = "2020.0.3"
+    const val ALIBABA_CLOUD = "2.2.1.RELEASE"
     const val KTORM = "3.2.0"
     const val LOGBACK = "1.2.3"
     const val SLF4J = "1.7.30"
@@ -14,12 +15,11 @@ object Version {
 plugins {
 //    application
 //    java
-//    id("org.springframework.boot") version this@Build_gradle.SPRING_BOOT_VERSION
-    id("org.springframework.boot") version "2.3.4.RELEASE"
-    id("io.spring.dependency-management") version "1.0.9.RELEASE"
+    id("org.springframework.boot") version "2.4.6"
+    id("io.spring.dependency-management") version "1.0.10.RELEASE"
     id("org.openjfx.javafxplugin") version "0.0.8"
     kotlin("jvm") version "1.5.10"
-    kotlin("plugin.spring") version "1.5.10"
+//    kotlin("plugin.spring") version "1.5.10"
 }
 
 /* 插件的配置需要在buildscript元素中 */
@@ -29,10 +29,10 @@ buildscript {
 //        maven { url = uri("https://plugins.gradle.org/m2/") }
 //    }
     /* 插件依赖 */
-    dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:2.3.4.RELEASE")
-        classpath("io.spring.gradle:dependency-management-plugin:1.0.9.RELEASE")
-    }
+//    dependencies {
+//        classpath("org.springframework.boot:spring-boot-gradle-plugin:2.4.6")
+//        classpath("io.spring.gradle:dependency-management-plugin:1.0.9.RELEASE")
+//    }
 }
 
 
@@ -115,9 +115,12 @@ subprojects {
     }
 
     dependencyManagement {
-//        imports {
-//            mavenBom("org.springframework.boot:spring-boot-dependencies:$SPRING_BOOT_VERSION")
-//        }
+        imports {
+            mavenBom("org.springframework.boot:spring-boot-dependencies:${Version.SPRING_BOOT}")
+            mavenBom("org.springframework.cloud:spring-cloud-dependencies:${Version.SPRING_CLOUD}")
+            mavenBom("com.alibaba.cloud:spring-cloud-alibaba-dependencies:${Version.ALIBABA_CLOUD}")
+//            mavenBom("com.alibaba.cloud:aliyun-spring-boot-dependencies:${Version.ALIBABA_CLOUD}")
+        }
         dependencies {
             dependency("de.idyl:winzipaes:1.0.1")
 
@@ -148,15 +151,15 @@ subprojects {
             dependency("org.glassfish.web:javax.el:2.2.6")
 
             // springboot
-            dependency("org.springframework.boot:spring-boot-starter-aop:${Version.SPRING_BOOT}")
-            dependency("org.springframework.boot:spring-boot-starter-web:${Version.SPRING_BOOT}")
-            dependency("org.springframework.boot:spring-boot-starter-webflux:${Version.SPRING_BOOT}")
-            dependency("org.springframework.boot:spring-boot-starter-actuator:${Version.SPRING_BOOT}")
-            dependency("org.springframework.boot:spring-boot-starter-data-redis-reactive:${Version.SPRING_BOOT}") // 限流用
-            dependency("de.codecentric:spring-boot-admin-starter-server:2.3.0")
-            dependency("org.springframework.boot:spring-boot-starter-test:${Version.SPRING_BOOT}") {
-                exclude("org.junit.vintage:junit-vintage-engine")
-            }
+//            dependency("org.springframework.boot:spring-boot-starter-aop:${Version.SPRING_BOOT}")
+//            dependency("org.springframework.boot:spring-boot-starter-web:${Version.SPRING_BOOT}")
+//            dependency("org.springframework.boot:spring-boot-starter-webflux:${Version.SPRING_BOOT}")
+//            dependency("org.springframework.boot:spring-boot-starter-actuator:${Version.SPRING_BOOT}")
+//            dependency("org.springframework.boot:spring-boot-starter-data-redis-reactive:${Version.SPRING_BOOT}") // 限流用
+//            dependency("de.codecentric:spring-boot-admin-starter-server:2.3.0")
+//            dependency("org.springframework.boot:spring-boot-starter-test:${Version.SPRING_BOOT}") {
+//                exclude("org.junit.vintage:junit-vintage-engine")
+//            }
 
             // swagger
             dependency("io.springfox:springfox-boot-starter:3.0.0")
@@ -208,26 +211,35 @@ subprojects {
             dependency("org.freemarker:freemarker:2.3.30")
 
             // spring cloud
-            dependency("org.springframework.cloud:spring-cloud-commons:${Version.SPRING_CLOUD}")
-            dependency("org.springframework.cloud:spring-cloud-context:${Version.SPRING_CLOUD}")
-            dependency("org.springframework.cloud:spring-cloud-config-server:${Version.SPRING_CLOUD}")
-            dependency("org.springframework.cloud:spring-cloud-config-client:${Version.SPRING_CLOUD}")
-            dependency("org.springframework.cloud:spring-cloud-starter-config:${Version.SPRING_CLOUD}")
-            dependency("org.springframework.cloud:spring-cloud-starter-netflix-eureka-server:${Version.SPRING_CLOUD}")
-            dependency("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client:${Version.SPRING_CLOUD}")
-            dependency("org.springframework.cloud:spring-cloud-starter-openfeign:${Version.SPRING_CLOUD}")
+//            dependency("org.springframework.cloud:spring-cloud-commons:${Version.SPRING_CLOUD}")
+//            dependency("org.springframework.cloud:spring-cloud-context:${Version.SPRING_CLOUD}")
+//            dependency("org.springframework.cloud:spring-cloud-starter-bootstrap:${Version.SPRING_CLOUD}")
+//            dependency("org.springframework.cloud:spring-cloud-config-server:${Version.SPRING_CLOUD}")
+//            dependency("org.springframework.cloud:spring-cloud-config-client:${Version.SPRING_CLOUD}")
+//            dependency("org.springframework.cloud:spring-cloud-starter-config:${Version.SPRING_CLOUD}")
+//            dependency("org.springframework.cloud:spring-cloud-starter-netflix-eureka-server:${Version.SPRING_CLOUD}")
+//            dependency("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client:${Version.SPRING_CLOUD}")
+//            dependency("org.springframework.cloud:spring-cloud-starter-openfeign:${Version.SPRING_CLOUD}")
             dependency("org.springframework.cloud:spring-cloud-starter-netflix-hystrix-dashboard:2.2.6.RELEASE")
             dependency("org.springframework.cloud:spring-cloud-starter-netflix-hystrix:2.2.6.RELEASE")
-            dependency("org.springframework.cloud:spring-cloud-starter-gateway:${Version.SPRING_CLOUD}")
+//            dependency("org.springframework.cloud:spring-cloud-starter-gateway:${Version.SPRING_CLOUD}")
             dependency("org.springframework.cloud:spring-cloud-starter-bus-amqp:2.2.3.RELEASE")
 
             // seata
             dependency("io.seata:seata-all:1.4.2")
             dependency("com.alibaba.cloud:spring-cloud-alibaba-seata:2.2.0.RELEASE")
 
-            dependency("com.alibaba.boot:nacos-config-spring-boot-starter:0.2.7")
-            dependency("com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-discovery:2.2.3.RELEASE")
-            dependency("com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-config:2.2.3.RELEASE")
+            dependency("com.alibaba.nacos:nacos-spring-context:0.3.6")
+
+//            dependency("com.alibaba.boot:nacos-config-spring-boot-starter:0.2.7")
+//            dependency("com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-discovery:2021.1")
+//            {
+//                exclude("org.springframework.cloud:spring-cloud-context")
+//            }
+//            dependency("com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-config:2021.1")
+//            {
+//                exclude("org.springframework.cloud:spring-cloud-context")
+//            }
 
 
             // 依赖maven中不存在的jar

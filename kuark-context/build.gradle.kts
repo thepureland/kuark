@@ -7,8 +7,8 @@ dependencies {
     api("org.springframework.cloud:spring-cloud-starter-bootstrap")
     api("org.springframework.cloud:spring-cloud-config-client")
 //    api("com.alibaba.boot:nacos-config-spring-boot-starter")
-    api("com.alibaba.nacos:nacos-spring-context")
-    api("com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-config")
+//    api("com.alibaba.nacos:nacos-spring-context")
+//    api("com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-config")
 
     testApi(project(":kuark-test"))
 }

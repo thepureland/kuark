@@ -2,8 +2,8 @@ server:
   port: 9201
 
 
-service-url:
-  user-service: http://localhost:8201
+#service-url:
+#  user-service: http://localhost:8201
 
 
 eureka:
@@ -17,6 +17,8 @@ logging:
     org.springframework.cloud.gateway: debug
 
 spring:
+  main:
+    web-application-type: reactive
   cloud:
     gateway:
       discovery:
@@ -26,19 +28,23 @@ spring:
           #使用小写服务名，默认是大写
           lower-case-service-id: true
       routes:
-        - id: prefixpath_route # 路由的ID
-          uri: lb://user-service # 在结合注册中心使用过滤器的时候，uri的协议必须为lb，这样才能启用Gateway的负载均衡功能
-          predicates:
-            - Method=GET
-          filters:
-            - PrefixPath=/user
-        - id: weight_high
-          uri: http://localhost:8201
-          predicates:
-            - Weight=group1, 8
-        - id: weight_low
-          # 匹配后路由地址
-          uri: http://localhost:8202
+        - id: product-service           # 路由 ID，唯一
+          uri: http://localhost:9191/   # 目标 URI，路由到微服务的地址
+          predicates: # 断言（判断条件）
+            - Path=/service1/**          # 匹配对应 URL 的请求，将匹配到的请求追加在目标 URI 之后
+#        - id: prefixpath_route # 路由的ID
+#          uri: lb://user-service # 在结合注册中心使用过滤器的时候，uri的协议必须为lb，这样才能启用Gateway的负载均衡功能
+#          predicates:
+#            - Method=GET
+#          filters:
+#            - PrefixPath=/user
+#        - id: weight_high
+#          uri: http://localhost:8201
+#          predicates:
+#            - Weight=group1, 8
+#        - id: weight_low
+#          # 匹配后路由地址
+#          uri: http://localhost:8202
 #          filters:
 #            - AddRequestParameter=username, jourwon
 #            - StripPrefix=2

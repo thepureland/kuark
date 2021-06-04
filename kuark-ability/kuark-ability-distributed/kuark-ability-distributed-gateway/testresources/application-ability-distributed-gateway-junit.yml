@@ -27,11 +27,313 @@ spring:
           enabled: true
           #使用小写服务名，默认是大写
           lower-case-service-id: true
-      routes:
-        - id: product-service           # 路由 ID，唯一
-          uri: http://localhost:9191/   # 目标 URI，路由到微服务的地址
-          predicates: # 断言（判断条件）
-            - Path=/service1/**          # 匹配对应 URL 的请求，将匹配到的请求追加在目标 URI 之后
+      routes: # https://cloud.spring.io/spring-cloud-gateway/reference/html/   https://blog.csdn.net/u010647035/article/details/84726266
+
+        # 匹配指定时间之后的请求
+        - id: after_route
+          uri: http://localhost:9191
+          predicates:
+            - After=2021-06-04T22:13:00.888+08:00[Asia/Shanghai] # UTC时间格式的时间
+
+        # 匹配指定时间之前的请求
+        - id: before_route
+          uri: http://localhost:9191
+          predicates:
+            - After=2021-06-04T22:13:00.888+08:00[Asia/Shanghai] # UTC时间格式的时间
+
+        # 匹配指定两个时间之间的请求
+        - id: between_route
+          uri: http://localhost:9191
+          predicates:
+            - Between=2021-06-04T22:13:00.888+08:00[Asia/Shanghai], 2121-06-04T22:13:00.888+08:00[Asia/Shanghai] # UTC时间格式的时间
+
+        # 匹配cookie名称和值的请求
+        - id: cookie_route
+          uri: http://localhost:9191
+          predicates:
+            - Cookie=chocolate, ch.p # 值为java的正则表达式
+
+        # 匹配header名称和值的请求
+        - id: header_route
+          uri: http://localhost:9191
+          predicates:
+            - Header=X-Request-Id, \d+ # 值为java的正则表达式
+
+        # 匹配host的请求
+        - id: host_route
+          uri: http://localhost:9191
+          predicates:
+            - Host=**.somehost.org,**.anotherhost.org # Ant-style pattern, {sub}.myhost.org are supported as well
+
+        # 匹配http method的请求
+        - id: method_route
+          uri: http://localhost:9191
+          predicates:
+            - Method=GET,POST
+
+        # 匹配路径的请求
+        - id: path_route
+          uri: http://localhost:9191
+          predicates:
+            - Path=/red/{segment},/blue/{segment}
+
+        # 匹配查询参数的请求
+        - id: query_route
+          uri: http://localhost:9191
+          predicates:
+            - Query=red, gree. # 值为可选，是java的正则表达式
+
+        # 匹配访问ip的请求
+        - id: remoteaddr_route
+          uri: http://localhost:9191
+          predicates:
+            - RemoteAddr=192.168.1.1/24 # CIDR-notation (IPv4 or IPv6) strings, 可多个
+
+        # 按权重分配请求
+        - id: weight_high
+          uri: https://weighthigh.org
+          predicates:
+            - Weight=group1, 8 # 每个分组单独计算
+        - id: weight_low
+          uri: https://weightlow.org
+          predicates:
+            - Weight=group1, 2
+
+
+        # 为满足条件的请求(downstream)添加header
+        - id: add_request_header_route
+          uri: http://localhost:9191
+          predicates: # 可选
+            - Path=/red/{segment}
+          filters:
+            - AddRequestHeader=X-Request-red, Blue-{segment}
+
+        # 为满足条件的请求(downstream)添加参数
+        - id: add_request_parameter_route
+          uri: http://localhost:9191
+          predicates: # 可选
+            - Host: { segment }.myhost.org
+          filters:
+            - AddRequestParameter=foo, bar-{segment}
+
+        # 为满足条件的请求的响应(downstream)添加header
+        - id: add_response_header_route
+          uri: http://localhost:9191
+          predicates:
+            - Host: {segment}.myhost.org
+          filters:
+            - AddResponseHeader=foo, bar-{segment}
+
+        # 处理重复的header
+        - id: dedupe_response_header_route
+          uri: http://localhost:9191
+          filters:
+            - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin # 可选的策略参数：RETAIN_FIRST (默认), RETAIN_LAST, RETAIN_UNIQUE
+
+        # 熔断处理
+        - id: circuitbreaker_route
+          uri: lb://backing-service:8088
+          predicates:
+            - Path=/consumingServiceEndpoint
+          filters:
+            - name: CircuitBreaker # 需要添加依赖：spring-cloud-starter-circuitbreaker-reactor-resilience4j
+              args:
+                name: myCircuitBreaker
+                fallbackUri: forward:/inCaseOfFailureUseThis
+            - RewritePath=/consumingServiceEndpoint, /backingServiceEndpoint
+
+        # fallback处理
+        - id: ingredients
+          uri: lb://ingredients
+          predicates:
+            - Path=//ingredients/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: fetchIngredients
+                fallbackUri: forward:/fallback
+        - id: ingredients-fallback
+          uri: http://localhost:9191
+          predicates:
+            - Path=/fallback
+          filters:
+            - name: FallbackHeaders
+              args:
+                executionExceptionTypeHeaderName: Test-Header
+
+        # 用一个header赋值另一个header
+        - id: map_request_header_route
+          uri: http://localhost:9191
+          filters:
+            - MapRequestHeader=Blue, X-Request-Red # fromHeader, toHeader
+
+        # 为满足条件的请求添加前置路径
+        - id: prefixpath_route
+          uri: http://localhost:9191
+          filters:
+            - PrefixPath=/mypath
+
+        # 转发请求时, 把原始请求的host头部带上，转发给目标服务。默认该filter是启用的。就是设置PRESERVE_HOST_HEADER_ATTRIBUTE为true
+        - id: preserve_host_route
+          uri: http://localhost:9191
+          filters:
+            - PreserveHostHeader # 没有参数
+
+        # 限流
+        - id: requestratelimiter_route
+          uri: http://localhost:9191
+          filters:
+            - name: RequestRateLimiter # 基于redis。超过限制时，HTTP状态 429 (Too Many Requests)会被返回
+              args:
+                # 以下两个参数都根据同一个key的，这个key如何解析出来，就需要用到key-resolver这个参数，它会去查找名称为userkeyResolver的Bean。
+                redis-rate-limiter.replenishRate: 10 # 针对同一个key，允许的每秒请求数，不包括被抛弃的请求。这实际是令牌桶填充率
+                redis-rate-limiter.burstCapacity: 20 # 针对同一个key，一秒内允许的最大请求数。这实际是令牌桶可容纳的最大令牌数。若设为0，则拒绝所有请求
+                redis-rate-limiter.requestedTokens: 1 # 一个请求消耗多少个token
+#                rate-limiter: "#{@myRateLimiter}"  # reference the bean by name using SpEL
+#                key-resolver: "#{@userKeyResolver}"
+
+        # 重定向
+        - id: prefixpath_route
+          uri: http://localhost:9191
+          filters:
+            - RedirectTo=302, https://acme.org  # 必须是300系列的http状态码
+
+        # 移除Request的header
+        - id: removerequestheader_route
+          uri: http://localhost:9191
+          filters:
+            - RemoveRequestHeader=X-Request-Foo
+
+        # 移除Response的header
+        - id: removeresponseheader_route
+          uri: http://localhost:9191
+          filters:
+            - RemoveResponseHeader=X-Response-Foo
+
+        # 移除Request的参数
+        - id: removerequestparameter_route
+          uri: http://localhost:9191
+          filters:
+            - RemoveRequestParameter=red
+
+        # 路径重写
+        - id: rewritepath_route
+          uri: http://localhost:9191
+          predicates:
+            - Path=/red/**
+          filters:
+            - RewritePath=/red(?<segment>/?.*), $\{segment} # 源支持java正则表达式， /red/blue => /blue 。因为YAML规范，$必须写成$\
+
+        # 重写Location响应头
+        - id: rewritelocationresponseheader_route
+          uri: http://localhost:9191
+          filters:
+            - RewriteLocationResponseHeader=AS_IN_REQUEST, Location, ,
+
+        # 重写响应头
+        - id: rewriteresponseheader_route
+          uri: http://localhost:9191
+          filters:
+            - RewriteResponseHeader=X-Response-Red, , password=[^&]+, password=***
+
+        # 转发前强制执行WebSession::save, 前提是使用Spring Session
+        - id: save_session
+          uri: http://localhost:9191
+          predicates:
+            - Path=/foo/**
+          filters:
+            - SaveSession
+
+        # 修改路径
+        - id: setpath_route
+          uri: http://localhost:9191
+          predicates:
+            - Path=/red/{segment}
+          filters:
+            - SetPath=/{segment}  # /red/blue => /blue
+
+        # 设置请求头
+        - id: setrequestheader_route
+          uri: http://localhost:9191
+          predicates:
+            - Host: { segment }.myhost.org
+          filters:
+            - SetRequestHeader=foo, bar-{segment}
+
+        # 设置响应头
+        - id: setresponseheader_route
+          uri: http://localhost:9191
+          predicates:
+            - Host: { segment }.myhost.org
+          filters:
+            - SetResponseHeader=foo, bar-{segment}
+
+        # 设置http状态码
+        - id: setstatusstring_route
+          uri: http://localhost:9191
+          filters:
+            - SetStatus=BAD_REQUEST
+            - id: setstatusint_route
+              uri: http://localhost:9191
+              filters:
+                - SetStatus=401 # 可以通过如下设置保留原状态码：spring.cloud.gateway.set-status.original-status-header-name=original-http-status
+
+        # 除去路径前缀
+        - id: nameRoot
+          uri: https://nameservice
+          predicates:
+            - Path=/name/**
+          filters:
+            - StripPrefix=2 # 当通过网关向/name/bar/foo发出请求时，对nameservice的请求将类似于http://nameservice/foo
+
+        # 重试
+        - id: retry_test
+          uri: http://localhost:9191/flakey
+          predicates:
+            - Host=*.retry.com
+          filters:
+            - name: Retry
+              args:
+                retries: 3
+                statuses: BAD_GATEWAY
+                methods: GET,POST
+                backoff:
+                  firstBackoff: 10ms
+                  maxBackoff: 50ms
+                  factor: 2
+                  basedOnPreviousValue: false
+
+        # 请求大小限制
+        - id: request_size_route
+          uri: http://localhost:9191/upload
+          predicates:
+            - Path=/upload
+          filters:
+            - name: RequestSize # 超限会返回状态码413(Payload Too Large)，header errorMessage是错误提示
+              args:
+                maxSize: 5000000
+
+        # 设置请求host
+        - id: set_request_host_header_route
+          uri: http://localhost:9191/headers
+          predicates:
+            - Path=/headers
+          filters:
+            - name: SetRequestHost
+              args:
+                host: example.org
+
+        # ModifyRequestBody filter：修改请求体(仅支持通过java代码)
+
+        # ModifyResponseBody filter: 修改响应体(仅支持通过java代码)
+
+        # 默认过滤器，应用到所有路由。spring.cloud.gateway.default-filters
+
+
+      filter:
+        secure-headers:
+          enabled: true # 添加一些安全相关的header。 见SecureHeadersGatewayFilterFactory
+
 #        - id: prefixpath_route # 路由的ID
 #          uri: lb://user-service # 在结合注册中心使用过滤器的时候，uri的协议必须为lb，这样才能启用Gateway的负载均衡功能
 #          predicates:

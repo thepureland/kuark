@@ -2,8 +2,9 @@ server:
   port: 9201
 
 
-
 spring:
+  application:
+    name: gateway-server
   cloud:
     gateway:
       enabled: true

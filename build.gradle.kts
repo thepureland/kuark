@@ -100,6 +100,13 @@ subprojects {
         }
     }
 
+//    sourceSets {
+//        getByName("main").java.srcDirs("src")
+//        getByName("main").resources.srcDirs("resources")
+//        getByName("test").java.srcDirs("test")
+//        getByName("test").resources.srcDirs("testresources")
+//    }
+
     kotlin.sourceSets["main"].kotlin.srcDirs("src")
     kotlin.sourceSets["test"].kotlin.srcDirs("test")
 

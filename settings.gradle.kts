@@ -59,23 +59,32 @@ include("kuark-service")
 include("kuark-service:kuark-service-sys")
 include("kuark-service:kuark-service-sys:kuark-service-sys-provider")
 findProject(":kuark-service:kuark-service-sys:kuark-service-sys-provider")?.name = "kuark-service-sys-provider"
-include("kuark-service:kuark-service-sys:kuark-service-sys-consumer")
-findProject(":kuark-service:kuark-service-sys:kuark-service-sys-consumer")?.name = "kuark-service-sys-consumer"
+include("kuark-service:kuark-service-sys:kuark-service-sys-common")
+findProject(":kuark-service:kuark-service-sys:kuark-service-sys-common")?.name = "kuark-service-sys-common"
+include("kuark-service:kuark-service-sys:kuark-service-sys-api")
+findProject(":kuark-service:kuark-service-sys:kuark-service-sys-api")?.name = "kuark-service-sys-api"
 include("kuark-service:kuark-service-geo")
 include("kuark-service:kuark-service-geo:kuark-service-geo-provider")
 findProject(":kuark-service:kuark-service-geo:kuark-service-geo-provider")?.name = "kuark-service-geo-provider"
-include("kuark-service:kuark-service-geo:kuark-service-geo-consumer")
-findProject(":kuark-service:kuark-service-geo:kuark-service-geo-consumer")?.name = "kuark-service-geo-consumer"
+include("kuark-service:kuark-service-geo:kuark-service-geo-common")
+findProject(":kuark-service:kuark-service-geo:kuark-service-geo-common")?.name = "kuark-service-geo-common"
+include("kuark-service:kuark-service-geo:kuark-service-geo-api")
+findProject(":kuark-service:kuark-service-geo:kuark-service-geo-api")?.name = "kuark-service-geo-api"
 include("kuark-service:kuark-service-user")
 include("kuark-service:kuark-service-user:kuark-service-user-provider")
 findProject(":kuark-service:kuark-service-user:kuark-service-user-provider")?.name = "kuark-service-user-provider"
-include("kuark-service:kuark-service-user:kuark-service-user-consumer")
-findProject(":kuark-service:kuark-service-user:kuark-service-user-consumer")?.name = "kuark-service-user-consumer"
+include("kuark-service:kuark-service-user:kuark-service-user-common")
+findProject(":kuark-service:kuark-service-user:kuark-service-user-common")?.name = "kuark-service-user-common"
+include("kuark-service:kuark-service-user:kuark-service-user-common")
+include("kuark-service:kuark-service-user:kuark-service-user-api")
+findProject(":kuark-service:kuark-service-user:kuark-service-user-api")?.name = "kuark-service-user-api"
 include("kuark-service:kuark-service-msg")
 include("kuark-service:kuark-service-msg:kuark-service-msg-provider")
 findProject(":kuark-service:kuark-service-msg:kuark-service-msg-provider")?.name = "kuark-service-msg-provider"
-include("kuark-service:kuark-service-msg:kuark-service-msg-consumer")
-findProject(":kuark-service:kuark-service-msg:kuark-service-msg-consumer")?.name = "kuark-service-msg-consumer"
+include("kuark-service:kuark-service-msg:kuark-service-msg-common")
+findProject(":kuark-service:kuark-service-msg:kuark-service-msg-common")?.name = "kuark-service-msg-common"
+include("kuark-service:kuark-service-msg:kuark-service-msg-api")
+findProject(":kuark-service:kuark-service-msg:kuark-service-msg-api")?.name = "kuark-service-msg-api"
 
 include("kuark-ui")
 include("kuark-ui:kuark-ui-jfx")
@@ -84,4 +93,3 @@ findProject(":kuark-ui:kuark-ui-jfx")?.name = "kuark-ui-jfx"
 include("kuark-tools")
 
 include("kuark-test")
-

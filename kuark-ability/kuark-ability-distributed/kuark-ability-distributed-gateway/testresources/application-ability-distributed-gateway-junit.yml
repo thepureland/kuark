@@ -2,10 +2,6 @@ server:
   port: 9201
 
 
-#service-url:
-#  user-service: http://localhost:8201
-
-
 eureka:
   client:
     service-url:
@@ -17,10 +13,13 @@ logging:
     org.springframework.cloud.gateway: debug
 
 spring:
+  application:
+    name: gateway-server
   main:
     web-application-type: reactive
   cloud:
     gateway:
+      enabled: true
       discovery:
         locator:
           #开启从注册中心动态创建路由的功能

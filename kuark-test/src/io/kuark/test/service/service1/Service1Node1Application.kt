@@ -3,6 +3,7 @@ package io.kuark.test.service.service1
 import io.kuark.test.YamlPropertySourceFactory
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.context.ConfigurableApplicationContext
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.FilterType
 import org.springframework.context.annotation.PropertySource
@@ -32,10 +33,22 @@ import org.springframework.context.annotation.PropertySource
 open class Service1Node1Application {
 
     companion object {
+
+        var context: ConfigurableApplicationContext? = null
+
+
         @JvmStatic
         fun main(args: Array<String>) {
-            SpringApplication.run(Service1Node1Application::class.java, *args)
+            context = SpringApplication.run(Service1Node1Application::class.java, *args)
+            println("service1-node1 started")
         }
+
+        @JvmStatic
+        fun exit() {
+            SpringApplication.exit(context)
+            println("service1-node1 shutdown")
+        }
+
     }
 
 }

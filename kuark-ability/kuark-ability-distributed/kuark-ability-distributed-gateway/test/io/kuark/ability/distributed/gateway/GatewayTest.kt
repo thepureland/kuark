@@ -1,43 +1,42 @@
 package io.kuark.ability.distributed.gateway
 
-import io.kuark.context.spring.YamlPropertySourceFactory
-import io.kuark.test.SpringTest
+import io.kuark.base.lang.SystemKit
+import io.kuark.test.server.eureka.EurekaServer
 import io.kuark.test.service.service1.Service1Node1Application
 import io.kuark.test.service.service1.Service1Node2Application
-import org.junit.jupiter.api.*
-import org.springframework.boot.autoconfigure.SpringBootApplication
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.cloud.gateway.config.GatewayAutoConfiguration
-import org.springframework.context.annotation.PropertySource
+import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestInstance
 
-//@SpringBootTest
-@SpringBootApplication(exclude = [GatewayAutoConfiguration::class])
+
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 internal open class GatewayTest {
 
     @BeforeAll
     fun setUp() {
-//        Service1Node1Application.main(arrayOf())
-//        Service1Node2Application.main(arrayOf())
+        SystemKit.setEnvVars(mapOf(
+            "eureka.client.service-url.defaultZone" to "http://localhost:8001/eureka/",
+            "spring.cloud.gateway.enabled" to "false"
+        ))
 
-//        val subThread = Thread {
-//            Service1Node1Application.main(arrayOf())
-//            println("kkkk")
-//            Service1Node2Application.main(arrayOf())
-//        }
-//        subThread.start()
-//        subThread.join()
+        EurekaServer.main(arrayOf())
+        Service1Node1Application.main(arrayOf())
+        Service1Node2Application.main(arrayOf())
+        GatewayServerApplication.main(arrayOf())
     }
 
     @AfterAll
     fun tearDown() {
-//        Service1Node1Application.exit()
-//        Service1Node2Application.exit()
+        Service1Node1Application.exit()
+        Service1Node2Application.exit()
+        GatewayServerApplication.exit()
+        EurekaServer.exit()
     }
 
     @Test
     fun getTablesByType() {
-        println("dkjsdkjfdskfjks")
+        println("getTablesByType")
     }
 
 }

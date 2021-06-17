@@ -6,6 +6,8 @@ logging:
 spring:
   application:
     name: service1
+  main:
+    web-application-type: reactive
 
 
 server:

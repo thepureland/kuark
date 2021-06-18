@@ -1,4 +1,4 @@
-package io.kuark.ability.rules
+package rules
 
 import io.kuark.ability.rules.People
 dialect  "java"

@@ -1,5 +1,6 @@
 package io.kuark.test.common
 
+import io.kuark.base.lang.SystemKit
 import org.springframework.boot.test.context.SpringBootTest
 
 /**
@@ -10,4 +11,9 @@ import org.springframework.boot.test.context.SpringBootTest
  */
 @SpringBootTest(classes = [TestApplication::class])
 open class SpringTest {
+
+    constructor() {
+        SystemKit.setEnvVars(mapOf("spring.cloud.config.enabled" to "false"))
+    }
+
 }

@@ -28,7 +28,6 @@ interface IUrlAuthDefinition {
      * 默认的过滤器有：anno、authc、authcBasic、logout、noSessionCreation、perms、port、rest、roles、ssl、user
      *
      * @return Map<url模式串，过滤器>
-     * @see org.apache.shiro.web.filter.mgt.DefaultFilter
      */
     fun getDefinitionMap(): LinkedHashMap<String, String>
 

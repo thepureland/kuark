@@ -196,7 +196,6 @@ subprojects {
             dependency("org.springframework.session:spring-session-data-redis:2.2.2.RELEASE")
 
             // auth
-            dependency("org.apache.shiro:shiro-spring:1.7.0")
             dependency("org.apache.oltu.oauth2:org.apache.oltu.oauth2.authzserver:1.0.2")
             dependency("org.apache.oltu.oauth2:org.apache.oltu.oauth2.resourceserver:1.0.2")
             dependency("org.apache.oltu.oauth2:org.apache.oltu.oauth2.client:1.0.2")

@@ -10,6 +10,7 @@ object Version {
     const val LOGBACK = "1.2.3"
     const val SLF4J = "1.7.30"
     const val KTOR = "1.4.0"
+    const val ACTIVITI = "7.1.0-M13"
 }
 
 plugins {
@@ -45,6 +46,7 @@ allprojects {
         maven { url = uri("https://repo.spring.io/milestone") }
         maven { url = uri("https://kotlin.bintray.com/ktor") }
         maven { url = uri("https://kotlin.bintray.com/kotlin-js-wrappers") }
+        maven { url = uri("https://artifacts.alfresco.com/nexus/content/repositories/activiti-releases") }
         mavenLocal()
         jcenter()
     }
@@ -127,6 +129,7 @@ subprojects {
             mavenBom("org.springframework.cloud:spring-cloud-dependencies:${Version.SPRING_CLOUD}")
             mavenBom("com.alibaba.cloud:spring-cloud-alibaba-dependencies:${Version.ALIBABA_CLOUD}")
 //            mavenBom("com.alibaba.cloud:aliyun-spring-boot-dependencies:${Version.ALIBABA_CLOUD}")
+            mavenBom("org.activiti:activiti-dependencies:${Version.ACTIVITI}")
         }
         dependencies {
             dependency("de.idyl:winzipaes:1.0.1")
@@ -237,6 +240,18 @@ subprojects {
             dependency("com.alibaba.cloud:spring-cloud-alibaba-seata:2.2.0.RELEASE")
 
             dependency("com.alibaba.nacos:nacos-spring-context:0.3.6")
+
+            // activiti
+            dependency("org.activiti:activiti-spring-boot-starter:${Version.ACTIVITI}")
+//            dependency("org.activiti:activiti-engine:${Version.ACTIVITI}")
+//            dependency("org.activiti:activiti-spring:${Version.ACTIVITI}")
+//            dependency("org.activiti:activiti-bpmn-model:${Version.ACTIVITI}")
+//            dependency("org.activiti:activiti-bpmn-converter:${Version.ACTIVITI}")
+//            dependency("org.activiti:activiti-json-converter:${Version.ACTIVITI}")
+//            dependency("org.activiti:activiti-bpmn-layout:${Version.ACTIVITI}")
+            dependency("org.activiti:activiti-image-generator:${Version.ACTIVITI}")
+//            dependency("org.activiti.cloud:activiti-cloud-services-api:7-201802-EA")
+
 
 //            dependency("com.alibaba.boot:nacos-config-spring-boot-starter:0.2.7")
 //            dependency("com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-discovery:2021.1")

@@ -54,6 +54,8 @@ include("kuark-ability:kuark-ability-web:kuark-ability-web-springmvc")
 findProject(":kuark-ability:kuark-ability-web:kuark-ability-web-springmvc")?.name = "kuark-ability-web-springmvc"
 include("kuark-ability:kuark-ability-mq")
 findProject(":kuark-ability:kuark-ability-mq")?.name = "kuark-ability-mq"
+include("kuark-ability:kuark-ability-workflow")
+findProject(":kuark-ability:kuark-ability-workflow")?.name = "kuark-ability-workflow"
 
 include("kuark-service")
 include("kuark-service:kuark-service-sys")

@@ -11,6 +11,7 @@ object Version {
     const val SLF4J = "1.7.30"
     const val KTOR = "1.4.0"
     const val ACTIVITI = "7.1.0-M13"
+    const val DROOLS = "7.55.0.Final"
 }
 
 plugins {
@@ -252,6 +253,9 @@ subprojects {
             dependency("org.activiti:activiti-image-generator:${Version.ACTIVITI}")
 //            dependency("org.activiti.cloud:activiti-cloud-services-api:7-201802-EA")
 
+            // drools
+            dependency("org.drools:drools-compiler:${Version.DROOLS}")
+            dependency("org.drools:drools-mvel:${Version.DROOLS}")
 
 //            dependency("com.alibaba.boot:nacos-config-spring-boot-starter:0.2.7")
 //            dependency("com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-discovery:2021.1")

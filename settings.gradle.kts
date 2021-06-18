@@ -56,6 +56,8 @@ include("kuark-ability:kuark-ability-mq")
 findProject(":kuark-ability:kuark-ability-mq")?.name = "kuark-ability-mq"
 include("kuark-ability:kuark-ability-workflow")
 findProject(":kuark-ability:kuark-ability-workflow")?.name = "kuark-ability-workflow"
+include("kuark-ability:kuark-ability-rules")
+findProject(":kuark-ability:kuark-ability-rules")?.name = "kuark-ability-rules"
 
 include("kuark-service")
 include("kuark-service:kuark-service-sys")

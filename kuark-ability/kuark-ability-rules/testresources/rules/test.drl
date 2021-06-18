@@ -1,0 +1,11 @@
+package io.kuark.ability.rules
+
+import io.kuark.ability.rules.People
+dialect  "java"
+
+rule "man"
+    when
+        $p : People(sex == 1 && drlType == "people")
+    then
+        System.out.println($p.getName() + "是男孩");
+end

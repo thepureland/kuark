@@ -2,7 +2,7 @@ package io.kuark.ability.data.rdb.support
 
 import io.kuark.ability.data.rdb.table.TestTableDao
 import io.kuark.ability.data.rdb.table.TestTableKit
-import io.kuark.test.SpringTest
+import io.kuark.test.common.SpringTest
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Test
 

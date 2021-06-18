@@ -1,4 +1,4 @@
-package io.kuark.test
+package io.kuark.test.common
 
 import org.springframework.beans.factory.config.YamlPropertiesFactoryBean
 import org.springframework.core.env.PropertiesPropertySource
@@ -14,7 +14,7 @@ import org.springframework.core.io.support.PropertySourceFactory
  * @author K
  * @since 1.0.0
  */
-internal class YamlPropertySourceFactory : PropertySourceFactory {
+class YamlPropertySourceFactory : PropertySourceFactory {
 
     override fun createPropertySource(name: String?, resource: EncodedResource): PropertySource<*> {
         val factory = YamlPropertiesFactoryBean()

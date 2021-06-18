@@ -1,7 +1,7 @@
 package io.kuark.service.sys.provider.biz
 
 import io.kuark.service.provider.sys.ibiz.ISysDictItemBiz
-import io.kuark.test.SpringTest
+import io.kuark.test.common.SpringTest
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired

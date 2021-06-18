@@ -3,7 +3,7 @@ package io.kuark.ability.distributed.lock
 import io.kuark.ability.distributed.lock.annotations.DistributedLock
 import io.kuark.ability.distributed.lock.kit.DistributedLockKit
 import io.kuark.base.log.LogFactory
-import io.kuark.test.SpringTest
+import io.kuark.test.common.SpringTest
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component

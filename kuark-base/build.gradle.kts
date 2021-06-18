@@ -31,5 +31,5 @@ dependencies {
     api("javax.el:javax.el-api")
     api("org.glassfish.web:javax.el")
 
-    testApi(project(":kuark-test"))
+    testImplementation(project(":kuark-test:kuark-test-common"))
 }

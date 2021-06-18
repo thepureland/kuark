@@ -97,3 +97,11 @@ findProject(":kuark-ui:kuark-ui-jfx")?.name = "kuark-ui-jfx"
 include("kuark-tools")
 
 include("kuark-test")
+include("kuark-test:kuark-test-server")
+findProject(":kuark-test:kuark-test-server")?.name = "kuark-test-server"
+include("kuark-test:kuark-test-common")
+findProject(":kuark-test:kuark-test-common")?.name = "kuark-test-common"
+include("kuark-test:kuark-test-service")
+findProject(":kuark-test:kuark-test-service")?.name = "kuark-test-service"
+include("kuark-test:kuark-test-server:kuark-test-server-eureka")
+findProject(":kuark-test:kuark-test-server:kuark-test-server-eureka")?.name = "kuark-test-server-eureka"

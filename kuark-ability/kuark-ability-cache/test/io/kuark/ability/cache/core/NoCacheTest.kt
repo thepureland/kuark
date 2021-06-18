@@ -1,7 +1,7 @@
 package io.kuark.ability.cache.core
 
-import io.kuark.test.SpringTest
-import io.kuark.test.TestSpringBootContextLoader
+import io.kuark.test.common.SpringTest
+import io.kuark.test.common.TestSpringBootContextLoader
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired

@@ -3,7 +3,7 @@ package io.kuark.context.config
 import com.alibaba.nacos.api.config.annotation.NacosValue
 import com.alibaba.nacos.spring.context.annotation.config.EnableNacosConfig
 import com.alibaba.nacos.spring.context.annotation.config.NacosPropertySource
-import io.kuark.test.SpringTest
+import io.kuark.test.common.SpringTest
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient

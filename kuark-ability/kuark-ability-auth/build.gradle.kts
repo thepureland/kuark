@@ -6,5 +6,5 @@ dependencies {
     api("org.apache.oltu.oauth2:org.apache.oltu.oauth2.resourceserver")
     api("org.apache.oltu.oauth2:org.apache.oltu.oauth2.client")
 
-    testApi(project(":kuark-test"))
+    testImplementation(project(":kuark-test:kuark-test-common"))
 }

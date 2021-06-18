@@ -3,5 +3,5 @@ dependencies {
     api("org.springframework.cloud:spring-cloud-starter-bus-amqp")
     api("org.springframework.boot:spring-boot-starter-actuator")
 
-    testApi(project(":kuark-test"))
+    testImplementation(project(":kuark-test:kuark-test-common"))
 }

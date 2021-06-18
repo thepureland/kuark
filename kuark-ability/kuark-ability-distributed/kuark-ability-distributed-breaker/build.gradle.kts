@@ -1,4 +1,5 @@
 dependencies {
     api(project(":kuark-context"))
-    testApi(project(":kuark-test"))
+
+    testImplementation(project(":kuark-test:kuark-test-common"))
 }

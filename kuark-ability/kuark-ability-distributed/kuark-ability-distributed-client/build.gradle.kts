@@ -4,5 +4,5 @@ dependencies {
     api("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
     api("org.springframework.cloud:spring-cloud-starter-openfeign")
 
-    testApi(project(":kuark-test"))
+    testImplementation(project(":kuark-test:kuark-test-common"))
 }

@@ -11,5 +11,5 @@ dependencies {
     api("io.ktor:ktor-client-apache")
     api("io.ktor:ktor-server-tests")
 
-    testApi(project(":kuark-test"))
+    testImplementation(project(":kuark-test:kuark-test-common"))
 }

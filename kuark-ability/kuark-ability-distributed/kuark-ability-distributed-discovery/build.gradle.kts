@@ -4,5 +4,5 @@ dependencies {
     api("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
     api("com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-discovery")
 
-    testApi(project(":kuark-test"))
+    testImplementation(project(":kuark-test:kuark-test-common"))
 }

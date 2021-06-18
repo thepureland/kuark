@@ -11,5 +11,5 @@ dependencies {
     api("org.activiti:activiti-spring-boot-starter")
     api("org.springframework.boot:spring-boot-starter-security")
 
-    testImplementation(project(":kuark-test"))
+    testImplementation(project(":kuark-test:kuark-test-common"))
 }

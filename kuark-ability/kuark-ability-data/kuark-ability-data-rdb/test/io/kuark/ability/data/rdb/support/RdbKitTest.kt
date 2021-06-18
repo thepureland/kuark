@@ -2,7 +2,7 @@ package io.kuark.ability.data.rdb.support
 
 import io.kuark.ability.data.rdb.kit.RdbKit
 import io.kuark.ability.data.rdb.metadata.RdbType
-import io.kuark.test.SpringTest
+import io.kuark.test.common.SpringTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 

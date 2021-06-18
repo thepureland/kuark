@@ -1,6 +1,6 @@
 package io.kuark.ability.workflow
 
-import io.kuark.test.SpringTest
+import io.kuark.test.common.SpringTest
 import org.activiti.api.process.model.builders.ProcessPayloadBuilder
 import org.activiti.api.process.runtime.ProcessRuntime
 import org.activiti.api.runtime.shared.query.Page

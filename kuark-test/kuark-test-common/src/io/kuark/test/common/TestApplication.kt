@@ -1,4 +1,4 @@
-package io.kuark.test
+package io.kuark.test.common
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.context.annotation.ComponentScan

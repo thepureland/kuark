@@ -2,7 +2,7 @@ package io.kuark.test.service.service1
 
 import io.kuark.base.lang.SystemKit
 import io.kuark.base.net.NetworkKit
-import io.kuark.test.YamlPropertySourceFactory
+import io.kuark.test.common.YamlPropertySourceFactory
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.context.ConfigurableApplicationContext
@@ -11,7 +11,7 @@ import org.springframework.context.annotation.FilterType
 import org.springframework.context.annotation.PropertySource
 
 /**
- * 服务1-节点2
+ * 服务1-节点1
  *
  * @author K
  * @since 1.0.0
@@ -22,17 +22,17 @@ import org.springframework.context.annotation.PropertySource
     ], //!!! 不能是io.kuark，不然excludeFilters不会生效
     excludeFilters = [ComponentScan.Filter(
         type = FilterType.ASSIGNABLE_TYPE,
-        classes = [Service1Node1Application::class]
+        classes = [Service1Node2Application::class]
     )]
 )
 @PropertySource(
     value = [
-        "classpath:service1-node2.yml"
+        "classpath:service1-node1.yml"
     ],
     factory = YamlPropertySourceFactory::class
 )
 @SpringBootApplication(excludeName = ["org.springframework.cloud.gateway.config.GatewayRedisAutoConfiguration"])
-open class Service1Node2Application {
+open class Service1Node1Application {
 
     companion object {
 
@@ -40,12 +40,13 @@ open class Service1Node2Application {
 
         @JvmStatic
         fun main(args: Array<String>) {
-            if (!NetworkKit.isPortActive("localhost", 9192)) {
+            if (!NetworkKit.isPortActive("localhost", 9191)) {
                 SystemKit.setEnvVars(mapOf(
                     "spring.main.web-application-type" to "servlet",
                 ))
-                context = SpringApplication.run(Service1Node2Application::class.java, *args)
-                println("service1-node2 UP")
+                val app = SpringApplication(Service1Node1Application::class.java)
+                context = app.run(*args)
+                println("service1-node1 UP")
             }
         }
 
@@ -53,7 +54,7 @@ open class Service1Node2Application {
         fun exit() {
             if (context != null && context!!.isRunning) {
                 SpringApplication.exit(context)
-                println("service1-node2 DOWN")
+                println("service1-node1 DOWN")
             }
         }
 

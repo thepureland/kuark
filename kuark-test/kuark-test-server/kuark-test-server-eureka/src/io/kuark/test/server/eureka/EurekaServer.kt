@@ -2,7 +2,7 @@ package io.kuark.test.server.eureka
 
 import io.kuark.base.lang.SystemKit
 import io.kuark.base.net.NetworkKit
-import io.kuark.test.YamlPropertySourceFactory
+import io.kuark.test.common.YamlPropertySourceFactory
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.cloud.netflix.eureka.server.EnableEurekaServer

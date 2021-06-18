@@ -1,7 +1,7 @@
 package io.kuark.ability.data.rdb.metadata
 
 import io.kuark.ability.data.rdb.table.TestTableKit
-import io.kuark.test.SpringTest
+import io.kuark.test.common.SpringTest
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeAll

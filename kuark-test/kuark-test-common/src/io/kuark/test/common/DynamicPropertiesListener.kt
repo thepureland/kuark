@@ -1,4 +1,4 @@
-package io.kuark.test
+package io.kuark.test.common
 
 import io.kuark.base.log.LogFactory
 import org.springframework.boot.context.event.ApplicationEnvironmentPreparedEvent

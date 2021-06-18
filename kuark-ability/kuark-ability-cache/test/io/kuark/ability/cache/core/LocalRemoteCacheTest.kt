@@ -2,8 +2,8 @@ package io.kuark.ability.cache.core
 
 import io.kuark.ability.cache.context.CacheNames
 import io.kuark.ability.cache.enums.CacheStrategy
-import io.kuark.test.SpringTest
-import io.kuark.test.TestSpringBootContextLoader
+import io.kuark.test.common.SpringTest
+import io.kuark.test.common.TestSpringBootContextLoader
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier

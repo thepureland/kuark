@@ -2,6 +2,7 @@ package io.kuark.ability.auth.rbac.model.po
 
 import io.kuark.ability.data.rdb.support.DbEntityFactory
 import io.kuark.ability.data.rdb.support.IMaintainableDbEntity
+import io.kuark.ability.data.rdb.support.IUpdatableDbEntity
 import java.time.LocalDateTime
 
 /**
@@ -11,7 +12,7 @@ import java.time.LocalDateTime
  * @since 1.0.0
  */
 //region your codes 1
-interface AuthUserAccount : IMaintainableDbEntity<String, AuthUserAccount> {
+interface AuthUserAccount : IUpdatableDbEntity<String, AuthUserAccount> {
 //endregion your codes 1
 
     companion object : DbEntityFactory<AuthUserAccount>()
@@ -34,11 +35,11 @@ interface AuthUserAccount : IMaintainableDbEntity<String, AuthUserAccount> {
     /** 用户类型代码 */
     var userTypeDictCode: String?
 
-    /** 账号冻结时间起 */
-    var freezeTimeStart: LocalDateTime?
+    /** 账号锁定时间起 */
+    var lockTimeStart: LocalDateTime?
 
-    /** 账号冻结时间止 */
-    var freezeTimeEnd: LocalDateTime?
+    /** 账号锁定时间止 */
+    var lockTimeEnd: LocalDateTime?
 
     /** 最后一次登入时间 */
     var lastLoginTime: LocalDateTime?

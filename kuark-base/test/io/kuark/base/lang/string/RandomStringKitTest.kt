@@ -6,6 +6,7 @@ internal class RandomStringKitTest {
 
     @Test
     fun uuid() {
+        println(RandomStringKit.uuid())
     }
 
     @Test

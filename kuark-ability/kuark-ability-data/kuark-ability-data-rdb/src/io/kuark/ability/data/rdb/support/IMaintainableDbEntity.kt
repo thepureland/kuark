@@ -11,27 +11,6 @@ import java.time.LocalDateTime
  * @author K
  * @since 1.0.0
  */
-interface IMaintainableDbEntity<ID, E : Entity<E>> : IDbEntity<ID, E> {
-
-    /** 记录创建时间 */
-    val createTime: LocalDateTime?
-
-    /** 记录创建用户 */
-    var createUser: String?
-
-    /** 记录更新时间 */
-    var updateTime: LocalDateTime?
-
-    /** 记录更新用户 */
-    var updateUser: String?
-
-    /** 是否启用 */
-    var isActive: Boolean
-
-    /** 是否内置 */
-    var isBuiltIn: Boolean
-
-    /** 备注 */
-    var remark: String?
+interface IMaintainableDbEntity<ID, E : Entity<E>> : IUpdatableDbEntity<ID, E>, IActivableDbEntity<ID, E> {
 
 }

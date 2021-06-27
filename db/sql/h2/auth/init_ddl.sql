@@ -8,8 +8,8 @@ create table "auth_user_account"
     "user_status_dict_code"         CHAR(2),
     "user_status_reason"        VARCHAR(127),
     "user_type_dict_code"           CHAR(2),
-    "freeze_time_start"         TIMESTAMP,
-    "freeze_time_end"           TIMESTAMP,
+    "lock_time_start"         TIMESTAMP,
+    "lock_time_end"           TIMESTAMP,
     "last_login_time"           TIMESTAMP,
     "last_logout_time"          TIMESTAMP,
     "last_login_ip"             CHAR(39),
@@ -47,9 +47,9 @@ comment on column "auth_user_account"."user_status_reason" is '用户状态原�
 
 comment on column "auth_user_account"."user_type_dict_code" is '用户类型代码';
 
-comment on column "auth_user_account"."freeze_time_start" is '账号冻结时间起';
+comment on column "auth_user_account"."lock_time_start" is '账号锁定时间起';
 
-comment on column "auth_user_account"."freeze_time_end" is '账号冻结时间止';
+comment on column "auth_user_account"."lock_time_end" is '账号锁定时间止';
 
 comment on column "auth_user_account"."last_login_time" is '最后一次登入时间';
 
@@ -82,6 +82,7 @@ comment on column "auth_user_account"."create_time" is '创建时间';
 comment on column "auth_user_account"."update_user" is '更新用户';
 
 comment on column "auth_user_account"."update_time" is '更新时间';
+
 COMMENT ON COLUMN "auth_user_account"."owner_id" IS '所有者id，依业务可以是店铺id、站点id、商户id等';
 
 
@@ -135,6 +136,28 @@ COMMENT ON COLUMN "auth_user_account_third_party"."owner_id" IS '所有者id，�
 
 create unique index "uq_u_a_a__principal_id_type_sub_sys_owner"
     on "auth_user_account_third_party" ("principal", "principal_type_dict_code", "sub_sys_dict_code", "owner_id");
+
+
+
+create table "auth_persistent_logins"
+(
+    "id"                        CHAR(63) not null        primary key,
+    "username"             VARCHAR(63) not null,
+    "token"             VARCHAR(63),
+    "last_used"               TIMESTAMP
+);
+
+comment on table "auth_persistent_logins" is '登陆持久化';
+
+comment on column "auth_persistent_logins"."id" is '主键，series，登陆令牌散列，仅在用户使用密码重新登录时创建';
+
+comment on column "auth_persistent_logins"."username" is '用户名';
+
+comment on column "auth_persistent_logins"."token" is '自动登陆会话令牌，会在每一个新的session中都重新生成';
+
+comment on column "auth_persistent_logins"."last_used" is '最后一次使用时间';
+
+
 
 
 create table "auth_user_group"

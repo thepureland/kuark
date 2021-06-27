@@ -6,5 +6,7 @@ dependencies {
     api("org.apache.oltu.oauth2:org.apache.oltu.oauth2.resourceserver")
     api("org.apache.oltu.oauth2:org.apache.oltu.oauth2.client")
 
+    api("javax.servlet:javax.servlet-api:4.0.1") //TODO provider
+
     testImplementation(project(":kuark-test:kuark-test-common"))
 }

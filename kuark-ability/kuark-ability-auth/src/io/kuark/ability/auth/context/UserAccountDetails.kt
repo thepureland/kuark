@@ -1,5 +1,6 @@
 package io.kuark.ability.auth.context
 
+import io.kuark.ability.auth.rbac.model.enums.UserAccountStatus
 import io.kuark.ability.auth.rbac.model.po.AuthUserAccount
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
@@ -14,12 +15,12 @@ class UserAccountDetails(val authUserAccount: AuthUserAccount): UserDetails {
 
     override fun getUsername(): String = authUserAccount.username
 
-    override fun isAccountNonExpired(): Boolean = authUserAccount.isActive //TODO
+    override fun isAccountNonExpired(): Boolean = authUserAccount.userStatusDictCode != UserAccountStatus.EXPIRED.code
 
-    override fun isAccountNonLocked(): Boolean = authUserAccount.isActive //TODO
+    override fun isAccountNonLocked(): Boolean = authUserAccount.userStatusDictCode != UserAccountStatus.LOCKED.code
 
-    override fun isCredentialsNonExpired() = authUserAccount.isActive //TODO
+    override fun isCredentialsNonExpired() = authUserAccount.userStatusDictCode != UserAccountStatus.CREDENTIAL_EXPIRED.code
 
-    override fun isEnabled(): Boolean = authUserAccount.isActive
+    override fun isEnabled(): Boolean = authUserAccount.userStatusDictCode == UserAccountStatus.NORMAL.code
 
 }

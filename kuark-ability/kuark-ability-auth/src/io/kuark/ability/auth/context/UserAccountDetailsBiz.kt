@@ -5,11 +5,9 @@ import io.kuark.ability.auth.rbac.ibiz.IAuthUserAccountThirdPartyBiz
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
-import org.springframework.stereotype.Service
 import javax.security.auth.login.AccountException
 
-@Service
-class UserAccountDetailsBiz: UserDetailsService {
+open class UserAccountDetailsBiz: UserDetailsService {
 
     @Autowired
     private lateinit var authUserAccountBiz: IAuthUserAccountBiz

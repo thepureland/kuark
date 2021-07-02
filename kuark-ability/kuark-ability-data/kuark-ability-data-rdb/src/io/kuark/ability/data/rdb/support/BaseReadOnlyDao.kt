@@ -3,6 +3,8 @@ package io.kuark.ability.data.rdb.support
 import io.kuark.ability.data.rdb.kit.RdbKit
 import io.kuark.base.lang.GenericKit
 import io.kuark.base.lang.string.humpToUnderscore
+import io.kuark.base.query.Criteria
+import io.kuark.base.query.Criterion
 import io.kuark.base.query.sort.Order
 import io.kuark.base.support.GroupExecutor
 import io.kuark.base.support.logic.AndOr
@@ -14,7 +16,6 @@ import org.ktorm.schema.Column
 import org.ktorm.schema.ColumnDeclaring
 import org.ktorm.schema.Table
 import java.util.*
-import kotlin.NoSuchElementException
 import kotlin.reflect.KClass
 
 /**
@@ -651,5 +652,6 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
         query.orderBy(*sortOf(*orders).toTypedArray())
         return processResult(query, returnProperties, returnColumns)
     }
+
 
 }

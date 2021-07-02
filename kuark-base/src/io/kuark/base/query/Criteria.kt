@@ -184,7 +184,7 @@ class Criteria : Serializable {
         }
     }
 
-    fun getCriterionGroups(): List<*> {
+    fun getCriterionGroups(): List<Any> {
         return criterionGroups
     }
 

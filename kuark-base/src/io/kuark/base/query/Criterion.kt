@@ -14,17 +14,17 @@ class Criterion : Serializable {
     /**
      * 查询条件逻辑操作符枚举
      */
-    var operator: Operator? = null
+    lateinit var operator: Operator
 
     /**
      * 要查询的属性名
      */
-    private var value: Any? = null
+    lateinit var property: String
 
     /**
      * 要查询的属性名对应的值
      */
-    var property: String? = null
+    private var value: Any? = null
 
     /**
      * 别名，用于同一属性名多个条件时
@@ -48,7 +48,7 @@ class Criterion : Serializable {
      * @param operator 查询条件逻辑操作符枚举
      * @param value 要查询的属性名对应的值
      */
-    constructor(property: String?, operator: Operator?, value: Any?) {
+    constructor(property: String, operator: Operator, value: Any?) {
         this.property = property
         this.operator = operator
         this.value = value
@@ -62,14 +62,14 @@ class Criterion : Serializable {
      * @param value 要查询的属性名对应的值
      * @param alias 别名，用于同一属性名多个条件时
      */
-    constructor(property: String?, operator: Operator?, value: Any?, alias: String?) : this(property, operator, value) {
+    constructor(property: String, operator: Operator, value: Any?, alias: String?) : this(property, operator, value) {
         this.alias = alias
     }
 
-    var operatorCode: String?
-        get() = if (operator == null) null else operator!!.code
+    var operatorCode: String
+        get() = operator!!.code
         set(operatorCode) {
-            operator = Operator.enumOf(operatorCode!!)
+            operator = Operator.enumOf(operatorCode)
         }
 
     fun getValue(): Any? {

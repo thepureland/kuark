@@ -316,7 +316,7 @@ enum class Operator constructor(
     }
 
     companion object {
-        fun enumOf(code: String): Operator? {
+        fun enumOf(code: String): Operator {
             var code = code
             if (code.isNotBlank()) {
                 code = code.uppercase(Locale.getDefault())

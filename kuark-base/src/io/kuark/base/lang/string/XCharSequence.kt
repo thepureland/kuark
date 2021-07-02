@@ -131,15 +131,16 @@ fun CharSequence.divideAverage(groupLen: Int): Array<String?> {
  *
  * <pre>
  * "".humpToUnderscore() = ""
- * " ".humpToUnderscore() = " "
+ * " ".humpToUnderscore(false) = " "
  * "humpToUnderscore".humpToUnderscore() = "HUMP_TO_UNDERSCORE"
  * </pre>
  *
- * @return “_”分割的字符串, 并且是大写的
+ * @param upperCase 是否转换为大写，true为大写，false为小写
+ * @return “_”分割的字符串
  * @author K
  * @since 1.0.0
  */
-fun CharSequence.humpToUnderscore(): String {
+fun CharSequence.humpToUnderscore(upperCase: Boolean = true): String {
     if (this.isEmpty()) return ""
     val sb = StringBuilder()
     sb.append(this[0])
@@ -149,7 +150,10 @@ fun CharSequence.humpToUnderscore(): String {
         }
         sb.append(this[i])
     }
-    return sb.toString().toUpperCase()
+    val result = sb.toString()
+    return if (upperCase) {
+        result.uppercase(Locale.getDefault())
+    } else result.lowercase(Locale.getDefault())
 }
 
 /**

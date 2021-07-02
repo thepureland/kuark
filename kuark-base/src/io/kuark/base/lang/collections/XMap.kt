@@ -47,7 +47,7 @@ fun Map<*, *>.toArrOfArr(): Array<Array<Any?>> {
  * @author K
  * @since 1.0.0
  */
-fun <K, V> Map<K, V?>.containsAll(subMap: Map<K, V>): Boolean {
+fun <K, V> Map<*, *>.containsAll(subMap: Map<K, V>): Boolean {
     if (this.isEmpty() || subMap.isEmpty()) {
         return false
     }

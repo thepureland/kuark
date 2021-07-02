@@ -1,5 +1,6 @@
 package io.kuark.ability.data.rdb.support
 
+import io.kuark.ability.data.rdb.table.TestTable
 import io.kuark.ability.data.rdb.table.TestTableDao
 import io.kuark.ability.data.rdb.table.TestTableKit
 import io.kuark.test.common.SpringTest
@@ -52,6 +53,14 @@ internal class BaseReadOnlyDaoTest: SpringTest() {
 
     @Test
     fun getById() {
+        val column = testTableDao.table()["is_active"]
+
+        println(testTableDao.table().isActive.name)
+
+        println(TestTable::isActive.name)
+
+        testTableDao.table()
+
         val entity = testTableDao.getById(-1)
         assertEquals("name1", entity.name)
 

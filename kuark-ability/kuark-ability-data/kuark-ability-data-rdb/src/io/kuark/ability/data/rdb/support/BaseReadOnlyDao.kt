@@ -2,16 +2,18 @@ package io.kuark.ability.data.rdb.support
 
 import io.kuark.ability.data.rdb.kit.RdbKit
 import io.kuark.base.lang.GenericKit
+import io.kuark.base.lang.string.humpToUnderscore
+import io.kuark.base.query.sort.Order
 import io.kuark.base.support.GroupExecutor
 import org.ktorm.database.Database
-import org.ktorm.dsl.QuerySource
-import org.ktorm.dsl.eq
-import org.ktorm.dsl.from
-import org.ktorm.dsl.inList
+import org.ktorm.dsl.*
 import org.ktorm.entity.*
+import org.ktorm.expression.OrderByExpression
 import org.ktorm.schema.Column
 import org.ktorm.schema.ColumnDeclaring
 import org.ktorm.schema.Table
+import java.util.*
+import kotlin.NoSuchElementException
 import kotlin.reflect.KClass
 
 /**
@@ -25,8 +27,8 @@ import kotlin.reflect.KClass
  */
 open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
 
-//    /** 数据库表-实体关联对象 */
-//    private lateinit var table: T
+    /** 数据库表-实体关联对象 */
+    protected var table: T? = null
 
     /**
      * 返回数据库表-实体关联对象
@@ -36,8 +38,11 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
      * @since 1.0.0
      */
     fun table(): T {
-        val tableClass = GenericKit.getSuperClassGenricClass(this::class, 2) as KClass<T>
-        return tableClass.objectInstance!!
+        if (table == null) {
+            val tableClass = GenericKit.getSuperClassGenricClass(this::class, 2) as KClass<T>
+            table = tableClass.objectInstance!!
+        }
+        return table!!
     }
 
     /**
@@ -78,8 +83,8 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
      * @author K
      * @since 1.0.0
      */
-    fun getById(id: PK): E {
-        return entitySequence().first { (table()["id"] as Column<PK>) eq id }
+    fun getById(id: PK): E? {
+        return entitySequence().firstOrNull { (table!!.primaryKeys[0] as Column<PK>) eq id }
     }
 
     /**
@@ -95,7 +100,8 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
         if (ids.isEmpty()) return listOf()
         val results = mutableListOf<E>()
         GroupExecutor(listOf(ids), countOfEachBatch) {
-            val result = entitySequence().filter { (table()["id"] as ColumnDeclaring<PK>).inList(*ids) }.toList()
+            val result =
+                entitySequence().filter { (table!!.primaryKeys[0] as ColumnDeclaring<PK>).inList(*ids) }.toList()
             results.addAll(result)
         }.execute()
         return results
@@ -122,6 +128,457 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
     fun countAll(): Int {
 //        return querySource().select(count(table()["id"])).map { row -> row.getInt(1) }[0]
         return entitySequence().count()
+    }
+
+
+    //region oneSearch
+    /**
+     * 根据单个属性查询
+     *
+     * @param property 属性名
+     * @param value    属性值
+     * @param orders   排序规则
+     * @return 指定类名对象的结果列表
+     */
+    fun oneSearch(property: String, value: Any?, vararg orders: Order): List<E> {
+        val column = columnOf(property)[0]
+        val entitySequence = if (value == null) {
+            entitySequence().filter { column.isNull() }
+        } else {
+            entitySequence().filter { column eq value }
+        }
+        entitySequence.sorted { sortOf(*orders) }
+        return entitySequence.toList()
+    }
+
+    /**
+     * 根据单个属性查询，只返回指定的单个属性的列表
+     *
+     * @param property       属性名
+     * @param value          属性值
+     * @param returnProperty 返回的属性名
+     * @param orders         排序规则
+     * @return List(属性值)
+     */
+    fun oneSearchProperty(property: String, value: Any?, returnProperty: String, vararg orders: Order): List<*> {
+        val column = columnOf(property)[0]
+        val returnColumn = columnOf(returnProperty)[0]
+        val select = querySource().select(returnColumn)
+        val query = if (value == null) {
+            select.where { column.isNull() }
+        } else {
+            select.where { column eq value }
+        }
+        query.orderBy(*sortOf(*orders).toTypedArray())
+        val returnValues = mutableListOf<Any?>()
+        query.forEach { row ->
+            returnValues.add(row[returnColumn])
+        }
+        return returnValues
+    }
+
+    /**
+     * 根据单个属性查询，只返回指定属性的列表
+     *
+     * @param property         属性名
+     * @param value            属性值
+     * @param returnProperties 返回的属性名称集合
+     * @param orders           排序规则
+     * @return List(Map(属性名, 属性值)), 一个Map封装一个记录
+     */
+    fun oneSearchProperties(
+        property: String, value: Any?, returnProperties: Collection<String>, vararg orders: Order
+    ): List<Map<String, *>> {
+        val column = columnOf(property)[0]
+        val returnColumns = columnOf(*returnProperties.toTypedArray())
+        val columnMap = mutableMapOf<String, Column<Any>>()
+        returnProperties.forEachIndexed{index, returnProperty ->
+            columnMap[returnProperty] = returnColumns[index]
+        }
+
+        val select = querySource().select(*returnColumns)
+        val query = if (value == null) {
+            select.where { column.isNull() }
+        } else {
+            select.where { column eq value }
+        }
+        query.orderBy(*sortOf(*orders).toTypedArray())
+        val returnValues = mutableListOf<Map<String, Any?>>()
+        query.forEach { row ->
+            val map = mutableMapOf<String, Any?>()
+            columnMap.forEach { (propertyName, column) ->
+                map[propertyName] = row[column]
+            }
+            returnValues.add(map)
+        }
+        return returnValues
+    }
+
+    //endregion oneSearch
+
+
+    //region allSearch
+    /**
+     * 查询所有结果
+     *
+     * @param orders 排序规则
+     * @return 实体对象列表
+     */
+    fun allSearch(vararg orders: Order): List<E> {
+        return entitySequence().toList()
+    }
+
+    /**
+     * 查询所有结果，只返回指定的单个属性的列表
+     *
+     * @param returnProperty 属性名
+     * @param orders         排序规则
+     * @return List(属性值)
+     */
+//    fun allSearchProperty(returnProperty: String, vararg orders: Order): List<*> {
+//        val returnColumn = columnOf(returnProperty)[0]
+//
+//    }
+
+//    /**
+//     * 查询所有结果，只返回指定属性的列表
+//     *
+//     * @param returnProperties 属性名称集合
+//     * @param orders           排序规则
+//     * @return List(Map(属性名, 属性值))
+//     */
+//    fun allSearchProperties(returnProperties: Collection<String>, vararg orders: Order): List<Map<String, *>>
+//
+//    //endregion allSearch
+//
+//
+//    //region andSearch
+//    /**
+//     * 根据多个属性进行and条件查询，返回实体类对象的列表
+//     *
+//     * @param properties Map(属性名，属性值)
+//     * @param orders     排序规则
+//     * @return 实体对象列表
+//     */
+//    fun andSearch(properties: Map<String, *>, vararg orders: Order): List<T>
+//
+//    /**
+//     * 根据多个属性进行and条件查询，只返回指定的单个属性的列表
+//     *
+//     * @param properties     Map(属性名，属性值）
+//     * @param returnProperty 要返回的属性名
+//     * @param orders         排序规则
+//     * @return List(指定的属性的值)
+//     */
+//    fun andSearchProperty(properties: Map<String, *>, returnProperty: String, vararg orders: Order): List<*>
+//
+//    /**
+//     * 根据多个属性进行and条件查询，只返回指定属性的列表
+//     *
+//     * @param properties       Map(属性名，属性值)
+//     * @param returnProperties 要返回的属性名集合
+//     * @param orders           排序规则
+//     * @return List(Map(指定的属性名，属性值))
+//     */
+//    fun andSearchProperties(
+//        properties: Map<String, *>, returnProperties: Collection<String>, vararg orders: Order
+//    ): List<Map<String, *>>
+//
+//    //endregion andSearch
+//
+//
+//    //region orSearch
+//    /**
+//     * 根据多个属性进行or条件查询，返回实体类对象的列表
+//     *
+//     * @param properties Map(属性名，属性值)
+//     * @param orders     排序规则
+//     * @return 实体对象列表
+//     */
+//    fun orSearch(properties: Map<String, *>, vararg orders: Order): List<T>
+//
+//    /**
+//     * 根据多个属性进行or条件查询，只返回指定的单个属性的列表
+//     *
+//     * @param properties     Map(属性名，属性值)
+//     * @param returnProperty 要返回的属性名
+//     * @param orders         排序规则
+//     * @return List(指定的属性的值)
+//     */
+//    fun orSearchProperty(properties: Map<String, *>, returnProperty: String, vararg orders: Order): List<*>
+//
+//    /**
+//     * 根据多个属性进行or条件查询，只返回指定的属性的列表
+//     *
+//     * @param properties       Map(属性名，属性值)
+//     * @param returnProperties 要返回的属性名集合
+//     * @param orders           排序规则
+//     * @return List(Map(指定的属性名，属性值))
+//     */
+//    fun orSearchProperties(
+//        properties: Map<String, *>, returnProperties: Collection<String>, vararg orders: Order
+//    ): List<Map<String, *>>
+//
+//    //endregion orSearch
+//
+//
+//    //region inSearch
+//    /**
+//     * in查询，返回实体类对象列表
+//     *
+//     * @param property 属性名
+//     * @param values   in条件值集合
+//     * @param orders   排序规则
+//     * @return 指定类名对象的结果列表
+//     */
+//    fun inSearch(property: String, values: List<*>, vararg orders: Order): List<T>
+//
+//    /**
+//     * in查询，只返回指定的单个属性的值
+//     *
+//     * @param property       属性名
+//     * @param values         in条件值集合
+//     * @param returnProperty 要返回的属性名
+//     * @param orders         排序规则
+//     * @return 指定属性的值列表
+//     */
+//    fun inSearchProperty(property: String, values: List<*>, returnProperty: String, vararg orders: Order): List<*>
+//
+//    /**
+//     * in查询，只返回指定属性的值
+//     *
+//     * @param property         属性名
+//     * @param values           in条件值集合
+//     * @param returnProperties 要返回的属性名集合
+//     * @param orders           排序规则
+//     * @return List(Map(指定的属性名，属性值))
+//     */
+//    fun inSearchProperties(
+//        property: String, values: List<*>, returnProperties: Collection<String>, vararg orders: Order
+//    ): List<Map<String, *>>
+//
+//    /**
+//     * 主键in查询，返回实体类对象列表
+//     *
+//     * @param values 主键值集合
+//     * @param orders 排序规则
+//     * @param orders 排序规则
+//     * @return 实体对象列表
+//     */
+//    fun inSearchById(values: List<PK>, vararg orders: Order): List<T>
+//
+//    /**
+//     * 主键in查询，只返回指定的单个属性的值
+//     *
+//     * @param values         主键值集合
+//     * @param returnProperty 要返回的属性名
+//     * @param orders         排序规则
+//     * @return 指定属性的值列表
+//     */
+//    fun inSearchPropertyById(values: List<PK>, returnProperty: String, vararg orders: Order): List<*>
+//
+//    /**
+//     * 主键in查询，只返回指定属性的值
+//     *
+//     * @param values           主键值集合
+//     * @param returnProperties 要返回的属性名集合
+//     * @param orders           排序规则
+//     * @return List<Map></Map><指定的属性名></指定的属性名>, 属性值>>
+//     */
+//    fun inSearchPropertiesById(
+//        values: List<PK>, returnProperties: Collection<String>, vararg orders: Order
+//    ): List<Map<String, *>>
+//
+//    //endregion inSearch
+//
+//
+//    //region search Criteria
+//    /**
+//     * 复杂条件查询
+//     *
+//     * @param criteria 查询条件
+//     * @param orders   排序规则
+//     * @return 实体对象列表
+//     */
+//    fun search(criteria: Criteria, vararg orders: Order): List<T>
+//
+//    /**
+//     * 复杂条件查询，只返回指定单个属性的值
+//     *
+//     * @param criteria       查询条件
+//     * @param returnProperty 要返回的属性名
+//     * @param orders         排序规则
+//     * @return 指定属性的值列表
+//     */
+//    fun searchProperty(criteria: Criteria, returnProperty: String, vararg orders: Order): List<*>
+//
+//    /**
+//     * 复杂条件，只返回指定多个属性的值
+//     *
+//     * @param criteria         查询条件
+//     * @param returnProperties 要返回的属性名集合
+//     * @param orders           排序规则
+//     * @return List(Map(指定的属性名 属性值))
+//     */
+//    fun searchProperties(
+//        criteria: Criteria, returnProperties: Collection<String>, vararg orders: Order
+//    ): List<Map<String, Any?>>
+//
+//    //endregion search Criteria
+//
+//
+//    //region pagingSearch
+//    /**
+//     * 分页查询，返回对象列表
+//     *
+//     * @param criteria 查询条件
+//     * @param pageNo   当前页码(从1开始)
+//     * @param pageSize 每页条数
+//     * @param orders   排序规则
+//     * @return 实体对象列表
+//     */
+//    fun pagingSearch(criteria: Criteria, pageNo: Int, pageSize: Int, vararg orders: Order): List<T>
+//
+//    /**
+//     * 分页查询，返回对象列表,返回只包含指定属性
+//     *
+//     * @param criteria 查询条件
+//     * @param pageNo   当前页码(从1开始)
+//     * @param pageSize 每页条数
+//     * @param orders   排序规则
+//     * @return 实体对象列表
+//     */
+//    fun pagingReturnProperty(
+//        criteria: Criteria, returnProperty: String, pageNo: Int, pageSize: Int, vararg orders: Order
+//    ): List<*>
+//
+//    /**
+//     * 分页查询，返回对象列表,返回只包含指定属性
+//     *
+//     * @param criteria 查询条件
+//     * @param pageNo   当前页码(从1开始)
+//     * @param pageSize 每页条数
+//     * @param orders   排序规则
+//     * @return 实体对象列表
+//     */
+//    fun pagingReturnProperties(
+//        criteria: Criteria, returnProperties: Collection<String>, pageNo: Int, pageSize: Int, vararg orders: Order
+//    ): List<Map<String?, Any?>>
+//
+//    //endregion pagingSearch
+//
+//
+//    /**
+//     * 计算记录数
+//     *
+//     * @param criteria 查询条件
+//     * @return 记录数
+//     */
+//    fun count(criteria: Criteria): Long
+//
+//    /**
+//     * 求和. 对满足条件的记录根据指定属性进行求和
+//     *
+//     * @param criteria 查询条件
+//     * @param property 待求和的属性
+//     * @return 和
+//     */
+//    fun sum(criteria: Criteria, property: String): Number
+//
+//    /**
+//     * 求平均值. 对满足条件的记录根据指定属性进行求平均值
+//     *
+//     * @param criteria 查询条件
+//     * @param property 待求平均值的属性
+//     * @return 平均值
+//     */
+//    fun avg(criteria: Criteria, property: String): Number
+//
+//    /**
+//     * 求最大值. 对满足条件的记录根据指定属性进行求最大值
+//     *
+//     * @param criteria 查询条件
+//     * @param property 待求最大值的属性
+//     * @return 最大值
+//     */
+//    fun max(criteria: Criteria, property: String): Any?
+//
+//    /**
+//     * 求最小值. 对满足条件的记录根据指定属性进行求最小值
+//     *
+//     * @param criteria 查询条件
+//     * @param property 待求最小值的属性
+//     * @return 最小值
+//     */
+//    fun min(criteria: Criteria, property: String): Any?
+
+    companion object {
+
+        /**
+         * 列信息缓存 Map(表名，Map(属性名, 列对象))
+         */
+        private val columnCache: MutableMap<String, MutableMap<String, Column<Any>>> = mutableMapOf()
+
+    }
+
+
+    /**
+     * 根据属性名得到列对象
+     *
+     * @param propertyNames 属性名可变数组
+     * @return 列对象数组
+     */
+    private fun columnOf(vararg propertyNames: String): Array<Column<Any>> { //TODO 是否ktorm能从列绑定关系直接取?
+        if (propertyNames.isEmpty()) return emptyArray()
+
+        val tableName = table!!.tableName
+        var columnMap = columnCache[tableName]
+        if (columnMap == null) {
+            columnMap = mutableMapOf()
+            columnCache[tableName] = columnMap
+        }
+
+        val columns = mutableListOf<Column<Any>>()
+        propertyNames.forEach { propertyName ->
+            var columnName = propertyName.humpToUnderscore(false)
+            var column: Column<*>?
+            try {
+                column = table!![columnName] // 1.先尝试以小写字段名获取
+            } catch (e: NoSuchElementException) {
+                columnName = columnName.uppercase(Locale.getDefault())
+                column = try {
+                    table!![columnName] // 2.再尝试以大写字段名获取
+                } catch (e: NoSuchElementException) {
+                    // 3.最后忽略大小写的分别比较下划线分割的列名、属性名
+                    table!!.columns.firstOrNull {
+                        it.name.equals(columnName, true) || it.name.equals(
+                            propertyName,
+                            true
+                        )
+                    }
+                }
+            }
+            if (column == null) {
+                error("无法推测属性【${propertyName}】在表【${tableName}】中的字段名！")
+            } else columns.add(column as Column<Any>)
+        }
+        return columns.toTypedArray()
+    }
+
+    private fun sortOf(vararg orders: Order): List<OrderByExpression> {
+        return if (orders.isNotEmpty()) {
+            val orderExpressions = mutableListOf<OrderByExpression>()
+            orders.forEach {
+                val column = columnOf(it.property)
+                val orderByExpression = if (it.isAscending) {
+                    column.asc()
+                } else column.desc()
+                orderExpressions.add(orderByExpression)
+            }
+            orderExpressions
+        } else {
+            emptyList()
+        }
     }
 
 }

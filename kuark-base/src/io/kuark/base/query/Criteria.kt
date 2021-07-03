@@ -91,6 +91,7 @@ class Criteria : Serializable {
         return addAnd(criteria).addAnd(criterion)
     }
     //endregion
+
     //region or
     /**
      * 添加多个查询条件，之间是或的关系

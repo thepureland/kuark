@@ -305,7 +305,7 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
      * @return 指定类名对象的结果列表
      */
     fun inSearch(property: String, values: List<*>, vararg orders: Order): List<E> {
-        val column = columnOf(property)[0]
+        val column = ColumnHelper.columnOf(table!!, property)[0]
         val entitySequence = entitySequence().filter { column.inList(values) }
         entitySequence.sorted { sortOf(*orders) }
         return entitySequence.toList()
@@ -378,186 +378,166 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
     }
 
     //endregion inSearch
-//
-//
-//    //region search Criteria
-//    /**
-//     * 复杂条件查询
-//     *
-//     * @param criteria 查询条件
-//     * @param orders   排序规则
-//     * @return 实体对象列表
-//     */
-//    fun search(criteria: Criteria, vararg orders: Order): List<T>
-//
-//    /**
-//     * 复杂条件查询，只返回指定单个属性的值
-//     *
-//     * @param criteria       查询条件
-//     * @param returnProperty 要返回的属性名
-//     * @param orders         排序规则
-//     * @return 指定属性的值列表
-//     */
-//    fun searchProperty(criteria: Criteria, returnProperty: String, vararg orders: Order): List<*>
-//
-//    /**
-//     * 复杂条件，只返回指定多个属性的值
-//     *
-//     * @param criteria         查询条件
-//     * @param returnProperties 要返回的属性名集合
-//     * @param orders           排序规则
-//     * @return List(Map(指定的属性名 属性值))
-//     */
-//    fun searchProperties(
-//        criteria: Criteria, returnProperties: Collection<String>, vararg orders: Order
-//    ): List<Map<String, Any?>>
-//
-//    //endregion search Criteria
-//
-//
-//    //region pagingSearch
-//    /**
-//     * 分页查询，返回对象列表
-//     *
-//     * @param criteria 查询条件
-//     * @param pageNo   当前页码(从1开始)
-//     * @param pageSize 每页条数
-//     * @param orders   排序规则
-//     * @return 实体对象列表
-//     */
-//    fun pagingSearch(criteria: Criteria, pageNo: Int, pageSize: Int, vararg orders: Order): List<T>
-//
-//    /**
-//     * 分页查询，返回对象列表,返回只包含指定属性
-//     *
-//     * @param criteria 查询条件
-//     * @param pageNo   当前页码(从1开始)
-//     * @param pageSize 每页条数
-//     * @param orders   排序规则
-//     * @return 实体对象列表
-//     */
-//    fun pagingReturnProperty(
-//        criteria: Criteria, returnProperty: String, pageNo: Int, pageSize: Int, vararg orders: Order
-//    ): List<*>
-//
-//    /**
-//     * 分页查询，返回对象列表,返回只包含指定属性
-//     *
-//     * @param criteria 查询条件
-//     * @param pageNo   当前页码(从1开始)
-//     * @param pageSize 每页条数
-//     * @param orders   排序规则
-//     * @return 实体对象列表
-//     */
-//    fun pagingReturnProperties(
-//        criteria: Criteria, returnProperties: Collection<String>, pageNo: Int, pageSize: Int, vararg orders: Order
-//    ): List<Map<String?, Any?>>
-//
-//    //endregion pagingSearch
-//
-//
-//    /**
-//     * 计算记录数
-//     *
-//     * @param criteria 查询条件
-//     * @return 记录数
-//     */
-//    fun count(criteria: Criteria): Long
-//
-//    /**
-//     * 求和. 对满足条件的记录根据指定属性进行求和
-//     *
-//     * @param criteria 查询条件
-//     * @param property 待求和的属性
-//     * @return 和
-//     */
-//    fun sum(criteria: Criteria, property: String): Number
-//
-//    /**
-//     * 求平均值. 对满足条件的记录根据指定属性进行求平均值
-//     *
-//     * @param criteria 查询条件
-//     * @param property 待求平均值的属性
-//     * @return 平均值
-//     */
-//    fun avg(criteria: Criteria, property: String): Number
-//
-//    /**
-//     * 求最大值. 对满足条件的记录根据指定属性进行求最大值
-//     *
-//     * @param criteria 查询条件
-//     * @param property 待求最大值的属性
-//     * @return 最大值
-//     */
-//    fun max(criteria: Criteria, property: String): Any?
-//
-//    /**
-//     * 求最小值. 对满足条件的记录根据指定属性进行求最小值
-//     *
-//     * @param criteria 查询条件
-//     * @param property 待求最小值的属性
-//     * @return 最小值
-//     */
-//    fun min(criteria: Criteria, property: String): Any?
 
-    companion object {
 
-        /**
-         * 列信息缓存 Map(表名，Map(属性名, 列对象))
-         */
-        private val columnCache: MutableMap<String, MutableMap<String, Column<Any>>> = mutableMapOf()
-
+    //region search Criteria
+    /**
+     * 复杂条件查询
+     *
+     * @param criteria 查询条件
+     * @param orders   排序规则
+     * @return 实体对象列表
+     */
+    fun search(criteria: Criteria, vararg orders: Order): List<E> {
+        return searchEntityCriteria(criteria, 0, 0, *orders)
     }
+
+    /**
+     * 复杂条件查询，只返回指定单个属性的值
+     *
+     * @param criteria       查询条件
+     * @param returnProperty 要返回的属性名
+     * @param orders         排序规则
+     * @return 指定属性的值列表
+     */
+    fun searchProperty(criteria: Criteria, returnProperty: String, vararg orders: Order): List<*> {
+        return searchPropertiesCriteria(criteria, listOf(returnProperty), 0, 0, *orders)
+    }
+
+    /**
+     * 复杂条件，只返回指定多个属性的值
+     *
+     * @param criteria         查询条件
+     * @param returnProperties 要返回的属性名集合
+     * @param orders           排序规则
+     * @return List(Map(指定的属性名 属性值))
+     */
+    fun searchProperties(
+        criteria: Criteria, returnProperties: Collection<String>, vararg orders: Order
+    ): List<Map<String, Any?>> {
+        return searchPropertiesCriteria(criteria, returnProperties, 0, 0, *orders)
+    }
+
+    //endregion search Criteria
+
+
+    //region pagingSearch
+    /**
+     * 分页查询，返回对象列表
+     *
+     * @param criteria 查询条件
+     * @param pageNo   当前页码(从1开始)
+     * @param pageSize 每页条数
+     * @param orders   排序规则
+     * @return 实体对象列表
+     */
+    fun pagingSearch(criteria: Criteria, pageNo: Int, pageSize: Int, vararg orders: Order): List<E> {
+        return searchEntityCriteria(criteria, pageNo, pageSize, *orders)
+    }
+
+    /**
+     * 分页查询，返回对象列表,返回只包含指定属性
+     *
+     * @param criteria 查询条件
+     * @param pageNo   当前页码(从1开始)
+     * @param pageSize 每页条数
+     * @param orders   排序规则
+     * @return 实体对象列表
+     */
+    fun pagingReturnProperty(
+        criteria: Criteria, returnProperty: String, pageNo: Int, pageSize: Int, vararg orders: Order
+    ): List<*> {
+        return searchPropertiesCriteria(criteria, listOf(returnProperty), pageNo, pageSize, *orders)
+    }
+
+    /**
+     * 分页查询，返回对象列表,返回只包含指定属性
+     *
+     * @param criteria 查询条件
+     * @param pageNo   当前页码(从1开始)
+     * @param pageSize 每页条数
+     * @param orders   排序规则
+     * @return 实体对象列表
+     */
+    fun pagingReturnProperties(
+        criteria: Criteria, returnProperties: Collection<String>, pageNo: Int, pageSize: Int, vararg orders: Order
+    ): List<Map<String, *>> {
+        return searchPropertiesCriteria(criteria, returnProperties, pageNo, pageSize, *orders)
+    }
+
+    //endregion pagingSearch
 
 
     /**
-     * 根据属性名得到列对象
+     * 计算记录数
      *
-     * @param propertyNames 属性名可变数组
-     * @return 列对象数组
+     * @param criteria 查询条件
+     * @return 记录数
      */
-    private fun columnOf(vararg propertyNames: String): Array<Column<Any>> { //TODO 是否ktorm能从列绑定关系直接取?
-        if (propertyNames.isEmpty()) return emptyArray()
-
-        val tableName = table!!.tableName
-        var columnMap = columnCache[tableName]
-        if (columnMap == null) {
-            columnMap = mutableMapOf()
-            columnCache[tableName] = columnMap
-        }
-
-        val columns = mutableListOf<Column<Any>>()
-        propertyNames.forEach { propertyName ->
-            var columnName = propertyName.humpToUnderscore(false)
-            var column: Column<*>?
-            try {
-                column = table!![columnName] // 1.先尝试以小写字段名获取
-            } catch (e: NoSuchElementException) {
-                columnName = columnName.uppercase(Locale.getDefault())
-                column = try {
-                    table!![columnName] // 2.再尝试以大写字段名获取
-                } catch (e: NoSuchElementException) {
-                    // 3.最后忽略大小写的分别比较下划线分割的列名、属性名
-                    table!!.columns.firstOrNull {
-                        it.name.equals(columnName, true) || it.name.equals(
-                            propertyName,
-                            true
-                        )
-                    }
-                }
-            }
-            if (column == null) {
-                error("无法推测属性【${propertyName}】在表【${tableName}】中的字段名！")
-            } else columns.add(column as Column<Any>)
-        }
-        return columns.toTypedArray()
+    fun count(criteria: Criteria): Int {
+        return entitySequence()
+            .filter { CriteriaConverter.convert(criteria, table!!) }
+            .aggregateColumns { count() }!!
     }
+
+    /**
+     * 求和. 对满足条件的记录根据指定属性进行求和
+     *
+     * @param criteria 查询条件
+     * @param property 待求和的属性
+     * @return 和
+     */
+    fun sum(criteria: Criteria, property: String): Number {
+        return entitySequence()
+            .filter { CriteriaConverter.convert(criteria, table!!) }
+            .aggregateColumns { sum(ColumnHelper.columnOf(table!!, property)[0] as Column<Number>) } as Number
+    }
+
+    /**
+     * 求平均值. 对满足条件的记录根据指定属性进行求平均值
+     *
+     * @param criteria 查询条件
+     * @param property 待求平均值的属性
+     * @return 平均值
+     */
+    fun avg(criteria: Criteria, property: String): Number {
+        return entitySequence()
+            .filter { CriteriaConverter.convert(criteria, table!!) }
+            .aggregateColumns { avg(ColumnHelper.columnOf(table!!, property)[0] as Column<Number>) } as Number
+    }
+
+    /**
+     * 求最大值. 对满足条件的记录根据指定属性进行求最大值
+     *
+     * @param criteria 查询条件
+     * @param property 待求最大值的属性
+     * @return 最大值
+     */
+    fun max(criteria: Criteria, property: String): Any? {
+        return entitySequence()
+            .filter { CriteriaConverter.convert(criteria, table!!) }
+            .aggregateColumns { max(ColumnHelper.columnOf(table!!, property)[0] as Column<Comparable<Any>>) }
+    }
+
+    /**
+     * 求最小值. 对满足条件的记录根据指定属性进行求最小值
+     *
+     * @param criteria 查询条件
+     * @param property 待求最小值的属性
+     * @return 最小值
+     */
+    fun min(criteria: Criteria, property: String): Any? {
+        return entitySequence()
+            .filter { CriteriaConverter.convert(criteria, table!!) }
+            .aggregateColumns { min(ColumnHelper.columnOf(table!!, property)[0] as Column<Comparable<Any>>) }
+    }
+
 
     private fun sortOf(vararg orders: Order): List<OrderByExpression> {
         return if (orders.isNotEmpty()) {
             val orderExpressions = mutableListOf<OrderByExpression>()
             orders.forEach {
-                val column = columnOf(it.property)[0]
+                val column = ColumnHelper.columnOf(table!!, it.property)[0]
                 val orderByExpression = if (it.isAscending) {
                     column.asc()
                 } else column.desc()
@@ -571,7 +551,7 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
 
     private fun processWhere(propertyMap: Map<String, *>, logic: AndOr?): ColumnDeclaring<Boolean> {
         val properties = propertyMap.keys.toTypedArray()
-        val columns = columnOf(*properties)
+        val columns = ColumnHelper.columnOf(table!!, *properties)
         val expressions = mutableListOf<ColumnDeclaring<Boolean>>()
         columns.forEachIndexed { index, column ->
             val value = propertyMap[properties[index]]
@@ -610,7 +590,7 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
         propertyMap: Map<String, *>?, logic: AndOr?, returnProperties: Collection<String>, vararg orders: Order
     ): List<Map<String, *>> {
         // select
-        val returnColumns = columnOf(*returnProperties.toTypedArray())
+        val returnColumns = ColumnHelper.columnOf(table!!, *returnProperties.toTypedArray())
         val query = querySource().select(*returnColumns)
 
         // where
@@ -647,11 +627,52 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
     private fun doInSearchProperties(
         property: String, values: List<*>, returnProperties: Collection<String>, vararg orders: Order
     ): List<Map<String, *>> {
-        val returnColumns = columnOf(property)
+        val returnColumns = ColumnHelper.columnOf(table!!, property)
         val query = querySource().select(returnColumns[0].inList(values))
         query.orderBy(*sortOf(*orders).toTypedArray())
         return processResult(query, returnProperties, returnColumns)
     }
 
+    private fun searchEntityCriteria(
+        criteria: Criteria, pageNo: Int = 0, pageSize: Int = 0, vararg orders: Order
+    ): List<E> {
+        val entitySequence = entitySequence()
+
+        // where
+        entitySequence.filter { CriteriaConverter.convert(criteria, table!!) }
+
+        // sort
+        entitySequence.sorted { sortOf(*orders) }
+
+        // paging
+        if (pageNo != 0 && pageSize != 0) {
+            entitySequence.drop((pageNo - 1) * pageSize).take(pageSize)
+        }
+
+        return entitySequence.toList()
+    }
+
+    private fun searchPropertiesCriteria(
+        criteria: Criteria, returnProperties: Collection<String>,
+        pageNo: Int = 0, pageSize: Int = 0, vararg orders: Order
+    ): List<Map<String, *>> {
+        // select
+        val returnColumns = ColumnHelper.columnOf(table!!, *returnProperties.toTypedArray())
+        val query = querySource().select(*returnColumns)
+
+        // where
+        query.where { CriteriaConverter.convert(criteria, table!!) }
+
+        // order
+        query.orderBy(*sortOf(*orders).toTypedArray())
+
+        // paging
+        if (pageNo != 0 && pageSize != 0) {
+            query.limit((pageNo - 1) * pageSize, pageSize)
+        }
+
+        // result
+        return processResult(query, returnProperties, returnColumns)
+    }
 
 }

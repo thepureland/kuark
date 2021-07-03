@@ -182,6 +182,11 @@ subprojects {
             // data
             dependency("org.ktorm:ktorm-core:${Version.KTORM}")
             dependency("org.ktorm:ktorm-jackson:${Version.KTORM}")
+            dependency("org.ktorm:ktorm-support-mysql:${Version.KTORM}")
+            dependency("org.ktorm:ktorm-support-postgresql:${Version.KTORM}")
+            dependency("org.ktorm:ktorm-support-oracle:${Version.KTORM}")
+            dependency("org.ktorm:ktorm-support-sqlserver:${Version.KTORM}")
+            dependency("org.ktorm:ktorm-support-sqlite:${Version.KTORM}")
             dependency("org.springframework.boot:spring-boot-starter-data-redis:${Version.SPRING_BOOT}")
             dependency("org.apache.commons:commons-pool2:2.8.0")
 //            dependency("me.liuwj.ktorm:ktorm-support-sqlite:$KTORM_VERSION")

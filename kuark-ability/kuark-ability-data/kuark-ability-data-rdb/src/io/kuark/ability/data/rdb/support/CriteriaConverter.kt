@@ -6,6 +6,7 @@ import io.kuark.base.query.enums.Operator
 import org.ktorm.dsl.*
 import org.ktorm.schema.Column
 import org.ktorm.schema.ColumnDeclaring
+import org.ktorm.schema.Table
 
 /**
  * Criteria转换器，可将Criteria转换为Ktorm查询条件表达式
@@ -24,7 +25,7 @@ internal object CriteriaConverter {
      * @author K
      * @since 1.0.0
      */
-    fun convert(criteria: Criteria, columnMap: Map<String, Column<*>>): ColumnDeclaring<Boolean> {
+    fun convert(criteria: Criteria, table: Table<*>): ColumnDeclaring<Boolean> {
         val criterionGroups = criteria.getCriterionGroups()
         val andExpressions = mutableListOf<ColumnDeclaring<Boolean>>()
         criterionGroups.forEach { criterionGroup -> // 第一层元素间是AND关系
@@ -34,10 +35,10 @@ internal object CriteriaConverter {
                     criterionGroup.forEach { groupElem ->
                         when (groupElem) {
                             is Criterion -> {
-                                orExpressions.add(convertCriterion(groupElem, columnMap))
+                                orExpressions.add(convertCriterion(groupElem, table))
                             }
                             is Criteria -> {
-                                orExpressions.add(convert(groupElem, columnMap))
+                                orExpressions.add(convert(groupElem, table))
                             }
                             else -> {
                                 error("Criteria中的元素(数组中)不支持【${criterionGroup::class}】类型！")
@@ -53,10 +54,10 @@ internal object CriteriaConverter {
                     andExpressions.add(expression)
                 }
                 is Criterion -> {
-                    andExpressions.add(convertCriterion(criterionGroup, columnMap))
+                    andExpressions.add(convertCriterion(criterionGroup, table))
                 }
                 is Criteria -> {
-                    andExpressions.add(convert(criterionGroup, columnMap))
+                    andExpressions.add(convert(criterionGroup, table))
                 }
                 else -> {
                     error("Criteria中的元素不支持【${criterionGroup::class}】类型！")
@@ -72,16 +73,14 @@ internal object CriteriaConverter {
         return expression
     }
 
-    private fun convertCriterion(
-        criterion: Criterion, columnMap: Map<String, Column<*>>
-    ): ColumnDeclaring<Boolean> {
-        val column = columnMap[criterion.property]!! as ColumnDeclaring<Any>
+    private fun convertCriterion(criterion: Criterion, table: Table<*>): ColumnDeclaring<Boolean> {
+        val column = ColumnHelper.columnOf(table, criterion.property) as ColumnDeclaring<Any>
         val value = criterion.getValue()
-        return when(criterion.operator) {
+        return when (criterion.operator) {
             Operator.EQ -> column.eq(value!!)
 //            Operator.IEQ ->  error("未支持") //TODO ktorm怎么支持sql函数？
-            Operator.EQ_P -> columnEq(column, columnMap[value!!]!!)
-            Operator.NE_P, Operator.LG_P -> columnNotEq(column, columnMap[value!!]!!)
+            Operator.EQ_P -> columnEq(column, ColumnHelper.columnOf(table, value as String) as Column<Any>)
+            Operator.NE_P, Operator.LG_P -> columnNotEq(column, ColumnHelper.columnOf(table, value as String) as Column<Any>)
 //            Operator.GE_P, Operator.LE_P, Operator.GT_P, Operator.LT_P -> error("未支持")
             Operator.LIKE -> column.like("%${value!!}%")
             Operator.LIKE_S -> column.like("${value!!}%")
@@ -102,19 +101,23 @@ internal object CriteriaConverter {
 
 
     // 为了解决 <T : Any> ColumnDeclaring<T>.eq(expr: ColumnDeclaring<T>) 的泛型问题
-    private inline fun <T: Any> columnEq(column: ColumnDeclaring<T>, anotherColumn: Column<*>): ColumnDeclaring<Boolean> =
+    private inline fun <T : Any> columnEq(
+        column: ColumnDeclaring<T>, anotherColumn: Column<Any>
+    ): ColumnDeclaring<Boolean> =
         column.eq(anotherColumn as Column<T>)
 
     // 为了解决 <T : Any> ColumnDeclaring<T>.notEq(expr: ColumnDeclaring<T>) 的泛型问题
-    private inline fun <T: Any> columnNotEq(column: ColumnDeclaring<T>, anotherColumn: Column<*>): ColumnDeclaring<Boolean> =
+    private inline fun <T : Any> columnNotEq(
+        column: ColumnDeclaring<T>, anotherColumn: Column<*>
+    ): ColumnDeclaring<Boolean> =
         column.notEq(anotherColumn as Column<T>)
 
     // 为了解决 <T : Any> ColumnDeclaring<T>.inList(list: Collection<T>) 的泛型问题
-    private inline fun <T: Any> columnIn(column: ColumnDeclaring<T>, values: List<T>): ColumnDeclaring<Boolean> =
+    private inline fun <T : Any> columnIn(column: ColumnDeclaring<T>, values: List<T>): ColumnDeclaring<Boolean> =
         column.inList(values)
 
     // 为了解决 <T : Any> ColumnDeclaring<T>.notInList(list: Collection<T>) 的泛型问题
-    private inline fun <T: Any> columnNotIn(column: ColumnDeclaring<T>, values: List<T>): ColumnDeclaring<Boolean> =
+    private inline fun <T : Any> columnNotIn(column: ColumnDeclaring<T>, values: List<T>): ColumnDeclaring<Boolean> =
         column.notInList(values)
 
     private fun handleIn(isIn: Boolean, value: Any, column: ColumnDeclaring<Any>): ColumnDeclaring<Boolean> {

@@ -321,7 +321,7 @@ enum class Operator constructor(
             if (code.isNotBlank()) {
                 code = code.uppercase(Locale.getDefault())
             }
-            return EnumKit.enumOf(Operator::class, code)
+            return EnumKit.enumOf(Operator::class, code) ?: error("非法的Operator code: ${code}")
         }
     }
 }

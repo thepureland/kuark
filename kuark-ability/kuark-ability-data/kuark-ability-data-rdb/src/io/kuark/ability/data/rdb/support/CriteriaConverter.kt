@@ -20,7 +20,7 @@ internal object CriteriaConverter {
      * 将Criteria转换为Ktorm的表达式
      *
      * @param criteria Criteria
-     * @param columnMap Map(属性名, Ktorm列对象)
+     * @param table ktorm表对象
      * @return Ktorm查询条件的表达式
      * @author K
      * @since 1.0.0

@@ -1,12 +1,13 @@
 package io.kuark.ability.data.rdb.support
 
 import io.kuark.base.lang.string.humpToUnderscore
+import io.kuark.base.query.Criteria
+import io.kuark.base.query.enums.Operator
 import io.kuark.base.support.GroupExecutor
 import org.ktorm.dsl.*
 import org.ktorm.entity.add
 import org.ktorm.entity.removeIf
 import org.ktorm.schema.Column
-import org.ktorm.schema.ColumnDeclaring
 import org.ktorm.schema.Table
 
 /**
@@ -31,9 +32,38 @@ open class BaseDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadOnlyD
      * @author K
      * @since 1.0.0
      */
-    fun insert(entity: E): PK? {
+    open fun insert(entity: E): PK {
         entitySequence().add(entity)
-        return entity.id
+        return entity.id!!
+    }
+
+    /**
+     * 保存实体对象，只保存指定的属性
+     *
+     * @param entity 实体对象
+     * @param propertyNames 要保存的属性的可变数组
+     * @return 主键值
+     */
+    open fun insertOnly(entity: E, vararg propertyNames: String): PK {
+        val properties = entity.properties
+        val columns = ColumnHelper.columnOf(table(), *propertyNames)
+        return database().insertAndGenerateKey(table!!) {
+            columns.forEach { (propertyName, column) ->
+                set(column, properties[propertyName])
+            }
+        } as PK
+    }
+
+    /**
+     * 保存实体对象，不保存指定的属性
+     *
+     * @param entity 实体对象
+     * @param excludePropertyNames 不保存的属性的可变数组
+     * @return 主键值
+     */
+    open fun insertExclude(entity: E, vararg excludePropertyNames: String): PK {
+        val onlyProperties = entity.properties.keys.filter { !excludePropertyNames.contains(it) }
+        return insertOnly(entity, *onlyProperties.toTypedArray())
     }
 
     /**
@@ -47,14 +77,29 @@ open class BaseDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadOnlyD
      * @author K
      * @since 1.0.0
      */
-    fun batchInsert(entities: Collection<E>, countOfEachBatch: Int = 1000): Int {
+    open fun batchInsert(entities: Collection<E>, countOfEachBatch: Int = 1000): Int {
+        return batchInsertOnly(entities, countOfEachBatch, *entities.first().properties.keys.toTypedArray())
+    }
+
+    /**
+     * 批量保存实体对象，只保存指定的属性
+     *
+     * @param entities 实体对象列表
+     * @param countOfEachBatch 每批大小，缺省为1000
+     * @param propertyNames 要保存的属性的可变数组
+     * @return 保存的记录数
+     */
+    open fun batchInsertOnly(entities: Collection<E>, countOfEachBatch: Int = 1000, vararg propertyNames: String): Int {
+        val columnMap = ColumnHelper.columnOf(table(), *propertyNames)
         var totalCount = 0
         GroupExecutor(entities, countOfEachBatch) {
             val counts = database().batchInsert(table()) {
                 it.forEach { entity ->
                     item {
                         for ((name, value) in entity.properties) {
-                            set(table()[name.humpToUnderscore().toLowerCase()], value) //TODO 有没有办法直接取得列名？
+                            if (name in propertyNames) {
+                                set(columnMap[name]!!, value)
+                            }
                         }
                     }
                 }
@@ -62,6 +107,21 @@ open class BaseDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadOnlyD
             totalCount += counts.sum()
         }.execute()
         return totalCount
+    }
+
+    /**
+     * 批量保存实体对象，不保存指定的属性
+     *
+     * @param entities 实体对象列表
+     * @param countOfEachBatch 每批大小，缺省为1000
+     * @param excludePropertyNames 不保存的属性的可变数组
+     * @return 保存的记录数
+     */
+    open fun batchInsertExclude(
+        entities: Collection<E>, countOfEachBatch: Int = 1000, excludePropertyNames: String
+    ): Int {
+        val onlyPropertyNames = entities.first().properties.keys.filter { it !in excludePropertyNames }
+        return batchInsertOnly(entities, countOfEachBatch, *onlyPropertyNames.toTypedArray())
     }
 
     //endregion Insert
@@ -77,7 +137,102 @@ open class BaseDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadOnlyD
      * @author K
      * @since 1.0.0
      */
-    fun update(entity: E): Boolean = entity.flushChanges() == 1
+    open fun update(entity: E): Boolean = entity.flushChanges() == 1
+
+    /**
+     * 有条件的更新实体对象（仅当满足给定的附加查询条件时）
+     *
+     * @param entity 实体对象
+     * @param criteria 附加查询条件
+     * @return 记录是否有更新
+     */
+    open fun updateWhen(entity: E, criteria: Criteria): Boolean {
+        return updateByCriteria(entity.id, entity.properties, criteria)
+    }
+
+    /**
+     * 只更新实体的某几个属性
+     *
+     * @param id         主键值
+     * @param properties Map(属性名，属性值)
+     * @return 是否更新成功
+     */
+    open fun updateProperties(id: PK, properties: Map<String, *>): Boolean {
+        val columnMap = ColumnHelper.columnOf(table(), *properties.keys.toTypedArray())
+        return database().update(table()) {
+            properties.forEach { (name, value) ->
+                set(columnMap[name]!!, properties[name])
+            }
+            where { getPkColumn() eq id }
+        } == 1
+    }
+
+    /**
+     * 有条件的只更新实体的某几个属性（仅当满足给定的附加查询条件时） <br></br>
+     * 注：id属性永远不会被更新
+     *
+     * @param id         主键值
+     * @param properties Map(属性名，属性值)
+     * @param criteria 附加查询条件
+     * @return 记录是否有更新
+     */
+    open fun updatePropertiesWhen(id: PK, properties: Map<String, *>, criteria: Criteria): Boolean {
+        return updateByCriteria(id, properties, criteria)
+    }
+
+    /**
+     * 只更新实体的某几个属性
+     *
+     * @param entity     实体对象
+     * @param propertyNames 更新的属性的可变数组
+     * @return 是否更新成功
+     */
+    open fun updateOnly(entity: E, vararg propertyNames: String): Boolean {
+        val properties = entity.properties.filter { it.key in propertyNames }
+        return updateByCriteria(entity.id, properties, null)
+    }
+
+    /**
+     * 有条件的只更新实体的某几个属性（仅当满足给定的附加查询条件时） <br></br>
+     * 注：id属性永远不会被更新
+     *
+     * @param entity     实体对象
+     * @param criteria 附加查询条件
+     * @param propertyNames 更新的属性的可变数组
+     * @return 记录是否有更新
+     */
+    open fun updateOnlyWhen(entity: E, criteria: Criteria, vararg propertyNames: String): Boolean {
+        val properties = entity.properties.filter { it.key in propertyNames }
+        return updateByCriteria(entity.id, properties, criteria)
+    }
+
+    /**
+     * 更新实体除指定的几个属性外的所有属性
+     * 注：id属性永远不会被更新
+     *
+     * @param entity            实体对象
+     * @param excludePropertyNames 不更新的属性的可变数组
+     * @return 是否更新成功
+     */
+    open fun updateExcludeProperties(entity: E, vararg excludePropertyNames: String): Boolean {
+        val properties = entity.properties.filter { it.key !in excludePropertyNames }
+        return updateByCriteria(entity.id, properties, null)
+    }
+
+    /**
+     * 有条件的更新实体除指定的几个属性外的所有属性（仅当满足给定的附加查询条件时） <br></br>
+     * 注：id属性永远不会被更新
+     *
+     * @param entity            实体对象
+     * @param criteria 附加查询条件
+     * @param excludePropertyNames 不更新的属性的可变数组
+     * @return 记录是否有更新
+     */
+    open fun updateExcludePropertiesWhen(entity: E, criteria: Criteria, vararg excludePropertyNames: String): Boolean {
+        val properties = entity.properties.filter { it.key !in excludePropertyNames }
+        return updateByCriteria(entity.id, properties, criteria)
+    }
+
 
     /**
      * 批量更新实体对应的记录
@@ -91,7 +246,7 @@ open class BaseDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadOnlyD
      * @author K
      * @since 1.0.0
      */
-    fun batchUpdate(entities: Collection<E>, countOfEachBatch: Int = 1000): Int {
+    open fun batchUpdate(entities: Collection<E>, countOfEachBatch: Int = 1000): Int {
         if (entities.filter { it.id == null }.isNotEmpty()) {
             error("由于存在主键为null的实体，批量更新失败！")
         }
@@ -126,12 +281,12 @@ open class BaseDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadOnlyD
      * @author K
      * @since 1.0.0
      */
-    fun deleteById(id: PK): Boolean {
+    open fun deleteById(id: PK): Boolean {
         val count = when (id) {
             is String -> entitySequence().removeIf { (table() as StringIdTable<*>).id eq id }
             is Int -> entitySequence().removeIf { (table() as IntIdTable<*>).id eq id }
             is Long -> entitySequence().removeIf { (table() as LongIdTable<*>).id eq id }
-            else -> error("不支持的主键类型【${id!!::class}】")
+            else -> error("不支持的主键类型【${id::class}】")
         }
         return count == 1
     }
@@ -144,13 +299,49 @@ open class BaseDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadOnlyD
      * @author K
      * @since 1.0.0
      */
-    fun delete(entity: E): Boolean {
-        val id = entity.id
-        id ?: error("删除实体时，属性id不能为null")
+    open fun delete(entity: E): Boolean {
+        val id = entity.id ?: error("删除实体时，属性id不能为null")
         return deleteById(id)
     }
 
+    /**
+     * 批量删除指定主键对应的实体对象
+     *
+     * @param ids 主键列表
+     * @return 删除的记录数
+     */
+    open fun batchDelete(ids: Collection<PK>): Int {
+        val criteria = Criteria.add("id", Operator.IN, ids.toList())
+        return entitySequence().removeIf { CriteriaConverter.convert(criteria, table()) }
+    }
+
+    /**
+     * 批量删除指定主键对应的实体对象
+     *
+     * @param criteria 查询条件
+     * @return 删除的记录数
+     */
+    open fun batchDeleteCriteria(criteria: Criteria): Int {
+        return entitySequence().removeIf { CriteriaConverter.convert(criteria, table()) }
+    }
 
     //endregion Delete
+
+    private fun updateByCriteria(id: PK?, propertyMap: Map<String, *>, criteria: Criteria?): Boolean {
+        assert(id != null) { "更新操作时，数据库实体主键不能为空！" }
+        val columnMap = ColumnHelper.columnOf(table(), *propertyMap.keys.toTypedArray())
+        return database().update(table()) {
+            propertyMap.forEach { (name, value) ->
+                set(columnMap[name]!!, propertyMap[name])
+            }
+            where {
+                var whereExpression = getPkColumn() eq id!!
+                if (criteria != null) {
+                    whereExpression = whereExpression.and(CriteriaConverter.convert(criteria, table()))
+                }
+                whereExpression
+            }
+        } == 1
+    }
 
 }

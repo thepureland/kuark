@@ -9,6 +9,7 @@ import io.kuark.base.support.logic.AndOr
 import org.ktorm.database.Database
 import org.ktorm.dsl.*
 import org.ktorm.entity.*
+import org.ktorm.expression.InListExpression
 import org.ktorm.expression.OrderByExpression
 import org.ktorm.schema.Column
 import org.ktorm.schema.ColumnDeclaring
@@ -37,7 +38,7 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
      * @author K
      * @since 1.0.0
      */
-    open fun table(): T {
+    protected fun table(): T {
         if (table == null) {
             val tableClass = GenericKit.getSuperClassGenricClass(this::class, 2) as KClass<T>
             table = tableClass.objectInstance!!
@@ -52,7 +53,7 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
      * @author K
      * @since 1.0.0
      */
-    open fun database(): Database = RdbKit.getDatabase()
+    protected fun database(): Database = RdbKit.getDatabase()
 
     /**
      * 返回T指定的表的查询源，基于该对象可以进行类似对数据库表的sql一样操作
@@ -61,7 +62,7 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
      * @author K
      * @since 1.0.0
      */
-    open fun querySource(): QuerySource = database().from(table())
+    protected fun querySource(): QuerySource = database().from(table())
 
     /**
      * 返回T指定的表的实体序列，基于该序列可以进行类似对集合一样的操作
@@ -70,14 +71,14 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
      * @author K
      * @since 1.0.0
      */
-    open fun entitySequence(): EntitySequence<E, T> = database().sequenceOf(table())
+    protected fun entitySequence(): EntitySequence<E, T> = database().sequenceOf(table())
 
     /**
      * 返回主键的列(kuark数据库表规范，一个表有且仅有一个列名为id的主键)
      *
      * @return 主键列对象
      */
-    open fun getPkColumn(): Column<PK> {
+    protected fun getPkColumn(): Column<PK> {
         return table().primaryKeys[0] as Column<PK>
     }
 
@@ -116,27 +117,7 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
         return results
     }
 
-    /**
-     * 查询当前表的实体。对于大表慎用，容易造成内存溢出！
-     *
-     * @return 实体列表
-     * @author K
-     * @since 1.0.0
-     */
-    open fun searchAll(): List<E> = entitySequence().toList()
-
     //endregion Search
-
-    /**
-     * 返回当前表的总记录数
-     *
-     * @return 当前表的总记录数
-     * @author K
-     * @since 1.0.0
-     */
-    open fun countAll(): Int {
-        return entitySequence().count()
-    }
 
 
     //region oneSearch
@@ -162,7 +143,8 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
      * @return List(属性值)
      */
     open fun oneSearchProperty(property: String, value: Any?, returnProperty: String, vararg orders: Order): List<*> {
-        return doSearchProperties(mapOf(property to value), null, listOf(returnProperty), *orders)
+        val results = doSearchProperties(mapOf(property to value), null, listOf(returnProperty), *orders)
+        return results.flatMap { it.values }
     }
 
     /**
@@ -202,7 +184,8 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
      * @return List(属性值)
      */
     open fun allSearchProperty(returnProperty: String, vararg orders: Order): List<*> {
-        return doSearchProperties(null, null, listOf(returnProperty), *orders)
+        val results = doSearchProperties(null, null, listOf(returnProperty), *orders)
+        return results.flatMap { it.values }
     }
 
     /**
@@ -240,7 +223,8 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
      * @return List(指定的属性的值)
      */
     open fun andSearchProperty(properties: Map<String, *>, returnProperty: String, vararg orders: Order): List<*> {
-        return doSearchProperties(properties, AndOr.AND, listOf(returnProperty), *orders)
+        val results = doSearchProperties(properties, AndOr.AND, listOf(returnProperty), *orders)
+        return results.flatMap { it.values }
     }
 
     /**
@@ -281,7 +265,8 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
      * @return List(指定的属性的值)
      */
     open fun orSearchProperty(properties: Map<String, *>, returnProperty: String, vararg orders: Order): List<*> {
-        return doSearchProperties(properties, AndOr.OR, listOf(returnProperty), *orders)
+        val results = doSearchProperties(properties, AndOr.OR, listOf(returnProperty), *orders)
+        return results.flatMap { it.values }
     }
 
     /**
@@ -310,10 +295,11 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
      * @param orders   排序规则
      * @return 指定类名对象的结果列表
      */
-    open fun inSearch(property: String, values: List<*>, vararg orders: Order): List<E> {
-        val column = ColumnHelper.columnOf(table!!, property)[property]!!
-        val entitySequence = entitySequence().filter { column.inList(values) }
-        entitySequence.sorted { sortOf(*orders) }
+    open fun inSearch(property: String, values: Collection<*>, vararg orders: Order): List<E> {
+        val column = ColumnHelper.columnOf(table(), property)[property]!!
+        values.toTypedArray()
+        var entitySequence = entitySequence().filter { column.inCollection(values) }
+        entitySequence = entitySequence.sorted { sortOf(*orders) }
         return entitySequence.toList()
     }
 
@@ -326,8 +312,11 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
      * @param orders         排序规则
      * @return 指定属性的值列表
      */
-    open fun inSearchProperty(property: String, values: List<*>, returnProperty: String, vararg orders: Order): List<*> {
-        return doInSearchProperties(property, values, listOf(returnProperty), *orders)
+    open fun inSearchProperty(
+        property: String, values: List<*>, returnProperty: String, vararg orders: Order
+    ): List<*> {
+        val results = doInSearchProperties(property, values, listOf(returnProperty), *orders)
+        return results.flatMap { it.values }
     }
 
     /**
@@ -366,7 +355,8 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
      * @return 指定属性的值列表
      */
     open fun inSearchPropertyById(values: List<PK>, returnProperty: String, vararg orders: Order): List<*> {
-        return doInSearchProperties("id", values, listOf(returnProperty), *orders)
+        val results = doInSearchProperties("id", values, listOf(returnProperty), *orders)
+        return results.flatMap { it.values }
     }
 
     /**
@@ -407,7 +397,8 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
      * @return 指定属性的值列表
      */
     open fun searchProperty(criteria: Criteria, returnProperty: String, vararg orders: Order): List<*> {
-        return searchPropertiesCriteria(criteria, listOf(returnProperty), 0, 0, *orders)
+        val results = searchPropertiesCriteria(criteria, listOf(returnProperty), 0, 0, *orders)
+        return results.flatMap { it.values }
     }
 
     /**
@@ -474,76 +465,100 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
     //endregion pagingSearch
 
 
+    //region aggregate
+
     /**
      * 计算记录数
      *
-     * @param criteria 查询条件
+     * @param criteria 查询条件，为null将计算所有记录
      * @return 记录数
      */
-    open fun count(criteria: Criteria): Int {
-        return entitySequence()
-            .filter { CriteriaConverter.convert(criteria, table!!) }
-            .aggregateColumns { count() }!!
+    open fun count(criteria: Criteria? = null): Int {
+        return if (criteria == null) {
+            entitySequence().count()
+        } else {
+            entitySequence()
+                .filter { CriteriaConverter.convert(criteria, table()) }
+                .aggregateColumns { count(getPkColumn()) }!!
+        }
     }
 
     /**
      * 求和. 对满足条件的记录根据指定属性进行求和
      *
-     * @param criteria 查询条件
      * @param property 待求和的属性
+     * @param criteria 查询条件，为null将计算所有记录
      * @return 和
      */
-    open fun sum(criteria: Criteria, property: String): Number {
-        return entitySequence()
-            .filter { CriteriaConverter.convert(criteria, table!!) }
-            .aggregateColumns { sum(ColumnHelper.columnOf(table!!, property)[property] as Column<Number>) } as Number
+    open fun sum(property: String, criteria: Criteria? = null): Number {
+        var entitySequence = entitySequence()
+        if (criteria != null) {
+            entitySequence = entitySequence.filter { CriteriaConverter.convert(criteria, table()) }
+        }
+        return entitySequence.aggregateColumns {
+            sum(ColumnHelper.columnOf(table(), property)[property] as Column<Number>)
+        } as Number
     }
 
     /**
      * 求平均值. 对满足条件的记录根据指定属性进行求平均值
      *
-     * @param criteria 查询条件
      * @param property 待求平均值的属性
+     * @param criteria 查询条件，为null将计算所有记录
      * @return 平均值
      */
-    open fun avg(criteria: Criteria, property: String): Number {
-        return entitySequence()
-            .filter { CriteriaConverter.convert(criteria, table!!) }
-            .aggregateColumns { avg(ColumnHelper.columnOf(table!!, property)[property] as Column<Number>) } as Number
+    open fun avg(property: String, criteria: Criteria? = null): Number {
+        var entitySequence = entitySequence()
+        if (criteria != null) {
+            entitySequence = entitySequence.filter { CriteriaConverter.convert(criteria, table()) }
+        }
+        return entitySequence.aggregateColumns {
+            avg(ColumnHelper.columnOf(table(), property)[property] as Column<Number>)
+        } as Number
     }
 
     /**
      * 求最大值. 对满足条件的记录根据指定属性进行求最大值
      *
-     * @param criteria 查询条件
      * @param property 待求最大值的属性
+     * @param criteria 查询条件，为null将计算所有记录
      * @return 最大值
      */
-    open fun max(criteria: Criteria, property: String): Any? {
-        return entitySequence()
-            .filter { CriteriaConverter.convert(criteria, table!!) }
-            .aggregateColumns { max(ColumnHelper.columnOf(table!!, property)[property] as Column<Comparable<Any>>) }
+    open fun max(property: String, criteria: Criteria? = null): Any? {
+        var entitySequence = entitySequence()
+        if (criteria != null) {
+            entitySequence = entitySequence.filter { CriteriaConverter.convert(criteria, table()) }
+        }
+        return entitySequence.aggregateColumns {
+            max(ColumnHelper.columnOf(table(), property)[property] as Column<Comparable<Any>>)
+        }
     }
 
     /**
      * 求最小值. 对满足条件的记录根据指定属性进行求最小值
      *
-     * @param criteria 查询条件
      * @param property 待求最小值的属性
+     * @param criteria 查询条件，为null将计算所有记录
      * @return 最小值
      */
-    open fun min(criteria: Criteria, property: String): Any? {
-        return entitySequence()
-            .filter { CriteriaConverter.convert(criteria, table!!) }
-            .aggregateColumns { min(ColumnHelper.columnOf(table!!, property)[property] as Column<Comparable<Any>>) }
+    open fun min(property: String, criteria: Criteria? = null): Any? {
+        var entitySequence = entitySequence()
+        if (criteria != null) {
+            entitySequence = entitySequence.filter { CriteriaConverter.convert(criteria, table()) }
+        }
+        return entitySequence.aggregateColumns {
+            min(ColumnHelper.columnOf(table(), property)[property] as Column<Comparable<Any>>)
+        }
     }
+
+    //endregion aggregate
 
 
     private fun sortOf(vararg orders: Order): List<OrderByExpression> {
         return if (orders.isNotEmpty()) {
             val orderExpressions = mutableListOf<OrderByExpression>()
             orders.forEach {
-                val column = ColumnHelper.columnOf(table!!, it.property)[it.property]!!
+                val column = ColumnHelper.columnOf(table(), it.property)[it.property]!!
                 val orderByExpression = if (it.isAscending) {
                     column.asc()
                 } else column.desc()
@@ -557,7 +572,7 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
 
     private fun processWhere(propertyMap: Map<String, *>, logic: AndOr?): ColumnDeclaring<Boolean> {
         val properties = propertyMap.keys.toTypedArray()
-        val columns = ColumnHelper.columnOf(table!!, *properties)
+        val columns = ColumnHelper.columnOf(table(), *properties)
         val expressions = mutableListOf<ColumnDeclaring<Boolean>>()
         columns.forEach { (property, column) ->
             val value = propertyMap[property]
@@ -582,13 +597,13 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
     }
 
     private fun doSearchEntity(propertyMap: Map<String, *>?, logic: AndOr?, vararg orders: Order): List<E> {
-        val entitySequence = entitySequence()
+        var entitySequence = entitySequence()
         if (propertyMap != null) {
             val fullExpression = processWhere(propertyMap!!, logic)
-            entitySequence.filter { fullExpression }
+            entitySequence = entitySequence.filter { fullExpression }
         }
 
-        entitySequence.sorted { sortOf(*orders) }
+        entitySequence = entitySequence.sorted { sortOf(*orders) }
         return entitySequence.toList()
     }
 
@@ -596,33 +611,27 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
         propertyMap: Map<String, *>?, logic: AndOr?, returnProperties: Collection<String>, vararg orders: Order
     ): List<Map<String, *>> {
         // select
-        val returnColumns = ColumnHelper.columnOf(table!!, *returnProperties.toTypedArray()).values
-        val query = querySource().select(returnColumns)
+        val returnColumnMap = ColumnHelper.columnOf(table(), *returnProperties.toTypedArray())
+        var query = querySource().select(returnColumnMap.values)
 
         // where
         if (propertyMap != null) {
             val fullExpression = processWhere(propertyMap!!, logic)
-            query.where { fullExpression }
+            query = query.where { fullExpression }
         }
 
         // order
-        query.orderBy(*sortOf(*orders).toTypedArray())
+        query = query.orderBy(*sortOf(*orders).toTypedArray())
 
         // result
-        return processResult(query, returnProperties, returnColumns.toList())
+        return processResult(query, returnColumnMap)
     }
 
-    private fun processResult(
-        query: Query, returnProperties: Collection<String>, returnColumns: List<Column<Any>>
-    ): List<Map<String, *>> {
-        val columnMap = mutableMapOf<String, Column<Any>>()
-        returnProperties.forEachIndexed { index, returnProperty ->
-            columnMap[returnProperty] = returnColumns[index]
-        }
+    private fun processResult(query: Query, returnColumnMap: Map<String, Column<Any>>): List<Map<String, *>> {
         val returnValues = mutableListOf<Map<String, Any?>>()
         query.forEach { row ->
             val map = mutableMapOf<String, Any?>()
-            columnMap.forEach { (propertyName, column) ->
+            returnColumnMap.forEach { (propertyName, column) ->
                 map[propertyName] = row[column]
             }
             returnValues.add(map)
@@ -633,26 +642,28 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
     private fun doInSearchProperties(
         property: String, values: List<*>, returnProperties: Collection<String>, vararg orders: Order
     ): List<Map<String, *>> {
-        val returnColumn = ColumnHelper.columnOf(table!!, property)[property]!!
-        val query = querySource().select(returnColumn.inList(values))
-        query.orderBy(*sortOf(*orders).toTypedArray())
-        return processResult(query, returnProperties, listOf(returnColumn))
+        val column = ColumnHelper.columnOf(table(), property)[property]!!
+        val returnColumnMap = ColumnHelper.columnOf(table(), *returnProperties.toTypedArray())
+        var query = querySource().select(returnColumnMap.values)
+        query = query.where { column.inCollection(values) }
+        query = query.orderBy(*sortOf(*orders).toTypedArray())
+        return processResult(query, returnColumnMap)
     }
 
     private fun searchEntityCriteria(
         criteria: Criteria, pageNo: Int = 0, pageSize: Int = 0, vararg orders: Order
     ): List<E> {
-        val entitySequence = entitySequence()
+        var entitySequence = entitySequence()
 
         // where
-        entitySequence.filter { CriteriaConverter.convert(criteria, table!!) }
+        entitySequence = entitySequence.filter { CriteriaConverter.convert(criteria, table()) }
 
         // sort
-        entitySequence.sorted { sortOf(*orders) }
+        entitySequence = entitySequence.sorted { sortOf(*orders) }
 
         // paging
         if (pageNo != 0 && pageSize != 0) {
-            entitySequence.drop((pageNo - 1) * pageSize).take(pageSize)
+            entitySequence = entitySequence.drop((pageNo - 1) * pageSize).take(pageSize)
         }
 
         return entitySequence.toList()
@@ -663,22 +674,27 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
         pageNo: Int = 0, pageSize: Int = 0, vararg orders: Order
     ): List<Map<String, *>> {
         // select
-        val returnColumns = ColumnHelper.columnOf(table!!, *returnProperties.toTypedArray()).values
-        val query = querySource().select(returnColumns)
+        val returnColumnMap = ColumnHelper.columnOf(table(), *returnProperties.toTypedArray())
+        var query = querySource().select(returnColumnMap.values)
 
         // where
-        query.where { CriteriaConverter.convert(criteria, table!!) }
+        query = query.where { CriteriaConverter.convert(criteria, table()) }
 
         // order
-        query.orderBy(*sortOf(*orders).toTypedArray())
+        query = query.orderBy(*sortOf(*orders).toTypedArray())
 
         // paging
         if (pageNo != 0 && pageSize != 0) {
-            query.limit((pageNo - 1) * pageSize, pageSize)
+            query = query.limit((pageNo - 1) * pageSize, pageSize)
         }
 
         // result
-        return processResult(query, returnProperties, returnColumns.toList())
+        return processResult(query, returnColumnMap)
     }
 
+}
+
+// 解决ktorm总是要调用到可变参数的inList方法的问题及泛型问题
+private fun <T : Any> ColumnDeclaring<T>.inCollection(list: Collection<*>): InListExpression<T> {
+    return InListExpression(left = asExpression(), values = list.map { wrapArgument(it as T?) })
 }

@@ -12,7 +12,6 @@ object ColumnHelper {
      */
     private val columnCache: MutableMap<String, MutableMap<String, Column<Any>>> = mutableMapOf()
 
-
     /**
      * 根据属性名得到列对象
      *

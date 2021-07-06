@@ -46,9 +46,9 @@ internal object CriteriaConverter {
                         }
                     }
                     var expression = orExpressions[0]
-                    orExpressions.forEachIndexed { index, expression ->
+                    orExpressions.forEachIndexed { index, orExpression ->
                         if (index != 0) {
-                            expression.or(expression)
+                            expression = expression.or(orExpression)
                         }
                     }
                     andExpressions.add(expression)
@@ -64,23 +64,31 @@ internal object CriteriaConverter {
                 }
             }
         }
-        var expression = andExpressions[0]
-        andExpressions.forEachIndexed { index, expression ->
+        var wholeExpression = andExpressions[0]
+        andExpressions.forEachIndexed { index, andExpression ->
             if (index != 0) {
-                expression.and(expression)
+                wholeExpression = wholeExpression.and(andExpression)
             }
         }
-        return expression
+        return wholeExpression
     }
 
     private fun convertCriterion(criterion: Criterion, table: Table<*>): ColumnDeclaring<Boolean> {
-        val column = ColumnHelper.columnOf(table, criterion.property) as ColumnDeclaring<Any>
+        val column = ColumnHelper.columnOf(table, criterion.property)[criterion.property] as Column<Any>
         val value = criterion.getValue()
         return when (criterion.operator) {
             Operator.EQ -> column.eq(value!!)
+            Operator.NE, Operator.LG -> column.notEq(value!!)
+            Operator.GT -> (column as Column<Comparable<Any>>).greater(value as Comparable<Any>)
+            Operator.GE -> (column as Column<Comparable<Any>>).greaterEq(value as Comparable<Any>)
+            Operator.LT -> (column as Column<Comparable<Any>>).less(value as Comparable<Any>)
+            Operator.LE -> (column as Column<Comparable<Any>>).lessEq(value as Comparable<Any>)
 //            Operator.IEQ ->  error("未支持") //TODO ktorm怎么支持sql函数？
             Operator.EQ_P -> columnEq(column, ColumnHelper.columnOf(table, value as String) as Column<Any>)
-            Operator.NE_P, Operator.LG_P -> columnNotEq(column, ColumnHelper.columnOf(table, value as String) as Column<Any>)
+            Operator.NE_P, Operator.LG_P -> columnNotEq(
+                column,
+                ColumnHelper.columnOf(table, value as String) as Column<Any>
+            )
 //            Operator.GE_P, Operator.LE_P, Operator.GT_P, Operator.LT_P -> error("未支持")
             Operator.LIKE -> column.like("%${value!!}%")
             Operator.LIKE_S -> column.like("${value!!}%")
@@ -95,6 +103,8 @@ internal object CriteriaConverter {
             Operator.IS_NOT_NULL -> column.isNotNull()
             Operator.IS_EMPTY -> column.eq("")
             Operator.IS_NOT_EMPTY -> column.notEq("")
+            Operator.BETWEEN -> (column as Column<Comparable<Any>>).between(value as ClosedRange<Comparable<Any>>)
+            Operator.BETWEEN -> (column as Column<Comparable<Any>>).notBetween(value as ClosedRange<Comparable<Any>>)
             else -> error("未支持")
         }
     }

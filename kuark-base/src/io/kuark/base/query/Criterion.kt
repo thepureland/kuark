@@ -73,14 +73,15 @@ class Criterion : Serializable {
         }
 
     fun getValue(): Any? {
-        return if (value == null || "" == value) {
-            value
-        } else when (operator) {
-            Operator.LIKE, Operator.ILIKE -> "%$value%"
-            Operator.LIKE_S, Operator.ILIKE_S -> value.toString() + "%"
-            Operator.LIKE_E, Operator.ILIKE_E -> "%$value"
-            else -> value
-        }
+//        return if (value == null || "" == value) {
+//            value
+//        } else when (operator) {
+//            Operator.LIKE, Operator.ILIKE -> "%$value%"
+//            Operator.LIKE_S, Operator.ILIKE_S -> value.toString() + "%"
+//            Operator.LIKE_E, Operator.ILIKE_E -> "%$value"
+//            else -> value
+//        }
+        return value
     }
 
     fun setValue(fieldValue: Any?) {

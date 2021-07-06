@@ -1,13 +1,11 @@
 package io.kuark.ability.data.rdb.support
 
-import io.kuark.base.lang.string.humpToUnderscore
 import io.kuark.base.query.Criteria
 import io.kuark.base.query.enums.Operator
 import io.kuark.base.support.GroupExecutor
 import org.ktorm.dsl.*
 import org.ktorm.entity.add
 import org.ktorm.entity.removeIf
-import org.ktorm.schema.Column
 import org.ktorm.schema.Table
 
 /**
@@ -233,13 +231,12 @@ open class BaseDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadOnlyD
         return updateByCriteria(entity.id, properties, criteria)
     }
 
-
     /**
      * 批量更新实体对应的记录
      *
      * ktorm底层该方法是基于原生 JDBC 提供的 executeBatch 函数实现
      *
-     * @param entities 实体集合
+     * @param entities 实体对象集合
      * @param countOfEachBatch 每批大小，缺省为1000
      * @return 更新成功的记录数
      * @throws IllegalStateException 存在主键为null时
@@ -247,25 +244,99 @@ open class BaseDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadOnlyD
      * @since 1.0.0
      */
     open fun batchUpdate(entities: Collection<E>, countOfEachBatch: Int = 1000): Int {
-        if (entities.filter { it.id == null }.isNotEmpty()) {
-            error("由于存在主键为null的实体，批量更新失败！")
-        }
+        return batchUpdateByCriteria(entities, countOfEachBatch, null)
+    }
 
-        var totalCount = 0
-        GroupExecutor(entities, countOfEachBatch) {
-            val counts = database().batchUpdate(table()) {
-                for (entity in it) {
-                    item {
-                        entity.properties.filter { it.key != "id" }.forEach { (name, value) ->
-                            set(table()[name.humpToUnderscore().toLowerCase()], value) //TODO 有没有办法直接取得列名？
-                        }
-                        where { (table()["id"] as Column<PK>) eq entity.id!! }
-                    }
+    /**
+     * 有条件的批量更新实体对象（仅当满足给定的附加查询条件时）
+     *
+     * @param entities 实体对象集合
+     * @param criteria 附加查询条件
+     * @param countOfEachBatch 每批大小，缺省为1000
+     * @return 更新的记录数
+     */
+    open fun batchUpdateWhen(entities: Collection<E>, criteria: Criteria, countOfEachBatch: Int = 1000): Int {
+        return batchUpdateByCriteria(entities, countOfEachBatch, criteria)
+    }
+
+    /**
+     * 批量更新实体对象, 只更新实体的某几个属性
+     *
+     * @param criteria   查询条件
+     * @param properties Map(属性名，属性值)
+     * @return 是否更新成功
+     */
+    open fun batchUpdateProperties(criteria: Criteria, properties: Map<String, *>): Int {
+        require(properties.isNotEmpty()) { "未指定要更新的属性Map！" }
+        val whereExpression = CriteriaConverter.convert(criteria, table())
+        val columnMap = ColumnHelper.columnOf(table(), *properties.keys.toTypedArray())
+        return database().batchUpdate(table()) {
+            item {
+                properties.forEach { (name, value) ->
+                    set(columnMap[name]!!, value)
+                    where { whereExpression }
                 }
             }
-            totalCount += counts.sum()
-        }.execute()
-        return totalCount
+        }.sum()
+    }
+
+    /**
+     * 批量更新实体对象指定的几个属性
+     *
+     * @param entities   实体对象列表
+     * @param propertyNames 更新的属性的可变数组
+     * @param countOfEachBatch 每批大小，缺省为1000
+     * @return 更新的记录数
+     */
+    open fun batchUpdateOnly(entities: Collection<E>, vararg propertyNames: String, countOfEachBatch: Int = 1000): Int {
+        return batchUpdateByCriteria(entities, countOfEachBatch, null, false, *propertyNames)
+    }
+
+    /**
+     * 有条件的批量更新实体对象指定的几个属性（仅当满足给定的附加查询条件时） <br></br>
+     * 注：id属性永远不会被更新
+     *
+     * @param entities   实体对象列表
+     * @param criteria 附加查询条件
+     * @param propertyNames 更新的属性的可变数组
+     * @param countOfEachBatch 每批大小，缺省为1000
+     * @return 更新的记录数
+     */
+    open fun batchUpdateOnlyWhen(
+        entities: Collection<E>, criteria: Criteria, vararg propertyNames: String, countOfEachBatch: Int = 1000
+    ): Int {
+        return batchUpdateByCriteria(entities, countOfEachBatch, criteria, false, *propertyNames)
+    }
+
+    /**
+     * 批量更新实体除了指定几个属性外的所有属性 <br></br>
+     * 注：id属性永远不会被更新
+     *
+     * @param entities   实体对象列表
+     * @param excludePropertyNames 不更新的属性的可变数组
+     * @param countOfEachBatch 每批大小，缺省为1000
+     * @return 是否更新成功
+     */
+    open fun batchUpdateExcludeProperties(
+        entities: Collection<E>, vararg excludePropertyNames: String, countOfEachBatch: Int = 1000
+    ): Int {
+        return batchUpdateByCriteria(entities, countOfEachBatch, null, true, *excludePropertyNames)
+    }
+
+    /**
+     * 有条件的批量更新实体除了指定几个属性外的所有属性（仅当满足给定的附加查询条件时） <br></br>
+     * 注：id属性永远不会被更新
+     *
+     * @param entities   实体对象列表
+     * @param criteria 附加查询条件
+     * @param countOfEachBatch 每批大小，缺省为1000
+     * @param excludePropertyNames 不更新的属性的可变数组
+     * @return 是否更新成功
+     */
+    open fun batchUpdateExcludePropertiesWhen(
+        entities: Collection<E>, criteria: Criteria, countOfEachBatch: Int = 1000, vararg excludePropertyNames: String
+    ): Int {
+        return batchUpdateByCriteria(entities, countOfEachBatch, criteria, true, *excludePropertyNames)
     }
 
     //endregion Update
@@ -328,10 +399,10 @@ open class BaseDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadOnlyD
     //endregion Delete
 
     private fun updateByCriteria(id: PK?, propertyMap: Map<String, *>, criteria: Criteria?): Boolean {
-        assert(id != null) { "更新操作时，数据库实体主键不能为空！" }
+        require(id != null) { "更新操作时，数据库实体主键不能为空！" }
         val columnMap = ColumnHelper.columnOf(table(), *propertyMap.keys.toTypedArray())
         return database().update(table()) {
-            propertyMap.forEach { (name, value) ->
+            propertyMap.filter { it.key != "id" }.forEach { (name, value) ->
                 set(columnMap[name]!!, propertyMap[name])
             }
             where {
@@ -342,6 +413,50 @@ open class BaseDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadOnlyD
                 whereExpression
             }
         } == 1
+    }
+
+    private fun batchUpdateByCriteria(
+        entities: Collection<E>,
+        countOfEachBatch: Int,
+        criteria: Criteria?,
+        exclude: Boolean = false,
+        vararg propertyNames: String = emptyArray()
+    ): Int {
+        require(entities.isNotEmpty()) { "实体集合参数不能为空集合！" }
+        require(!entities.any { it.id == null }) { "由于存在主键为null的实体，批量更新失败！" }
+
+        var totalCount = 0
+        var columnMap = ColumnHelper.columnOf(table(), *entities.first().properties.keys.toTypedArray())
+        if (propertyNames.isNotEmpty()) {
+            columnMap = if (exclude) {
+                columnMap.filter { it.key !in propertyNames }
+            } else {
+                columnMap.filter { it.key in propertyNames }
+            }
+        }
+        val criteriaExpression = if (criteria != null) CriteriaConverter.convert(criteria, table()) else null
+        GroupExecutor(entities, countOfEachBatch) {
+            val counts = database().batchUpdate(table()) {
+                for (entity in it) {
+                    item {
+                        entity.properties.filter { it.key != "id" }.forEach { (name, value) ->
+                            if (columnMap.containsKey(name)) {
+                                set(columnMap[name]!!, value)
+                            }
+                        }
+                        where {
+                            var whereExpression = getPkColumn() eq entity.id!!
+                            if (criteriaExpression != null) {
+                                whereExpression = whereExpression.and(criteriaExpression)
+                            }
+                            whereExpression
+                        }
+                    }
+                }
+            }
+            totalCount += counts.sum()
+        }.execute()
+        return totalCount
     }
 
 }

@@ -73,25 +73,25 @@ enum class Operator constructor(
      */
     LG_P("P<>", "小于大于(不等于)属性", false, false),
 
-    /**
-     * 大于等于属性
-     */
-    GE_P("P>=", "大于等于属性", false, false),
-
-    /**
-     * 小于等于属性
-     */
-    LE_P("P<=", "小于等于属性", false, false),
-
-    /**
-     * 大于属性
-     */
-    GT_P("P>", "大于属性", false, false),
-
-    /**
-     * 小于属性
-     */
-    LT_P("P<", "小于属性", false, false),
+//    /**
+//     * 大于等于属性
+//     */
+//    GE_P("P>=", "大于等于属性", false, false),
+//
+//    /**
+//     * 小于等于属性
+//     */
+//    LE_P("P<=", "小于等于属性", false, false),
+//
+//    /**
+//     * 大于属性
+//     */
+//    GT_P("P>", "大于属性", false, false),
+//
+//    /**
+//     * 小于属性
+//     */
+//    LT_P("P<", "小于属性", false, false),
 
     /**
      * 匹配字符串任意位置
@@ -108,20 +108,20 @@ enum class Operator constructor(
      */
     LIKE_E("LIKE_E", "匹配后面", false, true),
 
-    /**
-     * 忽略大小写匹配字符串任意位置
-     */
-    ILIKE("ILIKE", "忽略大小写任意位置匹配", false, true),
-
-    /**
-     * 忽略大小写匹配字符串前面
-     */
-    ILIKE_S("ILIKE_S", "忽略大小写匹配前面", false, true),
-
-    /**
-     * 忽略大小写匹配字符串后面
-     */
-    ILIKE_E("ILIKE_E", "忽略大小写匹配后面", false, true),
+//    /**
+//     * 忽略大小写匹配字符串任意位置
+//     */
+//    ILIKE("ILIKE", "忽略大小写任意位置匹配", false, true),
+//
+//    /**
+//     * 忽略大小写匹配字符串前面
+//     */
+//    ILIKE_S("ILIKE_S", "忽略大小写匹配前面", false, true),
+//
+//    /**
+//     * 忽略大小写匹配字符串后面
+//     */
+//    ILIKE_E("ILIKE_E", "忽略大小写匹配后面", false, true),
 
     /**
      * in查询
@@ -151,7 +151,17 @@ enum class Operator constructor(
     /**
      * 是否不为空串
      */
-    IS_NOT_EMPTY("!=''", "不等于空串", true, true);
+    IS_NOT_EMPTY("!=''", "不等于空串", true, true),
+
+    /**
+     * 在两者间
+     */
+    BETWEEN("BETWEEN", "在两者间", false, false),
+
+    /**
+     * 不在两者间
+     */
+    NOT_BETWEEN("NOT BETWEEN", "不在两者间", false, false);
 
     /**
      * 根据当前操作符比较两个值
@@ -233,21 +243,21 @@ enum class Operator constructor(
                     v1.trim { it <= ' ' }.endsWith((v2 as String?)!!)
                 } else false
             }
-            ILIKE -> {
-                if (v1 is String && v2 is String) {
-                    v1.lowercase(Locale.getDefault()).contains(v2.lowercase(Locale.getDefault()))
-                } else false
-            }
-            ILIKE_S -> {
-                if (v1 is String && v2 is String) {
-                    v1.trim { it <= ' ' }.lowercase(Locale.getDefault()).startsWith(v2.lowercase(Locale.getDefault()))
-                } else false
-            }
-            ILIKE_E -> {
-                if (v1 is String && v2 is String) {
-                    v1.trim { it <= ' ' }.lowercase(Locale.getDefault()).endsWith(v2.lowercase(Locale.getDefault()))
-                } else false
-            }
+//            ILIKE -> {
+//                if (v1 is String && v2 is String) {
+//                    v1.lowercase(Locale.getDefault()).contains(v2.lowercase(Locale.getDefault()))
+//                } else false
+//            }
+//            ILIKE_S -> {
+//                if (v1 is String && v2 is String) {
+//                    v1.trim { it <= ' ' }.lowercase(Locale.getDefault()).startsWith(v2.lowercase(Locale.getDefault()))
+//                } else false
+//            }
+//            ILIKE_E -> {
+//                if (v1 is String && v2 is String) {
+//                    v1.trim { it <= ' ' }.lowercase(Locale.getDefault()).endsWith(v2.lowercase(Locale.getDefault()))
+//                } else false
+//            }
             IN -> `in`(v1, v2)
             NOT_IN -> !`in`(v1, v2)
             IS_NULL -> v1 == null
@@ -285,6 +295,18 @@ enum class Operator constructor(
                 if (v1 is Map<*, *>) {
                     v1.isEmpty()
                 } else v1.toString().isEmpty()
+            }
+            BETWEEN -> {
+                if (v1 is Comparable<*> && v2 is ClosedFloatingPointRange<*>) {
+                    return (v1 as Comparable<Any>) >= v2.start && v1 <= v2.endInclusive
+                } else false
+            }
+            NOT_BETWEEN -> {
+                return if (v1 !is Comparable<*> || v2 !is ClosedFloatingPointRange<*>) {
+                    true
+                } else {
+                    (v1 as Comparable<Any>) < v2.start && v1 > v2.endInclusive
+                }
             }
             else -> false
         }

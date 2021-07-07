@@ -45,7 +45,7 @@ open class BaseDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadOnlyD
     open fun insertOnly(entity: E, vararg propertyNames: String): PK {
         val properties = entity.properties
         val columns = ColumnHelper.columnOf(table(), *propertyNames)
-        return database().insertAndGenerateKey(table!!) {
+        return database().insertAndGenerateKey(table()) {
             columns.forEach { (propertyName, column) ->
                 set(column, properties[propertyName])
             }
@@ -116,7 +116,7 @@ open class BaseDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadOnlyD
      * @return 保存的记录数
      */
     open fun batchInsertExclude(
-        entities: Collection<E>, countOfEachBatch: Int = 1000, excludePropertyNames: String
+        entities: Collection<E>, countOfEachBatch: Int = 1000, vararg excludePropertyNames: String
     ): Int {
         val onlyPropertyNames = entities.first().properties.keys.filter { it !in excludePropertyNames }
         return batchInsertOnly(entities, countOfEachBatch, *onlyPropertyNames.toTypedArray())
@@ -156,7 +156,8 @@ open class BaseDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadOnlyD
      * @return 是否更新成功
      */
     open fun updateProperties(id: PK, properties: Map<String, *>): Boolean {
-        val columnMap = ColumnHelper.columnOf(table(), *properties.keys.toTypedArray())
+        val propertyNames = properties.keys.filter { it != "id" }.toTypedArray()
+        val columnMap = ColumnHelper.columnOf(table(), *propertyNames)
         return database().update(table()) {
             properties.forEach { (name, value) ->
                 set(columnMap[name]!!, properties[name])
@@ -274,8 +275,8 @@ open class BaseDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadOnlyD
             item {
                 properties.forEach { (name, value) ->
                     set(columnMap[name]!!, value)
-                    where { whereExpression }
                 }
+                where { whereExpression }
             }
         }.sum()
     }
@@ -284,11 +285,11 @@ open class BaseDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadOnlyD
      * 批量更新实体对象指定的几个属性
      *
      * @param entities   实体对象列表
-     * @param propertyNames 更新的属性的可变数组
      * @param countOfEachBatch 每批大小，缺省为1000
+     * @param propertyNames 更新的属性的可变数组
      * @return 更新的记录数
      */
-    open fun batchUpdateOnly(entities: Collection<E>, vararg propertyNames: String, countOfEachBatch: Int = 1000): Int {
+    open fun batchUpdateOnly(entities: Collection<E>, countOfEachBatch: Int = 1000, vararg propertyNames: String): Int {
         return batchUpdateByCriteria(entities, countOfEachBatch, null, false, *propertyNames)
     }
 
@@ -298,12 +299,12 @@ open class BaseDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadOnlyD
      *
      * @param entities   实体对象列表
      * @param criteria 附加查询条件
-     * @param propertyNames 更新的属性的可变数组
      * @param countOfEachBatch 每批大小，缺省为1000
+     * @param propertyNames 更新的属性的可变数组
      * @return 更新的记录数
      */
     open fun batchUpdateOnlyWhen(
-        entities: Collection<E>, criteria: Criteria, vararg propertyNames: String, countOfEachBatch: Int = 1000
+        entities: Collection<E>, criteria: Criteria, countOfEachBatch: Int = 1000, vararg propertyNames: String
     ): Int {
         return batchUpdateByCriteria(entities, countOfEachBatch, criteria, false, *propertyNames)
     }
@@ -313,12 +314,12 @@ open class BaseDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadOnlyD
      * 注：id属性永远不会被更新
      *
      * @param entities   实体对象列表
-     * @param excludePropertyNames 不更新的属性的可变数组
      * @param countOfEachBatch 每批大小，缺省为1000
+     * @param excludePropertyNames 不更新的属性的可变数组
      * @return 是否更新成功
      */
     open fun batchUpdateExcludeProperties(
-        entities: Collection<E>, vararg excludePropertyNames: String, countOfEachBatch: Int = 1000
+        entities: Collection<E>, countOfEachBatch: Int = 1000, vararg excludePropertyNames: String
     ): Int {
         return batchUpdateByCriteria(entities, countOfEachBatch, null, true, *excludePropertyNames)
     }
@@ -400,7 +401,8 @@ open class BaseDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadOnlyD
 
     private fun updateByCriteria(id: PK?, propertyMap: Map<String, *>, criteria: Criteria?): Boolean {
         require(id != null) { "更新操作时，数据库实体主键不能为空！" }
-        val columnMap = ColumnHelper.columnOf(table(), *propertyMap.keys.toTypedArray())
+        val propertyNames = propertyMap.keys.toTypedArray()
+        val columnMap = ColumnHelper.columnOf(table(), *propertyNames)
         return database().update(table()) {
             propertyMap.filter { it.key != "id" }.forEach { (name, value) ->
                 set(columnMap[name]!!, propertyMap[name])

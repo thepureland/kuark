@@ -444,7 +444,8 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
     open fun pagingReturnProperty(
         criteria: Criteria, returnProperty: String, pageNo: Int, pageSize: Int, vararg orders: Order
     ): List<*> {
-        return searchPropertiesCriteria(criteria, listOf(returnProperty), pageNo, pageSize, *orders)
+        val results = searchPropertiesCriteria(criteria, listOf(returnProperty), pageNo, pageSize, *orders)
+        return results.flatMap { it.values }
     }
 
     /**

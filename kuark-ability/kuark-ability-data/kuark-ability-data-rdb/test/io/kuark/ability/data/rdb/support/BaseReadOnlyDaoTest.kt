@@ -1,5 +1,6 @@
 package io.kuark.ability.data.rdb.support
 
+import io.kuark.ability.data.rdb.kit.RdbKit
 import io.kuark.ability.data.rdb.table.TestTable
 import io.kuark.ability.data.rdb.table.TestTableDao
 import io.kuark.ability.data.rdb.table.TestTableKit
@@ -14,8 +15,6 @@ import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired
-import java.text.MessageFormat
-import java.util.*
 
 /**
  * BaseReadOnlyDao测试用例
@@ -91,7 +90,7 @@ internal class BaseReadOnlyDaoTest : SpringTest() {
         val orders = arrayOf(Order.asc(TestTable::height.name), Order.desc(TestTable::name.name))
         results = testTableDao.oneSearch(TestTable::isActive.name, true, *orders)
         assertEquals(8, results.size)
-        assertEquals("name5", results.first().name)
+        assertEquals("name8", results.first().name)
         assertEquals("name9", results.last().name)
     }
 
@@ -291,27 +290,48 @@ internal class BaseReadOnlyDaoTest : SpringTest() {
     //endregion search Criteria
 
 
-//    //region pagingSearch
-//    fun pagingSearch(criteria: Criteria, pageNo: Int, pageSize: Int, vararg orders: Order): List<E> {
-//        return searchEntityCriteria(criteria, pageNo, pageSize, *orders)
-//    }
-//
-//    fun pagingReturnProperty(
-//        criteria: Criteria, returnProperty: String, pageNo: Int, pageSize: Int, vararg orders: Order
-//    ): List<*> {
-//        return searchPropertiesCriteria(criteria, listOf(returnProperty), pageNo, pageSize, *orders)
-//    }
-//
-//    fun pagingReturnProperties(
-//        criteria: Criteria, returnProperties: Collection<String>, pageNo: Int, pageSize: Int, vararg orders: Order
-//    ): List<Map<String, *>> {
-//        return searchPropertiesCriteria(criteria, returnProperties, pageNo, pageSize, *orders)
-//    }
-//
-//    //endregion pagingSearch
-//
-//
-//    //region aggregate
+    //region pagingSearch
+    @Test
+    fun pagingSearch() {
+        if (isSupportPaging()) {
+            val criteria = Criteria.add(TestTable::isActive.name, Operator.EQ, true)
+            val entities = testTableDao.pagingSearch(criteria, 1, 4, Order.asc(TestTable::id.name))
+            assertEquals(4, entities.size)
+            assertEquals(-11, entities.first().id)
+        }
+    }
+
+    @Test
+    fun pagingReturnProperty() {
+        if (isSupportPaging()) {
+            val criteria = Criteria.add(TestTable::isActive.name, Operator.EQ, true)
+            val results =
+                testTableDao.pagingReturnProperty(criteria, TestTable::id.name, 1, 4, Order.asc(TestTable::id.name))
+            assertEquals(4, results.size)
+            assertEquals(-11, results.first())
+        }
+    }
+
+    @Test
+    fun pagingReturnProperties() {
+        if (isSupportPaging()) {
+            val criteria = Criteria.add(TestTable::isActive.name, Operator.EQ, true)
+            val returnProperties = listOf(TestTable::id.name, TestTable::name.name)
+            val results =
+                testTableDao.pagingReturnProperties(criteria, returnProperties, 1, 4, Order.asc(TestTable::id.name))
+            assertEquals(4, results.size)
+            assertEquals(-11, results.first()[TestTable::id.name])
+        }
+    }
+
+    private fun isSupportPaging(): Boolean { // h2可以用PostgreSqlDialect来实现分页
+        val dialect = RdbKit.getDatabase().dialect
+        return !dialect::class.java.name.contains("SqlDialectKt\$detectDialectImplementation\$1")
+    }
+    //endregion pagingSearch
+
+
+    //region aggregate
     @Test
     fun count() {
         assertEquals(11, testTableDao.count())

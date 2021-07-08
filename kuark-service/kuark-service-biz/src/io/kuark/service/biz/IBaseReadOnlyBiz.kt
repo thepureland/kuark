@@ -3,26 +3,29 @@ package io.kuark.service.biz
 import io.kuark.ability.data.rdb.support.IDbEntity
 import io.kuark.base.query.Criteria
 import io.kuark.base.query.sort.Order
-import org.ktorm.schema.Table
 
 /**
- * 基础的只读业务接口
+ * 基础的只读业务操作接口
  *
  * @param PK 实体主键类型
  * @param E 实体类型
- * @param T 数据库表-实体关联对象的类型
  * @author K
  * @since 1.0.0
  */
-interface IBaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
+interface IBaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>> {
 
+    //region Search
+    
     /**
      * 查询指定主键值的实体
      *
      * @param id 主键值，类型必须为以下之一：String、Int、Long
      * @return 实体
+     * @throws NoSuchElementException 不存在指定主键对应的实体时
+     * @author K
+     * @since 1.0.0
      */
-    fun getById(id: PK): E
+    fun getById(id: PK): E?
 
     /**
      * 批量查询指定主键值的实体
@@ -35,6 +38,9 @@ interface IBaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
      */
     fun getByIds(vararg ids: PK, countOfEachBatch: Int = 1000): List<E>
 
+    //endregion Search
+
+
     //region oneSearch
     /**
      * 根据单个属性查询
@@ -44,7 +50,7 @@ interface IBaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
      * @param orders   排序规则
      * @return 指定类名对象的结果列表
      */
-    fun oneSearch(property: String, value: Any?, vararg orders: Order): List<T>
+    fun oneSearch(property: String, value: Any?, vararg orders: Order): List<E>
 
     /**
      * 根据单个属性查询，只返回指定的单个属性的列表
@@ -64,7 +70,7 @@ interface IBaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
      * @param value            属性值
      * @param returnProperties 返回的属性名称集合
      * @param orders           排序规则
-     * @return List(Map(属性名, 属性值))
+     * @return List(Map(属性名, 属性值)), 一个Map封装一个记录
      */
     fun oneSearchProperties(
         property: String, value: Any?, returnProperties: Collection<String>, vararg orders: Order
@@ -80,7 +86,7 @@ interface IBaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
      * @param orders 排序规则
      * @return 实体对象列表
      */
-    fun allSearch(vararg orders: Order): List<T>
+    fun allSearch(vararg orders: Order): List<E>
 
     /**
      * 查询所有结果，只返回指定的单个属性的列表
@@ -111,7 +117,7 @@ interface IBaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
      * @param orders     排序规则
      * @return 实体对象列表
      */
-    fun andSearch(properties: Map<String, *>, vararg orders: Order): List<T>
+    fun andSearch(properties: Map<String, *>, vararg orders: Order): List<E>
 
     /**
      * 根据多个属性进行and条件查询，只返回指定的单个属性的列表
@@ -146,7 +152,7 @@ interface IBaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
      * @param orders     排序规则
      * @return 实体对象列表
      */
-    fun orSearch(properties: Map<String, *>, vararg orders: Order): List<T>
+    fun orSearch(properties: Map<String, *>, vararg orders: Order): List<E>
 
     /**
      * 根据多个属性进行or条件查询，只返回指定的单个属性的列表
@@ -182,7 +188,7 @@ interface IBaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
      * @param orders   排序规则
      * @return 指定类名对象的结果列表
      */
-    fun inSearch(property: String, values: List<*>, vararg orders: Order): List<T>
+    fun inSearch(property: String, values: Collection<*>, vararg orders: Order): List<E>
 
     /**
      * in查询，只返回指定的单个属性的值
@@ -193,7 +199,9 @@ interface IBaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
      * @param orders         排序规则
      * @return 指定属性的值列表
      */
-    fun inSearchProperty(property: String, values: List<*>, returnProperty: String, vararg orders: Order): List<*>
+    fun inSearchProperty(
+        property: String, values: List<*>, returnProperty: String, vararg orders: Order
+    ): List<*>
 
     /**
      * in查询，只返回指定属性的值
@@ -216,7 +224,7 @@ interface IBaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
      * @param orders 排序规则
      * @return 实体对象列表
      */
-    fun inSearchById(values: List<PK>, vararg orders: Order): List<T>
+    fun inSearchById(values: List<PK>, vararg orders: Order): List<E>
 
     /**
      * 主键in查询，只返回指定的单个属性的值
@@ -234,7 +242,7 @@ interface IBaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
      * @param values           主键值集合
      * @param returnProperties 要返回的属性名集合
      * @param orders           排序规则
-     * @return List<Map></Map><指定的属性名></指定的属性名>, 属性值>>
+     * @return List(Map(指定的属性名, 属性值))
      */
     fun inSearchPropertiesById(
         values: List<PK>, returnProperties: Collection<String>, vararg orders: Order
@@ -251,7 +259,7 @@ interface IBaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
      * @param orders   排序规则
      * @return 实体对象列表
      */
-    fun search(criteria: Criteria, vararg orders: Order): List<T>
+    fun search(criteria: Criteria, vararg orders: Order): List<E>
 
     /**
      * 复杂条件查询，只返回指定单个属性的值
@@ -288,7 +296,7 @@ interface IBaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
      * @param orders   排序规则
      * @return 实体对象列表
      */
-    fun pagingSearch(criteria: Criteria, pageNo: Int, pageSize: Int, vararg orders: Order): List<T>
+    fun pagingSearch(criteria: Criteria, pageNo: Int, pageSize: Int, vararg orders: Order): List<E>
 
     /**
      * 分页查询，返回对象列表,返回只包含指定属性
@@ -314,53 +322,57 @@ interface IBaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
      */
     fun pagingReturnProperties(
         criteria: Criteria, returnProperties: Collection<String>, pageNo: Int, pageSize: Int, vararg orders: Order
-    ): List<Map<String?, Any?>>
+    ): List<Map<String, *>>
 
     //endregion pagingSearch
 
 
+    //region aggregate
+
     /**
      * 计算记录数
      *
-     * @param criteria 查询条件
+     * @param criteria 查询条件，为null将计算所有记录
      * @return 记录数
      */
-    fun count(criteria: Criteria): Long
+    fun count(criteria: Criteria? = null): Int
 
     /**
      * 求和. 对满足条件的记录根据指定属性进行求和
      *
-     * @param criteria 查询条件
      * @param property 待求和的属性
+     * @param criteria 查询条件，为null将计算所有记录
      * @return 和
      */
-    fun sum(criteria: Criteria, property: String): Number
+    fun sum(property: String, criteria: Criteria? = null): Number
 
     /**
      * 求平均值. 对满足条件的记录根据指定属性进行求平均值
      *
-     * @param criteria 查询条件
      * @param property 待求平均值的属性
+     * @param criteria 查询条件，为null将计算所有记录
      * @return 平均值
      */
-    fun avg(criteria: Criteria, property: String): Number
+    fun avg(property: String, criteria: Criteria? = null): Number
 
     /**
      * 求最大值. 对满足条件的记录根据指定属性进行求最大值
      *
-     * @param criteria 查询条件
      * @param property 待求最大值的属性
+     * @param criteria 查询条件，为null将计算所有记录
      * @return 最大值
      */
-    fun max(criteria: Criteria, property: String): Any?
+    fun max(property: String, criteria: Criteria? = null): Any?
 
     /**
      * 求最小值. 对满足条件的记录根据指定属性进行求最小值
      *
-     * @param criteria 查询条件
      * @param property 待求最小值的属性
+     * @param criteria 查询条件，为null将计算所有记录
      * @return 最小值
      */
-    fun min(criteria: Criteria, property: String): Any?
+    fun min(property: String, criteria: Criteria? = null): Any?
+
+    //endregion aggregate
 
 }

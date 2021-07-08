@@ -167,7 +167,7 @@ open class BaseDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadOnlyD
     }
 
     /**
-     * 有条件的只更新实体的某几个属性（仅当满足给定的附加查询条件时） <br></br>
+     * 有条件的只更新实体的某几个属性（仅当满足给定的附加查询条件时）
      * 注：id属性永远不会被更新
      *
      * @param id         主键值
@@ -192,7 +192,7 @@ open class BaseDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadOnlyD
     }
 
     /**
-     * 有条件的只更新实体的某几个属性（仅当满足给定的附加查询条件时） <br></br>
+     * 有条件的只更新实体的某几个属性（仅当满足给定的附加查询条件时）
      * 注：id属性永远不会被更新
      *
      * @param entity     实体对象
@@ -219,7 +219,7 @@ open class BaseDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadOnlyD
     }
 
     /**
-     * 有条件的更新实体除指定的几个属性外的所有属性（仅当满足给定的附加查询条件时） <br></br>
+     * 有条件的更新实体除指定的几个属性外的所有属性（仅当满足给定的附加查询条件时）
      * 注：id属性永远不会被更新
      *
      * @param entity            实体对象
@@ -294,7 +294,7 @@ open class BaseDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadOnlyD
     }
 
     /**
-     * 有条件的批量更新实体对象指定的几个属性（仅当满足给定的附加查询条件时） <br></br>
+     * 有条件的批量更新实体对象指定的几个属性（仅当满足给定的附加查询条件时）
      * 注：id属性永远不会被更新
      *
      * @param entities   实体对象列表
@@ -310,7 +310,7 @@ open class BaseDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadOnlyD
     }
 
     /**
-     * 批量更新实体除了指定几个属性外的所有属性 <br></br>
+     * 批量更新实体除了指定几个属性外的所有属性
      * 注：id属性永远不会被更新
      *
      * @param entities   实体对象列表
@@ -325,7 +325,7 @@ open class BaseDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadOnlyD
     }
 
     /**
-     * 有条件的批量更新实体除了指定几个属性外的所有属性（仅当满足给定的附加查询条件时） <br></br>
+     * 有条件的批量更新实体除了指定几个属性外的所有属性（仅当满足给定的附加查询条件时）
      * 注：id属性永远不会被更新
      *
      * @param entities   实体对象列表

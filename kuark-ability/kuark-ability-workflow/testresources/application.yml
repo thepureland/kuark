@@ -1,0 +1,5 @@
+spring:
+  profiles:
+    active:
+      - ability-data-rdb-default
+      - ability-data-rdb-junit

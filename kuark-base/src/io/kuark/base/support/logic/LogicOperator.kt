@@ -3,6 +3,7 @@ package io.kuark.base.support.logic
 import io.kuark.base.lang.EnumKit
 import io.kuark.base.lang.collections.containsAll
 import io.kuark.base.support.enums.IDictEnum
+import java.util.*
 
 /**
  * 逻辑操作符枚举
@@ -129,7 +130,7 @@ enum class LogicOperator constructor(
                     return false
                 }
                 if (v1 is String && v2 is String) {
-                    (v1.toString() + "").toLowerCase() == (v2.toString() + "").toLowerCase()
+                    v1.toString().lowercase(Locale.getDefault()) == v2.toString().lowercase(Locale.getDefault())
                 } else v1 == v2
             }
             NE, LG -> {
@@ -186,7 +187,7 @@ enum class LogicOperator constructor(
             }
             ILIKE -> {
                 if (v1 is String && v2 is String) {
-                    v1.toLowerCase().contains(v2.toLowerCase())
+                    v1.lowercase(Locale.getDefault()).contains(v2.lowercase(Locale.getDefault()))
                 } else false
             }
             ILIKE_S -> {
@@ -197,8 +198,8 @@ enum class LogicOperator constructor(
             }
             ILIKE_E -> {
                 if (v1 is String && v2 is String) {
-                    v1.trim { it <= ' ' }.toLowerCase()
-                        .endsWith(v2.toLowerCase())
+                    v1.trim { it <= ' ' }.lowercase(Locale.getDefault())
+                        .endsWith(v2.lowercase(Locale.getDefault()))
                 } else false
             }
             IN -> `in`(v1, v2)
@@ -271,7 +272,7 @@ enum class LogicOperator constructor(
         fun enumOf(code: String): LogicOperator? {
             var codeStr = code
             if (codeStr.isNotBlank()) {
-                codeStr = codeStr.toUpperCase()
+                codeStr = codeStr.uppercase(Locale.getDefault())
             }
             return EnumKit.enumOf(LogicOperator::class, codeStr)
         }

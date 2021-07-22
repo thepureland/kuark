@@ -10,3 +10,4 @@
 /.sessions
 /sessionStore
 *.log
+h2.trace.db

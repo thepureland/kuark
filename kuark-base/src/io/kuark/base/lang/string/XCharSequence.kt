@@ -29,6 +29,7 @@ import kotlin.reflect.KClass
  * @author K
  * @since 1.0.0
  */
+@Suppress("UNCHECKED_CAST")
 fun <T : Any> CharSequence.toType(returnType: KClass<out T>): T { //TODO junit
     return this.toString().run {
         when (returnType) {
@@ -174,7 +175,8 @@ fun CharSequence.underscoreToHump(): String {
     val sb = StringBuilder()
     val words = this.split("_")
     for (word in words) {
-        sb.append(word.lowercase(Locale.getDefault()).capitalize())
+        sb.append(word.lowercase(Locale.getDefault())
+            .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() })
     }
     return sb.first().lowercaseChar() + sb.substring(1)
 }
@@ -195,6 +197,22 @@ fun CharSequence.fillTemplateByObjectMap(paramMap: Map<String, Any>): CharSequen
         )
     }
     return templateStr
+}
+
+/**
+ * 如果缺失指定的后缀，则拼接上
+ *
+ * @param suffix 后缀
+ * @param ignoreCase 忽略大小写，默认不忽略
+ * @return 拼接后的字符串
+ * @author K
+ * @since 1.0.0
+ */
+fun CharSequence.appendIfMissing(suffix: String, ignoreCase: Boolean = false): String {
+    if (!this.endsWith(suffix, ignoreCase)) {
+        return this.toString() + suffix
+    }
+    return this.toString()
 }
 
 
@@ -1099,7 +1117,8 @@ fun CharSequence.abbreviate(maxWidth: Int): String? = StringUtils.abbreviate(thi
  * @author K
  * @since 1.0.0
  */
-fun CharSequence.abbreviate(offset: Int, maxWidth: Int): String? = StringUtils.abbreviate(this.toString(), offset, maxWidth)
+fun CharSequence.abbreviate(offset: Int, maxWidth: Int): String? =
+    StringUtils.abbreviate(this.toString(), offset, maxWidth)
 
 /**
  * 用指定字符串替换源字符串中间的字符，以达到省略源字符串到指定长度的目的

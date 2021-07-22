@@ -7,13 +7,13 @@ import org.activiti.api.runtime.shared.query.Page
 import org.activiti.api.runtime.shared.query.Pageable
 import org.activiti.api.task.model.builders.TaskPayloadBuilder
 import org.activiti.api.task.runtime.TaskRuntime
+import org.activiti.engine.ProcessEngineConfiguration
+import org.activiti.engine.ProcessEngines
 import org.activiti.engine.RepositoryService
-import org.activiti.engine.repository.Deployment
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import java.io.File
 import java.io.FileInputStream
-import java.io.InputStream
 import java.util.zip.ZipInputStream
 
 
@@ -26,10 +26,10 @@ import java.util.zip.ZipInputStream
 class ActivitiTest : SpringTest() {
 
     @Autowired
-    private val processRuntime: ProcessRuntime? = null     // 实现流程定义相关操作
+    private val processRuntime: ProcessRuntime? = null
 
     @Autowired
-    private val taskRuntime: TaskRuntime? = null   // 任务先关的操作类
+    private val taskRuntime: TaskRuntime? = null
 
     @Autowired
     private val securityUtil: SecurityUtil? = null
@@ -37,38 +37,34 @@ class ActivitiTest : SpringTest() {
     @Autowired
     private val repositoryService: RepositoryService? = null
 
-    @Test // 部署流程
+    @Test
+    fun genTable() {
+        println(ProcessEngines.getDefaultProcessEngine())
+    }
+
+
+    @Test
     fun deploy() {
         securityUtil!!.logInAs("salaboy")
         val bpmnName = "test"
         val deploymentBuilder = repositoryService!!.createDeployment().name("请假流程")
-        var deployment: Deployment? = null
-        try {
-            deployment = deploymentBuilder.addClasspathResource("processes/$bpmnName.bpmn")
-                .addClasspathResource("processes/$bpmnName.png").deploy()
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
+        val deploy = deploymentBuilder.addClasspathResource("bpmn/$bpmnName.bpmn")
+            .addClasspathResource("bpmn/$bpmnName.png").deploy()
+        println(deploy)
     }
 
-    @Test // 远程外部BPMN
+    @Test
     fun deploy2() {
         securityUtil!!.logInAs("salaboy")
-        try {
-            var deployment: Deployment? = null
-            val `in`: InputStream =
-                FileInputStream(File("C:\\Users\\飞牛\\git\\SpringBoot2_Activiti7\\src\\main\\resources\\processes\\leaveProcess.zip"))
-            val zipInputStream = ZipInputStream(`in`)
-            deployment = repositoryService!!.createDeployment().name("请假流程2") // 指定zip格式的文件完成部署
-                .addZipInputStream(zipInputStream).deploy() // 完成部署
-            zipInputStream.close()
-        } catch (e: Exception) {
-            // TODO 上线时删除
-            e.printStackTrace()
-        }
+        val inputStream =
+            FileInputStream(File("C:\\Users\\飞牛\\git\\SpringBoot2_Activiti7\\src\\main\\resources\\processes\\leaveProcess.zip"))
+        val zipInputStream = ZipInputStream(inputStream)
+        repositoryService!!.createDeployment().name("请假流程2") // 指定zip格式的文件完成部署
+            .addZipInputStream(zipInputStream).deploy() // 完成部署
+        zipInputStream.close()
     }
 
-    @Test // 查看流程
+    @Test
     fun contextLoads() {
         securityUtil!!.logInAs("salaboy")
         val processDefinitionPage: Page<*> = processRuntime!!.processDefinitions(Pageable.of(0, 10))
@@ -78,7 +74,7 @@ class ActivitiTest : SpringTest() {
         }
     }
 
-    @Test // 启动流程
+    @Test
     fun startInstance() {
         securityUtil!!.logInAs("salaboy")
         val processInstance = processRuntime!!
@@ -86,7 +82,7 @@ class ActivitiTest : SpringTest() {
         System.err.println("流程实例ID：" + processInstance.id)
     }
 
-    @Test // 执行流程
+    @Test
     fun testTask() {
         securityUtil!!.logInAs("salaboy")
         var page = taskRuntime!!.tasks(Pageable.of(0, 10))

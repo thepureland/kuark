@@ -2,6 +2,7 @@ package io.kuark.base.io
 
 import org.apache.commons.io.FileUtils
 import java.io.File
+import java.net.URL
 import java.net.URLDecoder
 import kotlin.reflect.KClass
 
@@ -61,6 +62,24 @@ object PathKit {
         }
         val path = c.protectionDomain.codeSource.location.path
         return URLDecoder.decode(path, "UTF-8")
+    }
+
+    /**
+     * 获取资源的路径
+     *
+     * @param name 资源名称
+     * @return 资源绝对路径
+     */
+    fun getResourcePath(name: String): String {
+        // Try the current Thread context classloader
+        var classLoader = Thread.currentThread().contextClassLoader
+        var url = classLoader.getResource(name)
+        if (url == null) {
+            // Finally, try the classloader for this class
+            classLoader = this::class.java.classLoader
+            url = classLoader.getResource(name)
+        }
+        return url.path
     }
 
     /**

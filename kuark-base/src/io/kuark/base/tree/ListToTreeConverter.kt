@@ -56,7 +56,7 @@ object ListToTreeConverter {
     fun <E : IJsTreeNode> convertToJsTree(objectList: List<E>): List<E> {
         val treeNodeMap = mutableMapOf<String, E>()
         for (obj in objectList) {
-            treeNodeMap[obj.selfUniqueIdentifier!!] = obj
+            treeNodeMap[obj.selfUniqueIdentifier] = obj
         }
         val treeNodeList = ArrayList<E>()
         for (obj in objectList) {

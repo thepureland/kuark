@@ -9,11 +9,14 @@ import java.awt.image.BufferedImage
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.File
+import java.io.IOException
 import java.net.URI
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.util.*
 import javax.imageio.ImageIO
+import javax.imageio.stream.ImageInputStream
+import javax.imageio.stream.MemoryCacheImageInputStream
 import javax.swing.JFrame
 import javax.swing.JPanel
 
@@ -181,6 +184,44 @@ object ImageKit {
             destImage = image
         }
         return destImage as BufferedImage
+    }
+
+    /**
+     * 从内存字节数组中读取图像
+     *
+     * @param imgBytes 未解码的图像数据
+     * @return 返回 [BufferedImage]
+     * @throws IOException 当读写错误或不识别的格式时抛出
+     * @author https://blog.csdn.net/johnwaychan/article/details/79106983
+     */
+    fun readMemoryImage(imgBytes: ByteArray): BufferedImage {
+        // 将字节数组转为InputStream，再转为MemoryCacheImageInputStream
+        val imageInputstream = MemoryCacheImageInputStream(ByteArrayInputStream(imgBytes))
+        // 获取所有能识别数据流格式的ImageReader对象
+        val it = ImageIO.getImageReaders(imageInputstream)
+        // 迭代器遍历尝试用ImageReader对象进行解码
+        while (it.hasNext()) {
+            val imageReader = it.next()
+            // 设置解码器的输入流
+            imageReader.setInput(imageInputstream, true, true)
+            // 图像文件格式后缀
+            val suffix: String = imageReader.formatName.trim().lowercase(Locale.getDefault())
+            // 图像宽度
+            val width: Int = imageReader.getWidth(0)
+            // 图像高度
+            val height: Int = imageReader.getHeight(0)
+            System.out.printf("format %s,%dx%d\n", suffix, width, height)
+            try {
+                // 解码成功返回BufferedImage对象
+                // 0即为对第0张图像解码(gif格式会有多张图像),前面获取宽度高度的方法中的参数0也是同样的意思
+                return imageReader.read(0, imageReader.defaultReadParam)
+            } catch (e: Exception) {
+                imageReader.dispose()
+                // 如果解码失败尝试用下一个ImageReader解码
+            }
+        }
+        imageInputstream.close()
+        throw IOException("unsupported image format")
     }
 
     /**

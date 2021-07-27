@@ -1,6 +1,6 @@
-package io.kuark.ability.workflow.ibiz
+package io.kuark.ability.workflow.task
 
-import io.kuark.ability.workflow.vo.FlowTask
+import io.kuark.ability.workflow.task.FlowTask
 
 /**
  * 流程任务相关业务接口

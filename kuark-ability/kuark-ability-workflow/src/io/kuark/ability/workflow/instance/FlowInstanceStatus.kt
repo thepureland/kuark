@@ -1,4 +1,4 @@
-package io.kuark.ability.workflow.enums
+package io.kuark.ability.workflow.instance
 
 import org.activiti.engine.runtime.ProcessInstance
 
@@ -22,6 +22,15 @@ enum class FlowInstanceStatus {
 
 
     companion object {
+
+        /**
+         * 转化activiti定义的流程实例状态
+         *
+         * @param internalProcessInstance activiti流程实例对象
+         * @return 工作流实例状态枚举
+         * @author K
+         * @since 1.0.0
+         */
         fun of(internalProcessInstance: ProcessInstance): FlowInstanceStatus {
             return when {
                 internalProcessInstance.isSuspended -> SUSPENDED
@@ -30,6 +39,7 @@ enum class FlowInstanceStatus {
                 else -> RUNNING
             }
         }
+
     }
 
 }

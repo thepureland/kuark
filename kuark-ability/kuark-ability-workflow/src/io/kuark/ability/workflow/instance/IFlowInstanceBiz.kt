@@ -1,6 +1,7 @@
-package io.kuark.ability.workflow.ibiz
+package io.kuark.ability.workflow.instance
 
-import io.kuark.ability.workflow.vo.FlowInstance
+import io.kuark.ability.workflow.event.IFlowEventListener
+import io.kuark.ability.workflow.instance.FlowInstance
 import java.lang.IllegalArgumentException
 
 /**
@@ -38,12 +39,19 @@ interface IFlowInstanceBiz {
      * @param definitionKey 流程定义key(bpmn文件中process元素的id)。当存在多个对应的流程定义时，取最新的一个。
      * @param bizKey 业务主键
      * @param instanceName 实例名称
-     * @param variables 流程实例变量
+     * @param variables 流程实例变量，默认为null
+     * @param eventListener 事件监听器，默认为null
      * @return 流程实例对象，启动失败时返回null
      * @author K
      * @since 1.0.0
      */
-    fun startInstance(definitionKey: String, bizKey: String, instanceName: String, variables: Map<String, *>? = null): FlowInstance?
+    fun startInstance(
+        definitionKey: String,
+        bizKey: String,
+        instanceName: String,
+        variables: Map<String, *>? = null,
+        eventListener: IFlowEventListener? = null
+    ): FlowInstance?
 
     /**
      * 激活流程实例，重复激活将忽略操作

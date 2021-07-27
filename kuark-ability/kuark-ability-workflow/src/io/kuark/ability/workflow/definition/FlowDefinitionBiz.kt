@@ -1,7 +1,5 @@
-package io.kuark.ability.workflow.biz
+package io.kuark.ability.workflow.definition
 
-import io.kuark.ability.workflow.ibiz.IFlowDefinitionBiz
-import io.kuark.ability.workflow.vo.FlowDefinition
 import io.kuark.base.lang.string.appendIfMissing
 import io.kuark.base.log.LogFactory
 import org.activiti.bpmn.converter.BpmnXMLConverter

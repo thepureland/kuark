@@ -1,10 +1,9 @@
-package io.kuark.ability.workflow.biz
+package io.kuark.ability.workflow.task
 
-import io.kuark.ability.workflow.ibiz.IFlowDefinitionBiz
-import io.kuark.ability.workflow.ibiz.IFlowInstanceBiz
-import io.kuark.ability.workflow.ibiz.IFlowTaskBiz
-import io.kuark.ability.workflow.vo.FlowDefinition
-import io.kuark.ability.workflow.vo.FlowInstance
+import io.kuark.ability.workflow.definition.IFlowDefinitionBiz
+import io.kuark.ability.workflow.instance.IFlowInstanceBiz
+import io.kuark.ability.workflow.definition.FlowDefinition
+import io.kuark.ability.workflow.instance.FlowInstance
 import io.kuark.test.common.SpringTest
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test

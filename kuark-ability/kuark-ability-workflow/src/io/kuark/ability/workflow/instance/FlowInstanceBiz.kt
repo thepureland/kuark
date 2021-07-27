@@ -1,7 +1,6 @@
-package io.kuark.ability.workflow.biz
+package io.kuark.ability.workflow.instance
 
-import io.kuark.ability.workflow.ibiz.IFlowInstanceBiz
-import io.kuark.ability.workflow.vo.FlowInstance
+import io.kuark.ability.workflow.event.IFlowEventListener
 import io.kuark.base.log.LogFactory
 import org.activiti.engine.ActivitiException
 import org.activiti.engine.ActivitiIllegalArgumentException
@@ -43,9 +42,16 @@ open class FlowInstanceBiz : IFlowInstanceBiz {
 
     @Transactional
     override fun startInstance(
-        definitionKey: String, bizKey: String, instanceName: String, variables: Map<String, *>?
+        definitionKey: String,
+        bizKey: String,
+        instanceName: String,
+        variables: Map<String, *>?,
+        eventListener: IFlowEventListener?
     ): FlowInstance? {
         val instance = try {
+            if (eventListener != null) {
+                runtimeService.addEventListener(eventListener)
+            }
             runtimeService.startProcessInstanceByKey(definitionKey, bizKey, variables).apply {
                 log.info("启动流程实例成功！definitionKey：$definitionKey，bizKey：$bizKey，instanceName：$instanceName")
             }

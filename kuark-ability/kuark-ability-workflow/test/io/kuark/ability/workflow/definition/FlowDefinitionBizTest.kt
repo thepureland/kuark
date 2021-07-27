@@ -1,7 +1,5 @@
-package io.kuark.ability.workflow.biz
+package io.kuark.ability.workflow.definition
 
-import io.kuark.ability.workflow.ibiz.IFlowDefinitionBiz
-import io.kuark.ability.workflow.vo.FlowDefinition
 import io.kuark.base.image.ImageKit
 import io.kuark.base.io.FileKit
 import io.kuark.base.io.PathKit

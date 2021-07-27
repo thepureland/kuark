@@ -1,7 +1,5 @@
-package io.kuark.ability.workflow.biz
+package io.kuark.ability.workflow.task
 
-import io.kuark.ability.workflow.ibiz.IFlowTaskBiz
-import io.kuark.ability.workflow.vo.FlowTask
 import io.kuark.base.log.LogFactory
 import org.activiti.engine.TaskService
 import org.springframework.beans.factory.annotation.Autowired

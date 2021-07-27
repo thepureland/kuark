@@ -1,10 +1,10 @@
-package io.kuark.ability.workflow.biz
+package io.kuark.ability.workflow.instance
 
-import io.kuark.ability.workflow.enums.FlowInstanceStatus
-import io.kuark.ability.workflow.ibiz.IFlowDefinitionBiz
-import io.kuark.ability.workflow.ibiz.IFlowInstanceBiz
-import io.kuark.ability.workflow.vo.FlowDefinition
-import io.kuark.ability.workflow.vo.FlowInstance
+import io.kuark.ability.workflow.definition.IFlowDefinitionBiz
+import io.kuark.ability.workflow.definition.FlowDefinition
+import io.kuark.ability.workflow.event.FlowEvent
+import io.kuark.ability.workflow.event.FlowEventType
+import io.kuark.ability.workflow.event.IFlowEventListener
 import io.kuark.test.common.SpringTest
 import org.junit.jupiter.api.*
 
@@ -39,7 +39,7 @@ internal open class FlowInstanceBizTest : SpringTest() {
         flowInstance = flowInstanceBiz.getFlowInstance(BIZ_KEY, instance.definitionKey)
         assertNotNull(instance)
         assertNotNull(flowInstance)
-        assertEquals(instance!!._id, flowInstance!!._id)
+        assertEquals(instance._id, flowInstance!!._id)
 
         // 传不存在的业务主键
         assertNull(flowInstanceBiz.getFlowInstance(NO_EXISTS))
@@ -62,6 +62,23 @@ internal open class FlowInstanceBizTest : SpringTest() {
     open fun startInstance() {
         // 传不存在的流程定义key
         assertNull(flowInstanceBiz.startInstance(NO_EXISTS, BIZ_KEY, "instanceName"))
+
+        // 传监听器
+        var isEventFire = false
+        val listener = object : IFlowEventListener {
+            override fun onEvent(event: FlowEvent) {
+                if (event.type == FlowEventType.ACTIVITY_STARTED) {
+                    isEventFire = true
+                }
+            }
+        }
+        val definition = deploy()
+        val instance = flowInstanceBiz.startInstance(
+            definition.key, BIZ_KEY, "instanceName", mapOf("applicantId" to APPLICANT_ID), listener
+        )
+        assertNotNull(instance)
+        assertNotNull(flowInstanceBiz.getFlowInstance(BIZ_KEY, instance!!.definitionKey))
+        assert(isEventFire)
     }
 
     @Test

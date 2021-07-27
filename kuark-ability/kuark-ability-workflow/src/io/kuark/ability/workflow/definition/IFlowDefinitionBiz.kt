@@ -1,8 +1,7 @@
-package io.kuark.ability.workflow.ibiz
+package io.kuark.ability.workflow.definition
 
-import io.kuark.ability.workflow.vo.FlowDefinition
+import io.kuark.ability.workflow.definition.FlowDefinition
 import io.kuark.base.io.PathKit
-import org.activiti.engine.ActivitiObjectNotFoundException
 import java.io.FileNotFoundException
 import java.io.InputStream
 import java.lang.IllegalArgumentException

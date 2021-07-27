@@ -11,10 +11,10 @@ import java.util.*
  * @since 1.0.0
  */
 data class FlowDefinition(
-    val id: String,
+    internal val _id: String,
     val key: String,
     val name: String,
-    val deploymentId: String
+    internal val _deploymentId: String
 ) {
 
     private var description: String? = null

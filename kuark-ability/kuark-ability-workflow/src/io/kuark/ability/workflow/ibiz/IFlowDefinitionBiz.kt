@@ -53,7 +53,7 @@ interface IFlowDefinitionBiz {
      *
      * 尽管同一个key关联多个流程定义在activiti中是允许的，但在实际应用中最好是一一对应的关系！
      *
-     * @param definitionKey 流程定义key
+     * @param definitionKey 流程定义key(bpmn文件中process元素的id)
      * @return List(流程定义对象)，找不到返回空列表
      * @author K
      * @since 1.0.0
@@ -61,19 +61,9 @@ interface IFlowDefinitionBiz {
     fun getDefinitionByKey(definitionKey: String): List<FlowDefinition>
 
     /**
-     * 返回指定部署id对应的流程定义
-     *
-     * @param deploymentId 部署id
-     * @return List(流程定义对象)，找不到返回空列表
-     * @author K
-     * @since 1.0.0
-     */
-    fun getDefinitionsByDeploymentId(deploymentId: String): List<FlowDefinition>
-
-    /**
      * 激活流程定义，重复激活将忽略操作
      *
-     * @param definitionKey 流程定义key
+     * @param definitionKey 流程定义key(bpmn文件中process元素的id)
      * @throws IllegalArgumentException 当指定的definitionKey找不到对应流程定义时
      * @author K
      * @since 1.0.0
@@ -83,7 +73,7 @@ interface IFlowDefinitionBiz {
     /**
      * 挂起流程定义，重复挂起将忽略操作
      *
-     * @param definitionKey 流程定义key
+     * @param definitionKey 流程定义key(bpmn文件中process元素的id)
      * @throws IllegalArgumentException 当指定的definitionKey找不到对应流程定义时
      * @author K
      * @since 1.0.0
@@ -91,20 +81,20 @@ interface IFlowDefinitionBiz {
     fun suspendDefinition(definitionKey: String)
 
     /**
-     * 删除指定部署id对应的流程相关信息
+     * 删除指定流程定义key对应的所有流程的相关信息，只要一个失败，所有就删除失败
      *
-     * @param deploymentId 部署id
+     * @param definitionKey 流程定义key(bpmn文件中process元素的id)
      * @param cascade 是否级联删除流程实例、历史流程实例和job, 默认为否
-     * @throws IllegalArgumentException 当指定的部署id找不到对应信息时
+     * @throws IllegalArgumentException 当找不到对应流程定义时
      * @author K
      * @since 1.0.0
      */
-    fun deleteDefinitions(deploymentId: String, cascade: Boolean = false)
+    fun deleteDefinitions(definitionKey: String, cascade: Boolean = false)
 
     /**
      * 获取流程图
      *
-     * @param definitionKey 流程定义key。当有多个流程定义时，取第一个！
+     * @param definitionKey 流程定义key(bpmn文件中process元素的id)。当有多个流程定义时，取第一个！
      * @return 图片输入流对象，流程定义不存在时返回null
      * @author K
      * @since 1.0.0

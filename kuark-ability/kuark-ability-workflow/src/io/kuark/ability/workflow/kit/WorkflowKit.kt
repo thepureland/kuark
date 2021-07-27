@@ -3,34 +3,6 @@ package io.kuark.ability.workflow.kit
 object WorkflowKit {
 
 
-    fun deployProcess() {
-
-    }
-
-
-
-
-
-
-    fun deleteProcess() {
-
-    }
-
-    fun forceDeleteProcess() {
-
-    }
-
-    fun getBpmn() {
-
-    }
-
-    fun getBpmnImage() {
-
-    }
-
-    fun generateBpmnImage() {
-
-    }
 
 
 

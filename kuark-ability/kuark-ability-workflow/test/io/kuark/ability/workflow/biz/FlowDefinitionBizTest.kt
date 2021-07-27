@@ -67,14 +67,6 @@ internal open class FlowDefinitionBizTest : SpringTest() {
 
     @Test
     @Transactional
-    open fun getDefinitionsByDeploymentId() {
-        val definition = deploy()
-        assert(flowDefinitionBiz.getDefinitionsByDeploymentId(definition.deploymentId).isNotEmpty())
-        assert(flowDefinitionBiz.getDefinitionsByDeploymentId(NO_EXISTS).isEmpty())
-    }
-
-    @Test
-    @Transactional
     open fun activateDefinition() {
         val definition = deploy()
         flowDefinitionBiz.activateDefinition(definition.key)
@@ -91,7 +83,7 @@ internal open class FlowDefinitionBizTest : SpringTest() {
     @Transactional
     open fun deleteDefinitions() {
         val definition = deploy()
-        flowDefinitionBiz.deleteDefinitions(definition.deploymentId, true)
+        flowDefinitionBiz.deleteDefinitions(definition.key, true)
         assertThrows<IllegalArgumentException> { flowDefinitionBiz.deleteDefinitions(NO_EXISTS, true) }
     }
 

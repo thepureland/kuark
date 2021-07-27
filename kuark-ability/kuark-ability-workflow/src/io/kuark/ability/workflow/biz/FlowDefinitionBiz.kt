@@ -69,7 +69,7 @@ open class FlowDefinitionBiz : IFlowDefinitionBiz {
     override fun getDefinitionByKey(definitionKey: String): List<FlowDefinition> {
         val definitions = repositoryService.createProcessDefinitionQuery().processDefinitionKey(definitionKey).list()
         return if (definitions.isEmpty()) {
-            log.warn("找不到definitionKey：${definitionKey}对应的流程定义！")
+            log.warn("找不到流程定义！definitionKey：$definitionKey")
             emptyList()
         } else {
             val results = mutableListOf<FlowDefinition>()
@@ -78,17 +78,6 @@ open class FlowDefinitionBiz : IFlowDefinitionBiz {
                 results.add(FlowDefinition(deployment, it))
             }
             results
-        }
-    }
-
-    override fun getDefinitionsByDeploymentId(deploymentId: String): List<FlowDefinition> {
-        val deployment = repositoryService.createDeploymentQuery().deploymentId(deploymentId).singleResult()
-        return if (deployment == null) {
-            log.warn("找不到deploymentId：${deploymentId}对应的流程定义！")
-            emptyList()
-        } else {
-            val definitions = repositoryService.createProcessDefinitionQuery().deploymentId(deployment.id).list()
-            definitions.map { FlowDefinition(deployment, it) }.toList()
         }
     }
 
@@ -101,7 +90,7 @@ open class FlowDefinitionBiz : IFlowDefinitionBiz {
             throw IllegalArgumentException(e)
         } catch (e: ActivitiException) {
             if (e.message!!.contains("already in state")) {
-                log.warn("definitionKey: ${definitionKey}对应的流程定义已经处于激活状态，忽略对其激活操作!")
+                log.warn("忽略流程定义激活操作，因其已处于激活状态！definitionKey: $definitionKey")
             }
         }
     }
@@ -114,14 +103,22 @@ open class FlowDefinitionBiz : IFlowDefinitionBiz {
             log.error(e)
             throw IllegalArgumentException(e)
         } catch (e: ActivitiException) {
-            log.warn("definitionKey: ${definitionKey}对应的流程定义已经处于挂起状态，忽略对其挂起操作!")
+            log.warn("忽略流程定义挂起操作，因其已处于挂起状态！definitionKey: $definitionKey")
         }
     }
 
     @Transactional
-    override fun deleteDefinitions(deploymentId: String, cascade: Boolean) {
+    override fun deleteDefinitions(definitionKey: String, cascade: Boolean) {
+        val definitions = getDefinitionByKey(definitionKey)
+        if (definitions.isEmpty()) {
+            val errMsg = "找不到流程定义！definitionKey：$definitionKey"
+            log.error(errMsg)
+            throw IllegalArgumentException(errMsg)
+        }
         try {
-            repositoryService.deleteDeployment(deploymentId, cascade)
+            definitions.forEach {
+                repositoryService.deleteDeployment(it._deploymentId, cascade)
+            }
         } catch (e: ActivitiObjectNotFoundException) {
             log.error(e)
             throw IllegalArgumentException(e)
@@ -132,12 +129,12 @@ open class FlowDefinitionBiz : IFlowDefinitionBiz {
         val definitions = repositoryService.createProcessDefinitionQuery().processDefinitionKey(definitionKey).list()
         return if (definitions.isNotEmpty()) {
             if (definitions.size > 1) {
-                log.warn("通过definitionKey：${definitionKey}, 找到多个流程定义！")
+                log.warn("找到多个流程定义！definitionKey：$definitionKey")
             }
             val definition = definitions.first()
             repositoryService.getResourceAsStream(definition.deploymentId, definition.diagramResourceName)
         } else {
-            log.error("流程图获取失败！找不到definitionKey：${definitionKey}对应的流程定义！")
+            log.error("流程图获取失败，因找不到流程定义！definitionKey：$definitionKey")
             null
         }
     }
@@ -154,7 +151,7 @@ open class FlowDefinitionBiz : IFlowDefinitionBiz {
             // generateDiagram(bpmnModel, "png",  "宋体", "微软雅黑", "黑体", null, 2.0)
             DefaultProcessDiagramGenerator().generateDiagram(bpmnModel, emptyList())
         } else {
-            val errMsg = "生成流程图失败！bpmn文件【${filePath}】不存在！"
+            val errMsg = "生成流程图失败，因bpmn文件【${filePath}】不存在！"
             log.error(errMsg)
             throw FileNotFoundException(errMsg)
         }

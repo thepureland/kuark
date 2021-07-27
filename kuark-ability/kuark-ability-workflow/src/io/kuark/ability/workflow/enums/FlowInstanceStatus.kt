@@ -1,23 +1,33 @@
 package io.kuark.ability.workflow.enums
 
-import org.activiti.api.process.model.ProcessInstance
+import org.activiti.engine.runtime.ProcessInstance
 
+/**
+ * 流程实例状态枚举
+ *
+ * @author K
+ * @since 1.0.0
+ */
 enum class FlowInstanceStatus {
 
+    /** 已创建 */
     CREATED,
+    /** 运行中 */
     RUNNING,
+    /** 挂起 */
     SUSPENDED,
-    CANCELLED,
+    /** 完成 */
     COMPLETED;
+    //    CANCELLED,
+
 
     companion object {
-        fun enumOf(instanceStatus: ProcessInstance.ProcessInstanceStatus): FlowInstanceStatus {
-            return when(instanceStatus) {
-                ProcessInstance.ProcessInstanceStatus.CREATED -> CREATED
-                ProcessInstance.ProcessInstanceStatus.RUNNING -> RUNNING
-                ProcessInstance.ProcessInstanceStatus.SUSPENDED -> SUSPENDED
-                ProcessInstance.ProcessInstanceStatus.CANCELLED -> CANCELLED
-                ProcessInstance.ProcessInstanceStatus.COMPLETED -> COMPLETED
+        fun of(internalProcessInstance: ProcessInstance): FlowInstanceStatus {
+            return when {
+                internalProcessInstance.isSuspended -> SUSPENDED
+                internalProcessInstance.isEnded -> COMPLETED
+                internalProcessInstance.startTime == null -> CREATED
+                else -> RUNNING
             }
         }
     }

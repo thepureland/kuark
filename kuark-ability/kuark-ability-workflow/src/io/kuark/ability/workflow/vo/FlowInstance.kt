@@ -11,24 +11,24 @@ import java.util.*
  * @since 1.0.0
  */
 data class FlowInstance(
-    val id: String,
-    val name: String,
+    internal val _id: String,
+    var name: String,
     val bizKey: String,
     val definitionKey: String,
-//    val status: FlowInstanceStatus
+    val status: FlowInstanceStatus
 ) {
 
-    private var definitionId: String? = null
+    private var _definitionId: String? = null
     private var startTime: Date? = null
 
     constructor(instance: ProcessInstance) : this(
         instance.id,
-        instance.name,
+        instance.name ?: "",
         instance.businessKey,
         instance.processDefinitionKey,
-//        FlowInstanceStatus.enumOf(instance.)
+        FlowInstanceStatus.of(instance)
     ) {
-        this.definitionId = instance.processDefinitionId
+        this._definitionId = instance.processDefinitionId
         this.startTime = instance.startTime
     }
 

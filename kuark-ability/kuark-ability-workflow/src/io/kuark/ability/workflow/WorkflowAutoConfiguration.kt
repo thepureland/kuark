@@ -12,6 +12,9 @@ import org.springframework.context.annotation.Configuration
 
 /**
  * 工作流自动配置
+ *
+ * @author K
+ * @since 1.0.0
  */
 @Configuration
 open class WorkflowAutoConfiguration {

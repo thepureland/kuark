@@ -10,41 +10,42 @@ import java.util.*
  * @since 1.0.0
  */
 data class FlowTask(
-    val id: String,
+    internal val _id: String,
     val name: String,
-    val definitionId: String,
-    val instanceId: String,
-    val assignee: String,
-    val localVariables: Map<String, Any>,
-    val flowVariables: Map<String, Any>
+    val definitionKey: String,
+    val assignee: String?
 ) {
 
+    private var _parentTaskId: String? = null
+    private var _flowDefinitionId: String? = null
+    private var _instanceId: String? = null
+    private var localVariables: Map<String, Any>? = null
+    private var flowVariables: Map<String, Any>? = null
     private var owner: String? = null
     private var description: String? = null
     private var createdTime: Date? = null
     private var claimedTime: Date? = null
     private var dueDate: Date? = null
     private var priority = 0
-    private var parentTaskId: String? = null
-    private var taskDefinitionKey: String? = null
+
 
     constructor(task: Task) : this(
         task.id,
         task.name,
-        task.processDefinitionId,
-        task.processInstanceId,
-        task.assignee,
-        task.taskLocalVariables,
-        task.processVariables
+        task.taskDefinitionKey,
+        task.assignee
     ) {
+        this._flowDefinitionId = task.processDefinitionId
+        this._instanceId = task.processInstanceId
+        this.localVariables = task.taskLocalVariables
+        this.flowVariables = task.processVariables
         this.owner = task.owner
         this.description = task.description
         this.createdTime = task.createTime
         this.claimedTime= task.claimTime
         this.dueDate = task.dueDate
         this.priority = task.priority
-        this.parentTaskId = task.parentTaskId
-        this.taskDefinitionKey = task.taskDefinitionKey
+        this._parentTaskId = task.parentTaskId
     }
 
 }

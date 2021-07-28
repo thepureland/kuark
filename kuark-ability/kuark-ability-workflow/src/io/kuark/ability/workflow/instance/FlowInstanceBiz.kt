@@ -1,6 +1,7 @@
 package io.kuark.ability.workflow.instance
 
 import io.kuark.ability.workflow.event.IFlowEventListener
+import io.kuark.base.error.ObjectNotFoundException
 import io.kuark.base.log.LogFactory
 import org.activiti.engine.ActivitiException
 import org.activiti.engine.ActivitiIllegalArgumentException
@@ -137,7 +138,7 @@ open class FlowInstanceBiz : IFlowInstanceBiz {
         if (instance == null) {
             val errMsg = "找不到流程实例！bizKey：$bizKey，definitionKey：$definitionKey"
             log.error(errMsg)
-            throw IllegalArgumentException(errMsg)
+            throw ObjectNotFoundException(errMsg)
         }
         return instance._id
     }

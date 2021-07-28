@@ -15,8 +15,8 @@ open class GlobalFlowEventListener(
 
     override fun onEvent(event: ActivitiEvent) {
         val eventType = FlowEventType.of(event.type)
-        val eventListener = eventListeners[eventType]!!
-        eventListener.onEvent(FlowEvent(event))
+        val eventListener = eventListeners[eventType]
+        eventListener?.onEvent(FlowEvent(event))
     }
 
     override fun isFailOnException(): Boolean = false

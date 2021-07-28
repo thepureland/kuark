@@ -22,13 +22,13 @@ data class FlowDefinition(
 ) {
 
     /** 描述  */
-    private var description: String? = null
+    var description: String? = null
     /** 流程定义的版本 */
-    private var version: Int? = null
+    var version: Int? = null
     /** 是否被挂起 */
-    private var isSuspend: Boolean = false
+    var isSuspend: Boolean = false
     /** 部署时间 */
-    private var deploymentTime: Date? = null
+    var deploymentTime: Date? = null
 
 
     /**

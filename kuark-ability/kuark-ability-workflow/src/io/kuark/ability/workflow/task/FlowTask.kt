@@ -21,27 +21,27 @@ data class FlowTask(
 ) {
 
     /** 父任务id，内部使用 */
-    private var _parentTaskId: String? = null
+    internal var _parentTaskId: String? = null
     /** 流程定义id，内部使用 */
-    private var _flowDefinitionId: String? = null
+    internal var _flowDefinitionId: String? = null
     /** 流程实例id，内部使用 */
-    private var _instanceId: String? = null
+    internal var _instanceId: String? = null
     /** 局部变量 */
-    private var localVariables: Map<String, Any>? = null
+    var localVariables: Map<String, Any>? = null
     /** 全局变量 */
-    private var flowVariables: Map<String, Any>? = null
+    var flowVariables: Map<String, Any>? = null
     /** 任务原受理人id（有委托他人受理该任务） */
-    private var owner: String? = null
+    var owner: String? = null
     /** 描述 */
-    private var description: String? = null
+    var description: String? = null
     /** 任务创建时间 */
-    private var createdTime: Date? = null
+    var createdTime: Date? = null
     /** 任务签收时间 */
-    private var claimedTime: Date? = null
+    var claimedTime: Date? = null
     /** 任务过期时间 */
-    private var dueDate: Date? = null
+    var dueDate: Date? = null
     /** 优先级 */
-    private var priority = 0
+    var priority = 0
 
     /**
      * 次构造器

@@ -1,5 +1,6 @@
 package io.kuark.ability.workflow.task
 
+import io.kuark.base.error.ObjectNotFoundException
 import io.kuark.base.log.LogFactory
 import org.activiti.engine.TaskService
 import org.springframework.beans.factory.annotation.Autowired
@@ -41,12 +42,12 @@ open class FlowTaskBiz : IFlowTaskBiz {
         val task = findTask(bizKey, taskDefinitionKey)
         if (task.assignee == null || task.assignee.isEmpty()) {
             taskService.claim(task._id, userId)
-            log.info("流程任务用户绑定成功！bizKey：$bizKey，taskDefinitionKey：$taskDefinitionKey，userId: $userId")
+            log.info("用户签收流程任务成功！bizKey：$bizKey，taskDefinitionKey：$taskDefinitionKey，userId: $userId")
         } else {
             if (task.assignee == userId) {
-                log.warn("忽略流程任务用户绑定操作，因该用户已绑定！bizKey：$bizKey，taskDefinitionKey：$taskDefinitionKey，userId: $userId")
+                log.warn("忽略用户签收流程任务操作，因该用户已对此任务签收！bizKey：$bizKey，taskDefinitionKey：$taskDefinitionKey，userId: $userId")
             } else {
-                log.error("流程任务用户绑定失败，因已有其他用户绑定，要更改绑定的用户，请先解绑！bizKey：$bizKey，taskDefinitionKey：$taskDefinitionKey，userId: $userId")
+                log.error("用户签收流程任务失败，因已被其他用户签收，要更改签收的用户，请先取消签收！bizKey：$bizKey，taskDefinitionKey：$taskDefinitionKey，userId: $userId")
                 return false
             }
         }
@@ -57,13 +58,29 @@ open class FlowTaskBiz : IFlowTaskBiz {
     override fun unclaimTask(bizKey: String, taskDefinitionKey: String): Boolean {
         val task = findTask(bizKey, taskDefinitionKey)
         return if (task.assignee == null || task.assignee.isEmpty()) {
-            log.warn("忽略流程任务用户解绑操作，因该任务无绑定的用户！bizKey：bizKey：$bizKey，taskDefinitionKey：$taskDefinitionKey")
+            log.warn("忽略流程任务的取消签收操作，因该任务本就无用户签收！bizKey：$bizKey，taskDefinitionKey：$taskDefinitionKey")
             false
         } else {
             taskService.unclaim(task._id)
-            log.info("流程任务用户解绑成功！bizKey：bizKey：$bizKey，taskDefinitionKey：$taskDefinitionKey")
+            log.info("流程任务取消签收成功！bizKey：$bizKey，taskDefinitionKey：$taskDefinitionKey")
             true
         }
+    }
+
+    @Transactional
+    override fun delegateTask(bizKey: String, taskDefinitionKey: String, userId: String): Boolean {
+        val userId = userId.trim()
+        require(userId.isNotEmpty()) { log.error("FlowTaskBiz::delegateTask的userId参数不能为空！") }
+        val task = findTask(bizKey, taskDefinitionKey)
+        if (task.assignee == null || task.assignee.isEmpty()) {
+            log.info("流程任务在进行委托操作时，发现该任务并无用户签收，直接进行签收操作！bizKey：$bizKey，taskDefinitionKey：$taskDefinitionKey")
+            taskService.claim(task._id, userId)
+            log.info("用户签收流程任务成功！bizKey：$bizKey，taskDefinitionKey：$taskDefinitionKey，userId: $userId")
+        } else {
+            taskService.delegateTask(task._id, userId)
+            log.info("流程任务委托成功！bizKey：$bizKey，taskDefinitionKey：$taskDefinitionKey")
+        }
+        return true
     }
 
     @Transactional
@@ -80,7 +97,7 @@ open class FlowTaskBiz : IFlowTaskBiz {
                 taskService.complete(task._id)
                 log.info("执行流程任务成功！bizKey：$bizKey, taskDefinitionKey：$taskDefinitionKey, userId: $userId")
             } else {
-                log.error("执行流程任务失败，因绑定的用户不是$userId！bizKey：$bizKey, taskDefinitionKey：$taskDefinitionKey, userId: $userId")
+                log.error("执行流程任务失败，因签收的用户不是$userId！bizKey：$bizKey, taskDefinitionKey：$taskDefinitionKey, userId: $userId")
                 return false
             }
         }
@@ -92,7 +109,7 @@ open class FlowTaskBiz : IFlowTaskBiz {
         if (task == null) {
             val errMsg = "找不到流程任务！bizKey：$bizKey, taskDefinitionKey：$taskDefinitionKey"
             log.error(errMsg)
-            throw IllegalArgumentException(errMsg)
+            throw ObjectNotFoundException(errMsg)
         }
         return task
     }

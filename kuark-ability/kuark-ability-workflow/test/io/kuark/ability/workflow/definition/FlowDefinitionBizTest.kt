@@ -1,5 +1,6 @@
 package io.kuark.ability.workflow.definition
 
+import io.kuark.base.error.ObjectNotFoundException
 import io.kuark.base.image.ImageKit
 import io.kuark.base.io.FileKit
 import io.kuark.base.io.PathKit
@@ -11,7 +12,6 @@ import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
 import java.io.File
-import java.io.FileNotFoundException
 import javax.imageio.ImageIO
 
 
@@ -31,10 +31,10 @@ internal open class FlowDefinitionBizTest : SpringTest() {
     @Test
     @Transactional
     open fun deployWithBpmn() {
-        assertThrows<FileNotFoundException> {
+        assertThrows<ObjectNotFoundException> {
             flowDefinitionBiz.deployWithBpmn(DEPLOYMENT_NAME, NO_EXISTS, "test")
         }
-        assertThrows<FileNotFoundException> {
+        assertThrows<ObjectNotFoundException> {
             flowDefinitionBiz.deployWithBpmn(DEPLOYMENT_NAME, "test", NO_EXISTS)
         }
     }
@@ -52,7 +52,7 @@ internal open class FlowDefinitionBizTest : SpringTest() {
         }
 
         // 文件不存在
-        assertThrows<FileNotFoundException> { flowDefinitionBiz.deployWithZip(DEPLOYMENT_NAME, "no exists") }
+        assertThrows<ObjectNotFoundException> { flowDefinitionBiz.deployWithZip(DEPLOYMENT_NAME, "no exists") }
     }
 
     @Test
@@ -82,7 +82,7 @@ internal open class FlowDefinitionBizTest : SpringTest() {
     open fun deleteDefinitions() {
         val definition = deploy()
         flowDefinitionBiz.deleteDefinitions(definition.key, true)
-        assertThrows<IllegalArgumentException> { flowDefinitionBiz.deleteDefinitions(NO_EXISTS, true) }
+        assertThrows<ObjectNotFoundException> { flowDefinitionBiz.deleteDefinitions(NO_EXISTS, true) }
     }
 
     @Test
@@ -108,7 +108,7 @@ internal open class FlowDefinitionBizTest : SpringTest() {
 //        ImageKit.showImage(bufferedImage)
 //        Thread.sleep(2000)
 
-        assertThrows<FileNotFoundException> { flowDefinitionBiz.genFlowDiagram(NO_EXISTS) }
+        assertThrows<ObjectNotFoundException> { flowDefinitionBiz.genFlowDiagram(NO_EXISTS) }
     }
 
     private fun deploy(): FlowDefinition {

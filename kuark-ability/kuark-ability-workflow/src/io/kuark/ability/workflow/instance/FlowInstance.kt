@@ -23,9 +23,9 @@ data class FlowInstance(
 ) {
 
     /** 流程定义id，内部使用 */
-    private var _definitionId: String? = null
+    internal var _definitionId: String? = null
     /** 流程启动时间 */
-    private var startTime: Date? = null
+    var startTime: Date? = null
 
     /**
      * 次构造器

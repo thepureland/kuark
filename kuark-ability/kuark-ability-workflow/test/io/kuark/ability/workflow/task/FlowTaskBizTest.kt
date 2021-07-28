@@ -4,6 +4,7 @@ import io.kuark.ability.workflow.definition.IFlowDefinitionBiz
 import io.kuark.ability.workflow.instance.IFlowInstanceBiz
 import io.kuark.ability.workflow.definition.FlowDefinition
 import io.kuark.ability.workflow.instance.FlowInstance
+import io.kuark.base.error.ObjectNotFoundException
 import io.kuark.test.common.SpringTest
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
@@ -65,19 +66,19 @@ internal open class FlowTaskBizTest : SpringTest() {
         assertThrows<IllegalArgumentException> {
             flowTaskBiz.claimTask(BIZ_KEY, APPLICANT_TASK_DEFINITION_KEY, "")
         }
-        assertThrows<IllegalArgumentException> {
+        assertThrows<ObjectNotFoundException> {
             flowTaskBiz.claimTask(BIZ_KEY, NO_EXISTS, NO_EXISTS)
         }
 
-        // 绑定无用户的任务
+        // 签收无用户的任务
         assert(flowTaskBiz.claimTask(BIZ_KEY, APPLICANT_TASK_DEFINITION_KEY, APPLICANT_ID))
         var task = flowTaskBiz.getTask(BIZ_KEY, APPLICANT_TASK_DEFINITION_KEY)!!
         assertEquals(APPLICANT_ID, task.assignee)
 
-        // 重复绑定相同用户的任务，忽略绑定
+        // 相同用户重复签收任务，忽略之
         assert(flowTaskBiz.claimTask(BIZ_KEY, APPLICANT_TASK_DEFINITION_KEY, APPLICANT_ID))
 
-        // 绑定已有用户的任务，绑定失败
+        // 签收其他用户的任务，签收失败
         assertFalse(flowTaskBiz.claimTask(BIZ_KEY, APPLICANT_TASK_DEFINITION_KEY, "another user id"))
         task = flowTaskBiz.getTask(BIZ_KEY, APPLICANT_TASK_DEFINITION_KEY)!!
         assertEquals(APPLICANT_ID, task.assignee)
@@ -89,15 +90,40 @@ internal open class FlowTaskBizTest : SpringTest() {
         deployThenStart()
 
         // 非法参数
-        assertThrows<IllegalArgumentException> { flowTaskBiz.unclaimTask(BIZ_KEY, NO_EXISTS) }
+        assertThrows<ObjectNotFoundException> { flowTaskBiz.unclaimTask(BIZ_KEY, NO_EXISTS) }
 
-        // 解绑有用户的任务
+        // 取消签收已经签收过的任务
         assert(flowTaskBiz.unclaimTask(BIZ_KEY, APPLICANT_TASK_DEFINITION_KEY))
         val task = flowTaskBiz.getTask(BIZ_KEY, APPLICANT_TASK_DEFINITION_KEY)!!
         assertNull(task.assignee)
 
-        // 解绑无用户的任务
+        // 取消签收未签收过的任务
         assertFalse(flowTaskBiz.unclaimTask(BIZ_KEY, APPLICANT_TASK_DEFINITION_KEY))
+    }
+
+    @Test
+    @Transactional
+    open fun delegateTask() {
+        deployThenStart(mapOf("applicantId" to null))
+
+        // 非法参数
+        assertThrows<IllegalArgumentException> {
+            flowTaskBiz.delegateTask(BIZ_KEY, APPLICANT_TASK_DEFINITION_KEY, "")
+        }
+        assertThrows<ObjectNotFoundException> { flowTaskBiz.delegateTask(BIZ_KEY, NO_EXISTS, APPLICANT_ID) }
+
+        // 无用户签收，则直接做签收操作
+        assert(flowTaskBiz.delegateTask(BIZ_KEY, APPLICANT_TASK_DEFINITION_KEY, APPLICANT_ID))
+        var task = flowTaskBiz.getTask(BIZ_KEY, APPLICANT_TASK_DEFINITION_KEY)!!
+        assertEquals(APPLICANT_ID, task.assignee)
+        assertNull(task.owner)
+
+        // 将任务委托给其他人
+        val newAssignee = "another user id"
+        assert(flowTaskBiz.delegateTask(BIZ_KEY, APPLICANT_TASK_DEFINITION_KEY, newAssignee))
+        task = flowTaskBiz.getTask(BIZ_KEY, APPLICANT_TASK_DEFINITION_KEY)!!
+        assertEquals(newAssignee, task.assignee)
+        assertEquals(APPLICANT_ID, task.owner)
     }
 
     @Test
@@ -107,7 +133,7 @@ internal open class FlowTaskBizTest : SpringTest() {
 
         // 参数非法
         assertThrows<IllegalArgumentException> { flowTaskBiz.completeTask(BIZ_KEY, APPLICANT_TASK_DEFINITION_KEY, "") }
-        assertThrows<IllegalArgumentException> { flowTaskBiz.completeTask(BIZ_KEY, "non", APPLICANT_ID) }
+        assertThrows<ObjectNotFoundException> { flowTaskBiz.completeTask(BIZ_KEY, "non", APPLICANT_ID) }
 
         // 非任务执行者本人尝试完成任务，操作失败
         assertFalse(flowTaskBiz.completeTask(BIZ_KEY, APPLICANT_TASK_DEFINITION_KEY, "another user id"))

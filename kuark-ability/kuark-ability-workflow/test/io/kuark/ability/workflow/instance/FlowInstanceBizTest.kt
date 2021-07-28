@@ -5,6 +5,7 @@ import io.kuark.ability.workflow.definition.FlowDefinition
 import io.kuark.ability.workflow.event.FlowEvent
 import io.kuark.ability.workflow.event.FlowEventType
 import io.kuark.ability.workflow.event.IFlowEventListener
+import io.kuark.base.error.ObjectNotFoundException
 import io.kuark.test.common.SpringTest
 import org.junit.jupiter.api.*
 
@@ -92,7 +93,7 @@ internal open class FlowInstanceBizTest : SpringTest() {
         assertEquals(FlowInstanceStatus.RUNNING, flowInstance.status)
 
         // 传不存在的业务主键
-        assertThrows<IllegalArgumentException> { flowInstanceBiz.activateInstance(NO_EXISTS) }
+        assertThrows<ObjectNotFoundException> { flowInstanceBiz.activateInstance(NO_EXISTS) }
 
         // 重复激活
         flowInstanceBiz.activateInstance(BIZ_KEY)
@@ -111,7 +112,7 @@ internal open class FlowInstanceBizTest : SpringTest() {
         assertEquals(FlowInstanceStatus.SUSPENDED, flowInstance.status)
 
         // 非法参数
-        assertThrows<IllegalArgumentException> { flowInstanceBiz.suspendInstance(NO_EXISTS) }
+        assertThrows<ObjectNotFoundException> { flowInstanceBiz.suspendInstance(NO_EXISTS) }
     }
 
     @Test
@@ -122,7 +123,7 @@ internal open class FlowInstanceBizTest : SpringTest() {
         assertNull(flowInstanceBiz.getFlowInstance(BIZ_KEY))
         assert(flowInstanceBiz.getFlowInstances(instance.definitionKey).isEmpty())
 
-        assertThrows<IllegalArgumentException> { flowInstanceBiz.deleteInstance(NO_EXISTS, "test") }
+        assertThrows<ObjectNotFoundException> { flowInstanceBiz.deleteInstance(NO_EXISTS, "test") }
     }
 
     @Test

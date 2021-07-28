@@ -1,5 +1,6 @@
 package io.kuark.ability.workflow.definition
 
+import io.kuark.base.error.ObjectNotFoundException
 import io.kuark.base.lang.string.appendIfMissing
 import io.kuark.base.log.LogFactory
 import org.activiti.bpmn.converter.BpmnXMLConverter
@@ -14,7 +15,6 @@ import java.io.File
 import java.io.FileInputStream
 import java.io.FileNotFoundException
 import java.io.InputStream
-import java.lang.IllegalArgumentException
 import java.util.zip.ZipInputStream
 import javax.xml.stream.XMLInputFactory
 
@@ -44,7 +44,8 @@ open class FlowDefinitionBiz : IFlowDefinitionBiz {
                 deploymentBuilder.addClasspathResource(diagramFilePath)
             }
         } catch (e: ActivitiIllegalArgumentException) {
-            throw FileNotFoundException(e.message)
+            log.error(e)
+            throw ObjectNotFoundException(e)
         }
         val deployment = deploymentBuilder.deploy()
         val definition = repositoryService.createProcessDefinitionQuery().deploymentId(deployment.id).singleResult()
@@ -55,7 +56,12 @@ open class FlowDefinitionBiz : IFlowDefinitionBiz {
     override fun deployWithZip(deploymentName: String, zipFileName: String, prefixPath: String): List<FlowDefinition> {
         val zipPath = "${prefixPath}/${zipFileName}".appendIfMissing(".zip")
         val zipFile = File(zipPath)
-        val inputStream = FileInputStream(zipFile)
+        val inputStream =try {
+            FileInputStream(zipFile)
+        } catch (e: FileNotFoundException) {
+            log.error(e)
+            throw ObjectNotFoundException(e)
+        }
         val zipInputStream = ZipInputStream(inputStream)
         val deployment = zipInputStream.use {
             repositoryService.createDeployment().name(deploymentName).addZipInputStream(it).deploy()
@@ -85,10 +91,12 @@ open class FlowDefinitionBiz : IFlowDefinitionBiz {
             repositoryService.activateProcessDefinitionByKey(definitionKey)
         } catch (e: ActivitiObjectNotFoundException) {
             log.error(e)
-            throw IllegalArgumentException(e)
+            throw ObjectNotFoundException(e)
         } catch (e: ActivitiException) {
             if (e.message!!.contains("already in state")) {
                 log.warn("忽略流程定义激活操作，因其已处于激活状态！definitionKey: $definitionKey")
+            } else {
+                log.error(e)
             }
         }
     }
@@ -111,7 +119,7 @@ open class FlowDefinitionBiz : IFlowDefinitionBiz {
         if (definitions.isEmpty()) {
             val errMsg = "找不到流程定义！definitionKey：$definitionKey"
             log.error(errMsg)
-            throw IllegalArgumentException(errMsg)
+            throw ObjectNotFoundException(errMsg)
         }
         try {
             definitions.forEach {
@@ -119,7 +127,7 @@ open class FlowDefinitionBiz : IFlowDefinitionBiz {
             }
         } catch (e: ActivitiObjectNotFoundException) {
             log.error(e)
-            throw IllegalArgumentException(e)
+            throw ObjectNotFoundException(e)
         }
     }
 
@@ -151,7 +159,7 @@ open class FlowDefinitionBiz : IFlowDefinitionBiz {
         } else {
             val errMsg = "生成流程图失败，因bpmn文件【${filePath}】不存在！"
             log.error(errMsg)
-            throw FileNotFoundException(errMsg)
+            throw ObjectNotFoundException(errMsg)
         }
     }
 

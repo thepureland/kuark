@@ -1,8 +1,7 @@
 package io.kuark.ability.workflow.instance
 
 import io.kuark.ability.workflow.event.IFlowEventListener
-import io.kuark.ability.workflow.instance.FlowInstance
-import java.lang.IllegalArgumentException
+import io.kuark.base.error.ObjectNotFoundException
 
 /**
  * 流程实例相关业务接口
@@ -58,7 +57,7 @@ interface IFlowInstanceBiz {
      *
      * @param bizKey 业务主键
      * @param definitionKey 流程定义key(bpmn文件中process元素的id)，为null将忽略该条件。如果能确保bizKey的全局惟一性，可不传。
-     * @throws IllegalArgumentException 当找不到对应流程实例时
+     * @throws ObjectNotFoundException 当找不到对应流程实例时
      * @author K
      * @since 1.0.0
      */
@@ -69,7 +68,7 @@ interface IFlowInstanceBiz {
      *
      * @param bizKey 业务主键
      * @param definitionKey 流程定义key(bpmn文件中process元素的id)，为null将忽略该条件。如果能确保bizKey的全局惟一性，可不传。
-     * @throws IllegalArgumentException 当找不到对应流程实例时
+     * @throws ObjectNotFoundException 当找不到对应流程实例时
      * @author K
      * @since 1.0.0
      */
@@ -81,7 +80,7 @@ interface IFlowInstanceBiz {
      * @param bizKey 业务主键
      * @param reason 原因
      * @param definitionKey 流程定义key(bpmn文件中process元素的id)，为null将忽略该条件。如果能确保bizKey的全局惟一性，可不传。
-     * @throws IllegalArgumentException 当找不到对应流程实例时
+     * @throws ObjectNotFoundException 当找不到对应流程实例时
      * @author K
      * @since 1.0.0
      */
@@ -93,7 +92,7 @@ interface IFlowInstanceBiz {
      * @param oldBizKey 旧的业务主键
      * @param newBizKey 新的业务主键
      * @param definitionKey 流程定义key(bpmn文件中process元素的id)，为null将忽略该条件。如果能确保bizKey的全局惟一性，可不传。
-     * @throws IllegalArgumentException 当指定的参数找不到对应流程实例时
+     * @throws ObjectNotFoundException 当指定的参数找不到对应流程实例时
      * @author K
      * @since 1.0.0
      */

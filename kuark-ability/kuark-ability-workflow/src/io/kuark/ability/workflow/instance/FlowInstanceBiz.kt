@@ -1,15 +1,11 @@
 package io.kuark.ability.workflow.instance
 
-import io.kuark.ability.workflow.event.IFlowEventListener
 import io.kuark.base.error.ObjectNotFoundException
 import io.kuark.base.log.LogFactory
-import org.activiti.engine.ActivitiException
-import org.activiti.engine.ActivitiIllegalArgumentException
-import org.activiti.engine.ActivitiObjectNotFoundException
-import org.activiti.engine.RuntimeService
+import org.activiti.engine.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
-import java.lang.IllegalArgumentException
+import java.lang.StringBuilder
 
 /**
  * 流程实例相关业务
@@ -22,121 +18,133 @@ open class FlowInstanceBiz : IFlowInstanceBiz {
     @Autowired
     private lateinit var runtimeService: RuntimeService
 
+    @Autowired
+    private lateinit var repositoryService: RepositoryService
+
     private val log = LogFactory.getLog(this::class)
 
-    override fun getFlowInstance(bizKey: String, definitionKey: String?): FlowInstance? {
-        var query = runtimeService.createProcessInstanceQuery()
+    override fun isExists(key: String, bizKey: String, version: Int?): Boolean {
+        val query = runtimeService.createProcessInstanceQuery()
+            .processDefinitionKey(key)
             .processInstanceBusinessKey(bizKey)
-        if (definitionKey != null) {
-            query = query.processDefinitionKey(definitionKey)
+        if (version == null) {
+            val definition = repositoryService.createProcessDefinitionQuery()
+                .processDefinitionKey(key).latestVersion().singleResult()
+            definition ?: return false
+            query.processDefinitionVersion(definition.version)
+        } else {
+            query.processDefinitionVersion(version)
         }
+        return query.count() > 0
+    }
+
+    override fun get(key: String, bizKey: String, version: Int?): FlowInstance? {
+        val query = runtimeService.createProcessInstanceQuery()
+            .processDefinitionKey(key)
+            .processInstanceBusinessKey(bizKey)
+        if (version == null) {
+            val definition = repositoryService.createProcessDefinitionQuery()
+                .processDefinitionKey(key).latestVersion().singleResult()
+            definition ?: return null
+            query.processDefinitionVersion(definition.version)
+        } else {
+            query.processDefinitionVersion(version)
+        }
+
         val instance = query.singleResult()
         return if (instance == null) null else FlowInstance(instance)
     }
 
-    override fun getFlowInstances(definitionKey: String): List<FlowInstance> {
-        val instances = runtimeService.createProcessInstanceQuery()
-            .processDefinitionKey(definitionKey)
-            .list()
+    override fun search(criteria: FlowInstanceCriteria, pageNum: Int, limit: Int): List<FlowInstance> {
+        val whereStr = StringBuilder("e.parent_id_ IS NULL")
+
+        // 流程key(bpmn文件中process元素的id)
+        val key = criteria.key
+        if (key != null && key.isNotBlank() && !key.contains("'")) {
+            whereStr.append(" AND UPPER(d.key_) LIKE '%${key.uppercase()}%'")
+        }
+
+        // 业务主键
+        val bizKey = criteria.bizKey
+        if (bizKey != null && bizKey.isNotBlank() && !bizKey.contains("'")) {
+            whereStr.append(" AND UPPER(e.business_key_) LIKE '%${bizKey.uppercase()}%'")
+        }
+
+        // 实例名称
+        val instanceName = criteria.instanceName
+        if (instanceName != null && instanceName.isNotBlank() && !instanceName.contains("'")) {
+            whereStr.append(" AND UPPER(e.name_) LIKE '%${instanceName.uppercase()}%'")
+        }
+
+        // 查询
+        val sql = "SELECT e.*, d.key_ AS processDefinitionKey " +
+                "FROM act_ru_execution e LEFT JOIN act_re_procdef d " +
+                "ON e.proc_def_id_ = d.id_ " +
+                "WHERE $whereStr"
+        val query = runtimeService.createNativeProcessInstanceQuery().sql(sql)
+        val instances = if (limit < 1) {
+            query.list()
+        } else {
+            query.listPage((pageNum - 1) * limit, limit)
+        }
+
+        // 结果处理
         return instances.map { FlowInstance(it) }
     }
 
     @Transactional
-    override fun startInstance(
-        definitionKey: String,
-        bizKey: String,
-        instanceName: String,
-        variables: Map<String, *>?,
-        eventListener: IFlowEventListener?
-    ): FlowInstance? {
-        val instance = try {
-            if (eventListener != null) {
-                runtimeService.addEventListener(eventListener)
-            }
-            runtimeService.startProcessInstanceByKey(definitionKey, bizKey, variables).apply {
-                log.info("启动流程实例成功！definitionKey：$definitionKey，bizKey：$bizKey，instanceName：$instanceName")
-            }
-        } catch (e: ActivitiObjectNotFoundException) {
-            log.error("启动流程实例失败，因流程定义不存在！definitionKey：$definitionKey，bizKey：$bizKey")
-            null
-        } catch (e: Throwable) {
-            log.error(e, "启动流程实例失败！definitionKey: $definitionKey, bizKey: $bizKey")
-            null
-        }
-        return if (instance == null) {
-            null
-        } else {
-            runtimeService.setProcessInstanceName(instance.processInstanceId, instanceName)
-            FlowInstance(instance).apply {
-                this.name = instanceName
-            }
-        }
-    }
-
-    @Transactional
-    override fun activateInstance(bizKey: String, definitionKey: String?) {
-        val instanceId = findInstanceId(bizKey, definitionKey)
+    override fun activate(key: String, bizKey: String) {
+        val instanceId = findInstanceId(key, bizKey)
         try {
             runtimeService.activateProcessInstanceById(instanceId)
-            log.info("激活流程实例成功！bizKey：$bizKey，definitionKey：$definitionKey")
-        } catch (e: ActivitiObjectNotFoundException) {
-            val errMsg = "激活流程实例时找不到流程实例！bizKey: $bizKey，definitionKey：$definitionKey"
-            log.error(e, errMsg)
-            throw IllegalArgumentException(errMsg, e)
+            log.info("激活流程实例成功！【key：$key，bizKey：$bizKey】")
         } catch (e: ActivitiException) {
-            log.warn("忽略流程实例激活操作,因其已处于激活状态！bizKey：$bizKey，definitionKey：$definitionKey")
+            log.warn("忽略流程实例激活操作，因其已处于激活状态！【key：$key，bizKey：$bizKey】")
         }
     }
 
     @Transactional
-    override fun suspendInstance(bizKey: String, definitionKey: String?) {
-        val instanceId = findInstanceId(bizKey, definitionKey)
+    override fun suspend(key: String, bizKey: String) {
+        val instanceId = findInstanceId(key, bizKey)
         try {
             runtimeService.suspendProcessInstanceById(instanceId)
-            log.info("挂起流程实例成功！bizKey：$bizKey，definitionKey：$definitionKey")
-        } catch (e: ActivitiObjectNotFoundException) {
-            val errMsg = "挂起流程实例时找不到流程实例！bizKey: $bizKey，definitionKey：$definitionKey"
-            log.error(e, errMsg)
-            throw IllegalArgumentException(errMsg, e)
+            log.info("挂起流程实例成功！【key：$key，bizKey：$bizKey】")
         } catch (e: ActivitiException) {
-            log.warn("忽略流程实例挂起操作,因其已处于挂起状态！bizKey：$bizKey，definitionKey：$definitionKey")
+            log.warn("忽略流程实例挂起操作，因其已处于挂起状态！【key：$key，bizKey：$bizKey】")
         }
     }
 
     @Transactional
-    override fun deleteInstance(bizKey: String, reason: String, definitionKey: String?) {
-        val instanceId = findInstanceId(bizKey, definitionKey)
-        try {
-            runtimeService.deleteProcessInstance(instanceId, reason)
-            log.info("删除流程实例成功！bizKey: $bizKey，definitionKey：$definitionKey")
-        } catch (e: ActivitiObjectNotFoundException) {
-            val errMsg = "删除流程实例时找不到流程实例！bizKey: $bizKey，definitionKey：$definitionKey"
-            log.error(e, errMsg)
-            throw IllegalArgumentException(errMsg, e)
-        }
+    override fun delete(key: String, bizKey: String, reason: String?) {
+        val instanceId = findInstanceId(key, bizKey)
+        runtimeService.deleteProcessInstance(instanceId, reason)
+        log.info("删除流程实例成功！【bizKey: $bizKey，definitionKey：$key】")
     }
 
     @Transactional
-    override fun updateBizKey(oldBizKey: String, newBizKey: String, definitionKey: String?) {
-        val instanceId = findInstanceId(oldBizKey, definitionKey)
+    override fun updateBizKey(key: String, oldBizKey: String, newBizKey: String) {
+        require(newBizKey.isNotBlank()) { "更新流程实例业务主键失败！指定的新业务主键不能为空！【key：$key，oldBizKey: $oldBizKey】" }
+        require(!newBizKey.contains("'")) { "更新流程实例业务主键失败！指定的新业务主键不能包含单引号！【key：$key，oldBizKey: $oldBizKey，newBizKey：$newBizKey】" }
+
+        val instanceId = findInstanceId(key, oldBizKey)
         try {
             runtimeService.updateBusinessKey(instanceId, newBizKey)
-            log.info("更新流程实例的bizKey成功！oldBizKey: $oldBizKey，definitionKey：$definitionKey，newBizKey：$newBizKey")
+            log.info("更新流程实例的业务主键成功！【key：$key，oldBizKey: $oldBizKey，newBizKey：$newBizKey】")
         } catch (e: Throwable) {
-            val errMsg = "更新流程实例的bizKey失败！oldBizKey: $oldBizKey，definitionKey：$definitionKey，newBizKey：$newBizKey"
+            val errMsg = "更新流程实例的业务主键失败！【key：$key，oldBizKey: $oldBizKey，newBizKey：$newBizKey】"
             log.error(e, errMsg)
             when (e) {
                 is ActivitiIllegalArgumentException, is ActivitiObjectNotFoundException -> {
-                    throw IllegalArgumentException(errMsg, e)
+                    throw ObjectNotFoundException(errMsg, e)
                 }
             }
         }
     }
 
-    private fun findInstanceId(bizKey: String, definitionKey: String?): String {
-        val instance = getFlowInstance(bizKey, definitionKey)
+    private fun findInstanceId(key: String, bizKey: String): String {
+        val instance = get(key, bizKey)
         if (instance == null) {
-            val errMsg = "找不到流程实例！bizKey：$bizKey，definitionKey：$definitionKey"
+            val errMsg = "找不到流程实例！【key：$key，bizKey：$bizKey】"
             log.error(errMsg)
             throw ObjectNotFoundException(errMsg)
         }

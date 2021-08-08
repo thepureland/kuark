@@ -1,8 +1,10 @@
 package io.kuark.ability.workflow.definition
 
+import io.kuark.ability.workflow.event.IFlowEventListener
+import io.kuark.ability.workflow.instance.FlowInstance
+import io.kuark.base.error.ObjectAlreadyExistsException
 import io.kuark.base.error.ObjectNotFoundException
-import io.kuark.base.io.PathKit
-import java.io.InputStream
+import org.activiti.engine.ActivitiObjectNotFoundException
 
 /**
  * 流程定义相关业务接口
@@ -13,101 +15,100 @@ import java.io.InputStream
 interface IFlowDefinitionBiz {
 
     /**
-     * 部署单个流程：通过指定的bpmn相关信息
+     * 检测流程定义是否存在
      *
-     * @param deploymentName 部署名称
-     * @param bpmnFileName bpmn文件名，不传后缀(.bpmn)时将自动拼接
-     * @param diagramFileName bpmn对应的流程图文件名，不传后缀(.png)时将自动拼接。可选，不指定时将不会部署流程图。
-     * @param prefixPath 目录前缀，默认为bpmn。bpmn和流程图文件都必须放置于该目录下
-     * @return 流程定义对象。
-     * @throws ObjectNotFoundException 文件找不到时
+     * @param key 流程key(bpmn文件中process元素的id)，不能为空
+     * @param version 流程定义版本，如果为null则忽略该条件，默认为null
+     * @return true: 流程定义存在，false: 流程定义不存在
+     * @throws IllegalArgumentException key为空时
      * @author K
      * @since 1.0.0
      */
-    fun deployWithBpmn(
-        deploymentName: String, bpmnFileName: String, diagramFileName: String? = null, prefixPath: String = "bpmn"
-    ): FlowDefinition
+    fun isExists(key: String, version: Int? = null): Boolean
 
     /**
-     * 部署多个流程：通过zip压缩包。包中可包含bpmn和流程图文件,文件名(不含后缀)一样视为同一流程，流程图为可选。
+     * 获取流程定义
      *
-     * @param deploymentName 部署名称
-     * @param zipFileName 压缩包文件名，不传后缀(.zip)时将自动拼接。
-     * @param prefixPath 目录前缀，默认为bpmn。zip包必须放置于该目录下
-     * @return List(流程定义对象)
-     * @throws ObjectNotFoundException 文件找不到时
+     * @param key 流程key(bpmn文件中process元素的id)
+     * @param version 流程定义版本，传null将取最新版本，默认为null
+     * @return 流程定义对象，找不到返回null
+     * @throws IllegalArgumentException key为空时
      * @author K
      * @since 1.0.0
      */
-    fun deployWithZip(
-        deploymentName: String,
-        zipFileName: String,
-        prefixPath: String = PathKit.getResourcePath("bpmn")
-    ): List<FlowDefinition>
+    fun get(key: String, version: Int? = null): FlowDefinition?
 
     /**
-     * 返回指定key的流程定义
+     * 查询流程定义
      *
-     * 尽管同一个key关联多个流程定义在activiti中是允许的，但在实际应用中最好是一一对应的关系！
-     *
-     * @param definitionKey 流程定义key(bpmn文件中process元素的id)
-     * @return List(流程定义对象)，找不到返回空列表
+     * @param criteria 查询条件对象，当对象的属性不为空时才会将该属性作为查询条件，各属性间是”与“的关系
+     * @param pageNum 分页页码，从1开始，默认为1，小于1将按1处理
+     * @param limit 分页每页最大条数，默认为20，小于1将按不分页处理
      * @author K
      * @since 1.0.0
      */
-    fun getDefinitionByKey(definitionKey: String): List<FlowDefinition>
+    fun search(criteria: FlowDefinitionCriteria, pageNum: Int = 1, limit: Int = 20): List<FlowDefinition>
 
     /**
      * 激活流程定义，重复激活将忽略操作
      *
-     * @param definitionKey 流程定义key(bpmn文件中process元素的id)
-     * @throws ObjectNotFoundException 当指定的definitionKey找不到对应流程定义时
+     * @param key 流程key(bpmn文件中process元素的id)
+     * @param version 流程定义版本，传null将取最新版本，默认为null
+     * @throws IllegalArgumentException key为空时
+     * @throws ObjectNotFoundException 当指定的key找不到对应流程定义时
      * @author K
      * @since 1.0.0
      */
-    fun activateDefinition(definitionKey: String)
+    fun activate(key: String, version: Int? = null)
 
     /**
      * 挂起流程定义，重复挂起将忽略操作
      *
-     * @param definitionKey 流程定义key(bpmn文件中process元素的id)
-     * @throws ObjectNotFoundException 当指定的definitionKey找不到对应流程定义时
+     * @param key 流程key(bpmn文件中process元素的id)
+     * @param version 流程定义版本，传null将取最新版本，默认为null
+     * @throws IllegalArgumentException key为空时
+     * @throws ObjectNotFoundException 当指定的key找不到对应流程定义时
      * @author K
      * @since 1.0.0
      */
-    fun suspendDefinition(definitionKey: String)
+    fun suspend(key: String, version: Int? = null)
 
     /**
-     * 删除指定流程定义key对应的所有流程的相关信息，只要一个失败，所有就删除失败
+     * 删除指定流程key对应的所有流程的相关信息，只要一个失败，所有就删除失败
      *
-     * @param definitionKey 流程定义key(bpmn文件中process元素的id)
+     * @param key 流程key(bpmn文件中process元素的id)
+     * @param version 流程定义版本，传null将取最新版本，默认为null
      * @param cascade 是否级联删除流程实例、历史流程实例和job, 默认为否
+     * @throws IllegalArgumentException key为空时
      * @throws ObjectNotFoundException 当找不到对应流程定义时
      * @author K
      * @since 1.0.0
      */
-    fun deleteDefinitions(definitionKey: String, cascade: Boolean = false)
+    fun delete(key: String, version: Int? = null, cascade: Boolean = false)
 
     /**
-     * 获取流程图
+     * 启动流程
      *
-     * @param definitionKey 流程定义key(bpmn文件中process元素的id)。当有多个流程定义时，取第一个！
-     * @return 图片输入流对象，流程定义不存在时返回null
+     * @param key 流程key(bpmn文件中process元素的id)。作为查询条件。不能为空
+     * @param bizKey 业务主键。作为设置项，不能为空
+     * @param instanceName 实例名称。作为设置项，不能为空
+     * @param variables 流程实例变量，默认为null。作为设置项
+     * @param eventListener 事件监听器，默认为null。作为设置项
+     * @param version 流程定义版本，传null将取最新版本，默认为null。作为查询条件
+     * @return 流程实例对象，启动失败时返回null
+     * @throws IllegalArgumentException key或bizKey或instanceName为空时，或者bizKey值非法
+     * @throws ObjectAlreadyExistsException 指定key、version、bizType的流程实例已经存在
+     * @throws ObjectNotFoundException 找不到流程定义时
      * @author K
      * @since 1.0.0
      */
-    fun getFlowDiagram(definitionKey: String): InputStream?
-
-    /**
-     * 生成流程图(可以在部署前)
-     *
-     * @param bpmnFileName bpmn文件名，不传后缀(.bpmn)时将自动拼接
-     * @param prefixPath 目录前缀，默认为bpmn。bpmn文件必须放置于该目录下
-     * @return 图片输入流对象
-     * @throws ObjectNotFoundException 文件找不到时
-     * @author K
-     * @since 1.0.0
-     */
-    fun genFlowDiagram(bpmnFileName: String, prefixPath: String = PathKit.getResourcePath("bpmn")): InputStream
+    fun start(
+        key: String,
+        bizKey: String,
+        instanceName: String,
+        variables: Map<String, *>? = null,
+        eventListener: IFlowEventListener? = null,
+        version: Int? = null
+    ): FlowInstance?
 
 }

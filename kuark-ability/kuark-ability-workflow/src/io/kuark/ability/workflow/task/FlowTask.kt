@@ -15,31 +15,46 @@ data class FlowTask(
     /** 流程任务名称 */
     val name: String,
     /** 流程定义key(bpmn文件中process元素的id) */
-    val definitionKey: String,
+    val flowDefinitionKey: String,
+    /** 业务主键 */
+    val bizKey: String,
     /** 流程任务受理人id */
-    val assignee: String?
+    val assignee: String?,
 ) {
 
     /** 父任务id，内部使用 */
     internal var _parentTaskId: String? = null
+
     /** 流程定义id，内部使用 */
     internal var _flowDefinitionId: String? = null
+
     /** 流程实例id，内部使用 */
     internal var _instanceId: String? = null
+
+    /** 执行id，内部使用 */
+    internal var _executionId: String? = null
+
     /** 局部变量 */
     var localVariables: Map<String, Any>? = null
+
     /** 全局变量 */
     var flowVariables: Map<String, Any>? = null
+
     /** 任务原受理人id（有委托他人受理该任务） */
     var owner: String? = null
+
     /** 描述 */
     var description: String? = null
+
     /** 任务创建时间 */
     var createdTime: Date? = null
+
     /** 任务签收时间 */
     var claimedTime: Date? = null
+
     /** 任务过期时间 */
     var dueDate: Date? = null
+
     /** 优先级 */
     var priority = 0
 
@@ -54,6 +69,7 @@ data class FlowTask(
         task.id,
         task.name,
         task.taskDefinitionKey,
+        task.businessKey,
         task.assignee
     ) {
         this._flowDefinitionId = task.processDefinitionId
@@ -63,10 +79,11 @@ data class FlowTask(
         this.owner = task.owner
         this.description = task.description
         this.createdTime = task.createTime
-        this.claimedTime= task.claimTime
+        this.claimedTime = task.claimTime
         this.dueDate = task.dueDate
         this.priority = task.priority
         this._parentTaskId = task.parentTaskId
+        this._executionId = task.executionId
     }
 
 }

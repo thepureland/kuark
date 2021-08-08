@@ -1,25 +1,25 @@
 package io.kuark.ability.workflow.definition
 
+import io.kuark.ability.workflow.event.IFlowEventListener
+import io.kuark.ability.workflow.instance.FlowInstance
+import io.kuark.base.error.ObjectAlreadyExistsException
 import io.kuark.base.error.ObjectNotFoundException
-import io.kuark.base.lang.string.appendIfMissing
+import io.kuark.base.lang.collections.joinEachToString
 import io.kuark.base.log.LogFactory
-import org.activiti.bpmn.converter.BpmnXMLConverter
 import org.activiti.engine.ActivitiException
-import org.activiti.engine.ActivitiIllegalArgumentException
 import org.activiti.engine.ActivitiObjectNotFoundException
 import org.activiti.engine.RepositoryService
-import org.activiti.image.impl.DefaultProcessDiagramGenerator
+import org.activiti.engine.RuntimeService
+import org.activiti.engine.repository.Deployment
+import org.activiti.engine.repository.ProcessDefinition
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
-import java.io.File
-import java.io.FileInputStream
-import java.io.FileNotFoundException
-import java.io.InputStream
-import java.util.zip.ZipInputStream
-import javax.xml.stream.XMLInputFactory
+import java.lang.StringBuilder
 
 /**
  * 流程定义相关业务
+ *
+ * 每部署一次，都会生成一个新的流程定义
  *
  * @author K
  * @since 1.0.0
@@ -29,72 +29,92 @@ open class FlowDefinitionBiz : IFlowDefinitionBiz {
     @Autowired
     private lateinit var repositoryService: RepositoryService
 
+    @Autowired
+    private lateinit var runtimeService: RuntimeService
+
     private val log = LogFactory.getLog(this::class)
 
-    @Transactional
-    override fun deployWithBpmn(
-        deploymentName: String, bpmnFileName: String, diagramFileName: String?, prefixPath: String
-    ): FlowDefinition {
-        val bpmnFilePath = "${prefixPath}/${bpmnFileName}".appendIfMissing(".bpmn")
-        val deploymentBuilder = repositoryService.createDeployment().name(deploymentName)
-        try {
-            deploymentBuilder.addClasspathResource(bpmnFilePath)
-            if (diagramFileName != null && diagramFileName.isNotEmpty()) {
-                val diagramFilePath = "${prefixPath}/${diagramFileName}".appendIfMissing(".png")
-                deploymentBuilder.addClasspathResource(diagramFilePath)
-            }
-        } catch (e: ActivitiIllegalArgumentException) {
-            log.error(e)
-            throw ObjectNotFoundException(e)
+
+    override fun isExists(key: String, version: Int?): Boolean {
+        require(key.isNotBlank()) { "检测流程定义是否存在失败！【key】参数不能为空！" }
+
+        val query = repositoryService.createProcessDefinitionQuery().processDefinitionKey(key)
+        if (version != null) {
+            query.processDefinitionVersion(version)
         }
-        val deployment = deploymentBuilder.deploy()
-        val definition = repositoryService.createProcessDefinitionQuery().deploymentId(deployment.id).singleResult()
-        return FlowDefinition(deployment, definition)
+        return query.count() > 0
     }
 
-    @Transactional
-    override fun deployWithZip(deploymentName: String, zipFileName: String, prefixPath: String): List<FlowDefinition> {
-        val zipPath = "${prefixPath}/${zipFileName}".appendIfMissing(".zip")
-        val zipFile = File(zipPath)
-        val inputStream =try {
-            FileInputStream(zipFile)
-        } catch (e: FileNotFoundException) {
-            log.error(e)
-            throw ObjectNotFoundException(e)
-        }
-        val zipInputStream = ZipInputStream(inputStream)
-        val deployment = zipInputStream.use {
-            repositoryService.createDeployment().name(deploymentName).addZipInputStream(it).deploy()
-        }
-        val definitions = repositoryService.createProcessDefinitionQuery().deploymentId(deployment.id).list()
-        return definitions.map { FlowDefinition(deployment, it) }.toList()
-    }
+    override fun get(key: String, version: Int?): FlowDefinition? {
+        require(key.isNotBlank()) { "获取流程定义失败！【key】参数不能为空！" }
 
-    override fun getDefinitionByKey(definitionKey: String): List<FlowDefinition> {
-        val definitions = repositoryService.createProcessDefinitionQuery().processDefinitionKey(definitionKey).list()
-        return if (definitions.isEmpty()) {
-            log.warn("找不到流程定义！definitionKey：$definitionKey")
-            emptyList()
+        val def = getActivitiDefinition(key, version)
+        return if (def == null) {
+            log.warn("找不到流程定义！key：$key")
+            null
         } else {
-            val results = mutableListOf<FlowDefinition>()
-            definitions.forEach {
-                val deployment = repositoryService.createDeploymentQuery().deploymentId(it.deploymentId).singleResult()
-                results.add(FlowDefinition(deployment, it))
-            }
-            results
+            val deployment = repositoryService.createDeploymentQuery().deploymentId(def.deploymentId).singleResult()
+            FlowDefinition(def, deployment)
         }
     }
 
+    override fun search(criteria: FlowDefinitionCriteria, pageNum: Int, limit: Int): List<FlowDefinition> {
+        val whereStr = StringBuilder("1=1")
+
+        // 流程key(bpmn文件中process元素的id)
+        val key = criteria.key
+        if (key != null && key.isNotBlank() && !key.contains("'")) {
+            whereStr.append(" AND UPPER(key_) LIKE '%${key.uppercase()}%'")
+        }
+
+        // 流程名称，支持忽略大小写模糊搜索
+        val name = criteria.name
+        if (name != null && name.isNotBlank() && !name.contains("'")) {
+            whereStr.append(" AND UPPER(name_) LIKE '%${name.uppercase()}%'")
+        }
+
+        // 只查询最新版本的
+        val latestOnly = criteria.latestOnly
+        var sql = "SELECT * FROM act_re_procdef WHERE $whereStr"
+        if (latestOnly) {
+            sql = "$sql AND version_ = (SELECT MAX(def.version_) FROM act_re_procdef def GROUP BY def.key_)"
+        }
+
+        // 查询流程定义
+        val query = repositoryService.createNativeProcessDefinitionQuery().sql(sql)
+        val definitions = if (limit < 1) {
+            query.list()
+        } else {
+            val pageNo = if (pageNum < 1) 1 else pageNum
+            query.listPage((pageNo - 1) * limit, limit)
+        }
+
+        // 查询流程部署
+        val deploymentIds = definitions.map { it.deploymentId }
+        val deploymentIdsStr = deploymentIds.joinEachToString("'", "'", ",")
+        sql = "SELECT * FROM act_re_deployment WHERE id_ IN (${deploymentIdsStr})"
+        val deployments = repositoryService.createNativeDeploymentQuery().sql(sql).list()
+
+        // 结果处理
+        val deploymentMap = mutableMapOf<String, Deployment>()
+        deployments.forEach { deploymentMap[it.id] = it }
+        return definitions.map { FlowDefinition(it, deploymentMap[it.deploymentId]) }
+    }
+
     @Transactional
-    override fun activateDefinition(definitionKey: String) {
+    override fun activate(key: String, version: Int?) {
+        require(key.isNotBlank()) { "激活流程定义失败！【key】参数不能为空！" }
+
+        val def = getActivitiDefinition(key, version)
+        def ?: throw ObjectNotFoundException("找不到流程定义！【key：$key，version：$version】")
         try {
-            repositoryService.activateProcessDefinitionByKey(definitionKey)
+            repositoryService.activateProcessDefinitionById(def.id)
+            log.info("激活流程定义成功！【key：$key，version：$version】")
         } catch (e: ActivitiObjectNotFoundException) {
             log.error(e)
-            throw ObjectNotFoundException(e)
         } catch (e: ActivitiException) {
             if (e.message!!.contains("already in state")) {
-                log.warn("忽略流程定义激活操作，因其已处于激活状态！definitionKey: $definitionKey")
+                log.warn("忽略流程定义激活操作，因其已处于激活状态！【key: $key】")
             } else {
                 log.error(e)
             }
@@ -102,65 +122,116 @@ open class FlowDefinitionBiz : IFlowDefinitionBiz {
     }
 
     @Transactional
-    override fun suspendDefinition(definitionKey: String) {
+    override fun suspend(key: String, version: Int?) {
+        require(key.isNotBlank()) { "挂起流程定义失败！【key】参数不能为空！" }
+
         try {
-            repositoryService.suspendProcessDefinitionByKey(definitionKey)
+            repositoryService.suspendProcessDefinitionByKey(key)
+            log.info("挂起流程定义成功！【key：$key，version：$version】")
         } catch (e: ActivitiObjectNotFoundException) {
             log.error(e)
             throw IllegalArgumentException(e)
         } catch (e: ActivitiException) {
-            log.warn("忽略流程定义挂起操作，因其已处于挂起状态！definitionKey: $definitionKey")
+            log.warn("忽略流程定义挂起操作，因其已处于挂起状态！【key: $key】")
         }
     }
 
     @Transactional
-    override fun deleteDefinitions(definitionKey: String, cascade: Boolean) {
-        val definitions = getDefinitionByKey(definitionKey)
-        if (definitions.isEmpty()) {
-            val errMsg = "找不到流程定义！definitionKey：$definitionKey"
+    override fun delete(key: String, version: Int?, cascade: Boolean) {
+        require(key.isNotBlank()) { "删除流程定义失败！【key】参数不能为空！" }
+
+        val definition = get(key)
+        if (definition == null) {
+            val errMsg = "找不到流程定义！【key：$key】"
             log.error(errMsg)
             throw ObjectNotFoundException(errMsg)
         }
         try {
-            definitions.forEach {
-                repositoryService.deleteDeployment(it._deploymentId, cascade)
-            }
+            repositoryService.deleteDeployment(definition._deploymentId, cascade)
         } catch (e: ActivitiObjectNotFoundException) {
             log.error(e)
             throw ObjectNotFoundException(e)
         }
     }
 
-    override fun getFlowDiagram(definitionKey: String): InputStream? {
-        val definitions = repositoryService.createProcessDefinitionQuery().processDefinitionKey(definitionKey).list()
-        return if (definitions.isNotEmpty()) {
-            if (definitions.size > 1) {
-                log.warn("找到多个流程定义！definitionKey：$definitionKey")
+    @Transactional
+    override fun start(
+        key: String,
+        bizKey: String,
+        instanceName: String,
+        variables: Map<String, *>?,
+        eventListener: IFlowEventListener?,
+        version: Int?
+    ): FlowInstance? {
+        // 参数处理
+        require(key.isNotBlank()) { "启动流程失败！【key】参数不能为空！【bizKey: $bizKey】" }
+        require(instanceName.isNotBlank()) { "启动流程失败！【instanceName】参数不能为空！【key：$key，bizKey: $bizKey】" }
+        require(bizKey.isNotBlank()) { "启动流程失败！【bizKey】参数不能为空！【key：$key】" }
+        require(!bizKey.contains("'")) { "启动流程失败！指定的业务主键不能包含单引号！【key：$key，bizKey: $bizKey】" }
+        require(!instanceName.contains("'")) { "启动流程失败！指定的实例名称不能包含单引号！【key：$key，bizKey: $bizKey】" }
+
+        // 检测流程实例是否已经存在
+        val query = runtimeService.createProcessInstanceQuery()
+            .processDefinitionKey(key)
+            .processInstanceBusinessKey(bizKey)
+        if (version == null) {
+            val definition = repositoryService.createProcessDefinitionQuery()
+                .processDefinitionKey(key).latestVersion().singleResult()
+            if (definition == null) {
+                val errMsg = "启动流程失败，因流程定义不存在！【key：$key，version：$version，bizKey：$bizKey】"
+                log.error(errMsg)
+                throw ObjectNotFoundException(errMsg)
             }
-            val definition = definitions.first()
-            repositoryService.getResourceAsStream(definition.deploymentId, definition.diagramResourceName)
+            query.processDefinitionVersion(definition.version)
         } else {
-            log.error("流程图获取失败，因找不到流程定义！definitionKey：$definitionKey")
+            query.processDefinitionVersion(version)
+        }
+        if (query.count() > 0) {
+            val errMsg = "启动流程失败，因流程实例已存在！【key：$key，version：$version，bizKey：$bizKey】"
+            log.error(errMsg)
+            throw ObjectAlreadyExistsException(errMsg)
+        }
+
+        val instance = try {
+            // 添加事件监听器
+            if (eventListener != null) {
+                runtimeService.addEventListener(eventListener)
+            }
+
+            // 启动流程
+            runtimeService.startProcessInstanceByKey(key, bizKey, variables).apply {
+                log.info("启动流程成功！【key：$key，version：$version，bizKey：$bizKey】")
+            }
+        } catch (e: ActivitiObjectNotFoundException) {
+            val errMsg = "启动流程失败，因流程定义不存在！【key：$key，version：$version，bizKey：$bizKey】"
+            log.error(errMsg)
+            throw ObjectNotFoundException(errMsg)
+        } catch (e: Throwable) {
+            log.error(e, "启动流程失败！【key: $key，version：$version, bizKey: $bizKey】")
             null
+        }
+
+        return if (instance == null) {
+            null
+        } else {
+            // 设置流程实例名称
+            runtimeService.setProcessInstanceName(instance.processInstanceId, instanceName)
+            log.info("启动流程后设置流程实例名称成功！【instanceName：$instanceName，key：$key，version：$version，bizKey：$bizKey】")
+            FlowInstance(instance).apply {
+                this.name = instanceName
+            }
         }
     }
 
-    override fun genFlowDiagram(bpmnFileName: String, prefixPath: String): InputStream {
-        val filePath = "${prefixPath}/${bpmnFileName}".appendIfMissing(".bpmn")
-        val bpmnFile = File(filePath)
-        return if (bpmnFile.exists()) {
-            val inputStream = FileInputStream(bpmnFile)
-            val bpmnModel = inputStream.use {
-                val streamReader = XMLInputFactory.newInstance().createXMLStreamReader(it)
-                BpmnXMLConverter().convertToBpmnModel(streamReader)
-            }
-            // generateDiagram(bpmnModel, "png",  "宋体", "微软雅黑", "黑体", null, 2.0)
-            DefaultProcessDiagramGenerator().generateDiagram(bpmnModel, emptyList())
+
+    private fun getActivitiDefinition(key: String, version: Int?): ProcessDefinition? {
+        val query = repositoryService.createProcessDefinitionQuery().processDefinitionKey(key)
+        if (version == null) {
+            query.latestVersion()
         } else {
-            val errMsg = "生成流程图失败，因bpmn文件【${filePath}】不存在！"
-            log.error(errMsg)
-            throw ObjectNotFoundException(errMsg)
+            query.processDefinitionVersion(version)
         }
+        return query.singleResult()
     }
 
 }

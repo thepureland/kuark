@@ -1,18 +1,19 @@
 package io.kuark.ability.workflow.definition
 
+import io.kuark.ability.workflow.event.FlowEvent
+import io.kuark.ability.workflow.event.FlowEventType
+import io.kuark.ability.workflow.event.IFlowEventListener
+import io.kuark.ability.workflow.instance.FlowInstance
+import io.kuark.ability.workflow.model.FlowModelBizTest
+import io.kuark.base.error.ObjectAlreadyExistsException
 import io.kuark.base.error.ObjectNotFoundException
-import io.kuark.base.image.ImageKit
-import io.kuark.base.io.FileKit
-import io.kuark.base.io.PathKit
+import io.kuark.context.spring.SpringKit
 import io.kuark.test.common.SpringTest
-import org.activiti.engine.RepositoryService
-import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
-import java.io.File
-import javax.imageio.ImageIO
 
 
 internal open class FlowDefinitionBizTest : SpringTest() {
@@ -20,99 +21,124 @@ internal open class FlowDefinitionBizTest : SpringTest() {
     @Autowired
     private lateinit var flowDefinitionBiz: IFlowDefinitionBiz
 
-    @Autowired
-    private lateinit var repositoryService: RepositoryService
-
-    private val DEPLOYMENT_NAME = "请假申请(junit)"
-
     private val NO_EXISTS = "no exists"
 
+    @Test
+    @Transactional
+    open fun isExists() {
+        deploy()
+
+        assert(flowDefinitionBiz.isExists(FlowModelBizTest.KEY, 1))
+        assert(flowDefinitionBiz.isExists(FlowModelBizTest.KEY))
+        assertFalse(flowDefinitionBiz.isExists(FlowModelBizTest.KEY, 2))
+        assertFalse(flowDefinitionBiz.isExists(NO_EXISTS, 1))
+        assertThrows<IllegalArgumentException> { flowDefinitionBiz.isExists(" ") }
+    }
 
     @Test
     @Transactional
-    open fun deployWithBpmn() {
-        assertThrows<ObjectNotFoundException> {
-            flowDefinitionBiz.deployWithBpmn(DEPLOYMENT_NAME, NO_EXISTS, "test")
+    open fun get() {
+        deploy()
+
+        assertNotNull(flowDefinitionBiz.get(FlowModelBizTest.KEY, 1))
+        assertNull(flowDefinitionBiz.get(FlowModelBizTest.KEY, 2))
+        assertNull(flowDefinitionBiz.get(NO_EXISTS, 1))
+        assertEquals(1, flowDefinitionBiz.get(FlowModelBizTest.KEY)!!.version)
+        assertThrows<IllegalArgumentException> { flowDefinitionBiz.get(" ") }
+    }
+
+    @Test
+    @Transactional
+    open fun search() {
+        deploy()
+
+        // 指定条件模糊搜索
+        var criteria = FlowDefinitionCriteria.Builder().key("leaveAp").name("请假").latestOnly(true).build()
+        val definitions = flowDefinitionBiz.search(criteria, 1, 1)
+        assertEquals(1, definitions.size)
+
+        // 没有指定条件
+        criteria = FlowDefinitionCriteria.Builder().build()
+        assertEquals(1, flowDefinitionBiz.search(criteria).size)
+    }
+
+    @Test
+    @Transactional
+    open fun activate() {
+        val definition = deploy()
+        flowDefinitionBiz.activate(definition.key)
+    }
+
+    @Test
+    @Transactional
+    open fun suspend() {
+        val definition = deploy()
+        flowDefinitionBiz.suspend(definition.key)
+    }
+
+    @Test
+    @Transactional
+    open fun delete() {
+        val definition = deploy()
+        flowDefinitionBiz.delete(definition.key, null, true)
+        assertThrows<ObjectNotFoundException> { flowDefinitionBiz.delete(NO_EXISTS, null, true) }
+    }
+
+    @Test
+    @Transactional
+    open fun start() {
+        val definition = deploy()
+
+        // 非法参数
+        assertThrows<IllegalArgumentException> { flowDefinitionBiz.start("", BIZ_KEY, INSTANCE_NAME) }
+        assertThrows<IllegalArgumentException> { flowDefinitionBiz.start(KEY, " ", INSTANCE_NAME) }
+        assertThrows<IllegalArgumentException> { flowDefinitionBiz.start(KEY, "biz'key", INSTANCE_NAME) }
+        assertThrows<IllegalArgumentException> { flowDefinitionBiz.start(KEY, BIZ_KEY, "") }
+
+        // 传不存在的流程定义key
+        assertThrows<ObjectNotFoundException> { flowDefinitionBiz.start(NO_EXISTS, BIZ_KEY, INSTANCE_NAME) }
+
+        // 成功启动
+        var isEventFire = false
+        val listener = object : IFlowEventListener {
+            override fun onEvent(event: FlowEvent) {
+                if (event.type == FlowEventType.ACTIVITY_STARTED) {
+                    isEventFire = true
+                }
+            }
         }
-        assertThrows<ObjectNotFoundException> {
-            flowDefinitionBiz.deployWithBpmn(DEPLOYMENT_NAME, "test", NO_EXISTS)
+        var variables = mapOf("applicantId" to APPLICANT_ID)
+        val instance = flowDefinitionBiz.start(definition.key, BIZ_KEY, INSTANCE_NAME, variables, listener)
+        assertNotNull(instance)
+        assertNotNull(instance!!._id)
+        assert(isEventFire)
+        assertEquals(INSTANCE_NAME, instance.name)
+
+        // 重复启动
+        assertThrows<ObjectAlreadyExistsException> {
+            flowDefinitionBiz.start(definition.key, BIZ_KEY, INSTANCE_NAME, variables, listener)
         }
     }
 
-    @Test
-    @Transactional
-    open fun deployWithZip() {
-        val definitions = flowDefinitionBiz.deployWithZip(DEPLOYMENT_NAME, "bpmn")
-        assertEquals(2, definitions.size)
-        definitions.forEach {
-            var d = repositoryService.createProcessDefinitionQuery().processDefinitionKey(it.key).singleResult()
-            assert(d.diagramResourceName in arrayOf("test11.png", "test22.png"))
-            d = repositoryService.createProcessDefinitionQuery().processDefinitionKey(it.key).singleResult()
-            assert(d.diagramResourceName in arrayOf("test11.png", "test22.png"))
+
+    companion object {
+
+        internal val KEY = FlowModelBizTest.KEY
+        internal val BIZ_KEY = "bizKey"
+        internal val INSTANCE_NAME = "instanceName"
+        internal val APPLICANT_ID = "applicantId"
+
+        internal fun deploy(): FlowDefinition {
+            FlowModelBizTest.createModel()
+            return FlowModelBizTest.deployModel()
         }
 
-        // 文件不存在
-        assertThrows<ObjectNotFoundException> { flowDefinitionBiz.deployWithZip(DEPLOYMENT_NAME, "no exists") }
-    }
-
-    @Test
-    @Transactional
-    open fun getDefinitionByKey() {
-        val definition = deploy()
-        assert(flowDefinitionBiz.getDefinitionByKey(definition.key).isNotEmpty())
-        assert(flowDefinitionBiz.getDefinitionByKey(NO_EXISTS).isEmpty())
-    }
-
-    @Test
-    @Transactional
-    open fun activateDefinition() {
-        val definition = deploy()
-        flowDefinitionBiz.activateDefinition(definition.key)
-    }
-
-    @Test
-    @Transactional
-    open fun suspendDefinition() {
-        val definition = deploy()
-        flowDefinitionBiz.suspendDefinition(definition.key)
-    }
-
-    @Test
-    @Transactional
-    open fun deleteDefinitions() {
-        val definition = deploy()
-        flowDefinitionBiz.deleteDefinitions(definition.key, true)
-        assertThrows<ObjectNotFoundException> { flowDefinitionBiz.deleteDefinitions(NO_EXISTS, true) }
-    }
-
-    @Test
-    @Transactional
-    open fun getFlowDiagram() {
-        System.setProperty("java.awt.headless", "false") //??? 不加会报java.awt.HeadlessException异常
-        val definition = deploy()
-        val inputStream = flowDefinitionBiz.getFlowDiagram(definition.key)
-        val bufferedImage = ImageIO.read(inputStream)
-        ImageKit.showImage(bufferedImage)
-        Thread.sleep(2000)
-    }
-
-    @Test
-    open fun genFlowDiagram() {
-        val inputStream = flowDefinitionBiz.genFlowDiagram("test")
-        val file = File("${PathKit.getUserDirectory()}/flow.png")
-        inputStream.use {
-            FileKit.copyInputStreamToFile(it!!, file)
+        internal fun deployThenStart(variables: Map<String, *>? = mapOf("applicantId" to APPLICANT_ID)): FlowInstance {
+            val flowDefinitionBiz = SpringKit.getBean(IFlowDefinitionBiz::class)
+            deploy()
+            return flowDefinitionBiz.start(FlowModelBizTest.KEY, BIZ_KEY, INSTANCE_NAME, variables)!!
         }
 
-//        val bufferedImage = ImageIO.read(inputStream) //??? bufferedImage会为null
-//        ImageKit.showImage(bufferedImage)
-//        Thread.sleep(2000)
-
-        assertThrows<ObjectNotFoundException> { flowDefinitionBiz.genFlowDiagram(NO_EXISTS) }
-    }
-
-    private fun deploy(): FlowDefinition {
-        return flowDefinitionBiz.deployWithBpmn(DEPLOYMENT_NAME, "test", "test")
     }
 
 }

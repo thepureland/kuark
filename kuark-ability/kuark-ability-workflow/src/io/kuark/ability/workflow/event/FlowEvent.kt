@@ -11,13 +11,6 @@ import org.activiti.engine.delegate.event.ActivitiEvent
 open class FlowEvent(private val event: ActivitiEvent) {
 
     /** 事件类型枚举 */
-    val type: FlowEventType = FlowEventType.of(event.type)
-
-    // 事件
-    // ActivitiEventListener
-    // BaseEntityEventListener
-    // 注册eventListeners（先）或typedEventListeners
-    // 运行阶段添加的监听器引擎重启后就消失
-    // ActivitiTestCase
+    val type = FlowEventType.of(event.type)
 
 }

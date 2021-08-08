@@ -13,25 +13,22 @@ import org.apache.commons.collections.CollectionUtils
 /**
  * 转换Collection所有元素(通过toString())为String, 每个元素的前面加入prefix，后面加入postfix，如<div>mymessage</div>。
  *
- * @param prefix 要添加的前缀, 可以为null, 为null将被当作空串
- * @param postfix 要添加的后缀, 可以为null, 为null将被当作空串
+ * @param prefix 要添加的前缀，默认为空串
+ * @param postfix 要添加的后缀，默认为空串
+ * @param seperator 每个元素间的分隔符，默认为空串
  * @return 加上前缀和后缀的每个元素的toString值的连接串
  * @author K
  * @since 1.0.0
  */
-fun Collection<*>.eachToString(prefix: String? = null, postfix: String? = null): String {
-    var prefixStr = prefix
-    var postfixStr = postfix
-    if (this.isEmpty()) {
-        return ""
-    }
-    prefixStr = prefixStr ?: ""
-    postfixStr = postfixStr ?: ""
+fun Collection<*>.joinEachToString(prefix: String = "", postfix: String = "", seperator: String = ""): String {
+    if (this.isEmpty()) return ""
     val builder = StringBuilder()
-    for (o in this) {
-        builder.append(prefixStr).append(o).append(postfixStr)
+    this.forEachIndexed { index, elem ->
+        builder.append(prefix).append(elem).append(postfix)
+        if (index != this.size - 1) {
+            builder.append(seperator)
+        }
     }
-
     return builder.toString()
 }
 

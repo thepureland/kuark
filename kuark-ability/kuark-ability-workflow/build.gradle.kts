@@ -9,6 +9,7 @@ dependencies {
     api("org.activiti:activiti-image-generator")
 //    api("org.activiti.cloud:activiti-cloud-services-api")
     api("org.activiti:activiti-spring-boot-starter")
+    api("org.apache.xmlgraphics:batik-all")
     api("org.springframework.boot:spring-boot-starter-security")
 
     testImplementation(project(":kuark-test:kuark-test-common"))

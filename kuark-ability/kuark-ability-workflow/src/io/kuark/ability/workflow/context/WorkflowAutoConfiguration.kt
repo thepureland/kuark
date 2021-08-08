@@ -5,6 +5,8 @@ import io.kuark.ability.workflow.definition.IFlowDefinitionBiz
 import io.kuark.ability.workflow.event.GlobalFlowEventListener
 import io.kuark.ability.workflow.instance.FlowInstanceBiz
 import io.kuark.ability.workflow.instance.IFlowInstanceBiz
+import io.kuark.ability.workflow.model.FlowModelBiz
+import io.kuark.ability.workflow.model.IFlowModelBiz
 import io.kuark.ability.workflow.task.FlowTaskBiz
 import io.kuark.ability.workflow.task.IFlowTaskBiz
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
@@ -20,6 +22,10 @@ import org.springframework.core.annotation.Order
  */
 @Configuration
 open class WorkflowAutoConfiguration {
+
+    @Bean
+    @ConditionalOnMissingBean
+    open fun flowModelBiz(): IFlowModelBiz = FlowModelBiz()
 
     @Bean
     @ConditionalOnMissingBean

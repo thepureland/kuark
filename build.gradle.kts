@@ -256,6 +256,7 @@ subprojects {
 //            dependency("org.activiti:activiti-bpmn-layout:${Version.ACTIVITI}")
             dependency("org.activiti:activiti-image-generator:${Version.ACTIVITI}")
 //            dependency("org.activiti.cloud:activiti-cloud-services-api:7-201802-EA")
+            dependency("org.apache.xmlgraphics:batik-all:1.14")
 
             // drools
             dependency("org.drools:drools-compiler:${Version.DROOLS}")

@@ -5,6 +5,7 @@ import io.kuark.base.log.LogFactory
 import org.activiti.engine.TaskService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
+import java.lang.StringBuilder
 
 /**
  * 流程任务相关业务
@@ -19,7 +20,15 @@ open class FlowTaskBiz : IFlowTaskBiz {
 
     private val log = LogFactory.getLog(this::class)
 
-    override fun getTask(bizKey: String, taskDefinitionKey: String): FlowTask? {
+    override fun isExists(bizKey: String, taskDefinitionKey: String): Boolean {
+        val count = taskService.createTaskQuery()
+            .processInstanceBusinessKey(bizKey)
+            .taskDefinitionKey(taskDefinitionKey)
+            .count()
+        return count > 0
+    }
+
+    override fun get(bizKey: String, taskDefinitionKey: String): FlowTask? {
         val task = taskService.createTaskQuery()
             .processInstanceBusinessKey(bizKey)
             .taskDefinitionKey(taskDefinitionKey)
@@ -27,27 +36,71 @@ open class FlowTaskBiz : IFlowTaskBiz {
         return if (task == null) null else FlowTask(task)
     }
 
-    override fun getTasksByUser(vararg userIds: String): List<FlowTask> {
-        require(userIds.isNotEmpty()) { log.error("FlowTaskBiz::getTasksByUser的userIds参数不能为空！") }
-        val tasks = taskService.createTaskQuery()
-            .taskAssigneeIds(userIds.toList())
-            .list()
+    override fun search(criteria: FlowTaskCriteria, pageNum: Int, limit: Int): List<FlowTask> {
+        val whereStr = StringBuilder("1=1")
+
+        // 任务受理人id
+        val assignee = criteria.assignee
+        if (assignee != null && assignee.isNotBlank() && !assignee.contains("'")) {
+            whereStr.append(" AND t.assignee_ = '$assignee'")
+        }
+
+        // 业务主键
+        val bizKey = criteria.bizKey
+        if (bizKey != null && bizKey.isNotBlank() && !bizKey.contains("'")) {
+            whereStr.append(" AND UPPER(t.business_key_) LIKE '%${bizKey.uppercase()}%'")
+        }
+
+        // 任务定义key(bpmn文件userTask元素的id)
+        val taskDefinitionKey = criteria.taskDefinitionKey
+        if (taskDefinitionKey != null && taskDefinitionKey.isNotBlank() && !taskDefinitionKey.contains("'")) {
+            whereStr.append(" AND UPPER(t.task_def_key_) LIKE '%${taskDefinitionKey.uppercase()}%'")
+        }
+
+        // 任务名称
+        val name = criteria.name
+        if (name != null && name.isNotBlank() && !name.contains("'")) {
+            whereStr.append(" AND UPPER(t.name_) LIKE '%${name.uppercase()}%'")
+        }
+
+        // 流程定义key(bpmn文件中process元素的id)
+        val flowDefinitionKey = criteria.flowDefinitionKey
+        if (flowDefinitionKey != null && flowDefinitionKey.isNotBlank() && !flowDefinitionKey.contains("'")) {
+            whereStr.append(" AND UPPER(d.key_) LIKE '%${flowDefinitionKey.uppercase()}%'")
+        }
+
+        // 流程版本
+        val flowVersion = criteria.flowVersion
+        if (flowVersion != null) {
+            whereStr.append(" AND d.version_ = $flowVersion")
+        }
+
+        // 查询
+        val sql = "SELECT * FROM act_ru_task t LEFT JOIN act_re_procdef d ON t.proc_def_id_ = d.id_  WHERE $whereStr"
+        val query = taskService.createNativeTaskQuery().sql(sql)
+        val tasks = if (limit < 1) {
+            query.list()
+        } else {
+            val pageNo = if (pageNum < 1) 1 else pageNum
+            query.listPage((pageNo - 1) * limit, limit)
+        }
+
         return tasks.map { FlowTask(it) }
     }
 
     @Transactional
-    override fun claimTask(bizKey: String, taskDefinitionKey: String, userId: String): Boolean {
-        val userId = userId.trim()
-        require(userId.isNotEmpty()) { log.error("FlowTaskBiz::claimTask的userId参数不能为空！") }
+    override fun claim(bizKey: String, taskDefinitionKey: String, assignee: String): Boolean {
+        val userId = assignee.trim()
+        require(userId.isNotEmpty()) { "签收流程任务失败！【assignee】参数不能为空！【bizKey：$bizKey，taskDefinitionKey：$taskDefinitionKey】" }
         val task = findTask(bizKey, taskDefinitionKey)
         if (task.assignee == null || task.assignee.isEmpty()) {
             taskService.claim(task._id, userId)
-            log.info("用户签收流程任务成功！bizKey：$bizKey，taskDefinitionKey：$taskDefinitionKey，userId: $userId")
+            log.info("签收流程任务成功！【bizKey：$bizKey，taskDefinitionKey：$taskDefinitionKey，assignee: $userId】")
         } else {
             if (task.assignee == userId) {
-                log.warn("忽略用户签收流程任务操作，因该用户已对此任务签收！bizKey：$bizKey，taskDefinitionKey：$taskDefinitionKey，userId: $userId")
+                log.warn("忽略签收流程任务操作，因该用户已对此任务签收！【bizKey：$bizKey，taskDefinitionKey：$taskDefinitionKey，assignee: $userId】")
             } else {
-                log.error("用户签收流程任务失败，因已被其他用户签收，要更改签收的用户，请先取消签收！bizKey：$bizKey，taskDefinitionKey：$taskDefinitionKey，userId: $userId")
+                log.error("签收流程任务失败，因已被其他用户签收，要更改签收的用户，请先取消签收！【bizKey：$bizKey，taskDefinitionKey：$taskDefinitionKey，assignee: $userId】")
                 return false
             }
         }
@@ -55,49 +108,49 @@ open class FlowTaskBiz : IFlowTaskBiz {
     }
 
     @Transactional
-    override fun unclaimTask(bizKey: String, taskDefinitionKey: String): Boolean {
+    override fun unclaim(bizKey: String, taskDefinitionKey: String): Boolean {
         val task = findTask(bizKey, taskDefinitionKey)
         return if (task.assignee == null || task.assignee.isEmpty()) {
-            log.warn("忽略流程任务的取消签收操作，因该任务本就无用户签收！bizKey：$bizKey，taskDefinitionKey：$taskDefinitionKey")
+            log.warn("忽略流程任务的取消签收操作，因该任务本就无用户签收！【bizKey：$bizKey，taskDefinitionKey：$taskDefinitionKey】")
             false
         } else {
             taskService.unclaim(task._id)
-            log.info("流程任务取消签收成功！bizKey：$bizKey，taskDefinitionKey：$taskDefinitionKey")
+            log.info("流程任务取消签收成功！【bizKey：$bizKey，taskDefinitionKey：$taskDefinitionKey】")
             true
         }
     }
 
     @Transactional
-    override fun delegateTask(bizKey: String, taskDefinitionKey: String, userId: String): Boolean {
-        val userId = userId.trim()
-        require(userId.isNotEmpty()) { log.error("FlowTaskBiz::delegateTask的userId参数不能为空！") }
+    override fun delegate(bizKey: String, taskDefinitionKey: String, assignee: String): Boolean {
+        val userId = assignee.trim()
+        require(userId.isNotEmpty()) { "流程任务委托失败！【assignee】参数不能为空！【bizKey：$bizKey，taskDefinitionKey：$taskDefinitionKey】" }
         val task = findTask(bizKey, taskDefinitionKey)
         if (task.assignee == null || task.assignee.isEmpty()) {
-            log.info("流程任务在进行委托操作时，发现该任务并无用户签收，直接进行签收操作！bizKey：$bizKey，taskDefinitionKey：$taskDefinitionKey")
+            log.info("流程任务在进行委托操作时，发现该任务并无用户签收，直接进行签收操作！【bizKey：$bizKey，taskDefinitionKey：$taskDefinitionKey】")
             taskService.claim(task._id, userId)
-            log.info("用户签收流程任务成功！bizKey：$bizKey，taskDefinitionKey：$taskDefinitionKey，userId: $userId")
+            log.info("用户签收流程任务成功！【bizKey：$bizKey，taskDefinitionKey：$taskDefinitionKey，assignee: $userId】")
         } else {
             taskService.delegateTask(task._id, userId)
-            log.info("流程任务委托成功！bizKey：$bizKey，taskDefinitionKey：$taskDefinitionKey")
+            log.info("流程任务委托成功！【bizKey：$bizKey，taskDefinitionKey：$taskDefinitionKey，assignee: $userId】")
         }
         return true
     }
 
     @Transactional
-    override fun completeTask(bizKey: String, taskDefinitionKey: String, userId: String, force: Boolean): Boolean {
+    override fun complete(bizKey: String, taskDefinitionKey: String, userId: String, force: Boolean): Boolean {
         val userId = userId.trim()
-        require(userId.isNotEmpty()) { log.error("FlowTaskBiz::completeTask的userId参数不能为空！") }
+        require(userId.isNotEmpty()) { "执行流程任务失败！【userId】参数不能为空！【bizKey：$bizKey, taskDefinitionKey：$taskDefinitionKey】" }
         val task = findTask(bizKey, taskDefinitionKey)
         if (force) {
             taskService.setAssignee(task._id, userId)
             taskService.complete(task._id)
-            log.info("强制执行流程任务成功！bizKey：$bizKey, taskDefinitionKey：$taskDefinitionKey, userId: $userId")
+            log.info("强制执行流程任务成功！【bizKey：$bizKey, taskDefinitionKey：$taskDefinitionKey, userId: $userId】")
         } else {
             if (userId == task.assignee) {
                 taskService.complete(task._id)
-                log.info("执行流程任务成功！bizKey：$bizKey, taskDefinitionKey：$taskDefinitionKey, userId: $userId")
+                log.info("执行流程任务成功！【bizKey：$bizKey, taskDefinitionKey：$taskDefinitionKey, userId: $userId】")
             } else {
-                log.error("执行流程任务失败，因签收的用户不是$userId！bizKey：$bizKey, taskDefinitionKey：$taskDefinitionKey, userId: $userId")
+                log.error("执行流程任务失败，因签收的用户不是【$userId】！【bizKey：$bizKey, taskDefinitionKey：$taskDefinitionKey, userId: $userId】")
                 return false
             }
         }
@@ -105,7 +158,7 @@ open class FlowTaskBiz : IFlowTaskBiz {
     }
 
     private fun findTask(bizKey: String, taskDefinitionKey: String): FlowTask {
-        val task = getTask(bizKey, taskDefinitionKey)
+        val task = get(bizKey, taskDefinitionKey)
         if (task == null) {
             val errMsg = "找不到流程任务！bizKey：$bizKey, taskDefinitionKey：$taskDefinitionKey"
             log.error(errMsg)

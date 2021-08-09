@@ -1,5 +1,7 @@
 package io.kuark.ability.workflow.definition
 
+import io.kuark.ability.workflow.model.FlowModelCriteria
+
 /**
  * 流程定义查询条件构建者
  *
@@ -16,13 +18,21 @@ class FlowDefinitionCriteria private constructor(builder: Builder) {
     /** 流程名称，支持忽略大小写模糊搜索 */
     var name: String? = null
 
+    /** 分类 */
+    var category: String? = null
+
+    /** 租户(所属系统)id */
+    var tenantId: String? = null
+
     /** 只查询最新版本的，默认为true */
     var latestOnly: Boolean = true
 
     init {
-        this.key = builder.key
-        this.name = builder.name
-        this.latestOnly = builder.latestOnly
+        key = builder.key
+        name = builder.name
+        category = builder.category
+        tenantId = builder.tenantId
+        latestOnly = builder.latestOnly
     }
 
 
@@ -36,6 +46,8 @@ class FlowDefinitionCriteria private constructor(builder: Builder) {
 
         var key: String? = null
         var name: String? = null
+        var category: String? = null
+        var tenantId: String? = null
         var latestOnly: Boolean = true
 
         /**
@@ -55,6 +67,18 @@ class FlowDefinitionCriteria private constructor(builder: Builder) {
             return this
         }
 
+        /** 分类 */
+        fun category(category: String?): Builder {
+            this.category = category
+            return this
+        }
+
+        /** 租户(所属系统)id */
+        fun tenantId(tenantId: String?): Builder {
+            this.tenantId = tenantId
+            return this
+        }
+
         /** 只查询最新版本的，默认为true */
         fun latestOnly(latestOnly: Boolean): Builder {
             this.latestOnly = latestOnly
@@ -62,6 +86,5 @@ class FlowDefinitionCriteria private constructor(builder: Builder) {
         }
 
     }
-
 
 }

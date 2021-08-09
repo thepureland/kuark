@@ -27,11 +27,11 @@ data class FlowModel(
     /** 是否已部署 */
     var isDeployed: Boolean = false
 
-//    /** 分类 */
-//    var category: String? = null
-//
-//    /** 租户(所属系统)id */
-//    var tenantId: String? = null
+    /** 分类 */
+    var category: String? = null
+
+    /** 租户(所属系统)id */
+    var tenantId: String? = null
 
 
     /** 模型id，内部使用 */
@@ -40,8 +40,6 @@ data class FlowModel(
     /** 部署id，内部使用 */
     internal var _deploymentId: String? = null
 
-    /** 元数据信息，内部使用*/
-    internal var _metaInfo: String? = null
 
     /**
      * 次构造器
@@ -55,10 +53,9 @@ data class FlowModel(
         lastUpdateTime = model.lastUpdateTime
         _id = model.id
         _deploymentId = model.deploymentId
-        _metaInfo = model.metaInfo
         isDeployed = _deploymentId != null && _deploymentId!!.isNotBlank()
-//        category = model.category
-//        tenantId = model.tenantId
+        category = model.category
+        tenantId = model.tenantId
     }
 
 }

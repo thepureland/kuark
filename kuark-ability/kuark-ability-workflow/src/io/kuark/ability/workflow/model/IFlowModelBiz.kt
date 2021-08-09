@@ -54,15 +54,19 @@ interface IFlowModelBiz {
      *
      * @param key 流程key(bpmn文件中process元素的id)，不能为空
      * @param name 流程名称，不能为空
+     * @param category 分类，不能为空
      * @param flowJson 流程的json内容，不能为空
      * @param svgXml 流程图(svg格式)的xml内容，不能为空
+     * @param tenantId 租户(所属系统)id，可以为null，默认为null
      * @return 流程模型对象
      * @throws IllegalArgumentException 任意参数为空时，具体哪个参数参照异常消息
      * @throws ObjectAlreadyExistsException 流程key重复时
      * @author K
      * @since 1.0.0
      */
-    fun create(key: String, name: String, flowJson: String, svgXml: String): FlowModel
+    fun create(
+        key: String, name: String, category: String, flowJson: String, svgXml: String, tenantId: String? = null
+    ): FlowModel
 
     /**
      * 更新流程模型。
@@ -71,16 +75,26 @@ interface IFlowModelBiz {
      *
      * @param key 流程key(bpmn文件中process元素的id)。作为查询条件
      * @param version 模型版本，如果为null则查询最新的版本，默认为null。作为查询条件
-     * @param name 流程名称，如果为空将忽略该项的更新。作为更新项
-     * @param svgXml 流程图(svg格式)的xml内容，如果为空将忽略该项的更新。作为更新项
-     * @param flowJson 流程的json内容，如果为空将忽略该项的更新。作为更新项
+     * @param name 流程名称，作为更新项，如果为空将忽略该项的更新。
+     * @param category 分类，作为更新项，如果为空将忽略该项的更新。
+     * @param svgXml 流程图(svg格式)的xml内容，作为更新项，如果为空将忽略该项的更新。
+     * @param flowJson 流程的json内容，作为更新项，如果为空将忽略该项的更新。
+     * @param tenantId 租户(所属系统)id。作为更新项，如果为空将忽略该项的更新。
      * @return 流程模型对象
      * @throws IllegalArgumentException 流程key为空时
      * @throws ObjectNotFoundException 找不到流程模型时
      * @author K
      * @since 1.0.0
      */
-    fun update(key: String, version: Int? = null, name: String?, svgXml: String?, flowJson: String?): FlowModel
+    fun update(
+        key: String,
+        version: Int? = null,
+        name: String?,
+        category: String?,
+        svgXml: String?,
+        flowJson: String?,
+        tenantId: String? = null
+    ): FlowModel
 
     /**
      * 部署流程，通过已经存在的流程模型。一个版本的模型限制只能部署一次！

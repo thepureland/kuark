@@ -8,7 +8,6 @@ import io.kuark.base.error.ObjectNotFoundException
 import io.kuark.base.lang.string.appendIfMissing
 import io.kuark.base.log.LogFactory
 import org.activiti.bpmn.converter.BpmnXMLConverter
-import org.activiti.editor.constants.ModelDataJsonConstants
 import org.activiti.editor.language.json.converter.BpmnJsonConverter
 import org.activiti.engine.ActivitiIllegalArgumentException
 import org.activiti.engine.RepositoryService
@@ -20,7 +19,6 @@ import org.apache.batik.transcoder.image.PNGTranscoder
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
 import java.io.*
-import java.lang.StringBuilder
 import java.util.zip.ZipInputStream
 import javax.xml.stream.XMLInputFactory
 
@@ -67,6 +65,18 @@ open class FlowModelBiz : IFlowModelBiz {
             whereStr.append(" AND UPPER(name_) LIKE '%${name.uppercase()}%'")
         }
 
+        // 分类
+        val category = criteria.category
+        if (category != null && category.isNotBlank() && !category.contains("'")) {
+            whereStr.append(" AND category_ = '${category}'")
+        }
+
+        // 租户(所属系统)id
+        val tenantId = criteria.tenantId
+        if (tenantId != null && tenantId.isNotBlank() && !tenantId.contains("'")) {
+            whereStr.append(" AND tenant_id_ = '${tenantId}'")
+        }
+
         // 只查询最新版本的
         val latestOnly = criteria.latestOnly
         var sql = "SELECT * FROM act_re_model WHERE $whereStr"
@@ -88,19 +98,25 @@ open class FlowModelBiz : IFlowModelBiz {
     }
 
     @Transactional
-    override fun create(key: String, name: String, flowJson: String, svgXml: String): FlowModel {
-        require(key.isNotBlank()) { "创建流程模型失败！【流程key】参数不能为空！" }
-        require(name.isNotBlank()) { "创建流程模型失败！【流程名称】参数不能为空！" }
-        require(flowJson.isNotBlank()) { "创建流程模型失败！【流程的json内容】参数不能为空！" }
-        require(svgXml.isNotBlank()) { "创建流程模型失败！【流程图(svg格式)的xml内容】参数不能为空！" }
-        require(!key.contains("'")) { "创建流程模型失败！【流程key】参数不能包含单引号！" }
-        require(!name.contains("'")) { "创建流程模型失败！【流程名称】参数不能包含单引号！" }
+    override fun create(
+        key: String, name: String, category: String, flowJson: String, svgXml: String, tenantId: String?
+    ): FlowModel {
+        require(key.isNotBlank()) { "创建流程模型失败！【key】参数不能为空！" }
+        require(name.isNotBlank()) { "创建流程模型失败！【name】参数不能为空！" }
+        require(flowJson.isNotBlank()) { "创建流程模型失败！【flowJson】参数不能为空！" }
+        require(svgXml.isNotBlank()) { "创建流程模型失败！【svgXml】参数不能为空！" }
+        require(!key.contains("'")) { "创建流程模型失败！【key】参数不能包含单引号！" }
+        require(!name.contains("'")) { "创建流程模型失败！【name】参数不能包含单引号！" }
+        require(!category.contains("'")) { "创建流程模型失败！【category】参数不能包含单引号！" }
+        if (tenantId != null) {
+            require(!tenantId.contains("'")) { "创建流程模型失败！【tenantId】参数不能包含单引号！" }
+        }
 
         if (isExists(key)) {
             throw ObjectAlreadyExistsException("创建流程模型失败！【key：${key}】对应的流程模型已经存在！")
         }
         val model = repositoryService.newModel()
-        setModelProperties(model, key, name)
+        setModelProperties(model, key, name, category, tenantId)
         repositoryService.saveModel(model)
 
         // 保存流程内容
@@ -114,7 +130,15 @@ open class FlowModelBiz : IFlowModelBiz {
     }
 
     @Transactional
-    override fun update(key: String, version: Int?, name: String?, svgXml: String?, flowJson: String?): FlowModel {
+    override fun update(
+        key: String,
+        version: Int?,
+        name: String?,
+        category: String?,
+        svgXml: String?,
+        flowJson: String?,
+        tenantId: String?
+    ): FlowModel {
         require(key.isNotBlank()) { "更新流程模型失败！【流程key】参数不能为空！" }
         if (name != null) {
             require(!name.contains("'")) { "更新流程模型失败！【流程名称】参数不能包含单引号！" }
@@ -134,7 +158,7 @@ open class FlowModelBiz : IFlowModelBiz {
             model.version = latestVersion + 1
             log.info("更新流程模型【key：$key，version：$version】时发现其已部署，新增一条最新版本的模型记录【key：$key，version：${model.version}】。")
         }
-        setModelProperties(model!!, key, name)
+        setModelProperties(model!!, key, name, category, tenantId)
         repositoryService.saveModel(model) // 新增或更新
 
         // 保存流程内容
@@ -283,20 +307,28 @@ open class FlowModelBiz : IFlowModelBiz {
     }
 
 
-    private fun setModelProperties(model: Model, definitionKey: String, name: String?) {
-        val modelObjectNode = if (model.id == null) {
-            ObjectMapper().createObjectNode()
-        } else {
-            ObjectMapper().readTree(model.metaInfo) as ObjectNode
-        }
-        modelObjectNode.put(ModelDataJsonConstants.MODEL_NAME, name)
-        modelObjectNode.put(ModelDataJsonConstants.MODEL_REVISION, 1)
+    private fun setModelProperties(
+        model: Model, key: String, name: String?, category: String?, tenantId: String?
+    ) {
+//        val modelObjectNode = if (model.id == null) {
+//            ObjectMapper().createObjectNode()
+//        } else {
+//            ObjectMapper().readTree(model.metaInfo) as ObjectNode
+//        }
+//        modelObjectNode.put(ModelDataJsonConstants.MODEL_NAME, name)
+//        modelObjectNode.put(ModelDataJsonConstants.MODEL_REVISION, 1)
         model.apply {
-            if (name != null && name.isNotBlank()) {
+            this.key = key
+            if (name != null && name.isNotBlank()) { // 为空忽略更新
                 this.name = name
             }
-            this.key = definitionKey
-            this.metaInfo = modelObjectNode.toString()
+            if (category != null && category.isNotBlank()) { // 为空忽略更新
+                this.category = category
+            }
+            if (tenantId != null && tenantId.isNotBlank()) { // 为空忽略更新
+                this.tenantId = tenantId
+            }
+//            this.metaInfo = modelObjectNode.toString()
         }
     }
 

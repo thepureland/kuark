@@ -63,7 +63,7 @@ internal open class FlowModelBizTest : SpringTest() {
         assertEquals(1, models.size)
 
         deployModel()
-        flowModelBiz.update(model.key, null, "newName", null, null)
+        flowModelBiz.update(model.key, null, "newName", CATEGORY, null, null)
 
         // 更新已部署的模型后
         criteria = FlowModelCriteria.Builder().key("leaveApp").latestOnly(false).build()
@@ -81,22 +81,22 @@ internal open class FlowModelBizTest : SpringTest() {
         // 正常新增
         val svgXml = FileKit.readFileToString(File(PathKit.getResourcePath("bpmn/test-svg.xml")))
         val flowJson = FileKit.readFileToString(File(PathKit.getResourcePath("bpmn/test-flow.json")))
-        val definition = flowModelBiz.create(KEY, NAME, flowJson, svgXml)
+        val definition = flowModelBiz.create(KEY, NAME, CATEGORY, flowJson, svgXml)
         assertNotNull(definition._id)
 
         // 参数非法
-        assertThrows<IllegalArgumentException> { flowModelBiz.create("", NAME, flowJson, svgXml) }
+        assertThrows<IllegalArgumentException> { flowModelBiz.create("", NAME, CATEGORY, flowJson, svgXml) }
         assertThrows<IllegalArgumentException> {
-            flowModelBiz.create(KEY, "", flowJson, svgXml)
+            flowModelBiz.create(KEY, "", CATEGORY, flowJson, svgXml)
         }
         assertThrows<IllegalArgumentException> {
-            flowModelBiz.create(KEY, NAME, flowJson, " ")
+            flowModelBiz.create(KEY, NAME, CATEGORY, flowJson, " ")
         }
-        assertThrows<IllegalArgumentException> { flowModelBiz.create(KEY, NAME, "", svgXml) }
+        assertThrows<IllegalArgumentException> { flowModelBiz.create(KEY, NAME, CATEGORY, "", svgXml) }
 
         // 重复新增
         assertThrows<ObjectAlreadyExistsException> {
-            flowModelBiz.create(KEY, NAME, flowJson, svgXml)
+            flowModelBiz.create(KEY, NAME, CATEGORY, flowJson, svgXml)
         }
     }
 
@@ -109,14 +109,14 @@ internal open class FlowModelBizTest : SpringTest() {
         val newName = "newFlowName"
         val newSvgXml = FileKit.readFileToString(File(PathKit.getResourcePath("bpmn/test-svg.xml")))
         val newFlowJson = FileKit.readFileToString(File(PathKit.getResourcePath("bpmn/test-flow.json")))
-        flowModelBiz.update(definition.key, null, newName, newSvgXml, newFlowJson)
+        flowModelBiz.update(definition.key, null, newName, CATEGORY, newSvgXml, newFlowJson)
         val newDefinition = flowModelBiz.get(definition.key)!!
         assertEquals(1, newDefinition.version)
 
         deployModel()
 
         // 更新已部署的模型
-        flowModelBiz.update(definition.key, null, newName, newSvgXml, newFlowJson)
+        flowModelBiz.update(definition.key, null, newName, CATEGORY, newSvgXml, newFlowJson)
         val criteria = FlowModelCriteria.Builder().key(definition.key).latestOnly(false).build()
         val models = flowModelBiz.search(criteria)
         assertEquals(2, models.size)
@@ -149,7 +149,7 @@ internal open class FlowModelBizTest : SpringTest() {
             flowModelBiz.deployWithBpmn(DEPLOYMENT_NAME, NO_EXISTS, "test")
         }
         assertThrows<ObjectNotFoundException> {
-            flowModelBiz.deployWithBpmn(DEPLOYMENT_NAME, "test", NO_EXISTS)
+            flowModelBiz.deployWithBpmn(DEPLOYMENT_NAME, CATEGORY, NO_EXISTS)
         }
     }
 
@@ -201,12 +201,13 @@ internal open class FlowModelBizTest : SpringTest() {
 
         internal val KEY = "leaveApplicationKey"
         internal val NAME = "请假流程"
+        internal val CATEGORY = ""
 
         internal fun createModel(): FlowModel {
             val svgXml = FileKit.readFileToString(File(PathKit.getResourcePath("bpmn/test-svg.xml")), "UTF-8")
             val flowJson = FileKit.readFileToString(File(PathKit.getResourcePath("bpmn/test-flow.json")), "UTF-8")
             val flowModelBiz = SpringKit.getBean(IFlowModelBiz::class)
-            return flowModelBiz.create(KEY, NAME, flowJson, svgXml)
+            return flowModelBiz.create(KEY, NAME, CATEGORY, flowJson, svgXml)
         }
 
         internal fun deployModel(): FlowDefinition {

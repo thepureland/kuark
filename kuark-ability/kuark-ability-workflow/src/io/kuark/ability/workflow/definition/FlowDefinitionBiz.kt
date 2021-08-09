@@ -73,6 +73,18 @@ open class FlowDefinitionBiz : IFlowDefinitionBiz {
             whereStr.append(" AND UPPER(name_) LIKE '%${name.uppercase()}%'")
         }
 
+        // 分类
+        val category = criteria.category
+        if (category != null && category.isNotBlank() && !category.contains("'")) {
+            whereStr.append(" AND category_ = '${category}'")
+        }
+
+        // 租户(所属系统)id
+        val tenantId = criteria.tenantId
+        if (tenantId != null && tenantId.isNotBlank() && !tenantId.contains("'")) {
+            whereStr.append(" AND tenant_id_ = '${tenantId}'")
+        }
+
         // 只查询最新版本的
         val latestOnly = criteria.latestOnly
         var sql = "SELECT * FROM act_re_procdef WHERE $whereStr"

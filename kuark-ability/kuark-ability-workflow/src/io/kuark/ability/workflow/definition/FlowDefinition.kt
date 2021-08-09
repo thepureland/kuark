@@ -23,6 +23,12 @@ data class FlowDefinition(
     /** 流程定义的版本 */
     var version: Int? = null
 
+    /** 分类 */
+    var category: String? = null
+
+    /** 租户(所属系统)id */
+    var tenantId: String? = null
+
     /** 是否被挂起 */
     var isSuspend: Boolean = false
 
@@ -54,6 +60,8 @@ data class FlowDefinition(
         _diagramResourceName = definition.diagramResourceName
         description = definition.description
         version = definition.version
+        category = definition.category
+        tenantId = definition.tenantId
         isSuspend = definition.isSuspended
         if (deployment != null) {
             deploymentTime = deployment.deploymentTime
@@ -72,6 +80,8 @@ data class FlowDefinition(
         deploymentTime = deployment.deploymentTime
         _deploymentId = deployment.id
         version = deployment.version
+        category = deployment.category
+        tenantId = deployment.tenantId
     }
 
 }

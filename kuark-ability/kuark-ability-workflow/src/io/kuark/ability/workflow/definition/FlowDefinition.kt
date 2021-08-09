@@ -1,6 +1,7 @@
 package io.kuark.ability.workflow.definition
 
 import org.activiti.engine.repository.Deployment
+import org.activiti.engine.repository.Model
 import org.activiti.engine.repository.ProcessDefinition
 import java.util.*
 
@@ -15,16 +16,17 @@ data class FlowDefinition(
     val key: String,
     /** 流程定义名称 */
     val name: String,
+    /** 流程定义的版本 */
+    var version: Int,
+    /** 分类 */
+    var category: String
 ) {
 
-    /** 描述  */
-    var description: String? = null
+    /** 是否已部署 */
+    var isDeployed: Boolean = false
 
-    /** 流程定义的版本 */
-    var version: Int? = null
-
-    /** 分类 */
-    var category: String? = null
+    /** 部署时间 */
+    var deploymentTime: Date? = null
 
     /** 租户(所属系统)id */
     var tenantId: String? = null
@@ -32,16 +34,16 @@ data class FlowDefinition(
     /** 是否被挂起 */
     var isSuspend: Boolean = false
 
-    /** 部署时间 */
-    var deploymentTime: Date? = null
-
 
     /** 流程定义id，内部使用 */
     internal var _id: String? = null
+
     /** 流程模型id，内部使用 */
     internal var _modelId: String? = null
+
     /** 流程部署id，内部使用 */
     internal var _deploymentId: String? = null
+
     /** 流程图资源名称，内部使用 */
     internal var _diagramResourceName: String? = null
 
@@ -54,16 +56,19 @@ data class FlowDefinition(
      * @author K
      * @since 1.0.0
      */
-    constructor(definition: ProcessDefinition, deployment: Deployment? = null) : this(definition.key, definition.name) {
+    constructor(definition: ProcessDefinition, deployment: Deployment? = null) : this(
+        definition.key,
+        definition.name,
+        definition.version,
+        definition.category
+    ) {
         _id = definition.id
         _deploymentId = definition.deploymentId
         _diagramResourceName = definition.diagramResourceName
-        description = definition.description
-        version = definition.version
-        category = definition.category
         tenantId = definition.tenantId
         isSuspend = definition.isSuspended
         if (deployment != null) {
+            isDeployed = true
             deploymentTime = deployment.deploymentTime
         }
     }
@@ -72,16 +77,44 @@ data class FlowDefinition(
      * 次构造器
      *
      * @param deployment activiti流程部署对象
+     * @param modelId activiti流程模型id
      * @author K
      * @since 1.0.0
      */
-    constructor(deployment: Deployment, modelId: String) : this(deployment.key, deployment.name) {
+    constructor(deployment: Deployment, modelId: String) : this(
+        deployment.key,
+        deployment.name,
+        deployment.version,
+        deployment.category
+    ) {
         _modelId = modelId
         deploymentTime = deployment.deploymentTime
         _deploymentId = deployment.id
-        version = deployment.version
-        category = deployment.category
         tenantId = deployment.tenantId
+        isDeployed = true
+    }
+
+    /**
+     * 次构造器
+     *
+     * @param model activiti流程部署对象
+     * @param deployment activiti流程部署对象，默认为null
+     * @author K
+     * @since 1.0.0
+     */
+    constructor(model: Model, deployment: Deployment? = null) : this(
+        model.key,
+        model.name,
+        model.version,
+        model.category
+    ) {
+        _modelId = model.id
+        _deploymentId = model.deploymentId
+        tenantId = model.tenantId
+        if (deployment != null) {
+            isDeployed = true
+            deploymentTime = deployment.deploymentTime
+        }
     }
 
 }

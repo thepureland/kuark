@@ -1,7 +1,5 @@
 package io.kuark.ability.workflow.definition
 
-import io.kuark.ability.workflow.model.FlowModelCriteria
-
 /**
  * 流程定义查询条件构建者
  *
@@ -27,12 +25,16 @@ class FlowDefinitionCriteria private constructor(builder: Builder) {
     /** 只查询最新版本的，默认为true */
     var latestOnly: Boolean = true
 
+    /** 是否已部署，为null时查询所有 */
+    var isDeployed: Boolean? = null
+
     init {
         key = builder.key
         name = builder.name
         category = builder.category
         tenantId = builder.tenantId
         latestOnly = builder.latestOnly
+        isDeployed = builder.isDeployed
     }
 
 
@@ -49,6 +51,7 @@ class FlowDefinitionCriteria private constructor(builder: Builder) {
         var category: String? = null
         var tenantId: String? = null
         var latestOnly: Boolean = true
+        var isDeployed: Boolean? = null
 
         /**
          * 构建流程定义查询条件对象
@@ -82,6 +85,12 @@ class FlowDefinitionCriteria private constructor(builder: Builder) {
         /** 只查询最新版本的，默认为true */
         fun latestOnly(latestOnly: Boolean): Builder {
             this.latestOnly = latestOnly
+            return this
+        }
+
+        /** 是否已部署，为null时查询所有 */
+        fun isDeployed(isDeployed: Boolean): Builder {
+            this.isDeployed = isDeployed
             return this
         }
 

@@ -262,14 +262,30 @@ internal class BaseReadOnlyDaoTest : SpringTest() {
 
     @Test
     fun searchProperty() {
-        val criteria = Criteria().addAnd(
-            Criterion(TestTable::name.name, Operator.LIKE_S, "name1"),
+        // ILIKE_S，IS_NOT_NULL，GT
+        var criteria = Criteria().addAnd(
+            Criterion(TestTable::name.name, Operator.ILIKE_S, "Name1"),
             Criterion(TestTable::weight.name, Operator.IS_NOT_NULL, null),
             Criterion(TestTable::height.name, Operator.GT, 160)
         )
-        val results = testTableDao.searchProperty(criteria, TestTable::id.name, Order.desc(TestTable::weight.name))
+        var results = testTableDao.searchProperty(criteria, TestTable::id.name, Order.desc(TestTable::weight.name))
         assertEquals(2, results.size)
         assertEquals(-10, results.first())
+
+        // IEQ
+        criteria = Criteria.add(TestTable::name.name, Operator.IEQ, "Name1")
+        results = testTableDao.searchProperty(criteria, TestTable::id.name)
+        assertEquals(1, results.size)
+
+        // GT_P
+        criteria = Criteria.add(TestTable::height.name, Operator.GT_P, TestTable::weight.name)
+        results = testTableDao.searchProperty(criteria, TestTable::id.name)
+        assertEquals(9, results.size)
+
+        // NE_P
+        criteria = Criteria.add(TestTable::height.name, Operator.NE_P, TestTable::weight.name)
+        results = testTableDao.searchProperty(criteria, TestTable::id.name)
+        assertEquals(9, results.size)
     }
 
     @Test

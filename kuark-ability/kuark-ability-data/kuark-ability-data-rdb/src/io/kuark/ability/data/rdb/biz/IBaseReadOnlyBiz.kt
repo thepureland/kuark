@@ -1,11 +1,11 @@
-package io.kuark.service.biz
+package io.kuark.ability.data.rdb.biz
 
 import io.kuark.ability.data.rdb.support.IDbEntity
 import io.kuark.base.query.Criteria
 import io.kuark.base.query.sort.Order
 
 /**
- * 基础的只读业务操作接口
+ * 基于关系型数据库表的基础只读业务操作接口
  *
  * @param PK 实体主键类型
  * @param E 实体类型

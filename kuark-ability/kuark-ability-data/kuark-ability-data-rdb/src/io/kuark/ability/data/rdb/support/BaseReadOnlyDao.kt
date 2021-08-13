@@ -559,7 +559,7 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
         return if (orders.isNotEmpty()) {
             val orderExpressions = mutableListOf<OrderByExpression>()
             orders.forEach {
-                val column = ColumnHelper.columnOf(table(), it.property)[it.property]!!
+                val column = ColumnHelper.columnOf(table(), it.property!!)[it.property]!!
                 val orderByExpression = if (it.isAscending) {
                     column.asc()
                 } else column.desc()

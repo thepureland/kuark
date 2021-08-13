@@ -24,6 +24,8 @@
  */
 package io.kuark.ui.jfx.controls.wizard
 
+import io.kuark.base.lang.collections.MapKit
+import io.kuark.base.lang.string.StringKit
 import javafx.beans.property.ObjectProperty
 import javafx.beans.property.SimpleObjectProperty
 import javafx.collections.FXCollections
@@ -150,9 +152,8 @@ class Wizard constructor(owner: Any?, title: String = "") {
      * Tests if this Wizard has properties.
      * @return true if this Wizard has properties.
      */
-    fun hasProperties(): Boolean {
-        return properties != null && !properties!!.isEmpty()
-    }
+    fun hasProperties(): Boolean = MapKit.isNotEmpty(properties)
+
     // --- UserData
     /**
      * Convenience method for setting a single Object property that can be
@@ -293,7 +294,7 @@ class Wizard constructor(owner: Any?, title: String = "") {
             var settingName = n.id
 
             // but if the id is not set, we will use a generic naming scheme
-            if (settingName == null || settingName.isEmpty()) {
+            if (StringKit.isEmpty(settingName)) {
                 settingName = "page_.setting_$settingCounter"
             }
             settings[settingName] = setting

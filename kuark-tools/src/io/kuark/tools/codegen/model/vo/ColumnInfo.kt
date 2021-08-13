@@ -1,5 +1,6 @@
 package io.kuark.tools.codegen.model.vo
 
+import io.kuark.base.lang.string.StringKit
 import javafx.beans.property.*
 
 /**
@@ -75,7 +76,7 @@ class ColumnInfo {
     }
 
     fun getComment(): String? =
-        if (getCustomComment() != null && getCustomComment()!!.isNotBlank()) getCustomComment() else origComment
+        if (StringKit.isNotBlank(getCustomComment())) getCustomComment() else origComment
 
     fun getColumn(): String? = name
 }

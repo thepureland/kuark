@@ -1,5 +1,6 @@
 package io.kuark.base.lang
 
+import io.kuark.base.lang.string.StringKit
 import io.kuark.base.log.LogFactory
 import org.apache.commons.lang3.SystemUtils
 import java.io.BufferedReader
@@ -88,7 +89,7 @@ object SystemKit {
         if (process != null) {
             message = loadStream(process!!.inputStream)
             val errorMsg = loadStream(process.errorStream)
-            if (errorMsg != null && errorMsg.isNotEmpty()) {
+            if (StringKit.isNotEmpty(errorMsg)) {
                 message = errorMsg
             }
             process.destroy()

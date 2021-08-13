@@ -8,14 +8,21 @@ import java.io.Serializable
  * @author K
  * @since 1.0.0
  */
-class Order(val property: String, val direction: Direction = Direction.ASC) : Serializable {
+class Order : Serializable {
 
-    val isAscending: Boolean = direction == Direction.ASC
+    var property: String? = null
+    var direction: Direction? = null
 
+    constructor()
 
-    override fun toString(): String {
-        return "${property}: $direction"
+    constructor(property: String, direction: Direction = Direction.ASC) {
+        this.property = property
+        this.direction = direction
     }
+
+    val isAscending = direction == Direction.ASC
+
+    override fun toString() = "${property}: $direction"
 
     override fun hashCode(): Int {
         val prime = 31

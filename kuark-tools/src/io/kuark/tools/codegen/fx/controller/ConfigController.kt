@@ -6,6 +6,7 @@ import io.kuark.ability.data.rdb.kit.RdbKit
 import io.kuark.base.io.FilenameKit
 import io.kuark.base.io.PathKit
 import io.kuark.base.lang.SystemKit
+import io.kuark.base.lang.string.StringKit
 import io.kuark.base.support.PropertiesLoader
 import io.kuark.context.core.KuarkContextHolder
 import io.kuark.tools.codegen.model.vo.Config
@@ -152,27 +153,27 @@ class ConfigController : Initializable {
         }
 
         // package prefix
-        if (packagePrefixTextField.text == null || packagePrefixTextField.text.isBlank()) {
+        if (StringKit.isBlank(packagePrefixTextField.text)) {
             throw Exception("请填写包名前缀！")
         }
 
         // test module
-        if (moduleTextField.text == null || moduleTextField.text.isBlank()) {
+        if (StringKit.isBlank(moduleTextField.text)) {
             throw Exception("请填写模块名！")
         }
 
         // test location
-        if (locationTextField.text == null || locationTextField.text.isBlank()) {
+        if (StringKit.isBlank(locationTextField.text)) {
             throw Exception("代码生成目录不存在！")
         }
 
         // author location
-        if (authorTextField.text == null || authorTextField.text.isBlank()) {
+        if (StringKit.isBlank(authorTextField.text)) {
             throw Exception("请填写作者！")
         }
 
         // version location
-        if (versionTextField.text == null || versionTextField.text.isBlank()) {
+        if (StringKit.isBlank(versionTextField.text)) {
             throw Exception("请填写版本号！")
         }
     }

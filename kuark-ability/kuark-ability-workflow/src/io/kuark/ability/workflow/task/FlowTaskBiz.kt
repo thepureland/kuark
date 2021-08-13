@@ -1,6 +1,7 @@
 package io.kuark.ability.workflow.task
 
 import io.kuark.base.error.ObjectNotFoundException
+import io.kuark.base.lang.string.StringKit
 import io.kuark.base.log.LogFactory
 import org.activiti.engine.TaskService
 import org.springframework.beans.factory.annotation.Autowired
@@ -36,41 +37,41 @@ open class FlowTaskBiz : IFlowTaskBiz {
         return if (task == null) null else FlowTask(task)
     }
 
-    override fun search(criteria: FlowTaskCriteria, pageNum: Int, limit: Int): List<FlowTask> {
+    override fun search(queryItems: FlowTaskQueryItems, pageNum: Int, limit: Int): List<FlowTask> {
         val whereStr = StringBuilder("1=1")
 
         // 任务受理人id
-        val assignee = criteria.assignee
-        if (assignee != null && assignee.isNotBlank() && !assignee.contains("'")) {
+        val assignee = queryItems.assignee
+        if (StringKit.isNotBlank(assignee) && !assignee!!.contains("'")) {
             whereStr.append(" AND t.assignee_ = '$assignee'")
         }
 
         // 业务主键
-        val bizKey = criteria.bizKey
-        if (bizKey != null && bizKey.isNotBlank() && !bizKey.contains("'")) {
+        val bizKey = queryItems.bizKey
+        if (StringKit.isNotBlank(bizKey) && !bizKey!!.contains("'")) {
             whereStr.append(" AND UPPER(t.business_key_) LIKE '%${bizKey.uppercase()}%'")
         }
 
         // 任务定义key(bpmn文件userTask元素的id)
-        val taskDefinitionKey = criteria.taskDefinitionKey
-        if (taskDefinitionKey != null && taskDefinitionKey.isNotBlank() && !taskDefinitionKey.contains("'")) {
-            whereStr.append(" AND UPPER(t.task_def_key_) LIKE '%${taskDefinitionKey.uppercase()}%'")
+        val taskDefinitionKey = queryItems.taskDefinitionKey
+        if (StringKit.isNotBlank(taskDefinitionKey) && !taskDefinitionKey!!.contains("'")) {
+            whereStr.append(" AND UPPER(t.task_def_key_) LIKE '%${taskDefinitionKey!!.uppercase()}%'")
         }
 
         // 任务名称
-        val name = criteria.name
-        if (name != null && name.isNotBlank() && !name.contains("'")) {
+        val name = queryItems.name
+        if (StringKit.isNotBlank(name) && !name!!.contains("'")) {
             whereStr.append(" AND UPPER(t.name_) LIKE '%${name.uppercase()}%'")
         }
 
         // 流程定义key(bpmn文件中process元素的id)
-        val flowDefinitionKey = criteria.flowDefinitionKey
-        if (flowDefinitionKey != null && flowDefinitionKey.isNotBlank() && !flowDefinitionKey.contains("'")) {
-            whereStr.append(" AND UPPER(d.key_) LIKE '%${flowDefinitionKey.uppercase()}%'")
+        val flowDefinitionKey = queryItems.flowDefinitionKey
+        if (StringKit.isNotBlank(flowDefinitionKey) && !flowDefinitionKey!!.contains("'")) {
+            whereStr.append(" AND UPPER(d.key_) LIKE '%${flowDefinitionKey!!.uppercase()}%'")
         }
 
         // 流程版本
-        val flowVersion = criteria.flowVersion
+        val flowVersion = queryItems.flowVersion
         if (flowVersion != null) {
             whereStr.append(" AND d.version_ = $flowVersion")
         }
@@ -93,7 +94,7 @@ open class FlowTaskBiz : IFlowTaskBiz {
         val userId = assignee.trim()
         require(userId.isNotEmpty()) { "签收流程任务失败！【assignee】参数不能为空！【bizKey：$bizKey，taskDefinitionKey：$taskDefinitionKey】" }
         val task = findTask(bizKey, taskDefinitionKey)
-        if (task.assignee == null || task.assignee.isEmpty()) {
+        if (StringKit.isBlank(task.assignee)) {
             taskService.claim(task._id, userId)
             log.info("签收流程任务成功！【bizKey：$bizKey，taskDefinitionKey：$taskDefinitionKey，assignee: $userId】")
         } else {
@@ -110,7 +111,7 @@ open class FlowTaskBiz : IFlowTaskBiz {
     @Transactional
     override fun unclaim(bizKey: String, taskDefinitionKey: String): Boolean {
         val task = findTask(bizKey, taskDefinitionKey)
-        return if (task.assignee == null || task.assignee.isEmpty()) {
+        return if (StringKit.isBlank(task.assignee)) {
             log.warn("忽略流程任务的取消签收操作，因该任务本就无用户签收！【bizKey：$bizKey，taskDefinitionKey：$taskDefinitionKey】")
             false
         } else {
@@ -125,7 +126,7 @@ open class FlowTaskBiz : IFlowTaskBiz {
         val userId = assignee.trim()
         require(userId.isNotEmpty()) { "流程任务委托失败！【assignee】参数不能为空！【bizKey：$bizKey，taskDefinitionKey：$taskDefinitionKey】" }
         val task = findTask(bizKey, taskDefinitionKey)
-        if (task.assignee == null || task.assignee.isEmpty()) {
+        if (StringKit.isBlank(task.assignee)) {
             log.info("流程任务在进行委托操作时，发现该任务并无用户签收，直接进行签收操作！【bizKey：$bizKey，taskDefinitionKey：$taskDefinitionKey】")
             taskService.claim(task._id, userId)
             log.info("用户签收流程任务成功！【bizKey：$bizKey，taskDefinitionKey：$taskDefinitionKey，assignee: $userId】")

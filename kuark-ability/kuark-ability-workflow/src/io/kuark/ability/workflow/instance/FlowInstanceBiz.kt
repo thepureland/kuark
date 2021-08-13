@@ -1,6 +1,7 @@
 package io.kuark.ability.workflow.instance
 
 import io.kuark.base.error.ObjectNotFoundException
+import io.kuark.base.lang.string.StringKit
 import io.kuark.base.log.LogFactory
 import org.activiti.engine.*
 import org.springframework.beans.factory.annotation.Autowired
@@ -55,24 +56,24 @@ open class FlowInstanceBiz : IFlowInstanceBiz {
         return if (instance == null) null else FlowInstance(instance)
     }
 
-    override fun search(criteria: FlowInstanceCriteria, pageNum: Int, limit: Int): List<FlowInstance> {
+    override fun search(queryItems: FlowInstanceQueryItems, pageNum: Int, limit: Int): List<FlowInstance> {
         val whereStr = StringBuilder("e.parent_id_ IS NULL")
 
         // 流程key(bpmn文件中process元素的id)
-        val key = criteria.key
-        if (key != null && key.isNotBlank() && !key.contains("'")) {
+        val key = queryItems.key
+        if (StringKit.isNotBlank(key) && !key!!.contains("'")) {
             whereStr.append(" AND UPPER(d.key_) LIKE '%${key.uppercase()}%'")
         }
 
         // 业务主键
-        val bizKey = criteria.bizKey
-        if (bizKey != null && bizKey.isNotBlank() && !bizKey.contains("'")) {
+        val bizKey = queryItems.bizKey
+        if (StringKit.isNotBlank(bizKey) && !bizKey!!.contains("'")) {
             whereStr.append(" AND UPPER(e.business_key_) LIKE '%${bizKey.uppercase()}%'")
         }
 
         // 实例名称
-        val instanceName = criteria.instanceName
-        if (instanceName != null && instanceName.isNotBlank() && !instanceName.contains("'")) {
+        val instanceName = queryItems.instanceName
+        if (StringKit.isNotBlank(instanceName) && !instanceName!!.contains("'")) {
             whereStr.append(" AND UPPER(e.name_) LIKE '%${instanceName.uppercase()}%'")
         }
 

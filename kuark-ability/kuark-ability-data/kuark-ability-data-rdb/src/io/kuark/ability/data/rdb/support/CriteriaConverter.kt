@@ -4,9 +4,11 @@ import io.kuark.base.query.Criteria
 import io.kuark.base.query.Criterion
 import io.kuark.base.query.enums.Operator
 import org.ktorm.dsl.*
-import org.ktorm.schema.Column
-import org.ktorm.schema.ColumnDeclaring
-import org.ktorm.schema.Table
+import org.ktorm.expression.ArgumentExpression
+import org.ktorm.expression.BinaryExpression
+import org.ktorm.expression.BinaryExpressionType
+import org.ktorm.expression.FunctionExpression
+import org.ktorm.schema.*
 
 /**
  * Criteria转换器，可将Criteria转换为Ktorm查询条件表达式
@@ -83,20 +85,19 @@ internal object CriteriaConverter {
             Operator.GE -> (column as Column<Comparable<Any>>).greaterEq(value as Comparable<Any>)
             Operator.LT -> (column as Column<Comparable<Any>>).less(value as Comparable<Any>)
             Operator.LE -> (column as Column<Comparable<Any>>).lessEq(value as Comparable<Any>)
-//            Operator.IEQ ->  error("未支持") //TODO ktorm怎么支持sql函数？
-            Operator.EQ_P -> columnEq(column, ColumnHelper.columnOf(table, value as String) as Column<Any>)
-            Operator.NE_P, Operator.LG_P -> columnNotEq(
-                column,
-                ColumnHelper.columnOf(table, value as String) as Column<Any>
-            )
-//            Operator.GE_P, Operator.LE_P, Operator.GT_P, Operator.LT_P -> error("未支持")
+            Operator.IEQ -> column.ieq(value.toString().uppercase())
+            Operator.EQ_P -> columnEq(column, ColumnHelper.columnOf(table, value as String)[value] as Column<Any>)
+            Operator.NE_P -> columnNotEq(column, ColumnHelper.columnOf(table, value as String)[value] as Column<Any>)
+            Operator.GE_P -> column.columnGe(ColumnHelper.columnOf(table, value as String)[value] as Column<String>)
+            Operator.LE_P -> column.columnLe(ColumnHelper.columnOf(table, value as String)[value] as Column<String>)
+            Operator.GT_P -> column.columnGt(ColumnHelper.columnOf(table, value as String)[value] as Column<String>)
+            Operator.LT_P -> column.columnLt(ColumnHelper.columnOf(table, value as String)[value] as Column<String>)
             Operator.LIKE -> column.like("%${value!!}%")
             Operator.LIKE_S -> column.like("${value!!}%")
             Operator.LIKE_E -> column.like("%${value!!}")
-//            Operator.ILIKE:
-//            Operator.ILIKE_S:
-//            Operator.ILIKE_E:
-//                return "LOWER(" + column + ") LIKE LOWER(" + valueTmpl + ")";
+            Operator.ILIKE -> column.ilike("%${value!!.toString().uppercase()}%")
+            Operator.ILIKE_S -> column.ilike("${value!!.toString().uppercase()}%")
+            Operator.ILIKE_E -> column.ilike("%${value!!.toString().uppercase()}")
             Operator.IN -> handleIn(true, value!!, column)
             Operator.NOT_IN -> handleIn(false, value!!, column)
             Operator.IS_NULL -> column.isNull()
@@ -143,6 +144,84 @@ internal object CriteriaConverter {
         } else {
             columnNotIn(column, values as List<Any>)
         }
+    }
+
+    private infix fun ColumnDeclaring<*>.ilike(expr: ColumnDeclaring<String>): BinaryExpression<Boolean> {
+        return BinaryExpression(
+            BinaryExpressionType.LIKE,
+            FunctionExpression("upper", listOf(asExpression()), VarcharSqlType),
+            expr.asExpression(),
+            BooleanSqlType
+        )
+    }
+
+    private infix fun ColumnDeclaring<*>.ilike(value: String): BinaryExpression<Boolean> {
+        return this ilike ArgumentExpression(value, VarcharSqlType)
+    }
+
+    private infix fun ColumnDeclaring<*>.ieq(expr: ColumnDeclaring<String>): BinaryExpression<Boolean> {
+        return BinaryExpression(
+            BinaryExpressionType.EQUAL,
+            FunctionExpression("upper", listOf(asExpression()), VarcharSqlType),
+            expr.asExpression(),
+            BooleanSqlType
+        )
+    }
+
+    private infix fun ColumnDeclaring<*>.ieq(value: String): BinaryExpression<Boolean> {
+        return this ieq ArgumentExpression(value, VarcharSqlType)
+    }
+
+    private infix fun ColumnDeclaring<*>.columnGt(expr: ColumnDeclaring<String>): BinaryExpression<Boolean> {
+        return BinaryExpression(
+            BinaryExpressionType.GREATER_THAN,
+            asExpression(),
+            expr.asExpression(),
+            BooleanSqlType
+        )
+    }
+
+    private infix fun ColumnDeclaring<*>.columnGt(value: String): BinaryExpression<Boolean> {
+        return this columnGt ArgumentExpression(value, VarcharSqlType)
+    }
+
+    private infix fun ColumnDeclaring<*>.columnLt(expr: ColumnDeclaring<String>): BinaryExpression<Boolean> {
+        return BinaryExpression(
+            BinaryExpressionType.LESS_THAN,
+            asExpression(),
+            expr.asExpression(),
+            BooleanSqlType
+        )
+    }
+
+    private infix fun ColumnDeclaring<*>.columnLt(value: String): BinaryExpression<Boolean> {
+        return this columnLt ArgumentExpression(value, VarcharSqlType)
+    }
+
+    private infix fun ColumnDeclaring<*>.columnGe(expr: ColumnDeclaring<String>): BinaryExpression<Boolean> {
+        return BinaryExpression(
+            BinaryExpressionType.GREATER_THAN_OR_EQUAL,
+            asExpression(),
+            expr.asExpression(),
+            BooleanSqlType
+        )
+    }
+
+    private infix fun ColumnDeclaring<*>.columnGe(value: String): BinaryExpression<Boolean> {
+        return this columnGe ArgumentExpression(value, VarcharSqlType)
+    }
+
+    private infix fun ColumnDeclaring<*>.columnLe(expr: ColumnDeclaring<String>): BinaryExpression<Boolean> {
+        return BinaryExpression(
+            BinaryExpressionType.LESS_THAN_OR_EQUAL,
+            asExpression(),
+            expr.asExpression(),
+            BooleanSqlType
+        )
+    }
+
+    private infix fun ColumnDeclaring<*>.columnLe(value: String): BinaryExpression<Boolean> {
+        return this columnLe ArgumentExpression(value, VarcharSqlType)
     }
 
 }

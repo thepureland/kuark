@@ -41,8 +41,8 @@ data class FlowInstance(
         instance.processDefinitionKey,
         FlowInstanceStatus.of(instance)
     ) {
-        this._definitionId = instance.processDefinitionId
-        this.startTime = instance.startTime
+        _definitionId = instance.processDefinitionId
+        startTime = instance.startTime
     }
 
 }

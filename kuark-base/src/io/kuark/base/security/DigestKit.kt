@@ -1,5 +1,6 @@
 package io.kuark.base.security
 
+import io.kuark.base.lang.collections.ArrayKit
 import io.kuark.base.lang.string.EncodeKit
 import io.kuark.base.log.LogFactory
 import org.apache.commons.lang3.Validate
@@ -48,11 +49,11 @@ object DigestKit {
      * @since 1.0.0
      */
     fun getMD5(original: ByteArray?, salt: String?): String? {
-        if (original == null || original.isEmpty()) {
+        if (ArrayKit.isByteArrayEmpty(original)) {
             return null
         }
         val s = salt?.toByteArray()
-        val md5s = digest(original, MD5, s, 1)
+        val md5s = digest(original!!, MD5, s, 1)
         return EncodeKit.encodeHex(md5s)
     }
 

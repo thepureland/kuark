@@ -37,14 +37,14 @@ interface IFlowInstanceBiz {
     /**
      * 查询流程实例
      *
-     * @param criteria 查询条件对象，当对象的属性不为空时才会将该属性作为查询条件，各属性间是”与“的关系
+     * @param queryItems 查询项，当查询项的属性不为空时才会将该属性作为查询条件，各属性间是”与“的关系
      * @param pageNum 分页页码，从1开始，默认为1，小于1将按1处理
      * @param limit 分页每页最大条数，默认为20，小于1将按不分页处理
      * @return List(流程实例对象)，找不到时返回空集合
      * @author K
      * @since 1.0.0
      */
-    fun search(criteria: FlowInstanceCriteria, pageNum: Int = 1, limit: Int = 20): List<FlowInstance>
+    fun search(queryItems: FlowInstanceQueryItems, pageNum: Int = 1, limit: Int = 20): List<FlowInstance>
 
     /**
      * 激活流程实例，重复激活将忽略操作

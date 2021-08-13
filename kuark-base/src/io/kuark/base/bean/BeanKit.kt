@@ -1,6 +1,7 @@
 package io.kuark.base.bean
 
 import io.kuark.base.lang.SerializationKit
+import io.kuark.base.lang.collections.MapKit
 import io.kuark.base.lang.reflect.getEmptyConstructor
 import io.kuark.base.support.IIdEntity
 import org.apache.commons.beanutils.BeanUtils
@@ -63,7 +64,7 @@ object BeanKit {
      * @since 1.0.0
      */
     fun <T : Any> copyProperties(destObj: T, srcObj: Any, propertyMap: Map<String, String>? = null): T {
-        val map = if (propertyMap == null || propertyMap.isEmpty()) { // 将拷贝所有源对象的属性
+        val map = if (MapKit.isEmpty(propertyMap)) { // 将拷贝所有源对象的属性
             val mappingRule = mutableMapOf<String, String>()
             srcObj::class.memberProperties.forEach {
                 mappingRule[it.name] = it.name
@@ -71,7 +72,7 @@ object BeanKit {
             mappingRule
         } else propertyMap
 
-        for ((srcPropertyName, destPropertyName) in map) {
+        for ((srcPropertyName, destPropertyName) in map!!) {
             if (srcPropertyName.isNotBlank() && destPropertyName.isNotBlank()) {
                 val result = getProperty(srcObj, srcPropertyName)
                 copyProperty(destObj, destPropertyName, result)

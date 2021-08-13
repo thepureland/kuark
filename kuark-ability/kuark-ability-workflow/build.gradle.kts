@@ -1,5 +1,6 @@
 dependencies {
     api(project(":kuark-ability:kuark-ability-data:kuark-ability-data-rdb"))
+    api(project(":kuark-ability:kuark-ability-web:kuark-ability-web-common"))
     api("org.activiti:activiti-engine")
     api("org.activiti:activiti-spring")
     api("org.activiti:activiti-bpmn-model")

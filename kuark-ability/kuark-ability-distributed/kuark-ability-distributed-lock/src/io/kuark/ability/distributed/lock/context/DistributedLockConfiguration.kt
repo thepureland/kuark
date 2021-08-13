@@ -2,6 +2,7 @@ package io.kuark.ability.distributed.lock.context
 
 import io.kuark.ability.distributed.lock.core.RedissonLock
 import io.kuark.ability.distributed.lock.core.IRedissonLock
+import io.kuark.base.lang.string.StringKit
 import org.redisson.Redisson
 import org.redisson.api.RedissonClient
 import org.redisson.config.BaseConfig
@@ -73,7 +74,7 @@ open class DistributedLockConfiguration {
             timeout = properties.timeout
             retryAttempts = properties.retryAttempts
             retryInterval = properties.retryInterval
-            if (properties.password != null && properties.password!!.isNotBlank()) {
+            if (StringKit.isNotBlank(properties.password)) {
                 password = properties.password
             }
             subscriptionsPerConnection = properties.subscriptionsPerConnection

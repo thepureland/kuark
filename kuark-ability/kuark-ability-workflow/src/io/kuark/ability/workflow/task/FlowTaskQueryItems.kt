@@ -1,14 +1,14 @@
 package io.kuark.ability.workflow.task
 
 /**
- * 流程任务查询条件
+ * 流程任务查询项
  *
  * 当属性不为空时才会将该属性作为查询条件，各属性间是”与“的关系
  *
  * @author K
  * @since 1.0.0
  */
-class FlowTaskCriteria private constructor(builder: Builder) {
+class FlowTaskQueryItems {
 
     /** 任务受理人id */
     var assignee: String? = null
@@ -28,8 +28,12 @@ class FlowTaskCriteria private constructor(builder: Builder) {
     /** 流程版本 */
     var flowVersion: Int? = null
 
+    /**
+     * 空构造器，仅供框架反射使用
+     */
+    constructor()
 
-    init {
+    private constructor(builder: Builder) {
         assignee = builder.assignee
         bizKey = builder.bizKey
         taskDefinitionKey = builder.taskDefinitionKey
@@ -39,7 +43,7 @@ class FlowTaskCriteria private constructor(builder: Builder) {
     }
 
     /**
-     * 流程任务查询条件构建者
+     * 流程任务查询项构建者
      *
      * @author K
      * @since 1.0.0
@@ -54,9 +58,9 @@ class FlowTaskCriteria private constructor(builder: Builder) {
         var flowVersion: Int? = null
 
         /**
-         * 构建流程任务查询条件对象
+         * 构建流程任务查询项对象
          */
-        fun build(): FlowTaskCriteria = FlowTaskCriteria(this)
+        fun build(): FlowTaskQueryItems = FlowTaskQueryItems(this)
 
         /** 任务受理人id */
         fun assignee(assignee: String?): Builder {

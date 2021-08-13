@@ -1,5 +1,6 @@
 package io.kuark.base.query.sort
 
+import io.kuark.base.lang.collections.CollectionKit
 import io.kuark.base.lang.string.humpToUnderscore
 import java.io.Serializable
 import java.util.*
@@ -14,11 +15,6 @@ class Sort : Iterable<Order>, Serializable {
 
     private val orders: MutableList<Order>
 
-    fun addOrder(property: String, direction: Direction = Direction.ASC): Sort {
-        orders.add(Order(property, direction))
-        return this
-    }
-
     constructor(vararg orders: Order) : this(mutableListOf(*orders))
 
     constructor(orders: MutableList<Order>) {
@@ -31,11 +27,16 @@ class Sort : Iterable<Order>, Serializable {
     constructor(vararg properties: String, direction: Direction = Direction.ASC) : this(direction, listOf<String>(*properties))
 
     constructor(direction: Direction, properties: List<String>) {
-        require(!(properties == null || properties.isEmpty())) { "You have to provide at least one property to sort by!" }
+        require(CollectionKit.isNotEmpty(properties)) { "至少提供一个排序属性！" }
         orders = ArrayList(properties.size)
         for (property in properties) {
             orders.add(Order(property, direction))
         }
+    }
+
+    fun addOrder(property: String, direction: Direction = Direction.ASC): Sort {
+        orders.add(Order(property, direction))
+        return this
     }
 
     fun and(sort: Sort?): Sort {
@@ -98,8 +99,8 @@ class Sort : Iterable<Order>, Serializable {
         fun toSql(orders: Array<Order>, columnMap: Map<String?, String?>?): String {
             val orderSb = StringBuilder("ORDER BY ")
             for (order in orders) {
-                val property: String = order.property
-                val direction: String = order.direction.name.lowercase(Locale.getDefault())
+                val property = order.property!!
+                val direction = order.direction!!.name.lowercase(Locale.getDefault())
                 var columnName = if (columnMap == null) {
                     property.humpToUnderscore()
                 } else {

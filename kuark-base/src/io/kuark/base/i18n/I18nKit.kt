@@ -1,5 +1,6 @@
 package io.kuark.base.i18n
 
+import io.kuark.base.lang.string.StringKit
 import io.kuark.base.lang.string.right
 import io.kuark.base.log.LogFactory
 import io.kuark.base.scanner.classpath.ClassPathScanner
@@ -218,7 +219,7 @@ object I18nKit {
             }
             val keyValueMap = moduleMap[module]
             for ((key, value) in keyValueMapDef) {
-                if (!keyValueMap!!.containsKey(key) || keyValueMap[key] == null || keyValueMap[key]!!.isBlank()) {
+                if (!keyValueMap!!.containsKey(key) || StringKit.isBlank(keyValueMap[key])) {
                     keyValueMap[key] = value
                     //                    LOG.debug("i18n:缺失语言:{0},类型:{1},模块:{2},键:{3}",locale,type,module,key);
                 }

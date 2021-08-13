@@ -3,6 +3,7 @@ package io.kuark.base.io
 import de.idyl.winzipaes.AesZipFileEncrypter
 import de.idyl.winzipaes.impl.AESEncrypter
 import de.idyl.winzipaes.impl.AESEncrypterBC
+import io.kuark.base.lang.string.StringKit
 import org.apache.commons.io.FileUtils
 import org.apache.commons.io.LineIterator
 import org.apache.commons.io.filefilter.IOFileFilter
@@ -47,11 +48,11 @@ object FileKit {
         var zipOut: ZipOutputStream? = null
         try {
             zipFile = File.createTempFile(PREFIX_TEMP_FILE, ".zip")
-            if (password != null && password.isNotBlank()) {
+            if (StringKit.isNotBlank(password)) {
                 val aesEncrypter: AESEncrypter = AESEncrypterBC()
                 aesEncrypter.init(password, 0)
                 enc = AesZipFileEncrypter(zipFile, aesEncrypter)
-                if (filename != null && filename.isNotBlank()) {
+                if (StringKit.isNotBlank(filename)) {
                     filename = file.name
                 }
                 enc.add(file, filename, password)

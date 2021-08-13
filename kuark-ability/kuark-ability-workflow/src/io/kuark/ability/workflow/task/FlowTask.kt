@@ -56,7 +56,10 @@ data class FlowTask(
     var dueDate: Date? = null
 
     /** 优先级 */
-    var priority = 0
+    var priority: Int = 0
+
+    /** 表单key */
+    var formKey: String? = null
 
     /**
      * 次构造器
@@ -72,18 +75,20 @@ data class FlowTask(
         task.businessKey,
         task.assignee
     ) {
-        this._flowDefinitionId = task.processDefinitionId
-        this._instanceId = task.processInstanceId
-        this.localVariables = task.taskLocalVariables
-        this.flowVariables = task.processVariables
-        this.owner = task.owner
-        this.description = task.description
-        this.createdTime = task.createTime
-        this.claimedTime = task.claimTime
-        this.dueDate = task.dueDate
-        this.priority = task.priority
-        this._parentTaskId = task.parentTaskId
-        this._executionId = task.executionId
+        _flowDefinitionId = task.processDefinitionId
+        _instanceId = task.processInstanceId
+        localVariables = task.taskLocalVariables
+        flowVariables = task.processVariables
+        owner = task.owner
+        description = task.description
+        createdTime = task.createTime
+        claimedTime = task.claimTime
+        dueDate = task.dueDate
+        priority = task.priority
+        _parentTaskId = task.parentTaskId
+        _executionId = task.executionId
+        priority = task.priority
+        formKey = task.formKey
     }
 
 }

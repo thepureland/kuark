@@ -1,5 +1,6 @@
 package io.kuark.ability.data.rdb.datasource
 
+import io.kuark.base.lang.string.StringKit
 import io.kuark.context.core.KuarkContextHolder
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource
@@ -21,9 +22,9 @@ class MultipleDataSource : AbstractRoutingDataSource() {
 
     override fun determineCurrentLookupKey(): Any? {
         var key = KuarkContextHolder.get().dataSourceId
-        if (key == null || key.isBlank()) {
+        if (StringKit.isBlank(key)) {
             key = dataSourceRouter.determineDataSourceId()
-            if (key == null || key.isBlank()) {
+            if (StringKit.isBlank(key)) {
                 key =  DEFAULT_DATASOURCE_ID
             }
             KuarkContextHolder.get().dataSourceId = key

@@ -1,4 +1,4 @@
-package io.kuark.service.biz
+package io.kuark.ability.data.rdb.biz
 
 import io.kuark.ability.data.rdb.support.BaseReadOnlyDao
 import io.kuark.ability.data.rdb.support.IDbEntity
@@ -7,7 +7,7 @@ import io.kuark.base.query.sort.Order
 import org.springframework.beans.factory.annotation.Autowired
 
 /**
- * 基础的只读业务操作
+ * 基于关系型数据库表的基础的只读业务操作
  *
  * @param PK 实体主键类型
  * @param E 实体类型

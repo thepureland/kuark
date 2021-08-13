@@ -22,7 +22,7 @@ object CodeGenObjectBiz {
         tables.forEach { nameAndComments[it.name] = it.comment }
 
         // from code_gen_object
-        val codeGenObjects = CodeGenObjectDao.searchAll()
+        val codeGenObjects = CodeGenObjectDao.allSearch()
         for (codeGenObject in codeGenObjects) {
             if (nameAndComments.contains(codeGenObject.name)) {
                 nameAndComments[codeGenObject.name] = codeGenObject.comment

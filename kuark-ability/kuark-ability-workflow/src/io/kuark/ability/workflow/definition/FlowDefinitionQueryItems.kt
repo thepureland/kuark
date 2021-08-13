@@ -1,14 +1,14 @@
 package io.kuark.ability.workflow.definition
 
 /**
- * 流程定义查询条件构建者
+ * 流程定义查询项构建者
  *
  * 当属性不为空时才会将该属性作为查询条件，各属性间是”与“的关系
  *
  * @author K
  * @since 1.0.0
  */
-class FlowDefinitionCriteria private constructor(builder: Builder) {
+class FlowDefinitionQueryItems {
 
     /** 流程key(bpmn文件中process元素的id)，支持忽略大小写模糊搜索 */
     var key: String? = null
@@ -28,7 +28,12 @@ class FlowDefinitionCriteria private constructor(builder: Builder) {
     /** 是否已部署，为null时查询所有 */
     var isDeployed: Boolean? = null
 
-    init {
+    /**
+     * 空构造器，仅供框架反射使用
+     */
+    constructor()
+
+    private constructor(builder: Builder) {
         key = builder.key
         name = builder.name
         category = builder.category
@@ -39,7 +44,7 @@ class FlowDefinitionCriteria private constructor(builder: Builder) {
 
 
     /**
-     * 流程定义查询条件构建者
+     * 流程定义查询项构建者
      *
      * @author K
      * @since 1.0.0
@@ -54,9 +59,9 @@ class FlowDefinitionCriteria private constructor(builder: Builder) {
         var isDeployed: Boolean? = null
 
         /**
-         * 构建流程定义查询条件对象
+         * 构建流程定义查询项对象
          */
-        fun build(): FlowDefinitionCriteria = FlowDefinitionCriteria(this)
+        fun build(): FlowDefinitionQueryItems = FlowDefinitionQueryItems(this)
 
         /** 流程key(bpmn文件中process元素的id)，支持忽略大小写模糊搜索 */
         fun key(key: String?): Builder {

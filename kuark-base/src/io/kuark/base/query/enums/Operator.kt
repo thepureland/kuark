@@ -69,29 +69,24 @@ enum class Operator constructor(
     NE_P("P!=", "不等于属性", false, false),
 
     /**
-     * 小于大于(不等于)属性
+     * 大于等于属性
      */
-    LG_P("P<>", "小于大于(不等于)属性", false, false),
+    GE_P("P>=", "大于等于属性", false, false),
 
-//    /**
-//     * 大于等于属性
-//     */
-//    GE_P("P>=", "大于等于属性", false, false),
-//
-//    /**
-//     * 小于等于属性
-//     */
-//    LE_P("P<=", "小于等于属性", false, false),
-//
-//    /**
-//     * 大于属性
-//     */
-//    GT_P("P>", "大于属性", false, false),
-//
-//    /**
-//     * 小于属性
-//     */
-//    LT_P("P<", "小于属性", false, false),
+    /**
+     * 小于等于属性
+     */
+    LE_P("P<=", "小于等于属性", false, false),
+
+    /**
+     * 大于属性
+     */
+    GT_P("P>", "大于属性", false, false),
+
+    /**
+     * 小于属性
+     */
+    LT_P("P<", "小于属性", false, false),
 
     /**
      * 匹配字符串任意位置
@@ -108,20 +103,20 @@ enum class Operator constructor(
      */
     LIKE_E("LIKE_E", "匹配后面", false, true),
 
-//    /**
-//     * 忽略大小写匹配字符串任意位置
-//     */
-//    ILIKE("ILIKE", "忽略大小写任意位置匹配", false, true),
-//
-//    /**
-//     * 忽略大小写匹配字符串前面
-//     */
-//    ILIKE_S("ILIKE_S", "忽略大小写匹配前面", false, true),
-//
-//    /**
-//     * 忽略大小写匹配字符串后面
-//     */
-//    ILIKE_E("ILIKE_E", "忽略大小写匹配后面", false, true),
+    /**
+     * 忽略大小写匹配字符串任意位置
+     */
+    ILIKE("ILIKE", "忽略大小写任意位置匹配", false, true),
+
+    /**
+     * 忽略大小写匹配字符串前面
+     */
+    ILIKE_S("ILIKE_S", "忽略大小写匹配前面", false, true),
+
+    /**
+     * 忽略大小写匹配字符串后面
+     */
+    ILIKE_E("ILIKE_E", "忽略大小写匹配后面", false, true),
 
     /**
      * in查询

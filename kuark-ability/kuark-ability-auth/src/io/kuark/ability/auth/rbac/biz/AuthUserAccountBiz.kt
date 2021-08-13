@@ -1,14 +1,11 @@
 package io.kuark.ability.auth.rbac.biz
 
 import io.kuark.ability.auth.rbac.dao.AuthUserAccountDao
-import io.kuark.ability.auth.rbac.model.table.AuthUserAccounts
 import io.kuark.ability.auth.rbac.ibiz.IAuthUserAccountBiz
 import io.kuark.ability.auth.rbac.model.po.AuthUserAccount
-import io.kuark.context.core.KuarkContextHolder
-import org.ktorm.dsl.*
-import org.ktorm.entity.*
-import org.springframework.beans.factory.annotation.Autowired
+import io.kuark.ability.data.rdb.biz.BaseBiz
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 /**
  * 用户账号业务
@@ -18,60 +15,18 @@ import org.springframework.stereotype.Service
  */
 @Service
 //region your codes 1
-class AuthUserAccountBiz : IAuthUserAccountBiz {
+open class AuthUserAccountBiz : BaseBiz<String, AuthUserAccount, AuthUserAccountDao>(), IAuthUserAccountBiz {
 //endregion your codes 1
 
-    @Autowired
-    private lateinit var authUserAccountDao: AuthUserAccountDao
-
-    private lateinit var authUserGroupUserDao: AuthUserGroupUserDao
 
     //region your codes 2
 
-    override fun isUsernameExists(username: String): Boolean {
-        val context = KuarkContextHolder.get()
-        val subSysDictCode = context.subSysCode
-        val ownerId = context.ownerId
+    override fun isUsernameExists(username: String): Boolean = dao.isUsernameExists(username)
 
-        return authUserAccountDao.querySource()
-            .select(AuthUserAccounts.username)
-            .whereWithConditions {
-                it += (AuthUserAccounts.username eq username)
-                if (subSysDictCode != null && subSysDictCode.isNotBlank()) {
-                    it += (AuthUserAccounts.subSysDictCode eq subSysDictCode)
-                }
-                if (ownerId != null && ownerId.isNotBlank()) {
-                    it += (AuthUserAccounts.ownerId eq ownerId)
-                }
-            }
-            .totalRecords != 0
-    }
+    @Transactional
+    override fun register(userAccount: AuthUserAccount): Boolean = dao.register(userAccount)
 
-    override fun register(userAccount: AuthUserAccount): Boolean =
-        authUserAccountDao.entitySequence().add(userAccount) == 1
-
-    override fun getByUsername(username: String): AuthUserAccount? {
-        val context = KuarkContextHolder.get()
-        val subSysDictCode = context.subSysCode
-        val ownerId = context.ownerId
-
-
-        val userAccounts = authUserAccountDao.querySource()
-            .select()
-            .whereWithConditions {
-                it += (AuthUserAccounts.username eq username)
-                if (subSysDictCode != null && subSysDictCode.isNotBlank()) {
-                    it += (AuthUserAccounts.subSysDictCode eq subSysDictCode)
-                }
-                if (ownerId != null && ownerId.isNotBlank()) {
-                    it += (AuthUserAccounts.ownerId eq ownerId)
-                }
-            }.map { row -> AuthUserAccounts.createEntity(row) }
-
-        return if (userAccounts.isEmpty()) {
-            null
-        } else userAccounts.first()
-    }
+    override fun getByUsername(username: String): AuthUserAccount? = dao.getByUsername(username)
 
     override fun getPermissions(userId: String): Set<String> {
         // 得到用户隶属的用户组

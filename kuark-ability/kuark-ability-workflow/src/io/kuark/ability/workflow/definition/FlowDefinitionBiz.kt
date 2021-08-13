@@ -6,9 +6,12 @@ import io.kuark.ability.workflow.event.IFlowEventListener
 import io.kuark.ability.workflow.instance.FlowInstance
 import io.kuark.base.error.ObjectAlreadyExistsException
 import io.kuark.base.error.ObjectNotFoundException
+import io.kuark.base.lang.collections.CollectionKit
 import io.kuark.base.lang.collections.joinEachToString
+import io.kuark.base.lang.string.StringKit
 import io.kuark.base.lang.string.appendIfMissing
 import io.kuark.base.log.LogFactory
+import io.kuark.base.query.sort.Order
 import org.activiti.bpmn.converter.BpmnXMLConverter
 import org.activiti.editor.language.json.converter.BpmnJsonConverter
 import org.activiti.engine.*
@@ -72,35 +75,40 @@ open class FlowDefinitionBiz : IFlowDefinitionBiz {
         }
     }
 
-    override fun search(criteria: FlowDefinitionCriteria, pageNum: Int, limit: Int): List<FlowDefinition> {
+    override fun search(
+        queryItems: FlowDefinitionQueryItems,
+        orders: List<Order>?,
+        pageNum: Int,
+        limit: Int
+    ): List<FlowDefinition> {
         val whereStr = StringBuilder("1=1")
 
         // 流程key(bpmn文件中process元素的id)
-        val key = criteria.key
-        if (key != null && key.isNotBlank() && !key.contains("'")) {
+        val key = queryItems.key
+        if (StringKit.isNotBlank(key) && !key!!.contains("'")) {
             whereStr.append(" AND UPPER(key_) LIKE '%${key.uppercase()}%'")
         }
 
         // 流程名称，支持忽略大小写模糊搜索
-        val name = criteria.name
-        if (name != null && name.isNotBlank() && !name.contains("'")) {
+        val name = queryItems.name
+        if (StringKit.isNotBlank(name) && !name!!.contains("'")) {
             whereStr.append(" AND UPPER(name_) LIKE '%${name.uppercase()}%'")
         }
 
         // 分类
-        val category = criteria.category
-        if (category != null && category.isNotBlank() && !category.contains("'")) {
+        val category = queryItems.category
+        if (StringKit.isNotBlank(category) && !category!!.contains("'")) {
             whereStr.append(" AND category_ = '${category}'")
         }
 
         // 租户(所属系统)id
-        val tenantId = criteria.tenantId
-        if (tenantId != null && tenantId.isNotBlank() && !tenantId.contains("'")) {
+        val tenantId = queryItems.tenantId
+        if (StringKit.isNotBlank(tenantId) && !tenantId!!.contains("'")) {
             whereStr.append(" AND tenant_id_ = '${tenantId}'")
         }
 
         // 是否已部署
-        val isDeployed = criteria.isDeployed
+        val isDeployed = queryItems.isDeployed
         if (isDeployed != null) {
             if (isDeployed) {
                 whereStr.append(" AND deployment_id_ IS NOT NULL")
@@ -109,12 +117,28 @@ open class FlowDefinitionBiz : IFlowDefinitionBiz {
             }
         }
 
+        // 排序
+        var orderStr = ""
+        if (CollectionKit.isNotEmpty(orders)) {
+            val orderSb = StringBuilder("ORDER BY ")
+            val length = orderSb.length
+            orders!!.forEach {
+                if (StringKit.isNotBlank(it.property) && !it.property!!.contains("'") && it.direction != null) {
+                    orderSb.append("${it.property} ${it.direction!!.name},")
+                }
+            }
+            if (orderSb.length != length) {
+                orderStr = orderSb.deleteCharAt(orderSb.lastIndex).toString()
+            }
+        }
+
         // 只查询最新版本的
-        val latestOnly = criteria.latestOnly
+        val latestOnly = queryItems.latestOnly
         var sql = "SELECT * FROM act_re_model WHERE $whereStr"
         if (latestOnly) {
             sql = "$sql AND version_ = (SELECT MAX(m.version_) FROM act_re_model m GROUP BY m.key_)"
         }
+        sql = "$sql $orderStr"
 
         // 查询流程定义
         val query = repositoryService.createNativeModelQuery().sql(sql)
@@ -186,7 +210,7 @@ open class FlowDefinitionBiz : IFlowDefinitionBiz {
         var model = getActivitiModel(key, version)
         model ?: throw ObjectNotFoundException("更新流程定义失败！【key：${key}】对应的流程定义不存在！")
 
-        if (model.deploymentId != null && model.deploymentId.isNotBlank()) {
+        if (StringKit.isNotBlank(model.deploymentId)) {
             // 流程已部署，新增一条最新版本的流程定义记录
             val latestVersion = if (version == null) {
                 model.version
@@ -202,13 +226,13 @@ open class FlowDefinitionBiz : IFlowDefinitionBiz {
         repositoryService.saveModel(model) // 新增或更新
 
         // 保存流程内容
-        if (flowJson != null && flowJson.isNotBlank()) {
-            repositoryService.addModelEditorSource(model.id, flowJson.toByteArray(charset("utf-8")))
+        if (StringKit.isNotBlank(flowJson)) {
+            repositoryService.addModelEditorSource(model.id, flowJson!!.toByteArray(charset("utf-8")))
         }
 
         // 保存流程图
-        if (svgXml != null && svgXml.isNotBlank()) {
-            repositoryService.addModelEditorSourceExtra(model.id, svgToByteArray(svgXml))
+        if (StringKit.isNotBlank(svgXml)) {
+            repositoryService.addModelEditorSourceExtra(model.id, svgToByteArray(svgXml!!))
         }
 
         log.info("更新流程定义成功！【key：$key，version：$version】")
@@ -271,7 +295,7 @@ open class FlowDefinitionBiz : IFlowDefinitionBiz {
         val deploymentBuilder = repositoryService.createDeployment().name(name)
         try {
             deploymentBuilder.addClasspathResource(bpmnFilePath)
-            if (diagramFileName != null && diagramFileName.isNotEmpty()) {
+            if (StringKit.isNotBlank(diagramFileName)) {
                 val diagramFilePath = "${prefixPath}/${diagramFileName}".appendIfMissing(".png")
                 deploymentBuilder.addClasspathResource(diagramFilePath)
             }
@@ -491,13 +515,13 @@ open class FlowDefinitionBiz : IFlowDefinitionBiz {
 //        modelObjectNode.put(ModelDataJsonConstants.MODEL_REVISION, 1)
         model.apply {
             this.key = key
-            if (name != null && name.isNotBlank()) { // 为空忽略更新
+            if (StringKit.isNotBlank(name)) { // 为空忽略更新
                 this.name = name
             }
-            if (category != null && category.isNotBlank()) { // 为空忽略更新
+            if (StringKit.isNotBlank(category)) { // 为空忽略更新
                 this.category = category
             }
-            if (tenantId != null && tenantId.isNotBlank()) { // 为空忽略更新
+            if (StringKit.isNotBlank(tenantId)) { // 为空忽略更新
                 this.tenantId = tenantId
             }
 //            this.metaInfo = modelObjectNode.toString()

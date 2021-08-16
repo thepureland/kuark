@@ -44,14 +44,19 @@ interface IFlowDefinitionBiz {
      * 查询流程定义
      *
      * @param queryItems 查询项，当查询项的属性不为空时才会将该属性作为查询条件，各属性间是”与“的关系
-     * @param orders 排序规则
      * @param pageNum 分页页码，从1开始，默认为1，小于1将按1处理
-     * @param limit 分页每页最大条数，默认为20，小于1将按不分页处理
+     * @param pageSize 分页每页最大条数，默认为20，小于1将按不分页处理
+     * @param orders 排序规则
      * @return List(流程定义对象)，找不到时返回空集合
      * @author K
      * @since 1.0.0
      */
-    fun search(queryItems: FlowDefinitionQueryItems, orders: List<Order>?, pageNum: Int = 1, limit: Int = 20): List<FlowDefinition>
+    fun search(
+        queryItems: FlowDefinitionQueryItems,
+        pageNum: Int = 1,
+        pageSize: Int = 20,
+        vararg orders: Order,
+    ): List<FlowDefinition>
 
     /**
      * 创建流程定义
@@ -81,8 +86,8 @@ interface IFlowDefinitionBiz {
      * @param version 定义版本，如果为null则查询最新的版本，默认为null。作为查询条件
      * @param name 流程名称，作为更新项，如果为空将忽略该项的更新。
      * @param category 分类，作为更新项，如果为空将忽略该项的更新。
-     * @param svgXml 流程图(svg格式)的xml内容，作为更新项，如果为空将忽略该项的更新。
      * @param flowJson 流程的json内容，作为更新项，如果为空将忽略该项的更新。
+     * @param svgXml 流程图(svg格式)的xml内容，作为更新项，如果为空将忽略该项的更新。
      * @param tenantId 租户(所属系统)id。作为更新项，如果为空将忽略该项的更新。
      * @return 流程定义对象
      * @throws IllegalArgumentException 流程key为空时
@@ -95,8 +100,8 @@ interface IFlowDefinitionBiz {
         version: Int? = null,
         name: String?,
         category: String?,
-        svgXml: String?,
         flowJson: String?,
+        svgXml: String?,
         tenantId: String? = null
     ): FlowDefinition
 
@@ -169,7 +174,7 @@ interface IFlowDefinitionBiz {
      * @since 1.0.0
      */
     fun genFlowDiagram(bpmnFileName: String, prefixPath: String = PathKit.getResourcePath("bpmn")): InputStream
-    
+
     /**
      * 激活流程定义，重复激活将忽略操作
      *

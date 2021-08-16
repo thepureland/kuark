@@ -1,8 +1,10 @@
 package io.kuark.ability.workflow.task
 
+import io.kuark.ability.data.rdb.kit.RdbKit
 import io.kuark.base.error.ObjectNotFoundException
 import io.kuark.base.lang.string.StringKit
 import io.kuark.base.log.LogFactory
+import io.kuark.base.query.sort.Order
 import org.activiti.engine.TaskService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
@@ -37,7 +39,12 @@ open class FlowTaskBiz : IFlowTaskBiz {
         return if (task == null) null else FlowTask(task)
     }
 
-    override fun search(queryItems: FlowTaskQueryItems, pageNum: Int, limit: Int): List<FlowTask> {
+    override fun search(
+        queryItems: FlowTaskQueryItems,
+        pageNum: Int,
+        pageSize: Int,
+        vararg orders: Order
+    ): List<FlowTask> {
         val whereStr = StringBuilder("1=1")
 
         // 任务受理人id
@@ -76,14 +83,18 @@ open class FlowTaskBiz : IFlowTaskBiz {
             whereStr.append(" AND d.version_ = $flowVersion")
         }
 
+        // 排序
+        val orderStr = RdbKit.getOrderSql(*orders)
+
         // 查询
-        val sql = "SELECT * FROM act_ru_task t LEFT JOIN act_re_procdef d ON t.proc_def_id_ = d.id_  WHERE $whereStr"
+        val sql =
+            "SELECT * FROM act_ru_task t LEFT JOIN act_re_procdef d ON t.proc_def_id_ = d.id_  WHERE $whereStr $orderStr"
         val query = taskService.createNativeTaskQuery().sql(sql)
-        val tasks = if (limit < 1) {
+        val tasks = if (pageSize < 1) {
             query.list()
         } else {
             val pageNo = if (pageNum < 1) 1 else pageNum
-            query.listPage((pageNo - 1) * limit, limit)
+            query.listPage((pageNo - 1) * pageSize, pageSize)
         }
 
         return tasks.map { FlowTask(it) }

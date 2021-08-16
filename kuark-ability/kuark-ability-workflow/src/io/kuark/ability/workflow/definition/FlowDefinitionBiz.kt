@@ -2,11 +2,11 @@ package io.kuark.ability.workflow.definition
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.node.ObjectNode
+import io.kuark.ability.data.rdb.kit.RdbKit
 import io.kuark.ability.workflow.event.IFlowEventListener
 import io.kuark.ability.workflow.instance.FlowInstance
 import io.kuark.base.error.ObjectAlreadyExistsException
 import io.kuark.base.error.ObjectNotFoundException
-import io.kuark.base.lang.collections.CollectionKit
 import io.kuark.base.lang.collections.joinEachToString
 import io.kuark.base.lang.string.StringKit
 import io.kuark.base.lang.string.appendIfMissing
@@ -77,9 +77,9 @@ open class FlowDefinitionBiz : IFlowDefinitionBiz {
 
     override fun search(
         queryItems: FlowDefinitionQueryItems,
-        orders: List<Order>?,
         pageNum: Int,
-        limit: Int
+        pageSize: Int,
+        vararg orders: Order
     ): List<FlowDefinition> {
         val whereStr = StringBuilder("1=1")
 
@@ -118,19 +118,7 @@ open class FlowDefinitionBiz : IFlowDefinitionBiz {
         }
 
         // 排序
-        var orderStr = ""
-        if (CollectionKit.isNotEmpty(orders)) {
-            val orderSb = StringBuilder("ORDER BY ")
-            val length = orderSb.length
-            orders!!.forEach {
-                if (StringKit.isNotBlank(it.property) && !it.property!!.contains("'") && it.direction != null) {
-                    orderSb.append("${it.property} ${it.direction!!.name},")
-                }
-            }
-            if (orderSb.length != length) {
-                orderStr = orderSb.deleteCharAt(orderSb.lastIndex).toString()
-            }
-        }
+        val orderStr = RdbKit.getOrderSql(*orders)
 
         // 只查询最新版本的
         val latestOnly = queryItems.latestOnly
@@ -142,11 +130,11 @@ open class FlowDefinitionBiz : IFlowDefinitionBiz {
 
         // 查询流程定义
         val query = repositoryService.createNativeModelQuery().sql(sql)
-        val models = if (limit < 1) {
+        val models = if (pageSize < 1) {
             query.list()
         } else {
             val pageNo = if (pageNum < 1) 1 else pageNum
-            query.listPage((pageNo - 1) * limit, limit)
+            query.listPage((pageNo - 1) * pageSize, pageSize)
         }
 
         // 查询流程部署
@@ -199,8 +187,8 @@ open class FlowDefinitionBiz : IFlowDefinitionBiz {
         version: Int?,
         name: String?,
         category: String?,
-        svgXml: String?,
         flowJson: String?,
+        svgXml: String?,
         tenantId: String?
     ): FlowDefinition {
         require(key.isNotBlank()) { "更新流程定义失败！【流程key】参数不能为空！" }
@@ -289,8 +277,6 @@ open class FlowDefinitionBiz : IFlowDefinitionBiz {
     override fun deployWithBpmn(
         name: String, bpmnFileName: String, diagramFileName: String?, prefixPath: String
     ): FlowDefinition {
-
-
         val bpmnFilePath = "${prefixPath}/${bpmnFileName}".appendIfMissing(".bpmn")
         val deploymentBuilder = repositoryService.createDeployment().name(name)
         try {

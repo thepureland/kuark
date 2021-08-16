@@ -1,12 +1,13 @@
 package io.kuark.ability.workflow.instance
 
+import io.kuark.ability.data.rdb.kit.RdbKit
 import io.kuark.base.error.ObjectNotFoundException
 import io.kuark.base.lang.string.StringKit
 import io.kuark.base.log.LogFactory
+import io.kuark.base.query.sort.Order
 import org.activiti.engine.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
-import java.lang.StringBuilder
 
 /**
  * 流程实例相关业务
@@ -56,7 +57,9 @@ open class FlowInstanceBiz : IFlowInstanceBiz {
         return if (instance == null) null else FlowInstance(instance)
     }
 
-    override fun search(queryItems: FlowInstanceQueryItems, pageNum: Int, limit: Int): List<FlowInstance> {
+    override fun search(
+        queryItems: FlowInstanceQueryItems, pageNum: Int, pageSize: Int, vararg orders: Order
+    ): List<FlowInstance> {
         val whereStr = StringBuilder("e.parent_id_ IS NULL")
 
         // 流程key(bpmn文件中process元素的id)
@@ -77,16 +80,19 @@ open class FlowInstanceBiz : IFlowInstanceBiz {
             whereStr.append(" AND UPPER(e.name_) LIKE '%${instanceName.uppercase()}%'")
         }
 
+        // 排序
+        val orderStr = RdbKit.getOrderSql(*orders)
+
         // 查询
         val sql = "SELECT e.*, d.key_ AS processDefinitionKey " +
                 "FROM act_ru_execution e LEFT JOIN act_re_procdef d " +
                 "ON e.proc_def_id_ = d.id_ " +
-                "WHERE $whereStr"
+                "WHERE $whereStr $orderStr"
         val query = runtimeService.createNativeProcessInstanceQuery().sql(sql)
-        val instances = if (limit < 1) {
+        val instances = if (pageSize < 1) {
             query.list()
         } else {
-            query.listPage((pageNum - 1) * limit, limit)
+            query.listPage((pageNum - 1) * pageSize, pageSize)
         }
 
         // 结果处理

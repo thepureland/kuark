@@ -134,14 +134,14 @@ internal open class FlowDefinitionBizTest : SpringTest() {
         // 更新未部署的模型
         val newSvgXml = FileKit.readFileToString(File(PathKit.getResourcePath("bpmn/test-svg.xml")))
         val newFlowJson = FileKit.readFileToString(File(PathKit.getResourcePath("bpmn/test-flow.json")))
-        flowDefinitionBiz.update(definition.key, null, "newFlowName", CATEGORY, newSvgXml, newFlowJson)
+        flowDefinitionBiz.update(definition.key, null, "newFlowName", CATEGORY, newFlowJson, newSvgXml)
         val newDefinition = flowDefinitionBiz.get(definition.key)!!
         assertEquals(1, newDefinition.version)
 
         definition = deployModel()
 
         // 更新已部署的模型
-        flowDefinitionBiz.update(definition.key, null, "newFlowName2", CATEGORY, newSvgXml, newFlowJson)
+        flowDefinitionBiz.update(definition.key, null, "newFlowName2", CATEGORY, newFlowJson, newSvgXml)
         val criteria = FlowDefinitionQueryItems.Builder().key(definition.key).latestOnly(false).build()
         val definitions = flowDefinitionBiz.search(criteria)
         assertEquals(2, definitions.size)
@@ -150,7 +150,7 @@ internal open class FlowDefinitionBizTest : SpringTest() {
     @Test
     @Transactional
     open fun deploy() {
-        var model = createModel()
+        val model = createModel()
 
         // 非法参数
         assertThrows<IllegalArgumentException> { flowDefinitionBiz.deploy("") }
@@ -159,7 +159,7 @@ internal open class FlowDefinitionBizTest : SpringTest() {
         assertThrows<ObjectNotFoundException> { flowDefinitionBiz.deploy(NO_EXISTS) }
 
         // 成功部署
-        var definition = flowDefinitionBiz.deploy(model.key)
+        val definition = flowDefinitionBiz.deploy(model.key)
         assertNotNull(definition._modelId)
         assertNotNull(flowDefinitionBiz.get(definition.key))
 

@@ -20,6 +20,15 @@ class FlowDefinitionController {
 
     private lateinit var flowDefinitionBiz: IFlowDefinitionBiz
 
+    /**
+     * 返回指定key和版本的流程定义
+     *
+     * @param key 流程key(bpmn文件中process元素的id)
+     * @param version 流程定义版本
+     * @return 统一响应结果，当找不到表单时，属性data为null
+     * @author K
+     * @since 1.0.0
+     */
     @RequestMapping(value = ["/get"], method = [RequestMethod.GET])
     fun get(key: String, version: Int): WebResult<FlowDefinition> {
         val definition = flowDefinitionBiz.get(key, version)
@@ -30,29 +39,84 @@ class FlowDefinitionController {
         }
     }
 
+    /**
+     * 查询流程定义
+     *
+     * @param queryItems 查询项，当查询项的属性不为空时才会将该属性作为查询条件，各属性间是”与“的关系
+     * @param pageNum 分页页码，从1开始，默认为1，小于1将按1处理
+     * @param pageSize 分页每页最大条数，默认为20，小于1将按不分页处理
+     * @param orders 排序规则
+     * @return 统一响应结果，当找不到时，属性data为空列表
+     * @author K
+     * @since 1.0.0
+     */
     @RequestMapping(value = ["/search"], method = [RequestMethod.GET])
     fun search(
         queryItems: FlowDefinitionQueryItems,
-        orders: List<Order>?,
         pageNum: Int,
-        pageSize: Int
+        pageSize: Int,
+        vararg orders: Order
     ): WebResult<List<FlowDefinition>> {
-        val definitions = flowDefinitionBiz.search(queryItems, orders, pageNum, pageSize)
+        val definitions = flowDefinitionBiz.search(queryItems, pageNum, pageSize, *orders)
         return WebResult(definitions)
     }
 
+    /**
+     * 创建流程定义
+     *
+     * @param def 流程定义对象
+     * @param flowJson 流程的json内容，不能为空
+     * @param svgXml 流程图(svg格式)的xml内容，不能为空
+     * @return 统一响应结果
+     * @author K
+     * @since 1.0.0
+     */
     @RequestMapping(value = ["/create"], method = [RequestMethod.POST])
     fun create(def: FlowDefinition, flowJson: String, svgXml: String): WebResult<Boolean> {
         flowDefinitionBiz.create(def.key, def.name, def.category, flowJson, svgXml, def.tenantId)
         return WebResult(true)
     }
 
+    /**
+     * 更新流程定义
+     *
+     * @param def 流程定义对象
+     * @param flowJson 流程的json内容，不能为空
+     * @param svgXml 流程图(svg格式)的xml内容，不能为空
+     * @return 统一响应结果
+     * @author K
+     * @since 1.0.0
+     */
     @RequestMapping(value = ["/update"], method = [RequestMethod.PUT])
     fun update(def: FlowDefinition, flowJson: String?, svgXml: String?): WebResult<Boolean> {
-        flowDefinitionBiz.update(def.key, def.version, def.name, def.category, svgXml, flowJson, def.tenantId)
+        flowDefinitionBiz.update(def.key, def.version, def.name, def.category, flowJson, svgXml, def.tenantId)
         return WebResult(true)
     }
 
+    /**
+     * 部署流程
+     *
+     * @param key 流程key(bpmn文件中process元素的id)
+     * @param version 流程定义版本
+     * @return 统一响应结果
+     * @author K
+     * @since 1.0.0
+     */
+    @RequestMapping(value = ["/deploy"], method = [RequestMethod.POST])
+    fun deploy(key: String, version: Int): WebResult<Boolean> {
+        flowDefinitionBiz.deploy(key, version)
+        return WebResult(true)
+    }
+
+    /**
+     * 返回流程图
+     *
+     * @param key 流程key(bpmn文件中process元素的id)
+     * @param version 流程定义版本
+     * @return 统一响应结果
+     * @author K
+     * @since 1.0.0
+     */
     @RequestMapping(value = ["/getFlowDiagram"], method = [RequestMethod.GET])
     fun getFlowDiagram(key: String, version: Int): WebResult<String> {
         val inputStream = flowDefinitionBiz.getFlowDiagram(key, version)
@@ -65,13 +129,34 @@ class FlowDefinitionController {
         }
     }
 
-    fun delete() {
-
+    /**
+     * 删除流程定义
+     *
+     * @param key 流程key(bpmn文件中process元素的id)
+     * @param version 流程定义版本
+     * @return 统一响应结果
+     * @author K
+     * @since 1.0.0
+     */
+    @RequestMapping(value = ["/delete"], method = [RequestMethod.DELETE])
+    fun delete(key: String, version: Int): WebResult<Boolean> {
+        flowDefinitionBiz.delete(key, version)
+        return WebResult(true)
     }
 
-    fun deleteThorough() {
-
+    /**
+     * 强制删除流程定义，将级联删除流程实例、历史流程实例和job
+     *
+     * @param key 流程key(bpmn文件中process元素的id)
+     * @param version 流程定义版本
+     * @return 统一响应结果
+     * @author K
+     * @since 1.0.0
+     */
+    @RequestMapping(value = ["/deleteThorough"], method = [RequestMethod.DELETE])
+    fun deleteThorough(key: String, version: Int): WebResult<Boolean> {
+        flowDefinitionBiz.delete(key, version, true)
+        return WebResult(true)
     }
-
 
 }

@@ -3,8 +3,11 @@ package io.kuark.ability.data.rdb.kit
 import io.kuark.ability.data.rdb.datasource.currentDataSource
 import io.kuark.ability.data.rdb.datasource.currentDatabase
 import io.kuark.ability.data.rdb.metadata.RdbType
+import io.kuark.base.lang.collections.CollectionKit
+import io.kuark.base.lang.string.StringKit
 import io.kuark.base.lang.string.deleteWhitespace
 import io.kuark.base.lang.string.substringBetween
+import io.kuark.base.query.sort.Order
 import io.kuark.context.core.KuarkContextHolder
 import org.ktorm.database.Database
 import java.sql.Connection
@@ -108,5 +111,28 @@ object RdbKit {
             RdbType.DB2  -> "select 1 from sysibm.sysdummy1"
             else -> "select 1"
         }
+
+    /**
+     * 返回排序规则的SQL
+     *
+     * @param orders 排序规则
+     * @return 排序规则SQL
+     * @author K
+     * @since 1.0.0
+     */
+    fun getOrderSql(vararg orders: Order): String {
+        var orderStr = ""
+        val orderSb = StringBuilder("ORDER BY ")
+        val length = orderSb.length
+        orders.forEach {
+            if (StringKit.isNotBlank(it.property) && !it.property!!.contains("'") && it.direction != null) {
+                orderSb.append("${it.property} ${it.direction!!.name},")
+            }
+        }
+        if (orderSb.length != length) {
+            orderStr = orderSb.deleteCharAt(orderSb.lastIndex).toString()
+        }
+        return orderStr
+    }
 
 }

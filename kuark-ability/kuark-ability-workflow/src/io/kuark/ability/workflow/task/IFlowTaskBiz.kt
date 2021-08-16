@@ -1,6 +1,7 @@
 package io.kuark.ability.workflow.task
 
 import io.kuark.base.error.ObjectNotFoundException
+import io.kuark.base.query.sort.Order
 
 /**
  * 流程任务相关业务接口
@@ -32,19 +33,24 @@ interface IFlowTaskBiz {
      */
     fun get(bizKey: String, taskDefinitionKey: String): FlowTask?
 
-
     /**
      * 查询任务
      *
      * @param queryItems 查询项，当查询项的属性不为空时才会将该属性作为查询条件，各属性间是”与“的关系
      * @return 指定用户所有流程任务，没有的话返回空列表
      * @param pageNum 分页页码，从1开始，默认为1，小于1将按1处理
-     * @param limit 分页每页最大条数，默认为20，小于1将按不分页处理
+     * @param pageSize 分页每页最大条数，默认为20，小于1将按不分页处理
+     * @param orders 排序规则
      * @return List(流程任务对象)，找不到时返回空集合
      * @author K
      * @since 1.0.0
      */
-    fun search(queryItems: FlowTaskQueryItems, pageNum: Int = 1, limit: Int = 20): List<FlowTask>
+    fun search(
+        queryItems: FlowTaskQueryItems,
+        pageNum: Int = 1,
+        pageSize: Int = 20,
+        vararg orders: Order,
+    ): List<FlowTask>
 
     /**
      * 用户签收(受理)流程任务

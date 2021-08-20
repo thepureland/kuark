@@ -61,6 +61,8 @@ data class FlowTask(
     /** 表单key */
     var formKey: String? = null
 
+    var appVersion: Int? = null
+
     /**
      * 次构造器
      *
@@ -89,6 +91,7 @@ data class FlowTask(
         _executionId = task.executionId
         priority = task.priority
         formKey = task.formKey
+        appVersion = task.appVersion
     }
 
 }

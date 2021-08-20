@@ -17,6 +17,8 @@ dependencies {
     api("org.glassfish.jaxb:jaxb-runtime")
     api("com.google.zxing:core")
     api("org.javamoney:moneta")
+    api("xerces:xercesImpl")
+    api("org.apache.xmlgraphics:batik-all")
 
     // log
     api("org.slf4j:slf4j-api")

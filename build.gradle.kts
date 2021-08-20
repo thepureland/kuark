@@ -148,6 +148,8 @@ subprojects {
             dependency("org.glassfish.jaxb:jaxb-runtime:2.3.1")
             dependency("com.google.zxing:core:3.4.0")
             dependency("org.javamoney:moneta:1.4.2")
+            dependency("org.apache.xmlgraphics:batik-all:1.1.4")
+            dependency("xerces:xercesImpl:2.12.1")
 
             // log
             dependency("org.slf4j:slf4j-api:${Version.SLF4J}")

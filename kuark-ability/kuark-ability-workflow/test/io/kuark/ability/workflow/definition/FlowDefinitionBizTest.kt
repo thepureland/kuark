@@ -8,6 +8,7 @@ import io.kuark.base.error.ObjectAlreadyExistsException
 import io.kuark.base.error.ObjectNotFoundException
 import io.kuark.base.image.ImageKit
 import io.kuark.base.io.FileKit
+import io.kuark.base.io.IoKit
 import io.kuark.base.io.PathKit
 import io.kuark.context.spring.SpringKit
 import io.kuark.test.common.SpringTest
@@ -207,17 +208,15 @@ internal open class FlowDefinitionBizTest : SpringTest() {
 
     @Test
     open fun genFlowDiagram() {
-        val inputStream = flowDefinitionBiz.genFlowDiagram("test")
-        val file = File("${PathKit.getUserDirectory()}/flow.png")
-        inputStream.use {
-            FileKit.copyInputStreamToFile(it!!, file)
-        }
-
-//        val bufferedImage = ImageIO.read(inputStream) //??? bufferedImage会为null
-//        ImageKit.showImage(bufferedImage)
-//        Thread.sleep(2000)
-
         assertThrows<ObjectNotFoundException> { flowDefinitionBiz.genFlowDiagram(NO_EXISTS) }
+
+        val inputStream = flowDefinitionBiz.genFlowDiagram("test")
+        val svgXml = inputStream.use {
+            IoKit.toString(inputStream, "utf-8")
+        }
+        val bufferedImage = ImageKit.renderSvgToImage(svgXml, 600, 400)
+        ImageKit.showImage(bufferedImage)
+        Thread.sleep(3000)
     }
 
     @Test
@@ -279,15 +278,15 @@ internal open class FlowDefinitionBizTest : SpringTest() {
     }
 
 
-    companion object {
+    internal companion object {
 
-        internal val KEY = "leaveApplicationKey"
-        internal val NAME = "请假流程"
-        internal val CATEGORY = "test"
-        internal val BIZ_KEY = "bizKey"
-        internal val INSTANCE_NAME = "instanceName"
-        internal val APPLICANT_ID = "applicantId"
-        internal val DEPLOYMENT_NAME = "请假申请(junit)"
+        const val KEY = "leaveApplicationKey"
+        const val NAME = "请假流程"
+        const val CATEGORY = "test"
+        const val BIZ_KEY = "bizKey"
+        const val INSTANCE_NAME = "instanceName"
+        const val APPLICANT_ID = "applicantId"
+        const val DEPLOYMENT_NAME = "请假申请(junit)"
 
         internal fun createModel(): FlowDefinition {
             val svgXml = FileKit.readFileToString(File(PathKit.getResourcePath("bpmn/test-svg.xml")), "UTF-8")

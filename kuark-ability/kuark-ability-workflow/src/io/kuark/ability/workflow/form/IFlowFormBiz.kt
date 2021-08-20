@@ -16,6 +16,18 @@ interface IFlowFormBiz : IBaseBiz<String, FlowForm> {
     //region your codes 2
 
     /**
+     * 返回指定key和版本的表单
+     *
+     * @param key 表单key
+     * @param version 表单版本，如果为null，返回最新版本，默认为null
+     * @return 流程表单对象，找不到返回null
+     * @throws IllegalArgumentException key为空时
+     * @author K
+     * @since 1.0.0
+     */
+    fun get(key: String, version: Int? = null): FlowForm?
+
+    /**
      * 新增或更新表单信息
      *
      * @param flowForm 表单对象

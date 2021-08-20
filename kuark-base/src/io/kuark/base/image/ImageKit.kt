@@ -1,21 +1,27 @@
 package io.kuark.base.image
 
+import io.kuark.base.io.PathKit
+import org.apache.batik.anim.dom.SAXSVGDocumentFactory
+import org.apache.batik.bridge.BridgeContext
+import org.apache.batik.bridge.GVTBuilder
+import org.apache.batik.bridge.UserAgentAdapter
+import org.apache.batik.gvt.renderer.ConcreteImageRendererFactory
+import org.apache.batik.gvt.renderer.ImageRendererFactory
+import org.w3c.dom.svg.SVGDocument
+import org.w3c.dom.svg.SVGElement
 import java.awt.Color
 import java.awt.Dimension
 import java.awt.Graphics
+import java.awt.Rectangle
 import java.awt.geom.AffineTransform
 import java.awt.image.AffineTransformOp
 import java.awt.image.BufferedImage
-import java.io.ByteArrayInputStream
-import java.io.ByteArrayOutputStream
-import java.io.File
-import java.io.IOException
+import java.io.*
 import java.net.URI
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.util.*
 import javax.imageio.ImageIO
-import javax.imageio.stream.ImageInputStream
 import javax.imageio.stream.MemoryCacheImageInputStream
 import javax.swing.JFrame
 import javax.swing.JPanel
@@ -193,12 +199,22 @@ object ImageKit {
      * @return 返回 [BufferedImage]
      * @throws IOException 当读写错误或不识别的格式时抛出
      * @author https://blog.csdn.net/johnwaychan/article/details/79106983
+     * @author K
+     * @since 1.0.0
      */
-    fun readMemoryImage(imgBytes: ByteArray): BufferedImage {
+    fun readMemoryImage(imgBytes: ByteArray, format: String? = null): BufferedImage {
         // 将字节数组转为InputStream，再转为MemoryCacheImageInputStream
         val imageInputstream = MemoryCacheImageInputStream(ByteArrayInputStream(imgBytes))
         // 获取所有能识别数据流格式的ImageReader对象
-        val it = ImageIO.getImageReaders(imageInputstream)
+        val it = if (format == null) {
+            var imageReaders = ImageIO.getImageReaders(imageInputstream)
+//            if (!imageReaders.hasNext()) {
+//                imageReaders = ImageIO.getImageReaders(FileImageInputStream(File(srcFilePath)))
+//            }
+            imageReaders
+        } else {
+            ImageIO.getImageReadersByFormatName(format)
+        }
         // 迭代器遍历尝试用ImageReader对象进行解码
         while (it.hasNext()) {
             val imageReader = it.next()
@@ -252,6 +268,85 @@ object ImageKit {
         f.setLocation(200, 200)
         f.isVisible = true
         f.pack()
+    }
+
+    /**
+     * 将svg格式的xml渲染成图片
+     *
+     * @param xmlContent svg格式的xml
+     * @param width 图片宽度
+     * @param height 图片高度
+     * @return BufferedImage
+     * @author https://blog.csdn.net/do168/article/details/51564492
+     * @author K
+     * @since 1.0.0
+     */
+    fun renderSvgToImage(xmlContent: String, width: Int, height: Int): BufferedImage {
+        return renderSvgToImage(xmlContent, width, height, false, null, null)
+    }
+
+    private fun renderSvgToImage(
+        xmlContent: String,
+        width: Int,
+        height: Int,
+        stretch: Boolean,
+        idRegex: String?,
+        replacementColor: Color?,
+    ): BufferedImage {
+        // the following is necessary so that batik knows how to resolve URI fragments
+        // (#myLinearGradient). Otherwise the resolution fails and you cannot render.
+        val uri = "${PathKit.getTempDirectoryPath()}/temp.svg"
+        val df = SAXSVGDocumentFactory("org.apache.xerces.parsers.SAXParser")
+        val document = df.createSVGDocument(uri, StringReader(xmlContent))
+        if (idRegex != null && replacementColor != null) {
+            replaceFill(document, idRegex, replacementColor)
+        }
+        return renderToImage(document, width, height, stretch)
+    }
+
+    private fun renderToImage(document: SVGDocument?, width: Int, height: Int, stretch: Boolean): BufferedImage {
+        val rendererFactory = ConcreteImageRendererFactory()
+        val renderer = rendererFactory.createStaticImageRenderer()
+        val builder = GVTBuilder()
+        val ctx = BridgeContext(UserAgentAdapter())
+        ctx.setDynamicState(BridgeContext.STATIC)
+        val rootNode = builder.build(ctx, document)
+        renderer.tree = rootNode
+        val docWidth = ctx.documentSize.width.toFloat()
+        val docHeight = ctx.documentSize.height.toFloat()
+        var xscale = width / docWidth
+        var yscale = height / docHeight
+        if (!stretch) {
+            val scale = xscale.coerceAtMost(yscale)
+            xscale = scale
+            yscale = scale
+        }
+        val px = AffineTransform.getScaleInstance(xscale.toDouble(), yscale.toDouble())
+        val tx = (-0 + (width / xscale - docWidth) / 2).toDouble()
+        val ty = (-0 + (height / yscale - docHeight) / 2).toDouble()
+        px.translate(tx, ty)
+        //cgn.setViewingTransform(px);
+        renderer.updateOffScreen(width, height)
+        renderer.tree = rootNode
+        renderer.transform = px
+        //renderer.clearOffScreen();
+        renderer.repaint(Rectangle(0, 0, width, height))
+        return renderer.offScreen
+    }
+
+    private fun replaceFill(document: SVGDocument, idRegex: String, color: Color) {
+        val colorCode = String.format("#%02x%02x%02x", color.red, color.green, color.blue)
+        val children = document.getElementsByTagName("*")
+        for (i in 0 until children.length) {
+            if (children.item(i) is SVGElement) {
+                val element = children.item(i) as SVGElement
+                if (element.id.matches(Regex(idRegex))) {
+                    var style = element.getAttributeNS(null, "style")
+                    style = style.replaceFirst("fill:#[a-zA-z0-9]+".toRegex(), "fill:$colorCode")
+                    element.setAttributeNS(null, "style", style)
+                }
+            }
+        }
     }
 
 

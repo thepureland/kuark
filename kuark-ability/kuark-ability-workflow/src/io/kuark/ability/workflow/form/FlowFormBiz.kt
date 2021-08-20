@@ -8,7 +8,6 @@ import io.kuark.base.query.enums.Operator
 import io.kuark.base.query.sort.Order
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
-import java.util.*
 
 /**
  * 工作流表单业务
@@ -24,6 +23,23 @@ open class FlowFormBiz : BaseBiz<String, FlowForm, FlowFormDao>(), IFlowFormBiz 
     //region your codes 2
 
     protected val log = LogFactory.getLog(this::class)
+
+    override fun get(key: String, version: Int?): FlowForm? {
+        require(key.isNotBlank()) { "获取流程表单失败！【key】参数不能为空！" }
+
+        val criteria = Criteria.add(FlowForm::key.name, Operator.EQ, key)
+        var ver: Int? = version
+        if (version == null) {
+            ver = dao.max(FlowForm::version.name, criteria) as Int?
+        }
+        return if (ver == null) {
+            null
+        } else {
+            criteria.addAnd(FlowForm::version.name, Operator.EQ, ver)
+            val forms = dao.search(criteria)
+            if (forms.isEmpty()) null else forms.first()
+        }
+    }
 
     override fun saveOrUpdate(flowForm: FlowForm): Boolean {
         return if (StringKit.isBlank(flowForm.id)) {

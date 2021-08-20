@@ -1,23 +1,42 @@
 package io.kuark.ability.workflow.instance
 
 import io.kuark.ability.workflow.definition.FlowDefinitionBizTest
+import io.kuark.ability.workflow.task.FlowTaskBizTest
+import io.kuark.ability.workflow.task.IFlowTaskBiz
 import io.kuark.base.error.ObjectNotFoundException
+import io.kuark.base.image.ImageKit
+import io.kuark.base.io.IoKit
 import io.kuark.test.common.SpringTest
 import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
+import javax.imageio.ImageIO
 
+
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 internal open class FlowInstanceBizTest : SpringTest() {
 
 
     @Autowired
     private lateinit var flowInstanceBiz: IFlowInstanceBiz
 
+    @Autowired
+    private lateinit var flowTaskBiz: IFlowTaskBiz
+
+
     private val BIZ_KEY = FlowDefinitionBizTest.BIZ_KEY
     private val INSTANCE_NAME = FlowDefinitionBizTest.INSTANCE_NAME
     private val NO_EXISTS = "no exists"
+
+    @BeforeAll
+    fun setUp() {
+        //??? 不加的话，运行getFlowDiagram()时会报java.awt.HeadlessException异常！
+        System.setProperty("java.awt.headless", "false")
+    }
 
 
     @Test
@@ -25,12 +44,12 @@ internal open class FlowInstanceBizTest : SpringTest() {
     open fun isExists() {
         val instance = FlowDefinitionBizTest.deployThenStart()
 
-        assert(flowInstanceBiz.isExists(instance.definitionKey, BIZ_KEY))
-        assert(flowInstanceBiz.isExists(instance.definitionKey, BIZ_KEY, 1))
-        assert(flowInstanceBiz.isExists(instance.definitionKey, BIZ_KEY, 1))
-        assertFalse(flowInstanceBiz.isExists(NO_EXISTS, BIZ_KEY, 1))
-        assertFalse { flowInstanceBiz.isExists(" ", BIZ_KEY) }
-        assertFalse { flowInstanceBiz.isExists(instance.definitionKey, "") }
+        assert(flowInstanceBiz.isExists(BIZ_KEY, instance.definitionKey))
+        assert(flowInstanceBiz.isExists(BIZ_KEY, instance.definitionKey, 1))
+        assert(flowInstanceBiz.isExists(BIZ_KEY, instance.definitionKey, 1))
+        assert(flowInstanceBiz.isExists(BIZ_KEY, " "))
+        assertFalse(flowInstanceBiz.isExists(BIZ_KEY, NO_EXISTS, 1))
+        assertFalse { flowInstanceBiz.isExists("", instance.definitionKey) }
     }
 
     @Test
@@ -39,19 +58,19 @@ internal open class FlowInstanceBizTest : SpringTest() {
         val instance = FlowDefinitionBizTest.deployThenStart()
 
         // 正常结果，未指定版本号
-        var flowInstance = flowInstanceBiz.get(instance.definitionKey, BIZ_KEY)
+        var flowInstance = flowInstanceBiz.get(BIZ_KEY, instance.definitionKey)
         assertNotNull(instance)
         assertNotNull(flowInstance)
         assertEquals(instance._id, flowInstance!!._id)
 
         // 正常结果，指定版本号
-        flowInstance = flowInstanceBiz.get(instance.definitionKey, BIZ_KEY, 1)
+        flowInstance = flowInstanceBiz.get(BIZ_KEY, instance.definitionKey, 1)
         assertNotNull(instance)
         assertNotNull(flowInstance)
         assertEquals(instance._id, flowInstance!!._id)
 
         // 传不存在的key
-        assertNull(flowInstanceBiz.get(NO_EXISTS, BIZ_KEY))
+        assertNull(flowInstanceBiz.get(BIZ_KEY, NO_EXISTS))
     }
 
     @Test
@@ -80,16 +99,16 @@ internal open class FlowInstanceBizTest : SpringTest() {
         val instance = FlowDefinitionBizTest.deployThenStart()
 
         // 找不到流程实例
-        assertThrows<ObjectNotFoundException> { flowInstanceBiz.activate(NO_EXISTS, BIZ_KEY) }
+        assertThrows<ObjectNotFoundException> { flowInstanceBiz.activate(BIZ_KEY, NO_EXISTS) }
 
         // 成功激活
-        flowInstanceBiz.activate(instance.definitionKey, BIZ_KEY)
-        var flowInstance = flowInstanceBiz.get(instance.definitionKey, BIZ_KEY)!!
+        flowInstanceBiz.activate(BIZ_KEY, instance.definitionKey)
+        var flowInstance = flowInstanceBiz.get(BIZ_KEY, instance.definitionKey)!!
         assertEquals(FlowInstanceStatus.RUNNING, flowInstance.status)
 
         // 重复激活
-        flowInstanceBiz.activate(instance.definitionKey, BIZ_KEY)
-        flowInstance = flowInstanceBiz.get(instance.definitionKey, BIZ_KEY)!!
+        flowInstanceBiz.activate(BIZ_KEY, instance.definitionKey)
+        flowInstance = flowInstanceBiz.get(BIZ_KEY, instance.definitionKey)!!
         assertEquals(FlowInstanceStatus.RUNNING, flowInstance.status)
     }
 
@@ -99,16 +118,16 @@ internal open class FlowInstanceBizTest : SpringTest() {
         val instance = FlowDefinitionBizTest.deployThenStart()
 
         // 找不到流程实例
-        assertThrows<ObjectNotFoundException> { flowInstanceBiz.suspend(instance.definitionKey, NO_EXISTS) }
+        assertThrows<ObjectNotFoundException> { flowInstanceBiz.suspend(NO_EXISTS, instance.definitionKey) }
 
         // 成功挂起
-        flowInstanceBiz.suspend(instance.definitionKey, BIZ_KEY)
-        var flowInstance = flowInstanceBiz.get(instance.definitionKey, BIZ_KEY)!!
+        flowInstanceBiz.suspend(BIZ_KEY, instance.definitionKey)
+        var flowInstance = flowInstanceBiz.get(BIZ_KEY, instance.definitionKey)!!
         assertEquals(FlowInstanceStatus.SUSPENDED, flowInstance.status)
 
         // 重复挂起
-        flowInstanceBiz.suspend(instance.definitionKey, BIZ_KEY)
-        flowInstance = flowInstanceBiz.get(instance.definitionKey, BIZ_KEY)!!
+        flowInstanceBiz.suspend(BIZ_KEY, instance.definitionKey)
+        flowInstance = flowInstanceBiz.get(BIZ_KEY, instance.definitionKey)!!
         assertEquals(FlowInstanceStatus.SUSPENDED, flowInstance.status)
     }
 
@@ -119,12 +138,12 @@ internal open class FlowInstanceBizTest : SpringTest() {
 
         // 找不到流程实例
         assertThrows<ObjectNotFoundException> {
-            flowInstanceBiz.delete(instance.definitionKey, NO_EXISTS, "test")
+            flowInstanceBiz.delete(NO_EXISTS, instance.definitionKey, "test")
         }
 
         // 成功删除
-        flowInstanceBiz.delete(instance.definitionKey, BIZ_KEY, "test")
-        assertNull(flowInstanceBiz.get(instance.definitionKey, BIZ_KEY))
+        flowInstanceBiz.delete(BIZ_KEY, instance.definitionKey, "test")
+        assertNull(flowInstanceBiz.get(BIZ_KEY, instance.definitionKey))
         var criteria = FlowInstanceQueryItems.Builder().key(instance.definitionKey).build()
         assert(flowInstanceBiz.search(criteria).isEmpty())
     }
@@ -137,20 +156,46 @@ internal open class FlowInstanceBizTest : SpringTest() {
 
         // 参数非法
         assertThrows<IllegalArgumentException> {
-            flowInstanceBiz.updateBizKey(instance.definitionKey, BIZ_KEY, "")
-        }
-        assertThrows<IllegalArgumentException> {
-            flowInstanceBiz.updateBizKey(instance.definitionKey, BIZ_KEY, "biz'key")
+            flowInstanceBiz.updateBizKey(BIZ_KEY, "biz'key", instance.definitionKey)
         }
 
         // 流程实例找不到
         assertThrows<ObjectNotFoundException> {
-            flowInstanceBiz.updateBizKey(instance.definitionKey, NO_EXISTS, newBizKey)
+            flowInstanceBiz.updateBizKey(NO_EXISTS, newBizKey, instance.definitionKey)
         }
 
         // 更新成功
-        flowInstanceBiz.updateBizKey(instance.definitionKey, BIZ_KEY, newBizKey)
-        assertNotNull(flowInstanceBiz.get(instance.definitionKey, newBizKey))
+        flowInstanceBiz.updateBizKey(BIZ_KEY, newBizKey, instance.definitionKey)
+        assertNotNull(flowInstanceBiz.get(newBizKey, instance.definitionKey))
+    }
+
+    @Test
+    @Transactional
+    open fun getHighLightFlowDiagram() {
+        val instance = FlowDefinitionBizTest.deployThenStart(
+            mapOf(
+                "applicantId" to FlowDefinitionBizTest.APPLICANT_ID,
+                "approverId" to FlowTaskBizTest.APPROVER_ID
+            )
+        )
+
+        flowTaskBiz.complete(
+            instance.bizKey, FlowTaskBizTest.APPLICANT_TASK_DEFINITION_KEY, FlowTaskBizTest.APPLICANT_ID
+        )
+        val input = flowInstanceBiz.genHighLightFlowDiagram(instance.bizKey)!!
+        val svgXml = input.use {
+            IoKit.toString(input)
+        }
+        val bufferedImage = ImageKit.renderSvgToImage(svgXml, 600, 400)
+        ImageKit.showImage(bufferedImage)
+        Thread.sleep(3000)
+    }
+
+    @Test
+    fun test() {
+        val imageReadersByFormatName = ImageIO.getImageReadersByFormatName("png")
+        val imageReadersBySuffix = ImageIO.getImageReadersBySuffix("png")
+        println("")
     }
 
 }

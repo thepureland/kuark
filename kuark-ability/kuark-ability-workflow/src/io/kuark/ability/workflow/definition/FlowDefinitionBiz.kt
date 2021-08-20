@@ -338,8 +338,9 @@ open class FlowDefinitionBiz : IFlowDefinitionBiz {
                 val streamReader = XMLInputFactory.newInstance().createXMLStreamReader(it)
                 BpmnXMLConverter().convertToBpmnModel(streamReader)
             }
-            // generateDiagram(bpmnModel, "png",  "宋体", "微软雅黑", "黑体", null, 2.0)
-            DefaultProcessDiagramGenerator().generateDiagram(bpmnModel, emptyList())
+            DefaultProcessDiagramGenerator().generateDiagram(
+                bpmnModel, emptyList(), emptyList(), emptyList(), emptyList(), "宋体", "微软雅黑", "黑体", true, "png"
+            )
         } else {
             val errMsg = "生成流程图失败，因bpmn文件【${filePath}】不存在！"
             log.error(errMsg)

@@ -1,0 +1,1 @@
+activiti的sql脚本在activiti-engine.jar的org.activiti.db.create目录下

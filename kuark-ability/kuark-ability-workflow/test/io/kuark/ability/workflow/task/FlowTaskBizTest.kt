@@ -14,12 +14,6 @@ internal open class FlowTaskBizTest : SpringTest() {
     @Autowired
     private lateinit var flowTaskBiz: IFlowTaskBiz
 
-    private val NO_EXISTS = "no exists"
-    private val APPLICANT_ID = "applicantId" // 申请人id
-    private val APPLICANT_TASK_DEFINITION_KEY = "applicationTaskKey"
-    private val APPROVER_ID = "approverId" // 审批人id
-    private val APPROVAL_TASK_DEFINITION_KEY = "approvalTaskKey"
-
 
     @Test
     @Transactional
@@ -149,6 +143,14 @@ internal open class FlowTaskBizTest : SpringTest() {
         // 非任务执行者本人强制完成任务
         assert(flowTaskBiz.complete(instance.bizKey, APPROVAL_TASK_DEFINITION_KEY, APPLICANT_ID, true))
         assert(flowTaskBiz.search(criteria).isEmpty())
+    }
+
+    internal companion object {
+        const val NO_EXISTS = "no exists"
+        const val APPLICANT_ID = "applicantId" // 申请人id
+        const val APPLICANT_TASK_DEFINITION_KEY = "applicationTaskKey"
+        const val APPROVER_ID = "approverId" // 审批人id
+        const val APPROVAL_TASK_DEFINITION_KEY = "approvalTaskKey"
     }
 
 }

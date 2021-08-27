@@ -23,7 +23,7 @@ interface IFlowInstanceBiz {
      * 检测流程实例是否存在
      *
      * @param bizKey 业务主键，不能为null
-     * @param key 流程key(bpmn文件中process元素的id)，如果通过bizKey能惟一确定流程实例的话可以为null，默认为null
+     * @param key 流程定义key(bpmn文件中process元素的id)，如果通过bizKey能惟一确定流程实例的话可以为null，默认为null
      * @param version 流程定义版本，如果为null则检测最新版本，默认为null。key不为空时生效
      * @return true: 流程实例存在，false: 流程实例不存在
      * @author K
@@ -35,7 +35,7 @@ interface IFlowInstanceBiz {
      * 获取流程实例
      *
      * @param bizKey 业务主键，不能为null
-     * @param key 流程key(bpmn文件中process元素的id)，如果通过bizKey能惟一确定流程实例的话可以为null，默认为null
+     * @param key 流程定义key(bpmn文件中process元素的id)，如果通过bizKey能惟一确定流程实例的话可以为null，默认为null
      * @param version 流程定义版本，如果为null则返回最新版本，默认为null
      * @return 流程实例对象，找不到时返回null
      * @author K
@@ -65,7 +65,7 @@ interface IFlowInstanceBiz {
      * 激活流程实例，重复激活将忽略操作
      *
      * @param bizKey 业务主键，不能为空
-     * @param key 流程key(bpmn文件中process元素的id)，如果通过bizKey能惟一确定流程实例的话可以为null，默认为null
+     * @param key 流程定义key(bpmn文件中process元素的id)，如果通过bizKey能惟一确定流程实例的话可以为null，默认为null
      * @throws ObjectNotFoundException 当找不到对应流程实例时
      * @author K
      * @since 1.0.0
@@ -76,7 +76,7 @@ interface IFlowInstanceBiz {
      * 挂起流程实例，重复挂起将忽略操作
      *
      * @param bizKey 业务主键，不能为空
-     * @param key 流程key(bpmn文件中process元素的id)，如果通过bizKey能惟一确定流程实例的话可以为null，默认为null
+     * @param key 流程定义key(bpmn文件中process元素的id)，如果通过bizKey能惟一确定流程实例的话可以为null，默认为null
      * @throws ObjectNotFoundException 当找不到对应流程实例时
      * @author K
      * @since 1.0.0
@@ -87,7 +87,7 @@ interface IFlowInstanceBiz {
      * 删除流程实例
      *
      * @param bizKey 业务主键，不能为null
-     * @param key 流程key(bpmn文件中process元素的id)，如果通过bizKey能惟一确定流程实例的话可以为null，默认为null
+     * @param key 流程定义key(bpmn文件中process元素的id)，如果通过bizKey能惟一确定流程实例的话可以为null，默认为null
      * @param reason 删除原因，可以为null，默认为null
      * @throws ObjectNotFoundException 当找不到对应流程实例时
      * @author K
@@ -100,7 +100,7 @@ interface IFlowInstanceBiz {
      *
      * @param oldBizKey 旧的业务主键，不能为null
      * @param newBizKey 新的业务主键，不能为空
-     * @param key 流程key(bpmn文件中process元素的id)，如果通过bizKey能惟一确定流程实例的话可以为null，默认为null
+     * @param key 流程定义key(bpmn文件中process元素的id)，如果通过bizKey能惟一确定流程实例的话可以为null，默认为null
      * @throws IllegalArgumentException 新的业务主键为空或值非法时
      * @throws ObjectNotFoundException 当指定的参数找不到对应流程实例时
      * @author K
@@ -112,7 +112,7 @@ interface IFlowInstanceBiz {
      * 生成高亮流程图，已执行的节点高亮显示
      *
      * @param bizKey 业务主键，不能为null
-     * @param key 流程key(bpmn文件中process元素的id)，如果通过bizKey能惟一确定流程实例的话可以为null，默认为null
+     * @param key 流程定义key(bpmn文件中process元素的id)，如果通过bizKey能惟一确定流程实例的话可以为null，默认为null
      * @return 输入流
      * @throws IllegalArgumentException 业务主键为空
      * @author FRH

@@ -83,7 +83,7 @@ open class FlowDefinitionBiz : IFlowDefinitionBiz {
     ): List<FlowDefinition> {
         val whereStr = StringBuilder("1=1")
 
-        // 流程key(bpmn文件中process元素的id)
+        // 流程定义key(bpmn文件中process元素的id)
         val key = queryItems.key
         if (StringKit.isNotBlank(key) && !key!!.contains("'")) {
             whereStr.append(" AND UPPER(key_) LIKE '%${key.uppercase()}%'")
@@ -191,7 +191,7 @@ open class FlowDefinitionBiz : IFlowDefinitionBiz {
         svgXml: String?,
         tenantId: String?
     ): FlowDefinition {
-        require(key.isNotBlank()) { "更新流程定义失败！【流程key】参数不能为空！" }
+        require(key.isNotBlank()) { "更新流程定义失败！【流程定义key】参数不能为空！" }
         if (name != null) {
             require(!name.contains("'")) { "更新流程定义失败！【流程名称】参数不能包含单引号！" }
         }
@@ -229,7 +229,7 @@ open class FlowDefinitionBiz : IFlowDefinitionBiz {
 
     @Transactional
     override fun deploy(key: String, version: Int?): FlowDefinition {
-        require(key.isNotBlank()) { "部署流程失败！【流程key】不能为空！" }
+        require(key.isNotBlank()) { "部署流程失败！【流程定义key】不能为空！" }
 
         // 获取流程定义
         val model = getActivitiModel(key, version)
@@ -247,7 +247,7 @@ open class FlowDefinitionBiz : IFlowDefinitionBiz {
         val modelNode = ObjectMapper().readTree(modelEditorSource) as ObjectNode
         val bpmnModel = BpmnJsonConverter().convertToBpmnModel(modelNode)
         val definition = bpmnModel.processes.first()
-        definition.id = key // 设置流程key(bpmn文件中process元素的id)
+        definition.id = key // 设置流程定义key(bpmn文件中process元素的id)
         definition.name = model.name
         val bpmnBytes = BpmnXMLConverter().convertToXML(bpmnModel)
 

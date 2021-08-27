@@ -23,7 +23,7 @@ class FlowDefinitionController {
     /**
      * 返回指定key和版本的流程定义
      *
-     * @param key 流程key(bpmn文件中process元素的id)
+     * @param key 流程定义key(bpmn文件中process元素的id)
      * @param version 流程定义版本
      * @return 统一响应结果，当找不到表单时，属性data为null
      * @author K
@@ -96,7 +96,7 @@ class FlowDefinitionController {
     /**
      * 部署流程
      *
-     * @param key 流程key(bpmn文件中process元素的id)
+     * @param key 流程定义key(bpmn文件中process元素的id)
      * @param version 流程定义版本
      * @return 统一响应结果
      * @author K
@@ -111,7 +111,7 @@ class FlowDefinitionController {
     /**
      * 返回流程图
      *
-     * @param key 流程key(bpmn文件中process元素的id)
+     * @param key 流程定义key(bpmn文件中process元素的id)
      * @param version 流程定义版本
      * @return 统一响应结果
      * @author K
@@ -132,7 +132,7 @@ class FlowDefinitionController {
     /**
      * 删除流程定义
      *
-     * @param key 流程key(bpmn文件中process元素的id)
+     * @param key 流程定义key(bpmn文件中process元素的id)
      * @param version 流程定义版本
      * @return 统一响应结果
      * @author K
@@ -147,7 +147,7 @@ class FlowDefinitionController {
     /**
      * 强制删除流程定义，将级联删除流程实例、历史流程实例和job
      *
-     * @param key 流程key(bpmn文件中process元素的id)
+     * @param key 流程定义key(bpmn文件中process元素的id)
      * @param version 流程定义版本
      * @return 统一响应结果
      * @author K

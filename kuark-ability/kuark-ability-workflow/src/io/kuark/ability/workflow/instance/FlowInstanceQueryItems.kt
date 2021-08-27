@@ -1,5 +1,7 @@
 package io.kuark.ability.workflow.instance
 
+import java.util.*
+
 /**
  * 流程实例查询项
  *
@@ -10,14 +12,32 @@ package io.kuark.ability.workflow.instance
  */
 class FlowInstanceQueryItems {
 
-    /** 流程key(bpmn文件中process元素的id)，支持忽略大小写模糊查询 */
-    var key: String? = null
+    /** 流程定义key(bpmn文件中process元素的id)，支持忽略大小写模糊查询 */
+    var definitionKey: String? = null
 
     /** 业务主键，支持忽略大小写模糊查询 */
     var bizKey: String? = null
 
     /** 实例名称，支持忽略大小写模糊查询 */
-    var instanceName: String? = null
+    var name: String? = null
+
+    /** 发起时间始(大于等于) */
+    var startTimeFrom: Date? = null
+
+    /** 发起时间止(小于等于) */
+    var startTimeTo: Date? = null
+    
+    /** 发起者id */
+    var startUserId: String? = null
+    
+    /** 流程定义名称，支持忽略大小写模糊查询 */
+    var definitionName: String? = null
+    
+    /** 流程定义版本 */
+    var definitionVersion: Int? = null
+
+    /** 流程实例状态 */
+    var status: FlowInstanceStatus? = null
 
     /**
      * 空构造器，仅供框架反射使用
@@ -25,9 +45,15 @@ class FlowInstanceQueryItems {
     constructor()
 
     private constructor(builder: Builder) {
-        key = builder.key
+        definitionKey = builder.definitionKey
         bizKey = builder.bizKey
-        instanceName = builder.instanceName
+        name = builder.name
+        startTimeFrom = builder.startTimeFrom
+        startTimeTo = builder.startTimeTo
+        startUserId = builder.startUserId
+        definitionName = builder.definitionName
+        definitionVersion = builder.definitionVersion
+        status = builder.status
     }
 
 
@@ -39,18 +65,24 @@ class FlowInstanceQueryItems {
      */
     class Builder {
 
-        var key: String? = null
+        var definitionKey: String? = null
         var bizKey: String? = null
-        var instanceName: String? = null
+        var name: String? = null
+        var startTimeFrom: Date? = null
+        var startTimeTo: Date? = null
+        var startUserId: String? = null
+        var definitionName: String? = null
+        var definitionVersion: Int? = null
+        var status: FlowInstanceStatus? = null
 
         /**
          * 构建流程实例查询项对象
          */
         fun build(): FlowInstanceQueryItems = FlowInstanceQueryItems(this)
 
-        /** 流程key(bpmn文件中process元素的id)，支持忽略大小写模糊查询 */
-        fun key(key: String?): Builder {
-            this.key = key
+        /** 流程定义key(bpmn文件中process元素的id)，支持忽略大小写模糊查询 */
+        fun definitionKey(definitionKey: String?): Builder {
+            this.definitionKey = definitionKey
             return this
         }
 
@@ -61,8 +93,44 @@ class FlowInstanceQueryItems {
         }
 
         /** 实例名称，支持忽略大小写模糊查询 */
-        fun instanceName(instanceName: String?): Builder {
-            this.instanceName = instanceName
+        fun name(name: String?): Builder {
+            this.name = name
+            return this
+        }
+
+        /** 发起时间始(大于等于) */
+        fun startTimeFrom(startTimeFrom: Date?): Builder {
+            this.startTimeFrom = startTimeFrom
+            return this
+        }
+
+        /** 发起时间止(小于等于) */
+        fun startTimeTo(startTimeTo: Date?): Builder {
+            this.startTimeTo = startTimeTo
+            return this
+        }
+
+        /** 发起者id */
+        fun startUserId(startUserId: String?): Builder {
+            this.startUserId = startUserId
+            return this
+        }
+
+        /** 流程定义名称，支持忽略大小写模糊查询 */
+        fun definitionName(definitionName: String?): Builder {
+            this.definitionName = definitionName
+            return this
+        }
+
+        /** 流程定义版本 */
+        fun definitionVersion(definitionVersion: Int?): Builder {
+            this.definitionVersion = definitionVersion
+            return this
+        }
+
+        /** 流程实例状态 */
+        fun status(status: FlowInstanceStatus?): Builder {
+            this.status = status
             return this
         }
 

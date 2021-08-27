@@ -14,6 +14,7 @@ import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
+import java.util.*
 import javax.imageio.ImageIO
 
 
@@ -79,17 +80,17 @@ internal open class FlowInstanceBizTest : SpringTest() {
         val instance = FlowDefinitionBizTest.deployThenStart()
 
         // 正常结果
-        val builder = FlowInstanceQueryItems.Builder().key(instance.definitionKey)
+        val builder = FlowInstanceQueryItems.Builder().definitionKey(instance.definitionKey).startTimeTo(Date())
         assert(flowInstanceBiz.search(builder.build()).isNotEmpty())
         assert(flowInstanceBiz.search(builder.bizKey(BIZ_KEY).build()).isNotEmpty())
-        var criteria = builder.bizKey(BIZ_KEY).instanceName(INSTANCE_NAME).build()
+        var criteria = builder.bizKey(BIZ_KEY).name(INSTANCE_NAME).build()
         assert(flowInstanceBiz.search(criteria).isNotEmpty())
         assert(flowInstanceBiz.search(criteria, 1, 10).isNotEmpty())
-        criteria = builder.key("eaveAppl").bizKey("bizKe").instanceName("INSTANCE").build()
+        criteria = builder.definitionKey("eaveAppl").bizKey("bizKe").name("INSTANCE").build()
         assert(flowInstanceBiz.search(criteria).isNotEmpty())
 
         // 传不存在的流程定义key
-        criteria = builder.key(NO_EXISTS).build()
+        criteria = builder.definitionKey(NO_EXISTS).build()
         assert(flowInstanceBiz.search(criteria).isEmpty())
     }
 
@@ -144,7 +145,7 @@ internal open class FlowInstanceBizTest : SpringTest() {
         // 成功删除
         flowInstanceBiz.delete(BIZ_KEY, instance.definitionKey, "test")
         assertNull(flowInstanceBiz.get(BIZ_KEY, instance.definitionKey))
-        var criteria = FlowInstanceQueryItems.Builder().key(instance.definitionKey).build()
+        var criteria = FlowInstanceQueryItems.Builder().definitionKey(instance.definitionKey).build()
         assert(flowInstanceBiz.search(criteria).isEmpty())
     }
 

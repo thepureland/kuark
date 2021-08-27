@@ -13,6 +13,8 @@ import org.activiti.image.impl.DefaultProcessDiagramGenerator
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
 import java.io.InputStream
+import java.sql.Timestamp
+import kotlin.collections.ArrayList
 
 /**
  * 流程实例相关业务
@@ -74,8 +76,8 @@ open class FlowInstanceBiz : IFlowInstanceBiz {
     ): List<FlowInstance> {
         val whereStr = StringBuilder("e.parent_id_ IS NULL")
 
-        // 流程key(bpmn文件中process元素的id)
-        val key = queryItems.key
+        // 流程定义key(bpmn文件中process元素的id)
+        val key = queryItems.definitionKey
         if (StringKit.isNotBlank(key) && !key!!.contains("'")) {
             whereStr.append(" AND UPPER(d.key_) LIKE '%${key.uppercase()}%'")
         }
@@ -87,19 +89,51 @@ open class FlowInstanceBiz : IFlowInstanceBiz {
         }
 
         // 实例名称
-        val instanceName = queryItems.instanceName
+        val instanceName = queryItems.name
         if (StringKit.isNotBlank(instanceName) && !instanceName!!.contains("'")) {
             whereStr.append(" AND UPPER(e.name_) LIKE '%${instanceName.uppercase()}%'")
         }
+
+        // 发起时间始
+        val startTimeFrom = queryItems.startTimeFrom
+        if (startTimeFrom != null) {
+            whereStr.append(" AND e.start_time_ >= '${Timestamp(startTimeFrom.time)}'")
+        }
+
+        // 发起时间止
+        val startTimeTo = queryItems.startTimeTo
+        if (startTimeTo != null) {
+            whereStr.append(" AND e.start_time_ <= '${Timestamp(startTimeTo.time)}'")
+        }
+
+        // 发起者id
+        val startUserId = queryItems.startUserId
+        if (StringKit.isNotBlank(startUserId) && !startUserId!!.contains("'")) {
+            whereStr.append(" AND e.start_user_id_ = '${startUserId}'")
+        }
+
+        // 流程定义名称
+        val definitionName = queryItems.definitionName
+        if (StringKit.isNotBlank(definitionName) && !definitionName!!.contains("'")) {
+            whereStr.append(" AND UPPER(d.name_) LIKE '%${definitionName.uppercase()}%'")
+        }
+
+        /** 流程定义版本 */
+        val definitionVersion = queryItems.definitionVersion
+        if (definitionVersion != null) {
+            whereStr.append(" AND d.version_ = $definitionVersion")
+        }
+
 
         // 排序
         val orderStr = RdbKit.getOrderSql(*orders)
 
         // 查询
-        val sql = "SELECT e.*, d.key_ AS processDefinitionKey " +
-                "FROM act_ru_execution e LEFT JOIN act_re_procdef d " +
-                "ON e.proc_def_id_ = d.id_ " +
-                "WHERE $whereStr $orderStr"
+        val sql =
+            "SELECT e.*, d.key_ AS processDefinitionKey, d.name_ AS processDefinitionName, d.version_ AS processDefinitionVersion " +
+                    "FROM act_ru_execution e LEFT JOIN act_re_procdef d " +
+                    "ON e.proc_def_id_ = d.id_ " +
+                    "WHERE $whereStr $orderStr"
         val query = runtimeService.createNativeProcessInstanceQuery().sql(sql)
         val instances = if (pageSize < 1) {
             query.list()

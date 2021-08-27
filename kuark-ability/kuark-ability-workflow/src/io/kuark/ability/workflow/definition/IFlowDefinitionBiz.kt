@@ -19,7 +19,7 @@ interface IFlowDefinitionBiz {
     /**
      * 检测流程定义是否存在
      *
-     * @param key 流程key(bpmn文件中process元素的id)，不能为空
+     * @param key 流程定义key(bpmn文件中process元素的id)，不能为空
      * @param version 流程定义版本，如果为null则忽略该条件，默认为null
      * @return true: 流程定义存在，false: 流程定义不存在
      * @throws IllegalArgumentException key为空时
@@ -31,7 +31,7 @@ interface IFlowDefinitionBiz {
     /**
      * 获取流程定义
      *
-     * @param key 流程key(bpmn文件中process元素的id)
+     * @param key 流程定义key(bpmn文件中process元素的id)
      * @param version 流程定义版本，传null将取最新版本，默认为null
      * @return 流程定义对象，找不到返回null
      * @throws IllegalArgumentException key为空时
@@ -61,7 +61,7 @@ interface IFlowDefinitionBiz {
     /**
      * 创建流程定义
      *
-     * @param key 流程key(bpmn文件中process元素的id)，不能为空
+     * @param key 流程定义key(bpmn文件中process元素的id)，不能为空
      * @param name 流程名称，不能为空
      * @param category 分类，不能为空
      * @param flowJson 流程的json内容，不能为空
@@ -69,7 +69,7 @@ interface IFlowDefinitionBiz {
      * @param tenantId 租户(所属系统)id，可以为null，默认为null
      * @return 流程定义对象
      * @throws IllegalArgumentException 任意参数为空时，具体哪个参数参照异常消息
-     * @throws ObjectAlreadyExistsException 流程key重复时
+     * @throws ObjectAlreadyExistsException 流程定义key重复时
      * @author K
      * @since 1.0.0
      */
@@ -82,7 +82,7 @@ interface IFlowDefinitionBiz {
      *
      * 如果定义已部署，会自动新增一条新版本的定义记录，而不是更新原来的的定义记录；若未部署，则是对原记录作更新操作！！！
      *
-     * @param key 流程key(bpmn文件中process元素的id)。作为查询条件
+     * @param key 流程定义key(bpmn文件中process元素的id)。作为查询条件
      * @param version 定义版本，如果为null则查询最新的版本，默认为null。作为查询条件
      * @param name 流程名称，作为更新项，如果为空将忽略该项的更新。
      * @param category 分类，作为更新项，如果为空将忽略该项的更新。
@@ -90,7 +90,7 @@ interface IFlowDefinitionBiz {
      * @param svgXml 流程图(svg格式)的xml内容，作为更新项，如果为空将忽略该项的更新。
      * @param tenantId 租户(所属系统)id。作为更新项，如果为空将忽略该项的更新。
      * @return 流程定义对象
-     * @throws IllegalArgumentException 流程key为空时
+     * @throws IllegalArgumentException 流程定义key为空时
      * @throws ObjectNotFoundException 找不到流程定义时
      * @author K
      * @since 1.0.0
@@ -108,11 +108,11 @@ interface IFlowDefinitionBiz {
     /**
      * 部署流程，通过已经存在的流程定义。一个版本的定义限制只能部署一次！
      *
-     * @param key 流程key(bpmn文件中process元素的id)，不能为空
+     * @param key 流程定义key(bpmn文件中process元素的id)，不能为空
      * @param version 定义版本，如果为null则使用最新的版本，默认为null
      * @return 流程定义对象
      * @throws IllegalStateException 流程定义重复部署时
-     * @throws IllegalArgumentException 流程key为空时
+     * @throws IllegalArgumentException 流程定义key为空时
      * @throws ObjectNotFoundException 找不到流程定义时
      * @author K
      * @since 1.0.0
@@ -155,7 +155,7 @@ interface IFlowDefinitionBiz {
     /**
      * 获取流程图
      *
-     * @param key 流程key(bpmn文件中process元素的id)。当有多个流程定义时，取第一个！
+     * @param key 流程定义key(bpmn文件中process元素的id)。当有多个流程定义时，取第一个！
      * @param version 流程定义版本，传null将取最新版本，默认为null
      * @return 图片输入流对象，流程定义不存在时返回null
      * @author K
@@ -178,7 +178,7 @@ interface IFlowDefinitionBiz {
     /**
      * 激活流程定义，重复激活将忽略操作
      *
-     * @param key 流程key(bpmn文件中process元素的id)
+     * @param key 流程定义key(bpmn文件中process元素的id)
      * @param version 流程定义版本，传null将取最新版本，默认为null
      * @throws IllegalArgumentException key为空时
      * @throws ObjectNotFoundException 当指定的key找不到对应流程定义时
@@ -190,7 +190,7 @@ interface IFlowDefinitionBiz {
     /**
      * 挂起流程定义，重复挂起将忽略操作
      *
-     * @param key 流程key(bpmn文件中process元素的id)
+     * @param key 流程定义key(bpmn文件中process元素的id)
      * @param version 流程定义版本，传null将取最新版本，默认为null
      * @throws IllegalArgumentException key为空时
      * @throws ObjectNotFoundException 当指定的key找不到对应流程定义时
@@ -200,9 +200,9 @@ interface IFlowDefinitionBiz {
     fun suspend(key: String, version: Int? = null)
 
     /**
-     * 删除指定流程key对应的所有流程的相关信息，只要一个失败，所有就删除失败
+     * 删除指定流程定义key对应的所有流程的相关信息，只要一个失败，所有就删除失败
      *
-     * @param key 流程key(bpmn文件中process元素的id)
+     * @param key 流程定义key(bpmn文件中process元素的id)
      * @param version 流程定义版本，传null将取最新版本，默认为null
      * @param cascade 是否级联删除流程实例、历史流程实例和job, 默认为否
      * @throws IllegalArgumentException key为空时
@@ -215,7 +215,7 @@ interface IFlowDefinitionBiz {
     /**
      * 启动流程
      *
-     * @param key 流程key(bpmn文件中process元素的id)。作为查询条件。不能为空
+     * @param key 流程定义key(bpmn文件中process元素的id)。作为查询条件。不能为空
      * @param bizKey 业务主键。作为设置项，不能为空
      * @param instanceName 实例名称。作为设置项，不能为空
      * @param variables 流程实例变量，默认为null。作为设置项

@@ -80,7 +80,7 @@ internal open class FlowInstanceBizTest : SpringTest() {
         val instance = FlowDefinitionBizTest.deployThenStart()
 
         // 正常结果
-        val builder = FlowInstanceQueryItems.Builder().definitionKey(instance.definitionKey).startTimeTo(Date())
+        val builder = FlowInstanceSearchItems.Builder().definitionKey(instance.definitionKey).startTimeTo(Date())
         assert(flowInstanceBiz.search(builder.build()).isNotEmpty())
         assert(flowInstanceBiz.search(builder.bizKey(BIZ_KEY).build()).isNotEmpty())
         var criteria = builder.bizKey(BIZ_KEY).name(INSTANCE_NAME).build()
@@ -145,7 +145,7 @@ internal open class FlowInstanceBizTest : SpringTest() {
         // 成功删除
         flowInstanceBiz.delete(BIZ_KEY, instance.definitionKey, "test")
         assertNull(flowInstanceBiz.get(BIZ_KEY, instance.definitionKey))
-        var criteria = FlowInstanceQueryItems.Builder().definitionKey(instance.definitionKey).build()
+        var criteria = FlowInstanceSearchItems.Builder().definitionKey(instance.definitionKey).build()
         assert(flowInstanceBiz.search(criteria).isEmpty())
     }
 

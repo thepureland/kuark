@@ -2,14 +2,7 @@ package io.kuark.ability.workflow.instance
 
 import io.kuark.base.error.ObjectNotFoundException
 import io.kuark.base.query.sort.Order
-import org.activiti.bpmn.model.BpmnModel
-import org.activiti.engine.history.HistoricActivityInstance
-import org.activiti.engine.history.HistoricActivityInstanceQuery
-import org.activiti.engine.history.HistoricProcessInstance
-import org.activiti.engine.impl.RepositoryServiceImpl
-import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity
 import java.io.InputStream
-import java.util.stream.Collectors
 
 /**
  * 流程实例相关业务接口
@@ -46,7 +39,7 @@ interface IFlowInstanceBiz {
     /**
      * 查询流程实例
      *
-     * @param queryItems 查询项，当查询项的属性不为空时才会将该属性作为查询条件，各属性间是”与“的关系
+     * @param searchItems 查询项，当查询项的属性不为空时才会将该属性作为查询条件，各属性间是”与“的关系
      * @param pageNum 分页页码，从1开始，默认为1，小于1将按1处理
      * @param pageSize 分页每页最大条数，默认为20，小于1将按不分页处理
      * @param orders 排序规则
@@ -55,7 +48,7 @@ interface IFlowInstanceBiz {
      * @since 1.0.0
      */
     fun search(
-        queryItems: FlowInstanceQueryItems,
+        searchItems: FlowInstanceSearchItems,
         pageNum: Int = 1,
         pageSize: Int = 20,
         vararg orders: Order

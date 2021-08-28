@@ -72,54 +72,54 @@ open class FlowInstanceBiz : IFlowInstanceBiz {
     }
 
     override fun search(
-        queryItems: FlowInstanceQueryItems, pageNum: Int, pageSize: Int, vararg orders: Order
+        searchItems: FlowInstanceSearchItems, pageNum: Int, pageSize: Int, vararg orders: Order
     ): List<FlowInstance> {
         val whereStr = StringBuilder("e.parent_id_ IS NULL")
 
         // 流程定义key(bpmn文件中process元素的id)
-        val key = queryItems.definitionKey
+        val key = searchItems.definitionKey
         if (StringKit.isNotBlank(key) && !key!!.contains("'")) {
             whereStr.append(" AND UPPER(d.key_) LIKE '%${key.uppercase()}%'")
         }
 
         // 业务主键
-        val bizKey = queryItems.bizKey
+        val bizKey = searchItems.bizKey
         if (StringKit.isNotBlank(bizKey) && !bizKey!!.contains("'")) {
             whereStr.append(" AND UPPER(e.business_key_) LIKE '%${bizKey.uppercase()}%'")
         }
 
         // 实例名称
-        val instanceName = queryItems.name
+        val instanceName = searchItems.name
         if (StringKit.isNotBlank(instanceName) && !instanceName!!.contains("'")) {
             whereStr.append(" AND UPPER(e.name_) LIKE '%${instanceName.uppercase()}%'")
         }
 
         // 发起时间始
-        val startTimeFrom = queryItems.startTimeFrom
+        val startTimeFrom = searchItems.startTimeFrom
         if (startTimeFrom != null) {
             whereStr.append(" AND e.start_time_ >= '${Timestamp(startTimeFrom.time)}'")
         }
 
         // 发起时间止
-        val startTimeTo = queryItems.startTimeTo
+        val startTimeTo = searchItems.startTimeTo
         if (startTimeTo != null) {
             whereStr.append(" AND e.start_time_ <= '${Timestamp(startTimeTo.time)}'")
         }
 
         // 发起者id
-        val startUserId = queryItems.startUserId
+        val startUserId = searchItems.startUserId
         if (StringKit.isNotBlank(startUserId) && !startUserId!!.contains("'")) {
             whereStr.append(" AND e.start_user_id_ = '${startUserId}'")
         }
 
         // 流程定义名称
-        val definitionName = queryItems.definitionName
+        val definitionName = searchItems.definitionName
         if (StringKit.isNotBlank(definitionName) && !definitionName!!.contains("'")) {
             whereStr.append(" AND UPPER(d.name_) LIKE '%${definitionName.uppercase()}%'")
         }
 
         /** 流程定义版本 */
-        val definitionVersion = queryItems.definitionVersion
+        val definitionVersion = searchItems.definitionVersion
         if (definitionVersion != null) {
             whereStr.append(" AND d.version_ = $definitionVersion")
         }

@@ -46,7 +46,7 @@ class FlowFormController {
     /**
      * 查询表单
      *
-     * @param queryItems 查询项，当查询项的属性不为空时才会将该属性作为查询条件，各属性间是”与“的关系
+     * @param searchItems 查询项，当查询项的属性不为空时才会将该属性作为查询条件，各属性间是”与“的关系
      * @param pageNum 分页页码，从1开始，默认为1，小于1将按1处理
      * @param pageSize 分页每页最大条数，默认为20，小于1将按不分页处理
      * @param orders 排序规则
@@ -56,9 +56,9 @@ class FlowFormController {
      */
     @RequestMapping(value = ["/search"], method = [RequestMethod.GET])
     fun search(
-        queryItems: FlowFormQueryItems, pageNum: Int, pageSize: Int, vararg orders: Order
+        searchItems: FlowFormSearchItems, pageNum: Int, pageSize: Int, vararg orders: Order
     ): WebResult<List<FlowForm>> {
-        val flowForms = flowFormBiz.search(queryItems, pageNum, pageSize,  *orders)
+        val flowForms = flowFormBiz.search(searchItems, pageNum, pageSize,  *orders)
         return WebResult(flowForms)
     }
 

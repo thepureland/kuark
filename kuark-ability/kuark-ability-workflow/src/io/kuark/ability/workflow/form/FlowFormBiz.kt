@@ -59,25 +59,25 @@ open class FlowFormBiz : BaseBiz<String, FlowForm, FlowFormDao>(), IFlowFormBiz 
     }
 
     override fun search(
-        queryItems: FlowFormQueryItems, pageNum: Int, pageSize: Int, vararg orders: Order,
+        searchItems: FlowFormSearchItems, pageNum: Int, pageSize: Int, vararg orders: Order,
     ): List<FlowForm> {
         val criteria = Criteria()
-        if (StringKit.isNotBlank(queryItems.key)) {
-            criteria.addAnd(FlowForm::key.name, Operator.ILIKE, queryItems.key)
+        if (StringKit.isNotBlank(searchItems.key)) {
+            criteria.addAnd(FlowForm::key.name, Operator.ILIKE, searchItems.key)
         }
-        if (StringKit.isNotBlank(queryItems.name)) {
-            criteria.addAnd(FlowForm::name.name, Operator.ILIKE, queryItems.name)
+        if (StringKit.isNotBlank(searchItems.name)) {
+            criteria.addAnd(FlowForm::name.name, Operator.ILIKE, searchItems.name)
         }
-        if (StringKit.isNotBlank(queryItems.categoryDictCode)) {
-            criteria.addAnd(FlowForm::categoryDictCode.name, Operator.EQ, queryItems.categoryDictCode)
+        if (StringKit.isNotBlank(searchItems.categoryDictCode)) {
+            criteria.addAnd(FlowForm::categoryDictCode.name, Operator.EQ, searchItems.categoryDictCode)
         }
-        if (queryItems.version == null) {
-            if (queryItems.latestOnly) {
+        if (searchItems.version == null) {
+            if (searchItems.latestOnly) {
                 val latestVersion = dao.max(FlowForm::version.name, criteria)
                 latestVersion ?: return emptyList()
             }
         } else {
-            criteria.addAnd(FlowForm::version.name, Operator.EQ, queryItems.version)
+            criteria.addAnd(FlowForm::version.name, Operator.EQ, searchItems.version)
         }
         val pageNo = if (pageNum < 1) 1 else pageNum
         return dao.pagingSearch(criteria, pageNo, pageSize, *orders)

@@ -40,7 +40,7 @@ open class FlowTaskBiz : IFlowTaskBiz {
     }
 
     override fun search(
-        queryItems: FlowTaskQueryItems,
+        searchItems: FlowTaskSearchItems,
         pageNum: Int,
         pageSize: Int,
         vararg orders: Order
@@ -48,37 +48,37 @@ open class FlowTaskBiz : IFlowTaskBiz {
         val whereStr = StringBuilder("1=1")
 
         // 任务受理人id
-        val assignee = queryItems.assignee
+        val assignee = searchItems.assignee
         if (StringKit.isNotBlank(assignee) && !assignee!!.contains("'")) {
             whereStr.append(" AND t.assignee_ = '$assignee'")
         }
 
         // 业务主键
-        val bizKey = queryItems.bizKey
+        val bizKey = searchItems.bizKey
         if (StringKit.isNotBlank(bizKey) && !bizKey!!.contains("'")) {
             whereStr.append(" AND UPPER(t.business_key_) LIKE '%${bizKey.uppercase()}%'")
         }
 
         // 任务定义key(bpmn文件userTask元素的id)
-        val taskDefinitionKey = queryItems.taskDefinitionKey
+        val taskDefinitionKey = searchItems.taskDefinitionKey
         if (StringKit.isNotBlank(taskDefinitionKey) && !taskDefinitionKey!!.contains("'")) {
             whereStr.append(" AND UPPER(t.task_def_key_) LIKE '%${taskDefinitionKey!!.uppercase()}%'")
         }
 
         // 任务名称
-        val name = queryItems.name
+        val name = searchItems.name
         if (StringKit.isNotBlank(name) && !name!!.contains("'")) {
             whereStr.append(" AND UPPER(t.name_) LIKE '%${name.uppercase()}%'")
         }
 
         // 流程定义key(bpmn文件中process元素的id)
-        val flowDefinitionKey = queryItems.flowDefinitionKey
+        val flowDefinitionKey = searchItems.flowDefinitionKey
         if (StringKit.isNotBlank(flowDefinitionKey) && !flowDefinitionKey!!.contains("'")) {
             whereStr.append(" AND UPPER(d.key_) LIKE '%${flowDefinitionKey!!.uppercase()}%'")
         }
 
         // 流程版本
-        val flowVersion = queryItems.flowVersion
+        val flowVersion = searchItems.flowVersion
         if (flowVersion != null) {
             whereStr.append(" AND d.version_ = $flowVersion")
         }

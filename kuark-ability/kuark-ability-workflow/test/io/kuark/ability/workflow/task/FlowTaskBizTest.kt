@@ -45,11 +45,11 @@ internal open class FlowTaskBizTest : SpringTest() {
         FlowDefinitionBizTest.deployThenStart()
 
         // 有结果
-        var criteria = FlowTaskQueryItems.Builder().assignee(APPLICANT_ID).name("申").build()
+        var criteria = FlowTaskSearchItems.Builder().assignee(APPLICANT_ID).name("申").build()
         assert(flowTaskBiz.search(criteria).isNotEmpty())
 
         // 无结果
-        criteria = FlowTaskQueryItems.Builder().assignee(NO_EXISTS).build()
+        criteria = FlowTaskSearchItems.Builder().assignee(NO_EXISTS).build()
         assert(flowTaskBiz.search(criteria).isEmpty())
     }
 
@@ -133,7 +133,7 @@ internal open class FlowTaskBizTest : SpringTest() {
 
         // 非任务执行者本人尝试完成任务，操作失败
         assertFalse(flowTaskBiz.complete(instance.bizKey, APPLICANT_TASK_DEFINITION_KEY, "another user id"))
-        val criteria = FlowTaskQueryItems.Builder().assignee(APPLICANT_ID).build()
+        val criteria = FlowTaskSearchItems.Builder().assignee(APPLICANT_ID).build()
         assert(flowTaskBiz.search(criteria).isNotEmpty())
 
         // 任务执行者本人完成任务

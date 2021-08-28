@@ -10,7 +10,7 @@ import java.util.*
  * @author K
  * @since 1.0.0
  */
-class FlowInstanceQueryItems {
+class FlowInstanceSearchItems {
 
     /** 流程定义key(bpmn文件中process元素的id)，支持忽略大小写模糊查询 */
     var definitionKey: String? = null
@@ -78,7 +78,7 @@ class FlowInstanceQueryItems {
         /**
          * 构建流程实例查询项对象
          */
-        fun build(): FlowInstanceQueryItems = FlowInstanceQueryItems(this)
+        fun build(): FlowInstanceSearchItems = FlowInstanceSearchItems(this)
 
         /** 流程定义key(bpmn文件中process元素的id)，支持忽略大小写模糊查询 */
         fun definitionKey(definitionKey: String?): Builder {

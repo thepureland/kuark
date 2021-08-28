@@ -8,7 +8,7 @@ package io.kuark.ability.workflow.task
  * @author K
  * @since 1.0.0
  */
-class FlowTaskQueryItems {
+class FlowTaskSearchItems {
 
     /** 任务受理人id */
     var assignee: String? = null
@@ -60,7 +60,7 @@ class FlowTaskQueryItems {
         /**
          * 构建流程任务查询项对象
          */
-        fun build(): FlowTaskQueryItems = FlowTaskQueryItems(this)
+        fun build(): FlowTaskSearchItems = FlowTaskSearchItems(this)
 
         /** 任务受理人id */
         fun assignee(assignee: String?): Builder {

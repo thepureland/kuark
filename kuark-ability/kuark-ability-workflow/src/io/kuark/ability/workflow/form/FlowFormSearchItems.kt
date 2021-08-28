@@ -7,7 +7,7 @@ package io.kuark.ability.workflow.form
  * @author K
  * @since 1.0.0
  */
-class FlowFormQueryItems {
+class FlowFormSearchItems {
 
     /** 表单key，支持忽略大小定的模糊查询*/
     var key: String? = null
@@ -55,7 +55,7 @@ class FlowFormQueryItems {
         /**
          * 构建流程表单查询项对象
          */
-        fun build(): FlowFormQueryItems = FlowFormQueryItems(this)
+        fun build(): FlowFormSearchItems = FlowFormSearchItems(this)
 
         /** 表单key，支持忽略大小定的模糊查询*/
         fun key(key: String?): Builder {

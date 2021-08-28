@@ -76,7 +76,7 @@ open class FlowDefinitionBiz : IFlowDefinitionBiz {
     }
 
     override fun search(
-        queryItems: FlowDefinitionQueryItems,
+        searchItems: FlowDefinitionSearchItems,
         pageNum: Int,
         pageSize: Int,
         vararg orders: Order
@@ -84,31 +84,31 @@ open class FlowDefinitionBiz : IFlowDefinitionBiz {
         val whereStr = StringBuilder("1=1")
 
         // 流程定义key(bpmn文件中process元素的id)
-        val key = queryItems.key
+        val key = searchItems.key
         if (StringKit.isNotBlank(key) && !key!!.contains("'")) {
             whereStr.append(" AND UPPER(key_) LIKE '%${key.uppercase()}%'")
         }
 
         // 流程名称，支持忽略大小写模糊搜索
-        val name = queryItems.name
+        val name = searchItems.name
         if (StringKit.isNotBlank(name) && !name!!.contains("'")) {
             whereStr.append(" AND UPPER(name_) LIKE '%${name.uppercase()}%'")
         }
 
         // 分类
-        val category = queryItems.category
+        val category = searchItems.category
         if (StringKit.isNotBlank(category) && !category!!.contains("'")) {
             whereStr.append(" AND category_ = '${category}'")
         }
 
         // 租户(所属系统)id
-        val tenantId = queryItems.tenantId
+        val tenantId = searchItems.tenantId
         if (StringKit.isNotBlank(tenantId) && !tenantId!!.contains("'")) {
             whereStr.append(" AND tenant_id_ = '${tenantId}'")
         }
 
         // 是否已部署
-        val isDeployed = queryItems.isDeployed
+        val isDeployed = searchItems.isDeployed
         if (isDeployed != null) {
             if (isDeployed) {
                 whereStr.append(" AND deployment_id_ IS NOT NULL")
@@ -121,7 +121,7 @@ open class FlowDefinitionBiz : IFlowDefinitionBiz {
         val orderStr = RdbKit.getOrderSql(*orders)
 
         // 只查询最新版本的
-        val latestOnly = queryItems.latestOnly
+        val latestOnly = searchItems.latestOnly
         var sql = "SELECT * FROM act_re_model WHERE $whereStr"
         if (latestOnly) {
             sql = "$sql AND version_ = (SELECT MAX(m.version_) FROM act_re_model m GROUP BY m.key_)"

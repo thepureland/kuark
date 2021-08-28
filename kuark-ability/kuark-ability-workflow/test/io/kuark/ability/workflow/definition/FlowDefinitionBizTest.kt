@@ -88,7 +88,7 @@ internal open class FlowDefinitionBizTest : SpringTest() {
         createThenDeploy()
 
         // 指定条件模糊搜索
-        var criteria = FlowDefinitionQueryItems.Builder()
+        var criteria = FlowDefinitionSearchItems.Builder()
             .key("leaveAp")
             .name("请假")
             .isDeployed(true)
@@ -98,7 +98,7 @@ internal open class FlowDefinitionBizTest : SpringTest() {
         assertEquals(1, definitions.size)
 
         // 没有指定条件
-        criteria = FlowDefinitionQueryItems.Builder().build()
+        criteria = FlowDefinitionSearchItems.Builder().build()
         assertEquals(1, flowDefinitionBiz.search(criteria).size)
     }
 
@@ -143,7 +143,7 @@ internal open class FlowDefinitionBizTest : SpringTest() {
 
         // 更新已部署的模型
         flowDefinitionBiz.update(definition.key, null, "newFlowName2", CATEGORY, newFlowJson, newSvgXml)
-        val criteria = FlowDefinitionQueryItems.Builder().key(definition.key).latestOnly(false).build()
+        val criteria = FlowDefinitionSearchItems.Builder().key(definition.key).latestOnly(false).build()
         val definitions = flowDefinitionBiz.search(criteria)
         assertEquals(2, definitions.size)
     }

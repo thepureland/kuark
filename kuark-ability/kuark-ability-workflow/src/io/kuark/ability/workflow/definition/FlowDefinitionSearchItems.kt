@@ -8,7 +8,7 @@ package io.kuark.ability.workflow.definition
  * @author K
  * @since 1.0.0
  */
-class FlowDefinitionQueryItems {
+class FlowDefinitionSearchItems {
 
     /** 流程定义key(bpmn文件中process元素的id)，支持忽略大小写模糊搜索 */
     var key: String? = null
@@ -61,7 +61,7 @@ class FlowDefinitionQueryItems {
         /**
          * 构建流程定义查询项对象
          */
-        fun build(): FlowDefinitionQueryItems = FlowDefinitionQueryItems(this)
+        fun build(): FlowDefinitionSearchItems = FlowDefinitionSearchItems(this)
 
         /** 流程定义key(bpmn文件中process元素的id)，支持忽略大小写模糊搜索 */
         fun key(key: String?): Builder {

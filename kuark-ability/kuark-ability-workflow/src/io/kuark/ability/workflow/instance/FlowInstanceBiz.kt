@@ -74,7 +74,7 @@ open class FlowInstanceBiz : IFlowInstanceBiz {
     override fun search(
         searchItems: FlowInstanceSearchItems, pageNum: Int, pageSize: Int, vararg orders: Order
     ): List<FlowInstance> {
-        val whereStr = StringBuilder("e.proc_inst_id_ = id_") // 只查询流程实例
+        val whereStr = StringBuilder("e.proc_inst_id_ = e.id_") // 只查询流程实例
 
         // 流程定义key(bpmn文件中process元素的id)
         val key = searchItems.definitionKey

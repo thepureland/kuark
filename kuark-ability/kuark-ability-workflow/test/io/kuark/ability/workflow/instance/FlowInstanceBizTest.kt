@@ -105,12 +105,12 @@ internal open class FlowInstanceBizTest : SpringTest() {
         // 成功激活
         flowInstanceBiz.activate(BIZ_KEY, instance.definitionKey)
         var flowInstance = flowInstanceBiz.get(BIZ_KEY, instance.definitionKey)!!
-        assertEquals(FlowInstanceStatus.RUNNING, flowInstance.status)
+        assertFalse(flowInstance.isSuspend)
 
         // 重复激活
         flowInstanceBiz.activate(BIZ_KEY, instance.definitionKey)
         flowInstance = flowInstanceBiz.get(BIZ_KEY, instance.definitionKey)!!
-        assertEquals(FlowInstanceStatus.RUNNING, flowInstance.status)
+        assertFalse(flowInstance.isSuspend)
     }
 
     @Test
@@ -124,12 +124,12 @@ internal open class FlowInstanceBizTest : SpringTest() {
         // 成功挂起
         flowInstanceBiz.suspend(BIZ_KEY, instance.definitionKey)
         var flowInstance = flowInstanceBiz.get(BIZ_KEY, instance.definitionKey)!!
-        assertEquals(FlowInstanceStatus.SUSPENDED, flowInstance.status)
+        assert(flowInstance.isSuspend)
 
         // 重复挂起
         flowInstanceBiz.suspend(BIZ_KEY, instance.definitionKey)
         flowInstance = flowInstanceBiz.get(BIZ_KEY, instance.definitionKey)!!
-        assertEquals(FlowInstanceStatus.SUSPENDED, flowInstance.status)
+        assert(flowInstance.isSuspend)
     }
 
     @Test

@@ -18,8 +18,8 @@ data class FlowInstance(
     val bizKey: String,
     /** 流程定义key(bpmn文件中process元素的id) */
     val definitionKey: String,
-    /** 流程实例状态 */
-    val status: FlowInstanceStatus
+    /** 是否挂起 */
+    val isSuspend: Boolean = false
 ) {
 
     /** 流程定义id，内部使用 */
@@ -45,7 +45,7 @@ data class FlowInstance(
         instance.name ?: "",
         instance.businessKey,
         instance.processDefinitionKey,
-        FlowInstanceStatus.of(instance)
+        instance.isSuspended
     ) {
         _definitionId = instance.processDefinitionId
         startTime = instance.startTime

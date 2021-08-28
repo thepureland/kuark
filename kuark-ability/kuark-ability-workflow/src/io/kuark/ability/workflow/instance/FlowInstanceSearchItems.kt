@@ -36,8 +36,8 @@ class FlowInstanceSearchItems {
     /** 流程定义版本 */
     var definitionVersion: Int? = null
 
-    /** 流程实例状态 */
-    var status: FlowInstanceStatus? = null
+    /** 是否挂起 */
+    var isSuspend: Boolean? = null
 
     /**
      * 空构造器，仅供框架反射使用
@@ -53,7 +53,7 @@ class FlowInstanceSearchItems {
         startUserId = builder.startUserId
         definitionName = builder.definitionName
         definitionVersion = builder.definitionVersion
-        status = builder.status
+        isSuspend = builder.isSuspend
     }
 
 
@@ -73,7 +73,7 @@ class FlowInstanceSearchItems {
         var startUserId: String? = null
         var definitionName: String? = null
         var definitionVersion: Int? = null
-        var status: FlowInstanceStatus? = null
+        var isSuspend: Boolean? = null
 
         /**
          * 构建流程实例查询项对象
@@ -128,9 +128,9 @@ class FlowInstanceSearchItems {
             return this
         }
 
-        /** 流程实例状态 */
-        fun status(status: FlowInstanceStatus?): Builder {
-            this.status = status
+        /** 是否挂起 */
+        fun isSuspend(isSuspend: Boolean?): Builder {
+            this.isSuspend = isSuspend
             return this
         }
 

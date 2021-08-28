@@ -1,6 +1,7 @@
 package io.kuark.ability.workflow.task
 
 import io.kuark.ability.workflow.definition.FlowDefinitionBizTest
+import io.kuark.ability.workflow.instance.IFlowInstanceBiz
 import io.kuark.base.error.ObjectNotFoundException
 import io.kuark.test.common.SpringTest
 import org.junit.jupiter.api.Assertions.*
@@ -13,6 +14,9 @@ internal open class FlowTaskBizTest : SpringTest() {
 
     @Autowired
     private lateinit var flowTaskBiz: IFlowTaskBiz
+
+    @Autowired
+    private lateinit var flowInstanceBiz: IFlowInstanceBiz
 
 
     @Test
@@ -143,6 +147,9 @@ internal open class FlowTaskBizTest : SpringTest() {
         // 非任务执行者本人强制完成任务
         assert(flowTaskBiz.complete(instance.bizKey, APPROVAL_TASK_DEFINITION_KEY, APPLICANT_ID, true))
         assert(flowTaskBiz.search(criteria).isEmpty())
+
+        val inst = flowInstanceBiz.get(instance.bizKey)
+        println(inst)
     }
 
     internal companion object {

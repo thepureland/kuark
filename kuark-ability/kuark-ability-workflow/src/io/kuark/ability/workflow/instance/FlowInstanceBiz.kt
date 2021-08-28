@@ -74,7 +74,7 @@ open class FlowInstanceBiz : IFlowInstanceBiz {
     override fun search(
         searchItems: FlowInstanceSearchItems, pageNum: Int, pageSize: Int, vararg orders: Order
     ): List<FlowInstance> {
-        val whereStr = StringBuilder("e.parent_id_ IS NULL")
+        val whereStr = StringBuilder("e.proc_inst_id_ = id_") // 只查询流程实例
 
         // 流程定义key(bpmn文件中process元素的id)
         val key = searchItems.definitionKey
@@ -118,10 +118,20 @@ open class FlowInstanceBiz : IFlowInstanceBiz {
             whereStr.append(" AND UPPER(d.name_) LIKE '%${definitionName.uppercase()}%'")
         }
 
-        /** 流程定义版本 */
+        // 流程定义版本
         val definitionVersion = searchItems.definitionVersion
         if (definitionVersion != null) {
             whereStr.append(" AND d.version_ = $definitionVersion")
+        }
+
+        // 是否挂起
+        val suspend = searchItems.isSuspend
+        if (suspend != null) {
+            if (suspend) {
+                whereStr.append(" AND e.suspension_state_ = 2")
+            } else {
+                whereStr.append(" AND e.suspension_state_ != 2")
+            }
         }
 
 

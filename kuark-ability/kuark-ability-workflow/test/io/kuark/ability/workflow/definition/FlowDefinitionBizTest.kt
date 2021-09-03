@@ -129,27 +129,6 @@ internal open class FlowDefinitionBizTest : SpringTest() {
 
     @Test
     @Transactional
-    open fun update() {
-        var definition = createModel()
-
-        // 更新未部署的模型
-        val newSvgXml = FileKit.readFileToString(File(PathKit.getResourcePath("bpmn/test-svg.xml")))
-        val newFlowJson = FileKit.readFileToString(File(PathKit.getResourcePath("bpmn/test-flow.json")))
-        flowDefinitionBiz.update(definition.key, null, "newFlowName", CATEGORY, newFlowJson, newSvgXml)
-        val newDefinition = flowDefinitionBiz.get(definition.key)!!
-        assertEquals(1, newDefinition.version)
-
-        definition = deployModel()
-
-        // 更新已部署的模型
-        flowDefinitionBiz.update(definition.key, null, "newFlowName2", CATEGORY, newFlowJson, newSvgXml)
-        val criteria = FlowDefinitionSearchItems.Builder().key(definition.key).latestOnly(false).build()
-        val definitions = flowDefinitionBiz.search(criteria)
-        assertEquals(2, definitions.size)
-    }
-
-    @Test
-    @Transactional
     open fun deploy() {
         val model = createModel()
 

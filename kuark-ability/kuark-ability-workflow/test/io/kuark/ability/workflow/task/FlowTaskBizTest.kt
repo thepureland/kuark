@@ -15,9 +15,6 @@ internal open class FlowTaskBizTest : SpringTest() {
     @Autowired
     private lateinit var flowTaskBiz: IFlowTaskBiz
 
-    @Autowired
-    private lateinit var flowInstanceBiz: IFlowInstanceBiz
-
 
     @Test
     @Transactional
@@ -129,10 +126,23 @@ internal open class FlowTaskBizTest : SpringTest() {
     @Test
     @Transactional
     open fun complete() {
-        val instance = FlowDefinitionBizTest.deployThenStart(mapOf("applicantId" to APPLICANT_ID, "approverId" to APPROVER_ID))
+        val instance = FlowDefinitionBizTest.deployThenStart(
+            mapOf(
+                APPLICANT_ID to "applicantId",
+                DEPT_MANAGER_ID to "deptManagerId",
+                DAYS to 2,
+                PERSONNEL_ID to "personnelId"
+            )
+        )
 
         // 参数非法
-        assertThrows<IllegalArgumentException> { flowTaskBiz.complete(instance.bizKey, APPLICANT_TASK_DEFINITION_KEY, "") }
+        assertThrows<IllegalArgumentException> {
+            flowTaskBiz.complete(
+                instance.bizKey,
+                APPLICANT_TASK_DEFINITION_KEY,
+                ""
+            )
+        }
         assertThrows<ObjectNotFoundException> { flowTaskBiz.complete(instance.bizKey, "non", APPLICANT_ID) }
 
         // 非任务执行者本人尝试完成任务，操作失败
@@ -145,19 +155,96 @@ internal open class FlowTaskBizTest : SpringTest() {
         assert(flowTaskBiz.search(criteria).isEmpty())
 
         // 非任务执行者本人强制完成任务
-        assert(flowTaskBiz.complete(instance.bizKey, APPROVAL_TASK_DEFINITION_KEY, APPLICANT_ID, true))
+        assert(flowTaskBiz.complete(instance.bizKey, DEPT_MANAGER_APPROVAL_TASK_KEY, APPLICANT_ID, null, null, true))
+        assert(flowTaskBiz.search(criteria).isEmpty())
+    }
+
+    @Test
+    @Transactional
+    open fun revoke() {
+        val instance = FlowDefinitionBizTest.deployThenStart(
+            mapOf(
+                APPLICANT_ID to "applicantId",
+                DEPT_MANAGER_ID to "deptManagerId",
+                DAYS to 3,
+                PERSONNEL_ID to "personnelId",
+                GENERAL_MANAGER_IDS to "generalManagerId,assistantGeneralManagerId"
+            )
+        )
+
+        // 任务执行者本人完成任务
+        assert(flowTaskBiz.complete(instance.bizKey, APPLICANT_TASK_DEFINITION_KEY, APPLICANT_ID))
+        val criteria = FlowTaskSearchItems.Builder().assignee(APPLICANT_ID).build()
         assert(flowTaskBiz.search(criteria).isEmpty())
 
-        val inst = flowInstanceBiz.get(instance.bizKey)
-        println(inst)
+        // 撤回
+        flowTaskBiz.revoke(instance.bizKey, APPLICANT_ID, "填错")
+        val tasks = flowTaskBiz.search(criteria)
+        assert(tasks.isNotEmpty())
+        assertEquals(APPLICANT_TASK_DEFINITION_KEY, tasks.first().definitionKey)
+
+        // 撤回后再次完成任务
+        assert(flowTaskBiz.complete(instance.bizKey, APPLICANT_TASK_DEFINITION_KEY, APPLICANT_ID))
+        assert(flowTaskBiz.search(criteria).isEmpty())
+
+        val complete = flowTaskBiz.complete(instance.bizKey, DEPT_MANAGER_APPROVAL_TASK_KEY, DEPT_MANAGER_ID)
+
+        val r = flowTaskBiz.search(FlowTaskSearchItems.Builder().bizKey(instance.bizKey).build())
+        println(r)
+
+        flowTaskBiz.claim(instance.bizKey, GENERAL_MANAGER_APPROVAL_TASK_KEY, "generalManagerId")
+
+        flowTaskBiz.complete(instance.bizKey, GENERAL_MANAGER_APPROVAL_TASK_KEY, "generalManagerId")
+        val r2 = flowTaskBiz.search(FlowTaskSearchItems.Builder().bizKey(instance.bizKey).build())
+        println(r2)
+    }
+
+    @Test
+    @Transactional
+    open fun reject() {
+        val instance = FlowDefinitionBizTest.deployThenStart(
+            mapOf(
+                APPLICANT_ID to "applicantId",
+                DEPT_MANAGER_ID to "deptManagerId",
+                DAYS to 3,
+                PERSONNEL_ID to "personnelId"
+            )
+        )
+
+        // 任务执行者本人完成任务
+        assert(flowTaskBiz.complete(instance.bizKey, APPLICANT_TASK_DEFINITION_KEY, APPLICANT_ID))
+        val criteria = FlowTaskSearchItems.Builder().assignee(APPLICANT_ID).build()
+        assert(flowTaskBiz.search(criteria).isEmpty())
+
+        // 驳回
+        flowTaskBiz.reject(instance.bizKey, DEPT_MANAGER_APPROVAL_TASK_KEY, DEPT_MANAGER_ID, "3天不予准备")
+        val tasks = flowTaskBiz.search(criteria)
+        assert(tasks.isNotEmpty())
+        assertEquals(APPLICANT_TASK_DEFINITION_KEY, tasks.first().definitionKey)
+
+        // 驳回后再次完成任务
+        val variables = mapOf(DAYS to 2)
+        assert(flowTaskBiz.complete(instance.bizKey, APPLICANT_TASK_DEFINITION_KEY, APPLICANT_ID, null, variables))
+        assert(flowTaskBiz.search(criteria).isEmpty())
+    }
+
+    @Test
+    @Transactional
+    open fun fullTest() {
+
     }
 
     internal companion object {
         const val NO_EXISTS = "no exists"
         const val APPLICANT_ID = "applicantId" // 申请人id
         const val APPLICANT_TASK_DEFINITION_KEY = "applicationTaskKey"
-        const val APPROVER_ID = "approverId" // 审批人id
-        const val APPROVAL_TASK_DEFINITION_KEY = "approvalTaskKey"
+        const val DEPT_MANAGER_ID = "deptManagerId" // 部门经理id
+        const val DEPT_MANAGER_APPROVAL_TASK_KEY = "deptManagerApprovalTaskKey"
+        const val GENERAL_MANAGER_APPROVAL_TASK_KEY = "generalManagerApprovalTaskKey"
+        const val GENERAL_MANAGER_IDS = "generalManagerIds"
+        const val PERSONNEL_APPROVAL_TASK_KEY = "personnelApprovalTaskKey"
+        const val PERSONNEL_ID = "personnelId"
+        const val DAYS = "days"
     }
 
 }

@@ -14,8 +14,8 @@ data class FlowTask(
     internal val _id: String,
     /** 流程任务名称 */
     val name: String,
-    /** 流程定义key(bpmn文件中process元素的id) */
-    val flowDefinitionKey: String,
+    /** 任务定义key(bpmn文件userTask元素的id) */
+    val definitionKey: String,
     /** 业务主键 */
     val bizKey: String,
     /** 流程任务受理人id */
@@ -61,7 +61,6 @@ data class FlowTask(
     /** 表单key */
     var formKey: String? = null
 
-    var appVersion: Int? = null
 
     /**
      * 次构造器
@@ -91,7 +90,6 @@ data class FlowTask(
         _executionId = task.executionId
         priority = task.priority
         formKey = task.formKey
-        appVersion = task.appVersion
     }
 
 }

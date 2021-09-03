@@ -1,14 +1,24 @@
 package io.kuark.ability.workflow.task
 
 import io.kuark.ability.data.rdb.kit.RdbKit
+import io.kuark.base.error.IllegalOperationException
 import io.kuark.base.error.ObjectNotFoundException
 import io.kuark.base.lang.string.StringKit
 import io.kuark.base.log.LogFactory
 import io.kuark.base.query.sort.Order
+import org.activiti.bpmn.model.FlowNode
+import org.activiti.bpmn.model.SequenceFlow
+import org.activiti.engine.HistoryService
+import org.activiti.engine.RepositoryService
+import org.activiti.engine.RuntimeService
 import org.activiti.engine.TaskService
+import org.activiti.engine.history.HistoricTaskInstance
+import org.activiti.engine.impl.identity.Authentication
+import org.activiti.engine.task.Task
+import org.activiti.engine.task.TaskInfo
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
-import java.lang.StringBuilder
+
 
 /**
  * 流程任务相关业务
@@ -21,6 +31,16 @@ open class FlowTaskBiz : IFlowTaskBiz {
     @Autowired
     private lateinit var taskService: TaskService
 
+    @Autowired
+    private lateinit var historyService: HistoryService
+
+    @Autowired
+    private lateinit var repositoryService: RepositoryService
+
+    @Autowired
+    private lateinit var runtimeService: RuntimeService
+
+
     private val log = LogFactory.getLog(this::class)
 
     override fun isExists(bizKey: String, taskDefinitionKey: String): Boolean {
@@ -32,10 +52,7 @@ open class FlowTaskBiz : IFlowTaskBiz {
     }
 
     override fun get(bizKey: String, taskDefinitionKey: String): FlowTask? {
-        val task = taskService.createTaskQuery()
-            .processInstanceBusinessKey(bizKey)
-            .taskDefinitionKey(taskDefinitionKey)
-            .singleResult()
+        val task = getActivitiTask(bizKey, taskDefinitionKey)
         return if (task == null) null else FlowTask(task)
     }
 
@@ -149,17 +166,32 @@ open class FlowTaskBiz : IFlowTaskBiz {
     }
 
     @Transactional
-    override fun complete(bizKey: String, taskDefinitionKey: String, userId: String, force: Boolean): Boolean {
+    override fun complete(
+        bizKey: String,
+        taskDefinitionKey: String,
+        userId: String,
+        comment: String?,
+        variables: Map<String, *>?,
+        force: Boolean
+    ): Boolean {
         val userId = userId.trim()
         require(userId.isNotEmpty()) { "执行流程任务失败！【userId】参数不能为空！【bizKey：$bizKey, taskDefinitionKey：$taskDefinitionKey】" }
         val task = findTask(bizKey, taskDefinitionKey)
         if (force) {
             taskService.setAssignee(task._id, userId)
-            taskService.complete(task._id)
+            if (StringKit.isNotBlank(comment)) {
+                Authentication.setAuthenticatedUserId(userId) // addComment底层会调用Authentication.getAuthenticatedUserId()
+                taskService.addComment(task._id, task._instanceId, comment)
+            }
+            taskService.complete(task._id, variables)
             log.info("强制执行流程任务成功！【bizKey：$bizKey, taskDefinitionKey：$taskDefinitionKey, userId: $userId】")
         } else {
             if (userId == task.assignee) {
-                taskService.complete(task._id)
+                if (StringKit.isNotBlank(comment)) {
+                    Authentication.setAuthenticatedUserId(userId) // addComment底层会调用Authentication.getAuthenticatedUserId()
+                    taskService.addComment(task._id, task._instanceId, comment)
+                }
+                taskService.complete(task._id, variables)
                 log.info("执行流程任务成功！【bizKey：$bizKey, taskDefinitionKey：$taskDefinitionKey, userId: $userId】")
             } else {
                 log.error("执行流程任务失败，因签收的用户不是【$userId】！【bizKey：$bizKey, taskDefinitionKey：$taskDefinitionKey, userId: $userId】")
@@ -169,10 +201,114 @@ open class FlowTaskBiz : IFlowTaskBiz {
         return true
     }
 
+    override fun revoke(bizKey: String, userId: String, comment: String?): Boolean {
+        require(userId.isNotEmpty()) { "撤回流程任务失败！【userId】参数不能为空！【bizKey：$bizKey" }
+        val curTask = taskService.createTaskQuery().processInstanceBusinessKey(bizKey).singleResult()
+
+        val hisTaskInstances = historyService.createHistoricTaskInstanceQuery()
+            .processInstanceBusinessKey(bizKey)
+            .taskAssignee(userId)
+            .orderByTaskCreateTime()
+            .desc()
+            .list()
+        val myTask = if (hisTaskInstances.isEmpty()) {
+            throw IllegalOperationException("撤回流程任务失败！该任务非当前用户提交！")
+        } else {
+            hisTaskInstances.first()
+        }
+
+        // 任务跳转
+        jump(curTask, myTask, userId, comment)
+
+        return true
+    }
+
+    @Transactional
+    override fun reject(bizKey: String, taskDefinitionKey: String, userId: String, comment: String?): Boolean {
+        require(userId.isNotEmpty()) { "驳回流程任务失败！【userId】参数不能为空！【bizKey：$bizKey, taskDefinitionKey：$taskDefinitionKey】" }
+        val task = findTask(bizKey, taskDefinitionKey)
+        if (userId != task.assignee) {
+            log.error("驳回流程任务失败，因签收的用户不是【$userId】！【bizKey：$bizKey, taskDefinitionKey：$taskDefinitionKey, userId: $userId】")
+            return false
+        }
+
+        // 取得所有历史任务按时间降序排序
+        val htiList = historyService.createHistoricTaskInstanceQuery()
+            .processInstanceId(task._instanceId)
+            .orderByTaskCreateTime()
+            .desc()
+            .list()
+        if (htiList.isEmpty() || htiList.size < 2) {
+            return false
+        }
+
+        // 任务跳转
+        jump(htiList[0], htiList[1], userId, comment)
+
+        // 设置执行人
+        val nextTask = taskService.createTaskQuery().processInstanceId(task._instanceId).singleResult()
+        if (nextTask != null) {
+            taskService.setAssignee(nextTask.id, htiList[1].assignee)
+        }
+        return true
+    }
+
+    private fun jump(srcTask: TaskInfo, destTask: TaskInfo, userId: String, comment: String?) {
+        // 得到当前节点的信息
+        val execution = runtimeService.createExecutionQuery().executionId(srcTask.executionId).singleResult()
+        val bpmnModel = repositoryService.getBpmnModel(srcTask.processDefinitionId)
+        val curFlowNode = bpmnModel.mainProcess.getFlowElement(execution.activityId) as FlowNode
+
+        // 得到目标节点的信息
+        val finishedInstanceList = historyService.createHistoricActivityInstanceQuery()
+            .executionId(destTask.executionId)
+            .finished()
+            .list()
+        val lastActivityId = finishedInstanceList.first { it.taskId == destTask.id }.activityId
+        val lastFlowNode = bpmnModel.mainProcess.getFlowElement(lastActivityId) as FlowNode
+
+        // 记录当前节点的原活动方向
+        val oriSequenceFlows: MutableList<SequenceFlow> = ArrayList()
+        oriSequenceFlows.addAll(curFlowNode.outgoingFlows)
+
+        // 清理活动方向
+        curFlowNode.outgoingFlows.clear()
+
+        // 建立新方向
+        val newSequenceFlow = SequenceFlow().apply {
+            id = "newSequenceFlowId"
+            sourceFlowElement = curFlowNode
+            targetFlowElement = lastFlowNode
+        }
+        curFlowNode.outgoingFlows = listOf(newSequenceFlow)
+
+        // 完成任务
+        if (StringKit.isNotBlank(comment)) {
+            Authentication.setAuthenticatedUserId(userId) // addComment底层会调用Authentication.getAuthenticatedUserId()
+            taskService.addComment(srcTask.id, srcTask.processInstanceId, comment)
+        }
+        taskService.complete(srcTask.id)
+
+        // 恢复原方向
+        curFlowNode.outgoingFlows = oriSequenceFlows
+    }
+
+    private fun getActivitiTask(bizKey: String, taskDefinitionKey: String): Task? {
+        return taskService.createTaskQuery()
+            .processInstanceBusinessKey(bizKey)
+            .taskDefinitionKey(taskDefinitionKey)
+            .singleResult()
+    }
+
     private fun findTask(bizKey: String, taskDefinitionKey: String): FlowTask {
-        val task = get(bizKey, taskDefinitionKey)
+        val activitiTask = findActivitiTask(bizKey, taskDefinitionKey)
+        return FlowTask(activitiTask)
+    }
+
+    private fun findActivitiTask(bizKey: String, taskDefinitionKey: String): Task {
+        val task = getActivitiTask(bizKey, taskDefinitionKey)
         if (task == null) {
-            val errMsg = "找不到流程任务！bizKey：$bizKey, taskDefinitionKey：$taskDefinitionKey"
+            val errMsg = "找不到流程任务，可能流程未启动或已执行完成！bizKey：$bizKey, taskDefinitionKey：$taskDefinitionKey"
             log.error(errMsg)
             throw ObjectNotFoundException(errMsg)
         }

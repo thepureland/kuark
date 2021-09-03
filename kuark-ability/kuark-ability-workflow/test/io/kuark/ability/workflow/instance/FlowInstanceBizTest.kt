@@ -145,7 +145,7 @@ internal open class FlowInstanceBizTest : SpringTest() {
         // 成功删除
         flowInstanceBiz.delete(BIZ_KEY, instance.definitionKey, "test")
         assertNull(flowInstanceBiz.get(BIZ_KEY, instance.definitionKey))
-        var criteria = FlowInstanceSearchItems.Builder().definitionKey(instance.definitionKey).build()
+        val criteria = FlowInstanceSearchItems.Builder().definitionKey(instance.definitionKey).build()
         assert(flowInstanceBiz.search(criteria).isEmpty())
     }
 
@@ -176,7 +176,7 @@ internal open class FlowInstanceBizTest : SpringTest() {
         val instance = FlowDefinitionBizTest.deployThenStart(
             mapOf(
                 "applicantId" to FlowDefinitionBizTest.APPLICANT_ID,
-                "approverId" to FlowTaskBizTest.APPROVER_ID
+                "deptManagerId" to FlowTaskBizTest.DEPT_MANAGER_ID
             )
         )
 

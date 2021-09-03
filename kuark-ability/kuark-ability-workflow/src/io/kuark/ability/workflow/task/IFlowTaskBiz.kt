@@ -1,5 +1,6 @@
 package io.kuark.ability.workflow.task
 
+import io.kuark.base.error.IllegalOperationException
 import io.kuark.base.error.ObjectNotFoundException
 import io.kuark.base.query.sort.Order
 
@@ -54,6 +55,8 @@ interface IFlowTaskBiz {
 
     /**
      * 用户签收(受理)流程任务
+     * 
+     * claim与setAssignee区别在于claim签收之后别人不可以再签收不然会报错而setAssignee则不然
      *
      * @param bizKey 业务主键，不能为null
      * @param taskDefinitionKey 任务定义key(bpmn文件userTask元素的id)，不能为null
@@ -98,6 +101,8 @@ interface IFlowTaskBiz {
      * @param bizKey 业务主键，不能为null
      * @param taskDefinitionKey 任务定义key(bpmn文件userTask元素的id)，不能为null
      * @param userId 用户id，不能为空
+     * @param comment 批注，可以为null，默认为null
+     * @param variables 变量，可以为null，默认为null
      * @param force 是否强制执行，默认为false
      * @return true: 成功，false：失败
      * @throws IllegalArgumentException userId为空
@@ -105,6 +110,44 @@ interface IFlowTaskBiz {
      * @author K
      * @since 1.0.0
      */
-    fun complete(bizKey: String, taskDefinitionKey: String, userId: String, force: Boolean = false): Boolean
+    fun complete(
+        bizKey: String,
+        taskDefinitionKey: String,
+        userId: String,
+        comment: String? = null,
+        variables: Map<String, *>? = null,
+        force: Boolean = false
+    ): Boolean
+
+    /**
+     * 撤回到上一任务节点
+     *
+     * @param bizKey 业务主键，不能为null
+     * @param userId 用户id，不能为空
+     * @param comment 批注，可以为null，默认为null
+     * @return true: 成功，false：失败
+     * @throws IllegalArgumentException userId为空
+     * @throws ObjectNotFoundException 找不到对应的任务时
+     * @throws IllegalOperationException 任务非当前用户提交时
+     * @author https://blog.csdn.net/lianjie_c/article/details/79242009
+     * @author K
+     * @since 1.0.0
+     */
+    fun revoke(bizKey: String, userId: String, comment: String? = null): Boolean
+
+    /**
+     * 驳回流程任务
+     *
+     * @param bizKey 业务主键，不能为null
+     * @param taskDefinitionKey 任务定义key(bpmn文件userTask元素的id)，不能为null
+     * @param userId 用户id，不能为空
+     * @param comment 批注，可以为null，默认为null
+     * @return true: 成功，false：失败
+     * @throws IllegalArgumentException userId为空
+     * @throws ObjectNotFoundException 找不到对应的任务时
+     * @author K
+     * @since 1.0.0
+     */
+    fun reject(bizKey: String, taskDefinitionKey: String, userId: String, comment: String? = null): Boolean
 
 }

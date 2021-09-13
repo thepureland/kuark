@@ -15,6 +15,7 @@ object DateTimeFormatPattern {
     const val yyyyMMddHHmmss = "yyyyMMddHHmmss"
     const val yyyyMMddHHmmssSSS = "yyyyMMddHHmmssSSS"
     const val yyyy_MM_dd_HH_mm_ss = "yyyy-MM-dd HH:mm:ss"
+    const val yyyy_MM_dd_HH_mm_ss_SSS = "yyyy-MM-dd HH:mm:ss.SSS"
     const val MM_dd_HH_mm_ss = "MM-dd HH:mm:ss"
     const val HH_mm_ss = "HH:mm:ss"
 

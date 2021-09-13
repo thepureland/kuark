@@ -10,6 +10,12 @@ import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 import javax.security.auth.login.AccountException
 
+/**
+ * 用户账号明细业务，作为认证数据源
+ *
+ * @author K
+ * @since 1.0.0
+ */
 open class UserAccountDetailsBiz: UserDetailsService {
 
     @Autowired

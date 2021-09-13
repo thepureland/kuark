@@ -1,7 +1,10 @@
 package io.kuark.base.time
 
 import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
+import java.util.*
 
 
 /**
@@ -33,3 +36,13 @@ fun LocalDateTime.toCronExp(): String =
     with(this) {
         "$second $minute $hour $dayOfMonth ${month.value} ? $year"
     }
+
+/**
+ * 转化为Date
+ *
+ * @param zoneId 时区ID，缺省为系统默认时区
+ * @return Date
+ * @author K
+ * @since 1.0.0
+ */
+fun LocalDateTime.toDate(zoneId: ZoneId = ZoneId.systemDefault()): Date = Date.from(this.atZone(zoneId).toInstant())

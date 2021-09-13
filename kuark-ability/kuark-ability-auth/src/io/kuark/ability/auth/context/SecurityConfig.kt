@@ -14,6 +14,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.builders.WebSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
+import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import java.io.PrintWriter
@@ -25,23 +26,22 @@ import java.io.PrintWriter
 open class SecurityConfig : WebSecurityConfigurerAdapter() {
 
     @Autowired
-    private lateinit var userAccountDetailsBiz: UserAccountDetailsBiz
+    private lateinit var userAccountDetails: UserDetailsService
 
     /**
      * 配置认证
      */
     override fun configure(auth: AuthenticationManagerBuilder) {
-        auth.userDetailsService(userAccountDetailsBiz).passwordEncoder(passwordEncoder())
+        auth.userDetailsService(userAccountDetails).passwordEncoder(passwordEncoder())
     }
 
     /**
      * 配置授权
      */
     override fun configure(http: HttpSecurity) { //TODO
-//        http.rememberMe().key("KUARK-auth-Key")
-
         http.authorizeRequests()
-            .antMatchers("/rememberme").rememberMe()
+            .antMatchers("/rememberme").rememberMe() //rememberme 接口，必须是通过自动登录认证后才能访问，如果用户是通过用户名/密码认证的，则无法访问该接口
+            .antMatchers("/admin").fullyAuthenticated() //admin 接口，必须要用户名密码认证之后才能访问，如果用户是通过自动登录认证的，则必须重新输入用户名密码才能访问该接口
             .antMatchers("/user", "/menu")
             .hasRole("ADMIN")
             .antMatchers("/", "/**").permitAll()
@@ -78,7 +78,10 @@ open class SecurityConfig : WebSecurityConfigurerAdapter() {
             }
 
             .and()
-
+            .rememberMe()
+            .key("KUARK-auth-Key")  // 若没有设置 key，key 默认值是一个 UUID 字符串，这样会带来一个问题：如果服务端重启，这个 key 会变，这样就导致之前派发出去的所有 remember-me 自动登录令牌失效
+            .tokenRepository(tokenRepository())
+            .and()
             .logout()
 //            .logoutRequestMatcher(AntPathRequestMatcher("/logout", "POST"))
             .logoutSuccessUrl("/login")
@@ -106,7 +109,7 @@ open class SecurityConfig : WebSecurityConfigurerAdapter() {
     }
 
     private fun passwordEncoder(): PasswordEncoder {
-        return BCryptPasswordEncoder() //TODO
+        return BCryptPasswordEncoder() // 官方推荐方式，自带盐
     }
 
     /**

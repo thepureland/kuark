@@ -1,7 +1,7 @@
 package io.kuark.base.bean
 
 import io.kuark.base.support.IIdEntity
-import io.kuark.base.tree.ITreeable
+import io.kuark.base.tree.ITreeNode
 import java.util.*
 import javax.xml.bind.annotation.XmlRootElement
 
@@ -12,10 +12,11 @@ import javax.xml.bind.annotation.XmlRootElement
  * @since 1.0.0
  */
 @XmlRootElement
-class Person : IIdEntity<String>, ITreeable<String?> {
+class Person : IIdEntity<String>, ITreeNode<String?> {
 
-    override var selfUniqueIdentifier: String? = null
-    override var parentUniqueIdentifier: String? = null
+    override var id: String? = null
+    var parentId: String? = null
+    var children: MutableList<ITreeNode<String?>> = mutableListOf()
     var name: String? = null
     var sex: String? = null
     var age = 0
@@ -38,14 +39,6 @@ class Person : IIdEntity<String>, ITreeable<String?> {
 
     fun sayHello() {
         println("Hello World!")
-    }
-
-    fun getpId(): String? {
-        return parentUniqueIdentifier
-    }
-
-    fun setpId(pId: String?) {
-        parentUniqueIdentifier = pId
     }
 
     fun f(str: String) {
@@ -100,8 +93,10 @@ class Person : IIdEntity<String>, ITreeable<String?> {
         private const val serialVersionUID = -4651767804549188044L
     }
 
-    override var id: String?
-        get() = selfUniqueIdentifier
-        set(value) {}
+    override fun _getId(): String? = id
+
+    override fun _getParentId(): String? = parentId
+
+    override fun _getChildren(): MutableList<ITreeNode<String?>> = children
 
 }

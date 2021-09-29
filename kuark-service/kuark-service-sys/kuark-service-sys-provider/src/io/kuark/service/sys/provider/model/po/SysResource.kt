@@ -33,11 +33,8 @@ interface SysResource: IMaintainableDbEntity<String, SysResource> {
     /** 子系统代码 */
     var subSysDictCode: String?
 
-    /** 权限表达式 */
-    var permission: String?
-
-    /** 图标url */
-    var iconUrl: String?
+    /** 图标 */
+    var icon: String?
 
 
     //region your codes 2

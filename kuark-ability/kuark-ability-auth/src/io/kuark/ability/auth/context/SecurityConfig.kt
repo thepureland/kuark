@@ -1,6 +1,7 @@
 package io.kuark.ability.auth.context
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import io.kuark.ability.auth.login.general.AdditionalAuthenticationProvider
 import io.kuark.base.net.http.HttpResult
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
@@ -14,9 +15,13 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.builders.WebSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
+import org.springframework.security.core.session.SessionRegistryImpl
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
+import org.springframework.security.web.firewall.HttpFirewall
+import org.springframework.security.web.firewall.StrictHttpFirewall
+import org.springframework.security.web.session.HttpSessionEventPublisher
 import java.io.PrintWriter
 
 
@@ -85,6 +90,10 @@ open class SecurityConfig : WebSecurityConfigurerAdapter() {
             .logout()
 //            .logoutRequestMatcher(AntPathRequestMatcher("/logout", "POST"))
             .logoutSuccessUrl("/login")
+            .and()
+            .sessionManagement()
+            .maximumSessions(1) // 配置最大会话数为 1，这样后面的登录就会自动踢掉前面的登录
+//            .maxSessionsPreventsLogin(true)  // 添加该配置后，将禁止新的登录
 
         http.exceptionHandling()
             .authenticationEntryPoint { _, resp, _ ->
@@ -108,7 +117,9 @@ open class SecurityConfig : WebSecurityConfigurerAdapter() {
         web.ignoring().antMatchers("/js/**", "/css/**", "/images/**")   //TODO
     }
 
-    private fun passwordEncoder(): PasswordEncoder {
+    @Bean
+    @ConditionalOnMissingBean
+    open fun passwordEncoder(): PasswordEncoder {
         return BCryptPasswordEncoder() // 官方推荐方式，自带盐
     }
 
@@ -130,5 +141,82 @@ open class SecurityConfig : WebSecurityConfigurerAdapter() {
     @Bean
     @ConditionalOnMissingBean
     open fun tokenRepository(): TokenRepository = TokenRepository()
+
+    @Bean
+    @ConditionalOnMissingBean
+    open fun additionalAuthenticationProvider(): AuthenticationProvider {
+        val authenticationProvider = AdditionalAuthenticationProvider()
+        authenticationProvider.setPasswordEncoder(passwordEncoder())
+        authenticationProvider.setUserDetailsService(UserAccountDetailsBiz())
+        return authenticationProvider
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    override fun authenticationManager(): AuthenticationManager {
+        return ProviderManager(additionalAuthenticationProvider())
+    }
+
+    /**
+     * 可以将 session 创建以及销毁的事件及时感知到，并且调用 Spring 中的事件机制将相关的创建和销毁事件发布出去，进而被 Spring Security 感知到
+     */
+    @Bean
+    @ConditionalOnMissingBean
+    open fun httpSessionEventPublisher(): HttpSessionEventPublisher = HttpSessionEventPublisher()
+
+    @Bean
+    @ConditionalOnMissingBean
+    open fun sessionRegistry(): SessionRegistryImpl = SessionRegistryImpl()
+
+    @Bean
+    @ConditionalOnMissingBean
+    open fun httpFirewall(): HttpFirewall {
+        val firewall = StrictHttpFirewall()
+        firewall.setUnsafeAllowAnyHttpMethod(true)
+//        firewall.setAllowSemicolon(true)
+        return firewall
+    }
+
+//    @Bean
+//    @Throws(Exception::class)
+//    open fun loginFilter(): LoginFilter {
+//        val loginFilter = LoginFilter()
+//        loginFilter.setAuthenticationSuccessHandler { request, response, authentication ->
+//            response.setContentType("application/json;charset=utf-8")
+//            val out: PrintWriter = response.getWriter()
+//            val hr: Hr = authentication.getPrincipal() as Hr
+//            hr.setPassword(null)
+//            val ok: RespBean = RespBean.ok("登录成功!", hr)
+//            val s = ObjectMapper().writeValueAsString(ok)
+//            out.write(s)
+//            out.flush()
+//            out.close()
+//        }
+//        loginFilter.setAuthenticationFailureHandler { request, response, exception ->
+//            response.setContentType("application/json;charset=utf-8")
+//            val out: PrintWriter = response.getWriter()
+//            val respBean: RespBean = RespBean.error(exception.getMessage())
+//            if (exception is LockedException) {
+//                respBean.setMsg("账户被锁定，请联系管理员!")
+//            } else if (exception is CredentialsExpiredException) {
+//                respBean.setMsg("密码过期，请联系管理员!")
+//            } else if (exception is AccountExpiredException) {
+//                respBean.setMsg("账户过期，请联系管理员!")
+//            } else if (exception is DisabledException) {
+//                respBean.setMsg("账户被禁用，请联系管理员!")
+//            } else if (exception is BadCredentialsException) {
+//                respBean.setMsg("用户名或者密码输入错误，请重新输入!")
+//            }
+//            out.write(ObjectMapper().writeValueAsString(respBean))
+//            out.flush()
+//            out.close()
+//        }
+//        loginFilter.setAuthenticationManager(authenticationManagerBean())
+//        loginFilter.setFilterProcessesUrl("/doLogin")
+//        val sessionStrategy = ConcurrentSessionControlAuthenticationStrategy(sessionRegistry())
+//        sessionStrategy.setMaximumSessions(1)
+//        loginFilter.setSessionAuthenticationStrategy(sessionStrategy)
+//        return loginFilter
+//    }
 
 }

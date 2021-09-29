@@ -33,11 +33,8 @@ object SysResources: MaintainableTable<SysResource>("sys_resource") {
     /** 子系统代码 */
     var subSysDictCode = varchar("sub_sys_dict_code").bindTo { it.subSysDictCode }
 
-    /** 权限表达式 */
-    var permission = varchar("permission").bindTo { it.permission }
-
-    /** 图标url */
-    var iconUrl = varchar("icon_url").bindTo { it.iconUrl }
+    /** 图标 */
+    var icon = varchar("icon").bindTo { it.icon }
 
 
     //region your codes 2

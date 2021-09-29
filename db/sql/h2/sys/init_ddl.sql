@@ -148,8 +148,7 @@ create table "sys_resource"
     "parent_id"           CHAR(36),
     "seq_no"              INT2,
     "sub_sys_dict_code"       VARCHAR(31),
-    "permission"          VARCHAR(63),
-    "icon_url"            VARCHAR(127),
+    "icon"            VARCHAR(127),
     "remark"              VARCHAR(127),
     "is_active"           BOOLEAN  default TRUE          not null,
     "is_built_in"         BOOLEAN  default FALSE         not null,
@@ -175,9 +174,7 @@ comment on column "sys_resource"."seq_no" is '在同父节点下的排序号';
 
 comment on column "sys_resource"."sub_sys_dict_code" is '子系统代码';
 
-comment on column "sys_resource"."permission" is '权限表达式';
-
-comment on column "sys_resource"."icon_url" is '图标url';
+comment on column "sys_resource"."icon" is '图标';
 
 comment on column "sys_resource"."remark" is '备注，或其国际化key';
 

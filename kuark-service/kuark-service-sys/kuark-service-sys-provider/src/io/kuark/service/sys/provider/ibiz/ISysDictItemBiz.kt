@@ -1,6 +1,6 @@
 package io.kuark.service.sys.provider.ibiz
 
-import io.kuark.service.provider.sys.model.po.SysDictItem
+import io.kuark.service.sys.provider.model.po.SysDictItem
 
 /**
  * 字典子表业务接口

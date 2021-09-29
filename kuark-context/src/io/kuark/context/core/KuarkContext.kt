@@ -1,5 +1,8 @@
 package io.kuark.context.core
 
+import org.springframework.session.MapSession
+import org.springframework.session.Session
+
 /**
  * Kuark上下文
  *
@@ -29,6 +32,9 @@ class KuarkContext private constructor(builder: Builder) {
     /** 其他信息 */
     var otherInfos = hashMapOf<String, Any>()
 
+    /** Session */
+    var session: Session = MapSession()
+
     init {
         dataSourceId = builder.dataSourceId
         subSysCode = builder.subSysCode
@@ -36,6 +42,7 @@ class KuarkContext private constructor(builder: Builder) {
         userId = builder.userId
         traceKey = builder.traceKey
         otherInfos = builder.otherInfos
+        session = builder.session
     }
 
     /**
@@ -63,6 +70,9 @@ class KuarkContext private constructor(builder: Builder) {
 
         /** 其他信息 */
         internal var otherInfos = hashMapOf<String, Any>()
+
+        /** Session */
+        internal var session: Session = MapSession()
 
         fun build(): KuarkContext = KuarkContext(this)
 
@@ -93,6 +103,11 @@ class KuarkContext private constructor(builder: Builder) {
 
         fun addOtherInfos(vararg otherInfos: Pair<String, Any>): Builder {
             this.otherInfos.putAll(otherInfos)
+            return this
+        }
+
+        fun session(session: Session): Builder {
+            this.session = session
             return this
         }
 

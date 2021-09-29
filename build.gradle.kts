@@ -4,6 +4,7 @@ import org.springframework.boot.gradle.tasks.bundling.BootJar
 object Version {
     const val KOTLIN = "1.5.30"
     const val SPRING_BOOT = "2.4.6"
+    const val SPRING_SESSION = "2.5.2"
     const val SPRING_CLOUD = "2020.0.3"
     const val ALIBABA_CLOUD = "2.2.1.RELEASE"
     const val KTORM = "3.2.0"
@@ -173,6 +174,9 @@ subprojects {
 //            dependency("org.springframework.boot:spring-boot-starter-test:${Version.SPRING_BOOT}") {
 //                exclude("org.junit.vintage:junit-vintage-engine")
 //            }
+
+            // spring
+            dependency("org.springframework.session:spring-session-core:${Version.SPRING_SESSION}")
 
             // swagger
             dependency("io.springfox:springfox-boot-starter:3.0.0")

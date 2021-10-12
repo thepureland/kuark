@@ -10,8 +10,8 @@ import java.io.Serializable
  */
 class Order : Serializable {
 
-    var property: String? = null
-    var direction: Direction? = null
+    var property: String = ""
+    var direction: Direction = Direction.ASC
 
     constructor()
 
@@ -20,7 +20,7 @@ class Order : Serializable {
         this.direction = direction
     }
 
-    val isAscending = direction == Direction.ASC
+    fun isAscending() = direction == Direction.ASC
 
     override fun toString() = "${property}: $direction"
 

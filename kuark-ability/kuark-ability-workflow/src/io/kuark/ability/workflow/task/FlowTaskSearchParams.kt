@@ -1,14 +1,14 @@
 package io.kuark.ability.workflow.task
 
 /**
- * 流程任务查询项
+ * 流程任务查询参数
  *
  * 当属性不为空时才会将该属性作为查询条件，各属性间是”与“的关系
  *
  * @author K
  * @since 1.0.0
  */
-class FlowTaskSearchItems {
+class FlowTaskSearchParams {
 
     /** 任务受理人id */
     var assignee: String? = null
@@ -43,7 +43,7 @@ class FlowTaskSearchItems {
     }
 
     /**
-     * 流程任务查询项构建者
+     * 流程任务查询参数构建者
      *
      * @author K
      * @since 1.0.0
@@ -58,9 +58,9 @@ class FlowTaskSearchItems {
         var flowVersion: Int? = null
 
         /**
-         * 构建流程任务查询项对象
+         * 构建流程任务查询参数对象
          */
-        fun build(): FlowTaskSearchItems = FlowTaskSearchItems(this)
+        fun build(): FlowTaskSearchParams = FlowTaskSearchParams(this)
 
         /** 任务受理人id */
         fun assignee(assignee: String?): Builder {

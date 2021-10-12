@@ -19,12 +19,17 @@ object TreeKit {
      * @param E 树结点类型
      * @param treeNodeList 结点对象列表
      * @param direction 排序，指定排序时E必须实现Comparable接口，为null将不做排序，默认为null
+     * @param callback 结点挂载后的回调
      * @return List(树根结点)
      * @author K
      * @since 1.0.0
      */
-    fun <T, E : ITreeNode<T>> convertListToTree(treeNodeList: List<E>, direction: Direction? = null): List<E> {
-        return ListToTreeConverter.convert(treeNodeList, direction)
+    fun <T, E : ITreeNode<T>> convertListToTree(
+        treeNodeList: List<E>,
+        direction: Direction? = null,
+        callback: ICallback<E, Unit>? = null
+    ): List<E> {
+        return ListToTreeConverter.convert(treeNodeList, direction, callback)
     }
 
     /**

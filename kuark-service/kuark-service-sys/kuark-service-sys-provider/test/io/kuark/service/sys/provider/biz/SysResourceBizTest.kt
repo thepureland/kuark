@@ -13,8 +13,8 @@ internal class SysResourceBizTest : SpringTest() {
 
     @Test
     fun getMenus() {
-        val menus = sysResourceBiz.getMenus("")
+        val menus = sysResourceBiz.getMenus()
         println(JsonKit.toJson(menus))
-
     }
+
 }

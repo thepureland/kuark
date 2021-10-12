@@ -2,12 +2,12 @@ package io.kuark.ability.workflow.form
 
 
 /**
- * 流程表单查询项
+ * 流程表单查询参数
  *
  * @author K
  * @since 1.0.0
  */
-class FlowFormSearchItems {
+class FlowFormSearchParams {
 
     /** 表单key，支持忽略大小定的模糊查询*/
     var key: String? = null
@@ -39,7 +39,7 @@ class FlowFormSearchItems {
 
 
     /**
-     * 流程表单查询项构建者
+     * 流程表单查询参数构建者
      *
      * @author K
      * @since 1.0.0
@@ -53,9 +53,9 @@ class FlowFormSearchItems {
         internal var latestOnly: Boolean = true
 
         /**
-         * 构建流程表单查询项对象
+         * 构建流程表单查询参数对象
          */
-        fun build(): FlowFormSearchItems = FlowFormSearchItems(this)
+        fun build(): FlowFormSearchParams = FlowFormSearchParams(this)
 
         /** 表单key，支持忽略大小定的模糊查询*/
         fun key(key: String?): Builder {

@@ -1,7 +1,6 @@
 package io.kuark.ability.workflow.task
 
 import io.kuark.ability.workflow.definition.FlowDefinitionBizTest
-import io.kuark.ability.workflow.instance.IFlowInstanceBiz
 import io.kuark.base.error.ObjectNotFoundException
 import io.kuark.test.common.SpringTest
 import org.junit.jupiter.api.Assertions.*
@@ -46,11 +45,11 @@ internal open class FlowTaskBizTest : SpringTest() {
         FlowDefinitionBizTest.deployThenStart()
 
         // 有结果
-        var criteria = FlowTaskSearchItems.Builder().assignee(APPLICANT_ID).name("申").build()
+        var criteria = FlowTaskSearchParams.Builder().assignee(APPLICANT_ID).name("申").build()
         assert(flowTaskBiz.search(criteria).isNotEmpty())
 
         // 无结果
-        criteria = FlowTaskSearchItems.Builder().assignee(NO_EXISTS).build()
+        criteria = FlowTaskSearchParams.Builder().assignee(NO_EXISTS).build()
         assert(flowTaskBiz.search(criteria).isEmpty())
     }
 
@@ -147,7 +146,7 @@ internal open class FlowTaskBizTest : SpringTest() {
 
         // 非任务执行者本人尝试完成任务，操作失败
         assertFalse(flowTaskBiz.complete(instance.bizKey, APPLICANT_TASK_DEFINITION_KEY, "another user id"))
-        val criteria = FlowTaskSearchItems.Builder().assignee(APPLICANT_ID).build()
+        val criteria = FlowTaskSearchParams.Builder().assignee(APPLICANT_ID).build()
         assert(flowTaskBiz.search(criteria).isNotEmpty())
 
         // 任务执行者本人完成任务
@@ -174,7 +173,7 @@ internal open class FlowTaskBizTest : SpringTest() {
 
         // 任务执行者本人完成任务
         assert(flowTaskBiz.complete(instance.bizKey, APPLICANT_TASK_DEFINITION_KEY, APPLICANT_ID))
-        val criteria = FlowTaskSearchItems.Builder().assignee(APPLICANT_ID).build()
+        val criteria = FlowTaskSearchParams.Builder().assignee(APPLICANT_ID).build()
         assert(flowTaskBiz.search(criteria).isEmpty())
 
         // 撤回
@@ -189,13 +188,13 @@ internal open class FlowTaskBizTest : SpringTest() {
 
         val complete = flowTaskBiz.complete(instance.bizKey, DEPT_MANAGER_APPROVAL_TASK_KEY, DEPT_MANAGER_ID)
 
-        val r = flowTaskBiz.search(FlowTaskSearchItems.Builder().bizKey(instance.bizKey).build())
+        val r = flowTaskBiz.search(FlowTaskSearchParams.Builder().bizKey(instance.bizKey).build())
         println(r)
 
         flowTaskBiz.claim(instance.bizKey, GENERAL_MANAGER_APPROVAL_TASK_KEY, "generalManagerId")
 
         flowTaskBiz.complete(instance.bizKey, GENERAL_MANAGER_APPROVAL_TASK_KEY, "generalManagerId")
-        val r2 = flowTaskBiz.search(FlowTaskSearchItems.Builder().bizKey(instance.bizKey).build())
+        val r2 = flowTaskBiz.search(FlowTaskSearchParams.Builder().bizKey(instance.bizKey).build())
         println(r2)
     }
 
@@ -213,7 +212,7 @@ internal open class FlowTaskBizTest : SpringTest() {
 
         // 任务执行者本人完成任务
         assert(flowTaskBiz.complete(instance.bizKey, APPLICANT_TASK_DEFINITION_KEY, APPLICANT_ID))
-        val criteria = FlowTaskSearchItems.Builder().assignee(APPLICANT_ID).build()
+        val criteria = FlowTaskSearchParams.Builder().assignee(APPLICANT_ID).build()
         assert(flowTaskBiz.search(criteria).isEmpty())
 
         // 驳回

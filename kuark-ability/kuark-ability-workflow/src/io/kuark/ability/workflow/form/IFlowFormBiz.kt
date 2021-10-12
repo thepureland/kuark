@@ -40,7 +40,7 @@ interface IFlowFormBiz : IBaseBiz<String, FlowForm> {
     /**
      * 查询表单
      *
-     * @param searchItems 查询项，当查询项的属性不为空时才会将该属性作为查询条件，各属性间是”与“的关系
+     * @param searchParams 查询参数，当查询参数的属性不为空时才会将该属性作为查询条件，各属性间是”与“的关系
      * @param pageNum 分页页码，从1开始，默认为1，小于1将按1处理
      * @param pageSize 分页每页最大条数，默认为20，小于1将按不分页处理
      * @param orders 排序规则
@@ -49,7 +49,7 @@ interface IFlowFormBiz : IBaseBiz<String, FlowForm> {
      * @since 1.0.0
      */
     fun search(
-        searchItems: FlowFormSearchItems,
+        searchParams: FlowFormSearchParams,
         pageNum: Int = 1,
         pageSize: Int = 20,
         vararg orders: Order

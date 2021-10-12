@@ -1,14 +1,14 @@
 package io.kuark.ability.workflow.definition
 
 /**
- * 流程定义查询项构建者
+ * 流程定义查询参数
  *
  * 当属性不为空时才会将该属性作为查询条件，各属性间是”与“的关系
  *
  * @author K
  * @since 1.0.0
  */
-class FlowDefinitionSearchItems {
+class FlowDefinitionSearchParams {
 
     /** 流程定义key(bpmn文件中process元素的id)，支持忽略大小写模糊搜索 */
     var key: String? = null
@@ -44,7 +44,7 @@ class FlowDefinitionSearchItems {
 
 
     /**
-     * 流程定义查询项构建者
+     * 流程定义查询参数构建者
      *
      * @author K
      * @since 1.0.0
@@ -59,9 +59,9 @@ class FlowDefinitionSearchItems {
         var isDeployed: Boolean? = null
 
         /**
-         * 构建流程定义查询项对象
+         * 构建流程定义查询参数对象
          */
-        fun build(): FlowDefinitionSearchItems = FlowDefinitionSearchItems(this)
+        fun build(): FlowDefinitionSearchParams = FlowDefinitionSearchParams(this)
 
         /** 流程定义key(bpmn文件中process元素的id)，支持忽略大小写模糊搜索 */
         fun key(key: String?): Builder {

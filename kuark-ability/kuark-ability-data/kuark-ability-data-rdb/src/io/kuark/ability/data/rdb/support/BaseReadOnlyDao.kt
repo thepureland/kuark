@@ -14,7 +14,6 @@ import org.ktorm.expression.OrderByExpression
 import org.ktorm.schema.Column
 import org.ktorm.schema.ColumnDeclaring
 import org.ktorm.schema.Table
-import java.util.*
 import kotlin.reflect.KClass
 
 /**
@@ -38,6 +37,7 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
      * @author K
      * @since 1.0.0
      */
+    @Suppress("UNCHECKED_CAST")
     protected fun table(): T {
         if (table == null) {
             val tableClass = GenericKit.getSuperClassGenricClass(this::class, 2) as KClass<T>
@@ -78,6 +78,7 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
      *
      * @return 主键列对象
      */
+    @Suppress("UNCHECKED_CAST")
     protected fun getPkColumn(): Column<PK> {
         return table().primaryKeys[0] as Column<PK>
     }
@@ -297,7 +298,6 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
      */
     open fun inSearch(property: String, values: Collection<*>, vararg orders: Order): List<E> {
         val column = ColumnHelper.columnOf(table(), property)[property]!!
-        values.toTypedArray()
         var entitySequence = entitySequence().filter { column.inCollection(values) }
         entitySequence = entitySequence.sorted { sortOf(*orders) }
         return entitySequence.toList()
@@ -560,7 +560,7 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
             val orderExpressions = mutableListOf<OrderByExpression>()
             orders.forEach {
                 val column = ColumnHelper.columnOf(table(), it.property!!)[it.property]!!
-                val orderByExpression = if (it.isAscending) {
+                val orderByExpression = if (it.isAscending()) {
                     column.asc()
                 } else column.desc()
                 orderExpressions.add(orderByExpression)
@@ -600,7 +600,7 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
     private fun doSearchEntity(propertyMap: Map<String, *>?, logic: AndOr?, vararg orders: Order): List<E> {
         var entitySequence = entitySequence()
         if (propertyMap != null) {
-            val fullExpression = processWhere(propertyMap!!, logic)
+            val fullExpression = processWhere(propertyMap, logic)
             entitySequence = entitySequence.filter { fullExpression }
         }
 
@@ -617,7 +617,7 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
 
         // where
         if (propertyMap != null) {
-            val fullExpression = processWhere(propertyMap!!, logic)
+            val fullExpression = processWhere(propertyMap, logic)
             query = query.where { fullExpression }
         }
 

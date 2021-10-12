@@ -5,4 +5,3 @@ spring:
     - ability-cache-default
     - ability-data-rdb-default
     - service-sys-provider-default
-    - service-sys-provider-junit

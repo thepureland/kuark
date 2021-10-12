@@ -14,7 +14,7 @@ interface ISysResourceBiz {
 
     //region your codes 2
 
-    fun getMenus(userId: String): List<SysMenuTreeNode>
+    fun getMenus(): List<SysMenuTreeNode>
 
     //endregion your codes 2
 

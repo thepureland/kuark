@@ -140,6 +140,7 @@ subprojects {
             dependency("org.apache.commons:commons-lang3:3.10")
             dependency("org.apache.commons:commons-text:1.8")
             dependency("commons-io:commons-io:2.6")
+            dependency("commons-fileupload:commons-fileupload:1.4")
             dependency("commons-codec:commons-codec:1.14")
             dependency("commons-beanutils:commons-beanutils:1.9.4")
             dependency("com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.9.7")

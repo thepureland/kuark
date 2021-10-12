@@ -22,7 +22,7 @@ object ColumnHelper {
     fun columnOf(table: Table<*>, vararg propertyNames: String): Map<String, Column<Any>> { //TODO 是否ktorm能从列绑定关系直接取?
         if (propertyNames.isEmpty()) return emptyMap()
 
-        val tableName = table!!.tableName
+        val tableName = table.tableName
         var columnMap = columnCache[tableName]
         if (columnMap == null) {
             columnMap = mutableMapOf()
@@ -37,14 +37,14 @@ object ColumnHelper {
                 var columnName = propertyName.humpToUnderscore(false)
                 var column: Column<*>?
                 try {
-                    column = table!![columnName] // 1.先尝试以小写字段名获取
+                    column = table[columnName] // 1.先尝试以小写字段名获取
                 } catch (e: NoSuchElementException) {
                     columnName = columnName.uppercase(Locale.getDefault())
                     column = try {
-                        table!![columnName] // 2.再尝试以大写字段名获取
+                        table[columnName] // 2.再尝试以大写字段名获取
                     } catch (e: NoSuchElementException) {
                         // 3.最后忽略大小写的分别比较下划线分割的列名、属性名
-                        table!!.columns.firstOrNull {
+                        table.columns.firstOrNull {
                             it.name.equals(columnName, true) || it.name.equals(
                                 propertyName,
                                 true

@@ -76,7 +76,7 @@ open class FlowDefinitionBiz : IFlowDefinitionBiz {
     }
 
     override fun search(
-        searchItems: FlowDefinitionSearchItems,
+        searchItems: FlowDefinitionSearchParams,
         pageNum: Int,
         pageSize: Int,
         vararg orders: Order

@@ -1,6 +1,6 @@
 package io.kuark.service.sys.provider.model.table
 
-import io.kuark.ability.data.rdb.support.MaintainableTable
+import io.kuark.ability.data.rdb.support.UpdatableTable
 import io.kuark.service.sys.provider.model.po.SysDict
 import org.ktorm.schema.varchar
 
@@ -11,7 +11,7 @@ import org.ktorm.schema.varchar
  * @since 1.0.0
  */
 //region your codes 1
-object SysDicts: MaintainableTable<SysDict>("sys_dict") {
+object SysDicts: UpdatableTable<SysDict>("sys_dict") {
 //endregion your codes 1
 
     /** 模块 */

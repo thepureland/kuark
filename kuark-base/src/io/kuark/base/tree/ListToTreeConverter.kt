@@ -3,6 +3,7 @@ package io.kuark.base.tree
 import io.kuark.base.lang.collections.CollectionKit
 import io.kuark.base.log.LogFactory
 import io.kuark.base.query.sort.Direction
+import io.kuark.base.support.ICallback
 import java.util.*
 
 /**
@@ -23,11 +24,16 @@ object ListToTreeConverter {
      * @param E 树结点类型
      * @param treeNodeList 结点对象列表
      * @param direction 排序，指定排序时E必须实现Comparable接口，为null将不做排序，默认为null
+     * @param callback 结点挂载后的回调
      * @return List(树根结点)
      * @author K
      * @since 1.0.0
      */
-    fun <T, E : ITreeNode<T>> convert(treeNodeList: List<E>, direction: Direction? = null): List<E> {
+    fun <T, E : ITreeNode<T>> convert(
+        treeNodeList: List<E>,
+        direction: Direction? = null,
+        callback: ICallback<E, Unit>? = null
+    ): List<E> {
         val treeNodeMap = HashMap<T, E>(treeNodeList.size, 1f)
         for (obj in treeNodeList) {
             treeNodeMap[obj._getId()] = obj
@@ -38,6 +44,7 @@ object ListToTreeConverter {
             val pId = obj._getParentId()
             if (pId == null || "" == pId) { // 根
                 nodeList.add(node)
+                callback?.execute(node)
             } else {
                 val pNode = treeNodeMap[pId]
                 if (pNode != null) { // 存在父结点

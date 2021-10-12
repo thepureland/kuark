@@ -88,7 +88,7 @@ internal open class FlowDefinitionBizTest : SpringTest() {
         createThenDeploy()
 
         // 指定条件模糊搜索
-        var criteria = FlowDefinitionSearchItems.Builder()
+        var criteria = FlowDefinitionSearchParams.Builder()
             .key("leaveAp")
             .name("请假")
             .isDeployed(true)
@@ -98,7 +98,7 @@ internal open class FlowDefinitionBizTest : SpringTest() {
         assertEquals(1, definitions.size)
 
         // 没有指定条件
-        criteria = FlowDefinitionSearchItems.Builder().build()
+        criteria = FlowDefinitionSearchParams.Builder().build()
         assertEquals(1, flowDefinitionBiz.search(criteria).size)
     }
 

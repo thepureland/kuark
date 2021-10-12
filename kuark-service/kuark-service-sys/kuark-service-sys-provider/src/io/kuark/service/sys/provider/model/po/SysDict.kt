@@ -1,7 +1,7 @@
 package io.kuark.service.sys.provider.model.po
 
 import io.kuark.ability.data.rdb.support.DbEntityFactory
-import io.kuark.ability.data.rdb.support.IMaintainableDbEntity
+import io.kuark.ability.data.rdb.support.IUpdatableDbEntity
 
 /**
  * 字典主表数据库实体
@@ -10,7 +10,7 @@ import io.kuark.ability.data.rdb.support.IMaintainableDbEntity
  * @since 1.0.0
  */
 //region your codes 1
-interface SysDict : IMaintainableDbEntity<String, SysDict> {
+interface SysDict : IUpdatableDbEntity<String, SysDict> {
 //endregion your codes 1
 
     companion object : DbEntityFactory<SysDict>()

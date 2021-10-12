@@ -1,6 +1,7 @@
 package io.kuark.service.sys.provider.biz
 
 import io.kuark.ability.cache.context.CacheNames
+import io.kuark.ability.data.rdb.biz.BaseBiz
 import io.kuark.service.sys.provider.dao.SysDictDao
 import io.kuark.service.sys.provider.dao.SysDictItemDao
 import io.kuark.service.sys.provider.ibiz.ISysDictItemBiz
@@ -19,7 +20,7 @@ import org.springframework.stereotype.Service
 @Service
 //region your codes 1
 @CacheConfig(cacheNames = [CacheNames.SYS_DICT_ITEM])
-open class SysDictItemBiz : ISysDictItemBiz {
+open class SysDictItemBiz : BaseBiz<String, SysDictItem, SysDictItemDao>(), ISysDictItemBiz {
 //endregion your codes 1
 
     @Autowired

@@ -11,3 +11,5 @@
 /sessionStore
 *.log
 h2.trace.db
+temp.js
+temp.xml

@@ -12,7 +12,6 @@ import org.activiti.engine.HistoryService
 import org.activiti.engine.RepositoryService
 import org.activiti.engine.RuntimeService
 import org.activiti.engine.TaskService
-import org.activiti.engine.history.HistoricTaskInstance
 import org.activiti.engine.impl.identity.Authentication
 import org.activiti.engine.task.Task
 import org.activiti.engine.task.TaskInfo
@@ -57,7 +56,7 @@ open class FlowTaskBiz : IFlowTaskBiz {
     }
 
     override fun search(
-        searchItems: FlowTaskSearchItems,
+        searchParams: FlowTaskSearchParams,
         pageNum: Int,
         pageSize: Int,
         vararg orders: Order
@@ -65,37 +64,37 @@ open class FlowTaskBiz : IFlowTaskBiz {
         val whereStr = StringBuilder("1=1")
 
         // 任务受理人id
-        val assignee = searchItems.assignee
+        val assignee = searchParams.assignee
         if (StringKit.isNotBlank(assignee) && !assignee!!.contains("'")) {
             whereStr.append(" AND t.assignee_ = '$assignee'")
         }
 
         // 业务主键
-        val bizKey = searchItems.bizKey
+        val bizKey = searchParams.bizKey
         if (StringKit.isNotBlank(bizKey) && !bizKey!!.contains("'")) {
             whereStr.append(" AND UPPER(t.business_key_) LIKE '%${bizKey.uppercase()}%'")
         }
 
         // 任务定义key(bpmn文件userTask元素的id)
-        val taskDefinitionKey = searchItems.taskDefinitionKey
+        val taskDefinitionKey = searchParams.taskDefinitionKey
         if (StringKit.isNotBlank(taskDefinitionKey) && !taskDefinitionKey!!.contains("'")) {
             whereStr.append(" AND UPPER(t.task_def_key_) LIKE '%${taskDefinitionKey!!.uppercase()}%'")
         }
 
         // 任务名称
-        val name = searchItems.name
+        val name = searchParams.name
         if (StringKit.isNotBlank(name) && !name!!.contains("'")) {
             whereStr.append(" AND UPPER(t.name_) LIKE '%${name.uppercase()}%'")
         }
 
         // 流程定义key(bpmn文件中process元素的id)
-        val flowDefinitionKey = searchItems.flowDefinitionKey
+        val flowDefinitionKey = searchParams.flowDefinitionKey
         if (StringKit.isNotBlank(flowDefinitionKey) && !flowDefinitionKey!!.contains("'")) {
             whereStr.append(" AND UPPER(d.key_) LIKE '%${flowDefinitionKey!!.uppercase()}%'")
         }
 
         // 流程版本
-        val flowVersion = searchItems.flowVersion
+        val flowVersion = searchParams.flowVersion
         if (flowVersion != null) {
             whereStr.append(" AND d.version_ = $flowVersion")
         }

@@ -26,7 +26,7 @@ open class SysResourceBiz : BaseBiz<String, SysResource, SysResourceDao>(), ISys
 
     //region your codes 2
 
-    override fun getMenus(userId: String): List<SysMenuTreeNode> {
+    override fun getMenus(): List<SysMenuTreeNode> {
         //TODO 加入权限
         val criteria = Criteria.add(SysResource::isActive.name, Operator.EQ, true)
         val subSysCode = KuarkContextHolder.get().subSysCode
@@ -34,11 +34,10 @@ open class SysResourceBiz : BaseBiz<String, SysResource, SysResourceDao>(), ISys
             criteria.addAnd(SysResource::subSysDictCode.name, Operator.EQ, subSysCode)
         }
         val origMenus = dao.search(criteria)
-        val sysMenus = origMenus.map { SysMenuTreeNode(it.id!!, it.parentId, it.name, it.seqNo, it.icon, it.url) }
+        val sysMenus = origMenus.map { SysMenuTreeNode(it.name, it.url, it.icon, it.id!!, it.parentId, it.seqNo) }
         return TreeKit.convertListToTree(sysMenus, Direction.ASC)
     }
 
     //endregion your codes 2
-
 
 }

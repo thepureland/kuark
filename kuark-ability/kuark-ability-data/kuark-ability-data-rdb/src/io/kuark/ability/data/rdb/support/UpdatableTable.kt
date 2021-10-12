@@ -5,13 +5,13 @@ import org.ktorm.schema.datetime
 import org.ktorm.schema.varchar
 
 /**
- * 可维护型的数据库记录的实体（主键类型为字符串）
+ * 可更新的数据库记录的实体（主键类型为字符串）
  *
  * @param E 实体类型
  * @author K
  * @since 1.0.0
  */
-open class MaintainableTable<E : IMaintainableDbEntity<String, E>>(tableName: String): StringIdTable<E>(tableName) {
+open class UpdatableTable<E : IUpdatableDbEntity<String, E>>(tableName: String): StringIdTable<E>(tableName) {
 
     /** 记录创建时间 */
     val createTime = datetime("create_time").bindTo { it.createTime }
@@ -24,9 +24,6 @@ open class MaintainableTable<E : IMaintainableDbEntity<String, E>>(tableName: St
 
     /** 记录更新用户 */
     val updateUser = varchar("update_user").bindTo { it.updateUser }
-
-    /** 是否启用 */
-    val isActive = boolean("is_active").bindTo { it.isActive }
 
     /** 是否内置 */
     val isBuiltIn = boolean("is_built_in").bindTo { it.isBuiltIn }

@@ -1,12 +1,15 @@
 package io.kuark.ability.data.rdb.support
 
+import io.kuark.base.bean.BeanKit
 import io.kuark.base.query.Criteria
 import io.kuark.base.query.enums.Operator
 import io.kuark.base.support.GroupExecutor
+import io.kuark.base.support.payload.UpdatePayload
 import org.ktorm.dsl.*
 import org.ktorm.entity.add
 import org.ktorm.entity.removeIf
 import org.ktorm.schema.Table
+import java.lang.IllegalArgumentException
 
 /**
  * 基础数据访问对象，封装某数据库表的通用操作
@@ -136,6 +139,38 @@ open class BaseDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadOnlyD
      * @since 1.0.0
      */
     open fun update(entity: E): Boolean = entity.flushChanges() == 1
+
+    /**
+     * 用任意对象更新指定id的记录.
+     * 更新规则见 @see UpdatePayload 类
+     *
+     * @param updatePayload 更新项载体
+     * @return 是否更新成功
+     * @throws IllegalArgumentException 主键值为空时
+     * @author K
+     * @since 1.0.0
+     */
+    @Suppress("UNCHECKED_CAST")
+    fun update(updatePayload: UpdatePayload<PK>): Boolean {
+        val id = updatePayload.id
+        if (id == null || id == "") {
+            throw IllegalArgumentException("更新记录时主键值为空!")
+        }
+
+        val properties = mutableMapOf<String, Any?>()
+        val propMap = BeanKit.extract(updatePayload)
+        propMap.filter { it.value != null && it.key != "id" }.forEach { (prop, value) ->
+            if (prop == "nullProperties") {
+                (value as Collection<String>).forEach {
+                    properties[it] = null
+                }
+            } else {
+                properties[prop] = value
+            }
+        }
+        return updateProperties(id, properties)
+    }
+
 
     /**
      * 有条件的更新实体对象（仅当满足给定的附加查询条件时）

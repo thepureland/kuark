@@ -91,7 +91,7 @@ internal class BaseReadOnlyDaoTest : SpringTest() {
         results = testTableDao.oneSearch(TestTable::isActive.name, true, *orders)
         assertEquals(8, results.size)
         assertEquals("name8", results.first().name)
-        assertEquals("name9", results.last().name)
+        assertEquals("name9", results[5].name)
     }
 
     @Test

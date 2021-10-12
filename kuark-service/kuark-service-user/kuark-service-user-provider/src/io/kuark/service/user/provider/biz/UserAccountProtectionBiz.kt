@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service
  */
 @Service
 //region your codes 1
-class UserAccountProtectionBiz: IUserAccountProtectionBiz {
+open class UserAccountProtectionBiz: IUserAccountProtectionBiz {
 //endregion your codes 1
 
     //region your codes 2

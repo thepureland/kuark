@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service
  */
 @Service
 //region your codes 1
-class UserDbAuditLogBiz: IUserDbAuditLogBiz {
+open class UserDbAuditLogBiz: IUserDbAuditLogBiz {
 //endregion your codes 1
 
     //region your codes 2

@@ -5,11 +5,13 @@ import io.kuark.ability.data.rdb.table.TestTableDao
 import io.kuark.ability.data.rdb.table.TestTableKit
 import io.kuark.base.query.Criteria
 import io.kuark.base.query.enums.Operator
+import io.kuark.base.support.payload.UpdatePayload
 import io.kuark.test.common.SpringTest
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
+import java.time.LocalDateTime
 
 /**
  * BaseDao测试用例
@@ -176,6 +178,48 @@ internal open class BaseDaoTest : SpringTest() {
         entity = testTableDao.getById(-1)!!
         assertEquals("name", entity.name)
     }
+
+    @Test
+    @Transactional
+    open fun updateByUpdatePayload() {
+        class UpdatePayload1 : UpdatePayload<Int>() {
+            var name: String? = null
+            var birthday: LocalDateTime? = null
+        }
+        val updatePayload1 = UpdatePayload1().apply {
+            name = "name"
+            nullProperties = listOf("weight")
+        }
+
+        // id为空
+        assertThrows<java.lang.IllegalArgumentException> { testTableDao.update(updatePayload1) }
+
+        // 有指定nullProperties的值
+        updatePayload1.id = -1
+        var success = testTableDao.update(updatePayload1)
+        assert(success)
+        var entity = testTableDao.getById(-1)!!
+        assertEquals("name", entity.name)
+        assert(entity.birthday != null)
+        assertEquals(null, entity.weight)
+
+        // 未指定nullProperties的值
+        class UpdatePayload2 : UpdatePayload<Int>() {
+            var name: String? = null
+            var height: Int? = null
+        }
+
+        val updateItems2 = UpdatePayload2().apply {
+            id = -1
+            name = "name1"
+        }
+        success = testTableDao.update(updateItems2)
+        assert(success)
+        entity = testTableDao.getById(-1)!!
+        assertEquals("name1", entity.name)
+        assert(entity.height != null)
+    }
+
 
     @Test
     @Transactional

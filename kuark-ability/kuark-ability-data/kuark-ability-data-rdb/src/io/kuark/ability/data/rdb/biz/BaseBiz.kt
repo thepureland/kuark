@@ -1,9 +1,9 @@
 package io.kuark.ability.data.rdb.biz
 
 import io.kuark.ability.data.rdb.support.BaseDao
-import io.kuark.ability.data.rdb.support.BaseReadOnlyDao
 import io.kuark.ability.data.rdb.support.IDbEntity
 import io.kuark.base.query.Criteria
+import io.kuark.base.support.payload.UpdatePayload
 import org.springframework.transaction.annotation.Transactional
 
 /**
@@ -14,7 +14,8 @@ import org.springframework.transaction.annotation.Transactional
  * @author K
  * @since 1.0.0
  */
-open class BaseBiz<PK : Any, E : IDbEntity<PK, E>, DAO: BaseDao<PK, E, *>> : BaseReadOnlyBiz<PK, E, DAO>(), IBaseBiz<PK, E> {
+open class BaseBiz<PK : Any, E : IDbEntity<PK, E>, DAO : BaseDao<PK, E, *>> : BaseReadOnlyBiz<PK, E, DAO>(),
+    IBaseBiz<PK, E> {
 
     @Transactional
     override fun insert(entity: E): PK = dao.insert(entity)
@@ -41,6 +42,11 @@ open class BaseBiz<PK : Any, E : IDbEntity<PK, E>, DAO: BaseDao<PK, E, *>> : Bas
 
     @Transactional
     override fun update(entity: E): Boolean = dao.update(entity)
+
+    @Transactional
+    override fun update(updatePayload: UpdatePayload<PK>): Boolean {
+        return dao.update(updatePayload)
+    }
 
     @Transactional
     override fun updateWhen(entity: E, criteria: Criteria): Boolean = dao.updateWhen(entity, criteria)

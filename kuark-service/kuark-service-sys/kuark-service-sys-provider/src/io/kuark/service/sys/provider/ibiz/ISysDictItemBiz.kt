@@ -1,5 +1,6 @@
 package io.kuark.service.sys.provider.ibiz
 
+import io.kuark.ability.data.rdb.biz.IBaseBiz
 import io.kuark.service.sys.provider.model.po.SysDictItem
 
 /**
@@ -9,7 +10,7 @@ import io.kuark.service.sys.provider.model.po.SysDictItem
  * @since 1.0.0
  */
 //region your codes 1
-interface ISysDictItemBiz {
+interface ISysDictItemBiz: IBaseBiz<String, SysDictItem> {
 //endregion your codes 1
 
     //region your codes 2

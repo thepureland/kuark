@@ -2,6 +2,8 @@ package io.kuark.ability.data.rdb.biz
 
 import io.kuark.ability.data.rdb.support.IDbEntity
 import io.kuark.base.query.Criteria
+import io.kuark.base.support.payload.UpdatePayload
+import java.lang.IllegalArgumentException
 
 /**
  * 基于关系型数据库表的基础业务操作接口
@@ -92,6 +94,19 @@ interface IBaseBiz<PK : Any, E : IDbEntity<PK, E>>: IBaseReadOnlyBiz<PK, E> {
      * @since 1.0.0
      */
     fun update(entity: E): Boolean
+
+    /**
+     * 用任意对象更新指定id的记录.
+     * 更新规则见 @see UpdatePayload 类
+     *
+     * @param id 主键
+     * @param updatePayload 更新项载体
+     * @return 是否更新成功
+     * @throws IllegalArgumentException 主键值为空时
+     * @author K
+     * @since 1.0.0
+     */
+    fun update(updatePayload: UpdatePayload<PK>): Boolean
 
     /**
      * 有条件的更新实体对象（仅当满足给定的附加查询条件时）

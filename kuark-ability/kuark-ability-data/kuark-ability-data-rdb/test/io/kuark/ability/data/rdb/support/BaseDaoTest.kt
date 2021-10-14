@@ -3,8 +3,10 @@ package io.kuark.ability.data.rdb.support
 import io.kuark.ability.data.rdb.table.TestTable
 import io.kuark.ability.data.rdb.table.TestTableDao
 import io.kuark.ability.data.rdb.table.TestTableKit
+import io.kuark.ability.data.rdb.table.TestTables
 import io.kuark.base.query.Criteria
 import io.kuark.base.query.enums.Operator
+import io.kuark.base.support.payload.SearchPayload
 import io.kuark.base.support.payload.UpdatePayload
 import io.kuark.test.common.SpringTest
 import org.junit.jupiter.api.*
@@ -181,48 +183,6 @@ internal open class BaseDaoTest : SpringTest() {
 
     @Test
     @Transactional
-    open fun updateByUpdatePayload() {
-        class UpdatePayload1 : UpdatePayload<Int>() {
-            var name: String? = null
-            var birthday: LocalDateTime? = null
-        }
-        val updatePayload1 = UpdatePayload1().apply {
-            name = "name"
-            nullProperties = listOf("weight")
-        }
-
-        // id为空
-        assertThrows<java.lang.IllegalArgumentException> { testTableDao.update(updatePayload1) }
-
-        // 有指定nullProperties的值
-        updatePayload1.id = -1
-        var success = testTableDao.update(updatePayload1)
-        assert(success)
-        var entity = testTableDao.getById(-1)!!
-        assertEquals("name", entity.name)
-        assert(entity.birthday != null)
-        assertEquals(null, entity.weight)
-
-        // 未指定nullProperties的值
-        class UpdatePayload2 : UpdatePayload<Int>() {
-            var name: String? = null
-            var height: Int? = null
-        }
-
-        val updateItems2 = UpdatePayload2().apply {
-            id = -1
-            name = "name1"
-        }
-        success = testTableDao.update(updateItems2)
-        assert(success)
-        entity = testTableDao.getById(-1)!!
-        assertEquals("name1", entity.name)
-        assert(entity.height != null)
-    }
-
-
-    @Test
-    @Transactional
     open fun updateWhen() {
         var entity = testTableDao.getById(-1)!!
         entity.name = "name"
@@ -372,6 +332,61 @@ internal open class BaseDaoTest : SpringTest() {
         // 不满足Criteria条件
         criteria = Criteria.add("name", Operator.EQ, "name2")
         assertEquals(1, testTableDao.batchUpdateWhen(entities, criteria))
+    }
+
+    @Test
+    @Transactional
+    open fun batchUpdateWhenByUpdatePayload() {
+        class SearchPayload1 : SearchPayload() {
+            var name: String? = null
+            var weight: Double? = null
+            var noExistProp: String? = "noExistProp"
+            override var returnProperties: List<String>? = listOf("id", "name", "height")
+        }
+
+        class UpdatePayload1 : UpdatePayload<SearchPayload1>() {
+            var name: String? = null
+            var birthday: LocalDateTime? = null
+        }
+
+        val updatePayload1 = UpdatePayload1().apply {
+            name = "name"
+            nullProperties = listOf("weight")
+        }
+
+
+        // 无条件
+        assertThrows<java.lang.IllegalArgumentException> {
+            testTableDao.batchUpdateWhen(updatePayload1)
+        }
+        val searchPayload1 = SearchPayload1()
+        updatePayload1.searchPayload = searchPayload1
+        assertThrows<java.lang.IllegalArgumentException> {
+            testTableDao.batchUpdateWhen(updatePayload1)
+        }
+
+        // 有指定nullProperties的值
+        var count = testTableDao.batchUpdateWhen(updatePayload1) { column, _ ->
+            if (column.name == TestTables.name.name) {
+                column.ieq("nAme1")
+            } else {
+                null
+            }
+        }
+        assertEquals(1, count)
+        var entity = testTableDao.getById(-1)!!
+        assertEquals("name", entity.name)
+        assert(entity.birthday != null)
+        assertEquals(null, entity.weight)
+
+        // 未指定nullProperties的值
+        searchPayload1.name = "name2"
+        updatePayload1.nullProperties = null
+        count = testTableDao.batchUpdateWhen(updatePayload1)
+        assertEquals(1, count)
+        entity = testTableDao.getById(-1)!!
+        assertEquals("name", entity.name)
+        assert(entity.birthday != null)
     }
 
     @Test

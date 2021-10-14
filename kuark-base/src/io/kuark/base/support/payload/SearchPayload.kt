@@ -1,6 +1,7 @@
 package io.kuark.base.support.payload
 
 import io.kuark.base.query.sort.Order
+import io.kuark.base.support.logic.AndOr
 import kotlin.reflect.KClass
 
 
@@ -26,8 +27,8 @@ open class SearchPayload {
     /** 排序规则 */
     open var orders: List<Order>? = null
 
-    /** 各属性间的查询逻辑关系,true为AND, false为OR */
-    open var and: Boolean = true
+    /** 各属性间的查询逻辑关系，默认为AND */
+    open var andOr: AndOr = AndOr.AND
 
     /**
      * 查询结果的属性列表

@@ -2,7 +2,10 @@ package io.kuark.ability.data.rdb.biz
 
 import io.kuark.ability.data.rdb.support.IDbEntity
 import io.kuark.base.query.Criteria
+import io.kuark.base.support.payload.SearchPayload
 import io.kuark.base.support.payload.UpdatePayload
+import org.ktorm.schema.Column
+import org.ktorm.schema.ColumnDeclaring
 import java.lang.IllegalArgumentException
 
 /**
@@ -13,7 +16,7 @@ import java.lang.IllegalArgumentException
  * @author K
  * @since 1.0.0
  */
-interface IBaseBiz<PK : Any, E : IDbEntity<PK, E>>: IBaseReadOnlyBiz<PK, E> {
+interface IBaseBiz<PK : Any, E : IDbEntity<PK, E>> : IBaseReadOnlyBiz<PK, E> {
 
     //region Insert
 
@@ -96,19 +99,6 @@ interface IBaseBiz<PK : Any, E : IDbEntity<PK, E>>: IBaseReadOnlyBiz<PK, E> {
     fun update(entity: E): Boolean
 
     /**
-     * 用任意对象更新指定id的记录.
-     * 更新规则见 @see UpdatePayload 类
-     *
-     * @param id 主键
-     * @param updatePayload 更新项载体
-     * @return 是否更新成功
-     * @throws IllegalArgumentException 主键值为空时
-     * @author K
-     * @since 1.0.0
-     */
-    fun update(updatePayload: UpdatePayload<PK>): Boolean
-
-    /**
      * 有条件的更新实体对象（仅当满足给定的附加查询条件时）
      *
      * @param entity 实体对象
@@ -181,6 +171,24 @@ interface IBaseBiz<PK : Any, E : IDbEntity<PK, E>>: IBaseReadOnlyBiz<PK, E> {
      * @since 1.0.0
      */
     fun batchUpdate(entities: Collection<E>, countOfEachBatch: Int = 1000): Int
+
+    /**
+     * 有条件的批量更新指定属性
+     * 更新规则见 @see UpdatePayload 类，查询规则见 @see SearchPayload
+     *
+     * @param S 查询项载体类型
+     * @param updatePayload 更新项载体
+     * @param whereConditionFactory where条件表达式工厂函数，可以自定义查询逻辑，函数返回null时将按“等于”处理，默认为null
+     * @return 更新的记录数
+     * @throws IllegalArgumentException 无查询条件时
+     * @author K
+     * @since 1.0.0
+     */
+    @Suppress("UNCHECKED_CAST")
+    fun <S : SearchPayload> batchUpdateWhen(
+        updatePayload: UpdatePayload<S>,
+        whereConditionFactory: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)? = null
+    ): Int
 
     /**
      * 有条件的批量更新实体对象（仅当满足给定的附加查询条件时）

@@ -4,12 +4,15 @@ import io.kuark.base.bean.BeanKit
 import io.kuark.base.query.Criteria
 import io.kuark.base.query.enums.Operator
 import io.kuark.base.support.GroupExecutor
+import io.kuark.base.support.logic.AndOr
+import io.kuark.base.support.payload.SearchPayload
 import io.kuark.base.support.payload.UpdatePayload
 import org.ktorm.dsl.*
 import org.ktorm.entity.add
 import org.ktorm.entity.removeIf
+import org.ktorm.schema.Column
+import org.ktorm.schema.ColumnDeclaring
 import org.ktorm.schema.Table
-import java.lang.IllegalArgumentException
 
 /**
  * 基础数据访问对象，封装某数据库表的通用操作
@@ -44,6 +47,8 @@ open class BaseDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadOnlyD
      * @param entity 实体对象
      * @param propertyNames 要保存的属性的可变数组
      * @return 主键值
+     * @author K
+     * @since 1.0.0
      */
     @Suppress("UNCHECKED_CAST")
     open fun insertOnly(entity: E, vararg propertyNames: String): PK {
@@ -62,6 +67,8 @@ open class BaseDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadOnlyD
      * @param entity 实体对象
      * @param excludePropertyNames 不保存的属性的可变数组
      * @return 主键值
+     * @author K
+     * @since 1.0.0
      */
     open fun insertExclude(entity: E, vararg excludePropertyNames: String): PK {
         val onlyProperties = entity.properties.keys.filter { !excludePropertyNames.contains(it) }
@@ -90,6 +97,8 @@ open class BaseDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadOnlyD
      * @param countOfEachBatch 每批大小，缺省为1000
      * @param propertyNames 要保存的属性的可变数组
      * @return 保存的记录数
+     * @author K
+     * @since 1.0.0
      */
     open fun batchInsertOnly(entities: Collection<E>, countOfEachBatch: Int = 1000, vararg propertyNames: String): Int {
         val columnMap = ColumnHelper.columnOf(table(), *propertyNames)
@@ -118,6 +127,8 @@ open class BaseDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadOnlyD
      * @param countOfEachBatch 每批大小，缺省为1000
      * @param excludePropertyNames 不保存的属性的可变数组
      * @return 保存的记录数
+     * @author K
+     * @since 1.0.0
      */
     open fun batchInsertExclude(
         entities: Collection<E>, countOfEachBatch: Int = 1000, vararg excludePropertyNames: String
@@ -140,38 +151,6 @@ open class BaseDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadOnlyD
      * @since 1.0.0
      */
     open fun update(entity: E): Boolean = entity.flushChanges() == 1
-
-    /**
-     * 用任意对象更新指定id的记录.
-     * 更新规则见 @see UpdatePayload 类
-     *
-     * @param updatePayload 更新项载体
-     * @return 是否更新成功
-     * @throws IllegalArgumentException 主键值为空时
-     * @author K
-     * @since 1.0.0
-     */
-    @Suppress("UNCHECKED_CAST")
-    fun update(updatePayload: UpdatePayload<PK>): Boolean {
-        val id = updatePayload.id
-        if (id == null || id == "") {
-            throw IllegalArgumentException("更新记录时主键值为空!")
-        }
-
-        val properties = mutableMapOf<String, Any?>()
-        val propMap = BeanKit.extract(updatePayload)
-        propMap.filter { it.value != null && it.key != UpdatePayload<PK>::id.name }.forEach { (prop, value) ->
-            if (prop == UpdatePayload<PK>::nullProperties.name) {
-                (value as Collection<String>).forEach {
-                    properties[it] = null
-                }
-            } else {
-                properties[prop] = value
-            }
-        }
-        return updateProperties(id, properties)
-    }
-
 
     /**
      * 有条件的更新实体对象（仅当满足给定的附加查询条件时）
@@ -294,6 +273,62 @@ open class BaseDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadOnlyD
      */
     open fun batchUpdateWhen(entities: Collection<E>, criteria: Criteria, countOfEachBatch: Int = 1000): Int {
         return batchUpdateByCriteria(entities, countOfEachBatch, criteria)
+    }
+
+    /**
+     * 有条件的批量更新指定属性
+     * 更新规则见 @see UpdatePayload 类，查询规则见 @see SearchPayload
+     *
+     * @param S 查询项载体类型
+     * @param updatePayload 更新项载体
+     * @param whereConditionFactory where条件表达式工厂函数，可以自定义查询逻辑，函数返回null时将按“等于”处理，默认为null
+     * @return 更新的记录数
+     * @throws IllegalArgumentException 无查询条件时
+     * @author K
+     * @since 1.0.0
+     */
+    @Suppress("UNCHECKED_CAST")
+    fun <S : SearchPayload> batchUpdateWhen(
+        updatePayload: UpdatePayload<S>,
+        whereConditionFactory: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)? = null
+    ): Int {
+        val searchPayload = updatePayload.searchPayload
+        val wherePropertyMap = if (searchPayload == null) {
+            emptyMap<String, Any>()
+        } else {
+            val entityProperties = getEntityProperties()
+            getWherePropertyMap(searchPayload, entityProperties)
+        }
+
+        val updatePropertyMap = mutableMapOf<String, Any?>()
+        val updatePropMap = BeanKit.extract(updatePayload)
+        updatePropMap.filter {
+            it.value != null && it.key != IDbEntity<PK, E>::id.name && it.key != UpdatePayload<S>::searchPayload.name
+        }.forEach { (prop, value) ->
+            if (prop == UpdatePayload<S>::nullProperties.name) {
+                (value as Collection<String>).forEach {
+                    updatePropertyMap[it] = null
+                }
+            } else {
+                updatePropertyMap[prop] = value
+            }
+        }
+
+        val updateColumnMap = ColumnHelper.columnOf(table(), *updatePropertyMap.keys.toTypedArray())
+        val andOr = searchPayload?.andOr ?: AndOr.AND
+        val whereExpression = processWhere(wherePropertyMap, andOr, true, whereConditionFactory)
+        whereExpression ?: throw IllegalArgumentException("不能做无条件的数据库表的更新操作！")
+
+        return database().batchUpdate(table()) {
+            item {
+                updatePropertyMap.forEach { (name, value) ->
+                    set(updateColumnMap[name]!!, value)
+                }
+                where {
+                    whereExpression
+                }
+            }
+        }.sum()
     }
 
     /**

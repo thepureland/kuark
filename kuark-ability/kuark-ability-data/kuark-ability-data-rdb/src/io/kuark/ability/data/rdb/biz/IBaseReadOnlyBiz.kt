@@ -130,7 +130,7 @@ interface IBaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>> {
      *
      * @param properties Map(属性名，属性值)
      * @param orders     排序规则
-     * @param whereExpression where表达式函数，可以自定义查询逻辑，为null将按“等于”处理，默认为null
+     * @param whereConditionFactory where条件表达式工厂函数，可以自定义查询逻辑，函数返回null时将按“等于”处理，默认为null
      * @return 实体对象列表
      * @author K
      * @since 1.0.0
@@ -138,7 +138,7 @@ interface IBaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>> {
     fun andSearch(
         properties: Map<String, *>,
         vararg orders: Order,
-        whereExpression: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)? = null
+        whereConditionFactory: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)? = null
     ): List<E>
 
     /**
@@ -147,7 +147,7 @@ interface IBaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>> {
      * @param properties     Map(属性名，属性值）
      * @param returnProperty 要返回的属性名
      * @param orders         排序规则
-     * @param whereExpression where表达式函数，可以自定义查询逻辑，为null将按“等于”处理，默认为null
+     * @param whereConditionFactory where条件表达式工厂函数，可以自定义查询逻辑，函数返回null时将按“等于”处理，默认为null
      * @return List(指定的属性的值)
      * @author K
      * @since 1.0.0
@@ -156,7 +156,7 @@ interface IBaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>> {
         properties: Map<String, *>,
         returnProperty: String,
         vararg orders: Order,
-        whereExpression: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)? = null
+        whereConditionFactory: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)? = null
     ): List<*>
 
     /**
@@ -165,7 +165,7 @@ interface IBaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>> {
      * @param properties       Map(属性名，属性值)
      * @param returnProperties 要返回的属性名集合
      * @param orders           排序规则
-     * @param whereExpression where表达式函数，可以自定义查询逻辑，为null将按“等于”处理，默认为null
+     * @param whereConditionFactory where条件表达式工厂函数，可以自定义查询逻辑，函数返回null时将按“等于”处理，默认为null
      * @return List(Map(指定的属性名，属性值))
      * @author K
      * @since 1.0.0
@@ -174,7 +174,7 @@ interface IBaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>> {
         properties: Map<String, *>,
         returnProperties: Collection<String>,
         vararg orders: Order,
-        whereExpression: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)? = null
+        whereConditionFactory: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)? = null
     ): List<Map<String, *>>
 
     //endregion andSearch
@@ -186,7 +186,7 @@ interface IBaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>> {
      *
      * @param properties Map(属性名，属性值)
      * @param orders     排序规则
-     * @param whereExpression where表达式函数，可以自定义查询逻辑，为null将按“等于”处理，默认为null
+     * @param whereConditionFactory where条件表达式工厂函数，可以自定义查询逻辑，函数返回null时将按“等于”处理，默认为null
      * @return 实体对象列表
      * @author K
      * @since 1.0.0
@@ -194,7 +194,7 @@ interface IBaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>> {
     fun orSearch(
         properties: Map<String, *>,
         vararg orders: Order,
-        whereExpression: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)? = null
+        whereConditionFactory: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)? = null
     ): List<E>
 
     /**
@@ -203,7 +203,7 @@ interface IBaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>> {
      * @param properties     Map(属性名，属性值)
      * @param returnProperty 要返回的属性名
      * @param orders         排序规则
-     * @param whereExpression where表达式函数，可以自定义查询逻辑，为null将按“等于”处理，默认为null
+     * @param whereConditionFactory where条件表达式工厂函数，可以自定义查询逻辑，函数返回null时将按“等于”处理，默认为null
      * @return List(指定的属性的值)
      * @author K
      * @since 1.0.0
@@ -212,7 +212,7 @@ interface IBaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>> {
         properties: Map<String, *>,
         returnProperty: String,
         vararg orders: Order,
-        whereExpression: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)? = null
+        whereConditionFactory: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)? = null
     ): List<*>
 
     /**
@@ -221,7 +221,7 @@ interface IBaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>> {
      * @param properties       Map(属性名，属性值)
      * @param returnProperties 要返回的属性名集合
      * @param orders           排序规则
-     * @param whereExpression where表达式函数，可以自定义查询逻辑，为null将按“等于”处理，默认为null
+     * @param whereConditionFactory where条件表达式工厂函数，可以自定义查询逻辑，函数返回null时将按“等于”处理，默认为null
      * @return List(Map(指定的属性名，属性值))
      * @author K
      * @since 1.0.0
@@ -230,7 +230,7 @@ interface IBaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>> {
         properties: Map<String, *>,
         returnProperties: Collection<String>,
         vararg orders: Order,
-        whereExpression: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)? = null
+        whereConditionFactory: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)? = null
     ): List<Map<String, *>>
 
     //endregion orSearch
@@ -415,14 +415,14 @@ interface IBaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>> {
      * 根据查询载体对象查询(包括分页), 具体规则见 @see SearchPayload
      *
      * @param searchPayload 查询载体对象
-     * @param whereExpression where表达式函数，可以自定义查询逻辑，为null将按“等于”处理，默认为null
+     * @param whereConditionFactory where条件表达式工厂函数，可以自定义查询逻辑，函数返回null时将按“等于”处理，默认为null
      * @return 结果列表, 有三种类型可能, @see SearchPayload
      * @author K
      * @since 1.0.0
      */
     fun search(
         searchPayload: SearchPayload,
-        whereExpression: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)? = null
+        whereConditionFactory: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)? = null
     ): List<*>
 
     //endregion payload search
@@ -444,14 +444,14 @@ interface IBaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>> {
      * 计算记录数
      *
      * @param searchPayload 查询载体对象
-     * @param whereExpression where表达式函数，可以自定义查询逻辑，为null将按“等于”处理，默认为null
+     * @param whereConditionFactory where条件表达式工厂函数，可以自定义查询逻辑，函数返回null时将按“等于”处理，默认为null
      * @return 记录数
      * @author K
      * @since 1.0.0
      */
     fun count(
         searchPayload: SearchPayload,
-        whereExpression: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)? = null
+        whereConditionFactory: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)? = null
     ): Int
 
     /**

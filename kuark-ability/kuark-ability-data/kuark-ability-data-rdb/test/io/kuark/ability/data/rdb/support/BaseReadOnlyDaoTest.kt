@@ -151,7 +151,9 @@ internal class BaseReadOnlyDaoTest : SpringTest() {
 
         // 自定义查询逻辑
         results = testTableDao.andSearch(propertyMap) { column, _ ->
-            column.ilike("%Me5")
+            if (column.name == TestTables.name.name) {
+                column.ilike("%Me5")
+            } else null
         }
         assertEquals(1, results.size)
         assertEquals("name5", results.first().name)
@@ -449,6 +451,7 @@ internal class BaseReadOnlyDaoTest : SpringTest() {
             var weight: Double? = null
             var noExistProp: String? = "noExistProp"
         }
+
         val searchPayload1 = SearchPayload1().apply {
             name = "nAme1"
         }

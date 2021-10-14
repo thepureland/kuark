@@ -4,6 +4,9 @@ import io.kuark.ability.data.rdb.support.BaseReadOnlyDao
 import io.kuark.ability.data.rdb.support.IDbEntity
 import io.kuark.base.query.Criteria
 import io.kuark.base.query.sort.Order
+import io.kuark.base.support.payload.SearchPayload
+import org.ktorm.schema.Column
+import org.ktorm.schema.ColumnDeclaring
 import org.springframework.beans.factory.annotation.Autowired
 
 /**
@@ -43,25 +46,62 @@ open class BaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>, DAO : BaseReadOnlyDao
     override fun allSearchProperties(returnProperties: Collection<String>, vararg orders: Order): List<Map<String, *>> =
         dao.allSearchProperties(returnProperties, *orders)
 
-    override fun andSearch(properties: Map<String, *>, vararg orders: Order): List<E> =
-        dao.andSearch(properties, *orders)
+    override fun andSearch(
+        properties: Map<String, *>,
+        vararg orders: Order,
+        whereExpression: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)?
+    ): List<E> =
+        dao.andSearch(properties, *orders) { column, value ->
+            whereExpression?.invoke(column, value)
+        }
 
-    override fun andSearchProperty(properties: Map<String, *>, returnProperty: String, vararg orders: Order): List<*> =
-        dao.andSearchProperty(properties, returnProperty, *orders)
+    override fun andSearchProperty(
+        properties: Map<String, *>,
+        returnProperty: String,
+        vararg orders: Order,
+        whereExpression: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)?
+    ): List<*> =
+        dao.andSearchProperty(properties, returnProperty, *orders) { column, value ->
+            whereExpression?.invoke(column, value)
+        }
 
     override fun andSearchProperties(
-        properties: Map<String, *>, returnProperties: Collection<String>, vararg orders: Order
-    ): List<Map<String, *>> = dao.andSearchProperties(properties, returnProperties, *orders)
+        properties: Map<String, *>,
+        returnProperties: Collection<String>,
+        vararg orders: Order,
+        whereExpression: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)?
+    ): List<Map<String, *>> =
+        dao.andSearchProperties(properties, returnProperties, *orders) { column, value ->
+            whereExpression?.invoke(column, value)
+        }
 
-    override fun orSearch(properties: Map<String, *>, vararg orders: Order): List<E> =
-        dao.orSearch(properties, *orders)
+    override fun orSearch(
+        properties: Map<String, *>,
+        vararg orders: Order,
+        whereExpression: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)?
+    ): List<E> =
+        dao.orSearch(properties, *orders) { column, value ->
+            whereExpression?.invoke(column, value)
+        }
 
-    override fun orSearchProperty(properties: Map<String, *>, returnProperty: String, vararg orders: Order): List<*> =
-        dao.orSearchProperty(properties, returnProperty, *orders)
+    override fun orSearchProperty(
+        properties: Map<String, *>,
+        returnProperty: String,
+        vararg orders: Order,
+        whereExpression: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)?
+    ): List<*> =
+        dao.orSearchProperty(properties, returnProperty, *orders) { column, value ->
+            whereExpression?.invoke(column, value)
+        }
 
     override fun orSearchProperties(
-        properties: Map<String, *>, returnProperties: Collection<String>, vararg orders: Order
-    ): List<Map<String, *>> = dao.orSearchProperties(properties, returnProperties, *orders)
+        properties: Map<String, *>,
+        returnProperties: Collection<String>,
+        vararg orders: Order,
+        whereExpression: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)?
+    ): List<Map<String, *>> = dao.orSearchProperties(properties, returnProperties, *orders) { column, value ->
+        whereExpression?.invoke(column, value)
+    }
 
     override fun inSearch(property: String, values: Collection<*>, vararg orders: Order): List<E> =
         dao.inSearch(property, values, *orders)
@@ -107,6 +147,11 @@ open class BaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>, DAO : BaseReadOnlyDao
 
     override fun count(criteria: Criteria?): Int = dao.count(criteria)
 
+    override fun count(
+        searchPayload: SearchPayload,
+        whereExpression: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)?
+    ): Int = dao.count(searchPayload, whereExpression)
+
     override fun sum(property: String, criteria: Criteria?): Number = dao.sum(property, criteria)
 
     override fun avg(property: String, criteria: Criteria?): Number = dao.avg(property, criteria)
@@ -114,5 +159,10 @@ open class BaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>, DAO : BaseReadOnlyDao
     override fun max(property: String, criteria: Criteria?): Any = dao.avg(property, criteria)
 
     override fun min(property: String, criteria: Criteria?): Any = dao.avg(property, criteria)
+
+    override fun search(
+        searchPayload: SearchPayload,
+        whereExpression: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)?
+    ): List<*> = dao.search(searchPayload, whereExpression)
 
 }

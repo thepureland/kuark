@@ -4,17 +4,22 @@ import io.kuark.ability.data.rdb.kit.RdbKit
 import io.kuark.ability.data.rdb.table.TestTable
 import io.kuark.ability.data.rdb.table.TestTableDao
 import io.kuark.ability.data.rdb.table.TestTableKit
+import io.kuark.ability.data.rdb.table.TestTables
 import io.kuark.base.query.Criteria
 import io.kuark.base.query.Criterion
 import io.kuark.base.query.enums.Operator
 import io.kuark.base.query.sort.Order
+import io.kuark.base.support.payload.SearchPayload
 import io.kuark.test.common.SpringTest
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
+import org.ktorm.dsl.eq
+import org.ktorm.dsl.like
 import org.springframework.beans.factory.annotation.Autowired
+import java.time.LocalDateTime
 
 /**
  * BaseReadOnlyDao测试用例
@@ -141,8 +146,15 @@ internal class BaseReadOnlyDaoTest : SpringTest() {
     @Test
     fun andSearch() {
         val propertyMap = mapOf(TestTable::name.name to "name5", TestTable::weight.name to null)
-        val results = testTableDao.andSearch(propertyMap)
+        var results = testTableDao.andSearch(propertyMap)
         assertEquals(1, results.size)
+
+        // 自定义查询逻辑
+        results = testTableDao.andSearch(propertyMap) { column, _ ->
+            column.ilike("%Me5")
+        }
+        assertEquals(1, results.size)
+        assertEquals("name5", results.first().name)
     }
 
     @Test
@@ -347,12 +359,107 @@ internal class BaseReadOnlyDaoTest : SpringTest() {
     //endregion pagingSearch
 
 
+    //region payload search
+
+    @Test
+    fun searchBySearchPayload() {
+        // 指定returnProperties, 多个属性
+        class SearchPayload1 : SearchPayload() {
+            var name: String? = null
+            var weight: Double? = null
+            var noExistProp: String? = "noExistProp"
+            override var returnProperties: List<String>? = listOf("id", "name", "height")
+        }
+
+        val searchPayload1 = SearchPayload1().apply {
+            name = "name1"
+            weight = 56.5
+        }
+        var result = testTableDao.search(searchPayload1)
+        assertEquals(1, result.size)
+        assert(result.first() is Map<*, *>)
+        assertEquals(3, (result.first() as Map<*, *>).size)
+        assertEquals(-1, (result.first() as Map<*, *>)["id"])
+
+        // 指定returnProperties, 单个属性
+        searchPayload1.returnProperties = listOf("id")
+        result = testTableDao.search(searchPayload1)
+        assertEquals(1, result.size)
+        assertEquals(-1, result.first())
+
+        // returnProperties为null
+        searchPayload1.returnProperties = null
+        result = testTableDao.search(searchPayload1)
+        assertEquals(1, result.size)
+        assert(result.first() is TestTable)
+        assertEquals(-1, (result.first() as TestTable).id)
+
+        // 分页 & 排序
+        searchPayload1.name = null
+        searchPayload1.weight = null
+        searchPayload1.pageNo = 1
+        searchPayload1.pageSize = 3
+        searchPayload1.orders = listOf(Order.asc(TestTable::name.name))
+        result = testTableDao.search(searchPayload1)
+        assertEquals(3, result.size)
+        assert(result.first() is TestTable)
+        assertEquals(-1, (result.first() as TestTable).id)
+
+        // 指定
+        class Result {
+            var id: Int? = null
+            var name: String? = null
+            var weight: Double? = null
+            var noExistProp: String? = "noExistProp"
+        }
+        searchPayload1.returnEntityClass = Result::class
+        result = testTableDao.search(searchPayload1)
+        assertEquals(3, result.size)
+        assert(result.first() is Result)
+        assertEquals(-1, (result.first() as Result).id)
+
+        // 自定义查询逻辑
+        searchPayload1.name = "nAme1"
+        searchPayload1.pageNo = null
+        result = testTableDao.search(searchPayload1) { column, value ->
+            if (column.name == TestTables::name.name) {
+                SqlExpressionFactory.create(column, Operator.ILIKE_S, value)
+            } else {
+                null
+            }
+        }
+        assertEquals(3, result.size)
+    }
+
+    //endregion payload search
+
+
     //region aggregate
     @Test
     fun count() {
         assertEquals(11, testTableDao.count())
         val criteria = Criteria.add(TestTable::name.name, Operator.LIKE_S, "name1")
         assertEquals(3, testTableDao.count(criteria))
+    }
+
+    @Test
+    fun countByPayload() {
+        class SearchPayload1 : SearchPayload() {
+            var name: String? = null
+            var weight: Double? = null
+            var noExistProp: String? = "noExistProp"
+        }
+        val searchPayload1 = SearchPayload1().apply {
+            name = "nAme1"
+        }
+        val result = testTableDao.count(searchPayload1) { column, value ->
+            if (column.name == TestTables::name.name) {
+                SqlExpressionFactory.create(column, Operator.ILIKE_S, value)
+            } else {
+                null
+            }
+        }
+        assertEquals(3, result)
     }
 
     @Test

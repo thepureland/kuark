@@ -3,6 +3,9 @@ package io.kuark.ability.data.rdb.biz
 import io.kuark.ability.data.rdb.support.IDbEntity
 import io.kuark.base.query.Criteria
 import io.kuark.base.query.sort.Order
+import io.kuark.base.support.payload.SearchPayload
+import org.ktorm.schema.Column
+import org.ktorm.schema.ColumnDeclaring
 
 /**
  * 基于关系型数据库表的基础只读业务操作接口
@@ -15,7 +18,7 @@ import io.kuark.base.query.sort.Order
 interface IBaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>> {
 
     //region Search
-    
+
     /**
      * 查询指定主键值的实体
      *
@@ -49,6 +52,8 @@ interface IBaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>> {
      * @param value    属性值
      * @param orders   排序规则
      * @return 指定类名对象的结果列表
+     * @author K
+     * @since 1.0.0
      */
     fun oneSearch(property: String, value: Any?, vararg orders: Order): List<E>
 
@@ -60,6 +65,8 @@ interface IBaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>> {
      * @param returnProperty 返回的属性名
      * @param orders         排序规则
      * @return List(属性值)
+     * @author K
+     * @since 1.0.0
      */
     fun oneSearchProperty(property: String, value: Any?, returnProperty: String, vararg orders: Order): List<*>
 
@@ -71,6 +78,8 @@ interface IBaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>> {
      * @param returnProperties 返回的属性名称集合
      * @param orders           排序规则
      * @return List(Map(属性名, 属性值)), 一个Map封装一个记录
+     * @author K
+     * @since 1.0.0
      */
     fun oneSearchProperties(
         property: String, value: Any?, returnProperties: Collection<String>, vararg orders: Order
@@ -85,6 +94,8 @@ interface IBaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>> {
      *
      * @param orders 排序规则
      * @return 实体对象列表
+     * @author K
+     * @since 1.0.0
      */
     fun allSearch(vararg orders: Order): List<E>
 
@@ -94,6 +105,8 @@ interface IBaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>> {
      * @param returnProperty 属性名
      * @param orders         排序规则
      * @return List(属性值)
+     * @author K
+     * @since 1.0.0
      */
     fun allSearchProperty(returnProperty: String, vararg orders: Order): List<*>
 
@@ -103,6 +116,8 @@ interface IBaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>> {
      * @param returnProperties 属性名称集合
      * @param orders           排序规则
      * @return List(Map(属性名, 属性值))
+     * @author K
+     * @since 1.0.0
      */
     fun allSearchProperties(returnProperties: Collection<String>, vararg orders: Order): List<Map<String, *>>
 
@@ -115,9 +130,16 @@ interface IBaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>> {
      *
      * @param properties Map(属性名，属性值)
      * @param orders     排序规则
+     * @param whereExpression where表达式函数，可以自定义查询逻辑，为null将按“等于”处理，默认为null
      * @return 实体对象列表
+     * @author K
+     * @since 1.0.0
      */
-    fun andSearch(properties: Map<String, *>, vararg orders: Order): List<E>
+    fun andSearch(
+        properties: Map<String, *>,
+        vararg orders: Order,
+        whereExpression: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)? = null
+    ): List<E>
 
     /**
      * 根据多个属性进行and条件查询，只返回指定的单个属性的列表
@@ -125,9 +147,17 @@ interface IBaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>> {
      * @param properties     Map(属性名，属性值）
      * @param returnProperty 要返回的属性名
      * @param orders         排序规则
+     * @param whereExpression where表达式函数，可以自定义查询逻辑，为null将按“等于”处理，默认为null
      * @return List(指定的属性的值)
+     * @author K
+     * @since 1.0.0
      */
-    fun andSearchProperty(properties: Map<String, *>, returnProperty: String, vararg orders: Order): List<*>
+    fun andSearchProperty(
+        properties: Map<String, *>,
+        returnProperty: String,
+        vararg orders: Order,
+        whereExpression: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)? = null
+    ): List<*>
 
     /**
      * 根据多个属性进行and条件查询，只返回指定属性的列表
@@ -135,10 +165,16 @@ interface IBaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>> {
      * @param properties       Map(属性名，属性值)
      * @param returnProperties 要返回的属性名集合
      * @param orders           排序规则
+     * @param whereExpression where表达式函数，可以自定义查询逻辑，为null将按“等于”处理，默认为null
      * @return List(Map(指定的属性名，属性值))
+     * @author K
+     * @since 1.0.0
      */
     fun andSearchProperties(
-        properties: Map<String, *>, returnProperties: Collection<String>, vararg orders: Order
+        properties: Map<String, *>,
+        returnProperties: Collection<String>,
+        vararg orders: Order,
+        whereExpression: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)? = null
     ): List<Map<String, *>>
 
     //endregion andSearch
@@ -150,9 +186,16 @@ interface IBaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>> {
      *
      * @param properties Map(属性名，属性值)
      * @param orders     排序规则
+     * @param whereExpression where表达式函数，可以自定义查询逻辑，为null将按“等于”处理，默认为null
      * @return 实体对象列表
+     * @author K
+     * @since 1.0.0
      */
-    fun orSearch(properties: Map<String, *>, vararg orders: Order): List<E>
+    fun orSearch(
+        properties: Map<String, *>,
+        vararg orders: Order,
+        whereExpression: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)? = null
+    ): List<E>
 
     /**
      * 根据多个属性进行or条件查询，只返回指定的单个属性的列表
@@ -160,9 +203,17 @@ interface IBaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>> {
      * @param properties     Map(属性名，属性值)
      * @param returnProperty 要返回的属性名
      * @param orders         排序规则
+     * @param whereExpression where表达式函数，可以自定义查询逻辑，为null将按“等于”处理，默认为null
      * @return List(指定的属性的值)
+     * @author K
+     * @since 1.0.0
      */
-    fun orSearchProperty(properties: Map<String, *>, returnProperty: String, vararg orders: Order): List<*>
+    fun orSearchProperty(
+        properties: Map<String, *>,
+        returnProperty: String,
+        vararg orders: Order,
+        whereExpression: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)? = null
+    ): List<*>
 
     /**
      * 根据多个属性进行or条件查询，只返回指定的属性的列表
@@ -170,16 +221,23 @@ interface IBaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>> {
      * @param properties       Map(属性名，属性值)
      * @param returnProperties 要返回的属性名集合
      * @param orders           排序规则
+     * @param whereExpression where表达式函数，可以自定义查询逻辑，为null将按“等于”处理，默认为null
      * @return List(Map(指定的属性名，属性值))
+     * @author K
+     * @since 1.0.0
      */
     fun orSearchProperties(
-        properties: Map<String, *>, returnProperties: Collection<String>, vararg orders: Order
+        properties: Map<String, *>,
+        returnProperties: Collection<String>,
+        vararg orders: Order,
+        whereExpression: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)? = null
     ): List<Map<String, *>>
 
     //endregion orSearch
 
 
     //region inSearch
+
     /**
      * in查询，返回实体类对象列表
      *
@@ -187,6 +245,8 @@ interface IBaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>> {
      * @param values   in条件值集合
      * @param orders   排序规则
      * @return 指定类名对象的结果列表
+     * @author K
+     * @since 1.0.0
      */
     fun inSearch(property: String, values: Collection<*>, vararg orders: Order): List<E>
 
@@ -198,6 +258,8 @@ interface IBaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>> {
      * @param returnProperty 要返回的属性名
      * @param orders         排序规则
      * @return 指定属性的值列表
+     * @author K
+     * @since 1.0.0
      */
     fun inSearchProperty(
         property: String, values: List<*>, returnProperty: String, vararg orders: Order
@@ -211,6 +273,8 @@ interface IBaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>> {
      * @param returnProperties 要返回的属性名集合
      * @param orders           排序规则
      * @return List(Map(指定的属性名，属性值))
+     * @author K
+     * @since 1.0.0
      */
     fun inSearchProperties(
         property: String, values: List<*>, returnProperties: Collection<String>, vararg orders: Order
@@ -223,6 +287,8 @@ interface IBaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>> {
      * @param orders 排序规则
      * @param orders 排序规则
      * @return 实体对象列表
+     * @author K
+     * @since 1.0.0
      */
     fun inSearchById(values: List<PK>, vararg orders: Order): List<E>
 
@@ -233,6 +299,8 @@ interface IBaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>> {
      * @param returnProperty 要返回的属性名
      * @param orders         排序规则
      * @return 指定属性的值列表
+     * @author K
+     * @since 1.0.0
      */
     fun inSearchPropertyById(values: List<PK>, returnProperty: String, vararg orders: Order): List<*>
 
@@ -243,6 +311,8 @@ interface IBaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>> {
      * @param returnProperties 要返回的属性名集合
      * @param orders           排序规则
      * @return List(Map(指定的属性名, 属性值))
+     * @author K
+     * @since 1.0.0
      */
     fun inSearchPropertiesById(
         values: List<PK>, returnProperties: Collection<String>, vararg orders: Order
@@ -258,6 +328,8 @@ interface IBaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>> {
      * @param criteria 查询条件
      * @param orders   排序规则
      * @return 实体对象列表
+     * @author K
+     * @since 1.0.0
      */
     fun search(criteria: Criteria, vararg orders: Order): List<E>
 
@@ -268,6 +340,8 @@ interface IBaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>> {
      * @param returnProperty 要返回的属性名
      * @param orders         排序规则
      * @return 指定属性的值列表
+     * @author K
+     * @since 1.0.0
      */
     fun searchProperty(criteria: Criteria, returnProperty: String, vararg orders: Order): List<*>
 
@@ -278,6 +352,8 @@ interface IBaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>> {
      * @param returnProperties 要返回的属性名集合
      * @param orders           排序规则
      * @return List(Map(指定的属性名 属性值))
+     * @author K
+     * @since 1.0.0
      */
     fun searchProperties(
         criteria: Criteria, returnProperties: Collection<String>, vararg orders: Order
@@ -295,6 +371,8 @@ interface IBaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>> {
      * @param pageSize 每页条数
      * @param orders   排序规则
      * @return 实体对象列表
+     * @author K
+     * @since 1.0.0
      */
     fun pagingSearch(criteria: Criteria, pageNo: Int, pageSize: Int, vararg orders: Order): List<E>
 
@@ -306,6 +384,8 @@ interface IBaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>> {
      * @param pageSize 每页条数
      * @param orders   排序规则
      * @return 实体对象列表
+     * @author K
+     * @since 1.0.0
      */
     fun pagingReturnProperty(
         criteria: Criteria, returnProperty: String, pageNo: Int, pageSize: Int, vararg orders: Order
@@ -319,12 +399,33 @@ interface IBaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>> {
      * @param pageSize 每页条数
      * @param orders   排序规则
      * @return 实体对象列表
+     * @author K
+     * @since 1.0.0
      */
     fun pagingReturnProperties(
         criteria: Criteria, returnProperties: Collection<String>, pageNo: Int, pageSize: Int, vararg orders: Order
     ): List<Map<String, *>>
 
     //endregion pagingSearch
+
+
+    //region payload search
+
+    /**
+     * 根据查询载体对象查询(包括分页), 具体规则见 @see SearchPayload
+     *
+     * @param searchPayload 查询载体对象
+     * @param whereExpression where表达式函数，可以自定义查询逻辑，为null将按“等于”处理，默认为null
+     * @return 结果列表, 有三种类型可能, @see SearchPayload
+     * @author K
+     * @since 1.0.0
+     */
+    fun search(
+        searchPayload: SearchPayload,
+        whereExpression: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)? = null
+    ): List<*>
+
+    //endregion payload search
 
 
     //region aggregate
@@ -334,8 +435,24 @@ interface IBaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>> {
      *
      * @param criteria 查询条件，为null将计算所有记录
      * @return 记录数
+     * @author K
+     * @since 1.0.0
      */
     fun count(criteria: Criteria? = null): Int
+
+    /**
+     * 计算记录数
+     *
+     * @param searchPayload 查询载体对象
+     * @param whereExpression where表达式函数，可以自定义查询逻辑，为null将按“等于”处理，默认为null
+     * @return 记录数
+     * @author K
+     * @since 1.0.0
+     */
+    fun count(
+        searchPayload: SearchPayload,
+        whereExpression: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)? = null
+    ): Int
 
     /**
      * 求和. 对满足条件的记录根据指定属性进行求和
@@ -343,6 +460,8 @@ interface IBaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>> {
      * @param property 待求和的属性
      * @param criteria 查询条件，为null将计算所有记录
      * @return 和
+     * @author K
+     * @since 1.0.0
      */
     fun sum(property: String, criteria: Criteria? = null): Number
 
@@ -352,6 +471,8 @@ interface IBaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>> {
      * @param property 待求平均值的属性
      * @param criteria 查询条件，为null将计算所有记录
      * @return 平均值
+     * @author K
+     * @since 1.0.0
      */
     fun avg(property: String, criteria: Criteria? = null): Number
 
@@ -361,6 +482,8 @@ interface IBaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>> {
      * @param property 待求最大值的属性
      * @param criteria 查询条件，为null将计算所有记录
      * @return 最大值
+     * @author K
+     * @since 1.0.0
      */
     fun max(property: String, criteria: Criteria? = null): Any?
 
@@ -370,6 +493,8 @@ interface IBaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>> {
      * @param property 待求最小值的属性
      * @param criteria 查询条件，为null将计算所有记录
      * @return 最小值
+     * @author K
+     * @since 1.0.0
      */
     fun min(property: String, criteria: Criteria? = null): Any?
 

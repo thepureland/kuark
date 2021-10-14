@@ -29,4 +29,8 @@ class SysDictSearchPayload: SearchPayload() {
     /** 是否启用 */
     var isActive: Boolean? = null
 
+    override var pageNo: Int? = 1
+
+    override var pageSize: Int? = 10
+
 }

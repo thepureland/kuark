@@ -1,6 +1,7 @@
 package io.kuark.ability.data.rdb.support
 
 import io.kuark.base.lang.string.humpToUnderscore
+import org.ktorm.schema.BaseTable
 import org.ktorm.schema.Column
 import org.ktorm.schema.Table
 import java.util.*
@@ -19,7 +20,7 @@ object ColumnHelper {
      * @param propertyNames 属性名可变数组
      * @return 列对象数组
      */
-    fun columnOf(table: Table<*>, vararg propertyNames: String): Map<String, Column<Any>> { //TODO 是否ktorm能从列绑定关系直接取?
+    fun columnOf(table: BaseTable<*>, vararg propertyNames: String): Map<String, Column<Any>> { //TODO 是否ktorm能从列绑定关系直接取?
         if (propertyNames.isEmpty()) return emptyMap()
 
         val tableName = table.tableName

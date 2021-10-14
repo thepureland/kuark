@@ -19,6 +19,6 @@ open class UpdatePayload<T> : IIdEntity<T> {
     override var id: T? = null
 
     /** 值要设置为null的属性的列表 */
-    var nullProperties: List<String>? = null
+    open var nullProperties: List<String>? = null
 
 }

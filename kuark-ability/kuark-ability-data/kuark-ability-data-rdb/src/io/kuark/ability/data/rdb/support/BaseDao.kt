@@ -45,6 +45,7 @@ open class BaseDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadOnlyD
      * @param propertyNames 要保存的属性的可变数组
      * @return 主键值
      */
+    @Suppress("UNCHECKED_CAST")
     open fun insertOnly(entity: E, vararg propertyNames: String): PK {
         val properties = entity.properties
         val columns = ColumnHelper.columnOf(table(), *propertyNames)
@@ -159,8 +160,8 @@ open class BaseDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadOnlyD
 
         val properties = mutableMapOf<String, Any?>()
         val propMap = BeanKit.extract(updatePayload)
-        propMap.filter { it.value != null && it.key != "id" }.forEach { (prop, value) ->
-            if (prop == "nullProperties") {
+        propMap.filter { it.value != null && it.key != UpdatePayload<PK>::id.name }.forEach { (prop, value) ->
+            if (prop == UpdatePayload<PK>::nullProperties.name) {
                 (value as Collection<String>).forEach {
                     properties[it] = null
                 }
@@ -191,7 +192,7 @@ open class BaseDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadOnlyD
      * @return 是否更新成功
      */
     open fun updateProperties(id: PK, properties: Map<String, *>): Boolean {
-        val propertyNames = properties.keys.filter { it != "id" }.toTypedArray()
+        val propertyNames = properties.keys.filter { it != IDbEntity<PK, E>::id.name }.toTypedArray()
         val columnMap = ColumnHelper.columnOf(table(), *propertyNames)
         return database().update(table()) {
             properties.forEach { (name, value) ->
@@ -418,7 +419,7 @@ open class BaseDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadOnlyD
      * @return 删除的记录数
      */
     open fun batchDelete(ids: Collection<PK>): Int {
-        val criteria = Criteria.add("id", Operator.IN, ids.toList())
+        val criteria = Criteria.add(IDbEntity<PK, E>::id.name, Operator.IN, ids.toList())
         return entitySequence().removeIf { CriteriaConverter.convert(criteria, table()) }
     }
 
@@ -439,7 +440,7 @@ open class BaseDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadOnlyD
         val propertyNames = propertyMap.keys.toTypedArray()
         val columnMap = ColumnHelper.columnOf(table(), *propertyNames)
         return database().update(table()) {
-            propertyMap.filter { it.key != "id" }.forEach { (name, value) ->
+            propertyMap.filter { it.key != IDbEntity<PK, E>::id.name }.forEach { (name, value) ->
                 set(columnMap[name]!!, propertyMap[name])
             }
             where {
@@ -476,7 +477,7 @@ open class BaseDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadOnlyD
             val counts = database().batchUpdate(table()) {
                 for (entity in it) {
                     item {
-                        entity.properties.filter { it.key != "id" }.forEach { (name, value) ->
+                        entity.properties.filter { it.key != IDbEntity<PK, E>::id.name }.forEach { (name, value) ->
                             if (columnMap.containsKey(name)) {
                                 set(columnMap[name]!!, value)
                             }

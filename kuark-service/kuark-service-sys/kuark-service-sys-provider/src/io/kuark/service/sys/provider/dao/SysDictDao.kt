@@ -77,7 +77,9 @@ open class SysDictDao : BaseDao<String, SysDict, SysDicts>() {
             }
             query = query.orderBy(*orderExps.toTypedArray())
         }
-        return query.limit((searchPayload.pageNo - 1) * searchPayload.pageSize, searchPayload.pageSize)
+        val pageNo = searchPayload.pageNo ?: 1
+        val pageSize = searchPayload.pageSize ?: 10
+        return query.limit((pageNo - 1) * pageSize, pageSize)
             .map { row ->
                 SysDictListRecord(
                     row[SysDicts.module],

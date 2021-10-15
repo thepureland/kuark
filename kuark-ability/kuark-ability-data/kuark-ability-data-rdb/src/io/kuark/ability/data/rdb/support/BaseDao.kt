@@ -169,6 +169,8 @@ open class BaseDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadOnlyD
      * @param id         主键值
      * @param properties Map(属性名，属性值)
      * @return 是否更新成功
+     * @author K
+     * @since 1.0.0
      */
     open fun updateProperties(id: PK, properties: Map<String, *>): Boolean {
         val propertyNames = properties.keys.filter { it != IDbEntity<PK, E>::id.name }.toTypedArray()
@@ -189,6 +191,8 @@ open class BaseDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadOnlyD
      * @param properties Map(属性名，属性值)
      * @param criteria 附加查询条件
      * @return 记录是否有更新
+     * @author K
+     * @since 1.0.0
      */
     open fun updatePropertiesWhen(id: PK, properties: Map<String, *>, criteria: Criteria): Boolean {
         return updateByCriteria(id, properties, criteria)
@@ -200,6 +204,8 @@ open class BaseDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadOnlyD
      * @param entity     实体对象
      * @param propertyNames 更新的属性的可变数组
      * @return 是否更新成功
+     * @author K
+     * @since 1.0.0
      */
     open fun updateOnly(entity: E, vararg propertyNames: String): Boolean {
         val properties = entity.properties.filter { it.key in propertyNames }
@@ -214,6 +220,8 @@ open class BaseDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadOnlyD
      * @param criteria 附加查询条件
      * @param propertyNames 更新的属性的可变数组
      * @return 记录是否有更新
+     * @author K
+     * @since 1.0.0
      */
     open fun updateOnlyWhen(entity: E, criteria: Criteria, vararg propertyNames: String): Boolean {
         val properties = entity.properties.filter { it.key in propertyNames }
@@ -227,6 +235,8 @@ open class BaseDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadOnlyD
      * @param entity            实体对象
      * @param excludePropertyNames 不更新的属性的可变数组
      * @return 是否更新成功
+     * @author K
+     * @since 1.0.0
      */
     open fun updateExcludeProperties(entity: E, vararg excludePropertyNames: String): Boolean {
         val properties = entity.properties.filter { it.key !in excludePropertyNames }
@@ -241,6 +251,8 @@ open class BaseDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadOnlyD
      * @param criteria 附加查询条件
      * @param excludePropertyNames 不更新的属性的可变数组
      * @return 记录是否有更新
+     * @author K
+     * @since 1.0.0
      */
     open fun updateExcludePropertiesWhen(entity: E, criteria: Criteria, vararg excludePropertyNames: String): Boolean {
         val properties = entity.properties.filter { it.key !in excludePropertyNames }
@@ -270,6 +282,8 @@ open class BaseDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadOnlyD
      * @param criteria 附加查询条件
      * @param countOfEachBatch 每批大小，缺省为1000
      * @return 更新的记录数
+     * @author K
+     * @since 1.0.0
      */
     open fun batchUpdateWhen(entities: Collection<E>, criteria: Criteria, countOfEachBatch: Int = 1000): Int {
         return batchUpdateByCriteria(entities, countOfEachBatch, criteria)
@@ -280,8 +294,8 @@ open class BaseDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadOnlyD
      * 更新规则见 @see UpdatePayload 类，查询规则见 @see SearchPayload
      *
      * @param S 查询项载体类型
-     * @param updatePayload 更新项载体
-     * @param whereConditionFactory where条件表达式工厂函数，可以自定义查询逻辑，函数返回null时将按“等于”处理，默认为null
+     * @param updatePayload 更新项载体，当 whereConditionFactory 为null时，updatePayload.searchPayload不能为null。updatePayload.searchPayload为null时，条件间的查询逻辑为AND
+     * @param whereConditionFactory where条件表达式工厂函数，可对updatePayload.searchPayload的项定义操作符，也可完全自定义查询逻辑，函数返回null时将按“等于”操作处理updatePayload.searchPayload的项。该参数为null时，updatePayload.searchPayload 必须指定，默认为null
      * @return 更新的记录数
      * @throws IllegalArgumentException 无查询条件时
      * @author K
@@ -337,6 +351,8 @@ open class BaseDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadOnlyD
      * @param criteria   查询条件
      * @param properties Map(属性名，属性值)
      * @return 是否更新成功
+     * @author K
+     * @since 1.0.0
      */
     open fun batchUpdateProperties(criteria: Criteria, properties: Map<String, *>): Int {
         require(properties.isNotEmpty()) { "未指定要更新的属性Map！" }
@@ -359,6 +375,8 @@ open class BaseDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadOnlyD
      * @param countOfEachBatch 每批大小，缺省为1000
      * @param propertyNames 更新的属性的可变数组
      * @return 更新的记录数
+     * @author K
+     * @since 1.0.0
      */
     open fun batchUpdateOnly(entities: Collection<E>, countOfEachBatch: Int = 1000, vararg propertyNames: String): Int {
         return batchUpdateByCriteria(entities, countOfEachBatch, null, false, *propertyNames)
@@ -373,6 +391,8 @@ open class BaseDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadOnlyD
      * @param countOfEachBatch 每批大小，缺省为1000
      * @param propertyNames 更新的属性的可变数组
      * @return 更新的记录数
+     * @author K
+     * @since 1.0.0
      */
     open fun batchUpdateOnlyWhen(
         entities: Collection<E>, criteria: Criteria, countOfEachBatch: Int = 1000, vararg propertyNames: String
@@ -388,6 +408,8 @@ open class BaseDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadOnlyD
      * @param countOfEachBatch 每批大小，缺省为1000
      * @param excludePropertyNames 不更新的属性的可变数组
      * @return 是否更新成功
+     * @author K
+     * @since 1.0.0
      */
     open fun batchUpdateExcludeProperties(
         entities: Collection<E>, countOfEachBatch: Int = 1000, vararg excludePropertyNames: String
@@ -404,6 +426,8 @@ open class BaseDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadOnlyD
      * @param countOfEachBatch 每批大小，缺省为1000
      * @param excludePropertyNames 不更新的属性的可变数组
      * @return 是否更新成功
+     * @author K
+     * @since 1.0.0
      */
     open fun batchUpdateExcludePropertiesWhen(
         entities: Collection<E>, criteria: Criteria, countOfEachBatch: Int = 1000, vararg excludePropertyNames: String
@@ -452,6 +476,8 @@ open class BaseDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadOnlyD
      *
      * @param ids 主键列表
      * @return 删除的记录数
+     * @author K
+     * @since 1.0.0
      */
     open fun batchDelete(ids: Collection<PK>): Int {
         val criteria = Criteria.add(IDbEntity<PK, E>::id.name, Operator.IN, ids.toList())
@@ -463,9 +489,38 @@ open class BaseDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadOnlyD
      *
      * @param criteria 查询条件
      * @return 删除的记录数
+     * @author K
+     * @since 1.0.0
      */
     open fun batchDeleteCriteria(criteria: Criteria): Int {
         return entitySequence().removeIf { CriteriaConverter.convert(criteria, table()) }
+    }
+
+    /**
+     * 批量删除指定条件的实体对象
+     *
+     * @param searchPayload 查询项载体，为null时 whereConditionFactory 必须指定，此时条件间的查询逻辑为AND，默认为null
+     * @param whereConditionFactory where条件表达式工厂函数，可对searchPayload的项定义操作符，也可完全自定义查询逻辑，函数返回null时将按“等于”操作处理searchPayload的项。该参数为null时，searchPayload 必须指定，默认为null
+     * @return 删除的记录数
+     * @throws IllegalArgumentException 无查询条件时
+     * @author K
+     * @since 1.0.0
+     */
+    open fun batchDeleteWhen(
+        searchPayload: SearchPayload? = null,
+        whereConditionFactory: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)? = null
+    ): Int {
+        val wherePropertyMap = if (searchPayload == null) {
+            emptyMap<String, Any>()
+        } else {
+            val entityProperties = getEntityProperties()
+            getWherePropertyMap(searchPayload, entityProperties)
+        }
+
+        val andOr = searchPayload?.andOr ?: AndOr.AND
+        val whereExpression = processWhere(wherePropertyMap, andOr, true, whereConditionFactory)
+        whereExpression ?: throw IllegalArgumentException("不能做无条件的数据库表的删除操作！")
+        return entitySequence().removeIf { whereExpression }
     }
 
     //endregion Delete

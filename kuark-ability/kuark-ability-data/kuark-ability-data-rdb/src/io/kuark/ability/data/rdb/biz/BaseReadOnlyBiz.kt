@@ -147,14 +147,14 @@ open class BaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>, DAO : BaseReadOnlyDao
     ): List<Map<String, *>> = dao.pagingReturnProperties(criteria, returnProperties, pageNo, pageSize, *orders)
 
     override fun search(
-        listSearchPayload: ListSearchPayload,
+        listSearchPayload: ListSearchPayload?,
         whereExpression: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)?
     ): List<*> = dao.search(listSearchPayload, whereExpression)
 
     override fun count(criteria: Criteria?): Int = dao.count(criteria)
 
     override fun count(
-        searchPayload: SearchPayload,
+        searchPayload: SearchPayload?,
         whereExpression: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)?
     ): Int = dao.count(searchPayload, whereExpression)
 

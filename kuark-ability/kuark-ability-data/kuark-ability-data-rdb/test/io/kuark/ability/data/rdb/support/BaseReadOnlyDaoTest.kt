@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
+import org.ktorm.dsl.eq
 import org.springframework.beans.factory.annotation.Autowired
 
 /**
@@ -371,6 +372,7 @@ internal class BaseReadOnlyDaoTest : SpringTest() {
             override var returnProperties: List<String>? = listOf("id", "name", "height")
         }
 
+        // 仅指定SearchPayload
         val searchPayload1 = SearchPayload1().apply {
             name = "name1"
             weight = 56.5
@@ -429,6 +431,24 @@ internal class BaseReadOnlyDaoTest : SpringTest() {
             }
         }
         assertEquals(3, result.size)
+
+        // 仅指定whereConditionFactory
+        result = testTableDao.search { column, _ ->
+            when (column.name) {
+                TestTables::name.name -> {
+                    column.ilike("nAme1%")
+                }
+                TestTables::isActive.name -> {
+                    column.eq(true)
+                }
+                else -> null
+            }
+        }
+        assertEquals(2, result.size)
+
+        // 不指定任何条件，相当于allSearch()
+        result = testTableDao.search()
+        assertEquals(11, result.size)
     }
 
     //endregion payload search

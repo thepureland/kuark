@@ -131,7 +131,7 @@ interface IBaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>> {
      *
      * @param properties Map(属性名，属性值)
      * @param orders     排序规则
-     * @param whereConditionFactory where条件表达式工厂函数，可以自定义查询逻辑，函数返回null时将按“等于”处理，默认为null
+     * @param whereConditionFactory where条件表达式工厂函数，可对properties参数定义查询逻辑，也可完全自定义查询逻辑，函数返回null时将按“等于”操作处理properties参数中属性。参数默认为null
      * @return 实体对象列表
      * @author K
      * @since 1.0.0
@@ -148,7 +148,7 @@ interface IBaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>> {
      * @param properties     Map(属性名，属性值）
      * @param returnProperty 要返回的属性名
      * @param orders         排序规则
-     * @param whereConditionFactory where条件表达式工厂函数，可以自定义查询逻辑，函数返回null时将按“等于”处理，默认为null
+     * @param whereConditionFactory where条件表达式工厂函数，可对properties参数定义查询逻辑，也可完全自定义查询逻辑，函数返回null时将按“等于”操作处理properties参数中属性。参数默认为null
      * @return List(指定的属性的值)
      * @author K
      * @since 1.0.0
@@ -166,7 +166,7 @@ interface IBaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>> {
      * @param properties       Map(属性名，属性值)
      * @param returnProperties 要返回的属性名集合
      * @param orders           排序规则
-     * @param whereConditionFactory where条件表达式工厂函数，可以自定义查询逻辑，函数返回null时将按“等于”处理，默认为null
+     * @param whereConditionFactory where条件表达式工厂函数，可对properties参数定义查询逻辑，也可完全自定义查询逻辑，函数返回null时将按“等于”操作处理properties参数中属性。参数默认为null
      * @return List(Map(指定的属性名，属性值))
      * @author K
      * @since 1.0.0
@@ -187,7 +187,7 @@ interface IBaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>> {
      *
      * @param properties Map(属性名，属性值)
      * @param orders     排序规则
-     * @param whereConditionFactory where条件表达式工厂函数，可以自定义查询逻辑，函数返回null时将按“等于”处理，默认为null
+     * @param whereConditionFactory where条件表达式工厂函数，可对properties参数定义查询逻辑，也可完全自定义查询逻辑，函数返回null时将按“等于”操作处理properties参数中属性。参数默认为null
      * @return 实体对象列表
      * @author K
      * @since 1.0.0
@@ -204,7 +204,7 @@ interface IBaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>> {
      * @param properties     Map(属性名，属性值)
      * @param returnProperty 要返回的属性名
      * @param orders         排序规则
-     * @param whereConditionFactory where条件表达式工厂函数，可以自定义查询逻辑，函数返回null时将按“等于”处理，默认为null
+     * @param whereConditionFactory where条件表达式工厂函数，可对properties参数定义查询逻辑，也可完全自定义查询逻辑，函数返回null时将按“等于”操作处理properties参数中属性。参数默认为null
      * @return List(指定的属性的值)
      * @author K
      * @since 1.0.0
@@ -222,7 +222,7 @@ interface IBaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>> {
      * @param properties       Map(属性名，属性值)
      * @param returnProperties 要返回的属性名集合
      * @param orders           排序规则
-     * @param whereConditionFactory where条件表达式工厂函数，可以自定义查询逻辑，函数返回null时将按“等于”处理，默认为null
+     * @param whereConditionFactory where条件表达式工厂函数，可对properties参数定义查询逻辑，也可完全自定义查询逻辑，函数返回null时将按“等于”操作处理properties参数中属性。参数默认为null
      * @return List(Map(指定的属性名，属性值))
      * @author K
      * @since 1.0.0
@@ -415,14 +415,14 @@ interface IBaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>> {
     /**
      * 根据查询载体对象查询(包括分页), 具体规则见 @see SearchPayload
      *
-     * @param listSearchPayload 查询载体对象
-     * @param whereConditionFactory where条件表达式工厂函数，可以自定义查询逻辑，函数返回null时将按“等于”处理，默认为null
+     * @param listSearchPayload 查询载体对象，默认为null,为null时返回的列表元素类型为PO实体类，此时，若whereConditionFactory有指定，各条件间的查询逻辑为AND
+     * @param whereConditionFactory where条件表达式工厂函数，可对listSearchPayload参数定义查询逻辑，也可完全自定义查询逻辑，函数返回null时将按“等于”操作处理listSearchPayload中的属性。参数默认为null
      * @return 结果列表, 有三种类型可能, @see SearchPayload
      * @author K
      * @since 1.0.0
      */
     fun search(
-        listSearchPayload: ListSearchPayload,
+        listSearchPayload: ListSearchPayload? = null,
         whereConditionFactory: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)? = null
     ): List<*>
 
@@ -444,14 +444,14 @@ interface IBaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>> {
     /**
      * 计算记录数
      *
-     * @param searchPayload 查询载体对象
-     * @param whereConditionFactory where条件表达式工厂函数，可以自定义查询逻辑，函数返回null时将按“等于”处理，默认为null
+     * @param searchPayload 查询载体对象，默认为null,为null时返回的列表元素类型为PO实体类，此时，若whereConditionFactory有指定，各条件间的查询逻辑为AND
+     * @param whereConditionFactory where条件表达式工厂函数，可对searchPayload参数定义查询逻辑，也可完全自定义查询逻辑，函数返回null时将按“等于”操作处理searchPayload中的属性。参数默认为null
      * @return 记录数
      * @author K
      * @since 1.0.0
      */
     fun count(
-        searchPayload: SearchPayload,
+        searchPayload: SearchPayload? = null,
         whereConditionFactory: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)? = null
     ): Int
 

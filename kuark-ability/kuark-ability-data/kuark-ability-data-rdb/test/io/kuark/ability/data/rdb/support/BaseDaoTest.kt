@@ -11,6 +11,10 @@ import io.kuark.base.support.payload.UpdatePayload
 import io.kuark.test.common.SpringTest
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.ktorm.dsl.eq
+import org.ktorm.dsl.like
+import org.ktorm.schema.Column
+import org.ktorm.schema.ColumnDeclaring
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
@@ -356,12 +360,12 @@ internal open class BaseDaoTest : SpringTest() {
 
 
         // 无条件
-        assertThrows<java.lang.IllegalArgumentException> {
+        assertThrows<IllegalArgumentException> {
             testTableDao.batchUpdateWhen(updatePayload1)
         }
         val searchPayload1 = SearchPayload1()
         updatePayload1.searchPayload = searchPayload1
-        assertThrows<java.lang.IllegalArgumentException> {
+        assertThrows<IllegalArgumentException> {
             testTableDao.batchUpdateWhen(updatePayload1)
         }
 
@@ -528,6 +532,55 @@ internal open class BaseDaoTest : SpringTest() {
         assertEquals(2, testTableDao.batchDeleteCriteria(criteria))
         assertEquals(0, testTableDao.count(criteria))
     }
+
+    @Test
+    @Transactional
+    open fun batchDeleteWhen() {
+        class SearchPayload1 : SearchPayload() {
+            var name: String? = null
+            var weight: Double? = null
+            var noExistProp: String? = "noExistProp"
+        }
+
+        val searchPayload1 = SearchPayload1()
+
+        // 无条件
+        assertThrows<IllegalArgumentException> {
+            testTableDao.batchDeleteWhen()
+        }
+        assertThrows<IllegalArgumentException> {
+            testTableDao.batchDeleteWhen(searchPayload1)
+        }
+        assertThrows<IllegalArgumentException> {
+            testTableDao.batchDeleteWhen { _, _ -> null }
+        }
+
+        // 仅whereConditionFactory
+        var count = testTableDao.batchDeleteWhen { column, _ ->
+            if (column.name == TestTables.name.name) {
+                column.eq("name2")
+            } else null
+        }
+        assertEquals(1, count)
+        assertEquals(null, testTableDao.getById(-2))
+
+        // 仅SearchPayload项
+        searchPayload1.name = "name1"
+        count = testTableDao.batchDeleteWhen(searchPayload1)
+        assertEquals(1, count)
+        assertEquals(null, testTableDao.getById(-1))
+
+        // SearchPayload项 & whereConditionFactory
+        searchPayload1.name = "me3"
+        count = testTableDao.batchDeleteWhen(searchPayload1) { column, value ->
+            if (column.name == TestTables.name.name) {
+                column.like("%${value}")
+            } else null
+        }
+        assertEquals(1, count)
+        assertEquals(null, testTableDao.getById(-3))
+    }
+
     //endregion Delete
 
 }

@@ -230,7 +230,7 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
      *
      * @param properties Map(属性名，属性值)
      * @param orders     排序规则
-     * @param whereConditionFactory where条件表达式工厂函数，可以自定义查询逻辑，函数返回null时将按“等于”处理，默认为null
+     * @param whereConditionFactory where条件表达式工厂函数，可对properties参数定义查询逻辑，也可完全自定义查询逻辑，函数返回null时将按“等于”操作处理properties参数中属性。参数默认为null
      * @return 实体对象列表
      * @author K
      * @since 1.0.0
@@ -249,7 +249,7 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
      * @param properties     Map(属性名，属性值）
      * @param returnProperty 要返回的属性名
      * @param orders         排序规则
-     * @param whereConditionFactory where条件表达式工厂函数，可以自定义查询逻辑，函数返回null时将按“等于”处理，默认为null
+     * @param whereConditionFactory where条件表达式工厂函数，可对properties参数定义查询逻辑，也可完全自定义查询逻辑，函数返回null时将按“等于”操作处理properties参数中属性。参数默认为null
      * @return List(指定的属性的值)
      * @author K
      * @since 1.0.0
@@ -270,7 +270,7 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
      * @param properties       Map(属性名，属性值)
      * @param returnProperties 要返回的属性名集合
      * @param orders           排序规则
-     * @param whereConditionFactory where条件表达式工厂函数，可以自定义查询逻辑，函数返回null时将按“等于”处理，默认为null
+     * @param whereConditionFactory where条件表达式工厂函数，可对properties参数定义查询逻辑，也可完全自定义查询逻辑，函数返回null时将按“等于”操作处理properties参数中属性。参数默认为null
      * @return List(Map(指定的属性名，属性值))
      * @author K
      * @since 1.0.0
@@ -293,7 +293,7 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
      *
      * @param properties Map(属性名，属性值)
      * @param orders     排序规则
-     * @param whereConditionFactory where条件表达式工厂函数，可以自定义查询逻辑，函数返回null时将按“等于”处理，默认为null
+     * @param whereConditionFactory where条件表达式工厂函数，可对properties参数定义查询逻辑，也可完全自定义查询逻辑，函数返回null时将按“等于”操作处理properties参数中属性。参数默认为null
      * @return 实体对象列表
      * @author K
      * @since 1.0.0
@@ -312,7 +312,7 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
      * @param properties     Map(属性名，属性值)
      * @param returnProperty 要返回的属性名
      * @param orders         排序规则
-     * @param whereConditionFactory where条件表达式工厂函数，可以自定义查询逻辑，函数返回null时将按“等于”处理，默认为null
+     * @param whereConditionFactory where条件表达式工厂函数，可对properties参数定义查询逻辑，也可完全自定义查询逻辑，函数返回null时将按“等于”操作处理properties参数中属性。参数默认为null
      * @return List(指定的属性的值)
      * @author K
      * @since 1.0.0
@@ -333,7 +333,7 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
      * @param properties       Map(属性名，属性值)
      * @param returnProperties 要返回的属性名集合
      * @param orders           排序规则
-     * @param whereConditionFactory where条件表达式工厂函数，可以自定义查询逻辑，函数返回null时将按“等于”处理，默认为null
+     * @param whereConditionFactory where条件表达式工厂函数，可对properties参数定义查询逻辑，也可完全自定义查询逻辑，函数返回null时将按“等于”操作处理properties参数中属性。参数默认为null
      * @return List(Map(指定的属性名，属性值))
      * @author K
      * @since 1.0.0
@@ -558,44 +558,48 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
     /**
      * 根据查询载体对象查询(包括分页), 具体规则见 @see SearchPayload
      *
-     * @param listSearchPayload 查询载体对象
-     * @param whereConditionFactory where条件表达式工厂函数，可以自定义查询逻辑，函数返回null时将按“等于”处理，默认为null
+     * @param listSearchPayload 查询载体对象，默认为null,为null时返回的列表元素类型为PO实体类，此时，若whereConditionFactory有指定，各条件间的查询逻辑为AND
+     * @param whereConditionFactory where条件表达式工厂函数，可对listSearchPayload参数定义查询逻辑，也可完全自定义查询逻辑，函数返回null时将按“等于”操作处理listSearchPayload中的属性。参数默认为null
      * @return 结果列表, 有三种类型可能, @see SearchPayload
      * @author K
      * @since 1.0.0
      */
     @Suppress("UNCHECKED_CAST")
     open fun search(
-        listSearchPayload: ListSearchPayload,
+        listSearchPayload: ListSearchPayload? = null,
         whereConditionFactory: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)? = null
     ): List<*> {
-        val returnProperties = listSearchPayload.returnProperties
-
+        // select, where
         val objects = searchByPayload(listSearchPayload, whereConditionFactory)
         var query = objects[0] as Query
         val returnProps = objects[1] as Set<String>
         val returnColumnMap = objects[2] as Map<String, Column<Any>>
 
         // order
-        val orders = listSearchPayload.orders
-        if (CollectionKit.isNotEmpty(orders)) {
-            val orderExps = sortOf(*orders!!.toTypedArray())
-            query = query.orderBy(*orderExps.toTypedArray())
+        if (listSearchPayload != null) {
+            val orders = listSearchPayload.orders
+            if (CollectionKit.isNotEmpty(orders)) {
+                val orderExps = sortOf(*orders!!.toTypedArray())
+                query = query.orderBy(*orderExps.toTypedArray())
+            }
         }
 
         // paging
-        val pageNo = listSearchPayload.pageNo
-        if (pageNo != null) {
-            val pageSize = listSearchPayload.pageSize ?: 10
-            query = query.limit((pageNo - 1) * pageSize, pageSize)
+        if (listSearchPayload != null) {
+            val pageNo = listSearchPayload.pageNo
+            if (pageNo != null) {
+                val pageSize = listSearchPayload.pageSize ?: 10
+                query = query.limit((pageNo - 1) * pageSize, pageSize)
+            }
         }
 
         // result
+        val returnProperties = listSearchPayload?.returnProperties ?: emptyList()
         val mapList = processResult(query, returnColumnMap)
         return if (CollectionKit.isEmpty(returnProperties)) {
             val beanList = mutableListOf<Any>()
             mapList.forEach { map ->
-                val bean = if (listSearchPayload.returnEntityClass != null) {
+                val bean = if (listSearchPayload?.returnEntityClass != null) {
                     listSearchPayload.returnEntityClass!!.newInstance()
                 } else {
                     Entity.create(table().entityClass!!)
@@ -606,7 +610,7 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
                 beanList.add(bean)
             }
             beanList
-        } else if (returnProperties!!.size == 1) {
+        } else if (returnProperties.size == 1) {
             mapList.flatMap { it.values }
         } else {
             mapList
@@ -639,14 +643,14 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
     /**
      * 计算记录数
      *
-     * @param searchPayload 查询载体对象
-     * @param whereConditionFactory where条件表达式工厂函数，可以自定义查询逻辑，函数返回null时将按“等于”处理，默认为null
+     * @param searchPayload 查询载体对象，默认为null,为null时返回的列表元素类型为PO实体类，此时，若whereConditionFactory有指定，各条件间的查询逻辑为AND
+     * @param whereConditionFactory where条件表达式工厂函数，可对searchPayload参数定义查询逻辑，也可完全自定义查询逻辑，函数返回null时将按“等于”操作处理searchPayload中的属性。参数默认为null
      * @return 记录数
      * @author K
      * @since 1.0.0
      */
     open fun count(
-        searchPayload: SearchPayload,
+        searchPayload: SearchPayload? = null,
         whereConditionFactory: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)? = null
     ): Int {
         val query = searchByPayload(searchPayload, whereConditionFactory)[0] as Query
@@ -915,30 +919,33 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
     }
 
     private fun searchByPayload(
-        searchPayload: SearchPayload,
+        searchPayload: SearchPayload? = null,
         whereConditionFactory: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)? = null
     ): List<Any> {
         val entityProperties = getEntityProperties()
 
         // select
-        val returnProperties = searchPayload.returnProperties
+        val returnProperties = searchPayload?.returnProperties ?: emptyList()
         val props = if (CollectionKit.isEmpty(returnProperties)) {
-            val returnEntityClass = searchPayload.returnEntityClass
+            val returnEntityClass = searchPayload?.returnEntityClass
             returnEntityClass?.memberProperties?.map { it.name } ?: entityProperties
         } else {
             returnProperties
         }
-        val returnProps = entityProperties.intersect(props!!) // 取交集,保证要查询的列一定存在
+        val returnProps = entityProperties.intersect(props) // 取交集,保证要查询的列一定存在
         val returnColumnMap = ColumnHelper.columnOf(table(), *returnProps.toTypedArray())
         var query = querySource().select(returnColumnMap.values)
 
         // where
-        val propMap = getWherePropertyMap(searchPayload, entityProperties)
-        if (propMap.isNotEmpty()) {
-            val fullExpression = processWhere(propMap, searchPayload.andOr, true, whereConditionFactory)
-            if (fullExpression != null) {
-                query = query.where { fullExpression }
-            }
+        val propMap = if (searchPayload == null) {
+            emptyMap<String, Any>()
+        } else {
+            getWherePropertyMap(searchPayload, entityProperties)
+        }
+        val andOr = searchPayload?.andOr ?: AndOr.AND
+        val fullExpression = processWhere(propMap, andOr, true, whereConditionFactory)
+        if (fullExpression != null) {
+            query = query.where { fullExpression }
         }
 
         return listOf(query, returnProps, returnColumnMap)

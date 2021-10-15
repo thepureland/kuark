@@ -120,6 +120,12 @@ open class BaseBiz<PK : Any, E : IDbEntity<PK, E>, DAO : BaseDao<PK, E, *>>
     override fun batchDeleteCriteria(criteria: Criteria): Int = dao.batchDeleteCriteria(criteria)
 
     @Transactional
+    override fun batchDeleteWhen(
+        searchPayload: SearchPayload?,
+        whereConditionFactory: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)?
+    ): Int = dao.batchDeleteWhen(searchPayload, whereConditionFactory)
+
+    @Transactional
     override fun delete(entity: E): Boolean = dao.delete(entity)
 
 }

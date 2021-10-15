@@ -4,6 +4,7 @@ import io.kuark.ability.data.rdb.support.BaseReadOnlyDao
 import io.kuark.ability.data.rdb.support.IDbEntity
 import io.kuark.base.query.Criteria
 import io.kuark.base.query.sort.Order
+import io.kuark.base.support.payload.ListSearchPayload
 import io.kuark.base.support.payload.SearchPayload
 import org.ktorm.schema.Column
 import org.ktorm.schema.ColumnDeclaring
@@ -145,6 +146,11 @@ open class BaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>, DAO : BaseReadOnlyDao
         criteria: Criteria, returnProperties: Collection<String>, pageNo: Int, pageSize: Int, vararg orders: Order
     ): List<Map<String, *>> = dao.pagingReturnProperties(criteria, returnProperties, pageNo, pageSize, *orders)
 
+    override fun search(
+        listSearchPayload: ListSearchPayload,
+        whereExpression: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)?
+    ): List<*> = dao.search(listSearchPayload, whereExpression)
+
     override fun count(criteria: Criteria?): Int = dao.count(criteria)
 
     override fun count(
@@ -159,10 +165,5 @@ open class BaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>, DAO : BaseReadOnlyDao
     override fun max(property: String, criteria: Criteria?): Any = dao.avg(property, criteria)
 
     override fun min(property: String, criteria: Criteria?): Any = dao.avg(property, criteria)
-
-    override fun search(
-        searchPayload: SearchPayload,
-        whereExpression: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)?
-    ): List<*> = dao.search(searchPayload, whereExpression)
 
 }

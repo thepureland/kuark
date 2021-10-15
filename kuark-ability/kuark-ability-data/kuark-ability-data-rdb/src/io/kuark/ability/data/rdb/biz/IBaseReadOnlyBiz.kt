@@ -3,6 +3,7 @@ package io.kuark.ability.data.rdb.biz
 import io.kuark.ability.data.rdb.support.IDbEntity
 import io.kuark.base.query.Criteria
 import io.kuark.base.query.sort.Order
+import io.kuark.base.support.payload.ListSearchPayload
 import io.kuark.base.support.payload.SearchPayload
 import org.ktorm.schema.Column
 import org.ktorm.schema.ColumnDeclaring
@@ -414,14 +415,14 @@ interface IBaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>> {
     /**
      * 根据查询载体对象查询(包括分页), 具体规则见 @see SearchPayload
      *
-     * @param searchPayload 查询载体对象
+     * @param listSearchPayload 查询载体对象
      * @param whereConditionFactory where条件表达式工厂函数，可以自定义查询逻辑，函数返回null时将按“等于”处理，默认为null
      * @return 结果列表, 有三种类型可能, @see SearchPayload
      * @author K
      * @since 1.0.0
      */
     fun search(
-        searchPayload: SearchPayload,
+        listSearchPayload: ListSearchPayload,
         whereConditionFactory: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)? = null
     ): List<*>
 

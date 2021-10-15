@@ -18,15 +18,6 @@ import kotlin.reflect.KClass
  */
 open class SearchPayload {
 
-    /** 当前页码 */
-    open var pageNo: Int? = null
-
-    /** 页面大小(仅当pageNo不为null时才应用) */
-    open var pageSize: Int? = null
-
-    /** 排序规则 */
-    open var orders: List<Order>? = null
-
     /** 各属性间的查询逻辑关系，默认为AND */
     open var andOr: AndOr = AndOr.AND
 

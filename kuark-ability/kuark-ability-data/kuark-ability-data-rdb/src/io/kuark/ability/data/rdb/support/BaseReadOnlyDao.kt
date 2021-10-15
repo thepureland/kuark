@@ -9,6 +9,7 @@ import io.kuark.base.query.Criteria
 import io.kuark.base.query.sort.Order
 import io.kuark.base.support.GroupExecutor
 import io.kuark.base.support.logic.AndOr
+import io.kuark.base.support.payload.ListSearchPayload
 import io.kuark.base.support.payload.SearchPayload
 import org.ktorm.database.Database
 import org.ktorm.dsl.*
@@ -557,7 +558,7 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
     /**
      * 根据查询载体对象查询(包括分页), 具体规则见 @see SearchPayload
      *
-     * @param searchPayload 查询载体对象
+     * @param listSearchPayload 查询载体对象
      * @param whereConditionFactory where条件表达式工厂函数，可以自定义查询逻辑，函数返回null时将按“等于”处理，默认为null
      * @return 结果列表, 有三种类型可能, @see SearchPayload
      * @author K
@@ -565,27 +566,27 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
      */
     @Suppress("UNCHECKED_CAST")
     open fun search(
-        searchPayload: SearchPayload,
+        listSearchPayload: ListSearchPayload,
         whereConditionFactory: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)? = null
     ): List<*> {
-        val returnProperties = searchPayload.returnProperties
+        val returnProperties = listSearchPayload.returnProperties
 
-        val objects = searchByPayload(searchPayload, whereConditionFactory)
+        val objects = searchByPayload(listSearchPayload, whereConditionFactory)
         var query = objects[0] as Query
         val returnProps = objects[1] as Set<String>
         val returnColumnMap = objects[2] as Map<String, Column<Any>>
 
         // order
-        val orders = searchPayload.orders
+        val orders = listSearchPayload.orders
         if (CollectionKit.isNotEmpty(orders)) {
             val orderExps = sortOf(*orders!!.toTypedArray())
             query = query.orderBy(*orderExps.toTypedArray())
         }
 
         // paging
-        val pageNo = searchPayload.pageNo
+        val pageNo = listSearchPayload.pageNo
         if (pageNo != null) {
-            val pageSize = searchPayload.pageSize ?: 10
+            val pageSize = listSearchPayload.pageSize ?: 10
             query = query.limit((pageNo - 1) * pageSize, pageSize)
         }
 
@@ -594,8 +595,8 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
         return if (CollectionKit.isEmpty(returnProperties)) {
             val beanList = mutableListOf<Any>()
             mapList.forEach { map ->
-                val bean = if (searchPayload.returnEntityClass != null) {
-                    searchPayload.returnEntityClass!!.newInstance()
+                val bean = if (listSearchPayload.returnEntityClass != null) {
+                    listSearchPayload.returnEntityClass!!.newInstance()
                 } else {
                     Entity.create(table().entityClass!!)
                 }
@@ -733,7 +734,6 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
     }
 
     //endregion aggregate
-
 
     private fun sortOf(vararg orders: Order): List<OrderByExpression> {
         return if (orders.isNotEmpty()) {

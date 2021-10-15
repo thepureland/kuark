@@ -9,6 +9,7 @@ import io.kuark.base.query.Criteria
 import io.kuark.base.query.Criterion
 import io.kuark.base.query.enums.Operator
 import io.kuark.base.query.sort.Order
+import io.kuark.base.support.payload.ListSearchPayload
 import io.kuark.base.support.payload.SearchPayload
 import io.kuark.test.common.SpringTest
 import org.junit.jupiter.api.AfterAll
@@ -16,10 +17,7 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
-import org.ktorm.dsl.eq
-import org.ktorm.dsl.like
 import org.springframework.beans.factory.annotation.Autowired
-import java.time.LocalDateTime
 
 /**
  * BaseReadOnlyDao测试用例
@@ -366,7 +364,7 @@ internal class BaseReadOnlyDaoTest : SpringTest() {
     @Test
     fun searchBySearchPayload() {
         // 指定returnProperties, 多个属性
-        class SearchPayload1 : SearchPayload() {
+        class SearchPayload1 : ListSearchPayload() {
             var name: String? = null
             var weight: Double? = null
             var noExistProp: String? = "noExistProp"

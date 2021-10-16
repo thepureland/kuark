@@ -37,7 +37,7 @@ object MsgTemplates: StringIdTable<MsgTemplate>("msg_template") {
     var content = varchar("content").bindTo { it.content }
 
     /** 是否启用默认值 */
-    var isDefaultActive = boolean("is_default_active").bindTo { it.isDefaultActive }
+    var defaultActive = boolean("default_active").bindTo { it.defaultActive }
 
     /** 模板标题默认值 */
     var defaultTitle = varchar("default_title").bindTo { it.defaultTitle }

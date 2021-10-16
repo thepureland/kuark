@@ -14,8 +14,8 @@ import java.util.*
 enum class Operator constructor(
     override val code: String,
     override val trans: String,
-    val isAcceptNull: Boolean = false, // 值是否可接受null
-    val isStringOnly: Boolean = false  // 操作值只接收字符串类型
+    val acceptNull: Boolean = false, // 值是否可接受null
+    val stringOnly: Boolean = false  // 操作值只接收字符串类型
 ) : IDictEnum {
 
     /**

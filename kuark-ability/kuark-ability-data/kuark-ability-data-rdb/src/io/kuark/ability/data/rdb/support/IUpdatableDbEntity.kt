@@ -26,7 +26,7 @@ interface IUpdatableDbEntity<ID, E : Entity<E>> : IDbEntity<ID, E> {
     var updateUser: String?
 
     /** 是否内置 */
-    var isBuiltIn: Boolean
+    var builtIn: Boolean
 
     /** 备注 */
     var remark: String?

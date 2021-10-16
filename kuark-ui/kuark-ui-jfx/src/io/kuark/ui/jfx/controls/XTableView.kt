@@ -24,11 +24,11 @@ import javafx.scene.control.TableView
 class XTableView<S> : TableView<S>() {
 
     fun terminateEdit() {
-        if (!isEditing) {
+        if (!editing) {
             return
         }
         setTerminatingCell(getEditingCell())
-        check(!isEditing) { "expected editing to be terminated but was $editingCell" }
+        check(!editing) { "expected editing to be terminated but was $editingCell" }
         setTerminatingCell(null)
     }
 
@@ -40,7 +40,7 @@ class XTableView<S> : TableView<S>() {
      *
      * @return
      */
-    val isEditing: Boolean
+    val editing: Boolean
         get() = editingCell != null
 
     /**

@@ -26,7 +26,7 @@ open class UpdatableTable<E : IUpdatableDbEntity<String, E>>(tableName: String):
     val updateUser = varchar("update_user").bindTo { it.updateUser }
 
     /** 是否内置 */
-    val isBuiltIn = boolean("is_built_in").bindTo { it.isBuiltIn }
+    val builtIn = boolean("built_in").bindTo { it.builtIn }
 
     /** 备注 */
     val remark = varchar("remark").bindTo { it.remark }

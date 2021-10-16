@@ -25,7 +25,7 @@ open class TemplateModelCreator {
         templateModel["table"] = RdbMetadataKit.getTableByName(tableName)
         val origColumns = RdbMetadataKit.getColumnsByTableName(tableName).values
         templateModel["columns"] = origColumns
-        templateModel["pkColumn"] = origColumns.first { it.isPrimaryKey }
+        templateModel["pkColumn"] = origColumns.first { it.primaryKey }
         templateModel[Config.PROP_KEY_AUTHOR] = config.getAuthor()
         templateModel[Config.PROP_KEY_VERSION] = config.getVersion()
         val columnConfMap = columns.map { it.getColumn() to it }.toMap()
@@ -43,14 +43,14 @@ open class TemplateModelCreator {
     }
 
     open fun determinPoDaoSuperClass(templateModel: MutableMap<String, Any?>, origColumns: Collection<Column>) {
-        val pkKotylinType = origColumns.first { it.isPrimaryKey }.kotlinType
+        val pkKotylinType = origColumns.first { it.primaryKey }.kotlinType
         var poSuperClass = "IDbEntity"
         lateinit var daoSuperClass: String
         when (pkKotylinType) {
             String::class -> {
                 val maintainColumns = listOf(
                     "id", "create_time", "create_user", "update_time", "update_user",
-                    "is_active", "is_built_in", "remark"
+                    "active", "built_in", "remark"
                 )
                 if (origColumns.map { it.name }.containsAll(maintainColumns)) {
                     // 包括所有维护字段，po实现IMaintainableDbEntity，dao实现MaintainableTable

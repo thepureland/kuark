@@ -31,7 +31,7 @@ interface GeoIpLibrary: IMaintainableDbEntity<String, GeoIpLibrary> {
     var ispName: String?
 
     /** 该IP是否是用户修正过 */
-    var isRevised: Boolean
+    var revised: Boolean
 
 
     //region your codes 2

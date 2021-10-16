@@ -23,7 +23,7 @@ internal interface TestTable : IDbEntity<Int, TestTable> {
     var birthday: LocalDateTime?
 
     /** 是否生效 */
-    var isActive: Boolean?
+    var active: Boolean?
 
     /** 体重 */
     var weight: Double?

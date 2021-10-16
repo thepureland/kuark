@@ -75,7 +75,7 @@ internal open class FlowDefinitionBizTest : SpringTest() {
 
         deployModel()
 
-        assert(flowDefinitionBiz.get(KEY, 1)!!.isDeployed)
+        assert(flowDefinitionBiz.get(KEY, 1)!!.deployed)
         assertNull(flowDefinitionBiz.get(KEY, 2))
         assertNull(flowDefinitionBiz.get(NO_EXISTS, 1))
         assertEquals(1, flowDefinitionBiz.get(KEY)!!.version)

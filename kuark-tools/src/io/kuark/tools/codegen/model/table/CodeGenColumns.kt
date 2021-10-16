@@ -26,10 +26,10 @@ object CodeGenColumns : StringIdTable<CodeGenColumn>("code_gen_column") {
     var comment = varchar("comment").bindTo { it.comment }
 
     /** 是否可查询 */
-    var isSearchable = boolean("is_searchable").bindTo { it.isSearchable }
+    var searchable = boolean("searchable").bindTo { it.searchable }
 
     /** 是否列表中可排序 */
-    var isSortable = boolean("is_sortable").bindTo { it.isSortable }
+    var sortable = boolean("sortable").bindTo { it.sortable }
 
     /** 列表中列序 */
     var orderInList = int("order_in_list").bindTo { it.orderInList }

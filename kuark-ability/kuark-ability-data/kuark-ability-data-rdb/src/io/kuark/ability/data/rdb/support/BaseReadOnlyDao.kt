@@ -605,7 +605,7 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
                     Entity.create(table().entityClass!!)
                 }
                 returnProps.forEach { prop ->
-                    BeanKit.copyProperty(bean, prop, map[prop])
+                    BeanKit.setProperty(bean, prop, map[prop])
                 }
                 beanList.add(bean)
             }

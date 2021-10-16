@@ -37,22 +37,22 @@ class Column {
     var defaultValue: String? = null
 
     /** 是否可以为null */
-    var isNullable: Boolean = true
+    var nullable: Boolean = true
 
     /** 是否为主键 */
-    var isPrimaryKey: Boolean = false
+    var primaryKey: Boolean = false
 
     /** 是否为外键 */
-    var isForeignKey: Boolean = false
+    var foreignKey: Boolean = false
 
     /** 是否有索引 */
-    var isIndexed: Boolean = false
+    var indexed: Boolean = false
 
     /** 是否惟一 */
-    var isUnique: Boolean = false
+    var unique: Boolean = false
 
     /** 是否为字典代码 */
-    var isDictCode: Boolean = false
+    var dictCode: Boolean = false
 
     /** 是否为乍增长 */
     var autoIncrement: String? = null

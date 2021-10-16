@@ -13,8 +13,6 @@ import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.ktorm.dsl.eq
 import org.ktorm.dsl.like
-import org.ktorm.schema.Column
-import org.ktorm.schema.ColumnDeclaring
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
@@ -397,9 +395,9 @@ internal open class BaseDaoTest : SpringTest() {
     @Transactional
     open fun batchUpdateProperties() {
         val criteria = Criteria.add(TestTable::name.name, Operator.LIKE, "name1")
-        val properties = mapOf(TestTable::isActive.name to false, TestTable::height.name to null)
+        val properties = mapOf(TestTable::active.name to false, TestTable::height.name to null)
         assertEquals(3, testTableDao.batchUpdateProperties(criteria, properties))
-        criteria.addAnd(TestTable::isActive.name, Operator.EQ, false)
+        criteria.addAnd(TestTable::active.name, Operator.EQ, false)
         criteria.addAnd(TestTable::height.name, Operator.IS_NULL, null)
         assertEquals(3, testTableDao.count(criteria))
     }

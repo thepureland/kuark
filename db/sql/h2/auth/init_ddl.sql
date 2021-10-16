@@ -20,8 +20,8 @@ create table "auth_user_account"
     "dynamic_auth_key"          VARCHAR(63),
     "second_password"           VARCHAR(63),
     "remark"                    VARCHAR(127),
-    "is_active"                 BOOLEAN  default TRUE          not null,
-    "is_built_in"               BOOLEAN  default FALSE         not null,
+    "active"                 BOOLEAN  default TRUE          not null,
+    "built_in"               BOOLEAN  default FALSE         not null,
     "create_user"               VARCHAR(36),
     "create_time"               TIMESTAMP  default now() not null,
     "update_user"               VARCHAR(36),
@@ -71,9 +71,9 @@ comment on column "auth_user_account"."second_password" is '二级密码';
 
 comment on column "auth_user_account"."remark" is '备注，或其国际化key';
 
-comment on column "auth_user_account"."is_active" is '是否启用';
+comment on column "auth_user_account"."active" is '是否启用';
 
-comment on column "auth_user_account"."is_built_in" is '是否内置';
+comment on column "auth_user_account"."built_in" is '是否内置';
 
 comment on column "auth_user_account"."create_user" is '创建用户';
 
@@ -97,8 +97,8 @@ create table "auth_user_account_third_party"
     "sub_sys_dict_code"       VARCHAR(31),
     "owner_id"       VARCHAR(36),
     "remark"              VARCHAR(127),
-    "is_active"           BOOLEAN  default TRUE          not null,
-    "is_built_in"         BOOLEAN  default FALSE         not null,
+    "active"           BOOLEAN  default TRUE          not null,
+    "built_in"         BOOLEAN  default FALSE         not null,
     "create_user"         VARCHAR(36),
     "create_time"         TIMESTAMP  default now() not null,
     "update_user"         VARCHAR(36),
@@ -121,9 +121,9 @@ comment on column "auth_user_account_third_party"."sub_sys_dict_code" is '子系
 
 comment on column "auth_user_account_third_party"."remark" is '备注，或其国际化key';
 
-comment on column "auth_user_account_third_party"."is_active" is '是否启用';
+comment on column "auth_user_account_third_party"."active" is '是否启用';
 
-comment on column "auth_user_account_third_party"."is_built_in" is '是否内置';
+comment on column "auth_user_account_third_party"."built_in" is '是否内置';
 
 comment on column "auth_user_account_third_party"."create_user" is '创建用户';
 
@@ -167,8 +167,8 @@ create table "auth_user_group"
     "group_name"  VARCHAR(63)                    not null,
     "sub_sys_dict_code"       VARCHAR(31),
     "remark"      VARCHAR(127),
-    "is_active"   BOOLEAN  default TRUE          not null,
-    "is_built_in" BOOLEAN  default FALSE         not null,
+    "active"   BOOLEAN  default TRUE          not null,
+    "built_in" BOOLEAN  default FALSE         not null,
     "create_user" VARCHAR(36),
     "create_time" TIMESTAMP  default now() not null,
     "update_user" VARCHAR(36),
@@ -186,9 +186,9 @@ comment on column "auth_user_group"."sub_sys_dict_code" is '子系统代码';
 
 comment on column "auth_user_group"."remark" is '备注，或其国际化key';
 
-comment on column "auth_user_group"."is_active" is '是否启用';
+comment on column "auth_user_group"."active" is '是否启用';
 
-comment on column "auth_user_group"."is_built_in" is '是否内置';
+comment on column "auth_user_group"."built_in" is '是否内置';
 
 comment on column "auth_user_group"."create_user" is '创建用户';
 
@@ -222,8 +222,8 @@ create table "auth_role"
     "role_name"   VARCHAR(63)                    not null,
     "sub_sys_dict_code"       VARCHAR(31),
     "remark"      VARCHAR(127),
-    "is_active"   BOOLEAN  default TRUE          not null,
-    "is_built_in" BOOLEAN  default FALSE         not null,
+    "active"   BOOLEAN  default TRUE          not null,
+    "built_in" BOOLEAN  default FALSE         not null,
     "create_user" VARCHAR(36),
     "create_time" TIMESTAMP  default now() not null,
     "update_user" VARCHAR(36),
@@ -241,9 +241,9 @@ comment on column "auth_role"."sub_sys_dict_code" is '子系统代码';
 
 comment on column "auth_role"."remark" is '备注，或其国际化key';
 
-comment on column "auth_role"."is_active" is '是否启用';
+comment on column "auth_role"."active" is '是否启用';
 
-comment on column "auth_role"."is_built_in" is '是否内置';
+comment on column "auth_role"."built_in" is '是否内置';
 
 comment on column "auth_role"."create_user" is '创建用户';
 

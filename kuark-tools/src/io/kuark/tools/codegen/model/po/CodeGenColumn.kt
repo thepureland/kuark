@@ -25,10 +25,10 @@ interface CodeGenColumn : IDbEntity<String, CodeGenColumn> {
     var comment: String?
 
     /** 是否可查询 */
-    var isSearchable: Boolean
+    var searchable: Boolean
 
     /** 是否列表中可排序 */
-    var isSortable: Boolean
+    var sortable: Boolean
 
     /** 列表中列序 */
     var orderInList: Int?

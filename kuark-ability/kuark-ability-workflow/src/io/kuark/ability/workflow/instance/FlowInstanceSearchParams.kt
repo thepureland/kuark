@@ -37,7 +37,7 @@ class FlowInstanceSearchParams {
     var definitionVersion: Int? = null
 
     /** 是否挂起 */
-    var isSuspend: Boolean? = null
+    var suspend: Boolean? = null
 
     /**
      * 空构造器，仅供框架反射使用
@@ -53,7 +53,7 @@ class FlowInstanceSearchParams {
         startUserId = builder.startUserId
         definitionName = builder.definitionName
         definitionVersion = builder.definitionVersion
-        isSuspend = builder.isSuspend
+        suspend = builder.suspend
     }
 
 
@@ -73,7 +73,7 @@ class FlowInstanceSearchParams {
         var startUserId: String? = null
         var definitionName: String? = null
         var definitionVersion: Int? = null
-        var isSuspend: Boolean? = null
+        var suspend: Boolean? = null
 
         /**
          * 构建流程实例查询参数对象
@@ -130,7 +130,7 @@ class FlowInstanceSearchParams {
 
         /** 是否挂起 */
         fun isSuspend(isSuspend: Boolean?): Builder {
-            this.isSuspend = isSuspend
+            this.suspend = isSuspend
             return this
         }
 

@@ -37,7 +37,7 @@ interface MsgTemplate : IDbEntity<String, MsgTemplate> {
     var content: String?
 
     /** 是否启用默认值 */
-    var isDefaultActive: Boolean
+    var defaultActive: Boolean
 
     /** 模板标题默认值 */
     var defaultTitle: String?

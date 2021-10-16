@@ -35,7 +35,7 @@ object FlowForms : StringIdTable<FlowForm>("flow_form") {
     var remark = varchar("remark").bindTo { it.remark }
 
     /** 是否内置 */
-    var isBuiltIn = boolean("is_built_in").bindTo { it.isBuiltIn }
+    var builtIn = boolean("built_in").bindTo { it.builtIn }
 
     /** 创建用户 */
     var createUser = varchar("create_user").bindTo { it.createUser }

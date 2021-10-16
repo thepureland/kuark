@@ -1,4 +1,4 @@
-INSERT INTO "test_table" ("id", "name", "birthday", "is_active", "weight", "height") VALUES
+INSERT INTO "test_table" ("id", "name", "birthday", "active", "weight", "height") VALUES
 (-1, 'name1', '1984-01-04 06:40:00', 't', 56.5, 168),
 (-2, 'name2', '1985-01-14 06:40:00', 't', 53, 161),
 (-3, 'name3', '1995-01-14 06:40:00', 'f', 80, 180),

@@ -132,8 +132,8 @@ create table "user_personal_info"
     "register_url"              VARCHAR(127),
     "dynamic_auth_key"          VARCHAR(63),
     "remark"                    VARCHAR(127),
-    "is_active"                 BOOLEAN default TRUE  not null,
-    "is_built_in"               BOOLEAN default FALSE not null,
+    "active"                 BOOLEAN default TRUE  not null,
+    "built_in"               BOOLEAN default FALSE not null,
     "create_user"               VARCHAR(36),
     "create_time"               TIMESTAMP  default now() not null,
     "update_user"               VARCHAR(36),
@@ -166,9 +166,9 @@ comment on column "user_personal_info"."avatar_url" is '头像url';
 
 comment on column "user_personal_info"."remark" is '备注，或其国际化key';
 
-comment on column "user_personal_info"."is_active" is '是否启用';
+comment on column "user_personal_info"."active" is '是否启用';
 
-comment on column "user_personal_info"."is_built_in" is '是否内置';
+comment on column "user_personal_info"."built_in" is '是否内置';
 
 comment on column "user_personal_info"."create_user" is '创建用户';
 
@@ -188,8 +188,8 @@ create table "user_contact_way"
     "contact_way_status_dict_code" CHAR(2)  default '00'          not null,
     "priority"                 INT2,
     "remark"                   VARCHAR(127),
-    "is_active"                BOOLEAN  default TRUE          not null,
-    "is_built_in"              BOOLEAN  default FALSE         not null,
+    "active"                BOOLEAN  default TRUE          not null,
+    "built_in"              BOOLEAN  default FALSE         not null,
     "create_user"              VARCHAR(36),
     "create_time"              TIMESTAMP  default now() not null,
     "update_user"              VARCHAR(36),
@@ -212,9 +212,9 @@ comment on column "user_contact_way"."priority" is '优先级';
 
 comment on column "user_contact_way"."remark" is '备注，或其国际化key';
 
-comment on column "user_contact_way"."is_active" is '是否启用';
+comment on column "user_contact_way"."active" is '是否启用';
 
-comment on column "user_contact_way"."is_built_in" is '是否内置';
+comment on column "user_contact_way"."built_in" is '是否内置';
 
 comment on column "user_contact_way"."create_user" is '创建用户';
 
@@ -240,8 +240,8 @@ create table "user_account_protection"
     "match_question_count" INT4    default 1     not null,
     "error_times"          INT4    default 0     not null,
     "remark"               VARCHAR(127),
-    "is_active"            BOOLEAN default TRUE  not null,
-    "is_built_in"          BOOLEAN default FALSE not null,
+    "active"            BOOLEAN default TRUE  not null,
+    "built_in"          BOOLEAN default FALSE not null,
     "create_user"          VARCHAR(36),
     "create_time"          TIMESTAMP  default now() not null,
     "update_user"          VARCHAR(36),
@@ -274,9 +274,9 @@ comment on column "user_account_protection"."error_times" is '错误次数';
 
 comment on column "user_account_protection"."remark" is '备注，或其国际化key';
 
-comment on column "user_account_protection"."is_active" is '是否启用';
+comment on column "user_account_protection"."active" is '是否启用';
 
-comment on column "user_account_protection"."is_built_in" is '是否内置';
+comment on column "user_account_protection"."built_in" is '是否内置';
 
 comment on column "user_account_protection"."create_user" is '创建用户';
 

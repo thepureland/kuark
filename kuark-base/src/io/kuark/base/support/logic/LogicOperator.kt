@@ -15,9 +15,9 @@ enum class LogicOperator constructor(
     override val code: String,
     override val trans: String,
     // 值是否可接受null
-    val isAcceptNull: Boolean = false,
+    val acceptNull: Boolean = false,
     // 操作值只接收字符串类型
-    val isStringOnly: Boolean = false
+    val stringOnly: Boolean = false
 ) : IDictEnum {
 
     /** 等于 */

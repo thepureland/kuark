@@ -25,6 +25,7 @@ class Person : IIdEntity<String>, ITreeNode<String?> {
     var address: Address? = null
     var goods: List<String>? = null
     var contact: Map<String, String>? = null
+    var active: Boolean? = null
 
     constructor() {}
 

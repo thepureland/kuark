@@ -34,7 +34,7 @@ open class SysParamBiz: ISysParamBiz {
         val paramList = RdbKit.getDatabase().from(SysParams)
             .select(SysParams.columns)
             .whereWithConditions {
-                it += (SysParams.paramName eq name) and (SysParams.isActive eq true)
+                it += (SysParams.paramName eq name) and (SysParams.active eq true)
                 if (module.isNotEmpty()) {
                     it += SysParams.module eq module
                 }

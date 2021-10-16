@@ -34,7 +34,7 @@ open class AuthUserAccountThirdPartyDao : BaseDao<String, AuthUserAccountThirdPa
             .whereWithConditions {
                 it += (AuthUserAccountThirdPartys.principal eq identifier) and
                         (AuthUserAccountThirdPartys.principalTypeDictCode eq identityTypeDictCode) and
-                        (AuthUserAccountThirdPartys.isActive eq true)
+                        (AuthUserAccountThirdPartys.active eq true)
                 if (StringKit.isNotBlank(subSysDictCode)) {
                     it += (AuthUserAccountThirdPartys.subSysDictCode eq subSysDictCode!!)
                 }

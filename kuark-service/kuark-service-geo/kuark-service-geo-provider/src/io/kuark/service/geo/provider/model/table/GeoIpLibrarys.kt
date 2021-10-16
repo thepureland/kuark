@@ -31,7 +31,7 @@ object GeoIpLibrarys: MaintainableTable<GeoIpLibrary>("geo_ip_library") {
     var ispName = varchar("isp_name").bindTo { it.ispName }
 
     /** 该IP是否是用户修正过 */
-    var isRevised = boolean("is_revised").bindTo { it.isRevised }
+    var revised = boolean("revised").bindTo { it.revised }
 
 
     //region your codes 2

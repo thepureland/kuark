@@ -90,7 +90,7 @@ open class SysDictDao : BaseDao<String, SysDict, SysDicts>() {
                     row[SysDictItems.parentCode],
                     row[SysDictItems.itemName],
                     row[SysDictItems.seqNo],
-                    row[SysDictItems.isActive]!!,
+                    row[SysDictItems.active]!!,
                 )
             }
     }
@@ -127,8 +127,8 @@ open class SysDictDao : BaseDao<String, SysDict, SysDicts>() {
                 if (StringKit.isNotBlank(searchPayload.itemName)) {
                     it += SysDictItems.itemName.ilike("%${searchPayload.itemName!!.trim()}%")
                 }
-                if (searchPayload.isActive != null) {
-                    it += SysDictItems.isActive.eq(searchPayload.isActive!!)
+                if (searchPayload.active != null) {
+                    it += SysDictItems.active.eq(searchPayload.active!!)
                 }
             }
     }

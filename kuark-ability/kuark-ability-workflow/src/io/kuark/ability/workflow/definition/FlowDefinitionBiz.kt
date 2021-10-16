@@ -108,7 +108,7 @@ open class FlowDefinitionBiz : IFlowDefinitionBiz {
         }
 
         // 是否已部署
-        val isDeployed = searchItems.isDeployed
+        val isDeployed = searchItems.deployed
         if (isDeployed != null) {
             if (isDeployed) {
                 whereStr.append(" AND deployment_id_ IS NOT NULL")

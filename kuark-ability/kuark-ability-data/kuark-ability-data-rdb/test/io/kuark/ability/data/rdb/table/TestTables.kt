@@ -20,7 +20,7 @@ internal object TestTables : IntIdTable<TestTable>("test_table") {
     var birthday = datetime("birthday").bindTo { it.birthday }
 
     /** 是否生效 */
-    var isActive = boolean("is_active").bindTo { it.isActive }
+    var active = boolean("active").bindTo { it.active }
 
     /** 体重 */
     var weight = double("weight").bindTo { it.weight }

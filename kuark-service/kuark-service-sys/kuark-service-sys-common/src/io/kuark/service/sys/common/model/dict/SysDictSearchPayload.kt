@@ -1,7 +1,6 @@
 package io.kuark.service.sys.common.model.dict
 
-import io.kuark.base.query.sort.Order
-import io.kuark.base.support.payload.SearchPayload
+import io.kuark.base.support.payload.ListSearchPayload
 
 /**
  * 字典查询参数
@@ -9,7 +8,7 @@ import io.kuark.base.support.payload.SearchPayload
  * @author K
  * @since 1.0.0
  */
-class SysDictSearchPayload: SearchPayload() {
+class SysDictSearchPayload: ListSearchPayload() {
 
     /** 模块 */
     var module: String? = null
@@ -27,7 +26,7 @@ class SysDictSearchPayload: SearchPayload() {
     var itemName: String? = null
 
     /** 是否启用 */
-    var isActive: Boolean? = null
+    var active: Boolean? = null
 
     override var pageNo: Int? = 1
 

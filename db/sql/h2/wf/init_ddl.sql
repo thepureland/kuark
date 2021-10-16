@@ -8,7 +8,7 @@ create table "flow_form"
     "path"               VARCHAR(255)                    not null,
     "content"            CLOB                            not null,
     "remark"             VARCHAR(127),
-    "is_built_in"        BOOLEAN   default FALSE         not null,
+    "built_in"        BOOLEAN   default FALSE         not null,
     "create_user"        VARCHAR(36),
     "create_time"        TIMESTAMP default now(),
     "update_user"        VARCHAR(36),
@@ -33,7 +33,7 @@ comment on column "flow_form"."content" is '内容';
 
 comment on column "flow_form"."remark" is '备注';
 
-comment on column "flow_form"."is_built_in" is '是否内置';
+comment on column "flow_form"."built_in" is '是否内置';
 
 comment on column "flow_form"."create_user" is '创建用户';
 

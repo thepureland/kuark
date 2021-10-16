@@ -23,7 +23,7 @@ data class FlowDefinition(
 ) {
 
     /** 是否已部署 */
-    var isDeployed: Boolean = false
+    var deployed: Boolean = false
 
     /** 部署时间 */
     var deploymentTime: Date? = null
@@ -32,7 +32,7 @@ data class FlowDefinition(
     var tenantId: String? = null
 
     /** 是否被挂起 */
-    var isSuspend: Boolean = false
+    var suspend: Boolean = false
 
 
     /** 流程定义id，内部使用 */
@@ -66,9 +66,9 @@ data class FlowDefinition(
         _deploymentId = definition.deploymentId
         _diagramResourceName = definition.diagramResourceName
         tenantId = definition.tenantId
-        isSuspend = definition.isSuspended
+        suspend = definition.isSuspended
         if (deployment != null) {
-            isDeployed = true
+            deployed = true
             deploymentTime = deployment.deploymentTime
         }
     }
@@ -91,7 +91,7 @@ data class FlowDefinition(
         deploymentTime = deployment.deploymentTime
         _deploymentId = deployment.id
         tenantId = deployment.tenantId
-        isDeployed = true
+        deployed = true
     }
 
     /**
@@ -112,7 +112,7 @@ data class FlowDefinition(
         _deploymentId = model.deploymentId
         tenantId = model.tenantId
         if (deployment != null) {
-            isDeployed = true
+            deployed = true
             deploymentTime = deployment.deploymentTime
         }
     }

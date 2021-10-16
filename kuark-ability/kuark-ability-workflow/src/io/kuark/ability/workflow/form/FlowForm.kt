@@ -39,7 +39,7 @@ interface FlowForm : IDbEntity<String, FlowForm> {
     var remark: String?
 
     /** 是否内置 */
-    var isBuiltIn: Boolean
+    var builtIn: Boolean
 
     /** 创建用户 */
     var createUser: String?

@@ -26,10 +26,10 @@ open class MaintainableTable<E : IMaintainableDbEntity<String, E>>(tableName: St
     val updateUser = varchar("update_user").bindTo { it.updateUser }
 
     /** 是否启用 */
-    val isActive = boolean("is_active").bindTo { it.isActive }
+    val active = boolean("active").bindTo { it.active }
 
     /** 是否内置 */
-    val isBuiltIn = boolean("is_built_in").bindTo { it.isBuiltIn }
+    val builtIn = boolean("built_in").bindTo { it.builtIn }
 
     /** 备注 */
     val remark = varchar("remark").bindTo { it.remark }

@@ -13,6 +13,6 @@ import org.ktorm.entity.Entity
 interface IActivableDbEntity<ID, E : Entity<E>> : IDbEntity<ID, E> {
 
     /** 是否启用 */
-    var isActive: Boolean
+    var active: Boolean
 
 }

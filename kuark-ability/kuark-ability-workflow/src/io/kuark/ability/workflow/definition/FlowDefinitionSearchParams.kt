@@ -26,7 +26,7 @@ class FlowDefinitionSearchParams {
     var latestOnly: Boolean = true
 
     /** 是否已部署，为null时查询所有 */
-    var isDeployed: Boolean? = null
+    var deployed: Boolean? = null
 
     /**
      * 空构造器，仅供框架反射使用
@@ -39,7 +39,7 @@ class FlowDefinitionSearchParams {
         category = builder.category
         tenantId = builder.tenantId
         latestOnly = builder.latestOnly
-        isDeployed = builder.isDeployed
+        deployed = builder.deployed
     }
 
 
@@ -56,7 +56,7 @@ class FlowDefinitionSearchParams {
         var category: String? = null
         var tenantId: String? = null
         var latestOnly: Boolean = true
-        var isDeployed: Boolean? = null
+        var deployed: Boolean? = null
 
         /**
          * 构建流程定义查询参数对象
@@ -95,7 +95,7 @@ class FlowDefinitionSearchParams {
 
         /** 是否已部署，为null时查询所有 */
         fun isDeployed(isDeployed: Boolean): Builder {
-            this.isDeployed = isDeployed
+            this.deployed = isDeployed
             return this
         }
 

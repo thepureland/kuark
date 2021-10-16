@@ -9,10 +9,10 @@ create table "geo_ip_library"
     "country_id"  CHAR(3)                        not null,
     "region_code" VARCHAR(12),
     "isp_name"    VARCHAR(127),
-    "is_revised"  BOOLEAN  default FALSE         not null,
+    "revised"  BOOLEAN  default FALSE         not null,
     "remark"      VARCHAR(127),
-    "is_active"   BOOLEAN  default TRUE          not null,
-    "is_built_in" BOOLEAN  default FALSE         not null,
+    "active"   BOOLEAN  default TRUE          not null,
+    "built_in" BOOLEAN  default FALSE         not null,
     "create_user" VARCHAR(36),
     "create_time" TIMESTAMP  default now() not null,
     "update_user" VARCHAR(36),
@@ -33,13 +33,13 @@ comment on column "geo_ip_library"."region_code" is '地区编码';
 
 comment on column "geo_ip_library"."isp_name" is 'isp名称，或其国际化key';
 
-comment on column "geo_ip_library"."is_revised" is '该IP是否是用户修正过';
+comment on column "geo_ip_library"."revised" is '该IP是否是用户修正过';
 
 comment on column "geo_ip_library"."remark" is '备注，或其国际化key';
 
-comment on column "geo_ip_library"."is_active" is '是否启用';
+comment on column "geo_ip_library"."active" is '是否启用';
 
-comment on column "geo_ip_library"."is_built_in" is '是否内置';
+comment on column "geo_ip_library"."built_in" is '是否内置';
 
 comment on column "geo_ip_library"."create_user" is '创建用户';
 
@@ -75,8 +75,8 @@ create table "geo_country"
     "founding_day"            DATE,
     "driving_side_dict_code"      VARCHAR(15),
     "remark"                  VARCHAR(127),
-    "is_active"               BOOLEAN default TRUE  not null,
-    "is_built_in"             BOOLEAN default FALSE not null,
+    "active"               BOOLEAN default TRUE  not null,
+    "built_in"             BOOLEAN default FALSE not null,
     "create_user"             VARCHAR(36),
     "create_time"             TIMESTAMP  default now(),
     "update_user"             VARCHAR(36),
@@ -131,9 +131,9 @@ comment on column "geo_country"."driving_side_dict_code" is '驾驶方向代码'
 
 comment on column "geo_country"."remark" is '备注，或其国际化key';
 
-comment on column "geo_country"."is_active" is '是否启用';
+comment on column "geo_country"."active" is '是否启用';
 
-comment on column "geo_country"."is_built_in" is '是否内置';
+comment on column "geo_country"."built_in" is '是否内置';
 
 comment on column "geo_country"."create_user" is '创建用户';
 
@@ -164,8 +164,8 @@ create table "geo_region"
     "license_plate_no_prefix" VARCHAR(5),
     "airport_code"            CHAR(3),
     "remark"                  VARCHAR(127),
-    "is_active"               BOOLEAN  default TRUE          not null,
-    "is_built_in"             BOOLEAN  default FALSE         not null,
+    "active"               BOOLEAN  default TRUE          not null,
+    "built_in"             BOOLEAN  default FALSE         not null,
     "create_user"             VARCHAR(36),
     "create_time"             TIMESTAMP  default now() not null,
     "update_user"             VARCHAR(36),
@@ -204,9 +204,9 @@ comment on column "geo_region"."airport_code" is '机场3位编码';
 
 comment on column "geo_region"."remark" is '备注，或其国际化key';
 
-comment on column "geo_region"."is_active" is '是否启用';
+comment on column "geo_region"."active" is '是否启用';
 
-comment on column "geo_region"."is_built_in" is '是否内置';
+comment on column "geo_region"."built_in" is '是否内置';
 
 comment on column "geo_region"."create_user" is '创建用户';
 

@@ -48,7 +48,7 @@ object BeanKit {
      */
     fun <T : Any> copyProperties(destClass: KClass<T>, srcObj: Any, propertyMap: Map<String, String>? = null): T {
         val destObj = destClass.getEmptyConstructor()!!.call()
-        copyProperties(destObj, srcObj, propertyMap)
+        copyProperties(srcObj, destObj, propertyMap)
         return destObj
     }
 
@@ -56,14 +56,14 @@ object BeanKit {
      * 根据字段映射，拷贝源对象的属性，到指定目标对象的对应属性
      *
      * @param T 目标类型
-     * @param destObj 目标对象
      * @param srcObj 源对象
+     * @param destObj 目标对象
      * @param propertyMap 字段映射 Map(源对象属性名，目标对象属性名)，为null或空将尝试拷贝所有源对象的属性到目标对象的对应属性(如果存在的话)
      * @return 目标类的对象
      * @author K
      * @since 1.0.0
      */
-    fun <T : Any> copyProperties(destObj: T, srcObj: Any, propertyMap: Map<String, String>? = null): T {
+    fun <T : Any> copyProperties(srcObj: Any, destObj: T, propertyMap: Map<String, String>? = null): T {
         val map = if (MapKit.isEmpty(propertyMap)) { // 将拷贝所有源对象的属性
             val mappingRule = mutableMapOf<String, String>()
             srcObj::class.memberProperties.forEach {
@@ -75,7 +75,7 @@ object BeanKit {
         for ((srcPropertyName, destPropertyName) in map!!) {
             if (srcPropertyName.isNotBlank() && destPropertyName.isNotBlank()) {
                 val result = getProperty(srcObj, srcPropertyName)
-                copyProperty(destObj, destPropertyName, result)
+                setProperty(destObj, destPropertyName, result)
             }
         }
         return destObj
@@ -150,7 +150,7 @@ object BeanKit {
     fun <T> resetPropertiesExcludeId(entity: IIdEntity<T>) {
         val id = entity.id
         val emptyEntity: IIdEntity<T> = entity::class.getEmptyConstructor()!!.call()
-        copyProperties(entity, emptyEntity, null)
+        copyProperties(emptyEntity, entity, null)
         entity.id = id
     }
 
@@ -218,21 +218,6 @@ object BeanKit {
     fun <T : Any> copyProperties(orig: Any, dest: T): T = PropertyUtils.copyProperties(dest, orig) as T
 
     /**
-     * 拷贝(浅克隆)一个指定的属性值到指定的目标bean, 能进行类型转换
-     *
-     * @param T bean类型
-     * @param bean 目标bean
-     * @param name 属性名(可以嵌套/索引/映射/组合)
-     * @param value 属性值
-     * @return 目标bean
-     * @throws java.lang.reflect.InvocationTargetException 目标调用时发生异常
-     * @throws IllegalAccessException
-     * @author K
-     * @since 1.0.0
-     */
-    fun <T> copyProperty(bean: T, name: String?, value: Any?): T = BeanUtils.copyProperty(bean, name, value) as T
-
-    /**
      * 返回指定bean的所有属性名及其值
      *
      * @param bean 被提取属性的bean
@@ -258,6 +243,21 @@ object BeanKit {
      * @since 1.0.0
      */
     fun getProperty(bean: Any, name: String): Any? = PropertyUtils.getProperty(bean, name)
+
+    /**
+     * 设置属性值(浅克隆), 能进行类型转换
+     *
+     * @param T bean类型
+     * @param bean 目标bean
+     * @param name 属性名(可以嵌套/索引/映射/组合)
+     * @param value 属性值
+     * @return 目标bean
+     * @throws java.lang.reflect.InvocationTargetException 目标调用时发生异常
+     * @throws IllegalAccessException
+     * @author K
+     * @since 1.0.0
+     */
+    fun <T> setProperty(bean: T, name: String?, value: Any?): T = BeanUtils.copyProperty(bean, name, value) as T
 
     //endregion 封装org.apache.commons.beanutils.BeanUtils和PropertyUtils
 

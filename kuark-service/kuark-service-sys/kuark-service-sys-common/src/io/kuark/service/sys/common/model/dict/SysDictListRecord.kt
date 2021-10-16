@@ -27,6 +27,6 @@ data class SysDictListRecord(
     val seqNo: Int?,
 
     /** 是否启用 */
-    val isActive: Boolean
+    val active: Boolean
 
 )

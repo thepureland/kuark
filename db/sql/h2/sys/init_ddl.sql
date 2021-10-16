@@ -6,8 +6,8 @@ create table "sys_dict"
     "dict_type"   VARCHAR(63)                    not null,
     "dict_name"   VARCHAR(63),
     "remark"      VARCHAR(127),
-    "is_active"   BOOLEAN  default TRUE          not null,
-    "is_built_in" BOOLEAN  default FALSE         not null,
+    "active"   BOOLEAN  default TRUE          not null,
+    "built_in" BOOLEAN  default FALSE         not null,
     "create_user" VARCHAR(36),
     "create_time" TIMESTAMP default now(),
     "update_user" VARCHAR(36),
@@ -26,9 +26,9 @@ comment on column "sys_dict"."dict_name" is '字典名称，或其国际化key';
 
 comment on column "sys_dict"."remark" is '备注，或其国际化key';
 
-comment on column "sys_dict"."is_active" is '是否启用';
+comment on column "sys_dict"."active" is '是否启用';
 
-comment on column "sys_dict"."is_built_in" is '是否内置';
+comment on column "sys_dict"."built_in" is '是否内置';
 
 comment on column "sys_dict"."create_user" is '创建用户';
 
@@ -50,8 +50,8 @@ create table "sys_dict_item"
     "item_name"   VARCHAR(63)                    not null,
     "seq_no"      INT4,
     "remark"      VARCHAR(127),
-    "is_active"   BOOLEAN  default TRUE          not null,
-    "is_built_in" BOOLEAN  default FALSE         not null,
+    "active"   BOOLEAN  default TRUE          not null,
+    "built_in" BOOLEAN  default FALSE         not null,
     "create_user" VARCHAR(36),
     "create_time" TIMESTAMP default now(),
     "update_user" VARCHAR(36),
@@ -76,9 +76,9 @@ comment on column "sys_dict_item"."seq_no" is '该字典编号在同父节点下
 
 comment on column "sys_dict_item"."remark" is '备注，或其国际化key';
 
-comment on column "sys_dict_item"."is_active" is '是否启用';
+comment on column "sys_dict_item"."active" is '是否启用';
 
-comment on column "sys_dict_item"."is_built_in" is '是否内置';
+comment on column "sys_dict_item"."built_in" is '是否内置';
 
 comment on column "sys_dict_item"."create_user" is '创建用户';
 
@@ -100,8 +100,8 @@ create table "sys_param"
     "default_value" VARCHAR(127),
     "seq_no"        INT2,
     "remark"        VARCHAR(127),
-    "is_active"     BOOLEAN  default TRUE          not null,
-    "is_built_in"   BOOLEAN  default FALSE         not null,
+    "active"     BOOLEAN  default TRUE          not null,
+    "built_in"   BOOLEAN  default FALSE         not null,
     "create_user"   VARCHAR(36),
     "create_time"   TIMESTAMP default now() not null,
     "update_user"   VARCHAR(36),
@@ -124,9 +124,9 @@ comment on column "sys_param"."seq_no" is '序号';
 
 comment on column "sys_param"."remark" is '备注，或其国际化key';
 
-comment on column "sys_param"."is_active" is '是否启用';
+comment on column "sys_param"."active" is '是否启用';
 
-comment on column "sys_param"."is_built_in" is '是否内置';
+comment on column "sys_param"."built_in" is '是否内置';
 
 comment on column "sys_param"."create_user" is '创建用户';
 
@@ -150,8 +150,8 @@ create table "sys_resource"
     "sub_sys_dict_code"       VARCHAR(31),
     "icon"            VARCHAR(127),
     "remark"              VARCHAR(127),
-    "is_active"           BOOLEAN  default TRUE          not null,
-    "is_built_in"         BOOLEAN  default FALSE         not null,
+    "active"           BOOLEAN  default TRUE          not null,
+    "built_in"         BOOLEAN  default FALSE         not null,
     "create_user"         VARCHAR(36),
     "create_time"         TIMESTAMP  default now() not null,
     "update_user"         VARCHAR(36),
@@ -178,9 +178,9 @@ comment on column "sys_resource"."icon" is '图标';
 
 comment on column "sys_resource"."remark" is '备注，或其国际化key';
 
-comment on column "sys_resource"."is_active" is '是否启用';
+comment on column "sys_resource"."active" is '是否启用';
 
-comment on column "sys_resource"."is_built_in" is '是否内置';
+comment on column "sys_resource"."built_in" is '是否内置';
 
 comment on column "sys_resource"."create_user" is '创建用户';
 
@@ -205,8 +205,8 @@ create table "sys_data_source"
     "min_idle"     INT2,
     "max_wait"     INT2,
     "remark"       VARCHAR(127),
-    "is_active"    BOOLEAN     default TRUE          not null,
-    "is_built_in"  BOOLEAN     default FALSE         not null,
+    "active"    BOOLEAN     default TRUE          not null,
+    "built_in"  BOOLEAN     default FALSE         not null,
     "create_user"  VARCHAR(36),
     "create_time"  TIMESTAMP  default now() not null,
     "update_user"  VARCHAR(36),
@@ -235,9 +235,9 @@ comment on column "sys_data_source"."max_wait" is '获取连接时最大等待�
 
 comment on column "sys_data_source"."remark" is '备注，或其国际化key';
 
-comment on column "sys_data_source"."is_active" is '是否启用';
+comment on column "sys_data_source"."active" is '是否启用';
 
-comment on column "sys_data_source"."is_built_in" is '是否内置';
+comment on column "sys_data_source"."built_in" is '是否内置';
 
 comment on column "sys_data_source"."create_user" is '创建用户';
 

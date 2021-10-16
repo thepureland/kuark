@@ -60,8 +60,8 @@ object CodeGenColumnBiz {
                     name = column.getName()!!
                     objectName = table
                     comment = column.getCustomComment()
-                    isSearchable = column.getSearchable()
-                    isSortable = column.getSortable()
+                    searchable = column.getSearchable()
+                    sortable = column.getSortable()
                     orderInEdit = column.getOrderInEdit()
                     orderInList = column.getOrderInList()
                     orderInView = column.getOrderInView()

@@ -34,7 +34,7 @@ class Criterion : Serializable {
     /**
      * 条件是否已经加密过了.
      */
-    var isEncrypt = false
+    var encrypt = false
 
     /**
      * 仅供反射创建实例使用

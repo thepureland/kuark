@@ -19,7 +19,7 @@ data class FlowInstance(
     /** 流程定义key(bpmn文件中process元素的id) */
     val definitionKey: String,
     /** 是否挂起 */
-    val isSuspend: Boolean = false
+    val suspend: Boolean = false
 ) {
 
     /** 流程定义id，内部使用 */

@@ -7,7 +7,7 @@ CREATE TABLE "msg_template" (
   "locale_dict_code" varchar(5),
   "title" VARCHAR(127),
   "content" varchar,
-  "is_default_active" bool NOT NULL DEFAULT false,
+  "default_active" bool NOT NULL DEFAULT false,
   "default_title" VARCHAR(127),
   "default_content" varchar,
   "owner_id" VARCHAR(36)
@@ -22,7 +22,7 @@ COMMENT ON COLUMN "msg_template"."group_code" IS '模板分组编码,uuid,用于
 COMMENT ON COLUMN "msg_template"."locale_dict_code" IS '国家-语言代码';
 COMMENT ON COLUMN "msg_template"."title" IS '模板标题';
 COMMENT ON COLUMN "msg_template"."content" IS '模板内容';
-COMMENT ON COLUMN "msg_template"."is_default_active" IS '是否启用默认值';
+COMMENT ON COLUMN "msg_template"."default_active" IS '是否启用默认值';
 COMMENT ON COLUMN "msg_template"."default_title" IS '模板标题默认值';
 COMMENT ON COLUMN "msg_template"."default_content" IS '模板内容默认值';
 COMMENT ON COLUMN "msg_template"."owner_id" IS '所有者id，依业务可以是店铺id、站点id、商户id等';
@@ -66,8 +66,8 @@ CREATE TABLE "msg_receiver_group" (
   "define_table" VARCHAR(63) not null,
   "name_column" VARCHAR(63) not null,
   "remark"      VARCHAR(127),
-  "is_active"   BOOLEAN  default TRUE          not null,
-  "is_built_in" BOOLEAN  default FALSE         not null,
+  "active"   BOOLEAN  default TRUE          not null,
+  "built_in" BOOLEAN  default FALSE         not null,
   "create_user" VARCHAR(36),
   "create_time" TIMESTAMP  default now() not null,
   "update_user" VARCHAR(36),
@@ -82,8 +82,8 @@ COMMENT ON COLUMN "msg_receiver_group"."receiver_group_type_dict_code" IS '接�
 COMMENT ON COLUMN "msg_receiver_group"."define_table" IS '群组定义的表';
 COMMENT ON COLUMN "msg_receiver_group"."name_column" IS '群组名称在具体群组表中的字段名';
 comment on column "msg_receiver_group"."remark" is '备注，或其国际化key';
-comment on column "msg_receiver_group"."is_active" is '是否启用';
-comment on column "msg_receiver_group"."is_built_in" is '是否内置';
+comment on column "msg_receiver_group"."active" is '是否启用';
+comment on column "msg_receiver_group"."built_in" is '是否内置';
 comment on column "msg_receiver_group"."create_user" is '创建用户';
 comment on column "msg_receiver_group"."create_time" is '创建时间';
 comment on column "msg_receiver_group"."update_user" is '更新用户';

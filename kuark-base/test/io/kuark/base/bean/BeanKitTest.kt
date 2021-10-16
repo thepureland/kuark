@@ -31,45 +31,37 @@ internal class BeanKitTest {
             }
             goods = listOf("sporting", "singing", "dancing")
             contact = mapOf("student" to "Tom", "teacher" to "Lucy")
+            active = true
         }
     }
 
     @Test
-    fun testCloneBean() {
-        val p: Person = BeanKit.shallowClone(person)
-        assertEquals(person, p)
-        assertTrue(person.address === p.address) // 证明是浅克隆
+    fun shallowClone() {
+        val dest = BeanKit.shallowClone(person)
+        assertEquals(person, dest)
+        assertTrue(person.address === dest.address) // 证明是浅克隆
+        assertEquals(true, dest.active)
     }
 
     @Test
-    fun testDeepClone() {
-        val p: Person = BeanKit.deepClone(person)
-        assertEquals(person, p)
-        assertTrue(person.address !== p.address) // 证明是深克隆
+    fun deepClone() {
+        val dest: Person = BeanKit.deepClone(person)
+        assertEquals(person, dest)
+        assertTrue(person.address !== dest.address) // 证明是深克隆
+        assertEquals(true, dest.active)
     }
 
     @Test
-    fun testCopyProperties() {
-        val p = Person()
-        BeanKit.copyProperties(person, p)
-        assertEquals(person, p)
-        assertTrue(person.address === p.address) // 证明是浅克隆
+    fun copyProperties() {
+        val dest = Person()
+        BeanKit.copyProperties(person, dest)
+        assertEquals(person, dest)
+        assertTrue(person.address === dest.address) // 证明是浅克隆
+        assertEquals(true, dest.active)
     }
 
     @Test
-    fun testCopyProperty() {
-        BeanKit.copyProperty(person, "address.zipcode", "361000")
-        assertEquals("361000", person.address?.zipcode)
-    }
-
-    @Test
-    fun testCopyPropertiesWithoutCast() {
-        BeanKit.copyProperty(person, "address.zipcode", "361000")
-        assertEquals("361000", person.address?.zipcode)
-    }
-
-    @Test
-    fun testExtract() {
+    fun extract() {
         val map: Map<String, Any?> = BeanKit.extract(person)
         assertEquals(person.age, map["age"])
         assertEquals(person.name, map["name"])
@@ -78,69 +70,84 @@ internal class BeanKitTest {
         assertTrue(person.birthday === map["birthday"])
         assertTrue(person.contact === map["contact"])
         assertTrue(person.goods === map["goods"])
+        assertEquals(true, person.active)
     }
 
     @Test
-    fun testGetProperty() {
+    fun getProperty() {
         assertEquals(person.age, BeanKit.getProperty(person, "age"))
         assertEquals(person.goods?.get(0), BeanKit.getProperty(person, "goods[0]"))
         assertEquals(person.contact?.get("student"), BeanKit.getProperty(person, "contact(student)"))
         assertEquals(person.address?.province, BeanKit.getProperty(person, "address.province"))
+        assertEquals(true, BeanKit.getProperty(person, "active"))
     }
 
     @Test
-    fun testCopyPropertiesByMap() {
+    fun setProperty() {
+        BeanKit.setProperty(person, "address.zipcode", "361000")
+        assertEquals("361000", person.address?.zipcode)
+        BeanKit.setProperty(person, "isActive", "361000")
+        assertEquals(true, person.active)
+    }
+
+    @Test
+    fun copyPropertiesByMap() {
         val list = listOf("1", "2")
         val srcObj = Couple("key", list)
         val propertyMap = mapOf("first" to "second", "second[0]" to "first")
 
         val dest = BeanKit.copyProperties(Couple::class, srcObj, propertyMap)
-        assertEquals(srcObj.first, dest?.second)
-        assertEquals(srcObj.second!![0], dest?.first)
+        assertEquals(srcObj.first, dest.second)
+        assertEquals(srcObj.second!![0], dest.first)
     }
 
     @Test
-    fun testCopyPropertiesToClassInstance() {
-        val p: Person = BeanKit.copyProperties(Person::class, person)
-        assertEquals(person, p)
-        assertTrue(person.address === p.address) // 证明是浅克隆
+    fun copyPropertiesToClassInstance() {
+        val dest: Person = BeanKit.copyProperties(Person::class, person)
+        assertEquals(person, dest)
+        assertTrue(person.address === dest.address) // 证明是浅克隆
+        assertEquals(true, dest.active)
     }
 
     @Test
-    fun testCopyPropertiesExcludeId() {
+    fun copyPropertiesExcludeId() {
         val dest = Person()
         BeanKit.copyPropertiesExcludeId(person, dest)
         assertEquals(person.age, dest.age)
         assertTrue(person.address === dest.address)
-        assertNull(dest.selfUniqueIdentifier)
+        assertNull(dest._getId())
+        assertEquals(true, dest.active)
     }
 
     @Test
-    fun testcopyPropertiesExclude() {
-        val p = Person()
-        BeanKit.copyPropertiesExclude(person, p, "age", "address")
-        assertEquals(person.selfUniqueIdentifier, p.selfUniqueIdentifier)
-        assertEquals(0, p.age)
-        assertNull(p.address)
-        assertTrue(person.goods === p.goods) // 浅克隆
+    fun copyPropertiesExclude() {
+        val dest = Person()
+        BeanKit.copyPropertiesExclude(person, dest, "age", "address")
+        assertEquals(person._getId(), dest._getId())
+        assertEquals(0, dest.age)
+        assertNull(dest.address)
+        assertTrue(person.goods === dest.goods) // 浅克隆
+        assertEquals(true, dest.active)
     }
 
     @Test
-    fun testResetPropertiesExcludeId() {
+    fun resetPropertiesExcludeId() {
         val p: Person = BeanKit.shallowClone(person)
         BeanKit.resetPropertiesExcludeId(p)
         assertNull(p.name)
         assertNull(p.address)
-        assertEquals(person.selfUniqueIdentifier, p.selfUniqueIdentifier)
+        assertEquals(person._getId(), p._getId())
+        assertNull(p.active)
     }
 
     @Test
-    fun testBatchCopyProperties() {
+    fun batchCopyProperties() {
         val persons = listOf<Person>(person, person)
         val results = BeanKit.batchCopyProperties(Person::class, persons)
         assertEquals(persons.size.toLong(), results.size.toLong())
         assertEquals(persons[0].name, results[0].name)
         assertEquals(persons[1].weight, results[1].weight, 0.0)
+        assertEquals(persons[1].active, results[1].active)
     }
 
     internal class Couple<F, S> {

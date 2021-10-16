@@ -123,8 +123,8 @@ object RdbMetadataKit {
                     length = columnRs.getInt("COLUMN_SIZE")
                     decimalDigits = columnRs.getInt("DECIMAL_DIGITS")
                     defaultValue = columnRs.getString("COLUMN_DEF")
-                    isNullable = columnRs.getInt("NULLABLE") == DatabaseMetaData.columnNullable
-                    isDictCode = name.toUpperCase().endsWith("__CODE")
+                    nullable = columnRs.getInt("NULLABLE") == DatabaseMetaData.columnNullable
+                    dictCode = name.toUpperCase().endsWith("__CODE")
                     autoIncrement = columnRs.getString("IS_AUTOINCREMENT")
                 }
                 linkedMap[column.name] = column
@@ -136,7 +136,7 @@ object RdbMetadataKit {
         primaryKeyRs.use {
             while (primaryKeyRs.next()) {
                 val columnName = primaryKeyRs.getString("COLUMN_NAME")
-                linkedMap[columnName]!!.isPrimaryKey = true
+                linkedMap[columnName]!!.primaryKey = true
             }
         }
 
@@ -145,7 +145,7 @@ object RdbMetadataKit {
         foreignKeyRs.use {
             while (foreignKeyRs.next()) {
                 val columnName = foreignKeyRs.getString("FKCOLUMN_NAME")
-                linkedMap[columnName]!!.isForeignKey = true
+                linkedMap[columnName]!!.foreignKey = true
             }
         }
 
@@ -154,7 +154,7 @@ object RdbMetadataKit {
         indexInfoRs.use {
             while (indexInfoRs.next()) {
                 val columnName = indexInfoRs.getString("COLUMN_NAME")
-                linkedMap[columnName]!!.isIndexed = true
+                linkedMap[columnName]!!.indexed = true
             }
         }
 
@@ -164,7 +164,7 @@ object RdbMetadataKit {
         uniqueInfoRs.use {
             while (uniqueInfoRs.next()) {
                 val columnName = uniqueInfoRs.getString("COLUMN_NAME")
-                linkedMap[columnName]!!.isUnique = true
+                linkedMap[columnName]!!.unique = true
             }
         }
 

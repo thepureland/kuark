@@ -125,7 +125,7 @@ open class FlowInstanceBiz : IFlowInstanceBiz {
         }
 
         // 是否挂起
-        val suspend = searchParams.isSuspend
+        val suspend = searchParams.suspend
         if (suspend != null) {
             if (suspend) {
                 whereStr.append(" AND e.suspension_state_ = 2")

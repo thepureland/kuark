@@ -28,7 +28,7 @@ open class SysResourceBiz : BaseBiz<String, SysResource, SysResourceDao>(), ISys
 
     override fun getMenus(): List<SysMenuTreeNode> {
         //TODO 加入权限
-        val criteria = Criteria.add(SysResource::isActive.name, Operator.EQ, true)
+        val criteria = Criteria.add(SysResource::active.name, Operator.EQ, true)
         val subSysCode = KuarkContextHolder.get().subSysCode
         if (StringKit.isNotBlank(subSysCode)) {
             criteria.addAnd(SysResource::subSysDictCode.name, Operator.EQ, subSysCode)

@@ -79,23 +79,23 @@ internal class BaseReadOnlyDaoTest : SpringTest() {
         assertEquals(2, results.size)
 
         // 单条件升序
-        results = testTableDao.oneSearch(TestTable::isActive.name, true, Order.asc(TestTable::name.name))
+        results = testTableDao.oneSearch(TestTable::active.name, true, Order.asc(TestTable::name.name))
         assertEquals(8, results.size)
         assertEquals("name1", results.first().name)
         assertEquals("name9", results.last().name)
 
         // 单条件降序
-        results = testTableDao.oneSearch(TestTable::isActive.name, true, Order.desc(TestTable::name.name))
+        results = testTableDao.oneSearch(TestTable::active.name, true, Order.desc(TestTable::name.name))
         assertEquals(8, results.size)
         assertEquals("name9", results.first().name)
         assertEquals("name1", results.last().name)
 
         // 多个排序条件
         val orders = arrayOf(Order.asc(TestTable::height.name), Order.desc(TestTable::name.name))
-        results = testTableDao.oneSearch(TestTable::isActive.name, true, *orders)
+        results = testTableDao.oneSearch(TestTable::active.name, true, *orders)
         assertEquals(8, results.size)
-        assertEquals("name8", results.first().name)
-        assertEquals("name9", results[5].name)
+        assertEquals("name5", results.first().name)
+        assertEquals("name4", results[5].name)
     }
 
     @Test
@@ -167,7 +167,7 @@ internal class BaseReadOnlyDaoTest : SpringTest() {
 
     @Test
     fun andSearchProperties() {
-        val propertyMap = mapOf(TestTable::name.name to "name1", TestTable::isActive.name to true)
+        val propertyMap = mapOf(TestTable::name.name to "name1", TestTable::active.name to true)
         val returnProperties = listOf(TestTable::name.name, TestTable::id.name)
         val results = testTableDao.andSearchProperties(propertyMap, returnProperties)
         assertEquals(1, results.size)
@@ -224,7 +224,7 @@ internal class BaseReadOnlyDaoTest : SpringTest() {
     @Test
     fun inSearchProperties() {
         val ids = listOf(-3, -2, -1)
-        val returnProperties = listOf(TestTable::name.name, TestTable::id.name, TestTable::isActive.name)
+        val returnProperties = listOf(TestTable::name.name, TestTable::id.name, TestTable::active.name)
         val results =
             testTableDao.inSearchProperties(TestTable::id.name, ids, returnProperties, Order.desc(TestTable::id.name))
         assertEquals(3, results.size)
@@ -262,7 +262,7 @@ internal class BaseReadOnlyDaoTest : SpringTest() {
     @Test
     fun search() {
         val inIds = Criterion(TestTable::id.name, Operator.IN, listOf(-2, -4, -6, -7))
-        val eqActive = Criterion(TestTable::isActive.name, Operator.EQ, true)
+        val eqActive = Criterion(TestTable::active.name, Operator.EQ, true)
         val andCriteria = Criteria.and(inIds, eqActive)
         val likeName = Criterion(TestTable::name.name, Operator.LIKE_S, "name1")
         val orCriteria: Criteria = Criteria.or(likeName, andCriteria)
@@ -304,17 +304,17 @@ internal class BaseReadOnlyDaoTest : SpringTest() {
     @Test
     fun searchProperties() {
         val inIds = Criterion(TestTable::id.name, Operator.IN, listOf(-2, -4, -6, -7))
-        val eqActive = Criterion(TestTable::isActive.name, Operator.EQ, true)
+        val eqActive = Criterion(TestTable::active.name, Operator.EQ, true)
         val andCriteria = Criteria.and(inIds, eqActive)
         val likeName = Criterion(TestTable::name.name, Operator.LIKE_S, "name1")
         val orCriteria: Criteria = Criteria.or(likeName, andCriteria)
         val noNull = Criterion(TestTable::weight.name, Operator.IS_NOT_NULL, null)
         val criteria: Criteria = Criteria.and(orCriteria, noNull)
-        val returnProperties = listOf(TestTable::isActive.name, TestTable::name.name)
+        val returnProperties = listOf(TestTable::active.name, TestTable::name.name)
         val results = testTableDao.searchProperties(criteria, returnProperties, Order.desc(TestTable::weight.name))
         assertEquals(5, results.size)
         assertEquals("name10", results.first()[TestTable::name.name])
-        assertEquals(false, results.first()[TestTable::isActive.name])
+        assertEquals(false, results.first()[TestTable::active.name])
     }
     //endregion search Criteria
 
@@ -323,7 +323,7 @@ internal class BaseReadOnlyDaoTest : SpringTest() {
     @Test
     fun pagingSearch() {
         if (isSupportPaging()) {
-            val criteria = Criteria.add(TestTable::isActive.name, Operator.EQ, true)
+            val criteria = Criteria.add(TestTable::active.name, Operator.EQ, true)
             val entities = testTableDao.pagingSearch(criteria, 1, 4, Order.asc(TestTable::id.name))
             assertEquals(4, entities.size)
             assertEquals(-11, entities.first().id)
@@ -333,7 +333,7 @@ internal class BaseReadOnlyDaoTest : SpringTest() {
     @Test
     fun pagingReturnProperty() {
         if (isSupportPaging()) {
-            val criteria = Criteria.add(TestTable::isActive.name, Operator.EQ, true)
+            val criteria = Criteria.add(TestTable::active.name, Operator.EQ, true)
             val results =
                 testTableDao.pagingReturnProperty(criteria, TestTable::id.name, 1, 4, Order.asc(TestTable::id.name))
             assertEquals(4, results.size)
@@ -344,7 +344,7 @@ internal class BaseReadOnlyDaoTest : SpringTest() {
     @Test
     fun pagingReturnProperties() {
         if (isSupportPaging()) {
-            val criteria = Criteria.add(TestTable::isActive.name, Operator.EQ, true)
+            val criteria = Criteria.add(TestTable::active.name, Operator.EQ, true)
             val returnProperties = listOf(TestTable::id.name, TestTable::name.name)
             val results =
                 testTableDao.pagingReturnProperties(criteria, returnProperties, 1, 4, Order.asc(TestTable::id.name))
@@ -407,7 +407,7 @@ internal class BaseReadOnlyDaoTest : SpringTest() {
         assert(result.first() is TestTable)
         assertEquals(-1, (result.first() as TestTable).id)
 
-        // 指定
+        // 指定结果封装类
         class Result {
             var id: Int? = null
             var name: String? = null
@@ -438,7 +438,7 @@ internal class BaseReadOnlyDaoTest : SpringTest() {
                 TestTables::name.name -> {
                     column.ilike("nAme1%")
                 }
-                TestTables::isActive.name -> {
+                TestTables::active.name -> {
                     column.eq(true)
                 }
                 else -> null

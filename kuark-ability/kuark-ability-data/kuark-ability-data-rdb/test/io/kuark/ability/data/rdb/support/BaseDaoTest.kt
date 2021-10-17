@@ -189,6 +189,9 @@ internal open class BaseDaoTest : SpringTest() {
         var entity = testTableDao.getById(-1)!!
         entity.name = "name"
 
+        // Criteria为空
+        assertThrows<IllegalArgumentException> { testTableDao.updateWhen(entity, Criteria()) }
+
         // 满足Criteria条件
         var criteria = Criteria.add(TestTable::name.name, Operator.EQ, "name1")
         assert(testTableDao.updateWhen(entity, criteria))
@@ -215,6 +218,9 @@ internal open class BaseDaoTest : SpringTest() {
     @Test
     @Transactional
     open fun updatePropertiesWhen() {
+        // Criteria为空
+        assertThrows<IllegalArgumentException> { testTableDao.updatePropertiesWhen(entity, Criteria()) }
+
         // 满足Criteria条件
         var criteria = Criteria.add(TestTable::name.name, Operator.EQ, "name1")
         val properties = mapOf(TestTable::id.name to -2, TestTable::name.name to "name") // 主键应该要不会被更新

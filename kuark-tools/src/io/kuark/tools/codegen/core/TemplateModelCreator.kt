@@ -2,9 +2,12 @@ package io.kuark.tools.codegen.core
 
 import io.kuark.ability.data.rdb.metadata.Column
 import io.kuark.ability.data.rdb.metadata.RdbMetadataKit
+import io.kuark.ability.data.rdb.support.*
 import io.kuark.base.bean.BeanKit
+import io.kuark.base.lang.string.humpToUnderscore
 import io.kuark.base.lang.string.underscoreToHump
 import io.kuark.tools.codegen.model.vo.Config
+import java.util.*
 
 /**
  * 模板数据模型创建者，用户可继承此类自定义要填充模板的数据
@@ -14,6 +17,7 @@ import io.kuark.tools.codegen.model.vo.Config
  */
 open class TemplateModelCreator {
 
+    @Suppress("UNCHECKED_CAST")
     fun create(): Map<String, Any?> {
         val tableName = CodeGeneratorContext.tableName
         val config = CodeGeneratorContext.config
@@ -30,7 +34,7 @@ open class TemplateModelCreator {
         templateModel[Config.PROP_KEY_VERSION] = config.getVersion()
         val columnConfMap = columns.map { it.getColumn() to it }.toMap()
         for (origColumn in origColumns) {
-            val columnName = origColumn.name.toLowerCase()
+            val columnName = origColumn.name.lowercase(Locale.getDefault())
             val columnInfo = columnConfMap[columnName]
             if (columnInfo != null) {
                 BeanKit.copyProperties(columnInfo, origColumn)
@@ -44,32 +48,38 @@ open class TemplateModelCreator {
 
     open fun determinPoDaoSuperClass(templateModel: MutableMap<String, Any?>, origColumns: Collection<Column>) {
         val pkKotylinType = origColumns.first { it.primaryKey }.kotlinType
-        var poSuperClass = "IDbEntity"
+        var poSuperClass = IDbEntity::class.simpleName
         lateinit var daoSuperClass: String
         when (pkKotylinType) {
             String::class -> {
                 val maintainColumns = listOf(
-                    "id", "create_time", "create_user", "update_time", "update_user",
-                    "active", "built_in", "remark"
+                    MaintainableTable<*>::id.name,
+                    MaintainableTable<*>::createTime.name.humpToUnderscore(false),
+                    MaintainableTable<*>::createUser.name.humpToUnderscore(false),
+                    MaintainableTable<*>::updateTime.name.humpToUnderscore(false),
+                    MaintainableTable<*>::updateUser.name.humpToUnderscore(false),
+                    MaintainableTable<*>::active.name,
+                    MaintainableTable<*>::builtIn.name.humpToUnderscore(false),
+                    MaintainableTable<*>::remark.name,
                 )
                 if (origColumns.map { it.name }.containsAll(maintainColumns)) {
                     // 包括所有维护字段，po实现IMaintainableDbEntity，dao实现MaintainableTable
-                    poSuperClass = "IMaintainableDbEntity"
-                    daoSuperClass = "MaintainableTable"
+                    poSuperClass = IMaintainableDbEntity::class.simpleName
+                    daoSuperClass = MaintainableTable::class.simpleName!!
                     // 过滤掉父类中已有的列
                     templateModel["columns"] = origColumns.filter { !maintainColumns.contains(it.name) }
                 } else {
-                    daoSuperClass = "StringIdTable"
-                    templateModel["columns"] = origColumns.filter { it.name != "id" } // 过滤掉父类中已有的id列
+                    daoSuperClass = StringIdTable::class.simpleName!!
+                    templateModel["columns"] = origColumns.filter { it.name != IDbEntity<*,*>::id.name } // 过滤掉父类中已有的id列
                 }
             }
             Int::class -> {
-                daoSuperClass = "IntIdTable"
-                templateModel["columns"] = origColumns.filter { it.name != "id" } // 过滤掉父类中已有的id列
+                daoSuperClass = IntIdTable::class.simpleName!!
+                templateModel["columns"] = origColumns.filter { it.name != IDbEntity<*,*>::id.name } // 过滤掉父类中已有的id列
             }
             Long::class -> {
-                daoSuperClass = "LongIdTable"
-                templateModel["columns"] = origColumns.filter { it.name != "id" } // 过滤掉父类中已有的id列
+                daoSuperClass = LongIdTable::class.simpleName!!
+                templateModel["columns"] = origColumns.filter { it.name != IDbEntity<*,*>::id.name } // 过滤掉父类中已有的id列
             }
             else -> daoSuperClass = "Table"
         }

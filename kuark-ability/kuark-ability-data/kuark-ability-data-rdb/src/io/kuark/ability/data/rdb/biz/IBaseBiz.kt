@@ -68,6 +68,8 @@ interface IBaseBiz<PK : Any, E : IDbEntity<PK, E>> : IBaseReadOnlyBiz<PK, E> {
      * @param countOfEachBatch 每批大小，缺省为1000
      * @param propertyNames 要保存的属性的可变数组
      * @return 保存的记录数
+     * @author K
+     * @since 1.0.0
      */
     fun batchInsertOnly(entities: Collection<E>, countOfEachBatch: Int = 1000, vararg propertyNames: String): Int
 
@@ -78,6 +80,8 @@ interface IBaseBiz<PK : Any, E : IDbEntity<PK, E>> : IBaseReadOnlyBiz<PK, E> {
      * @param countOfEachBatch 每批大小，缺省为1000
      * @param excludePropertyNames 不保存的属性的可变数组
      * @return 保存的记录数
+     * @author K
+     * @since 1.0.0
      */
     fun batchInsertExclude(
         entities: Collection<E>, countOfEachBatch: Int = 1000, vararg excludePropertyNames: String
@@ -104,6 +108,9 @@ interface IBaseBiz<PK : Any, E : IDbEntity<PK, E>> : IBaseReadOnlyBiz<PK, E> {
      * @param entity 实体对象
      * @param criteria 附加查询条件
      * @return 记录是否有更新
+     * @throws IllegalArgumentException 条件为空时
+     * @author K
+     * @since 1.0.0
      */
     fun updateWhen(entity: E, criteria: Criteria): Boolean
 
@@ -113,6 +120,8 @@ interface IBaseBiz<PK : Any, E : IDbEntity<PK, E>> : IBaseReadOnlyBiz<PK, E> {
      * @param id         主键值
      * @param properties Map(属性名，属性值)
      * @return 是否更新成功
+     * @author K
+     * @since 1.0.0
      */
     fun updateProperties(id: PK, properties: Map<String, *>): Boolean
 
@@ -124,6 +133,9 @@ interface IBaseBiz<PK : Any, E : IDbEntity<PK, E>> : IBaseReadOnlyBiz<PK, E> {
      * @param properties Map(属性名，属性值)
      * @param criteria 附加查询条件
      * @return 记录是否有更新
+     * @throws IllegalArgumentException 无查询条件时
+     * @author K
+     * @since 1.0.0
      */
     fun updatePropertiesWhen(id: PK, properties: Map<String, *>, criteria: Criteria): Boolean
 
@@ -133,6 +145,8 @@ interface IBaseBiz<PK : Any, E : IDbEntity<PK, E>> : IBaseReadOnlyBiz<PK, E> {
      * @param entity     实体对象
      * @param propertyNames 更新的属性的可变数组
      * @return 是否更新成功
+     * @author K
+     * @since 1.0.0
      */
     fun updateOnly(entity: E, vararg propertyNames: String): Boolean
 
@@ -144,6 +158,9 @@ interface IBaseBiz<PK : Any, E : IDbEntity<PK, E>> : IBaseReadOnlyBiz<PK, E> {
      * @param criteria 附加查询条件
      * @param propertyNames 更新的属性的可变数组
      * @return 记录是否有更新
+     * @throws IllegalArgumentException 无查询条件时
+     * @author K
+     * @since 1.0.0
      */
     fun updateOnlyWhen(entity: E, criteria: Criteria, vararg propertyNames: String): Boolean
 
@@ -155,6 +172,9 @@ interface IBaseBiz<PK : Any, E : IDbEntity<PK, E>> : IBaseReadOnlyBiz<PK, E> {
      * @param criteria 附加查询条件
      * @param excludePropertyNames 不更新的属性的可变数组
      * @return 记录是否有更新
+     * @throws IllegalArgumentException 无查询条件时
+     * @author K
+     * @since 1.0.0
      */
     fun updateExcludePropertiesWhen(entity: E, criteria: Criteria, vararg excludePropertyNames: String): Boolean
 
@@ -197,6 +217,9 @@ interface IBaseBiz<PK : Any, E : IDbEntity<PK, E>> : IBaseReadOnlyBiz<PK, E> {
      * @param criteria 附加查询条件
      * @param countOfEachBatch 每批大小，缺省为1000
      * @return 更新的记录数
+     * @throws IllegalArgumentException 无查询条件时
+     * @author K
+     * @since 1.0.0
      */
     fun batchUpdateWhen(entities: Collection<E>, criteria: Criteria, countOfEachBatch: Int = 1000): Int
 
@@ -207,6 +230,8 @@ interface IBaseBiz<PK : Any, E : IDbEntity<PK, E>> : IBaseReadOnlyBiz<PK, E> {
      * @param entity            实体对象
      * @param excludePropertyNames 不更新的属性的可变数组
      * @return 是否更新成功
+     * @author K
+     * @since 1.0.0
      */
     fun updateExcludeProperties(entity: E, vararg excludePropertyNames: String): Boolean
 
@@ -216,6 +241,9 @@ interface IBaseBiz<PK : Any, E : IDbEntity<PK, E>> : IBaseReadOnlyBiz<PK, E> {
      * @param criteria   查询条件
      * @param properties Map(属性名，属性值)
      * @return 是否更新成功
+     * @throws IllegalArgumentException 未指定要更新的属性或无查询条件时
+     * @author K
+     * @since 1.0.0
      */
     fun batchUpdateProperties(criteria: Criteria, properties: Map<String, *>): Int
 
@@ -226,6 +254,8 @@ interface IBaseBiz<PK : Any, E : IDbEntity<PK, E>> : IBaseReadOnlyBiz<PK, E> {
      * @param countOfEachBatch 每批大小，缺省为1000
      * @param propertyNames 更新的属性的可变数组
      * @return 更新的记录数
+     * @author K
+     * @since 1.0.0
      */
     fun batchUpdateOnly(entities: Collection<E>, countOfEachBatch: Int = 1000, vararg propertyNames: String): Int
 
@@ -238,6 +268,9 @@ interface IBaseBiz<PK : Any, E : IDbEntity<PK, E>> : IBaseReadOnlyBiz<PK, E> {
      * @param countOfEachBatch 每批大小，缺省为1000
      * @param propertyNames 更新的属性的可变数组
      * @return 更新的记录数
+     * @throws IllegalArgumentException 无查询条件时
+     * @author K
+     * @since 1.0.0
      */
     fun batchUpdateOnlyWhen(
         entities: Collection<E>, criteria: Criteria, countOfEachBatch: Int = 1000, vararg propertyNames: String
@@ -251,6 +284,8 @@ interface IBaseBiz<PK : Any, E : IDbEntity<PK, E>> : IBaseReadOnlyBiz<PK, E> {
      * @param countOfEachBatch 每批大小，缺省为1000
      * @param excludePropertyNames 不更新的属性的可变数组
      * @return 是否更新成功
+     * @author K
+     * @since 1.0.0
      */
     fun batchUpdateExcludeProperties(
         entities: Collection<E>, countOfEachBatch: Int = 1000, vararg excludePropertyNames: String
@@ -265,6 +300,9 @@ interface IBaseBiz<PK : Any, E : IDbEntity<PK, E>> : IBaseReadOnlyBiz<PK, E> {
      * @param countOfEachBatch 每批大小，缺省为1000
      * @param excludePropertyNames 不更新的属性的可变数组
      * @return 是否更新成功
+     * @throws IllegalArgumentException 无查询条件时
+     * @author K
+     * @since 1.0.0
      */
     fun batchUpdateExcludePropertiesWhen(
         entities: Collection<E>, criteria: Criteria, countOfEachBatch: Int = 1000, vararg excludePropertyNames: String
@@ -290,6 +328,8 @@ interface IBaseBiz<PK : Any, E : IDbEntity<PK, E>> : IBaseReadOnlyBiz<PK, E> {
      *
      * @param ids 主键列表
      * @return 删除的记录数
+     * @author K
+     * @since 1.0.0
      */
     fun batchDelete(ids: Collection<PK>): Int
 
@@ -298,6 +338,9 @@ interface IBaseBiz<PK : Any, E : IDbEntity<PK, E>> : IBaseReadOnlyBiz<PK, E> {
      *
      * @param criteria 查询条件
      * @return 删除的记录数
+     * @throws IllegalArgumentException 无查询条件时
+     * @author K
+     * @since 1.0.0
      */
     fun batchDeleteCriteria(criteria: Criteria): Int
 

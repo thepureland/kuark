@@ -29,7 +29,8 @@ class Criteria : Serializable {
     constructor(criterion: Criterion) {
         addAnd(criterion)
     }
-    //endregion
+
+
     //region and
     /**
      * 添加单个查询条件
@@ -90,7 +91,7 @@ class Criteria : Serializable {
     fun addAnd(criteria: Criteria, criterion: Criterion): Criteria {
         return addAnd(criteria).addAnd(criterion)
     }
-    //endregion
+    //endregion and
 
     //region or
     /**
@@ -127,8 +128,8 @@ class Criteria : Serializable {
      * @return 当前查询对象
      */
     fun addOr(criterion: Criterion, criteria: Criteria): Criteria {
-        val objList = addCriterion(null, criterion!!)
-        addCriteria(objList, criteria!!)
+        val objList = addCriterion(null, criterion)
+        addCriteria(objList, criteria)
         addOrGroup(objList)
         return this
     }
@@ -142,41 +143,52 @@ class Criteria : Serializable {
      */
     fun addOr(criteria: Criteria, criterion: Criterion): Criteria {
         val objList = addCriteria(null, criteria)
-        addCriterion(objList, criterion!!)
+        addCriterion(objList, criterion)
         addOrGroup(objList)
         return this
     }
 
-    //endregion
+    //endregion or
+
+    /**
+     * 是否条件为空
+     *
+     * @return true：查询条件为空， 反之不为空
+     * @author K
+     * @since 1.0.0
+     */
+    fun isEmpty(): Boolean {
+        return criterionGroups.isEmpty()
+    }
 
     private fun addCriterion(list: MutableList<Any>?, vararg criterions: Criterion): MutableList<Any> {
-        var list = list
-        if (list == null) {
-            list = ArrayList<Any>(criterions.size)
+        var resultList = list
+        if (resultList == null) {
+            resultList = ArrayList(criterions.size)
         }
         for (criterion in criterions) {
             val operator = criterion.operator
             val value = criterion.getValue()
             if (value != null && value !is Collection<*> && value !is Array<*> && "" != value || value is Collection<*> && !value.isEmpty()
-                || value is Array<*> && (value as Array<Any?>).size != 0 || operator!!.acceptNull
+                || value is Array<*> && (value).size != 0 || operator.acceptNull
             ) {
-                list.add(criterion)
+                resultList.add(criterion)
             }
         }
-        return list
+        return resultList
     }
 
     private fun addCriteria(list: MutableList<Any>?, vararg criterias: Criteria): MutableList<Any> {
-        var list = list
-        if (list == null) {
-            list = ArrayList<Any>(criterias.size)
+        var resultList = list
+        if (resultList == null) {
+            resultList = ArrayList(criterias.size)
         }
         for (criteria in criterias) {
-            if (!criteria.getCriterionGroups().isEmpty()) {
-                list.add(criteria)
+            if (criteria.getCriterionGroups().isNotEmpty()) {
+                resultList.add(criteria)
             }
         }
-        return list
+        return resultList
     }
 
     private fun addOrGroup(list: List<*>) {
@@ -271,7 +283,7 @@ class Criteria : Serializable {
          */
         fun and(criteria: Criteria, criterion: Criterion): Criteria = Criteria().addAnd(criteria, criterion)
 
-        //endregion
+        //endregion static and
 
         //region static or
         /**
@@ -307,5 +319,6 @@ class Criteria : Serializable {
          * @return 新的查询对象
          */
         fun or(criteria: Criteria, criterion: Criterion): Criteria = Criteria().addOr(criteria, criterion)
+        //endregion static or
     }
 }

@@ -158,8 +158,12 @@ open class BaseDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadOnlyD
      * @param entity 实体对象
      * @param criteria 附加查询条件
      * @return 记录是否有更新
+     * @throws IllegalArgumentException 无查询条件时
+     * @author K
+     * @since 1.0.0
      */
     open fun updateWhen(entity: E, criteria: Criteria): Boolean {
+        require(!criteria.isEmpty()) { "有条件的更新实体对象时，查询条件不能为空！" }
         return updateByCriteria(entity.id, entity.properties, criteria)
     }
 
@@ -177,7 +181,7 @@ open class BaseDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadOnlyD
         val columnMap = ColumnHelper.columnOf(table(), *propertyNames)
         return database().update(table()) {
             properties.forEach { (name, value) ->
-                set(columnMap[name]!!, properties[name])
+                set(columnMap[name]!!, value)
             }
             where { getPkColumn() eq id }
         } == 1
@@ -191,10 +195,12 @@ open class BaseDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadOnlyD
      * @param properties Map(属性名，属性值)
      * @param criteria 附加查询条件
      * @return 记录是否有更新
+     * @throws IllegalArgumentException 无查询条件时
      * @author K
      * @since 1.0.0
      */
     open fun updatePropertiesWhen(id: PK, properties: Map<String, *>, criteria: Criteria): Boolean {
+        require(!criteria.isEmpty()) { "有条件的更新实体对象时，查询条件不能为空！" }
         return updateByCriteria(id, properties, criteria)
     }
 
@@ -220,10 +226,12 @@ open class BaseDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadOnlyD
      * @param criteria 附加查询条件
      * @param propertyNames 更新的属性的可变数组
      * @return 记录是否有更新
+     * @throws IllegalArgumentException 无查询条件时
      * @author K
      * @since 1.0.0
      */
     open fun updateOnlyWhen(entity: E, criteria: Criteria, vararg propertyNames: String): Boolean {
+        require(!criteria.isEmpty()) { "有条件的更新实体对象时，查询条件不能为空！" }
         val properties = entity.properties.filter { it.key in propertyNames }
         return updateByCriteria(entity.id, properties, criteria)
     }
@@ -251,10 +259,12 @@ open class BaseDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadOnlyD
      * @param criteria 附加查询条件
      * @param excludePropertyNames 不更新的属性的可变数组
      * @return 记录是否有更新
+     * @throws IllegalArgumentException 无查询条件时
      * @author K
      * @since 1.0.0
      */
     open fun updateExcludePropertiesWhen(entity: E, criteria: Criteria, vararg excludePropertyNames: String): Boolean {
+        require(!criteria.isEmpty()) { "有条件的更新实体对象时，查询条件不能为空！" }
         val properties = entity.properties.filter { it.key !in excludePropertyNames }
         return updateByCriteria(entity.id, properties, criteria)
     }
@@ -282,10 +292,12 @@ open class BaseDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadOnlyD
      * @param criteria 附加查询条件
      * @param countOfEachBatch 每批大小，缺省为1000
      * @return 更新的记录数
+     * @throws IllegalArgumentException 无查询条件时
      * @author K
      * @since 1.0.0
      */
     open fun batchUpdateWhen(entities: Collection<E>, criteria: Criteria, countOfEachBatch: Int = 1000): Int {
+        require(!criteria.isEmpty()) { "批量更新实体对象时，查询条件不能为空！" }
         return batchUpdateByCriteria(entities, countOfEachBatch, criteria)
     }
 
@@ -351,11 +363,14 @@ open class BaseDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadOnlyD
      * @param criteria   查询条件
      * @param properties Map(属性名，属性值)
      * @return 是否更新成功
+     * @throws IllegalArgumentException 未指定要更新的属性或无查询条件时
      * @author K
      * @since 1.0.0
      */
     open fun batchUpdateProperties(criteria: Criteria, properties: Map<String, *>): Int {
         require(properties.isNotEmpty()) { "未指定要更新的属性Map！" }
+        require(!criteria.isEmpty()) { "批量更新实体对象时，查询条件不能为空！" }
+
         val whereExpression = CriteriaConverter.convert(criteria, table())
         val columnMap = ColumnHelper.columnOf(table(), *properties.keys.toTypedArray())
         return database().batchUpdate(table()) {
@@ -391,12 +406,14 @@ open class BaseDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadOnlyD
      * @param countOfEachBatch 每批大小，缺省为1000
      * @param propertyNames 更新的属性的可变数组
      * @return 更新的记录数
+     * @throws IllegalArgumentException 无查询条件时
      * @author K
      * @since 1.0.0
      */
     open fun batchUpdateOnlyWhen(
         entities: Collection<E>, criteria: Criteria, countOfEachBatch: Int = 1000, vararg propertyNames: String
     ): Int {
+        require(!criteria.isEmpty()) { "批量更新实体对象时，查询条件不能为空！" }
         return batchUpdateByCriteria(entities, countOfEachBatch, criteria, false, *propertyNames)
     }
 
@@ -426,12 +443,14 @@ open class BaseDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadOnlyD
      * @param countOfEachBatch 每批大小，缺省为1000
      * @param excludePropertyNames 不更新的属性的可变数组
      * @return 是否更新成功
+     * @throws IllegalArgumentException 无查询条件时
      * @author K
      * @since 1.0.0
      */
     open fun batchUpdateExcludePropertiesWhen(
         entities: Collection<E>, criteria: Criteria, countOfEachBatch: Int = 1000, vararg excludePropertyNames: String
     ): Int {
+        require(!criteria.isEmpty()) { "有条件的批量更新实体对象时，查询条件不能为空！" }
         return batchUpdateByCriteria(entities, countOfEachBatch, criteria, true, *excludePropertyNames)
     }
 
@@ -489,10 +508,12 @@ open class BaseDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadOnlyD
      *
      * @param criteria 查询条件
      * @return 删除的记录数
+     * @throws IllegalArgumentException 无查询条件时
      * @author K
      * @since 1.0.0
      */
     open fun batchDeleteCriteria(criteria: Criteria): Int {
+        require(!criteria.isEmpty()) { "批量删除实体对象时，查询条件不能为空！" }
         return entitySequence().removeIf { CriteriaConverter.convert(criteria, table()) }
     }
 
@@ -531,10 +552,10 @@ open class BaseDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadOnlyD
         val columnMap = ColumnHelper.columnOf(table(), *propertyNames)
         return database().update(table()) {
             propertyMap.filter { it.key != IDbEntity<PK, E>::id.name }.forEach { (name, value) ->
-                set(columnMap[name]!!, propertyMap[name])
+                set(columnMap[name]!!, value)
             }
             where {
-                var whereExpression = getPkColumn() eq id!!
+                var whereExpression = getPkColumn() eq id
                 if (criteria != null) {
                     whereExpression = whereExpression.and(CriteriaConverter.convert(criteria, table()))
                 }

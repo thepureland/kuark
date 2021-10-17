@@ -276,7 +276,7 @@ internal class BaseReadOnlyDaoTest : SpringTest() {
     @Test
     fun searchProperty() {
         // ILIKE_S，IS_NOT_NULL，GT
-        var criteria = Criteria().addAnd(
+        var criteria = Criteria.and(
             Criterion(TestTable::name.name, Operator.ILIKE_S, "Name1"),
             Criterion(TestTable::weight.name, Operator.IS_NOT_NULL, null),
             Criterion(TestTable::height.name, Operator.GT, 160)

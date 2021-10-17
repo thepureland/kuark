@@ -1,7 +1,5 @@
 package io.kuark.base.support.payload
 
-import io.kuark.base.support.IIdEntity
-
 /**
  * 更新数据项载体父类
  *

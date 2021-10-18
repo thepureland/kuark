@@ -21,14 +21,14 @@ interface IBaseBiz<PK : Any, E : IDbEntity<PK, E>> : IBaseReadOnlyBiz<PK, E> {
     //region Insert
 
     /**
-     * 插入指定实体到当前表
+     * 插入指定实体或“插入项载休”到当前表
      *
-     * @param entity 实体
+     * @param any 实体对象或插入项载休
      * @return 主键值
      * @author K
      * @since 1.0.0
      */
-    fun insert(entity: E): PK
+    fun insert(any: Any): PK
 
     /**
      * 保存实体对象，只保存指定的属性
@@ -36,6 +36,8 @@ interface IBaseBiz<PK : Any, E : IDbEntity<PK, E>> : IBaseReadOnlyBiz<PK, E> {
      * @param entity 实体对象
      * @param propertyNames 要保存的属性的可变数组
      * @return 主键值
+     * @author K
+     * @since 1.0.0
      */
     fun insertOnly(entity: E, vararg propertyNames: String): PK
 
@@ -45,21 +47,23 @@ interface IBaseBiz<PK : Any, E : IDbEntity<PK, E>> : IBaseReadOnlyBiz<PK, E> {
      * @param entity 实体对象
      * @param excludePropertyNames 不保存的属性的可变数组
      * @return 主键值
+     * @author K
+     * @since 1.0.0
      */
     fun insertExclude(entity: E, vararg excludePropertyNames: String): PK
 
     /**
-     * 批量插入指定实体到当前表。
+     * 批量插入指定实体或“插入项载休”到当前表。
      *
      * ktorm底层该方法是基于原生 JDBC 提供的 executeBatch 函数实现
      *
-     * @param entities 实体集合
+     * @param objects 实体对象集合或“插入项载休”集合
      * @param countOfEachBatch 每批大小，缺省为1000
      * @return 成功插入的记录数
      * @author K
      * @since 1.0.0
      */
-    fun batchInsert(entities: Collection<E>, countOfEachBatch: Int = 1000): Int
+    fun batchInsert(objects: Collection<Any>, countOfEachBatch: Int = 1000): Int
 
     /**
      * 批量保存实体对象，只保存指定的属性

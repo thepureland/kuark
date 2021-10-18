@@ -11,6 +11,7 @@ import io.kuark.base.support.payload.UpdatePayload
 import io.kuark.test.common.SpringTest
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotNull
 import org.ktorm.dsl.eq
 import org.ktorm.dsl.like
 import org.springframework.beans.factory.annotation.Autowired
@@ -41,16 +42,31 @@ internal open class BaseDaoTest : SpringTest() {
     }
 
     //region Insert
+
     @Test
     @Transactional
     open fun insert() {
+        class InsertPayload {
+            var id: Int? = null
+            var name: String? = null
+            var height: Int? = null
+        }
+
+        val insertPayload = InsertPayload().apply {
+            id = 12
+            name = "name99"
+            height = 199
+        }
+
+        assertNotNull(testTableDao.insert(insertPayload))
+        assertEquals(12, testTableDao.allSearch().size)
+
         val entity = TestTable {
             id = 0
             name = "name0"
         }
-        val id = testTableDao.insert(entity)
-        assertEquals(0, id)
-        assertEquals(12, testTableDao.allSearch().size)
+        assertEquals(0, testTableDao.insert(entity))
+        assertEquals(13, testTableDao.allSearch().size)
     }
 
     @Test
@@ -88,6 +104,7 @@ internal open class BaseDaoTest : SpringTest() {
     @Test
     @Transactional
     open fun batchInsert() {
+        // 实体
         val entities = listOf(
             TestTable {
                 id = 21
@@ -102,9 +119,30 @@ internal open class BaseDaoTest : SpringTest() {
                 name = "name23"
             },
         )
-        val count = testTableDao.batchInsert(entities, 2)
-        assertEquals(3, count)
+        assertEquals(3, testTableDao.batchInsert(entities, 2))
         assertEquals(14, testTableDao.allSearch().size)
+
+        // 插入项载体
+        class InsertPayload {
+            var id: Int? = null
+            var name: String? = null
+            var height: Int? = null
+        }
+
+        val payloads = listOf(
+            InsertPayload().apply {
+                id = 31
+                name = "name31"
+                height = 131
+            },
+            InsertPayload().apply {
+                id = 32
+                name = "name32"
+                height = 132
+            }
+        )
+        assertEquals(2, testTableDao.batchInsert(payloads))
+        assertEquals(16, testTableDao.allSearch().size)
     }
 
     @Test
@@ -219,11 +257,11 @@ internal open class BaseDaoTest : SpringTest() {
     @Transactional
     open fun updatePropertiesWhen() {
         // Criteria为空
-        assertThrows<IllegalArgumentException> { testTableDao.updatePropertiesWhen(entity, Criteria()) }
+        val properties = mapOf(TestTable::id.name to -2, TestTable::name.name to "name") // 主键应该要不会被更新
+        assertThrows<IllegalArgumentException> { testTableDao.updatePropertiesWhen(-1, properties, Criteria()) }
 
         // 满足Criteria条件
         var criteria = Criteria.add(TestTable::name.name, Operator.EQ, "name1")
-        val properties = mapOf(TestTable::id.name to -2, TestTable::name.name to "name") // 主键应该要不会被更新
         assert(testTableDao.updatePropertiesWhen(-1, properties, criteria))
         var entity = testTableDao.getById(-1)!!
         assertEquals("name", entity.name)

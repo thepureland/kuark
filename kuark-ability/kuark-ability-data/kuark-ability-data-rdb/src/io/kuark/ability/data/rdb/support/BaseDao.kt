@@ -8,11 +8,13 @@ import io.kuark.base.support.logic.AndOr
 import io.kuark.base.support.payload.SearchPayload
 import io.kuark.base.support.payload.UpdatePayload
 import org.ktorm.dsl.*
+import org.ktorm.entity.Entity
 import org.ktorm.entity.add
 import org.ktorm.entity.removeIf
 import org.ktorm.schema.Column
 import org.ktorm.schema.ColumnDeclaring
 import org.ktorm.schema.Table
+import kotlin.reflect.full.memberProperties
 
 /**
  * 基础数据访问对象，封装某数据库表的通用操作
@@ -29,15 +31,23 @@ open class BaseDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadOnlyD
     //region Insert
 
     /**
-     * 插入指定实体到当前表
+     * 插入指定实体或“插入项载休”到当前表
      *
-     * @param entity 实体
+     * @param any 实体对象或插入项载休
      * @return 主键值
      * @author K
      * @since 1.0.0
      */
-    open fun insert(entity: E): PK {
-        entitySequence().add(entity)
+    @Suppress("UNCHECKED_CAST")
+    open fun insert(any: Any): PK {
+        val entity = if (any is IDbEntity<*, *>) {
+            any
+        } else {
+            val entity = Entity.create(table().entityClass!!)
+            BeanKit.copyProperties(any, entity)
+            entity
+        }
+        entitySequence().add(entity as E)
         return entity.id!!
     }
 
@@ -76,18 +86,42 @@ open class BaseDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadOnlyD
     }
 
     /**
-     * 批量插入指定实体到当前表。
+     * 批量插入指定实体或“插入项载休”到当前表。
      *
      * ktorm底层该方法是基于原生 JDBC 提供的 executeBatch 函数实现
      *
-     * @param entities 实体集合
+     * @param objects 实体对象集合或“插入项载休”集合
      * @param countOfEachBatch 每批大小，缺省为1000
      * @return 成功插入的记录数
      * @author K
      * @since 1.0.0
      */
-    open fun batchInsert(entities: Collection<E>, countOfEachBatch: Int = 1000): Int {
-        return batchInsertOnly(entities, countOfEachBatch, *entities.first().properties.keys.toTypedArray())
+    @Suppress("UNCHECKED_CAST")
+    open fun batchInsert(objects: Collection<Any>, countOfEachBatch: Int = 1000): Int {
+        if (objects.isEmpty()) return 0
+        return if (objects.first() is IDbEntity<*, *>) {
+            batchInsertOnly(objects as Collection<E>, countOfEachBatch, *objects.first().properties.keys.toTypedArray())
+        } else {
+            val propertyNames = getEntityProperties()
+            val columnMap = ColumnHelper.columnOf(table(), *propertyNames.toTypedArray())
+            var totalCount = 0
+            GroupExecutor(objects, countOfEachBatch) {
+                val counts = database().batchInsert(table()) {
+                    it.forEach { insertPayload ->
+                        item {
+                            val propMap = BeanKit.extract(insertPayload)
+                            for ((name, value) in propMap) {
+                                if (name in propertyNames) {
+                                    set(columnMap[name]!!, value)
+                                }
+                            }
+                        }
+                    }
+                }
+                totalCount += counts.sum()
+            }.execute()
+            totalCount
+        }
     }
 
     /**

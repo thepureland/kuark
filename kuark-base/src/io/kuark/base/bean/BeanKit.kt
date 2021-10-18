@@ -208,14 +208,13 @@ object BeanKit {
      * @param T 目标bean类型
      * @param orig 源bean
      * @param dest 目标bean
-     * @return 目标对象
      * @throws java.lang.reflect.InvocationTargetException 目标调用时发生异常
      * @throws IllegalAccessException 如果请求的方法不能通过反射访问
      * @throws NoSuchMethodException 如果找不到指定的可访问的方法
      * @author K
      * @since 1.0.0
      */
-    fun <T : Any> copyProperties(orig: Any, dest: T): T = PropertyUtils.copyProperties(dest, orig) as T
+    fun <T : Any> copyProperties(orig: Any, dest: T) = PropertyUtils.copyProperties(dest, orig)
 
     /**
      * 返回指定bean的所有属性名及其值

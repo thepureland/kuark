@@ -21,7 +21,7 @@ open class BaseBiz<PK : Any, E : IDbEntity<PK, E>, DAO : BaseDao<PK, E, *>>
     : BaseReadOnlyBiz<PK, E, DAO>(), IBaseBiz<PK, E> {
 
     @Transactional
-    override fun insert(entity: E): PK = dao.insert(entity)
+    override fun insert(any: Any): PK = dao.insert(any)
 
     @Transactional
     override fun insertOnly(entity: E, vararg propertyNames: String): PK = dao.insertOnly(entity, *propertyNames)
@@ -31,8 +31,8 @@ open class BaseBiz<PK : Any, E : IDbEntity<PK, E>, DAO : BaseDao<PK, E, *>>
         dao.insertExclude(entity, *excludePropertyNames)
 
     @Transactional
-    override fun batchInsert(entities: Collection<E>, countOfEachBatch: Int): Int =
-        dao.batchInsert(entities, countOfEachBatch)
+    override fun batchInsert(objects: Collection<Any>, countOfEachBatch: Int): Int =
+        dao.batchInsert(objects, countOfEachBatch)
 
     @Transactional
     override fun batchInsertOnly(entities: Collection<E>, countOfEachBatch: Int, vararg propertyNames: String): Int =

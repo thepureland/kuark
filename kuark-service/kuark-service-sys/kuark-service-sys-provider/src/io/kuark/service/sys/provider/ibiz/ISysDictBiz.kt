@@ -3,6 +3,7 @@ package io.kuark.service.sys.provider.ibiz
 import io.kuark.ability.data.rdb.biz.IBaseBiz
 import io.kuark.service.sys.common.model.dict.SysDictListRecord
 import io.kuark.service.sys.common.model.dict.SysDictSearchPayload
+import io.kuark.service.sys.common.model.dict.SysDictTreeNode
 import io.kuark.service.sys.provider.model.po.SysDict
 
 /**
@@ -26,6 +27,17 @@ interface ISysDictBiz : IBaseBiz<String, SysDict> {
      * @since 1.0.0
      */
     fun pagingSearch(searchPayload: SysDictSearchPayload): Pair<List<SysDictListRecord>, Int>
+
+    /**
+     * 加载直接孩子结点
+     *
+     * @param parentId 父主键，为null时加载SysDict
+     * @param activeOnly 是否只加载启用状态的数据
+     * @return List(SysDictTreeNode)
+     * @author K
+     * @since 1.0.0
+     */
+    fun loadDirectChildren(parentId: String?, activeOnly: Boolean = true): List<SysDictTreeNode>
 
     //endregion your codes 2
 

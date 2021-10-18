@@ -2,10 +2,10 @@ package io.kuark.service.sys.provider.dao
 
 import io.kuark.ability.data.rdb.support.BaseDao
 import io.kuark.ability.data.rdb.support.ColumnHelper
-import io.kuark.ability.data.rdb.support.ilike
 import io.kuark.base.error.ObjectNotFoundException
 import io.kuark.base.lang.collections.CollectionKit
 import io.kuark.base.lang.string.StringKit
+import io.kuark.base.query.enums.Operator
 import io.kuark.service.sys.common.model.dict.SysDictListRecord
 import io.kuark.service.sys.common.model.dict.SysDictSearchPayload
 import io.kuark.service.sys.provider.model.po.SysDict
@@ -44,7 +44,7 @@ open class SysDictDao : BaseDao<String, SysDict, SysDicts>() {
     /**
      * 分页连接查询符合条件的字典项及字典
      *
-     * @param searchPayload 查询参数
+     * @param searchPayload 查询项载体
      * @return List(SysDictListRecord)
      * @author K
      * @since 1.0.0
@@ -85,7 +85,7 @@ open class SysDictDao : BaseDao<String, SysDict, SysDicts>() {
                     row[SysDicts.module],
                     row[SysDicts.dictType]!!,
                     row[SysDicts.dictName],
-                    row[SysDictItems.dictId]!!,
+                    row[SysDictItems.id]!!,
                     row[SysDictItems.itemCode]!!,
                     row[SysDictItems.parentCode],
                     row[SysDictItems.itemName],
@@ -107,28 +107,42 @@ open class SysDictDao : BaseDao<String, SysDict, SysDicts>() {
         return leftJoinSearch(searchPayload).totalRecords
     }
 
-    private fun leftJoinSearch(searchPayload: SysDictSearchPayload): Query {
+    /**
+     * 构造SysDictItems左连接SysDicts的带有where查询条件的查询对象
+     *
+     * @param searchPayload 查询项载体
+     * @return Query
+     * @author K
+     * @since 1.0.0
+     */
+    fun leftJoinSearch(searchPayload: SysDictSearchPayload): Query {
         return database()
             .from(SysDictItems).leftJoin(SysDicts, on = SysDictItems.dictId.eq(SysDicts.id))
             .select()
             .whereWithConditions {
                 if (StringKit.isNotBlank(searchPayload.module)) {
-                    it += SysDicts.module.ilike("%${searchPayload.module!!.trim()}%")
+                    it += whereExpr(SysDicts.module, Operator.ILIKE, searchPayload.module!!.trim())
                 }
                 if (StringKit.isNotBlank(searchPayload.dictType)) {
-                    it += SysDicts.dictType.ilike("%${searchPayload.dictType!!.trim()}%")
+                    it += whereExpr(SysDicts.dictType, Operator.ILIKE, searchPayload.dictType!!.trim())
                 }
                 if (StringKit.isNotBlank(searchPayload.dictName)) {
-                    it += SysDicts.dictName.ilike("%${searchPayload.dictName!!.trim()}%")
+                    it += whereExpr(SysDicts.dictName, Operator.ILIKE, searchPayload.dictName!!.trim())
                 }
                 if (StringKit.isNotBlank(searchPayload.itemCode)) {
-                    it += SysDictItems.itemCode.ilike("%${searchPayload.itemCode!!.trim()}%")
+                    it += whereExpr(SysDictItems.itemCode, Operator.ILIKE, searchPayload.itemCode!!.trim())
+                }
+                if (StringKit.isNotBlank(searchPayload.parentCode)) {
+                    it += whereExpr(SysDictItems.parentCode, Operator.ILIKE, searchPayload.parentCode!!.trim())
                 }
                 if (StringKit.isNotBlank(searchPayload.itemName)) {
-                    it += SysDictItems.itemName.ilike("%${searchPayload.itemName!!.trim()}%")
+                    it += whereExpr(SysDictItems.itemName, Operator.ILIKE, searchPayload.itemName!!.trim())
                 }
                 if (searchPayload.active != null) {
                     it += SysDictItems.active.eq(searchPayload.active!!)
+                }
+                if (StringKit.isNotBlank(searchPayload.parentId)) {
+                    it += SysDictItems.parentId.eq(searchPayload.parentId!!)
                 }
             }
     }

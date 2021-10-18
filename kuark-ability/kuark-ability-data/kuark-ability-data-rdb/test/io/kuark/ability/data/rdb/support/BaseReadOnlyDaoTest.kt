@@ -425,7 +425,7 @@ internal class BaseReadOnlyDaoTest : SpringTest() {
         searchPayload1.pageNo = null
         result = testTableDao.search(searchPayload1) { column, value ->
             if (column.name == TestTables::name.name) {
-                SqlExpressionFactory.create(column, Operator.ILIKE_S, value)
+                testTableDao.whereExpr(column, Operator.ILIKE_S, value)
             } else {
                 null
             }
@@ -475,7 +475,7 @@ internal class BaseReadOnlyDaoTest : SpringTest() {
         }
         val result = testTableDao.count(searchPayload1) { column, value ->
             if (column.name == TestTables::name.name) {
-                SqlExpressionFactory.create(column, Operator.ILIKE_S, value)
+                testTableDao.whereExpr(column, Operator.ILIKE_S, value)
             } else {
                 null
             }

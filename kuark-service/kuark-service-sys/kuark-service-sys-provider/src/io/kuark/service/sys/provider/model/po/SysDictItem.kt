@@ -21,11 +21,14 @@ interface SysDictItem: IMaintainableDbEntity<String, SysDictItem> {
     /** 字典项编号 */
     var itemCode: String
 
+    /** 字典项名称，或其国际化key */
+    var itemName: String
+
     /** 父项编号 */
     var parentCode: String?
 
-    /** 字典项名称，或其国际化key */
-    var itemName: String
+    /** 父项主键 */
+    var parentId: String?
 
     /** 该字典编号在同父节点下的排序号 */
     var seqNo: Int?

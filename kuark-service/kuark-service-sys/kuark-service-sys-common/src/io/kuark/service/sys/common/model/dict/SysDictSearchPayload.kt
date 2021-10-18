@@ -10,6 +10,9 @@ import io.kuark.base.support.payload.ListSearchPayload
  */
 class SysDictSearchPayload: ListSearchPayload() {
 
+    /** 主键 */
+    var id: String? = null
+
     /** 模块 */
     var module: String? = null
 
@@ -22,14 +25,16 @@ class SysDictSearchPayload: ListSearchPayload() {
     /** 字典项编号 */
     var itemCode: String? = null
 
+    /** 父项编号 */
+    var parentCode: String? = null
+
+    /** 父项主键 */
+    var parentId: String? = null
+
     /** 字典项名称，或其国际化key */
     var itemName: String? = null
 
     /** 是否启用 */
     var active: Boolean? = null
-
-    override var pageNo: Int? = 1
-
-    override var pageSize: Int? = 10
 
 }

@@ -76,7 +76,7 @@ internal object CriteriaConverter {
     private fun convertCriterion(criterion: Criterion, table: Table<*>): ColumnDeclaring<Boolean> {
         val column = ColumnHelper.columnOf(table, criterion.property)[criterion.property] as Column<Any>
         val value = criterion.getValue()
-        return SqlExpressionFactory.create(column, criterion.operator, value)
+        return SqlWhereExpressionFactory.create(column, criterion.operator, value)
     }
 
 }

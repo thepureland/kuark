@@ -21,11 +21,14 @@ object SysDictItems: MaintainableTable<SysDictItem>("sys_dict_item") {
     /** 字典项编号 */
     var itemCode = varchar("item_code").bindTo { it.itemCode }
 
+    /** 字典项名称，或其国际化key */
+    var itemName = varchar("item_name").bindTo { it.itemName }
+
     /** 父项编号 */
     var parentCode = varchar("parent_code").bindTo { it.parentCode }
 
-    /** 字典项名称，或其国际化key */
-    var itemName = varchar("item_name").bindTo { it.itemName }
+    /** 父项主键 */
+    var parentId = varchar("parent_id").bindTo { it.parentId }
 
     /** 该字典编号在同父节点下的排序号 */
     var seqNo = int("seq_no").bindTo { it.seqNo }

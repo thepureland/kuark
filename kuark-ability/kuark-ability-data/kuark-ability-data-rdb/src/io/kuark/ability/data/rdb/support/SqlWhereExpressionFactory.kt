@@ -11,7 +11,7 @@ import org.ktorm.schema.ColumnDeclaring
  * @author K
  * @since 1.0.0
  */
-object SqlExpressionFactory {
+object SqlWhereExpressionFactory {
 
     /**
      * 创建查询条件表达式

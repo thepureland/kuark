@@ -14,7 +14,6 @@ import org.ktorm.entity.removeIf
 import org.ktorm.schema.Column
 import org.ktorm.schema.ColumnDeclaring
 import org.ktorm.schema.Table
-import kotlin.reflect.full.memberProperties
 
 /**
  * 基础数据访问对象，封装某数据库表的通用操作

@@ -6,6 +6,7 @@ import io.kuark.base.lang.GenericKit
 import io.kuark.base.lang.collections.CollectionKit
 import io.kuark.base.lang.reflect.newInstance
 import io.kuark.base.query.Criteria
+import io.kuark.base.query.enums.Operator
 import io.kuark.base.query.sort.Order
 import io.kuark.base.support.GroupExecutor
 import io.kuark.base.support.logic.AndOr
@@ -90,6 +91,21 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
     @Suppress("UNCHECKED_CAST")
     protected fun getPkColumn(): Column<PK> {
         return table().primaryKeys[0] as Column<PK>
+    }
+
+    /**
+     * 创建查询条件表达式
+     *
+     * @param column 列对象
+     * @param operator 操作符
+     * @param value 要查询的值
+     * @return 列申明对象
+     * @author K
+     * @since 1.0.0
+     */
+    @Suppress("UNCHECKED_CAST")
+    fun <A: Any> whereExpr(column: Column<A>, operator: Operator, value: A?): ColumnDeclaring<Boolean> {
+        return SqlWhereExpressionFactory.create(column as Column<Any>, operator, value)
     }
 
     //region Search

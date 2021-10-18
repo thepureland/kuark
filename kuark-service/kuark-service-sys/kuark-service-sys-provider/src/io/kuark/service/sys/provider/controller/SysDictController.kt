@@ -3,7 +3,7 @@ package io.kuark.service.sys.provider.controller
 import io.kuark.ability.web.common.WebResult
 import io.kuark.service.sys.common.model.dict.SysDictListRecord
 import io.kuark.service.sys.common.model.dict.SysDictSearchPayload
-import io.kuark.service.sys.common.model.dict.SysDictUpdateItems
+import io.kuark.service.sys.common.model.dict.SysDictUpdatePayload
 import io.kuark.service.sys.provider.ibiz.ISysDictBiz
 import io.kuark.service.sys.provider.ibiz.ISysDictItemBiz
 import io.kuark.service.sys.provider.model.table.SysDictItems
@@ -18,9 +18,6 @@ class SysDictController {
 
     @Autowired
     private lateinit var sysDictBiz: ISysDictBiz
-
-    @Autowired
-    private lateinit var sysDictItemBiz: ISysDictItemBiz
 
     @PostMapping("/list")
     fun list(@RequestBody searchPayload: SysDictSearchPayload): WebResult<Pair<List<SysDictListRecord>, Int>> {
@@ -39,18 +36,6 @@ class SysDictController {
     fun loadDictTypes(): WebResult<List<String>> {
         val modules = sysDictBiz.allSearchProperty(SysDicts.dictType.name) as List<String>
         return WebResult(modules.distinct())
-    }
-
-    @GetMapping("/loadDictItemCodes")
-    @Suppress("UNCHECKED_CAST")
-    fun loadDictItemCodes(): WebResult<List<String>> {
-        val modules = sysDictItemBiz.allSearchProperty(SysDictItems.itemCode.name) as List<String>
-        return WebResult(modules.distinct())
-    }
-
-    @PutMapping("/update")
-    fun update(updateItems: SysDictUpdateItems): WebResult<Boolean> {
-        return WebResult<Boolean>(sysDictItemBiz.update(updateItems))
     }
 
     @GetMapping("/get")

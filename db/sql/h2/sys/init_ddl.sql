@@ -46,8 +46,9 @@ create table "sys_dict_item"
         primary key,
     "dict_id"     CHAR(36)                       not null,
     "item_code"   VARCHAR(63)                    not null,
-    "parent_code" VARCHAR(63),
     "item_name"   VARCHAR(63)                    not null,
+    "parent_code" VARCHAR(63),
+    "parent_id"   VARCHAR(36),
     "seq_no"      INT4,
     "remark"      VARCHAR(127),
     "active"   BOOLEAN  default TRUE          not null,
@@ -68,9 +69,11 @@ comment on column "sys_dict_item"."dict_id" is '外键，sys_dict表的主键';
 
 comment on column "sys_dict_item"."item_code" is '字典项编号';
 
+comment on column "sys_dict_item"."item_name" is '字典项名称，或其国际化key';
+
 comment on column "sys_dict_item"."parent_code" is '父项编号';
 
-comment on column "sys_dict_item"."item_name" is '字典项名称，或其国际化key';
+comment on column "sys_dict_item"."parent_id" is '父项主键';
 
 comment on column "sys_dict_item"."seq_no" is '该字典编号在同父节点下的排序号';
 

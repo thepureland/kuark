@@ -2,9 +2,8 @@ package io.kuark.service.sys.provider.dao
 
 import io.kuark.service.sys.common.model.dict.SysDictSearchPayload
 import io.kuark.test.common.SpringTest
-import org.junit.jupiter.api.Test
-
 import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 
 internal class SysDictDaoTest: SpringTest() {

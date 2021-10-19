@@ -5,7 +5,6 @@ import io.kuark.base.bean.validation.constraint.annotaions.Exist
 import io.kuark.base.bean.validation.kit.ValidationKit
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-import org.springframework.context.annotation.DependsOn
 import javax.validation.constraints.NotBlank
 
 /**

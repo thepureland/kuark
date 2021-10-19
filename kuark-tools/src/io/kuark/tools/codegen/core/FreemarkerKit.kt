@@ -3,7 +3,6 @@ package io.kuark.tools.codegen.core
 import freemarker.template.Configuration
 import freemarker.template.Template
 import java.io.*
-import java.util.*
 
 /**
  * freemaker工具类

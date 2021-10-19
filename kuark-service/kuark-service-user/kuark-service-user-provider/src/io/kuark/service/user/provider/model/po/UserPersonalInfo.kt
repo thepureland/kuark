@@ -2,8 +2,8 @@ package io.kuark.service.user.provider.model.po
 
 import io.kuark.ability.data.rdb.support.DbEntityFactory
 import io.kuark.ability.data.rdb.support.IMaintainableDbEntity
-import java.time.LocalDateTime
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 /**
  * 用户个人信息数据库实体

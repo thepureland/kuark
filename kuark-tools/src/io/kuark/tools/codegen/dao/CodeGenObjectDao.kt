@@ -3,7 +3,7 @@ package io.kuark.tools.codegen.dao
 import io.kuark.ability.data.rdb.support.BaseDao
 import io.kuark.tools.codegen.model.po.CodeGenObject
 import io.kuark.tools.codegen.model.table.CodeGenObjects
-import org.ktorm.dsl.*
+import org.ktorm.dsl.eq
 import org.ktorm.entity.first
 import org.springframework.stereotype.Repository
 

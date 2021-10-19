@@ -2,6 +2,7 @@ package io.kuark.ability.cache.core
 
 import io.kuark.ability.cache.kit.CacheKit
 import io.kuark.base.lang.string.toType
+import io.kuark.base.support.Consts
 import io.kuark.context.spring.SpringKit
 import org.aspectj.lang.ProceedingJoinPoint
 import org.aspectj.lang.annotation.Around
@@ -169,6 +170,7 @@ class BatchCacheableAspect {
      * @author K
      * @since 1.0.0
      */
+    @Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
     private fun readUncachedData(
         result: MutableMap<String, Any?>, joinPoint: ProceedingJoinPoint, function: KFunction<*>,
         batchCacheable: BatchCacheable

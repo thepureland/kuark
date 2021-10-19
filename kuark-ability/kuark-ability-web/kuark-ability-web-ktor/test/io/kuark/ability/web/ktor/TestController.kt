@@ -1,13 +1,10 @@
 package io.kuark.ability.web.ktor
 
-import io.ktor.application.call
-import io.ktor.http.ContentType
-import io.ktor.response.respondText
-import io.ktor.routing.Route
-import io.ktor.routing.get
-import io.ktor.routing.route
-import io.ktor.sessions.get
-import io.ktor.sessions.sessions
+import io.ktor.application.*
+import io.ktor.http.*
+import io.ktor.response.*
+import io.ktor.routing.*
+import io.ktor.sessions.*
 import io.kuark.ability.web.ktor.session.WebSession
 import io.kuark.ability.web.ktor.support.KtorRouter
 import org.springframework.stereotype.Controller

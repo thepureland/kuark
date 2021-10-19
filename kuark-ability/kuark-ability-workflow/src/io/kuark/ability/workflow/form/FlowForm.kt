@@ -2,8 +2,8 @@ package io.kuark.ability.workflow.form
 
 import io.kuark.ability.data.rdb.support.DbEntityFactory
 import io.kuark.ability.data.rdb.support.IDbEntity
-import java.time.LocalDateTime
 import java.sql.Clob
+import java.time.LocalDateTime
 
 /**
  * 工作流表单数据库实体

@@ -40,7 +40,7 @@ import javafx.scene.control.Dialog
 import javafx.scene.control.DialogPane
 import java.util.*
 
-class Wizard constructor(owner: Any?, title: String = "") {
+class Wizard constructor(title: String = "") {
     /**************************************************************************
      *
      * Static fields
@@ -81,7 +81,7 @@ class Wizard constructor(owner: Any?, title: String = "") {
     /**
      *
      */
-    constructor() : this(null)
+    constructor() : this("")
 
     /**************************************************************************
      *
@@ -112,10 +112,8 @@ class Wizard constructor(owner: Any?, title: String = "") {
         override fun set(flow: Flow) {
             super.set(flow)
             pageHistory.clear()
-            if (flow != null) {
-                currentPage = flow.advance(currentPage.orElse(null))
-                updatePage(dialog, true)
-            }
+            currentPage = flow.advance(currentPage.orElse(null))
+            updatePage(dialog, true)
         }
     }
 
@@ -186,7 +184,7 @@ class Wizard constructor(owner: Any?, title: String = "") {
      *
      */
     private fun updatePage(dialog: Dialog<ButtonType?>?, advancing: Boolean) {
-        val flow = getFlow()
+//        val flow = getFlow()
         val prevPage = Optional.ofNullable(if (pageHistory.isEmpty()) null else pageHistory.peek())
         prevPage.ifPresent { page: WizardPane ->
             // if we are going forward in the wizard, we read in the settings

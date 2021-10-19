@@ -57,7 +57,7 @@ object NumberKit {
      * @author K
      * @since 1.0.0
      */
-    fun isNumber(str: String?): Boolean = NumberUtils.isNumber(str)
+    fun isNumber(str: String?): Boolean = NumberUtils.isCreatable(str)
 
     // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
     // 封装org.apache.commons.lang3.math.NumberUtils

@@ -3,7 +3,7 @@ package io.kuark.service.sys.provider.dao
 import io.kuark.ability.data.rdb.support.BaseDao
 import io.kuark.service.sys.provider.model.po.SysDictItem
 import io.kuark.service.sys.provider.model.table.SysDictItems
-import org.ktorm.dsl.*
+import org.ktorm.dsl.eq
 import org.ktorm.entity.filter
 import org.ktorm.entity.sortedBy
 import org.ktorm.entity.toList

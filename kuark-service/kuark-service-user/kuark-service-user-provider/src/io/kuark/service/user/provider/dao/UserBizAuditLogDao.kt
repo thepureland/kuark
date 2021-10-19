@@ -3,7 +3,6 @@ package io.kuark.service.user.provider.dao
 import io.kuark.ability.data.rdb.support.BaseDao
 import io.kuark.service.user.provider.model.po.UserBizAuditLog
 import io.kuark.service.user.provider.model.table.UserBizAuditLogs
-import org.ktorm.dsl.*
 import org.springframework.stereotype.Repository
 
 /**

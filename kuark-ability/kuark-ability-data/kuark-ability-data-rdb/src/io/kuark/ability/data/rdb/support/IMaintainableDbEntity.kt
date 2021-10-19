@@ -1,7 +1,6 @@
 package io.kuark.ability.data.rdb.support
 
 import org.ktorm.entity.Entity
-import java.time.LocalDateTime
 
 /**
  * 可维护型的数据库记录的实体接口

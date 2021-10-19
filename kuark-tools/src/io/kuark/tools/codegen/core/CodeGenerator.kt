@@ -3,13 +3,14 @@ package io.kuark.tools.codegen.core
 import freemarker.cache.MultiTemplateLoader
 import freemarker.cache.URLTemplateLoader
 import freemarker.template.Configuration
+import freemarker.template.Version
 import io.kuark.base.io.FileKit
 import io.kuark.base.log.LogFactory
-import io.kuark.tools.codegen.core.merge.CodeMerger
-import io.kuark.tools.codegen.core.merge.PrivateContentEraser
 import io.kuark.tools.codegen.biz.CodeGenColumnBiz
 import io.kuark.tools.codegen.biz.CodeGenFileBiz
 import io.kuark.tools.codegen.biz.CodeGenObjectBiz
+import io.kuark.tools.codegen.core.merge.CodeMerger
+import io.kuark.tools.codegen.core.merge.PrivateContentEraser
 import io.kuark.tools.codegen.model.vo.GenFile
 import javafx.scene.control.Alert
 import java.io.File
@@ -58,7 +59,7 @@ class CodeGenerator(
                 override fun getURL(template: String): URL = URL(root, template)
             }
         ))
-        val conf = Configuration()
+        val conf = Configuration(Configuration.VERSION_2_3_30)
         conf.templateLoader = multiTemplateLoader
         conf.numberFormat = "###############"
         conf.booleanFormat = "true,false"

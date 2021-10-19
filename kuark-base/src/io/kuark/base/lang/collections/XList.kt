@@ -1,5 +1,6 @@
 package io.kuark.base.lang.collections
 
+import io.kuark.base.support.Consts
 import org.apache.commons.collections.Factory
 import org.apache.commons.collections.ListUtils
 
@@ -41,6 +42,7 @@ import org.apache.commons.collections.ListUtils
  * @author K
  * @since 1.0.0
  */
+@Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
 fun <T : Any?> List<T>.lazyList(factory: Factory): List<T> = ListUtils.lazyList(this, factory) as List<T>
 
 // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

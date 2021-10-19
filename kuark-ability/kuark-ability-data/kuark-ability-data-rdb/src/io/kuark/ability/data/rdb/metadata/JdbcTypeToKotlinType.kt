@@ -1,6 +1,7 @@
 package io.kuark.ability.data.rdb.metadata
 
 import java.sql.Types
+import java.util.*
 import kotlin.reflect.KClass
 
 /**
@@ -65,7 +66,7 @@ object JdbcTypeToKotlinType {
      * @since 1.0.0
      */
     fun getKotlinType(rdbType: RdbType, column: Column): KClass<*> {
-        val jdbcType = column.jdbcTypeName.toUpperCase()
+        val jdbcType = column.jdbcTypeName.uppercase(Locale.getDefault())
         return when (rdbType) {
             RdbType.H2 -> {
                 when (jdbcType) {
@@ -119,9 +120,9 @@ object JdbcTypeToKotlinType {
                     "FLOAT", "BINARY_FLOAT" -> Float::class
                     "DOUBLE", "BINARY_DOUBLE" -> Double::class
                     "NUMBER", "NUMBER(20)", "NUMBER(21)", "NUMBER(22)", "NUMBER(23)", "NUMBER(24)", "NUMBER(25)", "NUMBER(26)", "NUMBER(27)", "NUMBER(28)", "NUMBER(29)", "NUMBER(30)",
-                    "NUMBER(31)", "NUMBER(32)", "NUMBER(33)", "NUMBER(34)", "NUMBER(35)", "NUMBER(36)", "NUMBER(37)", "NUMBER(38)", "NUMBER(38)" -> java.math.BigDecimal::class
+                    "NUMBER(31)", "NUMBER(32)", "NUMBER(33)", "NUMBER(34)", "NUMBER(35)", "NUMBER(36)", "NUMBER(37)", "NUMBER(38)" -> java.math.BigDecimal::class
                     "DEC", "DECIMAL", "DOUBLE PRECISION" -> java.math.BigDecimal::class
-                    "VARCHAR2", "CHAR", "LONG", "NVARCHAR2", "CHARACTER", "VARCHAR", "NCLOB" -> String::class
+                    "VARCHAR2", "CHAR", "LONG", "NVARCHAR2", "CHARACTER", "VARCHAR" -> String::class
                     "BFILE", "RAW", "LONGRAW", "LONG VARCHAR" -> Array<Byte>::class
                     "BLOB" -> java.sql.Blob::class
                     "CLOB", "NCLOB" -> java.sql.Clob::class
@@ -130,9 +131,11 @@ object JdbcTypeToKotlinType {
                     "DATETIME", "TIMESTAMP", "TIMESTAMP WITH TIME ZONE", "TIMESTAMP WITH LOCAL TIME ZONE", "INTERVAL", "INTERVAL YEAR TO MONTH", "INTERVAL DAY TO SECOND", "YEAR" -> java.time.LocalDateTime::class
                     "REF CURSOR" -> java.sql.ResultSet::class
                     else -> {
-                        if (jdbcType.matches(Regex("""NUMBER\([1-8],\d+\)"""))) Float::class
-                        if (jdbcType.matches(Regex("""NUMBER\(9|([1-9]\d),\d+\)"""))) Double::class
-                        else Any::class
+                        when {
+                            jdbcType.matches(Regex("""NUMBER\([1-8],\d+\)""")) -> Float::class
+                            jdbcType.matches(Regex("""NUMBER\(9|([1-9]\d),\d+\)""")) -> Double::class
+                            else -> Any::class
+                        }
                     }
                 }
             }

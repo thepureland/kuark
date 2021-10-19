@@ -33,7 +33,7 @@ open class CodeGenerateWizard : Application() {
     }
 
     override fun start(stage: Stage) {
-        val wizard = Wizard(null, "代码生成器")
+        val wizard = Wizard("代码生成器")
         CodeGeneratorContext.templateModelCreator = getTemplateModelCreator()
 
         // config page
@@ -101,12 +101,10 @@ open class CodeGenerateWizard : Application() {
 
         // show wizard and wait for response
         wizard.showAndWait().ifPresent { result: ButtonType? ->
-            if (result == ButtonType.FINISH) {
-                println("Wizard finished, settings: " + wizard.settings)
-            } else if (result == ButtonType.PREVIOUS) {
-                println("PREVIOUS")
-            } else if (result == ButtonType.NEXT) {
-                println("NEXT")
+            when (result) {
+                ButtonType.FINISH -> println("Wizard finished, settings: ${wizard.settings}")
+                ButtonType.PREVIOUS -> println("PREVIOUS")
+                ButtonType.NEXT -> println("NEXT")
             }
         }
     }

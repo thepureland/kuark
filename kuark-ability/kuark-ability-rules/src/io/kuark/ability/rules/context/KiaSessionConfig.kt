@@ -29,7 +29,7 @@ open class KiaSessionConfig {
 
     @get:Throws(IOException::class)
     private val ruleFiles: Array<Resource>
-        private get() {
+        get() {
             val resourcePatternResolver: ResourcePatternResolver = PathMatchingResourcePatternResolver()
             return resourcePatternResolver.getResources("classpath*:$RULES_PATH**/*.*")
         }
@@ -45,7 +45,7 @@ open class KiaSessionConfig {
     }
 
     private val kieServices: KieServices
-        private get() = KieServices.Factory.get()
+        get() = KieServices.Factory.get()
 
     @Bean
     @Throws(IOException::class)

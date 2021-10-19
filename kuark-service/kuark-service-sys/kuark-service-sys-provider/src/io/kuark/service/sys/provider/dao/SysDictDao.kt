@@ -6,6 +6,7 @@ import io.kuark.base.error.ObjectNotFoundException
 import io.kuark.base.lang.collections.CollectionKit
 import io.kuark.base.lang.string.StringKit
 import io.kuark.base.query.enums.Operator
+import io.kuark.base.support.Consts
 import io.kuark.service.sys.common.model.dict.SysDictListRecord
 import io.kuark.service.sys.common.model.dict.SysDictSearchPayload
 import io.kuark.service.sys.provider.model.po.SysDict
@@ -27,7 +28,7 @@ open class SysDictDao : BaseDao<String, SysDict, SysDicts>() {
 //endregion your codes 1
 
     //region your codes 2
-    @Suppress("UNCHECKED_CAST")
+    @Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
     fun searchIdsByModuleAndType(module: String, type: String): List<String> {
         return querySource()
             .select(SysDicts.id)

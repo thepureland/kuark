@@ -4,6 +4,7 @@ import io.kuark.base.bean.BeanKit
 import io.kuark.base.bean.validation.constraint.annotaions.Compare
 import io.kuark.base.bean.validation.support.DependsValidator
 import io.kuark.base.bean.validation.support.ValidationContext
+import io.kuark.base.support.Consts
 import javax.validation.ConstraintValidator
 import javax.validation.ConstraintValidatorContext
 
@@ -21,6 +22,7 @@ class CompareValidator : ConstraintValidator<Compare, Any?> {
         this.compare = compare
     }
 
+    @Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
     override fun isValid(value: Any?, constraintValidatorContext: ConstraintValidatorContext): Boolean {
         val bean = ValidationContext.get(constraintValidatorContext)!!
 

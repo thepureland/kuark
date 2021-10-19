@@ -1,6 +1,7 @@
 package io.kuark.base.security
 
 import java.security.MessageDigest
+import java.util.*
 
 /**
  * 目的：根据输入的秘钥，对提供的字符串进行加密，和对以此加密规则生成的密文解密
@@ -47,7 +48,7 @@ object Base36Kit {
      */
     fun encryptIgnoreCase(src: String, key: Long): String { //小写字母以大写字母来处理
         var srcString = src
-        srcString = srcString.toUpperCase()
+        srcString = srcString.uppercase(Locale.getDefault())
         //生成校验位
         val checkBit = getMD5(srcString)!!.substring(0, 1)
         //加密
@@ -204,7 +205,7 @@ object Base36Kit {
         if (band36_62) {
             band = 36
             //36进制不包括小写字母，小写字母以大写字母来处理
-            s = s.toUpperCase()
+            s = s.uppercase(Locale.getDefault())
         }
         val len1 = s.length
         val len2 = transNum.toString().length
@@ -214,17 +215,17 @@ object Base36Kit {
         for (i in 0 until len) {
             val j = len1 - 1 - i
             //转为自定义的36位或/62位编码
-            ch[j] = asciiToDiy(ch[j].toInt()).toChar()
+            ch[j] = asciiToDiy(ch[j].code).toChar()
             if (plus_minus) { //System.out.print((int)ch[j] + " " + ch[j] + " ");
-                ch[j] = ((ch[j].toInt() + transNum.toString().substring(i, i + 1).toInt()) % band).toChar()
+                ch[j] = ((ch[j].code + transNum.toString().substring(i, i + 1).toInt()) % band).toChar()
                 //System.out.print((int)ch[j] + " " + ch[j] + " ");
             } else { //System.out.print((int)ch[j] + " " + ch[j] + " ");
                 ch[j] =
-                    ((ch[j].toInt() - transNum.toString().substring(i, i + 1).toInt() + band) % band).toChar()
+                    ((ch[j].code - transNum.toString().substring(i, i + 1).toInt() + band) % band).toChar()
                 //System.out.print((int)ch[j] + " " + ch[j] + " ");
             }
             //把自定义编码转回ASCII码
-            ch[j] = diyToascii(ch[j].toInt()).toChar()
+            ch[j] = diyToascii(ch[j].code).toChar()
         }
         return String(ch)
     }

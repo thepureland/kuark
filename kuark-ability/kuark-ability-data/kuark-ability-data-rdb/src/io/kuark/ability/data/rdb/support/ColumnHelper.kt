@@ -1,9 +1,9 @@
 package io.kuark.ability.data.rdb.support
 
 import io.kuark.base.lang.string.humpToUnderscore
+import io.kuark.base.support.Consts
 import org.ktorm.schema.BaseTable
 import org.ktorm.schema.Column
-import org.ktorm.schema.Table
 import java.util.*
 
 object ColumnHelper {
@@ -56,6 +56,7 @@ object ColumnHelper {
                 if (column == null) {
                     error("无法推测属性【${propertyName}】在表【${tableName}】中的字段名！")
                 } else {
+                    @Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
                     resultMap[propertyName] = column as Column<Any>
                     columnMap[propertyName] = resultMap[propertyName]!!
                 }

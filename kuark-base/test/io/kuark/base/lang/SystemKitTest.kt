@@ -2,8 +2,6 @@ package io.kuark.base.lang
 
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
-import java.io.IOException
 
 internal class SystemKitTest {
 

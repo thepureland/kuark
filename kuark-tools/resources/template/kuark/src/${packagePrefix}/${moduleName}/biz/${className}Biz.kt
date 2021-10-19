@@ -1,4 +1,8 @@
-package ${packagePrefix}.${moduleName}.biz
+package $
+
+import org.springframework.stereotype.Service
+
+{packagePrefix}.${moduleName}.biz
 
 import org.springframework.stereotype.Service
 import ${packagePrefix}.${moduleName}.ibiz.I${className}Biz

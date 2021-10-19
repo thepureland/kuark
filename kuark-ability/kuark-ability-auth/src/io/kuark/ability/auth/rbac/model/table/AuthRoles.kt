@@ -1,7 +1,7 @@
 package io.kuark.ability.auth.rbac.model.table
 
-import io.kuark.ability.data.rdb.support.MaintainableTable
 import io.kuark.ability.auth.rbac.model.po.AuthRole
+import io.kuark.ability.data.rdb.support.MaintainableTable
 import org.ktorm.schema.varchar
 
 /**

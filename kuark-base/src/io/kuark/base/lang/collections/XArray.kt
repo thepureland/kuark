@@ -114,7 +114,7 @@ fun <T> Array<T>.add(element: T?): Array<T> = ArrayUtils.add(this, element)
  * @author K
  * @since 1.0.0
  */
-fun <T> Array<T>.add(index: Int, element: T?): Array<T> = ArrayUtils.add(this, index, element)
+fun <T> Array<T>.add(index: Int, element: T?): Array<T> = ArrayUtils.insert(index, this, element)
 
 /**
  * 从数组中的指定位置移除对应的元素, 其后的元素依次左移

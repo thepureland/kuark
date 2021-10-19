@@ -1,9 +1,7 @@
 package io.kuark.ability.distributed.tx.context
 
-import com.alibaba.druid.pool.DruidDataSource
 import com.zaxxer.hikari.HikariDataSource
 import io.seata.rm.datasource.DataSourceProxy
-import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean

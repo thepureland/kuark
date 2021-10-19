@@ -2,6 +2,7 @@ package io.kuark.base.lang
 
 import io.kuark.base.lang.string.StringKit
 import io.kuark.base.log.LogFactory
+import io.kuark.base.support.Consts
 import org.apache.commons.lang3.SystemUtils
 import java.io.BufferedReader
 import java.io.File
@@ -29,13 +30,14 @@ object SystemKit {
      * @author K
      * @since 1.0.0
      */
+    @Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
     fun setEnvVars(vars: Map<String, String>) {
         try {
             val processEnvironmentClass = Class.forName("java.lang.ProcessEnvironment")
             val theEnvironmentField = processEnvironmentClass.getDeclaredField("theEnvironment")
             theEnvironmentField.isAccessible = true
             val env = theEnvironmentField.get(null) as MutableMap<String, String>
-            env.putAll(vars!!)
+            env.putAll(vars)
             val theCaseInsensitiveEnvironmentField =
                 processEnvironmentClass.getDeclaredField("theCaseInsensitiveEnvironment")
             theCaseInsensitiveEnvironmentField.isAccessible = true
@@ -51,7 +53,7 @@ object SystemKit {
                     val obj = field.get(env)
                     val map = obj as MutableMap<String, String>
                     map.clear()
-                    map.putAll(vars!!)
+                    map.putAll(vars)
                 }
             }
         }
@@ -87,7 +89,7 @@ object SystemKit {
 
 
         if (process != null) {
-            message = loadStream(process!!.inputStream)
+            message = loadStream(process.inputStream)
             val errorMsg = loadStream(process.errorStream)
             if (StringKit.isNotEmpty(errorMsg)) {
                 message = errorMsg
@@ -98,9 +100,9 @@ object SystemKit {
         return success to message
     }
 
-    private fun loadStream(inputStream: InputStream): String? {
-        inputStream.use { inputStream ->
-            BufferedReader(InputStreamReader(inputStream)).use { reader ->
+    private fun loadStream(inputStream: InputStream): String {
+        inputStream.use { stream ->
+            BufferedReader(InputStreamReader(stream)).use { reader ->
                 val buffer = StringBuffer()
                 var line: String?
                 while (reader.readLine().also { line = it } != null) {
@@ -128,7 +130,7 @@ object SystemKit {
      * @author K
      * @since 1.0.0
      */
-    fun getOSName(): String = System.getProperty("os.name").toLowerCase()
+    fun getOSName(): String = System.getProperty("os.name").lowercase(Locale.getDefault())
 
     /**
      * 是否调试模式
@@ -153,7 +155,7 @@ object SystemKit {
      * @author K
      * @since 1.0.0
      */
-    fun isWindowsOS(): Boolean = getOSName().toLowerCase().contains("windows")
+    fun isWindowsOS(): Boolean = getOSName().lowercase(Locale.getDefault()).contains("windows")
 
     /**
      * 得到系统当前用户

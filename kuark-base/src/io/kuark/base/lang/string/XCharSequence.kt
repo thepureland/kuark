@@ -2,7 +2,9 @@ package io.kuark.base.lang.string
 
 import io.kuark.base.security.CryptoKit
 import io.kuark.base.security.DigestKit
+import io.kuark.base.support.Consts
 import org.apache.commons.lang3.StringUtils
+import org.apache.commons.text.similarity.LevenshteinDistance
 import java.math.BigDecimal
 import java.math.BigInteger
 import java.util.*
@@ -20,6 +22,17 @@ import kotlin.reflect.KClass
 
 
 /**
+ * 将首字母大写
+ *
+ * @return 首字母大写的字符串
+ * @author K
+ * @since 1.0.0
+ */
+fun CharSequence.capitalizeString(): String =
+    this.toString().replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
+
+
+/**
  * 将字符序列类型的值转为指定类型的值，仅支持以下类型：
  * Double、Int、Long、Float、Short、BigDecimal、BigInteger、Boolean、Byte、Char、String
  *
@@ -29,7 +42,7 @@ import kotlin.reflect.KClass
  * @author K
  * @since 1.0.0
  */
-@Suppress("UNCHECKED_CAST")
+@Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
 fun <T : Any> CharSequence.toType(returnType: KClass<out T>): T { //TODO junit
     return this.toString().run {
         when (returnType) {
@@ -696,7 +709,7 @@ fun CharSequence.replaceEachRepeatedly(
     replacementList: Array<out CharSequence>?
 ): String {
     val sList = searchList?.map { it?.toString() ?: "" } ?: emptyList()
-    val rList = replacementList?.map { it?.toString() } ?: emptyList()
+    val rList = replacementList?.map { it.toString() } ?: emptyList()
     return StringUtils.replaceEachRepeatedly(this.toString(), sList.toTypedArray(), rList.toTypedArray())
 }
 
@@ -763,7 +776,7 @@ fun CharSequence.chop(): String = StringUtils.chop(this.toString())
  * @since 1.0.0
  */
 fun CharSequence.repeatAndSeparate(separator: CharSequence?, repeat: Int): String? =
-    StringUtils.repeat(this.toString(), separator?.toString() ?: null, repeat)
+    StringUtils.repeat(this.toString(), separator?.toString(), repeat)
 
 //region Centering
 
@@ -1143,7 +1156,7 @@ fun CharSequence.abbreviate(offset: Int, maxWidth: Int): String? =
  * @since 1.0.0
  */
 fun CharSequence.abbreviateMiddle(middle: CharSequence?, length: Int): String? =
-    StringUtils.abbreviateMiddle(this.toString(), middle?.toString() ?: null, length)
+    StringUtils.abbreviateMiddle(this.toString(), middle?.toString(), length)
 
 //endregion Abbreviating
 
@@ -1244,7 +1257,7 @@ fun Array<out CharSequence?>.indexOfDifference(): Int = StringUtils.indexOfDiffe
  * @since 1.0.0
  */
 fun Array<out CharSequence?>.getCommonPrefix(): String {
-    val array = this.map { it?.toString() ?: null }.toTypedArray()
+    val array = this.map { it?.toString() }.toTypedArray()
     return StringUtils.getCommonPrefix(*array)
 }
 
@@ -1270,7 +1283,7 @@ fun Array<out CharSequence?>.getCommonPrefix(): String {
  * @author K
  * @since 1.0.0
  */
-fun CharSequence.getLevenshteinDistance(t: CharSequence): Int = StringUtils.getLevenshteinDistance(this, t)
+fun CharSequence.getLevenshteinDistance(t: CharSequence): Int = LevenshteinDistance().apply(this, t)
 
 /**
  * 如果两个字符串的“距离”(相似度)小于等于给定的极限值，就返回该“距离”，否则返回-1。
@@ -1297,7 +1310,7 @@ fun CharSequence.getLevenshteinDistance(t: CharSequence): Int = StringUtils.getL
  * @since 1.0.0
  */
 fun CharSequence.getLevenshteinDistance(t: CharSequence, threshold: Int): Int =
-    StringUtils.getLevenshteinDistance(this, t, threshold)
+    LevenshteinDistance(threshold).apply(this, t)
 //endregion Misc
 
 /**

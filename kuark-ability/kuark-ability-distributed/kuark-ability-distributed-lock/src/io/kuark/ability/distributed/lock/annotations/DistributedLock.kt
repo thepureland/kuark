@@ -1,7 +1,5 @@
 package io.kuark.ability.distributed.lock.annotations
 
-import java.lang.annotation.Documented
-
 /**
  *
  *
@@ -10,5 +8,5 @@ import java.lang.annotation.Documented
  */
 @Target(AnnotationTarget.FUNCTION, AnnotationTarget.PROPERTY_GETTER, AnnotationTarget.PROPERTY_SETTER)
 @Retention(AnnotationRetention.RUNTIME)
-@Documented
+@MustBeDocumented
 annotation class DistributedLock(val description: String = "")

@@ -3,6 +3,7 @@ package io.kuark.base.bean
 import io.kuark.base.lang.SerializationKit
 import io.kuark.base.lang.collections.MapKit
 import io.kuark.base.lang.reflect.getEmptyConstructor
+import io.kuark.base.support.Consts
 import io.kuark.base.support.IIdEntity
 import org.apache.commons.beanutils.BeanUtils
 import org.apache.commons.beanutils.PropertyUtils
@@ -181,6 +182,7 @@ object BeanKit {
      * @author K
      * @since 1.0.0
      */
+    @Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
     fun <T> shallowClone(bean: T): T = BeanUtils.cloneBean(bean) as T
 
 //    /**
@@ -256,6 +258,7 @@ object BeanKit {
      * @author K
      * @since 1.0.0
      */
+    @Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
     fun <T> setProperty(bean: T, name: String?, value: Any?): T = BeanUtils.copyProperty(bean, name, value) as T
 
     //endregion 封装org.apache.commons.beanutils.BeanUtils和PropertyUtils

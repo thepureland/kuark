@@ -3,7 +3,6 @@ package io.kuark.service.geo.provider.dao
 import io.kuark.ability.data.rdb.support.BaseDao
 import io.kuark.service.geo.provider.model.po.GeoCountry
 import io.kuark.service.geo.provider.model.table.GeoCountrys
-import org.ktorm.dsl.*
 import org.springframework.stereotype.Repository
 
 /**

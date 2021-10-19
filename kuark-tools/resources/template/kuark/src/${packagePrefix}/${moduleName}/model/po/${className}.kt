@@ -1,4 +1,8 @@
-package ${packagePrefix}.${moduleName}.model.po
+package $
+
+import io.kuark.ability.data.rdb.support.DbEntityFactory
+
+{packagePrefix}.${moduleName}.model.po
 
 import io.kuark.ability.data.rdb.support.DbEntityFactory
 <#if poSuperClass == "IDbEntity">

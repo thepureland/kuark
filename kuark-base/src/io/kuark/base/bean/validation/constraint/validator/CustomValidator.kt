@@ -3,6 +3,7 @@ package io.kuark.base.bean.validation.constraint.validator
 import io.kuark.base.bean.validation.constraint.annotaions.Custom
 import io.kuark.base.bean.validation.support.IBeanValidator
 import io.kuark.base.bean.validation.support.ValidationContext
+import io.kuark.base.support.Consts
 import javax.validation.ConstraintValidator
 import javax.validation.ConstraintValidatorContext
 import kotlin.reflect.KClass
@@ -25,6 +26,7 @@ class CustomValidator : ConstraintValidator<Custom, Any?> {
         return validate(custom.checkClass, value, context)
     }
 
+    @Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
     companion object {
         fun validate(
             checkClass: KClass<out IBeanValidator<*>>, value: Any?, context: ConstraintValidatorContext

@@ -1,7 +1,7 @@
 package io.kuark.ability.auth.rbac.model.table
 
-import io.kuark.ability.data.rdb.support.MaintainableTable
 import io.kuark.ability.auth.rbac.model.po.AuthUserAccount
+import io.kuark.ability.data.rdb.support.UpdatableTable
 import org.ktorm.schema.datetime
 import org.ktorm.schema.float
 import org.ktorm.schema.varchar
@@ -13,7 +13,7 @@ import org.ktorm.schema.varchar
  * @since 1.0.0
  */
 //region your codes 1
-object AuthUserAccounts : MaintainableTable<AuthUserAccount>("user_account") {
+object AuthUserAccounts : UpdatableTable<AuthUserAccount>("user_account") {
 //endregion your codes 1
 
     /** 用户名 */
@@ -34,11 +34,11 @@ object AuthUserAccounts : MaintainableTable<AuthUserAccount>("user_account") {
     /** 用户类型代码 */
     var userTypeDictCode = varchar("user_type_dict_code").bindTo { it.userTypeDictCode }
 
-    /** 账号冻结时间起 */
-    var freezeTimeStart = datetime("freeze_time_start").bindTo { it.freezeTimeStart }
+    /** 账号锁定时间起 */
+    var lockTimeStart = datetime("freeze_time_start").bindTo { it.lockTimeStart }
 
-    /** 账号冻结时间止 */
-    var freezeTimeEnd = datetime("freeze_time_end").bindTo { it.freezeTimeEnd }
+    /** 账号锁定时间止 */
+    var lockTimeEnd = datetime("freeze_time_end").bindTo { it.lockTimeEnd }
 
     /** 最后一次登入时间 */
     var lastLoginTime = datetime("last_login_time").bindTo { it.lastLoginTime }

@@ -1,5 +1,6 @@
 package io.kuark.ability.web.common
 
+import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 
 /**
@@ -8,7 +9,8 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize
  * @author K
  * @since 1.0.0
  */
-@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL) // 序列化json的时候,如果是null的对象,key也会消失
+@JsonSerialize
+@JsonInclude(JsonInclude.Include.NON_NULL) // 序列化json的时候,如果是null的对象,key也会消失
 data class WebResult<T>(
     var data: T?,
     var msg: String?,

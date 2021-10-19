@@ -43,7 +43,8 @@ object CodeGenObjectBiz {
                 createTime = LocalDateTime.now()
                 createUser = author
                 genCount = 1
-            }) != null
+            })
+            true
         } else {
             with(codeGenObject) {
                 this.comment = comment

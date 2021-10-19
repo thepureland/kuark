@@ -19,9 +19,9 @@ class RedissonLock(val redissonClient: RedissonClient) : IRedissonLock {
         return lock
     }
 
-    override fun lock(lockKey: String, leaseTime: Int): RLock {
+    override fun lock(lockKey: String, timeout: Int): RLock {
         val lock = redissonClient.getLock(lockKey)
-        lock.lock(leaseTime.toLong(), TimeUnit.SECONDS)
+        lock.lock(timeout.toLong(), TimeUnit.SECONDS)
         return lock
     }
 

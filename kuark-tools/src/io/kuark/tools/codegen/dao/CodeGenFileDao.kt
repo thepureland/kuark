@@ -1,10 +1,12 @@
 package io.kuark.tools.codegen.dao
 
-import io.kuark.ability.data.rdb.kit.RdbKit
 import io.kuark.ability.data.rdb.support.BaseDao
 import io.kuark.tools.codegen.model.po.CodeGenFile
 import io.kuark.tools.codegen.model.table.CodeGenFiles
-import org.ktorm.dsl.*
+import org.ktorm.dsl.eq
+import org.ktorm.dsl.forEach
+import org.ktorm.dsl.select
+import org.ktorm.dsl.where
 import org.springframework.stereotype.Repository
 
 /**

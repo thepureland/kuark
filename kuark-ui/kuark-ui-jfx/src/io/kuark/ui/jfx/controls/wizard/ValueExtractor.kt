@@ -24,6 +24,7 @@
  */
 package io.kuark.ui.jfx.controls.wizard
 
+import io.kuark.base.support.Consts
 import javafx.scene.Node
 import javafx.scene.control.*
 import javafx.util.Callback
@@ -33,6 +34,7 @@ object ValueExtractor {
 
     private val valueExtractors = mutableMapOf<Class<*>, Callback<Any, Any>>()
 
+    @Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
     private fun <T : Any> addValueExtractor(clazz: Class<T>, extractor: Callback<T, Any>) {
         valueExtractors[clazz] = extractor as Callback<Any, Any>
     }

@@ -3,7 +3,6 @@ package io.kuark.base.data.json
 import com.fasterxml.jackson.core.type.TypeReference
 import io.kuark.base.bean.Address
 import io.kuark.base.bean.Person
-import io.kuark.base.lang.string.deleteWhitespace
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

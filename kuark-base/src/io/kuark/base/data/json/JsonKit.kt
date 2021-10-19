@@ -9,7 +9,6 @@ import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.databind.util.JSONPObject
 import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule
 import io.kuark.base.log.LogFactory
-import java.util.regex.Pattern
 import kotlin.reflect.KClass
 
 /**

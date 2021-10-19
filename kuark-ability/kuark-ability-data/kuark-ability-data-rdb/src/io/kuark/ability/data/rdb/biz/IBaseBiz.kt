@@ -2,11 +2,11 @@ package io.kuark.ability.data.rdb.biz
 
 import io.kuark.ability.data.rdb.support.IDbEntity
 import io.kuark.base.query.Criteria
+import io.kuark.base.support.Consts
 import io.kuark.base.support.payload.SearchPayload
 import io.kuark.base.support.payload.UpdatePayload
 import org.ktorm.schema.Column
 import org.ktorm.schema.ColumnDeclaring
-import java.lang.IllegalArgumentException
 
 /**
  * 基于关系型数据库表的基础业务操作接口
@@ -208,7 +208,7 @@ interface IBaseBiz<PK : Any, E : IDbEntity<PK, E>> : IBaseReadOnlyBiz<PK, E> {
      * @author K
      * @since 1.0.0
      */
-    @Suppress("UNCHECKED_CAST")
+    @Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
     fun <S : SearchPayload> batchUpdateWhen(
         updatePayload: UpdatePayload<S>,
         whereConditionFactory: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)? = null

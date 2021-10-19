@@ -1,10 +1,7 @@
 package io.kuark.ability.auth.context
 
-import io.kuark.ability.auth.rbac.dao.AuthUserAccountDao
 import io.kuark.ability.auth.rbac.ibiz.IAuthUserAccountBiz
 import io.kuark.ability.auth.rbac.ibiz.IAuthUserAccountThirdPartyBiz
-import io.kuark.ability.auth.rbac.model.po.AuthUserAccount
-import org.ktorm.entity.first
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService

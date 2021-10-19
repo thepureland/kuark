@@ -1,15 +1,14 @@
 package io.kuark.ability.web.ktor.context
 
-import io.ktor.routing.routing
-import io.ktor.server.engine.ApplicationEngine
-import io.ktor.server.engine.ApplicationEngineFactory
-import io.ktor.server.engine.embeddedServer
+import io.ktor.routing.*
+import io.ktor.server.engine.*
 import io.kuark.ability.web.ktor.support.KtorMiddleware
 import io.kuark.ability.web.ktor.support.KtorRouter
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import java.util.*
 
 // 此处为web框架的加载，当ktor开始启动后将陷入死循环，所以需要先让spring boot加载其他配置项
 @Configuration
@@ -29,7 +28,7 @@ open class KtorConfiguration {
      */
     @Bean
     open fun registerKtorWebContainer(): ApplicationEngineFactory<ApplicationEngine, out ApplicationEngine.Configuration> {
-        val clazzStr = when(webContainer.toUpperCase()) {
+        val clazzStr = when(webContainer.uppercase(Locale.getDefault())) {
             "NETTY" -> "io.ktor.server.netty.Netty"
             "JETTY" -> "io.ktor.server.jetty.Jetty"
             "TOMCAT" -> "io.ktor.server.tomcat.Tomcat"
@@ -39,7 +38,7 @@ open class KtorConfiguration {
         val clazz = try {
              Class.forName(clazzStr)
         } catch (e: ClassNotFoundException) {
-            error("类${clazzStr}找不到，请确保依赖存在：io.ktor:ktor-server-${webContainer.toLowerCase()}")
+            error("类${clazzStr}找不到，请确保依赖存在：io.ktor:ktor-server-${webContainer.lowercase(Locale.getDefault())}")
         }
         val instance = clazz.getDeclaredField("INSTANCE")
         return instance.get(null) as ApplicationEngineFactory<ApplicationEngine, out ApplicationEngine.Configuration>

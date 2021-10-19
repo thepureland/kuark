@@ -3,6 +3,7 @@ package io.kuark.base.tree
 import io.kuark.base.lang.collections.CollectionKit
 import io.kuark.base.log.LogFactory
 import io.kuark.base.query.sort.Direction
+import io.kuark.base.support.Consts
 import io.kuark.base.support.ICallback
 import java.util.*
 
@@ -64,7 +65,7 @@ object ListToTreeConverter {
     }
 
 
-    @Suppress("UNCHECKED_CAST")
+    @Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
     private fun <T, E : ITreeNode<T>> sort(nodes: List<E>, direction: Direction): List<E> {
         if (nodes.first() !is Comparable<*>) {
             error("类${nodes.first()::class.simpleName}必须实现Comparable接口！")

@@ -1,9 +1,9 @@
 package io.kuark.ability.auth.login.third.github
 
 import io.kuark.ability.auth.login.third.core.AuthParam
+import io.kuark.ability.auth.login.third.core.IAuthBiz
 import io.kuark.ability.auth.login.third.core.IAuthToken
 import io.kuark.ability.auth.login.third.core.IAuthUser
-import io.kuark.ability.auth.login.third.core.IAuthBiz
 import io.kuark.base.data.json.JsonKit
 import io.kuark.base.lang.string.RandomStringKit
 import io.kuark.base.net.http.HttpClientKit

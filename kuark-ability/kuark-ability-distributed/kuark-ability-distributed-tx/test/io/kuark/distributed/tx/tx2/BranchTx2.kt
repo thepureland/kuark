@@ -2,10 +2,8 @@ package io.kuark.distributed.tx.tx2
 
 import io.kuark.base.log.LogFactory
 import io.kuark.distributed.tx.table.TestTableDao
-import io.kuark.distributed.tx.tx1.BranchTx1
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Transactional
 
 /**
  * 模拟分支事务2

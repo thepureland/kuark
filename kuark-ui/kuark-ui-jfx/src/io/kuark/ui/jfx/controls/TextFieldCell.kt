@@ -110,7 +110,7 @@ class TextFieldCell<S, T> @JvmOverloads constructor(private val sc: StringConver
                     ""
         // Focused and hover states should be set in the CSS.  This is just a test
         // to see what happens when we set the style in code
-        textField.focusedProperty().addListener { observable, oldValue, newValue ->
+        textField.focusedProperty().addListener { _, _, newValue ->
             val tf = graphic as TextField
             val strStyleGotFocus = "-fx-background-color: purple, -fx-text-box-border, -fx-control-inner-background;" +
                     "-fx-background-insets: -0.4, 1, 2;" +
@@ -130,7 +130,7 @@ class TextFieldCell<S, T> @JvmOverloads constructor(private val sc: StringConver
                 tf.style = strStyleLostFocus
             }
         }
-        textField.hoverProperty().addListener { observable, oldValue, newValue ->
+        textField.hoverProperty().addListener { _, _, newValue ->
             val tf = graphic as TextField
             val strStyleGotHover =
                 "-fx-background-color: derive(purple,90%), -fx-text-box-border, derive(-fx-control-inner-background, 10%);" +

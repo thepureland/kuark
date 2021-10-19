@@ -2,7 +2,6 @@ package io.kuark.base.io
 
 import org.apache.commons.io.FileUtils
 import java.io.File
-import java.net.URL
 import java.net.URLDecoder
 import kotlin.reflect.KClass
 

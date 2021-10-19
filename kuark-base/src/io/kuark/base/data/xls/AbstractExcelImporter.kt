@@ -7,6 +7,7 @@ import io.kuark.base.lang.reflect.getMemberProperty
 import io.kuark.base.lang.reflect.newInstance
 import io.kuark.base.lang.string.toType
 import io.kuark.base.log.LogFactory
+import io.kuark.base.support.Consts
 import jxl.Cell
 import jxl.CellType
 import jxl.Sheet
@@ -134,6 +135,7 @@ abstract class AbstractExcelImporter<T : Any> : IExcelImporter<T> {
      * @author K
      * @since 1.0.0
      */
+    @Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
     protected open fun wrapRowObjects(): List<T> {
         val rowObjectList = mutableListOf<T>()
         propertyNames = getPropertyNames()

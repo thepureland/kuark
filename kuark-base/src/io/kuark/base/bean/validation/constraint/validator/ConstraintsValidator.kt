@@ -4,6 +4,7 @@ import io.kuark.base.bean.validation.constraint.annotaions.*
 import io.kuark.base.bean.validation.support.ValidationContext
 import io.kuark.base.lang.reflect.getMemberProperty
 import io.kuark.base.lang.reflect.getMemberPropertyValue
+import io.kuark.base.support.Consts
 import io.kuark.base.support.logic.AndOr
 import org.hibernate.validator.constraints.*
 import org.hibernate.validator.constraints.Currency
@@ -146,7 +147,7 @@ class ConstraintsValidator : ConstraintValidator<Constraints, Any?> {
                 val validator = when (value) {
                     is CharSequence -> DecimalMaxValidatorForCharSequence()
                     is Double -> DecimalMaxValidatorForDouble()
-                    is Integer -> DecimalMaxValidatorForInteger()
+                    is Int -> DecimalMaxValidatorForInteger()
                     is Long -> DecimalMaxValidatorForLong()
                     is Float -> DecimalMaxValidatorForFloat()
                     is Byte -> DecimalMaxValidatorForByte()
@@ -163,7 +164,7 @@ class ConstraintsValidator : ConstraintValidator<Constraints, Any?> {
                 val validator = when (value) {
                     is CharSequence -> DecimalMinValidatorForCharSequence()
                     is Double -> DecimalMinValidatorForDouble()
-                    is Integer -> DecimalMinValidatorForInteger()
+                    is Int -> DecimalMinValidatorForInteger()
                     is Long -> DecimalMinValidatorForLong()
                     is Float -> DecimalMinValidatorForFloat()
                     is Byte -> DecimalMinValidatorForByte()
@@ -238,7 +239,7 @@ class ConstraintsValidator : ConstraintValidator<Constraints, Any?> {
                 val validator = when (value) {
                     is CharSequence -> MaxValidatorForCharSequence()
                     is Double -> MaxValidatorForDouble()
-                    is Integer -> MaxValidatorForInteger()
+                    is Int -> MaxValidatorForInteger()
                     is Long -> MaxValidatorForLong()
                     is Float -> MaxValidatorForFloat()
                     is Byte -> MaxValidatorForByte()
@@ -255,7 +256,7 @@ class ConstraintsValidator : ConstraintValidator<Constraints, Any?> {
                 val validator = when (value) {
                     is CharSequence -> MinValidatorForCharSequence()
                     is Double -> MinValidatorForDouble()
-                    is Integer -> MinValidatorForInteger()
+                    is Int -> MinValidatorForInteger()
                     is Long -> MinValidatorForLong()
                     is Float -> MinValidatorForFloat()
                     is Byte -> MinValidatorForByte()
@@ -272,7 +273,7 @@ class ConstraintsValidator : ConstraintValidator<Constraints, Any?> {
                 val validator = when (value) {
                     is CharSequence -> NegativeValidatorForCharSequence()
                     is Double -> NegativeValidatorForDouble()
-                    is Integer -> NegativeValidatorForInteger()
+                    is Int -> NegativeValidatorForInteger()
                     is Long -> NegativeValidatorForLong()
                     is Float -> NegativeValidatorForFloat()
                     is Byte -> NegativeValidatorForByte()
@@ -289,7 +290,7 @@ class ConstraintsValidator : ConstraintValidator<Constraints, Any?> {
                 val validator = when (value) {
                     is CharSequence -> NegativeOrZeroValidatorForCharSequence()
                     is Double -> NegativeOrZeroValidatorForDouble()
-                    is Integer -> NegativeOrZeroValidatorForInteger()
+                    is Int -> NegativeOrZeroValidatorForInteger()
                     is Long -> NegativeOrZeroValidatorForLong()
                     is Float -> NegativeOrZeroValidatorForFloat()
                     is Byte -> NegativeOrZeroValidatorForByte()
@@ -376,7 +377,7 @@ class ConstraintsValidator : ConstraintValidator<Constraints, Any?> {
                 val validator = when (value) {
                     is CharSequence -> PositiveValidatorForCharSequence()
                     is Double -> PositiveValidatorForDouble()
-                    is Integer -> PositiveValidatorForInteger()
+                    is Int -> PositiveValidatorForInteger()
                     is Long -> PositiveValidatorForLong()
                     is Float -> PositiveValidatorForFloat()
                     is Byte -> PositiveValidatorForByte()
@@ -393,7 +394,7 @@ class ConstraintsValidator : ConstraintValidator<Constraints, Any?> {
                 val validator = when (value) {
                     is CharSequence -> PositiveOrZeroValidatorForCharSequence()
                     is Double -> PositiveOrZeroValidatorForDouble()
-                    is Integer -> PositiveOrZeroValidatorForInteger()
+                    is Int -> PositiveOrZeroValidatorForInteger()
                     is Long -> PositiveOrZeroValidatorForLong()
                     is Float -> PositiveOrZeroValidatorForFloat()
                     is Byte -> PositiveOrZeroValidatorForByte()
@@ -429,7 +430,7 @@ class ConstraintsValidator : ConstraintValidator<Constraints, Any?> {
             // hibernate定义的约束
             is CodePointLength -> doValidate(CodePointLengthValidator(), annotation, value, context)
             is CreditCardNumber -> {
-                val ignoreNonDigitCharacters = (annotation as CreditCardNumber).ignoreNonDigitCharacters
+                val ignoreNonDigitCharacters = annotation.ignoreNonDigitCharacters
                 val constructor = LuhnCheck::class.constructors.first()
                 val luhnCheck = constructor.callBy(mapOf(constructor.parameters[3] to ignoreNonDigitCharacters))
                 doValidate(LuhnCheckValidator(), luhnCheck, value, context)
@@ -446,7 +447,6 @@ class ConstraintsValidator : ConstraintValidator<Constraints, Any?> {
             is ParameterScriptAssert ->
                 doValidate(ParameterScriptAssertValidator(), annotation, value, context)
             is Range -> {
-                annotation as Range
                 val minConstructor = Min::class.constructors.first()
                 val minAnnotation = minConstructor.callBy(mapOf(minConstructor.parameters[3] to annotation.min))
                 val maxConstructor = Max::class.constructors.first()
@@ -456,7 +456,7 @@ class ConstraintsValidator : ConstraintValidator<Constraints, Any?> {
                             && doValidate(MaxValidatorForCharSequence(), maxAnnotation, value, context)
                     is Double -> doValidate(MinValidatorForDouble(), minAnnotation, value, context)
                             && doValidate(MaxValidatorForDouble(), maxAnnotation, value, context)
-                    is Integer -> doValidate(MinValidatorForInteger(), minAnnotation, value, context)
+                    is Int -> doValidate(MinValidatorForInteger(), minAnnotation, value, context)
                             && doValidate(MaxValidatorForInteger(), maxAnnotation, value, context)
                     is Long -> doValidate(MinValidatorForLong(), minAnnotation, value, context)
                             && doValidate(MaxValidatorForLong(), maxAnnotation, value, context)
@@ -497,6 +497,7 @@ class ConstraintsValidator : ConstraintValidator<Constraints, Any?> {
     }
 
 
+    @Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
     private fun doValidate(
         validator: Any, annotation: Annotation, value: Any?, context: ConstraintValidatorContext
     ): Boolean =

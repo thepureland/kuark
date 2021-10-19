@@ -4,6 +4,7 @@ import de.idyl.winzipaes.AesZipFileEncrypter
 import de.idyl.winzipaes.impl.AESEncrypter
 import de.idyl.winzipaes.impl.AESEncrypterBC
 import io.kuark.base.lang.string.StringKit
+import io.kuark.base.support.Consts
 import org.apache.commons.io.FileUtils
 import org.apache.commons.io.LineIterator
 import org.apache.commons.io.filefilter.IOFileFilter
@@ -262,6 +263,7 @@ object FileKit {
      * @author K
      * @since 1.0.0
      */
+    @Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
     fun listFiles(directory: File, extensions: Array<String>?, recursive: Boolean): List<File> =
         FileUtils.listFiles(directory, extensions, recursive) as List<File>
 

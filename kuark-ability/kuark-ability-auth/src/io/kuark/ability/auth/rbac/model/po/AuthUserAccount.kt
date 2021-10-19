@@ -1,7 +1,6 @@
 package io.kuark.ability.auth.rbac.model.po
 
 import io.kuark.ability.data.rdb.support.DbEntityFactory
-import io.kuark.ability.data.rdb.support.IMaintainableDbEntity
 import io.kuark.ability.data.rdb.support.IUpdatableDbEntity
 import java.time.LocalDateTime
 

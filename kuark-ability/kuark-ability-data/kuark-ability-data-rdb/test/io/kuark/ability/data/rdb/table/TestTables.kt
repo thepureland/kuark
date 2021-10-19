@@ -1,7 +1,7 @@
 package io.kuark.ability.data.rdb.table
 
-import org.ktorm.schema.*
 import io.kuark.ability.data.rdb.support.IntIdTable
+import org.ktorm.schema.*
 
 /**
  * 测试表数据库表-实体关联对象

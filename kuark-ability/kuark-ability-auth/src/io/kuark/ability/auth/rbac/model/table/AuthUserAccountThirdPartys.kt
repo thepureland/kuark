@@ -1,8 +1,8 @@
 package io.kuark.ability.auth.rbac.model.table
 
-import org.ktorm.schema.*
 import io.kuark.ability.auth.rbac.model.po.AuthUserAccountThirdParty
 import io.kuark.ability.data.rdb.support.MaintainableTable
+import org.ktorm.schema.varchar
 
 /**
  * 用户账号第三方授权信息数据库表-实体关联对象

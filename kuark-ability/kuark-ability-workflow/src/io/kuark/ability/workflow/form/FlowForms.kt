@@ -1,7 +1,7 @@
 package io.kuark.ability.workflow.form
 
-import org.ktorm.schema.*
 import io.kuark.ability.data.rdb.support.StringIdTable
+import org.ktorm.schema.*
 
 /**
  * 工作流表单数据库表-实体关联对象

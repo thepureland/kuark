@@ -87,7 +87,7 @@ class ConfigController : Initializable {
             setDbPassword(propertiesLoader.getProperty(Config.PROP_KEY_DB_PASSWORD, ""))
             val templateInfo = Config.TemplateNameAndRootDir(
                 propertiesLoader.getProperty(Config.PROP_KEY_TEMPLATE_ROOT_DIR, ""),
-                FilenameKit.normalize(propertiesLoader.getProperty(Config.PROP_KEY_TEMPLATE_ROOT_DIR, ""), true)!!
+                FilenameKit.normalize(propertiesLoader.getProperty(Config.PROP_KEY_TEMPLATE_ROOT_DIR, ""), true)
             )
             setTemplateInfo(templateInfo)
             setPackagePrefix(propertiesLoader.getProperty(Config.PROP_KEY_PACKAGE_PREFIX, ""))
@@ -120,7 +120,7 @@ class ConfigController : Initializable {
         val templateNameAndPaths = mutableListOf<Config.TemplateNameAndRootDir>()
         files.forEach {
             templateNameAndPaths.add(
-                Config.TemplateNameAndRootDir(it.name, FilenameKit.normalize(it.absolutePath, true)!!)
+                Config.TemplateNameAndRootDir(it.name, FilenameKit.normalize(it.absolutePath, true))
             )
         }
         templateChoiceBox.items = FXCollections.observableArrayList(*templateNameAndPaths.toTypedArray())
@@ -206,7 +206,7 @@ class ConfigController : Initializable {
             }
         }
         directoryChooser.title = "选择生成目录"
-        val selectedFolder = directoryChooser.showDialog(openButton!!.scene.window)
+        val selectedFolder = directoryChooser.showDialog(openButton.scene.window)
         if (selectedFolder != null) {
             locationTextField.text = selectedFolder.absolutePath
         }
@@ -235,7 +235,7 @@ class ConfigController : Initializable {
     }
 
     private val properties: Properties
-        private get() {
+        get() {
             val properties = Properties()
             if (!propertiesFile.exists()) { // 第一次使用，预设组件默认值
                 val parentFile = propertiesFile.parentFile

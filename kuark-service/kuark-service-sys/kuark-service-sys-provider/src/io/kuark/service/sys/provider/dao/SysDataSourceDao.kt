@@ -3,7 +3,6 @@ package io.kuark.service.sys.provider.dao
 import io.kuark.ability.data.rdb.support.BaseDao
 import io.kuark.service.sys.provider.model.po.SysDataSource
 import io.kuark.service.sys.provider.model.table.SysDataSources
-import org.ktorm.dsl.*
 import org.springframework.stereotype.Repository
 
 /**

@@ -6,7 +6,6 @@ import org.apache.batik.bridge.BridgeContext
 import org.apache.batik.bridge.GVTBuilder
 import org.apache.batik.bridge.UserAgentAdapter
 import org.apache.batik.gvt.renderer.ConcreteImageRendererFactory
-import org.apache.batik.gvt.renderer.ImageRendererFactory
 import org.w3c.dom.svg.SVGDocument
 import org.w3c.dom.svg.SVGElement
 import java.awt.Color
@@ -160,7 +159,7 @@ object ImageKit {
      * @since 1.0.0
      */
     fun scale(srcImageFile: String, height: Int, width: Int, hasFiller: Boolean = true): BufferedImage {
-        var ratio = 0.0 // 缩放比例
+        val ratio: Double // 缩放比例
         val file = File(srcImageFile)
         val srcImage: BufferedImage = ImageIO.read(file)
         var destImage = srcImage.getScaledInstance(width, height, BufferedImage.SCALE_SMOOTH)

@@ -1,9 +1,8 @@
 package io.kuark.ability.auth.rbac.dao
 
-import io.kuark.ability.data.rdb.support.BaseDao
 import io.kuark.ability.auth.rbac.model.po.AuthUserGroup
 import io.kuark.ability.auth.rbac.model.table.AuthUserGroups
-import org.ktorm.dsl.*
+import io.kuark.ability.data.rdb.support.BaseDao
 import org.springframework.stereotype.Repository
 
 /**

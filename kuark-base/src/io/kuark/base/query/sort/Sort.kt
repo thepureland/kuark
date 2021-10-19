@@ -63,14 +63,14 @@ class Sort : Iterable<Order>, Serializable {
         return orders.iterator()
     }
 
-    override fun equals(obj: Any?): Boolean {
-        if (this === obj) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) {
             return true
         }
-        if (obj !is Sort) {
+        if (other !is Sort) {
             return false
         }
-        return orders == obj.orders
+        return orders == other.orders
     }
 
     override fun hashCode(): Int {
@@ -99,8 +99,8 @@ class Sort : Iterable<Order>, Serializable {
         fun toSql(orders: Array<Order>, columnMap: Map<String?, String?>?): String {
             val orderSb = StringBuilder("ORDER BY ")
             for (order in orders) {
-                val property = order.property!!
-                val direction = order.direction!!.name.lowercase(Locale.getDefault())
+                val property = order.property
+                val direction = order.direction.name.lowercase(Locale.getDefault())
                 var columnName = if (columnMap == null) {
                     property.humpToUnderscore()
                 } else {

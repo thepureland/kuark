@@ -78,7 +78,7 @@ open class FlowTaskBiz : IFlowTaskBiz {
         // 任务定义key(bpmn文件userTask元素的id)
         val taskDefinitionKey = searchParams.taskDefinitionKey
         if (StringKit.isNotBlank(taskDefinitionKey) && !taskDefinitionKey!!.contains("'")) {
-            whereStr.append(" AND UPPER(t.task_def_key_) LIKE '%${taskDefinitionKey!!.uppercase()}%'")
+            whereStr.append(" AND UPPER(t.task_def_key_) LIKE '%${taskDefinitionKey.uppercase()}%'")
         }
 
         // 任务名称
@@ -90,7 +90,7 @@ open class FlowTaskBiz : IFlowTaskBiz {
         // 流程定义key(bpmn文件中process元素的id)
         val flowDefinitionKey = searchParams.flowDefinitionKey
         if (StringKit.isNotBlank(flowDefinitionKey) && !flowDefinitionKey!!.contains("'")) {
-            whereStr.append(" AND UPPER(d.key_) LIKE '%${flowDefinitionKey!!.uppercase()}%'")
+            whereStr.append(" AND UPPER(d.key_) LIKE '%${flowDefinitionKey.uppercase()}%'")
         }
 
         // 流程版本
@@ -173,27 +173,27 @@ open class FlowTaskBiz : IFlowTaskBiz {
         variables: Map<String, *>?,
         force: Boolean
     ): Boolean {
-        val userId = userId.trim()
-        require(userId.isNotEmpty()) { "执行流程任务失败！【userId】参数不能为空！【bizKey：$bizKey, taskDefinitionKey：$taskDefinitionKey】" }
+        val uId = userId.trim()
+        require(uId.isNotEmpty()) { "执行流程任务失败！【userId】参数不能为空！【bizKey：$bizKey, taskDefinitionKey：$taskDefinitionKey】" }
         val task = findTask(bizKey, taskDefinitionKey)
         if (force) {
-            taskService.setAssignee(task._id, userId)
+            taskService.setAssignee(task._id, uId)
             if (StringKit.isNotBlank(comment)) {
-                Authentication.setAuthenticatedUserId(userId) // addComment底层会调用Authentication.getAuthenticatedUserId()
+                Authentication.setAuthenticatedUserId(uId) // addComment底层会调用Authentication.getAuthenticatedUserId()
                 taskService.addComment(task._id, task._instanceId, comment)
             }
             taskService.complete(task._id, variables)
-            log.info("强制执行流程任务成功！【bizKey：$bizKey, taskDefinitionKey：$taskDefinitionKey, userId: $userId】")
+            log.info("强制执行流程任务成功！【bizKey：$bizKey, taskDefinitionKey：$taskDefinitionKey, userId: $uId】")
         } else {
-            if (userId == task.assignee) {
+            if (uId == task.assignee) {
                 if (StringKit.isNotBlank(comment)) {
-                    Authentication.setAuthenticatedUserId(userId) // addComment底层会调用Authentication.getAuthenticatedUserId()
+                    Authentication.setAuthenticatedUserId(uId) // addComment底层会调用Authentication.getAuthenticatedUserId()
                     taskService.addComment(task._id, task._instanceId, comment)
                 }
                 taskService.complete(task._id, variables)
-                log.info("执行流程任务成功！【bizKey：$bizKey, taskDefinitionKey：$taskDefinitionKey, userId: $userId】")
+                log.info("执行流程任务成功！【bizKey：$bizKey, taskDefinitionKey：$taskDefinitionKey, userId: $uId】")
             } else {
-                log.error("执行流程任务失败，因签收的用户不是【$userId】！【bizKey：$bizKey, taskDefinitionKey：$taskDefinitionKey, userId: $userId】")
+                log.error("执行流程任务失败，因签收的用户不是【$uId】！【bizKey：$bizKey, taskDefinitionKey：$taskDefinitionKey, userId: $uId】")
                 return false
             }
         }

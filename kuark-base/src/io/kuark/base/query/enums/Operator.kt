@@ -2,6 +2,7 @@ package io.kuark.base.query.enums
 
 import io.kuark.base.lang.EnumKit
 import io.kuark.base.lang.collections.containsAll
+import io.kuark.base.support.Consts
 import io.kuark.base.support.enums.IDictEnum
 import java.util.*
 
@@ -165,6 +166,7 @@ enum class Operator constructor(
      * @param v2 右值
      * @return 是否满足逻辑关系
      */
+    @Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
     fun compare(v1: Any?, v2: Any?): Boolean {
         return when (this) {
             EQ -> {
@@ -258,11 +260,11 @@ enum class Operator constructor(
             IS_NULL -> v1 == null
             IS_NOT_NULL -> v1 != null
             IS_NOT_EMPTY -> {
-                if (v1 != null) {
-                    return true
+                if (v1 == null) {
+                    return false
                 }
                 if (v1 is String) {
-                    return (v1 as String).isNotEmpty()
+                    return v1.isNotEmpty()
                 }
                 if (v1 is Array<*>) {
                     return (v1 as Array<Any?>).isNotEmpty()
@@ -308,37 +310,37 @@ enum class Operator constructor(
     }
 
     private fun `in`(v1: Any?, v2: Any?): Boolean {
-        var v1 = v1
-        var v2 = v2
-        if (v1 is String && v2 is String) {
-            val elems = v2.split(",").toTypedArray()
-            return v1 in elems
+        var value1 = v1
+        var value2 = v2
+        if (value1 is String && value2 is String) {
+            val elems = value2.split(",").toTypedArray()
+            return value1 in elems
         }
-        if (v1 is Array<*>) {
-            v1 = listOf(*v1)
+        if (value1 is Array<*>) {
+            value1 = listOf(*value1)
         }
-        if (v2 is Array<*>) {
-            v2 = listOf(*v2)
+        if (value2 is Array<*>) {
+            value2 = listOf(*value2)
         }
-        if (v2 is Collection<*>) {
-            return if (v1 is Collection<*>) {
-                v2.containsAll(v1)
+        if (value2 is Collection<*>) {
+            return if (value1 is Collection<*>) {
+                value2.containsAll(value1)
             } else {
-                v2.contains(v1)
+                value2.contains(value1)
             }
         }
-        return if (v1 is Map<*, *> && v2 is Map<*, *>) {
-            v2.containsAll(v1)
+        return if (value1 is Map<*, *> && value2 is Map<*, *>) {
+            value2.containsAll(value1)
         } else false
     }
 
     companion object {
         fun enumOf(code: String): Operator {
-            var code = code
-            if (code.isNotBlank()) {
-                code = code.uppercase(Locale.getDefault())
+            var operatorCode = code
+            if (operatorCode.isNotBlank()) {
+                operatorCode = operatorCode.uppercase(Locale.getDefault())
             }
-            return EnumKit.enumOf(Operator::class, code) ?: error("非法的Operator code: ${code}")
+            return EnumKit.enumOf(Operator::class, operatorCode) ?: error("非法的Operator code: $operatorCode")
         }
     }
 }

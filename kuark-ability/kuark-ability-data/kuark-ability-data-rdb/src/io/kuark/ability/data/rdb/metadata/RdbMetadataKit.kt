@@ -3,6 +3,7 @@ package io.kuark.ability.data.rdb.metadata
 import io.kuark.ability.data.rdb.kit.RdbKit
 import java.sql.Connection
 import java.sql.DatabaseMetaData
+import java.util.*
 
 /**
  * 关系型数据库元数据工具类
@@ -71,7 +72,7 @@ object RdbMetadataKit {
 
     private fun _getTablesByType(conn: Connection, vararg tableTypes: TableType?): List<Table> {
         val dbMetaData = conn.metaData
-        val types = tableTypes?.mapTo(mutableListOf()) { it -> it!!.name }.toTypedArray()
+        val types = tableTypes.mapTo(mutableListOf()) { it!!.name }.toTypedArray()
         val talbes = mutableListOf<Table>()
         val tableRs = dbMetaData.getTables(conn.catalog, conn.schema, "%", types)
         tableRs.use {
@@ -124,7 +125,7 @@ object RdbMetadataKit {
                     decimalDigits = columnRs.getInt("DECIMAL_DIGITS")
                     defaultValue = columnRs.getString("COLUMN_DEF")
                     nullable = columnRs.getInt("NULLABLE") == DatabaseMetaData.columnNullable
-                    dictCode = name.toUpperCase().endsWith("__CODE")
+                    dictCode = name.uppercase(Locale.getDefault()).endsWith("__CODE")
                     autoIncrement = columnRs.getString("IS_AUTOINCREMENT")
                 }
                 linkedMap[column.name] = column

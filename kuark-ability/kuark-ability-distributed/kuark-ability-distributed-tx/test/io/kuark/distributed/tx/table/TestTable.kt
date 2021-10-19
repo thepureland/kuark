@@ -2,7 +2,6 @@ package io.kuark.distributed.tx.table
 
 import io.kuark.ability.data.rdb.support.DbEntityFactory
 import io.kuark.ability.data.rdb.support.IDbEntity
-import java.time.LocalDateTime
 
 /**
  * 测试表数据库实体

@@ -33,5 +33,6 @@ dependencies {
     api("javax.el:javax.el-api")
     api("org.glassfish.web:javax.el")
 
-    testImplementation(project(":kuark-test:kuark-test-common"))
+    api("org.springframework.boot:spring-boot-starter-aop")
+    api("org.springframework.boot:spring-boot-starter-test")
 }

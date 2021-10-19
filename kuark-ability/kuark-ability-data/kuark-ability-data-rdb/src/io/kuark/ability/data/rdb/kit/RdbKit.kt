@@ -3,7 +3,6 @@ package io.kuark.ability.data.rdb.kit
 import io.kuark.ability.data.rdb.datasource.currentDataSource
 import io.kuark.ability.data.rdb.datasource.currentDatabase
 import io.kuark.ability.data.rdb.metadata.RdbType
-import io.kuark.base.lang.collections.CollectionKit
 import io.kuark.base.lang.string.StringKit
 import io.kuark.base.lang.string.deleteWhitespace
 import io.kuark.base.lang.string.substringBetween
@@ -12,6 +11,7 @@ import io.kuark.context.core.KuarkContextHolder
 import org.ktorm.database.Database
 import java.sql.Connection
 import java.sql.DriverManager
+import java.util.*
 import javax.sql.DataSource
 
 /**
@@ -90,11 +90,11 @@ object RdbKit {
      * @since 1.0.0
      */
     fun determinRdbTypeByUrl(url: String): RdbType {
-        val urlStr = url.deleteWhitespace().toLowerCase()
+        val urlStr = url.deleteWhitespace().lowercase(Locale.getDefault())
         if (urlStr.contains(":sqlserver:"))
             return RdbType.SQLSERVER
         val type = url.substringBetween("jdbc:", ":")
-        return RdbType.valueOf(type.toUpperCase())
+        return RdbType.valueOf(type.uppercase(Locale.getDefault()))
     }
 
     /**
@@ -125,8 +125,8 @@ object RdbKit {
         val orderSb = StringBuilder("ORDER BY ")
         val length = orderSb.length
         orders.forEach {
-            if (StringKit.isNotBlank(it.property) && !it.property!!.contains("'") && it.direction != null) {
-                orderSb.append("${it.property} ${it.direction!!.name},")
+            if (StringKit.isNotBlank(it.property) && !it.property.contains("'")) {
+                orderSb.append("${it.property} ${it.direction.name},")
             }
         }
         if (orderSb.length != length) {

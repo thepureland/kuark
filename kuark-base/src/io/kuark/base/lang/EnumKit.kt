@@ -2,6 +2,7 @@ package io.kuark.base.lang
 
 import io.kuark.base.lang.reflect.isEnum
 import io.kuark.base.log.LogFactory
+import io.kuark.base.support.Consts
 import io.kuark.base.support.enums.IDictEnum
 import org.apache.commons.lang3.EnumUtils
 import java.util.*
@@ -117,6 +118,7 @@ object EnumKit {
      * @author K
      * @since 1.0.0
      */
+    @Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
     fun getCodeEnumClass(enumClassStr: String): KClass<out IDictEnum> {
         require(!enumClassStr.isBlank()) { "字典枚举全类名参数不能为空" }
 

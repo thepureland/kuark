@@ -74,7 +74,7 @@ abstract class AbstractConstraintConvertor(
      * @param rule Map<注解属性名，注解属性值>
      */
     private fun handleMessageI18n(rule: Map<String, Any>) {
-        //TODO i18n
+        println(rule) //TODO i18n
     }
 
 }

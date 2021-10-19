@@ -1,5 +1,6 @@
 package io.kuark.ui.jfx.controls.table.cell.factory
 
+import io.kuark.base.support.Consts
 import io.kuark.ui.jfx.controls.XTextFieldTableCell
 import javafx.scene.control.TableCell
 import javafx.scene.control.TableColumn
@@ -8,6 +9,7 @@ import javafx.util.StringConverter
 
 class XTextFieldTableCellFactory<S> : Callback<TableColumn<S, String>?, TableCell<S, String>?> {
 
+    @Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
     override fun call(param: TableColumn<S, String>?): TableCell<S, String> {
         return XTextFieldTableCell<S, String>(object :
             StringConverter<String?>() {
@@ -16,7 +18,7 @@ class XTextFieldTableCellFactory<S> : Callback<TableColumn<S, String>?, TableCel
                 return str
             }
 
-            override fun fromString(string: String): String? {
+            override fun fromString(string: String): String {
                 return string
             }
         }) as TableCell<S, String>

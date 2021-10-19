@@ -4,8 +4,10 @@ import io.kuark.ability.data.rdb.metadata.Column
 import io.kuark.ability.data.rdb.metadata.RdbMetadataKit
 import io.kuark.ability.data.rdb.support.*
 import io.kuark.base.bean.BeanKit
+import io.kuark.base.lang.string.capitalizeString
 import io.kuark.base.lang.string.humpToUnderscore
 import io.kuark.base.lang.string.underscoreToHump
+import io.kuark.base.support.Consts
 import io.kuark.tools.codegen.model.vo.Config
 import java.util.*
 
@@ -17,7 +19,7 @@ import java.util.*
  */
 open class TemplateModelCreator {
 
-    @Suppress("UNCHECKED_CAST")
+    @Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
     fun create(): Map<String, Any?> {
         val tableName = CodeGeneratorContext.tableName
         val config = CodeGeneratorContext.config
@@ -25,7 +27,7 @@ open class TemplateModelCreator {
         val templateModel = mutableMapOf<String, Any?>()
         templateModel[Config.PROP_KEY_PACKAGE_PREFIX] = config.getPackagePrefix()
         templateModel[Config.PROP_KEY_MODULE_NAME] = config.getModuleName()
-        templateModel["className"] = tableName.underscoreToHump().capitalize()
+        templateModel["className"] = tableName.underscoreToHump().capitalizeString()
         templateModel["table"] = RdbMetadataKit.getTableByName(tableName)
         val origColumns = RdbMetadataKit.getColumnsByTableName(tableName).values
         templateModel["columns"] = origColumns

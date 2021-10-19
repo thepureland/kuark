@@ -42,15 +42,12 @@ class ValidateCode {
     }
 
     fun createCode(): String? {
-        var x = 0
-        var fontHeight = 0
-        var codeY = 0
-        var red = 0
-        var green = 0
-        var blue = 0
-        x = width / (codeCount + 2)
-        fontHeight = height - 2
-        codeY = height - 4
+        var red: Int
+        var green: Int
+        var blue: Int
+        val x = width / (codeCount + 2)
+        val fontHeight = height - 2
+        val codeY = height - 4
         buffImg = BufferedImage(width, height, 1)
         val g = buffImg!!.createGraphics()
         val random = Random()

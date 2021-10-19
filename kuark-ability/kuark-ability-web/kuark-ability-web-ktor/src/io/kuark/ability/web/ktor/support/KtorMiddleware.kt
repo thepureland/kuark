@@ -1,6 +1,6 @@
 package io.kuark.ability.web.ktor.support
 
-import io.ktor.application.Application
+import io.ktor.application.*
 
 interface KtorMiddleware {
 

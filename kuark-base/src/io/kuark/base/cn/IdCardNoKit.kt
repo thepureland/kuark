@@ -45,7 +45,7 @@ object IdCardNoKit {
      * @since 1.0.0
      */
     fun convert15To18(idCardNo15: String): String? {
-        if (idCardNo15!!.isBlank() || idCardNo15.length != MAINLAND_ID_MIN_LENGTH) {
+        if (idCardNo15.isBlank() || idCardNo15.length != MAINLAND_ID_MIN_LENGTH) {
             return null
         }
         var idCard18: String
@@ -183,7 +183,7 @@ object IdCardNoKit {
      * @since 1.0.0
      */
     fun isTwIdCardNo(str: CharSequence): Boolean {
-        if (str!!.isBlank()) {
+        if (str.isBlank()) {
             return false
         }
         if (!str.matches("^[a-zA-Z][0-9]{9}$".toRegex())) {
@@ -224,11 +224,11 @@ object IdCardNoKit {
         var card = str.replace("[\\(|\\)]".toRegex(), "")
         var sum: Int
         if (card.length == 9) {
-            sum = ((card.substring(0, 1).toUpperCase().toCharArray()[0].toInt() - 55) * 9
-                    + (card.substring(1, 2).toUpperCase().toCharArray()[0].toInt() - 55) * 8)
+            sum = ((card.substring(0, 1).uppercase(Locale.getDefault()).toCharArray()[0].code - 55) * 9
+                    + (card.substring(1, 2).uppercase(Locale.getDefault()).toCharArray()[0].code - 55) * 8)
             card = card.substring(1, 9)
         } else {
-            sum = 522 + (card.substring(0, 1).toUpperCase().toCharArray()[0].toInt() - 55) * 8
+            sum = 522 + (card.substring(0, 1).uppercase(Locale.getDefault()).toCharArray()[0].code - 55) * 8
         }
         val mid = card.substring(1, 7)
         val end = card.substring(7, 8)
@@ -238,7 +238,7 @@ object IdCardNoKit {
             sum += Integer.valueOf(c.toString() + "") * iflag
             iflag--
         }
-        sum = if ("A" == end.toUpperCase()) {
+        sum = if ("A" == end.uppercase(Locale.getDefault())) {
             sum + 10
         } else {
             sum + Integer.valueOf(end)
@@ -262,7 +262,7 @@ object IdCardNoKit {
         val len = ca.size
         val iArr = IntArray(len)
         for (i in 0 until len) {
-            iArr[i] = ca[i].toInt() - 48
+            iArr[i] = ca[i].code - 48
         }
         return iArr
     }
@@ -310,17 +310,17 @@ object IdCardNoKit {
      * @since 1.0.0
      */
     fun getBirthday(idCardNo: String): String? {
-        var idCardNo = idCardNo
-        if (idCardNo.isBlank()) {
+        var idNo = idCardNo
+        if (idNo.isBlank()) {
             return null
         }
-        val len = idCardNo!!.length
+        val len = idNo.length
         if (len < MAINLAND_ID_MIN_LENGTH) {
             return null
         } else if (len == MAINLAND_ID_MIN_LENGTH) {
-            idCardNo = convert15To18(idCardNo)!!
+            idNo = convert15To18(idNo)!!
         }
-        return idCardNo!!.substring(6, 14)
+        return idNo.substring(6, 14)
     }
 
     /**
@@ -332,21 +332,21 @@ object IdCardNoKit {
      * @since 1.0.0
      */
     fun getSex(idCardNo: String): Sex {
-        var idCardNo = idCardNo
-        if (idCardNo!!.isBlank()) {
+        var idNo = idCardNo
+        if (idNo.isBlank()) {
             return Sex.SECRET
         }
-        if (isTwIdCardNo(idCardNo)) {
-            return if (idCardNo[1] == '1') Sex.MALE else Sex.FEMALE
+        if (isTwIdCardNo(idNo)) {
+            return if (idNo[1] == '1') Sex.MALE else Sex.FEMALE
         }
-        if (idCardNo.length != MAINLAND_ID_MIN_LENGTH && idCardNo.length != MAINLAND_ID_MAX_LENGTH) {
+        if (idNo.length != MAINLAND_ID_MIN_LENGTH && idNo.length != MAINLAND_ID_MAX_LENGTH) {
             return Sex.SECRET
         }
         val sGender: Sex
-        if (idCardNo.length == MAINLAND_ID_MIN_LENGTH) {
-            idCardNo = convert15To18(idCardNo)!!
+        if (idNo.length == MAINLAND_ID_MIN_LENGTH) {
+            idNo = convert15To18(idNo)!!
         }
-        val sCardNum = idCardNo!!.substring(16, 17)
+        val sCardNum = idNo.substring(16, 17)
         sGender = if (sCardNum.toInt() % 2 != 0) {
             Sex.MALE
         } else {

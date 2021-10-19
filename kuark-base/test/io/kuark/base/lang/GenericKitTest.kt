@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import java.io.Serializable
-import java.lang.IllegalArgumentException
 
 /**
  * GenericKit测试用例

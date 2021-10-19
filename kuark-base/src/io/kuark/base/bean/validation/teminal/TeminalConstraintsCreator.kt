@@ -7,6 +7,7 @@ import io.kuark.base.lang.SystemKit
 import io.kuark.base.lang.reflect.getMemberProperty
 import io.kuark.base.lang.reflect.getSuperClass
 import io.kuark.base.lang.reflect.isAnnotationPresent
+import io.kuark.base.support.Consts
 import javax.validation.Constraint
 import javax.validation.Valid
 import kotlin.reflect.KClass
@@ -60,13 +61,13 @@ object TeminalConstraintsCreator {
         annotations: MutableMap<String, MutableList<Annotation>>, beanClass: KClass<*>, parentProperty: KProperty<*>?
     ) {
         var clazz = beanClass
-        var parentProperty = parentProperty
+        var parentProp = parentProperty
         annotations.putAll(getAnnotationsOnClass(clazz))
 
         for (prop in clazz.memberProperties) {
             if (prop.returnType != Any::class.starProjectedType) {
                 if (prop.getter.isAnnotationPresent(Valid::class)) { // 级联验证
-                    parentProperty = prop
+                    parentProp = prop
                     val parentClazz = clazz
                     clazz = prop.returnType.classifier as KClass<*>
                     if (clazz == Array<Any>::class) {
@@ -80,14 +81,14 @@ object TeminalConstraintsCreator {
                         val paramType = prop.typeParameters
                         clazz = paramType[1].starProjectedType.classifier as KClass<*>
                     }
-                    parseAnnotations(annotations, clazz, parentProperty) // 递归解析所有类中的注解
+                    parseAnnotations(annotations, clazz, parentProp) // 递归解析所有类中的注解
                     clazz = parentClazz
-                    parentProperty = null
+                    parentProp = null
                 } else {
-                    val propName = if (parentProperty == null) {
+                    val propName = if (parentProp == null) {
                         prop.name
                     } else {
-                        "'${parentProperty.name}.${prop.name}'"
+                        "'${parentProp.name}.${prop.name}'"
                     }
                     if (propName.split("\\.").toTypedArray().size > 2) {
                         error("属性嵌套层次超过1层：$propName")
@@ -144,20 +145,19 @@ object TeminalConstraintsCreator {
      * @author K
      * @since 1.0.0
      */
+    @Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
     private fun getAnnotationsOnClass(clazz: KClass<*>): Map<String, MutableList<Annotation>> {
         val annotationMap = mutableMapOf<String, MutableList<Annotation>>()
         for (annotation in clazz.annotations) {
             val prop = annotation::class.getMemberProperty("properties") // 自定义的类级别约束注解中, 代表类属性数组的属性名定义统一用properties
-            if (prop != null) {
-                val propertyNames = prop.call(annotation) as Array<String>
-                propertyNames.forEach { propertyName ->
-                    var annoList = annotationMap[propertyName] ?: mutableListOf()
-                    annotationMap[propertyName] = annoList
-                    if (annotation.annotationClass.isAnnotationPresent(Constraint::class)
-                        || annotation.annotationClass.qualifiedName!!.endsWith(".List")
-                    ) { // 是约束注解
-                        annoList.add(annotation)
-                    }
+            val propertyNames = prop.call(annotation) as Array<String>
+            propertyNames.forEach { propertyName ->
+                val annoList = annotationMap[propertyName] ?: mutableListOf()
+                annotationMap[propertyName] = annoList
+                if (annotation.annotationClass.isAnnotationPresent(Constraint::class)
+                    || annotation.annotationClass.qualifiedName!!.endsWith(".List")
+                ) { // 是约束注解
+                    annoList.add(annotation)
                 }
             }
         }
@@ -175,10 +175,8 @@ object TeminalConstraintsCreator {
     private fun getAnnotationsOnGetter(clazz: KClass<*>, property: String): MutableList<Annotation> {
         val annotationList = mutableListOf<Annotation>()
         if (clazz != Any::class && !clazz.isAbstract) {
-            val prop = clazz.getMemberProperty(property)
-            if (prop == null) {
-                return getAnnotationsOnGetter(clazz.getSuperClass()!!, property)
-            } else {
+            try {
+                val prop = clazz.getMemberProperty(property)
                 val annotations = prop.getter.annotations
                 for (annotation in annotations) {
                     if (annotation.annotationClass.isAnnotationPresent(Constraint::class)
@@ -187,6 +185,8 @@ object TeminalConstraintsCreator {
                         annotationList.add(annotation)
                     }
                 }
+            } catch (e: Exception) {
+                return getAnnotationsOnGetter(clazz.getSuperClass()!!, property)
             }
         }
         return annotationList

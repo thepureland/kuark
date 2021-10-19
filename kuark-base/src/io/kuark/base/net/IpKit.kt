@@ -304,10 +304,10 @@ object IpKit {
     fun ipv4ToIpv6(ipv4: String): String {
         if (isValidIpv4(ipv4)) {
             val parts = ipv4.split(".").toTypedArray()
-            val part1 = Integer.toHexString(Integer.valueOf(parts[0])).toUpperCase()
-            val part2 = Integer.toHexString(Integer.valueOf(parts[1])).toUpperCase()
-            val part3 = Integer.toHexString(Integer.valueOf(parts[2])).toUpperCase()
-            val part4 = Integer.toHexString(Integer.valueOf(parts[3])).toUpperCase()
+            val part1 = Integer.toHexString(Integer.valueOf(parts[0])).uppercase(Locale.getDefault())
+            val part2 = Integer.toHexString(Integer.valueOf(parts[1])).uppercase(Locale.getDefault())
+            val part3 = Integer.toHexString(Integer.valueOf(parts[2])).uppercase(Locale.getDefault())
+            val part4 = Integer.toHexString(Integer.valueOf(parts[3])).uppercase(Locale.getDefault())
             val ipv6Str = part1.padStart(2, '0') + part2.padStart(2, '0') +
                     ":" + part3.padStart(2, '0') + part4.padStart(2, '0')
             return "0000:0000:0000:0000:0000:0000:$ipv6Str"

@@ -1,11 +1,13 @@
 package io.kuark.ui.jfx.controls
 
+import io.kuark.base.support.Consts
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
 import javafx.event.EventHandler
 import javafx.scene.control.ComboBox
 import javafx.scene.input.KeyCode
 import javafx.scene.input.KeyEvent
+import java.util.*
 
 class AutoCompleteComboBoxListener<T>(private val comboBox: ComboBox<Any>?) : EventHandler<KeyEvent> {
     private val sb: StringBuilder
@@ -37,8 +39,8 @@ class AutoCompleteComboBoxListener<T>(private val comboBox: ComboBox<Any>?) : Ev
         val list = FXCollections.observableArrayList<Any>()
         for (i in data.indices) {
             if (comboBox != null) {
-                if (data[i].toString().toLowerCase().startsWith(
-                        comboBox.editor.text.toLowerCase()
+                if (data[i].toString().lowercase(Locale.getDefault()).startsWith(
+                        comboBox.editor.text.lowercase(Locale.getDefault())
                     )
                 ) {
                     list.add(data[i])
@@ -66,8 +68,10 @@ class AutoCompleteComboBoxListener<T>(private val comboBox: ComboBox<Any>?) : Ev
         moveCaretToPos = false
     }
 
+
     init {
         sb = StringBuilder()
+        @Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
         data = comboBox!!.items as ObservableList<T>
         comboBox.isEditable = true
         comboBox.onKeyPressed = EventHandler { comboBox.hide() }

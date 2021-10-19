@@ -11,23 +11,20 @@ import javafx.beans.property.StringProperty
  * @author K
  * @since 1.0.0
  */
-class GenFile : Comparable<GenFile> {
+class GenFile(
+    generate: Boolean, filename: String, directory: String,// 参数化后的文件相对路径
+    var finalFileRelativePath: String,// 模板文件相对路径，为了生成时能找得到模板文件
+    var templateFileRelativePath: String
+) : Comparable<GenFile> {
 
     private val generate = SimpleBooleanProperty()
     private val filename = SimpleStringProperty()
     private val directory = SimpleStringProperty()
-    var finalFileRelativePath: String // 参数化后的文件相对路径
-    var templateFileRelativePath: String // 模板文件相对路径，为了生成时能找得到模板文件
 
-    constructor(
-        generate: Boolean, filename: String, directory: String,
-        finalFileRelativePath: String, templateFileRelativePath: String
-    ) {
+    init {
         setGenerate(generate)
-        setFilename(filename!!)
+        setFilename(filename)
         setDirectory(directory)
-        this.finalFileRelativePath = finalFileRelativePath
-        this.templateFileRelativePath = templateFileRelativePath
     }
 
     fun getGenerate(): Boolean = generate.get()
@@ -48,5 +45,5 @@ class GenFile : Comparable<GenFile> {
 
     fun directoryProperty(): StringProperty = directory
 
-    override fun compareTo(o: GenFile): Int = getDirectory().compareTo(o.getDirectory())
+    override fun compareTo(other: GenFile): Int = getDirectory().compareTo(other.getDirectory())
 }

@@ -32,25 +32,21 @@ class Order : Serializable {
         return result
     }
 
-    override fun equals(obj: Any?): Boolean {
-        if (this === obj) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) {
             return true
         }
-        if (obj == null) {
+        if (other == null) {
             return false
         }
-        if (javaClass != obj.javaClass) {
+        if (javaClass != other.javaClass) {
             return false
         }
-        val other = obj as Order
-        if (direction !== other.direction) {
+        val order = other as Order
+        if (direction !== order.direction) {
             return false
         }
-        if (property == null) {
-            if (other.property != null) {
-                return false
-            }
-        } else if (property != other.property) {
+        if (property != order.property) {
             return false
         }
         return true

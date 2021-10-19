@@ -1,8 +1,9 @@
 package io.kuark.ability.auth.rbac.model.table
 
-import org.ktorm.schema.*
 import io.kuark.ability.auth.rbac.model.po.AuthPersistentLogins
 import io.kuark.ability.data.rdb.support.StringIdTable
+import org.ktorm.schema.datetime
+import org.ktorm.schema.varchar
 
 /**
  * 登陆持久化数据库表-实体关联对象

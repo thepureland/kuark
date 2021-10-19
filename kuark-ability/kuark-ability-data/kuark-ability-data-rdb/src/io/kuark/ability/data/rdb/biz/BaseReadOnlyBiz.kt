@@ -50,58 +50,58 @@ open class BaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>, DAO : BaseReadOnlyDao
     override fun andSearch(
         properties: Map<String, *>,
         vararg orders: Order,
-        whereExpression: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)?
+        whereConditionFactory: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)?
     ): List<E> =
         dao.andSearch(properties, *orders) { column, value ->
-            whereExpression?.invoke(column, value)
+            whereConditionFactory?.invoke(column, value)
         }
 
     override fun andSearchProperty(
         properties: Map<String, *>,
         returnProperty: String,
         vararg orders: Order,
-        whereExpression: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)?
+        whereConditionFactory: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)?
     ): List<*> =
         dao.andSearchProperty(properties, returnProperty, *orders) { column, value ->
-            whereExpression?.invoke(column, value)
+            whereConditionFactory?.invoke(column, value)
         }
 
     override fun andSearchProperties(
         properties: Map<String, *>,
         returnProperties: Collection<String>,
         vararg orders: Order,
-        whereExpression: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)?
+        whereConditionFactory: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)?
     ): List<Map<String, *>> =
         dao.andSearchProperties(properties, returnProperties, *orders) { column, value ->
-            whereExpression?.invoke(column, value)
+            whereConditionFactory?.invoke(column, value)
         }
 
     override fun orSearch(
         properties: Map<String, *>,
         vararg orders: Order,
-        whereExpression: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)?
+        whereConditionFactory: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)?
     ): List<E> =
         dao.orSearch(properties, *orders) { column, value ->
-            whereExpression?.invoke(column, value)
+            whereConditionFactory?.invoke(column, value)
         }
 
     override fun orSearchProperty(
         properties: Map<String, *>,
         returnProperty: String,
         vararg orders: Order,
-        whereExpression: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)?
+        whereConditionFactory: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)?
     ): List<*> =
         dao.orSearchProperty(properties, returnProperty, *orders) { column, value ->
-            whereExpression?.invoke(column, value)
+            whereConditionFactory?.invoke(column, value)
         }
 
     override fun orSearchProperties(
         properties: Map<String, *>,
         returnProperties: Collection<String>,
         vararg orders: Order,
-        whereExpression: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)?
+        whereConditionFactory: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)?
     ): List<Map<String, *>> = dao.orSearchProperties(properties, returnProperties, *orders) { column, value ->
-        whereExpression?.invoke(column, value)
+        whereConditionFactory?.invoke(column, value)
     }
 
     override fun inSearch(property: String, values: Collection<*>, vararg orders: Order): List<E> =
@@ -148,15 +148,15 @@ open class BaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>, DAO : BaseReadOnlyDao
 
     override fun search(
         listSearchPayload: ListSearchPayload?,
-        whereExpression: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)?
-    ): List<*> = dao.search(listSearchPayload, whereExpression)
+        whereConditionFactory: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)?
+    ): List<*> = dao.search(listSearchPayload, whereConditionFactory)
 
     override fun count(criteria: Criteria?): Int = dao.count(criteria)
 
     override fun count(
         searchPayload: SearchPayload?,
-        whereExpression: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)?
-    ): Int = dao.count(searchPayload, whereExpression)
+        whereConditionFactory: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)?
+    ): Int = dao.count(searchPayload, whereConditionFactory)
 
     override fun sum(property: String, criteria: Criteria?): Number = dao.sum(property, criteria)
 

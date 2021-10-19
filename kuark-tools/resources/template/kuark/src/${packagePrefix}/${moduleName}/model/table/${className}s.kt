@@ -1,4 +1,8 @@
-package ${packagePrefix}.${moduleName}.model.table
+package $
+
+import org.ktorm.schema.*
+
+{packagePrefix}.${moduleName}.model.table
 
 import org.ktorm.schema.*
 import ${packagePrefix}.${moduleName}.model.po.${className}

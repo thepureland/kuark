@@ -67,7 +67,7 @@ class Criterion : Serializable {
     }
 
     var operatorCode: String
-        get() = operator!!.code
+        get() = operator.code
         set(operatorCode) {
             operator = Operator.enumOf(operatorCode)
         }
@@ -95,7 +95,7 @@ class Criterion : Serializable {
      * @return　查询条件字符串
      */
     override fun toString(): String {
-        val op = if (operator == null) "null" else operator!!.code
+        val op = operator.code
         val `val` = (if (getValue() == null) "" else getValue())!!
         return "$property $op $`val`".trim { it <= ' ' }
     }

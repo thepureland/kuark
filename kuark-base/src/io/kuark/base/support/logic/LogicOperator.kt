@@ -2,6 +2,7 @@ package io.kuark.base.support.logic
 
 import io.kuark.base.lang.EnumKit
 import io.kuark.base.lang.collections.containsAll
+import io.kuark.base.support.Consts
 import io.kuark.base.support.enums.IDictEnum
 import java.util.*
 
@@ -112,6 +113,7 @@ enum class LogicOperator constructor(
      * @author K
      * @since 1.0.0
      */
+    @Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
     fun assert(v1: Any?, v2: Any? = null): Boolean {
         return when (this) {
             EQ -> {
@@ -192,8 +194,8 @@ enum class LogicOperator constructor(
             }
             ILIKE_S -> {
                 if (v1 is String && v2 is String) {
-                    v1.trim { it <= ' ' }.toLowerCase()
-                        .startsWith(v2.toLowerCase())
+                    v1.trim { it <= ' ' }.lowercase(Locale.getDefault())
+                        .startsWith(v2.lowercase(Locale.getDefault()))
                 } else false
             }
             ILIKE_E -> {
@@ -202,8 +204,8 @@ enum class LogicOperator constructor(
                         .endsWith(v2.lowercase(Locale.getDefault()))
                 } else false
             }
-            IN -> `in`(v1, v2)
-            NOT_IN -> !`in`(v1, v2)
+            IN -> inOperation(v1, v2)
+            NOT_IN -> !inOperation(v1, v2)
             IS_NULL -> v1 == null
             IS_NOT_NULL -> v1 != null
             IS_NOT_EMPTY -> {
@@ -243,7 +245,8 @@ enum class LogicOperator constructor(
         }
     }
 
-    private fun `in`(v1: Any?, v2: Any?): Boolean {
+    @Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
+    private fun inOperation(v1: Any?, v2: Any?): Boolean {
         var value1 = v1
         var value2 = v2
         if (value1 is String && value2 is String) {

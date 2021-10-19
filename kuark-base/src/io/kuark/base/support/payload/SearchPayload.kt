@@ -1,6 +1,5 @@
 package io.kuark.base.support.payload
 
-import io.kuark.base.query.sort.Order
 import io.kuark.base.support.logic.AndOr
 import kotlin.reflect.KClass
 

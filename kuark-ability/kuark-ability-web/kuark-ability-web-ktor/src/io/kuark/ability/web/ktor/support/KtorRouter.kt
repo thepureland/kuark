@@ -1,6 +1,6 @@
 package io.kuark.ability.web.ktor.support
 
-import io.ktor.routing.Route
+import io.ktor.routing.*
 
 interface KtorRouter {
 

@@ -22,9 +22,9 @@ object DataSourceKit {
      */
     fun getCurrentDataSource(): DataSource = KuarkContextHolder.currentDataSource()
 
-    fun getDataSource(dataSourceId: String): DataSource {
-        TODO()
-    }
+//    fun getDataSource(dataSourceId: String): DataSource {
+//        TODO()
+//    }
 
     /**
      * 创建数据源

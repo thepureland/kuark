@@ -1,19 +1,14 @@
 package io.kuark.ability.web.ktor.context
 
-import io.ktor.application.Application
-import io.ktor.application.ApplicationCallPipeline
-import io.ktor.application.call
-import io.ktor.application.install
-import io.ktor.features.ContentNegotiation
-import io.ktor.features.StatusPages
-import io.ktor.http.ContentType
-import io.ktor.http.HttpStatusCode
-import io.ktor.response.respondText
+import io.ktor.application.*
+import io.ktor.features.*
+import io.ktor.http.*
+import io.ktor.response.*
 import io.ktor.sessions.*
-import io.kuark.context.spring.SpringKit
-import io.kuark.ability.web.session.MixCacheSessionStorage
+import io.kuark.ability.web.ktor.session.MixCacheSessionStorage
 import io.kuark.ability.web.ktor.session.WebSession
 import io.kuark.ability.web.ktor.support.KtorMiddleware
+import io.kuark.context.spring.SpringKit
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 

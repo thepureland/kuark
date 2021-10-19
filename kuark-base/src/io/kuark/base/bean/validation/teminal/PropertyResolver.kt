@@ -20,16 +20,16 @@ object PropertyResolver {
      * @since 1.0.0
      */
     fun toPotQuote(property: String, propertyPrefix: String?): String {
-        var property = property
-        if (!property.startsWith("$") && propertyPrefix != null && "" != propertyPrefix && !property.startsWith("'") && !property.startsWith(
+        var prop = property
+        if (!prop.startsWith("$") && propertyPrefix != null && "" != propertyPrefix && !prop.startsWith("'") && !prop.startsWith(
                 propertyPrefix
-            ) && !property.contains("_")
+            ) && !prop.contains("_")
         ) {
-            if (!property.contains(".")) { // 不是原始request里的参数名
-                property = "'$propertyPrefix.$property'"
+            if (!prop.contains(".")) { // 不是原始request里的参数名
+                prop = "'$propertyPrefix.$prop'"
             }
         }
-        return toPotQuote(property)
+        return toPotQuote(prop)
     }
 
     /**
@@ -41,12 +41,12 @@ object PropertyResolver {
      * @since 1.0.0
      */
     fun toPotQuote(property: String): String {
-        var property = property
-        property = toPot(property)
-        if (!property.startsWith("'") && (property.contains(".") || property.endsWith("[]"))) {
-            property = "'$property'"
+        var prop = property
+        prop = toPot(prop)
+        if (!prop.startsWith("'") && (prop.contains(".") || prop.endsWith("[]"))) {
+            prop = "'$prop'"
         }
-        return property
+        return prop
     }
 
     /**
@@ -58,13 +58,13 @@ object PropertyResolver {
      * @since 1.0.0
      */
     fun toPot(property: String): String {
-        var property = property
-        property = property.replace("\\$\\$".toRegex(), "[]") // 数组处理
-        if (property.startsWith("$")) {
-            property = property.substring(1)
+        var prop = property
+        prop = prop.replace("\\$\\$".toRegex(), "[]") // 数组处理
+        if (prop.startsWith("$")) {
+            prop = prop.substring(1)
         }
-        property = property.replace("_".toRegex(), ".") // 有带"_"的为表单提交时属性名带"."的
-        return property
+        prop = prop.replace("_".toRegex(), ".") // 有带"_"的为表单提交时属性名带"."的
+        return prop
     }
 
     /**
@@ -76,14 +76,14 @@ object PropertyResolver {
      * @since 1.0.0
      */
     fun toUnderline(property: String): String {
-        var property = property
-        if (isArrayProperty(property)) {
-            property = property.replace("\\[\\d+\\]".toRegex(), Matcher.quoteReplacement("$$"))
+        var prop = property
+        if (isArrayProperty(prop)) {
+            prop = prop.replace("\\[\\d+]".toRegex(), Matcher.quoteReplacement("$$"))
         }
-        return if (property.contains(".")) {
-            property.replace("\\.".toRegex(), "_")
+        return if (prop.contains(".")) {
+            prop.replace("\\.".toRegex(), "_")
         } else {
-            "$$property"
+            "$$prop"
         }
     }
 

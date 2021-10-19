@@ -1,8 +1,8 @@
 package io.kuark.tools.codegen.fx.controller
 
-import io.kuark.tools.codegen.core.CodeGeneratorContext
 import io.kuark.tools.codegen.biz.CodeGenColumnBiz
 import io.kuark.tools.codegen.biz.CodeGenObjectBiz
+import io.kuark.tools.codegen.core.CodeGeneratorContext
 import io.kuark.tools.codegen.model.vo.ColumnInfo
 import io.kuark.tools.codegen.model.vo.Config
 import io.kuark.ui.jfx.controls.AutoCompleteComboBoxListener

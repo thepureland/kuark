@@ -1,5 +1,6 @@
 package io.kuark.ui.jfx.controls
 
+import io.kuark.base.support.Consts
 import javafx.beans.value.ChangeListener
 import javafx.beans.value.ObservableValue
 import javafx.scene.Node
@@ -35,7 +36,7 @@ class XTextFieldTableCell<S, T> @JvmOverloads constructor(converter: StringConve
 
     /** the changeListener for the table's terminatingCell property  */
     private val terminatingListener =
-        ChangeListener { e: ObservableValue<out TablePosition<S?, *>?>?, oldPosition: TablePosition<S?, *>?,
+        ChangeListener { _: ObservableValue<out TablePosition<S?, *>?>?, _: TablePosition<S?, *>?,
                          newPosition: TablePosition<S?, *>? ->
             terminateEdit(
                 newPosition
@@ -61,7 +62,7 @@ class XTextFieldTableCell<S, T> @JvmOverloads constructor(converter: StringConve
                 // either throw an exception or return silently
                 return
             }
-            myTextField!!.focusedProperty().addListener { e, old, nvalue ->
+            myTextField!!.focusedProperty().addListener { _, _, nvalue ->
                 if (!nvalue) {
                     commitEdit(converter.fromString(myTextField!!.text))
                     System.out.println(myTextField!!.text)
@@ -135,6 +136,7 @@ class XTextFieldTableCell<S, T> @JvmOverloads constructor(converter: StringConve
     /**
      * @param oldTable
      */
+    @Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
     private fun uninstallTerminatingListener(oldTable: TableView<S?>?) {
         if (oldTable is XTableView<*>) {
             (oldTable.terminatingCellProperty() as ObservableValue<*>).removeListener(terminatingListener as ChangeListener<in Any>)
@@ -148,7 +150,7 @@ class XTextFieldTableCell<S, T> @JvmOverloads constructor(converter: StringConve
      * @param converter
      */
     init {
-        tableViewProperty().addListener { e: ObservableValue<out TableView<S?>>?, oldTable: TableView<S?>?, newTable: TableView<S?> ->
+        tableViewProperty().addListener { _: ObservableValue<out TableView<S?>>?, oldTable: TableView<S?>?, newTable: TableView<S?> ->
             uninstallTerminatingListener(oldTable)
             installTerminatingListener(newTable)
         }

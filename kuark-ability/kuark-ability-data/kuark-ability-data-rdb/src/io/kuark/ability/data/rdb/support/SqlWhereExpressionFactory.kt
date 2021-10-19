@@ -1,6 +1,7 @@
 package io.kuark.ability.data.rdb.support
 
 import io.kuark.base.query.enums.Operator
+import io.kuark.base.support.Consts
 import org.ktorm.dsl.*
 import org.ktorm.schema.Column
 import org.ktorm.schema.ColumnDeclaring
@@ -23,7 +24,7 @@ object SqlWhereExpressionFactory {
      * @author K
      * @since 1.0.0
      */
-    @Suppress("UNCHECKED_CAST")
+    @Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
     fun create(column: Column<Any>, operator: Operator, value: Any?): ColumnDeclaring<Boolean> {
         return when (operator) {
             Operator.EQ -> column.eq(value!!)
@@ -64,36 +65,36 @@ object SqlWhereExpressionFactory {
             Operator.IS_EMPTY -> column.eq("")
             Operator.IS_NOT_EMPTY -> column.notEq("")
             Operator.BETWEEN -> (column as Column<Comparable<Any>>).between(value as ClosedRange<Comparable<Any>>)
-            Operator.BETWEEN -> (column as Column<Comparable<Any>>).notBetween(value as ClosedRange<Comparable<Any>>)
+            Operator.NOT_BETWEEN -> (column as Column<Comparable<Any>>).notBetween(value as ClosedRange<Comparable<Any>>)
             else -> error("未支持")
         }
     }
 
     // 为了解决 <T : Any> ColumnDeclaring<T>.eq(expr: ColumnDeclaring<T>) 的泛型问题
-    @Suppress("UNCHECKED_CAST")
+    @Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
     private fun <T : Any> columnEq(
         column: ColumnDeclaring<T>, anotherColumn: Column<Any>
     ): ColumnDeclaring<Boolean> =
         column.eq(anotherColumn as Column<T>)
 
     // 为了解决 <T : Any> ColumnDeclaring<T>.notEq(expr: ColumnDeclaring<T>) 的泛型问题
-    @Suppress("UNCHECKED_CAST")
+    @Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
     private fun <T : Any> columnNotEq(
         column: ColumnDeclaring<T>, anotherColumn: Column<*>
     ): ColumnDeclaring<Boolean> =
         column.notEq(anotherColumn as Column<T>)
 
     // 为了解决 <T : Any> ColumnDeclaring<T>.inList(list: Collection<T>) 的泛型问题
-    @Suppress("UNCHECKED_CAST")
+    @Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
     private fun <T : Any> columnIn(column: ColumnDeclaring<T>, values: List<T>): ColumnDeclaring<Boolean> =
         column.inList(values)
 
     // 为了解决 <T : Any> ColumnDeclaring<T>.notInList(list: Collection<T>) 的泛型问题
-    @Suppress("UNCHECKED_CAST")
+    @Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
     private fun <T : Any> columnNotIn(column: ColumnDeclaring<T>, values: List<T>): ColumnDeclaring<Boolean> =
         column.notInList(values)
 
-    @Suppress("UNCHECKED_CAST")
+    @Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
     private fun handleIn(isIn: Boolean, value: Any, column: ColumnDeclaring<Any>): ColumnDeclaring<Boolean> {
         var values = value
         if (values !is List<*> && values !is Array<*>) {

@@ -3,7 +3,6 @@ package io.kuark.base.lang
 import io.kuark.base.lang.reflect.firstMatchTypeOf
 import io.kuark.base.lang.reflect.getSuperClass
 import io.kuark.base.lang.reflect.getSuperInterfaces
-import java.lang.IllegalArgumentException
 import kotlin.reflect.KCallable
 import kotlin.reflect.KClass
 import kotlin.reflect.full.starProjectedType

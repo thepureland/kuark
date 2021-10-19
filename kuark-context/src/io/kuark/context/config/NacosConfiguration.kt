@@ -2,7 +2,6 @@ package io.kuark.context.config
 
 //import com.alibaba.nacos.spring.context.annotation.config.EnableNacosConfig
 //import com.alibaba.nacos.spring.context.annotation.config.NacosPropertySource
-import org.springframework.context.annotation.Configuration
 
 /**
  * nacos springboot配置类

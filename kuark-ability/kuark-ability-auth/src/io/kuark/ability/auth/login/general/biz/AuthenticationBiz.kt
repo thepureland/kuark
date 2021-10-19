@@ -1,6 +1,5 @@
 package io.kuark.ability.auth.login.general.biz
 
-import io.kuark.ability.auth.login.general.PrincipalType
 import io.kuark.ability.auth.login.general.ibiz.IAuthenticationBiz
 
 

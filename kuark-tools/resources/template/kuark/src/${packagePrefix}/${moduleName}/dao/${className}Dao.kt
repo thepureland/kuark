@@ -1,4 +1,9 @@
-package ${packagePrefix}.${moduleName}.dao
+package $
+
+import org.ktorm.dsl.*
+import org.springframework.stereotype.Repository
+
+{packagePrefix}.${moduleName}.dao
 
 <#if table.type.name() == "TABLE">
 import io.kuark.ability.data.rdb.support.BaseDao

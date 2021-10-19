@@ -3,6 +3,7 @@ package io.kuark.ability.data.rdb.support
 import io.kuark.base.bean.BeanKit
 import io.kuark.base.query.Criteria
 import io.kuark.base.query.enums.Operator
+import io.kuark.base.support.Consts
 import io.kuark.base.support.GroupExecutor
 import io.kuark.base.support.logic.AndOr
 import io.kuark.base.support.payload.SearchPayload
@@ -37,7 +38,7 @@ open class BaseDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadOnlyD
      * @author K
      * @since 1.0.0
      */
-    @Suppress("UNCHECKED_CAST")
+    @Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
     open fun insert(any: Any): PK {
         val entity = if (any is IDbEntity<*, *>) {
             any
@@ -59,7 +60,7 @@ open class BaseDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadOnlyD
      * @author K
      * @since 1.0.0
      */
-    @Suppress("UNCHECKED_CAST")
+    @Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
     open fun insertOnly(entity: E, vararg propertyNames: String): PK {
         val properties = entity.properties
         val columns = ColumnHelper.columnOf(table(), *propertyNames)
@@ -95,7 +96,7 @@ open class BaseDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadOnlyD
      * @author K
      * @since 1.0.0
      */
-    @Suppress("UNCHECKED_CAST")
+    @Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
     open fun batchInsert(objects: Collection<Any>, countOfEachBatch: Int = 1000): Int {
         if (objects.isEmpty()) return 0
         return if (objects.first() is IDbEntity<*, *>) {
@@ -346,7 +347,7 @@ open class BaseDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadOnlyD
      * @author K
      * @since 1.0.0
      */
-    @Suppress("UNCHECKED_CAST")
+    @Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
     fun <S : SearchPayload> batchUpdateWhen(
         updatePayload: UpdatePayload<S>,
         whereConditionFactory: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)? = null

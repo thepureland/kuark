@@ -121,6 +121,15 @@ open class SysDictDao : BaseDao<String, SysDict, SysDicts>() {
             .from(SysDictItems).leftJoin(SysDicts, on = SysDictItems.dictId.eq(SysDicts.id))
             .select()
             .whereWithConditions {
+                if (StringKit.isNotBlank(searchPayload.id)) {
+                    it += SysDictItems.id.eq(searchPayload.id!!)
+                }
+                if (StringKit.isNotBlank(searchPayload.parentId)) {
+                    it += SysDictItems.parentId.eq(searchPayload.parentId!!)
+                }
+                if (searchPayload.active != null) {
+                    it += SysDictItems.active.eq(searchPayload.active!!)
+                }
                 if (StringKit.isNotBlank(searchPayload.module)) {
                     it += whereExpr(SysDicts.module, Operator.ILIKE, searchPayload.module!!.trim())
                 }
@@ -138,12 +147,6 @@ open class SysDictDao : BaseDao<String, SysDict, SysDicts>() {
                 }
                 if (StringKit.isNotBlank(searchPayload.itemName)) {
                     it += whereExpr(SysDictItems.itemName, Operator.ILIKE, searchPayload.itemName!!.trim())
-                }
-                if (searchPayload.active != null) {
-                    it += SysDictItems.active.eq(searchPayload.active!!)
-                }
-                if (StringKit.isNotBlank(searchPayload.parentId)) {
-                    it += SysDictItems.parentId.eq(searchPayload.parentId!!)
                 }
             }
     }

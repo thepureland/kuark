@@ -29,15 +29,38 @@ interface ISysDictBiz : IBaseBiz<String, SysDict> {
     fun pagingSearch(searchPayload: SysDictSearchPayload): Pair<List<SysDictListRecord>, Int>
 
     /**
-     * 加载直接孩子结点
+     * 加载直接孩子结点(用于树)
      *
-     * @param parentId 父主键，为null时加载SysDict
-     * @param activeOnly 是否只加载启用状态的数据
+     * @param parent 父项标识，为null时加载模块列表
+     * @param isModule 是否parent代表模块名
+     * @param activeOnly 是否只加载启用状态的数据, 默认为是
      * @return List(SysDictTreeNode)
      * @author K
      * @since 1.0.0
      */
-    fun loadDirectChildren(parentId: String?, activeOnly: Boolean = true): List<SysDictTreeNode>
+    fun loadDirectChildrenForTree(parent: String?, isModule: Boolean, activeOnly: Boolean = true): List<SysDictTreeNode>
+
+    /**
+     * 加载直接孩子结点(用于列表)
+     *
+     * @param parent 父项标识
+     * @param isModule 是否parent代表模块名
+     * @param activeOnly 是否只加载启用状态的数据, 默认为是
+     * @return Pair(List(SysDictListModel), 总记录数)
+     * @author K
+     * @since 1.0.0
+     */
+    fun loadDirectChildrenForList(parent: String, isModule: Boolean, activeOnly: Boolean = true): Pair<List<SysDictListRecord>, Int>
+
+    /**
+     * 返回指定id的字典信息
+     *
+     * @param id 字典或字典项id，由isDict参数决定
+     * @param isDict true: 字典id，false：字典项id
+     * @author K
+     * @since 1.0.0
+     */
+    fun get(id: String, isDict: Boolean?): SysDictListRecord?
 
     //endregion your codes 2
 

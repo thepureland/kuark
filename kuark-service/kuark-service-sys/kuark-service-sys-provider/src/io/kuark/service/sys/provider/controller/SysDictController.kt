@@ -1,9 +1,11 @@
 package io.kuark.service.sys.provider.controller
 
 import io.kuark.ability.web.common.WebResult
+import io.kuark.base.lang.string.StringKit
 import io.kuark.base.support.Consts
 import io.kuark.service.sys.common.model.dict.SysDictListRecord
 import io.kuark.service.sys.common.model.dict.SysDictSearchPayload
+import io.kuark.service.sys.common.model.dict.SysDictTreeNode
 import io.kuark.service.sys.provider.ibiz.ISysDictBiz
 import io.kuark.service.sys.provider.model.table.SysDicts
 import org.springframework.beans.factory.annotation.Autowired
@@ -16,6 +18,26 @@ class SysDictController {
 
     @Autowired
     private lateinit var sysDictBiz: ISysDictBiz
+
+    @PostMapping("/laodTreeNodes")
+    fun laodTreeNodes(@RequestBody searchPayload: SysDictSearchPayload): WebResult<List<SysDictTreeNode>> {
+        val activeOnly = searchPayload.active ?: false
+        return WebResult(
+            sysDictBiz.loadDirectChildrenForTree(
+                searchPayload.parentId, searchPayload.firstLevel ?: false, activeOnly
+            )
+        )
+    }
+
+    @PostMapping("/listByTree")
+    fun listByTree(@RequestBody searchPayload: SysDictSearchPayload): WebResult<Pair<List<SysDictListRecord>, Int>> {
+        val activeOnly = searchPayload.active ?: false
+        return WebResult(
+            sysDictBiz.loadDirectChildrenForList(
+                searchPayload.parentId!!, searchPayload.firstLevel ?: false, activeOnly
+            )
+        )
+    }
 
     @PostMapping("/list")
     fun list(@RequestBody searchPayload: SysDictSearchPayload): WebResult<Pair<List<SysDictListRecord>, Int>> {
@@ -37,8 +59,13 @@ class SysDictController {
     }
 
     @GetMapping("/get")
-    fun get() {
-
+    fun get(id: String, isDict: Boolean?): WebResult<SysDictListRecord> {
+        val dict = sysDictBiz.get(id, isDict)
+        return if (dict == null) {
+            WebResult("找不到对应的字典/字典项！")
+        } else {
+            WebResult(dict)
+        }
     }
 
 }

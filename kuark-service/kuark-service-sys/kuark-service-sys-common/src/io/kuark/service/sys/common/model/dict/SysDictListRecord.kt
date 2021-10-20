@@ -12,10 +12,10 @@ data class SysDictListRecord(
     val dictName: String?,
 
     /** 字典项ID */
-    val itemId: String,
+    val itemId: String?,
 
     /** 字典项编号 */
-    val itemCode: String,
+    val itemCode: String?,
 
     /** 父项编号 */
     val parentCode: String?,
@@ -27,6 +27,6 @@ data class SysDictListRecord(
     val seqNo: Int?,
 
     /** 是否启用 */
-    val active: Boolean
+    val active: Boolean?
 
 )

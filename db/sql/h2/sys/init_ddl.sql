@@ -48,7 +48,7 @@ create table "sys_dict_item"
     "item_code"   VARCHAR(63)                    not null,
     "item_name"   VARCHAR(63)                    not null,
     "parent_code" VARCHAR(63),
-    "parent_id"   VARCHAR(36),
+    "parent_id"   CHAR(36)                    not null,
     "seq_no"      INT4,
     "remark"      VARCHAR(127),
     "active"   BOOLEAN  default TRUE          not null,

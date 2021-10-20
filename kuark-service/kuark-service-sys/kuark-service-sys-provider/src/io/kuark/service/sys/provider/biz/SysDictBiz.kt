@@ -36,37 +36,74 @@ open class SysDictBiz : BaseBiz<String, SysDict, SysDictDao>(), ISysDictBiz {
         return Pair(dictItems, totalCount)
     }
 
-    override fun loadDirectChildren(parentId: String?, activeOnly: Boolean): List<SysDictTreeNode> {
-        return if (StringKit.isBlank(parentId)) { // 加载SysDict数据
-            val results = dao.allSearch(Order.asc(SysDicts.dictType.name))
-            results.map {
-                BeanKit.copyProperties(
-                    SysDictTreeNode::class, it, mapOf(
-                        SysDict::dictType.name to SysDictTreeNode::code.name,
-                        SysDict::dictName.name to SysDictTreeNode::name.name,
+    override fun loadDirectChildrenForTree(
+        parent: String?,
+        isModule: Boolean,
+        activeOnly: Boolean
+    ): List<SysDictTreeNode> {
+        return when {
+            StringKit.isBlank(parent) -> { // 加载模块列表
+                val modules = dao.allSearchProperty(SysDicts.module.name, Order.asc(SysDicts.module.name)).toSet() // distinct
+                modules.map { SysDictTreeNode().apply { code = it.toString() } }
+            }
+            isModule -> { // 加载SysDict数据
+                val results = dao.oneSearch(SysDicts.module.name, parent, Order.asc(SysDicts.dictType.name))
+                results.map {
+                    val treeNode = BeanKit.copyProperties(
+                        SysDictTreeNode::class, it, mapOf(
+                            SysDict::id.name to SysDictTreeNode::id.name,
+                            SysDict::dictType.name to SysDictTreeNode::code.name,
+                        )
                     )
-                )
-            }
-        } else { // 加载SysDictItem数据
-            val searchPayload = SysDictSearchPayload().apply {
-                this.parentId = parentId
-                this.active = if (activeOnly) true else null
-            }
-            dao.leftJoinSearch(searchPayload)
-                .orderBy(SysDictItems.seqNo.asc())
-                .map { row ->
-                    SysDictTreeNode().apply {
-                        id = row[SysDictItems.id]
-                        code = row[SysDictItems.itemCode]
-                        name = row[SysDictItems.itemName]
-                        seqNo = row[SysDictItems.seqNo]
-                        module = row[SysDicts.module]
-                    }
+                    treeNode
                 }
-
+            }
+            else -> { // 加载SysDictItem数据
+                val searchPayload = SysDictSearchPayload().apply {
+                    this.parentId = parent
+                    this.active = if (activeOnly) true else null
+                }
+                dao.leftJoinSearch(searchPayload)
+                    .orderBy(SysDictItems.seqNo.asc())
+                    .map { row ->
+                        SysDictTreeNode().apply {
+                            id = row[SysDictItems.id]
+                            code = row[SysDictItems.itemCode]
+                        }
+                    }
+            }
         }
     }
 
-    //endregion your codes 2
+    override fun loadDirectChildrenForList(parent: String, isModule: Boolean, activeOnly: Boolean): Pair<List<SysDictListRecord>, Int> {
+        val searchPayload = SysDictSearchPayload().apply {
+            this.active = if (activeOnly) true else null
+        }
+        if (isModule) {
+            searchPayload.module = parent
+        } else {
+            searchPayload.parentId = parent
+        }
+        val records = dao.pagingSearch(searchPayload)
+        val totalCount = dao.count(searchPayload)
+        return Pair(records, totalCount)
+    }
+
+    override fun get(id: String, isDict: Boolean?): SysDictListRecord? {
+        return if (isDict == true) {
+            val dict = dao.getById(id) ?: return null
+            SysDictListRecord(
+                dict.module, dict.dictType, dict.dictName, null, null, null, null, null, null
+            )
+        } else {
+            val searchPayload = SysDictSearchPayload().apply {
+                this.id = id
+                pageSize = 1
+            }
+            dao.pagingSearch(searchPayload).firstOrNull()
+        }
+    }
+
+//endregion your codes 2
 
 }

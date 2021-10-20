@@ -37,4 +37,7 @@ class SysDictSearchPayload: ListSearchPayload() {
     /** 是否启用 */
     var active: Boolean? = null
 
+    /** 是否为第一层树节点 */
+    var firstLevel: Boolean? = null
+
 }

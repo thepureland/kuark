@@ -140,7 +140,8 @@ enum class Operator constructor(
     IS_NOT_NULL("IS NOT NULL", "非空", true, false),
 
     /**
-     * 是否为空串
+     * 是否为空
+     * 字符串判断是否为空串，数组、集合、Map判断是否为空，其他对象toString()后判断是否为空串
      */
     IS_EMPTY("=''", "等于空串", true, true),
 

@@ -26,14 +26,14 @@ class AtLeastValidator : ConstraintValidator<AtLeast, Any> {
     }
 
     override fun isValid(bean: Any, constraintValidatorContext: ConstraintValidatorContext): Boolean {
-        var nullCount = 0
+        var count = 0
         atLeast.properties.forEach { prop ->
             val value = BeanKit.getProperty(bean, prop)
-            if (value != null) {
-                nullCount++
+            if (atLeast.logic.assert(value)) {
+                count++
             }
         }
-        return nullCount >= atLeast.count
+        return count >= atLeast.count
     }
 
 }

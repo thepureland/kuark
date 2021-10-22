@@ -1,12 +1,14 @@
 package io.kuark.base.bean.validation.constraint.annotaions
 
 import io.kuark.base.bean.validation.constraint.validator.AtLeastValidator
+import io.kuark.base.bean.validation.support.AssertLogic
+import io.kuark.base.query.enums.Operator
 import javax.validation.Constraint
 import javax.validation.Payload
 import kotlin.reflect.KClass
 
 /**
- * "至少需要几个"约束注解，类级别注解，将校验指定的属性至少有几个不为null
+ * "至少需要几个"约束注解，类级别注解，将校验指定的属性至少有几个满足给定的断言逻辑
  *
  * @author K
  * @since 1.0.0
@@ -20,7 +22,10 @@ annotation class AtLeast(
     /** 要校验的属性名 */
     val properties: Array<String>,
 
-    /** 值不为null的属性的个数 */
+    /** 断言逻辑，默认为判断值是否不为null */
+    val logic: AssertLogic = AssertLogic.IS_NOT_NULL,
+
+    /** 值满足给定的断言逻辑的属性的至少个数 */
     val count: Int = 1,
 
 

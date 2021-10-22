@@ -44,7 +44,10 @@ open class SysDictBiz : BaseBiz<String, SysDict, SysDictDao>(), ISysDictBiz {
         return when {
             StringKit.isBlank(parent) -> { // 加载模块列表
                 val modules = dao.allSearchProperty(SysDicts.module.name, Order.asc(SysDicts.module.name)).toSet() // distinct
-                modules.map { SysDictTreeNode().apply { code = it.toString() } }
+                modules.map { SysDictTreeNode().apply {
+                    code = it.toString()
+                    id = code
+                }}
             }
             isModule -> { // 加载SysDict数据
                 val results = dao.oneSearch(SysDicts.module.name, parent, Order.asc(SysDicts.dictType.name))

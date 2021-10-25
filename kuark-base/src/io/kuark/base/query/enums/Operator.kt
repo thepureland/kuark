@@ -161,14 +161,16 @@ enum class Operator constructor(
     NOT_BETWEEN("NOT BETWEEN", "不在两者间", false, false);
 
     /**
-     * 根据当前操作符比较两个值
+     * 根据当前操作符作断言
      *
      * @param v1 左值
-     * @param v2 右值
+     * @param v2 右值 (对于IS_NULL、IS_NOT_NULL、IS_EMPTY、IS_NOT_EMPTY来说无意义)
      * @return 是否满足逻辑关系
+     * @author K
+     * @since 1.0.0
      */
     @Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
-    fun compare(v1: Any?, v2: Any?): Boolean {
+    fun assert(v1: Any?, v2: Any?): Boolean {
         return when (this) {
             EQ -> {
                 if (v1 == null && v2 == null) {
@@ -241,23 +243,23 @@ enum class Operator constructor(
                     v1.trim { it <= ' ' }.endsWith((v2 as String?)!!)
                 } else false
             }
-//            ILIKE -> {
-//                if (v1 is String && v2 is String) {
-//                    v1.lowercase(Locale.getDefault()).contains(v2.lowercase(Locale.getDefault()))
-//                } else false
-//            }
-//            ILIKE_S -> {
-//                if (v1 is String && v2 is String) {
-//                    v1.trim { it <= ' ' }.lowercase(Locale.getDefault()).startsWith(v2.lowercase(Locale.getDefault()))
-//                } else false
-//            }
-//            ILIKE_E -> {
-//                if (v1 is String && v2 is String) {
-//                    v1.trim { it <= ' ' }.lowercase(Locale.getDefault()).endsWith(v2.lowercase(Locale.getDefault()))
-//                } else false
-//            }
-            IN -> `in`(v1, v2)
-            NOT_IN -> !`in`(v1, v2)
+            ILIKE -> {
+                if (v1 is String && v2 is String) {
+                    v1.lowercase(Locale.getDefault()).contains(v2.lowercase(Locale.getDefault()))
+                } else false
+            }
+            ILIKE_S -> {
+                if (v1 is String && v2 is String) {
+                    v1.trim { it <= ' ' }.lowercase(Locale.getDefault()).startsWith(v2.lowercase(Locale.getDefault()))
+                } else false
+            }
+            ILIKE_E -> {
+                if (v1 is String && v2 is String) {
+                    v1.trim { it <= ' ' }.lowercase(Locale.getDefault()).endsWith(v2.lowercase(Locale.getDefault()))
+                } else false
+            }
+            IN -> inOperation(v1, v2)
+            NOT_IN -> !inOperation(v1, v2)
             IS_NULL -> v1 == null
             IS_NOT_NULL -> v1 != null
             IS_NOT_EMPTY -> {
@@ -310,7 +312,7 @@ enum class Operator constructor(
         }
     }
 
-    private fun `in`(v1: Any?, v2: Any?): Boolean {
+    private fun inOperation(v1: Any?, v2: Any?): Boolean {
         var value1 = v1
         var value2 = v2
         if (value1 is String && value2 is String) {

@@ -42,22 +42,22 @@ enum class AssertLogic {
      */
     fun assert(value: Any?): Boolean {
         return when(this) {
-            IS_NULL -> Operator.IS_NULL.compare(value, null)
-            IS_NOT_NULL -> Operator.IS_NOT_NULL.compare(value, null)
-            IS_EMPTY -> Operator.IS_EMPTY.compare(value, null)
-            IS_NOT_EMPTY -> Operator.IS_NOT_EMPTY.compare(value, null)
+            IS_NULL -> Operator.IS_NULL.assert(value, null)
+            IS_NOT_NULL -> Operator.IS_NOT_NULL.assert(value, null)
+            IS_EMPTY -> Operator.IS_EMPTY.assert(value, null)
+            IS_NOT_EMPTY -> Operator.IS_NOT_EMPTY.assert(value, null)
             IS_BLANK -> {
                 when (value) {
                     null -> true
                     is String -> value.isBlank()
-                    else -> Operator.IS_NULL.compare(value, null) || Operator.IS_EMPTY.compare(value, null)
+                    else -> Operator.IS_NULL.assert(value, null) || Operator.IS_EMPTY.assert(value, null)
                 }
             }
             IS_NOT_BLANK -> {
                 when (value) {
                     null -> false
                     is String -> value.isNotBlank()
-                    else -> Operator.IS_NOT_NULL.compare(value, null) && Operator.IS_NOT_EMPTY.compare(value, null)
+                    else -> Operator.IS_NOT_NULL.assert(value, null) && Operator.IS_NOT_EMPTY.assert(value, null)
                 }
             }
         }

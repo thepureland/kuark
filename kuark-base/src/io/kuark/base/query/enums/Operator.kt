@@ -264,7 +264,7 @@ enum class Operator constructor(
             IS_NOT_NULL -> v1 != null
             IS_NOT_EMPTY -> {
                 if (v1 == null) {
-                    return false
+                    return true
                 }
                 if (v1 is String) {
                     return v1.isNotEmpty()

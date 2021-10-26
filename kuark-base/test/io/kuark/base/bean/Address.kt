@@ -25,11 +25,11 @@ class Address : Serializable {
         return result
     }
 
-    override fun equals(obj: Any?): Boolean {
-        if (this === obj) return true
-        if (obj == null) return false
-        if (javaClass != obj.javaClass) return false
-        val other: Address = obj as Address
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other == null) return false
+        if (javaClass != other.javaClass) return false
+        val other: Address = other as Address
         if (city == null) {
             if (other.city != null) return false
         } else if (city != other.city) return false

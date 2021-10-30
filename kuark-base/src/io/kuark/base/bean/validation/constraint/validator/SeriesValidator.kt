@@ -147,7 +147,7 @@ class SeriesValidator : ConstraintValidator<Series, Any?> {
             SeriesType.INC_EQ_DESC_EQ -> {
                 val maxValue = values.maxOrNull()
                 val maxValueStartIndex = values.indexOf(maxValue)
-                if (maxValueStartIndex == values.lastIndex) {
+                if (maxValueStartIndex == 0 || maxValueStartIndex == values.lastIndex) {
                     return false
                 }
                 var maxValueEndIndex = maxValueStartIndex
@@ -170,7 +170,7 @@ class SeriesValidator : ConstraintValidator<Series, Any?> {
             SeriesType.DESC_EQ_INC_EQ -> {
                 val minValue = values.minOrNull()
                 val minValueStartIndex = values.indexOf(minValue)
-                if (minValueStartIndex == values.lastIndex) {
+                if (minValueStartIndex == 0 || minValueStartIndex == values.lastIndex) {
                     return false
                 }
                 var minValueEndIndex = minValueStartIndex

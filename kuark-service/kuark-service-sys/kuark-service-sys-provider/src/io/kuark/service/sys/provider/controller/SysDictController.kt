@@ -14,6 +14,7 @@ import io.kuark.service.sys.provider.model.po.SysDictItem
 import io.kuark.service.sys.provider.model.table.SysDicts
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
+import java.util.*
 
 @RestController
 @RequestMapping("/sysDict")
@@ -96,6 +97,11 @@ class SysDictController {
             sysDictItemBiz.insert(sysDictItem)
         }
         return WebResult(id)
+    }
+
+    @GetMapping("/testRemote")
+    fun testRemote(code: String?): WebResult<Boolean> {
+        return WebResult(code == "true")
     }
 
 }

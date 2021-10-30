@@ -11,6 +11,7 @@ import org.hibernate.validator.constraints.*
 import org.hibernate.validator.constraints.time.DurationMax
 import org.hibernate.validator.constraints.time.DurationMin
 import org.junit.jupiter.api.Test
+import java.time.Duration
 import java.time.LocalDate
 import java.time.LocalDateTime
 import javax.money.MonetaryAmount
@@ -98,10 +99,10 @@ internal class TeminalConstraintsCreatorTest {
         val date2: LocalDate?,
 
         @get:DurationMax
-        val time1: LocalDateTime?,
+        val time1: Duration?,
 
         @get:DurationMin
-        val time2: LocalDateTime?,
+        val time2: Duration?,
 
         @get:DecimalMin("50.0", message = "体重必须大于50.0KG")
         @get:DecimalMax("100.0", message = "体重必须小于100.0KG")

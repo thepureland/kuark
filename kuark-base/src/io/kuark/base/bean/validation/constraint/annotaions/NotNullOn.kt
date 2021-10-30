@@ -9,7 +9,7 @@ import kotlin.reflect.KClass
 /**
  * 非null依赖约束注解，属性级别注解。
  *
- * 当前属性的值是否可以为null，取决于定义的表达式。表达式为false，属性值可为null，即非必填选项；表达式为true，属性值必填。
+ * 当前属性的值是否可以为null，取决于定义的表达式。表达式为false，属性值可为null，即非必填项；表达式为true，属性值必填。
  * 注意：此约束注解不可与 @NotNull 一起使用
  * 注意：不可类似地实现如 NotEmptyOn 和 NotBlankOn 约束注解。NotNullOn之所以可行是因为各约束注解在校验时值为null都返回true。
  *

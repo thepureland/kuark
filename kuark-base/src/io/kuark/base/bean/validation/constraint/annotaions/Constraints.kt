@@ -111,7 +111,7 @@ annotation class Constraints(
     val pattern: Pattern = Pattern(regexp = "", message = MESSAGE),
     /** 正数约束，被校验对象类型必须为以下之一或其子类： CharSequence、Double、Integer、Long、Float、Byte、Short、BigDecimal、BigInteger、Number、MonetaryAmount */
     val positive: Positive = Positive(message = MESSAGE),
-    /** 正数约束，被校验对象类型必须为以下之一或其子类： CharSequence、Double、Integer、Long、Float、Byte、Short、BigDecimal、BigInteger、Number、MonetaryAmount */
+    /** 非负数约束，被校验对象类型必须为以下之一或其子类： CharSequence、Double、Integer、Long、Float、Byte、Short、BigDecimal、BigInteger、Number、MonetaryAmount */
     val positiveOrZero: PositiveOrZero = PositiveOrZero(message = MESSAGE),
     /**
      * 尺寸约束, 被校验对象类型必须为以下之一或其子类：
@@ -132,9 +132,9 @@ annotation class Constraints(
     val isbn: ISBN = ISBN(message = MESSAGE),
     /** 字符串长度约束，被校验对象类型必须为CharSequence或其子类 */
     val length: Length = Length(message = MESSAGE),
-    /** 字符串Luhn算法(模10算法)约束，被校验对象类型必须为CharSequence或其子类 */
+    /** 字符串Luhn算法(模10算法)约束，可检测银行卡、信用卡。被校验对象类型必须为CharSequence或其子类 */
     val luhnCheck: LuhnCheck = LuhnCheck(message = MESSAGE),
-    /** 字符串模10算法约束，被校验对象类型必须为CharSequence或其子类 */
+    /** 字符串模10算法约束，可检测银行卡、信用卡。被校验对象类型必须为CharSequence或其子类 */
     val mod10Check: Mod10Check = Mod10Check(message = MESSAGE),
     /** 字符串模11算法约束，被校验对象类型必须为CharSequence或其子类 */
     val mod11Check: Mod11Check = Mod11Check(message = MESSAGE),

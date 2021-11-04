@@ -84,11 +84,12 @@ open class SysDictDao : BaseDao<String, SysDict, SysDicts>() {
             .map { row ->
                 SysDictListRecord(
                     row[SysDicts.module],
+                    row[SysDicts.id]!!,
                     row[SysDicts.dictType]!!,
                     row[SysDicts.dictName],
                     row[SysDictItems.id]!!,
                     row[SysDictItems.itemCode]!!,
-                    row[SysDictItems.parentCode],
+                    row[SysDictItems.parentId],
                     row[SysDictItems.itemName],
                     row[SysDictItems.seqNo],
                     row[SysDictItems.active]!!,

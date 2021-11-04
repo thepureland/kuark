@@ -43,14 +43,12 @@ interface ISysDictBiz : IBaseBiz<String, SysDict> {
     /**
      * 加载直接孩子结点(用于列表)
      *
-     * @param parent 父项标识
-     * @param isModule 是否parent代表模块名
-     * @param activeOnly 是否只加载启用状态的数据, 默认为是
+     * @param searchPayload 查询参数
      * @return Pair(List(SysDictListModel), 总记录数)
      * @author K
      * @since 1.0.0
      */
-    fun loadDirectChildrenForList(parent: String, isModule: Boolean, activeOnly: Boolean = true): Pair<List<SysDictListRecord>, Int>
+    fun loadDirectChildrenForList(searchPayload: SysDictSearchPayload): Pair<List<SysDictListRecord>, Int>
 
     /**
      * 返回指定id的字典信息

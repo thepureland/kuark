@@ -263,7 +263,7 @@ interface IBaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>> {
      * @since 1.0.0
      */
     fun inSearchProperty(
-        property: String, values: List<*>, returnProperty: String, vararg orders: Order
+        property: String, values: Collection<*>, returnProperty: String, vararg orders: Order
     ): List<*>
 
     /**
@@ -278,7 +278,7 @@ interface IBaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>> {
      * @since 1.0.0
      */
     fun inSearchProperties(
-        property: String, values: List<*>, returnProperties: Collection<String>, vararg orders: Order
+        property: String, values: Collection<*>, returnProperties: Collection<String>, vararg orders: Order
     ): List<Map<String, *>>
 
     /**
@@ -291,7 +291,7 @@ interface IBaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>> {
      * @author K
      * @since 1.0.0
      */
-    fun inSearchById(values: List<PK>, vararg orders: Order): List<E>
+    fun inSearchById(values: Collection<PK>, vararg orders: Order): List<E>
 
     /**
      * 主键in查询，只返回指定的单个属性的值
@@ -303,7 +303,7 @@ interface IBaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>> {
      * @author K
      * @since 1.0.0
      */
-    fun inSearchPropertyById(values: List<PK>, returnProperty: String, vararg orders: Order): List<*>
+    fun inSearchPropertyById(values: Collection<PK>, returnProperty: String, vararg orders: Order): List<*>
 
     /**
      * 主键in查询，只返回指定属性的值
@@ -316,7 +316,7 @@ interface IBaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>> {
      * @since 1.0.0
      */
     fun inSearchPropertiesById(
-        values: List<PK>, returnProperties: Collection<String>, vararg orders: Order
+        values: Collection<PK>, returnProperties: Collection<String>, vararg orders: Order
     ): List<Map<String, *>>
 
     //endregion inSearch

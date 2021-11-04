@@ -5,6 +5,9 @@ data class SysDictListRecord(
     /** 模块 */
     val module: String?,
 
+    /** 字典id */
+    val dictId: String,
+
     /** 字典类型 */
     val dictType: String,
 
@@ -17,8 +20,8 @@ data class SysDictListRecord(
     /** 字典项编号 */
     val itemCode: String?,
 
-    /** 父项编号 */
-    val parentCode: String?,
+    /** 父项ID */
+    val parentId: String?,
 
     /** 字典项名称，或其国际化key */
     val itemName: String?,
@@ -29,4 +32,9 @@ data class SysDictListRecord(
     /** 是否启用 */
     val active: Boolean?
 
-)
+) {
+
+    /** 父项编号 */
+    var parentCode: String? = null
+
+}

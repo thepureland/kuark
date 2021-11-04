@@ -8,6 +8,7 @@ import io.kuark.service.sys.common.model.dict.SysDictListRecord
 import io.kuark.service.sys.common.model.dict.SysDictSearchPayload
 import io.kuark.service.sys.common.model.dict.SysDictTreeNode
 import io.kuark.service.sys.provider.dao.SysDictDao
+import io.kuark.service.sys.provider.dao.SysDictItemDao
 import io.kuark.service.sys.provider.ibiz.ISysDictBiz
 import io.kuark.service.sys.provider.model.po.SysDict
 import io.kuark.service.sys.provider.model.table.SysDictItems
@@ -15,6 +16,7 @@ import io.kuark.service.sys.provider.model.table.SysDicts
 import org.ktorm.dsl.asc
 import org.ktorm.dsl.map
 import org.ktorm.dsl.orderBy
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
 /**
@@ -30,9 +32,24 @@ open class SysDictBiz : BaseBiz<String, SysDict, SysDictDao>(), ISysDictBiz {
 
     //region your codes 2
 
+    @Autowired
+    private lateinit var sysDictItemDao: SysDictItemDao
+
     override fun pagingSearch(searchPayload: SysDictSearchPayload): Pair<List<SysDictListRecord>, Int> {
         val dictItems = dao.pagingSearch(searchPayload)
         val totalCount = dao.count(searchPayload)
+
+        // 查询parentCode
+        val parentIds = dictItems.filter { StringKit.isNotBlank(it.parentId) }.map { it.parentId }.toSet()
+        val returnProperties = listOf(SysDictItems.id.name, SysDictItems.itemCode.name)
+        val idAndCodeMaps = sysDictItemDao.inSearchProperties(SysDictItems.id.name, parentIds, returnProperties)
+        dictItems.forEach { dictItem ->
+            val idAndCodeMap = idAndCodeMaps.singleOrNull { it[SysDictItems.id.name] == dictItem.parentId }
+            if (idAndCodeMap != null) {
+                dictItem.parentCode = idAndCodeMap[SysDictItems.itemCode.name] as String
+            }
+        }
+
         return Pair(dictItems, totalCount)
     }
 
@@ -78,14 +95,13 @@ open class SysDictBiz : BaseBiz<String, SysDict, SysDictDao>(), ISysDictBiz {
         }
     }
 
-    override fun loadDirectChildrenForList(parent: String, isModule: Boolean, activeOnly: Boolean): Pair<List<SysDictListRecord>, Int> {
-        val searchPayload = SysDictSearchPayload().apply {
-            this.active = if (activeOnly) true else null
-        }
+    override fun loadDirectChildrenForList(searchPayload: SysDictSearchPayload): Pair<List<SysDictListRecord>, Int> {
+        val activeOnly = searchPayload.active ?: false // 是否只加载启用状态的数据, 默认为是
+        searchPayload.active = if (activeOnly) true else null
+        val isModule = searchPayload.firstLevel ?: false // 是否parent代表模块名
         if (isModule) {
-            searchPayload.module = parent
-        } else {
-            searchPayload.parentId = parent
+            searchPayload.module = searchPayload.parentId
+            searchPayload.parentId = null
         }
         val records = dao.pagingSearch(searchPayload)
         val totalCount = dao.count(searchPayload)
@@ -96,7 +112,7 @@ open class SysDictBiz : BaseBiz<String, SysDict, SysDictDao>(), ISysDictBiz {
         return if (isDict == true) {
             val dict = dao.getById(id) ?: return null
             SysDictListRecord(
-                dict.module, dict.dictType, dict.dictName, null, null, null, null, null, null
+                dict.module, id, dict.dictType, dict.dictName, null, null, null, null, null, null
             )
         } else {
             val searchPayload = SysDictSearchPayload().apply {

@@ -5,6 +5,7 @@ import io.kuark.base.bean.validation.support.Depends
 import io.kuark.base.bean.validation.support.IBeanValidator
 import io.kuark.base.bean.validation.support.RegExps
 import io.kuark.base.bean.validation.support.SeriesType
+import io.kuark.base.data.json.JsonKit
 import io.kuark.base.support.enums.Sex
 import io.kuark.base.support.logic.LogicOperator
 import org.hibernate.validator.constraints.*
@@ -32,7 +33,7 @@ internal class TeminalConstraintsCreatorTest {
     @Test
     fun create() {
         val result = TeminalConstraintsCreator.create(TestRegisterBean::class)
-        println(result)
+        println(JsonKit.toJson(result))
     }
 
     @AtLeast(properties = ["mobile", "email"], message = "必须至少提供一种联系方式")

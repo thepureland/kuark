@@ -397,7 +397,7 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
      * @since 1.0.0
      */
     open fun inSearchProperty(
-        property: String, values: List<*>, returnProperty: String, vararg orders: Order
+        property: String, values: Collection<*>, returnProperty: String, vararg orders: Order
     ): List<*> {
         val results = doInSearchProperties(property, values, listOf(returnProperty), *orders)
         return results.flatMap { it.values }
@@ -415,7 +415,7 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
      * @since 1.0.0
      */
     open fun inSearchProperties(
-        property: String, values: List<*>, returnProperties: Collection<String>, vararg orders: Order
+        property: String, values: Collection<*>, returnProperties: Collection<String>, vararg orders: Order
     ): List<Map<String, *>> {
         return doInSearchProperties(property, values, returnProperties, *orders)
     }
@@ -430,7 +430,7 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
      * @author K
      * @since 1.0.0
      */
-    open fun inSearchById(values: List<PK>, vararg orders: Order): List<E> {
+    open fun inSearchById(values: Collection<PK>, vararg orders: Order): List<E> {
         return inSearch(IDbEntity<PK, E>::id.name, values, *orders)
     }
 
@@ -444,7 +444,7 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
      * @author K
      * @since 1.0.0
      */
-    open fun inSearchPropertyById(values: List<PK>, returnProperty: String, vararg orders: Order): List<*> {
+    open fun inSearchPropertyById(values: Collection<PK>, returnProperty: String, vararg orders: Order): List<*> {
         val results = doInSearchProperties(IDbEntity<PK, E>::id.name, values, listOf(returnProperty), *orders)
         return results.flatMap { it.values }
     }
@@ -460,7 +460,7 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
      * @since 1.0.0
      */
     open fun inSearchPropertiesById(
-        values: List<PK>, returnProperties: Collection<String>, vararg orders: Order
+        values: Collection<PK>, returnProperties: Collection<String>, vararg orders: Order
     ): List<Map<String, *>> {
         return doInSearchProperties(IDbEntity<PK, E>::id.name, values, returnProperties, *orders)
     }
@@ -883,7 +883,7 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
     }
 
     private fun doInSearchProperties(
-        property: String, values: List<*>, returnProperties: Collection<String>, vararg orders: Order
+        property: String, values: Collection<*>, returnProperties: Collection<String>, vararg orders: Order
     ): List<Map<String, *>> {
         val column = ColumnHelper.columnOf(table(), property)[property]!!
         val returnColumnMap = ColumnHelper.columnOf(table(), *returnProperties.toTypedArray())

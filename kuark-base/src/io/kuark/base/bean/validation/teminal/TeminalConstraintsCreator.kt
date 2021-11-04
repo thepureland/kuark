@@ -25,18 +25,21 @@ import kotlin.reflect.full.starProjectedType
  */
 object TeminalConstraintsCreator {
 
-    private val constrainCacheMap = mutableMapOf<String, String>()
+    /**
+     * Map(Bean类名-属性名前缀，Map(属性名， LinkedHashMap(约束名，Array(Map(约束注解的属性名，约束注解的属性值)))))
+     */
+    private val constrainCacheMap = mutableMapOf<String, Map<String, LinkedHashMap<String, Array<Map<String, Any>>>>>()
 
     /**
      * 生成Bean类对应的终端验证规则
      *
      * @param beanClass 待校验的bean类
      * @param propertyPrefix 属性名前缀
-     * @return 验证规则json文本
+     * @return Map(属性名， LinkedHashMap(约束名，Array(Map(约束注解的属性名，约束注解的属性值))))
      * @author K
      * @since 1.0.0
      */
-    fun create(beanClass: KClass<*>, propertyPrefix: String = ""): String {
+    fun create(beanClass: KClass<*>, propertyPrefix: String = ""): Map<String, LinkedHashMap<String, Array<Map<String, Any>>>> {
         val cacheKey = "${beanClass.qualifiedName}-$propertyPrefix"
         var rules = constrainCacheMap[cacheKey]
         if (rules == null || SystemKit.isDebug()) {
@@ -118,9 +121,9 @@ object TeminalConstraintsCreator {
      */
     private fun genRule(
         annotationsMap: Map<String, MutableList<Annotation>>, propertyPrefix: String, beanClass: KClass<*>
-    ): String {
+    ): Map<String, LinkedHashMap<String, Array<Map<String, Any>>>> {
         if (annotationsMap.isEmpty()) {
-            return ""
+            return emptyMap()
         }
         val ruleMap = mutableMapOf<String, LinkedHashMap<String, Array<Map<String, Any>>>>()
         for ((originalProperty, annotations) in annotationsMap) {
@@ -134,7 +137,7 @@ object TeminalConstraintsCreator {
                 ruleMap[property] = map
             }
         }
-        return JsonKit.toJson(ruleMap)
+        return ruleMap
     }
 
     /**

@@ -1,6 +1,8 @@
 package io.kuark.service.sys.provider.controller
 
 import io.kuark.ability.web.common.WebResult
+import io.kuark.ability.web.springmvc.BaseController
+import io.kuark.base.bean.validation.teminal.TeminalConstraintsCreator
 import io.kuark.base.lang.string.StringKit
 import io.kuark.base.support.Consts
 import io.kuark.service.sys.common.model.dict.SysDictAddPayload
@@ -13,13 +15,16 @@ import io.kuark.service.sys.provider.model.po.SysDict
 import io.kuark.service.sys.provider.model.po.SysDictItem
 import io.kuark.service.sys.provider.model.table.SysDicts
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.*
 import java.util.*
+import javax.validation.Valid
+import kotlin.reflect.KClass
 
 @RestController
 @RequestMapping("/sysDict")
 @CrossOrigin
-class SysDictController {
+open class SysDictController : BaseController() {
 
     @Autowired
     private lateinit var sysDictBiz: ISysDictBiz
@@ -39,12 +44,7 @@ class SysDictController {
 
     @PostMapping("/listByTree")
     fun listByTree(@RequestBody searchPayload: SysDictSearchPayload): WebResult<Pair<List<SysDictListRecord>, Int>> {
-        val activeOnly = searchPayload.active ?: false
-        return WebResult(
-            sysDictBiz.loadDirectChildrenForList(
-                searchPayload.parentId!!, searchPayload.firstLevel ?: false, activeOnly
-            )
-        )
+        return WebResult(sysDictBiz.loadDirectChildrenForList(searchPayload))
     }
 
     @PostMapping("/list")
@@ -77,7 +77,8 @@ class SysDictController {
     }
 
     @PostMapping("/add")
-    fun add(addPayload: SysDictAddPayload): WebResult<String> {
+    fun add(@RequestBody @Valid addPayload: SysDictAddPayload, bindingResult: BindingResult): WebResult<String> {
+        if (bindingResult.hasErrors()) error("数据校验失败！")
         val id = if (StringKit.isBlank(addPayload.parentId)) { // 添加SysDict
             val sysDict = SysDict().apply {
                 module = addPayload.module
@@ -88,6 +89,7 @@ class SysDictController {
             sysDictBiz.insert(sysDict)
         } else { // 添加SysDictItem
             val sysDictItem = SysDictItem().apply {
+                dictId = addPayload.dictId!!
                 parentId = addPayload.parentId
                 itemCode = addPayload.code!!
                 itemName = addPayload.name!!
@@ -99,9 +101,6 @@ class SysDictController {
         return WebResult(id)
     }
 
-    @GetMapping("/testRemote")
-    fun testRemote(code: String?): WebResult<Boolean> {
-        return WebResult(code == "true")
-    }
+    override fun getFormModelClass(): KClass<SysDictAddPayload> = SysDictAddPayload::class
 
 }

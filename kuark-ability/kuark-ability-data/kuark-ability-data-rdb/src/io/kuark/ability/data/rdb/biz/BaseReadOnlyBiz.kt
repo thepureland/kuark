@@ -108,21 +108,21 @@ open class BaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>, DAO : BaseReadOnlyDao
         dao.inSearch(property, values, *orders)
 
     override fun inSearchProperty(
-        property: String, values: List<*>, returnProperty: String, vararg orders: Order
+        property: String, values: Collection<*>, returnProperty: String, vararg orders: Order
     ): List<*> = dao.inSearchProperty(property, values, returnProperty, *orders)
 
     override fun inSearchProperties(
-        property: String, values: List<*>, returnProperties: Collection<String>, vararg orders: Order
+        property: String, values: Collection<*>, returnProperties: Collection<String>, vararg orders: Order
     ): List<Map<String, *>> = dao.inSearchProperties(property, values, returnProperties, *orders)
 
-    override fun inSearchById(values: List<PK>, vararg orders: Order): List<E> =
+    override fun inSearchById(values: Collection<PK>, vararg orders: Order): List<E> =
         dao.inSearchById(values, *orders)
 
-    override fun inSearchPropertyById(values: List<PK>, returnProperty: String, vararg orders: Order): List<*> =
+    override fun inSearchPropertyById(values: Collection<PK>, returnProperty: String, vararg orders: Order): List<*> =
         dao.inSearchPropertyById(values, returnProperty, *orders)
 
     override fun inSearchPropertiesById(
-        values: List<PK>, returnProperties: Collection<String>, vararg orders: Order
+        values: Collection<PK>, returnProperties: Collection<String>, vararg orders: Order
     ): List<Map<String, *>> = dao.inSearchPropertiesById(values, returnProperties, *orders)
 
     override fun search(criteria: Criteria, vararg orders: Order): List<E> =

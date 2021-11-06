@@ -2,22 +2,22 @@ package io.kuark.service.sys.provider.controller
 
 import io.kuark.ability.web.common.WebResult
 import io.kuark.ability.web.springmvc.BaseController
-import io.kuark.base.bean.validation.teminal.TeminalConstraintsCreator
 import io.kuark.base.lang.string.StringKit
 import io.kuark.base.support.Consts
-import io.kuark.service.sys.common.model.dict.SysDictAddPayload
-import io.kuark.service.sys.common.model.dict.SysDictListRecord
+import io.kuark.base.support.payload.UpdatePayload
+import io.kuark.service.sys.common.model.dict.SysDictPayload
+import io.kuark.service.sys.common.model.dict.SysDictRecord
 import io.kuark.service.sys.common.model.dict.SysDictSearchPayload
 import io.kuark.service.sys.common.model.dict.SysDictTreeNode
 import io.kuark.service.sys.provider.ibiz.ISysDictBiz
 import io.kuark.service.sys.provider.ibiz.ISysDictItemBiz
 import io.kuark.service.sys.provider.model.po.SysDict
 import io.kuark.service.sys.provider.model.po.SysDictItem
+import io.kuark.service.sys.provider.model.table.SysDictItems
 import io.kuark.service.sys.provider.model.table.SysDicts
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.*
-import java.util.*
 import javax.validation.Valid
 import kotlin.reflect.KClass
 
@@ -43,12 +43,12 @@ open class SysDictController : BaseController() {
     }
 
     @PostMapping("/listByTree")
-    fun listByTree(@RequestBody searchPayload: SysDictSearchPayload): WebResult<Pair<List<SysDictListRecord>, Int>> {
+    fun listByTree(@RequestBody searchPayload: SysDictSearchPayload): WebResult<Pair<List<SysDictRecord>, Int>> {
         return WebResult(sysDictBiz.loadDirectChildrenForList(searchPayload))
     }
 
     @PostMapping("/list")
-    fun list(@RequestBody searchPayload: SysDictSearchPayload): WebResult<Pair<List<SysDictListRecord>, Int>> {
+    fun list(@RequestBody searchPayload: SysDictSearchPayload): WebResult<Pair<List<SysDictRecord>, Int>> {
         return WebResult(sysDictBiz.pagingSearch(searchPayload))
     }
 
@@ -67,8 +67,8 @@ open class SysDictController : BaseController() {
     }
 
     @GetMapping("/get")
-    fun get(id: String, isDict: Boolean?): WebResult<SysDictListRecord> {
-        val dict = sysDictBiz.get(id, isDict)
+    fun get(id: String, isDict: Boolean?, fetchAllParentIds: Boolean = false): WebResult<SysDictRecord> {
+        val dict = sysDictBiz.get(id, isDict, fetchAllParentIds)
         return if (dict == null) {
             WebResult("找不到对应的字典/字典项！")
         } else {
@@ -76,31 +76,12 @@ open class SysDictController : BaseController() {
         }
     }
 
-    @PostMapping("/add")
-    fun add(@RequestBody @Valid addPayload: SysDictAddPayload, bindingResult: BindingResult): WebResult<String> {
+    @PostMapping("/saveOrUpdate")
+    fun saveOrUpdate(@RequestBody @Valid payload: SysDictPayload, bindingResult: BindingResult): WebResult<String> {
         if (bindingResult.hasErrors()) error("数据校验失败！")
-        val id = if (StringKit.isBlank(addPayload.parentId)) { // 添加SysDict
-            val sysDict = SysDict().apply {
-                module = addPayload.module
-                dictType = addPayload.code!!
-                dictName = addPayload.name
-                remark = addPayload.remark
-            }
-            sysDictBiz.insert(sysDict)
-        } else { // 添加SysDictItem
-            val sysDictItem = SysDictItem().apply {
-                dictId = addPayload.dictId!!
-                parentId = addPayload.parentId
-                itemCode = addPayload.code!!
-                itemName = addPayload.name!!
-                seqNo = addPayload.seqNo
-                remark = addPayload.remark
-            }
-            sysDictItemBiz.insert(sysDictItem)
-        }
-        return WebResult(id)
+        return WebResult(sysDictBiz.saveOrUpdate(payload))
     }
 
-    override fun getFormModelClass(): KClass<SysDictAddPayload> = SysDictAddPayload::class
+    override fun getFormModelClass(): KClass<SysDictPayload> = SysDictPayload::class
 
 }

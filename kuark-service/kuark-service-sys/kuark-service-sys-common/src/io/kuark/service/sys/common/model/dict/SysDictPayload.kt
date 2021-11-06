@@ -9,7 +9,10 @@ import javax.validation.constraints.*
     logic = AssertLogic.IS_NOT_BLANK,
     message = "parentId、module两个至少一个不能为空"
 )
-class SysDictAddPayload {
+class SysDictPayload {
+
+    /** 主键 */
+    var id: String? = null
 
     /** 字典id */
     var dictId: String? = null

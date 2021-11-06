@@ -1,6 +1,6 @@
 package io.kuark.service.sys.common.model.dict
 
-data class SysDictListRecord(
+data class SysDictRecord(
 
     /** 模块 */
     val module: String?,
@@ -30,11 +30,17 @@ data class SysDictListRecord(
     val seqNo: Int?,
 
     /** 是否启用 */
-    val active: Boolean?
+    val active: Boolean?,
+
+    /** 备注 */
+    val remark: String?
 
 ) {
 
     /** 父项编号 */
     var parentCode: String? = null
+
+    /** 所有父项ID */
+    var parentIds: List<String>? = null
 
 }

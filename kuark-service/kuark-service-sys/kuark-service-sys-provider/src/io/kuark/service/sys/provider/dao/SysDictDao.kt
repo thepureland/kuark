@@ -7,7 +7,7 @@ import io.kuark.base.lang.collections.CollectionKit
 import io.kuark.base.lang.string.StringKit
 import io.kuark.base.query.enums.Operator
 import io.kuark.base.support.Consts
-import io.kuark.service.sys.common.model.dict.SysDictListRecord
+import io.kuark.service.sys.common.model.dict.SysDictRecord
 import io.kuark.service.sys.common.model.dict.SysDictSearchPayload
 import io.kuark.service.sys.provider.model.po.SysDict
 import io.kuark.service.sys.provider.model.table.SysDictItems
@@ -50,7 +50,7 @@ open class SysDictDao : BaseDao<String, SysDict, SysDicts>() {
      * @author K
      * @since 1.0.0
      */
-    fun pagingSearch(searchPayload: SysDictSearchPayload): List<SysDictListRecord> {
+    fun pagingSearch(searchPayload: SysDictSearchPayload): List<SysDictRecord> {
         var query = leftJoinSearch(searchPayload)
         val orders = searchPayload.orders
         if (CollectionKit.isEmpty(orders)) {
@@ -82,7 +82,7 @@ open class SysDictDao : BaseDao<String, SysDict, SysDicts>() {
         val pageSize = searchPayload.pageSize ?: 10
         return query.limit((pageNo - 1) * pageSize, pageSize)
             .map { row ->
-                SysDictListRecord(
+                SysDictRecord(
                     row[SysDicts.module],
                     row[SysDicts.id]!!,
                     row[SysDicts.dictType]!!,
@@ -93,6 +93,7 @@ open class SysDictDao : BaseDao<String, SysDict, SysDicts>() {
                     row[SysDictItems.itemName],
                     row[SysDictItems.seqNo],
                     row[SysDictItems.active]!!,
+                    row[SysDictItems.remark]
                 )
             }
     }

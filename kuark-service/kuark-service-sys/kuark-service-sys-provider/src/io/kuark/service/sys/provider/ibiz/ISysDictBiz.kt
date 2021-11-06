@@ -1,7 +1,8 @@
 package io.kuark.service.sys.provider.ibiz
 
 import io.kuark.ability.data.rdb.biz.IBaseBiz
-import io.kuark.service.sys.common.model.dict.SysDictListRecord
+import io.kuark.service.sys.common.model.dict.SysDictPayload
+import io.kuark.service.sys.common.model.dict.SysDictRecord
 import io.kuark.service.sys.common.model.dict.SysDictSearchPayload
 import io.kuark.service.sys.common.model.dict.SysDictTreeNode
 import io.kuark.service.sys.provider.model.po.SysDict
@@ -26,7 +27,7 @@ interface ISysDictBiz : IBaseBiz<String, SysDict> {
      * @author K
      * @since 1.0.0
      */
-    fun pagingSearch(searchPayload: SysDictSearchPayload): Pair<List<SysDictListRecord>, Int>
+    fun pagingSearch(searchPayload: SysDictSearchPayload): Pair<List<SysDictRecord>, Int>
 
     /**
      * 加载直接孩子结点(用于树)
@@ -48,17 +49,39 @@ interface ISysDictBiz : IBaseBiz<String, SysDict> {
      * @author K
      * @since 1.0.0
      */
-    fun loadDirectChildrenForList(searchPayload: SysDictSearchPayload): Pair<List<SysDictListRecord>, Int>
+    fun loadDirectChildrenForList(searchPayload: SysDictSearchPayload): Pair<List<SysDictRecord>, Int>
 
     /**
      * 返回指定id的字典信息
      *
      * @param id 字典或字典项id，由isDict参数决定
      * @param isDict true: 字典id，false：字典项id
+     * @param fetchAllParentIds 是否要获取所有父项id，默认为false
+     * @return SysDictRecord，找不到返回null
      * @author K
      * @since 1.0.0
      */
-    fun get(id: String, isDict: Boolean?): SysDictListRecord?
+    fun get(id: String, isDict: Boolean?, fetchAllParentIds: Boolean = false): SysDictRecord?
+
+    /**
+     * 保存或更新字典或字典项
+     *
+     * @param payload 数据载体
+     * @return 主键
+     * @author K
+     * @since 1.0.0
+     */
+    fun saveOrUpdate(payload: SysDictPayload): String
+
+    /**
+     * 查询指定字典项的所有父项id
+     *
+     * @param itemId 字典项id
+     * @return List(父项id)
+     * @author K
+     * @since 1.0.0
+     */
+    fun fetchAllParentIds(itemId: String): MutableList<String>
 
     //endregion your codes 2
 

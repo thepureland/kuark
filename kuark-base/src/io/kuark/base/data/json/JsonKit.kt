@@ -130,11 +130,11 @@ object JsonKit {
      * @author K
      * @since 1.0.0
      */
-    fun <T> updateBean(jsonString: String, obj: T, mapper: ObjectMapper? = null): T? {
+    fun <T: Any> updateBean(jsonString: String, obj: T, mapper: ObjectMapper? = null): T? {
         try {
             return (mapper ?: createDefaultMapper()).readerForUpdating(obj).readValue(jsonString)
         } catch (e: Exception) {
-            LOG.error(e, "将json串:{0}更新到对象:{1}时出错.", jsonString, obj)
+            LOG.error(e, "将json串${jsonString}更新到对象:${obj::class}时出错.")
         }
         return null
     }

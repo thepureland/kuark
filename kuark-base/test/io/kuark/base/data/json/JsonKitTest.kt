@@ -74,7 +74,7 @@ internal class JsonKitTest {
     @Test
     fun testFromJson() {
         val jsonStr =
-            """[{"selfUniqueIdentifier":null,"parentUniqueIdentifier":null,"name":"Mike","sex":"male","age":25,"weight":0.0,"birthday":60528873600000,"address":{"province":"hunan","city":"changsha","street":"wuyilu","zipcode":"410000"},"goods":["sporting","singing","dancing"],"contact":{"student":"Tom","teacher":"Lucy"},"id":null,"pId":null}]"""
+            """[{"id":"id","parentId":null,"children":[],"name":"Mike","sex":"male","age":25,"weight":0.0,"birthday":60528873600000,"address":{"province":"hunan","city":"changsha","street":"wuyilu","zipcode":"410000"},"goods":["sporting","singing","dancing"],"contact":{"student":"Tom","teacher":"Lucy"},"active":null}]"""
         val persons = JsonKit.fromJson(jsonStr, object : TypeReference<List<Person>>() {})
         assertEquals(1, persons!!.size)
     }
@@ -82,14 +82,14 @@ internal class JsonKitTest {
     @Test
     fun testToJson() {
         val jsonStr =
-            """[{"selfUniqueIdentifier":null,"parentUniqueIdentifier":null,"name":"Mike","sex":"male","age":25,"weight":0.0,"birthday":60528873600000,"address":{"province":"hunan","city":"changsha","street":"wuyilu","zipcode":"410000"},"goods":["sporting","singing","dancing"],"contact":{"student":"Tom","teacher":"Lucy"},"id":null,"pId":null}]"""
+            """[{"id":"id","parentId":null,"children":[],"name":"Mike","sex":"male","age":25,"weight":0.0,"birthday":60528873600000,"address":{"province":"hunan","city":"changsha","street":"wuyilu","zipcode":"410000"},"goods":["sporting","singing","dancing"],"contact":{"student":"Tom","teacher":"Lucy"},"active":null}]"""
         assertEquals(jsonStr.length, JsonKit.toJson(listOf(person)).length)
     }
 
     @Test
     fun updateBean() {
         val jsonStr =
-            """{"selfUniqueIdentifier":null,"parentUniqueIdentifier":null,"name":"Mike","sex":"male","age":25,"weight":0.0,"birthday":60528873600000,"address":{"province":"hunan","city":"changsha","street":"wuyilu","zipcode":"410000"},"goods":["sporting","singing","dancing"],"contact":{"student":"Tom","teacher":"Lucy"},"id":null,"pId":null}"""
+            """{"id":null,"parentId":null,"name":"Mike","sex":"male","age":25,"weight":0.0,"birthday":60528873600000,"address":{"province":"hunan","city":"changsha","street":"wuyilu","zipcode":"410000"},"goods":["sporting","singing","dancing"],"contact":{"student":"Tom","teacher":"Lucy"}}"""
         val person = Person().apply {
             name = "unknown"
             address = Address().apply {
@@ -104,7 +104,7 @@ internal class JsonKitTest {
     @Test
     fun toJsonP() {
         val jsonP =
-            """func({"selfUniqueIdentifier":null,"parentUniqueIdentifier":null,"name":"Mike","sex":"male","age":25,"weight":0.0,"birthday":60528873600000,"address":{"province":"hunan","city":"changsha","street":"wuyilu","zipcode":"410000"},"goods":["sporting","singing","dancing"],"contact":{"student":"Tom","teacher":"Lucy"},"id":null,"pId":null})"""
+            """func({"id":"id","parentId":null,"children":[],"name":"Mike","sex":"male","age":25,"weight":0.0,"birthday":60528873600000,"address":{"province":"hunan","city":"changsha","street":"wuyilu","zipcode":"410000"},"goods":["sporting","singing","dancing"],"contact":{"student":"Tom","teacher":"Lucy"},"active":null})"""
         assertEquals(jsonP.length, JsonKit.toJsonP("func", person).length)
     }
 

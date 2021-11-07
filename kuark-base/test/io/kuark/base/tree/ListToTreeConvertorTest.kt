@@ -37,6 +37,7 @@ internal class ListToTreeConvertorTest {
             private set
         var name: String? = null
             private set
+        var childern = mutableListOf<ITreeNode<String>>()
 
         constructor(id: String, parentId: String?, name: String?) : super() {
             this.id = id
@@ -51,6 +52,10 @@ internal class ListToTreeConvertorTest {
         override fun _getId(): String = id
 
         override fun _getParentId(): String? = parentId
+
+        override fun _getChildren(): MutableList<ITreeNode<String>> {
+            return childern
+        }
 
     }
 

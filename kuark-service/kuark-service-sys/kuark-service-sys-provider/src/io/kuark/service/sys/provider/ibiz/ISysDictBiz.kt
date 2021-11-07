@@ -74,6 +74,17 @@ interface ISysDictBiz : IBaseBiz<String, SysDict> {
     fun saveOrUpdate(payload: SysDictPayload): String
 
     /**
+     * 删除字典或字典项
+     *
+     * @param id 主键
+     * @param isDict true: 字典id，false：字典项id
+     * @return 是否删除成功
+     * @author K
+     * @since 1.0.0
+     */
+    fun delete(id: String, isDict: Boolean): Boolean
+
+    /**
      * 查询指定字典项的所有父项id
      *
      * @param itemId 字典项id

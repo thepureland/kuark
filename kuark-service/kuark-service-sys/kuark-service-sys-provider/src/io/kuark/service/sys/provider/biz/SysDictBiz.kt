@@ -16,10 +16,12 @@ import io.kuark.service.sys.provider.model.po.SysDictItem
 import io.kuark.service.sys.provider.model.table.SysDictItems
 import io.kuark.service.sys.provider.model.table.SysDicts
 import org.ktorm.dsl.asc
+import org.ktorm.dsl.eq
 import org.ktorm.dsl.map
 import org.ktorm.dsl.orderBy
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 /**
  * 字典主表业务
@@ -137,6 +139,7 @@ open class SysDictBiz : BaseBiz<String, SysDict, SysDictDao>(), ISysDictBiz {
         }
     }
 
+    @Transactional
     override fun saveOrUpdate(payload: SysDictPayload): String {
         return if (StringKit.isBlank(payload.id)) { // 新增
             if (StringKit.isBlank(payload.parentId)) { // 添加SysDict
@@ -205,12 +208,39 @@ open class SysDictBiz : BaseBiz<String, SysDict, SysDictDao>(), ISysDictBiz {
         return results
     }
 
+    @Transactional
+    override fun delete(id: String, isDict: Boolean): Boolean {
+        return if (isDict) {
+            sysDictItemDao.batchDeleteWhen { column, _ ->
+                if (column.name == SysDictItems.dictId.name) {
+                    column.eq(id)
+                } else null
+            }
+            dao.deleteById(id)
+        } else {
+            val childItemIds = mutableListOf<String>()
+            recursionFindAllChildId(id, childItemIds)
+            if (childItemIds.isNotEmpty()) {
+                sysDictItemDao.batchDelete(childItemIds)
+            }
+            sysDictItemDao.deleteById(id)
+        }
+    }
+
     private fun recursionFindAllParentId(itemId: String, results: MutableList<String>) {
         val list = sysDictItemDao.oneSearchProperty(SysDictItems.id.name, itemId, SysDictItems.parentId.name)
         if (list.isNotEmpty()) {
             val parentId = list.first() as String
             results.add(parentId)
             recursionFindAllParentId(parentId, results)
+        }
+    }
+
+    private fun recursionFindAllChildId(itemId: String, results: MutableList<String>) {
+        val itemIds = sysDictItemDao.oneSearchProperty(SysDictItems.parentId.name, itemId, SysDictItems.id.name)
+        itemIds.forEach { id ->
+            results.add(id as String)
+            recursionFindAllChildId(id, results)
         }
     }
 

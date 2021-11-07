@@ -533,6 +533,7 @@ open class BaseDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadOnlyD
      * @since 1.0.0
      */
     open fun batchDelete(ids: Collection<PK>): Int {
+        require(!ids.isEmpty()) { "批量删除实体对象时，主键集合不能为空！" }
         val criteria = Criteria.add(IDbEntity<PK, E>::id.name, Operator.IN, ids.toList())
         return entitySequence().removeIf { CriteriaConverter.convert(criteria, table()) }
     }

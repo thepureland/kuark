@@ -82,6 +82,11 @@ open class SysDictController : BaseController() {
         return WebResult(sysDictBiz.saveOrUpdate(payload))
     }
 
+    @DeleteMapping("/delete")
+    fun delete(id: String, isDict: Boolean): WebResult<Boolean> {
+        return WebResult(sysDictBiz.delete(id, isDict))
+    }
+
     override fun getFormModelClass(): KClass<SysDictPayload> = SysDictPayload::class
 
 }

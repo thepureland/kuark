@@ -35,7 +35,7 @@ class FlowFormController {
      */
     @RequestMapping(value = ["/get"], method = [RequestMethod.GET])
     fun get(id: String): WebResult<FlowForm> {
-        val flowForm = flowFormBiz.getById(id)
+        val flowForm = flowFormBiz.get(id)
         return if (flowForm == null) {
             WebResult("找不到流程表单！id：$id")
         } else {

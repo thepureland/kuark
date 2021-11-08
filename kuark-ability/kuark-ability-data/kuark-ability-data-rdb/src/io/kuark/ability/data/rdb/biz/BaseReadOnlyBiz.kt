@@ -9,6 +9,7 @@ import io.kuark.base.support.payload.SearchPayload
 import org.ktorm.schema.Column
 import org.ktorm.schema.ColumnDeclaring
 import org.springframework.beans.factory.annotation.Autowired
+import kotlin.reflect.KClass
 
 /**
  * 基于关系型数据库表的基础的只读业务操作
@@ -23,7 +24,9 @@ open class BaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>, DAO : BaseReadOnlyDao
     @Autowired
     protected lateinit var dao: DAO
 
-    override fun getById(id: PK): E? = dao.getById(id)
+    override fun get(id: PK): E? = dao.get(id)
+
+    override fun <R : Any> get(id: PK, returnType: KClass<R>): R? = dao.get(id, returnType)
 
     override fun getByIds(vararg ids: PK, countOfEachBatch: Int): List<E> =
         dao.getByIds(*ids, countOfEachBatch = countOfEachBatch)

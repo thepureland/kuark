@@ -44,7 +44,7 @@ open class BaseBiz<PK : Any, E : IDbEntity<PK, E>, DAO : BaseDao<PK, E, *>>
     ): Int = dao.batchInsertExclude(entities, countOfEachBatch, *excludePropertyNames)
 
     @Transactional
-    override fun update(entity: E): Boolean = dao.update(entity)
+    override fun update(any: Any): Boolean = dao.update(any)
 
     @Transactional
     override fun updateWhen(entity: E, criteria: Criteria): Boolean = dao.updateWhen(entity, criteria)

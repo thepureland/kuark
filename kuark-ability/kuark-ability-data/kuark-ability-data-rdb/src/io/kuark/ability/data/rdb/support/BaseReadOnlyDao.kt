@@ -115,13 +115,35 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
      * 查询指定主键值的实体
      *
      * @param id 主键值，类型必须为以下之一：String、Int、Long
-     * @return 实体
-     * @throws NoSuchElementException 不存在指定主键对应的实体时
+     * @return 实体，找不到返回null
      * @author K
      * @since 1.0.0
      */
-    open fun getById(id: PK): E? {
+    open fun get(id: PK): E? {
         return entitySequence().firstOrNull { getPkColumn() eq id }
+    }
+
+    /**
+     * 查询指定主键值的实体，可以指定返回的对象类型
+     *
+     * @param id 主键值，类型必须为以下之一：String、Int、Long
+     * @return 结果对象，找不到返回null
+     * @author K
+     * @since 1.0.0
+     */
+    open fun <R: Any> get(id: PK, returnType: KClass<R>): R? {
+        val query = querySource()
+            .select()
+            .where { getPkColumn().eq(id) }
+        val columnMap = getColumns(returnType)
+        query.forEach { row ->
+            val bean = returnType.newInstance()
+            columnMap.forEach { (property, column) ->
+                BeanKit.setProperty(bean, property, row[column])
+            }
+            return bean
+        }
+        return null
     }
 
     /**
@@ -784,7 +806,7 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
         val expressions = mutableListOf<ColumnDeclaring<Boolean>>()
         columns.forEach { (property, column) ->
             val value = propertyMap[property]
-            val expression = if (value == null) {
+            val expression = if (value == null || value == "") {
                 if (ignoreNull) {
                     null
                 } else {
@@ -976,6 +998,13 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
 
     protected fun getWherePropertyMap(searchPayload: SearchPayload, entityProperties: List<String>): Map<String, *> {
         return BeanKit.extract(searchPayload).filter { entityProperties.contains(it.key) }
+    }
+
+    protected fun getColumns(returnType: KClass<*>): Map<String, Column<Any>> {
+        val entityProperties = getEntityProperties()
+        val properties = returnType.memberProperties.map { it.name }
+        val returnProps = entityProperties.intersect(properties) // 取交集,保证要查询的列一定存在
+        return ColumnHelper.columnOf(table(), *returnProps.toTypedArray())
     }
 
 }

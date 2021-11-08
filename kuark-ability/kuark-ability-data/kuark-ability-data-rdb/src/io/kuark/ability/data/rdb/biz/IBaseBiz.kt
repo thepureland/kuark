@@ -97,14 +97,14 @@ interface IBaseBiz<PK : Any, E : IDbEntity<PK, E>> : IBaseReadOnlyBiz<PK, E> {
     //region Update
 
     /**
-     * 更新指定实体对应的记录
+     * 更新指定实体或更新载体对应的记录
      *
-     * @param entity 实体
+     * @param any 实体对象或更新载体（如果是实体对象，只会对有更改的属性作更新；如果是更新载体，将对载体的所有属性作更新）
      * @return 是否更新成功
      * @author K
      * @since 1.0.0
      */
-    fun update(entity: E): Boolean
+    fun update(any: Any): Boolean
 
     /**
      * 有条件的更新实体对象（仅当满足给定的附加查询条件时）

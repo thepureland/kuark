@@ -32,13 +32,6 @@ open class SysDictItemBiz : BaseBiz<String, SysDictItem, SysDictItemDao>(), ISys
 
     //region yur codes 2
 
-    /**
-     * 根据模块和字典类型，取得对应字典项(仅包括处于启用状态的)，并将结果缓存，查不到不缓存
-     *
-     * @param module 如果没有请传入空串，此时请保证type的惟一性，否则结果将不确定是哪条记录
-     * @param type 字典类型
-     * @return 字典项列表。如果module为空串，且存在多个同名type，将任意返回一个type对应的字典项。查无结果返回空列表。
-     */
     @Cacheable(key = "#module.concat(':').concat(#type)", unless = "#result.isEmpty()")
     override fun getItemsByModuleAndType(module: String, type: String): List<SysDictItem> {
         // 查出对应的dict id
@@ -87,7 +80,7 @@ open class SysDictItemBiz : BaseBiz<String, SysDictItem, SysDictItemDao>(), ISys
     }
 
     @Transactional
-    override fun cascadeDelete(id: String): Boolean {
+    override fun cascadeDeleteChildren(id: String): Boolean {
         val childItemIds = mutableListOf<String>()
         recursionFindAllChildId(id, childItemIds)
         if (childItemIds.isNotEmpty()) {

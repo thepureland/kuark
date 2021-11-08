@@ -80,7 +80,7 @@ internal open class BaseDaoTest : SpringTest() {
         }
         val id = testTableDao.insertOnly(entity, TestTable::id.name, TestTable::name.name)
         assertEquals(0, id)
-        val result = testTableDao.getById(0)!!
+        val result = testTableDao.get(0)!!
         assert(result.weight == null)
         assert(result.height == null)
     }
@@ -96,7 +96,7 @@ internal open class BaseDaoTest : SpringTest() {
         }
         val id = testTableDao.insertExclude(entity, TestTable::weight.name, TestTable::height.name)
         assertEquals(0, id)
-        val result = testTableDao.getById(0)!!
+        val result = testTableDao.get(0)!!
         assert(result.weight == null)
         assert(result.height == null)
     }
@@ -171,7 +171,7 @@ internal open class BaseDaoTest : SpringTest() {
         val count = testTableDao.batchInsertOnly(entities, 4, TestTable::id.name, TestTable::name.name)
         assertEquals(3, count)
         assertEquals(14, testTableDao.allSearch().size)
-        val result = testTableDao.getById(21)!!
+        val result = testTableDao.get(21)!!
         assert(result.weight == null)
         assert(result.height == null)
     }
@@ -202,7 +202,7 @@ internal open class BaseDaoTest : SpringTest() {
         val count = testTableDao.batchInsertExclude(entities, 4, TestTable::weight.name, TestTable::height.name)
         assertEquals(3, count)
         assertEquals(14, testTableDao.allSearch().size)
-        val result = testTableDao.getById(21)!!
+        val result = testTableDao.get(21)!!
         assert(result.weight == null)
         assert(result.height == null)
     }
@@ -213,18 +213,18 @@ internal open class BaseDaoTest : SpringTest() {
     @Test
     @Transactional
     open fun update() {
-        var entity = testTableDao.getById(-1)!!
+        var entity = testTableDao.get(-1)!!
         entity.name = "name"
         val success = testTableDao.update(entity)
         assert(success)
-        entity = testTableDao.getById(-1)!!
+        entity = testTableDao.get(-1)!!
         assertEquals("name", entity.name)
     }
 
     @Test
     @Transactional
     open fun updateWhen() {
-        var entity = testTableDao.getById(-1)!!
+        var entity = testTableDao.get(-1)!!
         entity.name = "name"
 
         // Criteria为空
@@ -233,14 +233,14 @@ internal open class BaseDaoTest : SpringTest() {
         // 满足Criteria条件
         var criteria = Criteria.add(TestTable::name.name, Operator.EQ, "name1")
         assert(testTableDao.updateWhen(entity, criteria))
-        entity = testTableDao.getById(-1)!!
+        entity = testTableDao.get(-1)!!
         assertEquals("name", entity.name)
 
         // 不满足Criteria条件
         entity.name = "name1"
         criteria = Criteria.add(TestTable::name.name, Operator.EQ, "non-exists")
         assert(!testTableDao.updateWhen(entity, criteria))
-        entity = testTableDao.getById(-1)!!
+        entity = testTableDao.get(-1)!!
         assertEquals("name", entity.name)
     }
 
@@ -249,8 +249,8 @@ internal open class BaseDaoTest : SpringTest() {
     open fun updateProperties() {
         val properties = mapOf(TestTable::name.name to -2, TestTable::name.name to "new-name") // 主键应该要不会被更新
         assert(testTableDao.updateProperties(-1, properties))
-        assertEquals("new-name", testTableDao.getById(-1)!!.name)
-        assertEquals("name2", testTableDao.getById(-2)!!.name)
+        assertEquals("new-name", testTableDao.get(-1)!!.name)
+        assertEquals("name2", testTableDao.get(-2)!!.name)
     }
 
     @Test
@@ -263,37 +263,37 @@ internal open class BaseDaoTest : SpringTest() {
         // 满足Criteria条件
         var criteria = Criteria.add(TestTable::name.name, Operator.EQ, "name1")
         assert(testTableDao.updatePropertiesWhen(-1, properties, criteria))
-        var entity = testTableDao.getById(-1)!!
+        var entity = testTableDao.get(-1)!!
         assertEquals("name", entity.name)
 
         // 不满足Criteria条件
         criteria = Criteria.add(TestTable::name.name, Operator.EQ, "non-exists")
         assert(!testTableDao.updatePropertiesWhen(-1, mapOf(TestTable::name.name to "name1"), criteria))
-        entity = testTableDao.getById(-1)!!
+        entity = testTableDao.get(-1)!!
         assertEquals("name", entity.name)
     }
 
     @Test
     @Transactional
     open fun updateOnly() {
-        val entity = testTableDao.getById(-1)!!
+        val entity = testTableDao.get(-1)!!
         entity.name = "new-name"
         assert(testTableDao.updateOnly(entity, TestTable::name.name))
-        assertEquals("new-name", testTableDao.getById(-1)!!.name)
-        assertEquals("name2", testTableDao.getById(-2)!!.name)
+        assertEquals("new-name", testTableDao.get(-1)!!.name)
+        assertEquals("name2", testTableDao.get(-2)!!.name)
     }
 
     @Test
     @Transactional
     open fun updateOnlyWhen() {
-        var entity = testTableDao.getById(-1)!!
+        var entity = testTableDao.get(-1)!!
         entity.name = "name"
         entity.weight = null
 
         // 满足Criteria条件
         var criteria = Criteria.add(TestTable::name.name, Operator.EQ, "name1")
         assert(testTableDao.updateOnlyWhen(entity, criteria, TestTable::name.name))
-        entity = testTableDao.getById(-1)!!
+        entity = testTableDao.get(-1)!!
         assertEquals("name", entity.name)
         assertEquals(56.5, entity.weight)
 
@@ -301,18 +301,18 @@ internal open class BaseDaoTest : SpringTest() {
         entity.name = "name1"
         criteria = Criteria.add(TestTable::name.name, Operator.EQ, "non-exists")
         assert(!testTableDao.updateOnlyWhen(entity, criteria, TestTable::name.name))
-        entity = testTableDao.getById(-1)!!
+        entity = testTableDao.get(-1)!!
         assertEquals("name", entity.name)
     }
 
     @Test
     @Transactional
     open fun updateExcludeProperties() {
-        var entity = testTableDao.getById(-1)!!
+        var entity = testTableDao.get(-1)!!
         entity.name = "name"
         entity.weight = null
         assert(testTableDao.updateExcludeProperties(entity, TestTable::weight.name))
-        entity = testTableDao.getById(-1)!!
+        entity = testTableDao.get(-1)!!
         assertEquals("name", entity.name)
         assertEquals(56.5, entity.weight)
     }
@@ -320,14 +320,14 @@ internal open class BaseDaoTest : SpringTest() {
     @Test
     @Transactional
     open fun updateExcludePropertiesWhen() {
-        var entity = testTableDao.getById(-1)!!
+        var entity = testTableDao.get(-1)!!
         entity.name = "name"
         entity.weight = null
 
         // 满足Criteria条件
         var criteria = Criteria.add(TestTable::name.name, Operator.EQ, "name1")
         assert(testTableDao.updateExcludePropertiesWhen(entity, criteria, TestTable::weight.name))
-        entity = testTableDao.getById(-1)!!
+        entity = testTableDao.get(-1)!!
         assertEquals("name", entity.name)
         assertEquals(56.5, entity.weight)
 
@@ -335,7 +335,7 @@ internal open class BaseDaoTest : SpringTest() {
         entity.name = "name1"
         criteria = Criteria.add(TestTable::name.name, Operator.EQ, "non-exists")
         assert(!testTableDao.updateExcludePropertiesWhen(entity, criteria))
-        entity = testTableDao.getById(-1)!!
+        entity = testTableDao.get(-1)!!
         assertEquals("name", entity.name)
     }
 
@@ -420,7 +420,7 @@ internal open class BaseDaoTest : SpringTest() {
             }
         }
         assertEquals(1, count)
-        var entity = testTableDao.getById(-1)!!
+        var entity = testTableDao.get(-1)!!
         assertEquals("name", entity.name)
         assert(entity.birthday != null)
         assertEquals(null, entity.weight)
@@ -430,7 +430,7 @@ internal open class BaseDaoTest : SpringTest() {
         updatePayload1.nullProperties = null
         count = testTableDao.batchUpdateWhen(updatePayload1)
         assertEquals(1, count)
-        entity = testTableDao.getById(-1)!!
+        entity = testTableDao.get(-1)!!
         assertEquals("name", entity.name)
         assert(entity.birthday != null)
     }
@@ -543,16 +543,16 @@ internal open class BaseDaoTest : SpringTest() {
     @Transactional
     open fun deleteById() {
         assert(testTableDao.deleteById(-1))
-        assert(testTableDao.getById(-1) == null)
+        assert(testTableDao.get(-1) == null)
         assert(!testTableDao.deleteById(1))
     }
 
     @Test
     @Transactional
     open fun delete() {
-        val entity = testTableDao.getById(-1)
+        val entity = testTableDao.get(-1)
         assert(testTableDao.delete(entity!!))
-        assert(testTableDao.getById(-1) == null)
+        assert(testTableDao.get(-1) == null)
 
         // 主键为null
         assertThrows<IllegalStateException> { testTableDao.delete(TestTable {}) }
@@ -604,13 +604,13 @@ internal open class BaseDaoTest : SpringTest() {
             } else null
         }
         assertEquals(1, count)
-        assertEquals(null, testTableDao.getById(-2))
+        assertEquals(null, testTableDao.get(-2))
 
         // 仅SearchPayload项
         searchPayload1.name = "name1"
         count = testTableDao.batchDeleteWhen(searchPayload1)
         assertEquals(1, count)
-        assertEquals(null, testTableDao.getById(-1))
+        assertEquals(null, testTableDao.get(-1))
 
         // SearchPayload项 & whereConditionFactory
         searchPayload1.name = "me3"
@@ -620,7 +620,7 @@ internal open class BaseDaoTest : SpringTest() {
             } else null
         }
         assertEquals(1, count)
-        assertEquals(null, testTableDao.getById(-3))
+        assertEquals(null, testTableDao.get(-3))
     }
 
     //endregion Delete

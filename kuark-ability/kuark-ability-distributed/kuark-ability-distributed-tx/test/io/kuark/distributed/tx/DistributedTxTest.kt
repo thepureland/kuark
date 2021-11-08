@@ -45,11 +45,11 @@ open class DistributedTxTest {
     fun test() {
         // 当前余额100，先扣50，后加100，结果150
         globalTx.normal()
-        assertEquals(150.0, testTableDao.getById(1).balance)
+        assertEquals(150.0, testTableDao.get(1).balance)
 
         // 当前余额150，先扣100，后加100(此时出错，应全部回滚)，结果150(没变化)
         assertThrows<Exception> { globalTx.onError() }
-        assertEquals(150.0, testTableDao.getById(1).balance)
+        assertEquals(150.0, testTableDao.get(1).balance)
     }
 
 }

@@ -10,8 +10,8 @@ import io.kuark.base.query.sort.Order
  */
 open class ListSearchPayload: SearchPayload() {
 
-    /** 当前页码 */
-    open var pageNo: Int? = null
+    /** 当前页码(不分页时可将其设置为null) */
+    open var pageNo: Int? = 1
 
     /** 页面大小(仅当pageNo不为null时才应用) */
     open var pageSize: Int? = null

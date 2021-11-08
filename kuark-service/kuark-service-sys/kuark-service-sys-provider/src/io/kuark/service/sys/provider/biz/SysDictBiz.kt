@@ -44,19 +44,19 @@ open class SysDictBiz : BaseBiz<String, SysDict, SysDictDao>(), ISysDictBiz {
 
     override fun pagingSearch(searchPayload: SysDictSearchPayload): Pair<List<SysDictRecord>, Int> {
         val dictItems = dao.pagingSearch(searchPayload)
-        val totalCount = dao.count(searchPayload)
-
-        // 查询parentCode
-        val parentIds = dictItems.filter { StringKit.isNotBlank(it.parentId) }.map { it.parentId }.toSet()
-        val returnProperties = listOf(SysDictItems.id.name, SysDictItems.itemCode.name)
-        val idAndCodeMaps = sysDictItemBiz.inSearchProperties(SysDictItems.id.name, parentIds, returnProperties)
-        dictItems.forEach { dictItem ->
-            val idAndCodeMap = idAndCodeMaps.singleOrNull { it[SysDictItems.id.name] == dictItem.parentId }
-            if (idAndCodeMap != null) {
-                dictItem.parentCode = idAndCodeMap[SysDictItems.itemCode.name] as String
+        val totalCount = if (dictItems.isNotEmpty()) {
+            // 查询parentCode
+            val parentIds = dictItems.filter { StringKit.isNotBlank(it.parentId) }.map { it.parentId }.toSet()
+            val returnProperties = listOf(SysDictItems.id.name, SysDictItems.itemCode.name)
+            val idAndCodeMaps = sysDictItemBiz.inSearchProperties(SysDictItems.id.name, parentIds, returnProperties)
+            dictItems.forEach { dictItem ->
+                val idAndCodeMap = idAndCodeMaps.singleOrNull { it[SysDictItems.id.name] == dictItem.parentId }
+                if (idAndCodeMap != null) {
+                    dictItem.parentCode = idAndCodeMap[SysDictItems.itemCode.name] as String
+                }
             }
-        }
-
+            dao.count(searchPayload)
+        } else 0
         return Pair(dictItems, totalCount)
     }
 
@@ -120,7 +120,7 @@ open class SysDictBiz : BaseBiz<String, SysDict, SysDictDao>(), ISysDictBiz {
 
     override fun get(id: String, isDict: Boolean?, fetchAllParentIds: Boolean): SysDictRecord? {
         return if (isDict == true) {
-            val dict = dao.getById(id) ?: return null
+            val dict = dao.get(id) ?: return null
             SysDictRecord(
                 dict.module, id, dict.dictType, dict.dictName, null, null, null, null, null, null, dict.remark
             )
@@ -184,7 +184,7 @@ open class SysDictBiz : BaseBiz<String, SysDict, SysDictDao>(), ISysDictBiz {
             }
             dao.deleteById(id)
         } else {
-            sysDictItemBiz.cascadeDelete(id)
+            sysDictItemBiz.cascadeDeleteChildren(id)
         }
     }
 

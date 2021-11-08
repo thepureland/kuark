@@ -1,7 +1,15 @@
 package io.kuark.service.sys.provider.biz
 
 import io.kuark.ability.cache.context.CacheNames
+import io.kuark.ability.data.rdb.biz.BaseBiz
 import io.kuark.ability.data.rdb.kit.RdbKit
+import io.kuark.ability.data.rdb.support.SqlWhereExpressionFactory
+import io.kuark.ability.web.common.WebResult
+import io.kuark.base.lang.string.StringKit
+import io.kuark.base.query.enums.Operator
+import io.kuark.service.sys.common.model.param.SysParamRecord
+import io.kuark.service.sys.common.model.param.SysParamSearchPayload
+import io.kuark.service.sys.provider.dao.SysParamDao
 import io.kuark.service.sys.provider.ibiz.ISysParamBiz
 import io.kuark.service.sys.provider.model.po.SysParam
 import io.kuark.service.sys.provider.model.table.SysParams
@@ -17,20 +25,13 @@ import org.springframework.stereotype.Service
  */
 @Service
 //region your codes 1
-open class SysParamBiz: ISysParamBiz {
+open class SysParamBiz : BaseBiz<String, SysParam, SysParamDao>(), ISysParamBiz {
 //endregion your codes 1
 
     //region your codes 2
 
-    /**
-     * 根据模块和参数名称，取得对应参数信息(仅包括处于启用状态的)，并将结果缓存，查不到不缓存
-     *
-     * @param module 如果没有请传入空串，此时请保证参数名称的惟一性，否则结果将不确定是哪条记录
-     * @param name 参数名称
-     * @return 参数信息。如果module为空串，且存在多个同名参数，将任意返回一个name对应的参数信息。查无结果返回null。
-     */
     @Cacheable(value = [CacheNames.SYS_PARAM], key = "#module.concat(':').concat(#name)", unless = "#result == null")
-    open fun getParamByModuleAndName(module: String, name: String): SysParam? {
+    override fun getParamByModuleAndName(module: String, name: String): SysParam? {
         val paramList = RdbKit.getDatabase().from(SysParams)
             .select(SysParams.columns)
             .whereWithConditions {
@@ -42,6 +43,18 @@ open class SysParamBiz: ISysParamBiz {
             .map { row -> SysParams.createEntity(row) }
             .toList()
         return if (paramList.isEmpty()) null else paramList.first()
+    }
+
+    override fun pagingSearch(searchPayload: SysParamSearchPayload): Pair<List<SysParamRecord>, Int> {
+        val records = dao.search(searchPayload) { column, value ->
+            if (value != null && column.name in arrayOf(SysParams.module.name, SysParams.paramName.name, SysParams.defaultValue.name)) {
+                SqlWhereExpressionFactory.create(column, Operator.ILIKE, value.toString().trim())
+            } else if (column.name == SysParams.active.name && value == true) {
+                SqlWhereExpressionFactory.create(column, Operator.EQ, true)
+            } else null
+        }
+        val count = if (records.isEmpty()) 0 else dao.count(searchPayload)
+        return Pair(records as List<SysParamRecord>, count)
     }
 
     //endregion your codes 2

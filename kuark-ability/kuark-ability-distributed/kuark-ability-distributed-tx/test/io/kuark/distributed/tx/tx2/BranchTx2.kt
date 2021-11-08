@@ -21,12 +21,12 @@ open class BranchTx2 : IBranchTx2 {
 
 //    @Transactional
     override fun increase(id: Int, money: Double) {
-        val entity = testTableDao.getById(id)
-        log.info("用户【$id】当前余额【${testTableDao.getById(id).balance}】")
+        val entity = testTableDao.get(id)
+        log.info("用户【$id】当前余额【${testTableDao.get(id).balance}】")
         log.info("为用户【$id】增加余额【$money】")
         entity.balance += money
         testTableDao.update(entity)
-        log.info("用户【$id】当前余额【${testTableDao.getById(id).balance}】")
+        log.info("用户【$id】当前余额【${testTableDao.get(id).balance}】")
     }
 
     override fun increaseFail(id: Int, money: Double) {

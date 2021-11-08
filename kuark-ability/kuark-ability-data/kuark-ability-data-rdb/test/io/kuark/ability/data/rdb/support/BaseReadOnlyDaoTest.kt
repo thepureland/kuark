@@ -19,6 +19,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.ktorm.dsl.eq
 import org.springframework.beans.factory.annotation.Autowired
+import java.time.LocalDateTime
 
 /**
  * BaseReadOnlyDao测试用例
@@ -47,11 +48,29 @@ internal class BaseReadOnlyDaoTest : SpringTest() {
     //region Search
     @Test
     fun getById() {
-        val entity = testTableDao.getById(-1)
+        val entity = testTableDao.get(-1)
         assertEquals("name1", entity!!.name)
 
         // 不存在指定主键对应的实体时
-        assert(testTableDao.getById(1) == null)
+        assert(testTableDao.get(1) == null)
+    }
+
+    @Test
+    fun get() {
+        class Record {
+            var name: String? = null
+            var birthday: LocalDateTime? = null
+            var active: Boolean? = null
+            var noExistProp: String? = null
+        }
+
+        val record = testTableDao.get(-1, Record::class)!!
+        assertEquals("name1", record.name)
+        assertEquals(true, record.active)
+        assertEquals(null, record.noExistProp)
+
+        // 不存在指定主键对应的实体时
+        assert(testTableDao.get(1, Record::class) == null)
     }
 
     @Test

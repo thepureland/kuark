@@ -19,9 +19,7 @@ data class WebResult<T>(
 
     constructor() : this(null, null, 200)
 
-    constructor(data: T?) : this(data, "", 200)
-
-    constructor(msg: String?) : this(null, msg, 200)
+    constructor(data: T?, msg: String? = null) : this(data, msg, 200)
 
     constructor(msg: String?, code: Int) : this(null, msg, code)
 

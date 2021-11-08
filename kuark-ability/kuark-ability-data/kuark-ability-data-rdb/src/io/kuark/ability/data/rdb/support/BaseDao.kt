@@ -12,6 +12,7 @@ import org.ktorm.dsl.*
 import org.ktorm.entity.Entity
 import org.ktorm.entity.add
 import org.ktorm.entity.removeIf
+import org.ktorm.entity.update
 import org.ktorm.schema.Column
 import org.ktorm.schema.ColumnDeclaring
 import org.ktorm.schema.Table
@@ -177,14 +178,23 @@ open class BaseDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadOnlyD
     //region Update
 
     /**
-     * 更新指定实体对应的记录
+     * 更新指定实体或更新载体对应的记录
      *
-     * @param entity 实体对象（只会对有更改的属性作更新）
+     * @param any 实体对象或更新载体（如果是实体对象，只会对有更改的属性作更新；如果是更新载体，将对载体的所有属性作更新）
      * @return 是否更新成功
      * @author K
      * @since 1.0.0
      */
-    open fun update(entity: E): Boolean = entity.flushChanges() == 1
+    @Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
+    open fun update(any: Any): Boolean {
+        return if (any is IDbEntity<*, *>) {
+            entitySequence().update(any as E) == 1
+        } else {
+            val entity = Entity.create(table().entityClass!!)
+            BeanKit.copyProperties(any, entity)
+            this.update(entity)
+        }
+    }
 
     /**
      * 有条件的更新实体对象（仅当满足给定的附加查询条件时）

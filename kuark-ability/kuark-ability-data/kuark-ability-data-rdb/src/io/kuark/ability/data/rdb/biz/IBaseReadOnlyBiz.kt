@@ -7,6 +7,7 @@ import io.kuark.base.support.payload.ListSearchPayload
 import io.kuark.base.support.payload.SearchPayload
 import org.ktorm.schema.Column
 import org.ktorm.schema.ColumnDeclaring
+import kotlin.reflect.KClass
 
 /**
  * 基于关系型数据库表的基础只读业务操作接口
@@ -24,12 +25,21 @@ interface IBaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>> {
      * 查询指定主键值的实体
      *
      * @param id 主键值，类型必须为以下之一：String、Int、Long
-     * @return 实体
-     * @throws NoSuchElementException 不存在指定主键对应的实体时
+     * @return 实体，找不到返回null
      * @author K
      * @since 1.0.0
      */
-    fun getById(id: PK): E?
+    fun get(id: PK): E?
+
+    /**
+     * 查询指定主键值的实体，可以指定返回的对象类型
+     *
+     * @param id 主键值，类型必须为以下之一：String、Int、Long
+     * @return 结果对象，找不到返回null
+     * @author K
+     * @since 1.0.0
+     */
+    fun <R: Any> get(id: PK, returnType: KClass<R>): R?
 
     /**
      * 批量查询指定主键值的实体

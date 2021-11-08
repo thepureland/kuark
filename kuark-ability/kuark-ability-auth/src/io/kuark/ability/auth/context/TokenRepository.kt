@@ -36,7 +36,7 @@ class TokenRepository: PersistentTokenRepository {
     }
 
     override fun getTokenForSeries(seriesId: String): PersistentRememberMeToken {
-        val t = authPersistentLoginsBiz.getById(seriesId)
+        val t = authPersistentLoginsBiz.get(seriesId)
         t ?: throw ObjectNotFoundException("找不到持久化令牌令牌！【seriesId：${seriesId}】")
         return PersistentRememberMeToken(t.username, t.id, t.token, t.lastUsed!!.toDate())
     }

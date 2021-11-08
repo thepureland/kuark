@@ -179,7 +179,7 @@ open class BaseDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadOnlyD
     /**
      * 更新指定实体对应的记录
      *
-     * @param entity 实体
+     * @param entity 实体对象（只会对有更改的属性作更新）
      * @return 是否更新成功
      * @author K
      * @since 1.0.0
@@ -189,7 +189,7 @@ open class BaseDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadOnlyD
     /**
      * 有条件的更新实体对象（仅当满足给定的附加查询条件时）
      *
-     * @param entity 实体对象
+     * @param entity 实体对象（只会对有更改的属性作更新）
      * @param criteria 附加查询条件
      * @return 记录是否有更新
      * @throws IllegalArgumentException 无查询条件时

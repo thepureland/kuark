@@ -170,13 +170,7 @@ open class SysDictBiz : BaseBiz<String, SysDict, SysDictDao>(), ISysDictBiz {
                     dictName = payload.name
                     remark = payload.remark
                 }
-                dao.updateOnly(
-                    sysDict,
-                    SysDicts.module.name,
-                    SysDicts.dictType.name,
-                    SysDicts.dictName.name,
-                    SysDicts.remark.name
-                )
+                dao.update(sysDict)
             } else { // SysDictItem
                 val sysDictItem = SysDictItem {
                     id = payload.id
@@ -187,15 +181,7 @@ open class SysDictBiz : BaseBiz<String, SysDict, SysDictDao>(), ISysDictBiz {
                     seqNo = payload.seqNo
                     remark = payload.remark
                 }
-                sysDictItemDao.updateOnly(
-                    sysDictItem,
-                    SysDictItems.dictId.name,
-                    SysDictItems.parentId.name,
-                    SysDictItems.itemCode.name,
-                    SysDictItems.itemName.name,
-                    SysDictItems.seqNo.name,
-                    SysDictItems.remark.name
-                )
+                sysDictItemDao.update(sysDictItem)
             }
             payload.id!!
         }

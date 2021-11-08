@@ -1,17 +1,14 @@
 package io.kuark.service.sys.provider.controller
 
-import io.kuark.ability.data.rdb.support.SqlWhereExpressionFactory
 import io.kuark.ability.web.common.WebResult
 import io.kuark.ability.web.springmvc.BaseController
 import io.kuark.base.lang.string.StringKit
-import io.kuark.base.query.enums.Operator
 import io.kuark.service.sys.common.model.param.SysParamPayload
 import io.kuark.service.sys.common.model.param.SysParamRecord
 import io.kuark.service.sys.common.model.param.SysParamSearchPayload
 import io.kuark.service.sys.provider.ibiz.ISysDictItemBiz
 import io.kuark.service.sys.provider.ibiz.ISysParamBiz
 import io.kuark.service.sys.provider.model.po.SysParam
-import io.kuark.service.sys.provider.model.table.SysParams
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.*
@@ -63,6 +60,11 @@ open class SysParamController : BaseController() {
     @DeleteMapping("/delete")
     fun delete(id: String): WebResult<Boolean> {
         return WebResult(sysParamBiz.deleteById(id))
+    }
+
+    @PostMapping("/batchDelete")
+    fun batchDelete(@RequestBody ids: List<String>): WebResult<Boolean> {
+        return WebResult(sysParamBiz.batchDelete(ids) == ids.size)
     }
 
     @GetMapping("/loadModules")

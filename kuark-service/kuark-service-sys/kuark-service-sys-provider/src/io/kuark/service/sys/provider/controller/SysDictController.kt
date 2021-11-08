@@ -78,6 +78,17 @@ open class SysDictController : BaseController() {
         return WebResult(sysDictBiz.delete(id, isDict))
     }
 
+    @PostMapping("/batchDelete")
+    fun batchDelete(@RequestBody map: Map<String, Boolean>): WebResult<Boolean> {
+        map.forEach { (id, isDict) ->
+            val success = sysDictBiz.delete(id, isDict)
+            if (!success) {
+                return WebResult(false)
+            }
+        }
+        return WebResult(true)
+    }
+
     override fun getFormModelClass(): KClass<SysDictPayload> = SysDictPayload::class
 
 }

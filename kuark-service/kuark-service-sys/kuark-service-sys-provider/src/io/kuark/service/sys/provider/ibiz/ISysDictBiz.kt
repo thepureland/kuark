@@ -20,6 +20,17 @@ interface ISysDictBiz : IBaseBiz<String, SysDict> {
     //region your codes 2
 
     /**
+     * 返回模块和字典类型对应的字典id
+     *
+     * @param module 模块
+     * @param type 字典类型
+     * @return 字典id，不存在时返回null
+     * @author K
+     * @since 1.0.0
+     */
+    fun getDictIdByModuleAndType(module: String, type: String): String?
+
+    /**
      * 查询符合条件的字典项及字典
      *
      * @param searchPayload 查询参数
@@ -83,16 +94,6 @@ interface ISysDictBiz : IBaseBiz<String, SysDict> {
      * @since 1.0.0
      */
     fun delete(id: String, isDict: Boolean): Boolean
-
-    /**
-     * 查询指定字典项的所有父项id
-     *
-     * @param itemId 字典项id
-     * @return List(父项id)
-     * @author K
-     * @since 1.0.0
-     */
-    fun fetchAllParentIds(itemId: String): MutableList<String>
 
     //endregion your codes 2
 

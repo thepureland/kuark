@@ -9,10 +9,9 @@ import io.kuark.service.sys.common.model.dict.SysDictRecord
 import io.kuark.service.sys.common.model.dict.SysDictSearchPayload
 import io.kuark.service.sys.common.model.dict.SysDictTreeNode
 import io.kuark.service.sys.provider.dao.SysDictDao
-import io.kuark.service.sys.provider.dao.SysDictItemDao
 import io.kuark.service.sys.provider.ibiz.ISysDictBiz
+import io.kuark.service.sys.provider.ibiz.ISysDictItemBiz
 import io.kuark.service.sys.provider.model.po.SysDict
-import io.kuark.service.sys.provider.model.po.SysDictItem
 import io.kuark.service.sys.provider.model.table.SysDictItems
 import io.kuark.service.sys.provider.model.table.SysDicts
 import org.ktorm.dsl.asc
@@ -37,7 +36,11 @@ open class SysDictBiz : BaseBiz<String, SysDict, SysDictDao>(), ISysDictBiz {
     //region your codes 2
 
     @Autowired
-    private lateinit var sysDictItemDao: SysDictItemDao
+    private lateinit var sysDictItemBiz: ISysDictItemBiz
+
+    override fun getDictIdByModuleAndType(module: String, type: String): String? {
+        return dao.getDictIdByModuleAndType(module, type)
+    }
 
     override fun pagingSearch(searchPayload: SysDictSearchPayload): Pair<List<SysDictRecord>, Int> {
         val dictItems = dao.pagingSearch(searchPayload)
@@ -46,7 +49,7 @@ open class SysDictBiz : BaseBiz<String, SysDict, SysDictDao>(), ISysDictBiz {
         // 查询parentCode
         val parentIds = dictItems.filter { StringKit.isNotBlank(it.parentId) }.map { it.parentId }.toSet()
         val returnProperties = listOf(SysDictItems.id.name, SysDictItems.itemCode.name)
-        val idAndCodeMaps = sysDictItemDao.inSearchProperties(SysDictItems.id.name, parentIds, returnProperties)
+        val idAndCodeMaps = sysDictItemBiz.inSearchProperties(SysDictItems.id.name, parentIds, returnProperties)
         dictItems.forEach { dictItem ->
             val idAndCodeMap = idAndCodeMaps.singleOrNull { it[SysDictItems.id.name] == dictItem.parentId }
             if (idAndCodeMap != null) {
@@ -130,7 +133,8 @@ open class SysDictBiz : BaseBiz<String, SysDict, SysDictDao>(), ISysDictBiz {
             if (result != null && fetchAllParentIds) {
                 val parentId = result.parentId
                 if (StringKit.isNotBlank(parentId)) {
-                    val parentIds = fetchAllParentIds(parentId!!)
+                    var parentIds = sysDictItemBiz.fetchAllParentIds(parentId!!)
+                    parentIds = parentIds.toMutableList()
                     parentIds.add(parentId)
                     result.parentIds = parentIds
                 }
@@ -151,15 +155,7 @@ open class SysDictBiz : BaseBiz<String, SysDict, SysDictDao>(), ISysDictBiz {
                 }
                 dao.insert(sysDict)
             } else { // 添加SysDictItem
-                val sysDictItem = SysDictItem().apply {
-                    dictId = payload.dictId!!
-                    parentId = payload.parentId
-                    itemCode = payload.code!!
-                    itemName = payload.name!!
-                    seqNo = payload.seqNo
-                    remark = payload.remark
-                }
-                sysDictItemDao.insert(sysDictItem)
+                sysDictItemBiz.saveOrUpdate(payload)
             }
         } else { // 更新
             if (StringKit.isBlank(payload.parentId)) { // SysDict
@@ -172,63 +168,26 @@ open class SysDictBiz : BaseBiz<String, SysDict, SysDictDao>(), ISysDictBiz {
                 }
                 dao.update(sysDict)
             } else { // SysDictItem
-                val sysDictItem = SysDictItem {
-                    id = payload.id
-                    dictId = payload.dictId!!
-                    parentId = payload.parentId
-                    itemCode = payload.code!!
-                    itemName = payload.name!!
-                    seqNo = payload.seqNo
-                    remark = payload.remark
-                }
-                sysDictItemDao.update(sysDictItem)
+                sysDictItemBiz.saveOrUpdate(payload)
             }
             payload.id!!
         }
     }
 
-    override fun fetchAllParentIds(itemId: String): MutableList<String> {
-        val results = mutableListOf<String>()
-        recursionFindAllParentId(itemId, results)
-        results.reverse()
-        return results
-    }
-
     @Transactional
     override fun delete(id: String, isDict: Boolean): Boolean {
         return if (isDict) {
-            sysDictItemDao.batchDeleteWhen { column, _ ->
+            sysDictItemBiz.batchDeleteWhen { column, _ ->
                 if (column.name == SysDictItems.dictId.name) {
                     column.eq(id)
                 } else null
             }
             dao.deleteById(id)
         } else {
-            val childItemIds = mutableListOf<String>()
-            recursionFindAllChildId(id, childItemIds)
-            if (childItemIds.isNotEmpty()) {
-                sysDictItemDao.batchDelete(childItemIds)
-            }
-            sysDictItemDao.deleteById(id)
+            sysDictItemBiz.cascadeDelete(id)
         }
     }
 
-    private fun recursionFindAllParentId(itemId: String, results: MutableList<String>) {
-        val list = sysDictItemDao.oneSearchProperty(SysDictItems.id.name, itemId, SysDictItems.parentId.name)
-        if (list.isNotEmpty()) {
-            val parentId = list.first() as String
-            results.add(parentId)
-            recursionFindAllParentId(parentId, results)
-        }
-    }
-
-    private fun recursionFindAllChildId(itemId: String, results: MutableList<String>) {
-        val itemIds = sysDictItemDao.oneSearchProperty(SysDictItems.parentId.name, itemId, SysDictItems.id.name)
-        itemIds.forEach { id ->
-            results.add(id as String)
-            recursionFindAllChildId(id, results)
-        }
-    }
 
 //endregion your codes 2
 

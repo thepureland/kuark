@@ -29,17 +29,16 @@ open class SysDictDao : BaseDao<String, SysDict, SysDicts>() {
 
     //region your codes 2
     @Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
-    fun searchIdsByModuleAndType(module: String, type: String): List<String> {
-        return querySource()
+    fun getDictIdByModuleAndType(module: String, type: String): String? {
+        val list = querySource()
             .select(SysDicts.id)
             .whereWithConditions {
+                it += SysDicts.module eq module
                 it += SysDicts.dictType eq type
-                if (module.isNotEmpty()) {
-                    it += SysDicts.module eq module
-                }
             }
             .map { row -> row[SysDicts.id] }
             .toList() as List<String>
+        return if(list.isEmpty()) null else list.first()
     }
 
     /**

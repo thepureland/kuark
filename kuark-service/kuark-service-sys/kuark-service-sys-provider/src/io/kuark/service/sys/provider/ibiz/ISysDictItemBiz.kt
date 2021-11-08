@@ -1,7 +1,9 @@
 package io.kuark.service.sys.provider.ibiz
 
 import io.kuark.ability.data.rdb.biz.IBaseBiz
+import io.kuark.service.sys.common.model.dict.SysDictPayload
 import io.kuark.service.sys.provider.model.po.SysDictItem
+import org.springframework.transaction.annotation.Transactional
 
 /**
  * 字典子表业务接口
@@ -23,6 +25,12 @@ interface ISysDictItemBiz: IBaseBiz<String, SysDictItem> {
      * @return 字典项列表。如果module为空串，且存在多个同名type，将任意返回一个type对应的字典项。查无结果返回空列表。
      */
     fun getItemsByModuleAndType(module: String, type: String): List<SysDictItem>
+
+    fun saveOrUpdate(payload: SysDictPayload): String
+
+    fun fetchAllParentIds(itemId: String): List<String>
+
+    fun cascadeDelete(id: String): Boolean
 
     //endregion your codes 2
 

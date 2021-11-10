@@ -21,7 +21,7 @@ internal class SysDictDaoTest: SpringTest() {
             module = "sys"
             dictType = "mon"
         }
-        val list = sysDictDao.search(searchModel, 0)
+        val list = sysDictDao.pagingSearch(searchModel)
         assertEquals(12, list.size)
         assertEquals("jan", list.first().itemCode)
         assertEquals("dec", list.last().itemCode)

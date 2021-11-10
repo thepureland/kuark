@@ -1,7 +1,7 @@
 package io.kuark.ability.distributed.lock.kit
 
 import io.kuark.ability.distributed.lock.core.IRedissonLock
-import io.kuark.context.spring.SpringKit
+import io.kuark.context.kit.SpringKit
 import org.redisson.api.RLock
 import java.util.concurrent.TimeUnit
 

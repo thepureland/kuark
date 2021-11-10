@@ -3,7 +3,7 @@ package io.kuark.ability.cache.core
 import io.kuark.ability.cache.kit.CacheKit
 import io.kuark.base.lang.string.toType
 import io.kuark.base.support.Consts
-import io.kuark.context.spring.SpringKit
+import io.kuark.context.kit.SpringKit
 import org.aspectj.lang.ProceedingJoinPoint
 import org.aspectj.lang.annotation.Around
 import org.aspectj.lang.annotation.Aspect

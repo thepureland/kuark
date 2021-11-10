@@ -160,7 +160,7 @@ subprojects {
             dependency("ch.qos.logback:logback-classic:${Version.LOGBACK}")
 
             // validation
-            dependency("javax.validation:validation-api:2.0.1.Final")
+//            dependency("javax.validation:validation-api:2.0.1.Final")
             dependency("org.hibernate.validator:hibernate-validator:6.1.5.Final")
             dependency("javax.el:javax.el-api:3.0.1-b06")
             dependency("org.glassfish.web:javax.el:2.2.6")

@@ -2,7 +2,7 @@ package io.kuark.ability.cache.kit
 
 import io.kuark.ability.cache.core.MixCacheManager
 import io.kuark.base.log.LogFactory
-import io.kuark.context.spring.SpringKit
+import io.kuark.context.kit.SpringKit
 import org.springframework.cache.Cache
 import kotlin.reflect.KClass
 

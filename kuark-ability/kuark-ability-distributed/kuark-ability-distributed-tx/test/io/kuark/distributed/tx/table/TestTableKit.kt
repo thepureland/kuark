@@ -2,7 +2,7 @@ package io.kuark.distributed.tx.table
 
 import io.kuark.base.scanner.classpath.ClassPathScanner
 import io.kuark.base.scanner.support.Resource
-import io.kuark.context.spring.SpringKit
+import io.kuark.context.kit.SpringKit
 import org.springframework.jdbc.core.JdbcTemplate
 
 /**

@@ -131,10 +131,12 @@ object TeminalConstraintsCreator {
             val context = ConstraintConvertContext(originalProperty, property, propertyPrefix, beanClass)
             annotations.forEach {
                 val converter = ConstraintConvertorFactory.getInstance(it)
-                val teminalConstraint = converter.convert(context)
-                val map = ruleMap[property] ?: linkedMapOf()
-                map[teminalConstraint.constraint] = teminalConstraint.rule
-                ruleMap[property] = map
+                if (converter != null) { // 为null不需要返回给终端
+                    val teminalConstraint = converter.convert(context)
+                    val map = ruleMap[property] ?: linkedMapOf()
+                    map[teminalConstraint.constraint] = teminalConstraint.rule
+                    ruleMap[property] = map
+                }
             }
         }
         return ruleMap

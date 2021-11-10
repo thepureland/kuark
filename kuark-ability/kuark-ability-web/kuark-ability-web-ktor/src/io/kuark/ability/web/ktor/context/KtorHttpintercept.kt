@@ -8,7 +8,7 @@ import io.ktor.sessions.*
 import io.kuark.ability.web.ktor.session.MixCacheSessionStorage
 import io.kuark.ability.web.ktor.session.WebSession
 import io.kuark.ability.web.ktor.support.KtorMiddleware
-import io.kuark.context.spring.SpringKit
+import io.kuark.context.kit.SpringKit
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 

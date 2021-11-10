@@ -1,4 +1,4 @@
-package io.kuark.context.spring
+package io.kuark.context.kit
 
 import org.springframework.context.ApplicationContext
 import org.springframework.context.ApplicationContextAware
@@ -61,5 +61,15 @@ object SpringKit : ApplicationContextAware {
      * @since 1.0.0
      */
     fun getProperty(propertyName: String): String? = applicationContext.environment.getProperty(propertyName)
+
+    /**
+     * 返回指定类型的所有实现bean实例（包括子类）
+     *
+     * @param clazz 类或接口
+     * @return Map(bean名称, bean实例)
+     * @author K
+     * @since 1.0.0
+     */
+    fun <T : Any> getBeansOfType(clazz: KClass<T>): Map<String, T> = applicationContext.getBeansOfType(clazz.java)
 
 }

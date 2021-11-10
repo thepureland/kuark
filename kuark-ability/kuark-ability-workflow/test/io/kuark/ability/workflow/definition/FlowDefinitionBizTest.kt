@@ -10,7 +10,7 @@ import io.kuark.base.image.ImageKit
 import io.kuark.base.io.FileKit
 import io.kuark.base.io.IoKit
 import io.kuark.base.io.PathKit
-import io.kuark.context.spring.SpringKit
+import io.kuark.context.kit.SpringKit
 import io.kuark.test.common.SpringTest
 import org.activiti.engine.RepositoryService
 import org.junit.jupiter.api.Assertions.*

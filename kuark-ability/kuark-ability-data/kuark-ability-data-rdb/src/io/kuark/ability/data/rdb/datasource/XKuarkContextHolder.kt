@@ -1,7 +1,7 @@
 package io.kuark.ability.data.rdb.datasource
 
 import io.kuark.context.core.KuarkContextHolder
-import io.kuark.context.spring.SpringKit
+import io.kuark.context.kit.SpringKit
 import org.ktorm.database.Database
 import javax.sql.DataSource
 

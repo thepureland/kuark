@@ -417,6 +417,20 @@ interface IBaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>> {
         criteria: Criteria, returnProperties: Collection<String>, pageNo: Int, pageSize: Int, vararg orders: Order
     ): List<Map<String, *>>
 
+    /**
+     * 根据查询载体对象分页查询，返回查询结果及总记录数
+     *
+     * @param listSearchPayload 查询载体对象，默认为null,为null时返回的列表元素类型为PO实体类，此时，若whereConditionFactory有指定，各条件间的查询逻辑为AND
+     * @param whereConditionFactory where条件表达式工厂函数，可对listSearchPayload参数定义查询逻辑，也可完全自定义查询逻辑，函数返回null时将按“等于”操作处理listSearchPayload中的属性。参数默认为null
+     * @return Pair(List(结果对象), 总记录数)， 结果对象有三种类型可能, @see SearchPayload
+     * @author K
+     * @since 1.0.0
+     */
+    fun pagingSearch(
+        listSearchPayload: ListSearchPayload? = null,
+        whereConditionFactory: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)? = null
+    ): Pair<List<*>, Int>
+
     //endregion pagingSearch
 
 

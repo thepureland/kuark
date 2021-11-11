@@ -149,6 +149,15 @@ open class BaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>, DAO : BaseReadOnlyDao
         criteria: Criteria, returnProperties: Collection<String>, pageNo: Int, pageSize: Int, vararg orders: Order
     ): List<Map<String, *>> = dao.pagingReturnProperties(criteria, returnProperties, pageNo, pageSize, *orders)
 
+    override fun pagingSearch(
+        listSearchPayload: ListSearchPayload?,
+        whereConditionFactory: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)?
+    ): Pair<List<*>, Int> {
+        val results = search(listSearchPayload, whereConditionFactory)
+        val count = count(listSearchPayload, whereConditionFactory)
+        return Pair(results, count)
+    }
+
     override fun search(
         listSearchPayload: ListSearchPayload?,
         whereConditionFactory: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)?

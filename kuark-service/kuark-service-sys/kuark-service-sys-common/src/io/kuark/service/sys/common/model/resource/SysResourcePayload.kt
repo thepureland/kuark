@@ -1,5 +1,6 @@
 package io.kuark.service.sys.common.model.resource
 
+import io.kuark.base.bean.validation.constraint.annotaions.DictCode
 import io.kuark.base.bean.validation.constraint.annotaions.DictEnumCode
 import org.hibernate.validator.constraints.URL
 import javax.validation.constraints.Digits
@@ -9,15 +10,18 @@ import javax.validation.constraints.Positive
 
 class SysResourcePayload {
 
+    /** 主键 */
+    var id: String? = null
+
     @get:NotBlank(message = "资源名称不能为空！")
     /** 名称，或其国际化key */
     var name: String? = null
 
-    @get:URL
     /** url */
     var url: String? = null
 
-    @get:DictEnumCode(enumClass = ResourceTypeEnum::class, message = "资源类型不存在！")
+    @get:NotBlank(message = "资源类型不能为空")
+    @get:DictCode("resource_type", "kuark.sys", "资源类型不存在！")
     /** 资源类型字典代码 */
     var resourceTypeDictCode: String?  = null
 
@@ -31,6 +35,7 @@ class SysResourcePayload {
     var seqNo: Int? = null
 
 
+    @get:DictCode("sub_sys", "kuark.sys", "子系统不存在！")
     /** 子系统代码 */
     var subSysDictCode: String? = null
 

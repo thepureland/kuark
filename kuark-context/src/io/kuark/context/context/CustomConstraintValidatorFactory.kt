@@ -7,10 +7,15 @@ import java.time.Clock
 import javax.validation.ClockProvider
 import javax.validation.Configuration
 import javax.validation.ConstraintValidator
-import javax.validation.ConstraintValidatorFactory
 
 
-open class CustomValidatorFactoryBean: LocalValidatorFactoryBean() {
+/**
+ * 自定义约束的验证器工厂，用于为自定义的约束注解指定验证器
+ *
+ * @author K
+ * @since 1.0.0
+ */
+open class CustomConstraintValidatorFactory: LocalValidatorFactoryBean() {
 
     override fun getClockProvider(): ClockProvider {
         return ClockProvider {
@@ -21,22 +26,17 @@ open class CustomValidatorFactoryBean: LocalValidatorFactoryBean() {
     override fun postProcessConfiguration(configuration: Configuration<*>) {
         val hibernateConfiguration = configuration as HibernateValidatorConfiguration
         val constraintMapping = hibernateConfiguration.createConstraintMapping()
-        val beans = SpringKit.getBeansOfType(IValidatorProvider::class).values
+        val beans = SpringKit.getBeansOfType(IConstraintValidatorProviderBean::class).values
         beans.forEach { provider ->
             val validators = provider.provide<Annotation, ConstraintValidator<Annotation, *>>()
             validators.forEach { (constraint, validator) ->
                 constraintMapping
                     .constraintDefinition(constraint.java)
                     .validatedBy(validator.java)
-                    .includeExistingValidators(true)
+                    .includeExistingValidators(false)
             }
         }
         hibernateConfiguration.addMapping(constraintMapping)
     }
-
-    override fun setConstraintValidatorFactory(constraintValidatorFactory: ConstraintValidatorFactory) {
-        super.setConstraintValidatorFactory(constraintValidatorFactory)
-    }
-
 
 }

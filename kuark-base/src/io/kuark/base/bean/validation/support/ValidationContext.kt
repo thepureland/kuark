@@ -1,8 +1,12 @@
 package io.kuark.base.bean.validation.support
 
+import org.hibernate.validator.HibernateValidator
 import org.hibernate.validator.internal.engine.constraintvalidation.ConstraintValidatorContextImpl
+import javax.validation.Configuration
 import javax.validation.ConstraintValidatorContext
+import javax.validation.Validation
 import javax.validation.Validator
+import javax.validation.spi.ValidationProvider
 
 /**
  * Bean校验的上下文
@@ -18,6 +22,8 @@ object ValidationContext {
     /** 是否快速失败模式 */
     private val failFastThreadLocal = InheritableThreadLocal<Boolean>()
 
+    /** 验证器 */
+    var validator: Validator? = null
 
     /**
      * 存放ConstraintDescriptor对象hashcode关联的Bean

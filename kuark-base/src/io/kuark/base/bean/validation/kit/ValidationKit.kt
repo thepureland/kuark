@@ -104,12 +104,15 @@ object ValidationKit {
 //        val validatorFactory = configure.buildValidatorFactory()
 //        ValidationContext.set(validatorFactory, bean)
         ValidationContext.setFailFast(failFast)
-        val validatorFactory = Validation.byProvider(HibernateValidator::class.java)
-            .configure()
-            .failFast(failFast)
+        if (ValidationContext.validator == null) {
+            val validatorFactory = Validation.byProvider(HibernateValidator::class.java)
+                .configure()
+                .failFast(failFast)
 //            .addProperty( "hibernate.validator.fail_fast", "true" )
-            .buildValidatorFactory()
-        return validatorFactory.validator
+                .buildValidatorFactory()
+            ValidationContext.validator = validatorFactory.validator
+        }
+        return ValidationContext.validator!!
     }
 
 }

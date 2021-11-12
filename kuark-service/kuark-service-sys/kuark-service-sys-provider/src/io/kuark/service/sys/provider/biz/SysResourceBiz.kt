@@ -6,6 +6,7 @@ import io.kuark.base.query.Criteria
 import io.kuark.base.query.enums.Operator
 import io.kuark.base.query.sort.Direction
 import io.kuark.base.support.Consts
+import io.kuark.base.support.payload.ListSearchPayload
 import io.kuark.base.tree.TreeKit
 import io.kuark.context.core.KuarkContextHolder
 import io.kuark.service.sys.common.model.SysMenuTreeNode
@@ -17,8 +18,11 @@ import io.kuark.service.sys.provider.dao.SysResourceDao
 import io.kuark.service.sys.provider.ibiz.ISysDictItemBiz
 import io.kuark.service.sys.provider.ibiz.ISysResourceBiz
 import io.kuark.service.sys.provider.model.po.SysResource
+import org.ktorm.schema.Column
+import org.ktorm.schema.ColumnDeclaring
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import kotlin.reflect.KClass
 
 /**
  * 资源业务
@@ -87,7 +91,33 @@ open class SysResourceBiz : BaseBiz<String, SysResource, SysResourceDao>(), ISys
         }
         require(StringKit.isNotBlank(resourceTypeDictCode)) { "加载系统资源列表时，资源类型参数不能为空！" }
         require(StringKit.isNotBlank(subSysDictCode)) { "加载系统资源列表时，子系统参数不能为空！" }
+        @Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
         return pagingSearch(searchPayload) as Pair<List<SysResourceRecord>, Int>
+    }
+
+    override fun pagingSearch(
+        listSearchPayload: ListSearchPayload?,
+        whereConditionFactory: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)?
+    ): Pair<List<*>, Int> {
+        @Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
+        val result =  super.pagingSearch(listSearchPayload, whereConditionFactory) as Pair<List<SysResourceRecord>, Int>
+        result.first.forEach {
+            transCode(it)
+        }
+        return result
+    }
+
+    override fun <R : Any> get(id: String, returnType: KClass<R>): R? {
+        val result = super.get(id, returnType)
+        if (result is SysResourceRecord) {
+            transCode(result)
+        }
+        return result
+    }
+
+    private fun transCode(record: SysResourceRecord) {
+        record.resourceTypeName = dictItemBiz.transDictCode("kuark:sys", "resource_type", record.resourceTypeDictCode!!)
+        record.subSysName = dictItemBiz.transDictCode("kuark:sys", "sub_sys", record.subSysDictCode!!)
     }
 
     //endregion your codes 2

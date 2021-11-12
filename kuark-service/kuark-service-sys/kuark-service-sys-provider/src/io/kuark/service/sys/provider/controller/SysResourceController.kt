@@ -89,10 +89,19 @@ open class SysResourceController : BaseController() {
     }
 
     @GetMapping("/loadSubSyses")
-    fun loadModules(): WebResult<List<String>> {
+    fun loadModules(): WebResult<Map<String, String>> {
         val items = sysDictItemBiz.getItemsByModuleAndType("kuark:sys", "sub_sys")
-        val itemCodes = items.map { it.itemCode }
-        return WebResult(itemCodes)
+        val map = mutableMapOf<String, String>()
+        items.forEach { map[it.itemCode] = it.itemName }
+        return WebResult(map)
+    }
+
+    @GetMapping("/loadResourceTypes")
+    fun loadResourceTypes(): WebResult<Map<String, String>> {
+        val items = sysDictItemBiz.getItemsByModuleAndType("kuark:sys", "resource_type")
+        val map = mutableMapOf<String, String>()
+        items.forEach { map[it.itemCode] = it.itemName }
+        return WebResult(map)
     }
 
     override fun getFormModelClass(): KClass<*> = SysResourcePayload::class

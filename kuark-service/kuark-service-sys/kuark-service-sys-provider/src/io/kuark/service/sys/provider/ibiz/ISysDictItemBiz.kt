@@ -29,6 +29,18 @@ interface ISysDictItemBiz: IBaseBiz<String, SysDictItem> {
     fun getItemsByModuleAndType(module: String, type: String): List<SysDictItem>
 
     /**
+     * 翻译字典项代码
+     *
+     * @param module 如果没有请传入空串，此时请保证type的惟一性，否则结果将不确定是哪条记录
+     * @param type 字典类型
+     * @param code 字典项代码
+     * @return 字典项名称，找不到返回null
+     * @author K
+     * @since 1.0.0
+     */
+    fun transDictCode(module: String, type: String, code: String): String?
+
+    /**
      * 保存或更新
      *
      * @param payload 载体对象

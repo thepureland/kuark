@@ -14,6 +14,9 @@ class SysResourceRecord {
     /** 资源类型字典代码 */
     var resourceTypeDictCode: String? = null
 
+    /** 资源类型名称 */
+    var resourceTypeName: String? = null
+
     /** 父id */
     var parentId: String? = null
 
@@ -23,7 +26,13 @@ class SysResourceRecord {
     /** 子系统代码 */
     var subSysDictCode: String? = null
 
+    /** 子系统名称 */
+    var subSysName: String? = null
+
     /** 图标 */
     var icon: String? = null
+
+    /** 是否启用 */
+    var active: Boolean? = null
 
 }

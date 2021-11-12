@@ -45,6 +45,11 @@ open class SysDictItemBiz : BaseBiz<String, SysDictItem, SysDictItemDao>(), ISys
         }
     }
 
+    override fun transDictCode(module: String, type: String, code: String): String? {
+        val items = this.getItemsByModuleAndType(module, type)
+        return items.firstOrNull { it.itemCode == code }?.itemName
+    }
+
     @Transactional
     override fun saveOrUpdate(payload: SysDictPayload): String {
         return if (StringKit.isBlank(payload.id)) { // 新增

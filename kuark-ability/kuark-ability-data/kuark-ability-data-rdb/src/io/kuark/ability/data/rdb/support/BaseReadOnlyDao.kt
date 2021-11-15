@@ -808,7 +808,7 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
             val value = propertyMap[property]
             val expression = if (value == null || value == "") {
                 if (ignoreNull) {
-                    null
+                    whereConditionFactory?.let { it(column, value) }
                 } else {
                     column.isNull()
                 }

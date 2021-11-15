@@ -1,7 +1,8 @@
 package io.kuark.context.context
 
-import io.kuark.context.kit.SpringKit
 import org.hibernate.validator.HibernateValidatorConfiguration
+import org.springframework.context.ApplicationContext
+import org.springframework.context.ApplicationContextAware
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean
 import java.time.Clock
 import javax.validation.ClockProvider
@@ -15,7 +16,9 @@ import javax.validation.ConstraintValidator
  * @author K
  * @since 1.0.0
  */
-open class CustomConstraintValidatorFactory: LocalValidatorFactoryBean() {
+open class CustomConstraintValidatorFactory: LocalValidatorFactoryBean(), ApplicationContextAware {
+
+    private lateinit var applicationContext: ApplicationContext
 
     override fun getClockProvider(): ClockProvider {
         return ClockProvider {
@@ -26,7 +29,7 @@ open class CustomConstraintValidatorFactory: LocalValidatorFactoryBean() {
     override fun postProcessConfiguration(configuration: Configuration<*>) {
         val hibernateConfiguration = configuration as HibernateValidatorConfiguration
         val constraintMapping = hibernateConfiguration.createConstraintMapping()
-        val beans = SpringKit.getBeansOfType(IConstraintValidatorProviderBean::class).values
+        val beans = applicationContext.getBeansOfType(IConstraintValidatorProviderBean::class.java).values
         beans.forEach { provider ->
             val validators = provider.provide<Annotation, ConstraintValidator<Annotation, *>>()
             validators.forEach { (constraint, validator) ->
@@ -37,6 +40,11 @@ open class CustomConstraintValidatorFactory: LocalValidatorFactoryBean() {
             }
         }
         hibernateConfiguration.addMapping(constraintMapping)
+    }
+
+    override fun setApplicationContext(applicationContext: ApplicationContext) {
+        super.setApplicationContext(applicationContext)
+        this.applicationContext = applicationContext
     }
 
 }

@@ -36,9 +36,10 @@ open class SysResourceController : BaseController() {
         return sysResourceBiz.getMenus()
     }
 
-    @PostMapping("/laodTreeNodes")
+    @PostMapping("/loadTreeNodes")
     fun laodTreeNodes(@RequestBody searchPayload: SysResourceSearchPayload): WebResult<List<SysResourceTreeNode>> {
-        return WebResult(sysResourceBiz.loadDirectChildrenForTree(searchPayload))
+        val results = sysResourceBiz.loadDirectChildrenForTree(searchPayload)
+        return WebResult(results)
     }
 
     @PostMapping("/search")
@@ -53,8 +54,8 @@ open class SysResourceController : BaseController() {
     }
 
     @GetMapping("/get")
-    fun get(id: String): WebResult<SysResourceRecord> {
-        return WebResult(sysResourceBiz.get(id, SysResourceRecord::class))
+    fun get(id: String, fetchAllParentIds: Boolean = false): WebResult<SysResourceRecord> {
+        return WebResult(sysResourceBiz.get(id, SysResourceRecord::class, fetchAllParentIds))
     }
 
     @PostMapping("/saveOrUpdate")
@@ -80,7 +81,7 @@ open class SysResourceController : BaseController() {
 
     @DeleteMapping("/delete")
     fun delete(id: String): WebResult<Boolean> {
-        return WebResult(sysResourceBiz.deleteById(id))
+        return WebResult(sysResourceBiz.cascadeDeleteChildren(id))
     }
 
     @PostMapping("/batchDelete")

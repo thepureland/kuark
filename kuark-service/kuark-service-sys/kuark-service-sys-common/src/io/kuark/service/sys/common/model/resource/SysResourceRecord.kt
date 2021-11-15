@@ -17,8 +17,8 @@ class SysResourceRecord {
     /** 资源类型名称 */
     var resourceTypeName: String? = null
 
-    /** 父id */
-    var parentId: String? = null
+    /** 所有父项ID */
+    var parentIds: List<String>? = null
 
     /** 在同父节点下的排序号 */
     var seqNo: Int? = null
@@ -34,5 +34,8 @@ class SysResourceRecord {
 
     /** 是否启用 */
     var active: Boolean? = null
+
+    /** 备注 */
+    var remark: String? = null
 
 }

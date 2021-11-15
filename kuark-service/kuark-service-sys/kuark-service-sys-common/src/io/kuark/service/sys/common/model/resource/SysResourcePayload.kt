@@ -21,7 +21,7 @@ class SysResourcePayload {
     var url: String? = null
 
     @get:NotBlank(message = "资源类型不能为空")
-    @get:DictCode("resource_type", "kuark.sys", "资源类型不存在！")
+    @get:DictCode("resource_type", "kuark:sys", "资源类型不存在！")
     /** 资源类型字典代码 */
     var resourceTypeDictCode: String?  = null
 
@@ -35,7 +35,7 @@ class SysResourcePayload {
     var seqNo: Int? = null
 
 
-    @get:DictCode("sub_sys", "kuark.sys", "子系统不存在！")
+    @get:DictCode("sub_sys", "kuark:sys", "子系统不存在！")
     /** 子系统代码 */
     var subSysDictCode: String? = null
 

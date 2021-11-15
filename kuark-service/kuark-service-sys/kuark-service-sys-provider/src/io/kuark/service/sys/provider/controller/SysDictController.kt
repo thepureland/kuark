@@ -23,7 +23,7 @@ open class SysDictController : BaseController() {
     @Autowired
     private lateinit var sysDictBiz: ISysDictBiz
 
-    @PostMapping("/laodTreeNodes")
+    @PostMapping("/loadTreeNodes")
     fun laodTreeNodes(@RequestBody searchPayload: SysDictSearchPayload): WebResult<List<SysDictTreeNode>> {
         val activeOnly = searchPayload.active ?: false
         return WebResult(

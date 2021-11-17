@@ -42,4 +42,7 @@ class SysResourcePayload {
     /** 图标 */
     var icon: String? = null
 
+    /** 备注 */
+    var remark: String? = null
+
 }

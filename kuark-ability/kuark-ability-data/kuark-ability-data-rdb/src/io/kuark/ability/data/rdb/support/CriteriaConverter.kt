@@ -35,7 +35,8 @@ internal object CriteriaConverter {
                     criterionGroup.forEach { groupElem ->
                         when (groupElem) {
                             is Criterion -> {
-                                orExpressions.add(convertCriterion(groupElem, table))
+                                val columnDeclaring = convertCriterion(groupElem, table)
+                                columnDeclaring?.let { orExpressions.add(columnDeclaring) }
                             }
                             is Criteria -> {
                                 orExpressions.add(convert(groupElem, table))
@@ -54,7 +55,8 @@ internal object CriteriaConverter {
                     andExpressions.add(expression)
                 }
                 is Criterion -> {
-                    andExpressions.add(convertCriterion(criterionGroup, table))
+                    val columnDeclaring = convertCriterion(criterionGroup, table)
+                    columnDeclaring?.let { andExpressions.add(columnDeclaring) }
                 }
                 is Criteria -> {
                     andExpressions.add(convert(criterionGroup, table))
@@ -73,7 +75,7 @@ internal object CriteriaConverter {
         return wholeExpression
     }
 
-    private fun convertCriterion(criterion: Criterion, table: Table<*>): ColumnDeclaring<Boolean> {
+    private fun convertCriterion(criterion: Criterion, table: Table<*>): ColumnDeclaring<Boolean>? {
         val column = ColumnHelper.columnOf(table, criterion.property)[criterion.property] as Column<Any>
         val value = criterion.getValue()
         return SqlWhereExpressionFactory.create(column, criterion.operator, value)

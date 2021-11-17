@@ -132,22 +132,22 @@ open class SysDictDao : BaseDao<String, SysDict, SysDicts>() {
                     it += SysDictItems.active.eq(searchPayload.active!!)
                 }
                 if (StringKit.isNotBlank(searchPayload.module)) {
-                    it += whereExpr(SysDicts.module, Operator.ILIKE, searchPayload.module!!.trim())
+                    it += whereExpr(SysDicts.module, Operator.ILIKE, searchPayload.module!!.trim())!!
                 }
                 if (StringKit.isNotBlank(searchPayload.dictType)) {
-                    it += whereExpr(SysDicts.dictType, Operator.ILIKE, searchPayload.dictType!!.trim())
+                    it += whereExpr(SysDicts.dictType, Operator.ILIKE, searchPayload.dictType!!.trim())!!
                 }
                 if (StringKit.isNotBlank(searchPayload.dictName)) {
-                    it += whereExpr(SysDicts.dictName, Operator.ILIKE, searchPayload.dictName!!.trim())
+                    it += whereExpr(SysDicts.dictName, Operator.ILIKE, searchPayload.dictName!!.trim())!!
                 }
                 if (StringKit.isNotBlank(searchPayload.itemCode)) {
-                    it += whereExpr(SysDictItems.itemCode, Operator.ILIKE, searchPayload.itemCode!!.trim())
+                    it += whereExpr(SysDictItems.itemCode, Operator.ILIKE, searchPayload.itemCode!!.trim())!!
                 }
                 if (StringKit.isNotBlank(searchPayload.parentCode)) {
-                    it += whereExpr(SysDictItems.parentCode, Operator.ILIKE, searchPayload.parentCode!!.trim())
+                    it += whereExpr(SysDictItems.parentCode, Operator.ILIKE, searchPayload.parentCode!!.trim())!!
                 }
                 if (StringKit.isNotBlank(searchPayload.itemName)) {
-                    it += whereExpr(SysDictItems.itemName, Operator.ILIKE, searchPayload.itemName!!.trim())
+                    it += whereExpr(SysDictItems.itemName, Operator.ILIKE, searchPayload.itemName!!.trim())!!
                 }
             }
     }

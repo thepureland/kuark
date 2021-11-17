@@ -25,7 +25,10 @@ object SqlWhereExpressionFactory {
      * @since 1.0.0
      */
     @Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
-    fun create(column: Column<Any>, operator: Operator, value: Any?): ColumnDeclaring<Boolean> {
+    fun create(column: Column<Any>, operator: Operator, value: Any?): ColumnDeclaring<Boolean>? {
+        if (value == null && operator !in arrayOf(Operator.IS_NULL, Operator.IS_NOT_NULL)) {
+            return null
+        }
         return when (operator) {
             Operator.EQ -> column.eq(value!!)
             Operator.NE, Operator.LG -> column.notEq(value!!)

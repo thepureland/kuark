@@ -7,6 +7,7 @@ import io.kuark.ability.data.rdb.support.SqlWhereExpressionFactory
 import io.kuark.ability.web.common.WebResult
 import io.kuark.base.lang.string.StringKit
 import io.kuark.base.query.enums.Operator
+import io.kuark.base.support.Consts
 import io.kuark.service.sys.common.model.param.SysParamRecord
 import io.kuark.service.sys.common.model.param.SysParamSearchPayload
 import io.kuark.service.sys.provider.dao.SysParamDao
@@ -54,6 +55,7 @@ open class SysParamBiz : BaseBiz<String, SysParam, SysParamDao>(), ISysParamBiz 
             } else null
         }
         val count = if (records.isEmpty()) 0 else dao.count(searchPayload)
+        @Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
         return Pair(records as List<SysParamRecord>, count)
     }
 

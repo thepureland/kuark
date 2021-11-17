@@ -1,6 +1,8 @@
 package io.kuark.service.sys.provider.biz
 
 import io.kuark.ability.data.rdb.biz.BaseBiz
+import io.kuark.ability.data.rdb.support.SqlWhereExpressionFactory
+import io.kuark.ability.data.rdb.support.ilike
 import io.kuark.base.lang.string.StringKit
 import io.kuark.base.query.Criteria
 import io.kuark.base.query.enums.Operator
@@ -69,10 +71,8 @@ open class SysResourceBiz : BaseBiz<String, SysResource, SysResourceDao>(), ISys
                 if (searchPayload.active == false) { // 非仅启用状态
                     searchPayload.active = null
                 }
-//                if (searchPayload.level != null && searchPayload.level!! == 2) {
-//                    searchPayload.parentId = null
-//                }
                 searchPayload.returnEntityClass = SysResourceTreeNode::class
+                searchPayload.pageNo = null // 不分页
                 dao.search(searchPayload) { column, _ ->
                     if (column.name == SysResources.parentId.name && searchPayload.level == 2) { // 1层是资源类型，2层是子系统，从第3层开始才是SysResource
                         column.isNull()
@@ -98,9 +98,17 @@ open class SysResourceBiz : BaseBiz<String, SysResource, SysResourceDao>(), ISys
         listSearchPayload: ListSearchPayload?,
         whereConditionFactory: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)?
     ): Pair<List<*>, Int> {
+        val result = if (whereConditionFactory == null) {
+            super.pagingSearch(listSearchPayload) { column, value ->
+                if (column.name == SysResources.name.name) {
+                    SqlWhereExpressionFactory.create(column, Operator.ILIKE, value)
+                } else null
+            }
+        } else {
+            super.pagingSearch(listSearchPayload, whereConditionFactory)
+        }
         @Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
-        val result = super.pagingSearch(listSearchPayload, whereConditionFactory) as Pair<List<SysResourceRecord>, Int>
-        result.first.forEach {
+        (result as Pair<List<SysResourceRecord>, Int>).first.forEach {
             transCode(it)
         }
         return result
@@ -112,11 +120,9 @@ open class SysResourceBiz : BaseBiz<String, SysResource, SysResourceDao>(), ISys
             transCode(result)
             if (fetchAllParentIds) {
                 val realParentIds = fetchAllParentIds(id)
-                if (realParentIds.isNotEmpty()) {
-                    val parentIds = mutableListOf(result.resourceTypeDictCode!!, result.subSysDictCode!!)
-                    parentIds.addAll(realParentIds)
-                    result.parentIds = parentIds
-                }
+                val parentIds = mutableListOf(result.resourceTypeDictCode!!, result.subSysDictCode!!)
+                parentIds.addAll(realParentIds)
+                result.parentIds = parentIds
             }
         }
         return result

@@ -105,7 +105,7 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
      * @since 1.0.0
      */
     @Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
-    fun <A: Any> whereExpr(column: Column<A>, operator: Operator, value: A?): ColumnDeclaring<Boolean> {
+    fun <A: Any> whereExpr(column: Column<A>, operator: Operator, value: A?): ColumnDeclaring<Boolean>? {
         return SqlWhereExpressionFactory.create(column as Column<Any>, operator, value)
     }
 

@@ -17,6 +17,9 @@ class SysDictPayload {
     /** 字典id */
     var dictId: String? = null
 
+    /** 字典类型 */
+    var dictType: String? = null
+
     /** 父项id */
     var parentId: String? = null
 

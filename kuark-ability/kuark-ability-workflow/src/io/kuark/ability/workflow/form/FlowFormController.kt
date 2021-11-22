@@ -37,7 +37,7 @@ class FlowFormController {
     fun get(id: String): WebResult<FlowForm> {
         val flowForm = flowFormBiz.get(id)
         return if (flowForm == null) {
-            WebResult("找不到流程表单！id：$id")
+            WebResult(null,"找不到流程表单！id：$id")
         } else {
             WebResult(flowForm)
         }

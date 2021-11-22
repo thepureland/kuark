@@ -28,6 +28,9 @@ class MixCacheManager : AbstractTransactionSupportingCacheManager() {
     @Value("\${cache.config.strategy}")
     private var strategyStr: String? = null
 
+    @Value("\${cache.config.enabled}")
+    private var cacheEnabled: Boolean? = null
+
     @Autowired(required = false)
     @Qualifier("localCacheManager")
     private lateinit var localCacheManager: CacheManager
@@ -79,5 +82,7 @@ class MixCacheManager : AbstractTransactionSupportingCacheManager() {
         val mixCache = cache as MixCache
         mixCache.clearLocal(key)
     }
+
+    fun isCacheEnabled(): Boolean = cacheEnabled == true
 
 }

@@ -8,6 +8,7 @@ import io.kuark.service.sys.common.model.dict.SysDictRecord
 import io.kuark.service.sys.common.model.dict.SysDictSearchPayload
 import io.kuark.service.sys.common.model.dict.SysDictTreeNode
 import io.kuark.service.sys.provider.ibiz.ISysDictBiz
+import io.kuark.service.sys.provider.ibiz.ISysDictItemBiz
 import io.kuark.service.sys.provider.model.table.SysDicts
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.validation.BindingResult
@@ -22,6 +23,9 @@ open class SysDictController : BaseController() {
 
     @Autowired
     private lateinit var sysDictBiz: ISysDictBiz
+
+    @Autowired
+    private lateinit var sysDictItemBiz: ISysDictItemBiz
 
     @PostMapping("/loadTreeNodes")
     fun laodTreeNodes(@RequestBody searchPayload: SysDictSearchPayload): WebResult<List<SysDictTreeNode>> {
@@ -46,8 +50,8 @@ open class SysDictController : BaseController() {
     @GetMapping("/loadModules")
     @Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
     fun loadModules(): WebResult<List<String>> {
-        val modules = sysDictBiz.allSearchProperty(SysDicts.module.name) as List<String>
-        return WebResult(modules.distinct())
+        val items = sysDictItemBiz.getItemsByModuleAndType("kuark:sys", "module")
+        return WebResult(items.map { it.itemCode })
     }
 
     @GetMapping("/loadDictTypes")

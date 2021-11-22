@@ -1,6 +1,7 @@
 package io.kuark.service.sys.provider.biz
 
 import io.kuark.ability.cache.context.CacheNames
+import io.kuark.ability.cache.kit.CacheKit
 import io.kuark.ability.data.rdb.biz.BaseBiz
 import io.kuark.base.lang.string.StringKit
 import io.kuark.service.sys.common.model.dict.SysDictPayload
@@ -9,8 +10,11 @@ import io.kuark.service.sys.provider.ibiz.ISysDictBiz
 import io.kuark.service.sys.provider.ibiz.ISysDictItemBiz
 import io.kuark.service.sys.provider.model.po.SysDictItem
 import io.kuark.service.sys.provider.model.table.SysDictItems
+import io.kuark.service.sys.provider.model.table.SysDicts
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.CacheConfig
+import org.springframework.cache.annotation.CacheEvict
+import org.springframework.cache.annotation.CachePut
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -51,6 +55,7 @@ open class SysDictItemBiz : BaseBiz<String, SysDictItem, SysDictItemDao>(), ISys
     }
 
     @Transactional
+    @CacheEvict(key = "#payload.module.concat(':').concat(#payload.dictType)")
     override fun saveOrUpdate(payload: SysDictPayload): String {
         return if (StringKit.isBlank(payload.id)) { // 新增
             val sysDictItem = SysDictItem().apply {
@@ -91,11 +96,16 @@ open class SysDictItemBiz : BaseBiz<String, SysDictItem, SysDictItemDao>(), ISys
         if (childItemIds.isNotEmpty()) {
             dao.batchDelete(childItemIds)
         }
+        if (CacheKit.isCacheActive()) {
+            val dictIds = dao.oneSearchProperty(SysDictItem::id.name, id, SysDictItem::dictId.name)
+            val dict = sysDictBiz.get(dictIds.first() as String)!!
+            CacheKit.evict(CacheNames.SYS_DICT_ITEM, "${dict.module}:${dict.dictType}") // 字典的缓存粒度为字典类型
+        }
         return dao.deleteById(id)
     }
 
     private fun recursionFindAllParentId(itemId: String, results: MutableList<String>) {
-        val list = dao.oneSearchProperty(SysDictItems.id.name, itemId, SysDictItems.parentId.name)
+        val list = dao.oneSearchProperty(SysDictItem::id.name, itemId, SysDictItem::parentId.name)
         if (list.isNotEmpty()) {
             val parentId = list.first() as String
             results.add(parentId)
@@ -104,7 +114,7 @@ open class SysDictItemBiz : BaseBiz<String, SysDictItem, SysDictItemDao>(), ISys
     }
 
     private fun recursionFindAllChildId(itemId: String, results: MutableList<String>) {
-        val itemIds = dao.oneSearchProperty(SysDictItems.parentId.name, itemId, SysDictItems.id.name)
+        val itemIds = dao.oneSearchProperty(SysDictItem::parentId.name, itemId, SysDictItem::id.name)
         itemIds.forEach { id ->
             results.add(id as String)
             recursionFindAllChildId(id, results)

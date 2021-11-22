@@ -12,6 +12,7 @@ dependencies {
     api("org.activiti:activiti-spring-boot-starter")
     api("org.apache.xmlgraphics:batik-all")
     api("org.springframework.boot:spring-boot-starter-security")
+    api(project(":kuark-service:kuark-service-sys:kuark-service-sys-provider"))
 
     testImplementation(project(":kuark-test:kuark-test-common"))
 }

@@ -58,6 +58,15 @@ include("kuark-ability:kuark-ability-workflow")
 findProject(":kuark-ability:kuark-ability-workflow")?.name = "kuark-ability-workflow"
 include("kuark-ability:kuark-ability-rules")
 findProject(":kuark-ability:kuark-ability-rules")?.name = "kuark-ability-rules"
+include("kuark-ability:kuark-ability-settings")
+findProject(":kuark-ability:kuark-ability-settings")?.name = "kuark-ability-settings"
+include("kuark-ability:kuark-ability-settings:kuark-ability-settings-provider")
+findProject(":kuark-ability:kuark-ability-settings:kuark-ability-settings-provider")?.name = "kuark-ability-settings-provider"
+include("kuark-ability:kuark-ability-settings:kuark-ability-settings-common")
+findProject(":kuark-ability:kuark-ability-settings:kuark-ability-settings-common")?.name = "kuark-ability-settings-common"
+findProject(":kuark-ability-settings:kuark-ability-settings-api")?.name = "kuark-ability-settings-api"
+include("kuark-ability:kuark-ability-settings:kuark-ability-settings-api")
+findProject(":kuark-ability:kuark-ability-settings:kuark-ability-settings-api")?.name = "kuark-ability-settings-api"
 
 include("kuark-service")
 include("kuark-service:kuark-service-sys")

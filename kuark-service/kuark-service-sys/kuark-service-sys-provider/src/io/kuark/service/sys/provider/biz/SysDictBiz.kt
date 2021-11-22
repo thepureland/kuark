@@ -67,11 +67,10 @@ open class SysDictBiz : BaseBiz<String, SysDict, SysDictDao>(), ISysDictBiz {
     ): List<SysDictTreeNode> {
         return when {
             StringKit.isBlank(parent) -> { // 加载模块列表
-                val modules =
-                    dao.allSearchProperty(SysDicts.module.name, Order.asc(SysDicts.module.name)).toSet() // distinct
-                modules.map {
+                val items = sysDictItemBiz.getItemsByModuleAndType("kuark:sys", "module")
+                items.map {
                     SysDictTreeNode().apply {
-                        code = it.toString()
+                        code = it.itemCode
                         id = code
                     }
                 }

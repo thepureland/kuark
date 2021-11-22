@@ -3,6 +3,9 @@ package io.kuark.ability.workflow.definition
 import io.kuark.ability.web.common.WebResult
 import io.kuark.base.image.ImageKit
 import io.kuark.base.query.sort.Order
+import io.kuark.service.sys.provider.ibiz.ISysDictItemBiz
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RestController
@@ -18,7 +21,11 @@ import javax.imageio.ImageIO
 @RequestMapping("/flow/definition")
 class FlowDefinitionController {
 
+    @Autowired
     private lateinit var flowDefinitionBiz: IFlowDefinitionBiz
+
+    @Autowired
+    private lateinit var sysDictItemBiz: ISysDictItemBiz
 
     /**
      * 返回指定key和版本的流程定义
@@ -33,7 +40,7 @@ class FlowDefinitionController {
     fun get(key: String, version: Int): WebResult<FlowDefinition> {
         val definition = flowDefinitionBiz.get(key, version)
         return if (definition == null) {
-            WebResult("流程定义不存在！key：$key, version：$version")
+            WebResult(null,"流程定义不存在！key：$key, version：$version")
         } else {
             WebResult(definition)
         }
@@ -157,6 +164,14 @@ class FlowDefinitionController {
     fun deleteThorough(key: String, version: Int): WebResult<Boolean> {
         flowDefinitionBiz.delete(key, version, true)
         return WebResult(true)
+    }
+
+    @GetMapping("/loadCategories")
+    fun loadCategories(): WebResult<Map<String, String>> {
+        val items = sysDictItemBiz.getItemsByModuleAndType("kuark:flow", "flow_category")
+        val map = mutableMapOf<String, String>()
+        items.forEach { map[it.itemCode] = it.itemName }
+        return WebResult(map)
     }
 
 }

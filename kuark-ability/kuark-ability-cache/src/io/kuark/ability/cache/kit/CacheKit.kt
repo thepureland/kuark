@@ -17,6 +17,18 @@ object CacheKit {
     private val log = LogFactory.getLog(this::class)
 
     /**
+     * 是否开户缓存
+     *
+     * @return true: 开启缓存，false：关闭缓存
+     * @author K
+     * @since 1.0.0
+     */
+    fun isCacheActive(): Boolean {
+        val cacheManager = SpringKit.getBean("cacheManager") as MixCacheManager
+        return cacheManager.isCacheEnabled()
+    }
+
+    /**
      * 根据名称获取缓存
      *
      * @param name 缓存名称

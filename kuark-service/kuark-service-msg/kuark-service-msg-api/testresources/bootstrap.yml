@@ -1,7 +1,0 @@
-spring:
-  profiles:
-    active:
-    - context-default
-    - ability-web-ktor-default
-    - service-msg-consumer-default
-    - service-msg-consumer-junit

@@ -3,7 +3,7 @@ package io.kuark.ability.workflow.definition
 import io.kuark.ability.web.common.WebResult
 import io.kuark.base.image.ImageKit
 import io.kuark.base.query.sort.Order
-import io.kuark.service.sys.provider.ibiz.ISysDictItemBiz
+import io.kuark.ability.sys.provider.reg.ibiz.IRegDictItemBiz
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
@@ -25,7 +25,7 @@ class FlowDefinitionController {
     private lateinit var flowDefinitionBiz: IFlowDefinitionBiz
 
     @Autowired
-    private lateinit var sysDictItemBiz: ISysDictItemBiz
+    private lateinit var regDictItemBiz: IRegDictItemBiz
 
     /**
      * 返回指定key和版本的流程定义
@@ -168,7 +168,7 @@ class FlowDefinitionController {
 
     @GetMapping("/loadCategories")
     fun loadCategories(): WebResult<Map<String, String>> {
-        val items = sysDictItemBiz.getItemsByModuleAndType("kuark:flow", "flow_category")
+        val items = regDictItemBiz.getItemsByModuleAndType("kuark:flow", "flow_category")
         val map = mutableMapOf<String, String>()
         items.forEach { map[it.itemCode] = it.itemName }
         return WebResult(map)

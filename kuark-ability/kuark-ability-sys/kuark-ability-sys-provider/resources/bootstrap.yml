@@ -1,0 +1,7 @@
+spring:
+  profiles:
+    active:
+    - context-default
+    - ability-cache-default
+    - ability-data-rdb-default
+    - ability-settings-provider-default

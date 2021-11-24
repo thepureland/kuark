@@ -58,46 +58,23 @@ include("kuark-ability:kuark-ability-workflow")
 findProject(":kuark-ability:kuark-ability-workflow")?.name = "kuark-ability-workflow"
 include("kuark-ability:kuark-ability-rules")
 findProject(":kuark-ability:kuark-ability-rules")?.name = "kuark-ability-rules"
-include("kuark-ability:kuark-ability-settings")
-findProject(":kuark-ability:kuark-ability-settings")?.name = "kuark-ability-settings"
-include("kuark-ability:kuark-ability-settings:kuark-ability-settings-provider")
-findProject(":kuark-ability:kuark-ability-settings:kuark-ability-settings-provider")?.name = "kuark-ability-settings-provider"
-include("kuark-ability:kuark-ability-settings:kuark-ability-settings-common")
-findProject(":kuark-ability:kuark-ability-settings:kuark-ability-settings-common")?.name = "kuark-ability-settings-common"
-findProject(":kuark-ability-settings:kuark-ability-settings-api")?.name = "kuark-ability-settings-api"
-include("kuark-ability:kuark-ability-settings:kuark-ability-settings-api")
-findProject(":kuark-ability:kuark-ability-settings:kuark-ability-settings-api")?.name = "kuark-ability-settings-api"
-
-include("kuark-service")
-include("kuark-service:kuark-service-sys")
-include("kuark-service:kuark-service-sys:kuark-service-sys-provider")
-findProject(":kuark-service:kuark-service-sys:kuark-service-sys-provider")?.name = "kuark-service-sys-provider"
-include("kuark-service:kuark-service-sys:kuark-service-sys-common")
-findProject(":kuark-service:kuark-service-sys:kuark-service-sys-common")?.name = "kuark-service-sys-common"
-include("kuark-service:kuark-service-sys:kuark-service-sys-api")
-findProject(":kuark-service:kuark-service-sys:kuark-service-sys-api")?.name = "kuark-service-sys-api"
-include("kuark-service:kuark-service-geo")
-include("kuark-service:kuark-service-geo:kuark-service-geo-provider")
-findProject(":kuark-service:kuark-service-geo:kuark-service-geo-provider")?.name = "kuark-service-geo-provider"
-include("kuark-service:kuark-service-geo:kuark-service-geo-common")
-findProject(":kuark-service:kuark-service-geo:kuark-service-geo-common")?.name = "kuark-service-geo-common"
-include("kuark-service:kuark-service-geo:kuark-service-geo-api")
-findProject(":kuark-service:kuark-service-geo:kuark-service-geo-api")?.name = "kuark-service-geo-api"
-include("kuark-service:kuark-service-user")
-include("kuark-service:kuark-service-user:kuark-service-user-provider")
-findProject(":kuark-service:kuark-service-user:kuark-service-user-provider")?.name = "kuark-service-user-provider"
-include("kuark-service:kuark-service-user:kuark-service-user-common")
-findProject(":kuark-service:kuark-service-user:kuark-service-user-common")?.name = "kuark-service-user-common"
-include("kuark-service:kuark-service-user:kuark-service-user-common")
-include("kuark-service:kuark-service-user:kuark-service-user-api")
-findProject(":kuark-service:kuark-service-user:kuark-service-user-api")?.name = "kuark-service-user-api"
-include("kuark-service:kuark-service-msg")
-include("kuark-service:kuark-service-msg:kuark-service-msg-provider")
-findProject(":kuark-service:kuark-service-msg:kuark-service-msg-provider")?.name = "kuark-service-msg-provider"
-include("kuark-service:kuark-service-msg:kuark-service-msg-common")
-findProject(":kuark-service:kuark-service-msg:kuark-service-msg-common")?.name = "kuark-service-msg-common"
-include("kuark-service:kuark-service-msg:kuark-service-msg-api")
-findProject(":kuark-service:kuark-service-msg:kuark-service-msg-api")?.name = "kuark-service-msg-api"
+include("kuark-ability:kuark-ability-sys")
+findProject(":kuark-ability:kuark-ability-sys")?.name = "kuark-ability-sys"
+include("kuark-ability:kuark-ability-sys:kuark-ability-sys-provider")
+findProject(":kuark-ability:kuark-ability-sys:kuark-ability-sys-provider")?.name = "kuark-ability-sys-provider"
+include("kuark-ability:kuark-ability-sys:kuark-ability-sys-common")
+findProject(":kuark-ability:kuark-ability-sys:kuark-ability-sys-common")?.name = "kuark-ability-sys-common"
+findProject(":kuark-ability-sys:kuark-ability-sys-api")?.name = "kuark-ability-sys-api"
+include("kuark-ability:kuark-ability-sys:kuark-ability-sys-api")
+findProject(":kuark-ability:kuark-ability-sys:kuark-ability-sys-api")?.name = "kuark-ability-sys-api"
+include("kuark-ability:kuark-ability-notify")
+findProject(":kuark-ability:kuark-ability-notify")?.name = "kuark-ability-notify"
+include("kuark-ability:kuark-ability-notify:kuark-ability-notify-provider")
+findProject(":kuark-ability:kuark-ability-notify:kuark-ability-notify-provider")?.name = "kuark-ability-notify-provider"
+include("kuark-ability:kuark-ability-notify:kuark-ability-notify-common")
+findProject(":kuark-ability:kuark-ability-notify:kuark-ability-notify-common")?.name = "kuark-ability-notify-common"
+include("kuark-ability:kuark-ability-notify:kuark-ability-notify-api")
+findProject(":kuark-ability:kuark-ability-notify:kuark-ability-notify-api")?.name = "kuark-ability-notify-api"
 
 include("kuark-ui")
 include("kuark-ui:kuark-ui-jfx")

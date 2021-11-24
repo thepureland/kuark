@@ -21,7 +21,7 @@ class RegDictItemController {
     private lateinit var regDictItemBiz: IRegDictItemBiz
 
     @GetMapping("/loadDictItemCodes")
-    @Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
+    @Suppress(Consts.Suppress.UNCHECKED_CAST)
     fun loadDictItemCodes(): WebResult<List<String>> {
         val modules = regDictItemBiz.allSearchProperty(RegDictItems.itemCode.name) as List<String>
         return WebResult(modules.distinct())

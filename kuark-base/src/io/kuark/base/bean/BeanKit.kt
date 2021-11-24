@@ -182,7 +182,7 @@ object BeanKit {
      * @author K
      * @since 1.0.0
      */
-    @Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
+    @Suppress(Consts.Suppress.UNCHECKED_CAST)
     fun <T> shallowClone(bean: T): T = BeanUtils.cloneBean(bean) as T
 
 //    /**
@@ -258,7 +258,7 @@ object BeanKit {
      * @author K
      * @since 1.0.0
      */
-    @Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
+    @Suppress(Consts.Suppress.UNCHECKED_CAST)
     fun <T> setProperty(bean: T, name: String?, value: Any?): T = BeanUtils.copyProperty(bean, name, value) as T
 
     //endregion 封装org.apache.commons.beanutils.BeanUtils和PropertyUtils

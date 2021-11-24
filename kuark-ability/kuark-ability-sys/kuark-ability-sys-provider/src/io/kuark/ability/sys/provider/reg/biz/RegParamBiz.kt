@@ -53,7 +53,7 @@ open class RegParamBiz : BaseBiz<String, RegParam, RegParamDao>(), IRegParamBiz 
             } else null
         }
         val count = if (records.isEmpty()) 0 else dao.count(searchPayload)
-        @Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
+        @Suppress(Consts.Suppress.UNCHECKED_CAST)
         return Pair(records as List<RegParamRecord>, count)
     }
 

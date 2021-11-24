@@ -19,7 +19,7 @@ class Sort : Iterable<Order>, Serializable {
 
     constructor(orders: MutableList<Order>) {
         if (orders.isEmpty()) {
-            throw error("必须至少提供一个排序规则！")
+            error("必须至少提供一个排序规则！")
         }
         this.orders = orders
     }

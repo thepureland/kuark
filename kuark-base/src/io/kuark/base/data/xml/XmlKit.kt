@@ -76,7 +76,7 @@ object XmlKit {
      * @author K
      * @since 1.0.0
      */
-    @Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
+    @Suppress(Consts.Suppress.UNCHECKED_CAST)
     fun <T : Any> fromXml(xml: String, clazz: KClass<T>, ignoreNameSpace: Boolean = false): T {
         val reader = StringReader(xml)
         val sax = SAXParserFactory.newInstance()

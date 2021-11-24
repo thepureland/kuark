@@ -170,7 +170,7 @@ class BatchCacheableAspect {
      * @author K
      * @since 1.0.0
      */
-    @Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
+    @Suppress(Consts.Suppress.UNCHECKED_CAST)
     private fun readUncachedData(
         result: MutableMap<String, Any?>, joinPoint: ProceedingJoinPoint, function: KFunction<*>,
         batchCacheable: BatchCacheable

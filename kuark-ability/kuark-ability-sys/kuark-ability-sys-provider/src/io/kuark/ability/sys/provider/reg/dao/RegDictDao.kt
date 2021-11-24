@@ -28,7 +28,7 @@ open class RegDictDao : BaseDao<String, RegDict, RegDicts>() {
 //endregion your codes 1
 
     //region your codes 2
-    @Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
+    @Suppress(Consts.Suppress.UNCHECKED_CAST)
     fun getDictIdByModuleAndType(module: String, type: String): String? {
         val list = querySource()
             .select(RegDicts.id)

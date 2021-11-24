@@ -118,7 +118,7 @@ object EnumKit {
      * @author K
      * @since 1.0.0
      */
-    @Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
+    @Suppress(Consts.Suppress.UNCHECKED_CAST)
     fun getCodeEnumClass(enumClassStr: String): KClass<out IDictEnum> {
         require(!enumClassStr.isBlank()) { "字典枚举全类名参数不能为空" }
 

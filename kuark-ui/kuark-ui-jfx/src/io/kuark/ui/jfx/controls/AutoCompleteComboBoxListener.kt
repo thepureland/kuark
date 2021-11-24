@@ -71,7 +71,7 @@ class AutoCompleteComboBoxListener<T>(private val comboBox: ComboBox<Any>?) : Ev
 
     init {
         sb = StringBuilder()
-        @Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
+        @Suppress(Consts.Suppress.UNCHECKED_CAST)
         data = comboBox!!.items as ObservableList<T>
         comboBox.isEditable = true
         comboBox.onKeyPressed = EventHandler { comboBox.hide() }

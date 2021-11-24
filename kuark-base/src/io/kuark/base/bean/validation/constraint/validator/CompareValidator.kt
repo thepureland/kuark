@@ -22,7 +22,7 @@ class CompareValidator : ConstraintValidator<Compare, Any?> {
         this.compare = compare
     }
 
-    @Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
+    @Suppress(Consts.Suppress.UNCHECKED_CAST)
     override fun isValid(value: Any?, constraintValidatorContext: ConstraintValidatorContext): Boolean {
         val bean = ValidationContext.get(constraintValidatorContext)!!
 

@@ -46,7 +46,7 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
      * @author K
      * @since 1.0.0
      */
-    @Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
+    @Suppress(Consts.Suppress.UNCHECKED_CAST)
     protected fun table(): T {
         if (table == null) {
             val tableClass = GenericKit.getSuperClassGenricClass(this::class, 2) as KClass<T>
@@ -89,7 +89,7 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
      * @author K
      * @since 1.0.0
      */
-    @Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
+    @Suppress(Consts.Suppress.UNCHECKED_CAST)
     protected fun getPkColumn(): Column<PK> {
         return table().primaryKeys[0] as Column<PK>
     }
@@ -104,7 +104,7 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
      * @author K
      * @since 1.0.0
      */
-    @Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
+    @Suppress(Consts.Suppress.UNCHECKED_CAST)
     fun <A: Any> whereExpr(column: Column<A>, operator: Operator, value: A?): ColumnDeclaring<Boolean>? {
         return SqlWhereExpressionFactory.create(column as Column<Any>, operator, value)
     }
@@ -603,7 +603,7 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
      * @author K
      * @since 1.0.0
      */
-    @Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
+    @Suppress(Consts.Suppress.UNCHECKED_CAST)
     open fun search(
         listSearchPayload: ListSearchPayload? = null,
         whereConditionFactory: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)? = null
@@ -705,7 +705,7 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
      * @author K
      * @since 1.0.0
      */
-    @Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
+    @Suppress(Consts.Suppress.UNCHECKED_CAST)
     open fun sum(property: String, criteria: Criteria? = null): Number {
         var entitySequence = entitySequence()
         if (criteria != null) {
@@ -725,7 +725,7 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
      * @author K
      * @since 1.0.0
      */
-    @Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
+    @Suppress(Consts.Suppress.UNCHECKED_CAST)
     open fun avg(property: String, criteria: Criteria? = null): Number {
         var entitySequence = entitySequence()
         if (criteria != null) {
@@ -745,7 +745,7 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
      * @author K
      * @since 1.0.0
      */
-    @Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
+    @Suppress(Consts.Suppress.UNCHECKED_CAST)
     open fun max(property: String, criteria: Criteria? = null): Any? {
         var entitySequence = entitySequence()
         if (criteria != null) {
@@ -765,7 +765,7 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
      * @author K
      * @since 1.0.0
      */
-    @Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
+    @Suppress(Consts.Suppress.UNCHECKED_CAST)
     open fun min(property: String, criteria: Criteria? = null): Any? {
         var entitySequence = entitySequence()
         if (criteria != null) {
@@ -794,7 +794,7 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
         }
     }
 
-    @Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
+    @Suppress(Consts.Suppress.UNCHECKED_CAST)
     protected fun processWhere(
         propertyMap: Map<String, *>,
         andOr: AndOr?,
@@ -1010,7 +1010,7 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
 }
 
 // 解决ktorm总是要调用到可变参数的inList方法的问题及泛型问题
-@Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
+@Suppress(Consts.Suppress.UNCHECKED_CAST)
 private fun <T : Any> ColumnDeclaring<T>.inCollection(list: Collection<*>): InListExpression<T> {
     return InListExpression(left = asExpression(), values = list.map { wrapArgument(it as T?) })
 }

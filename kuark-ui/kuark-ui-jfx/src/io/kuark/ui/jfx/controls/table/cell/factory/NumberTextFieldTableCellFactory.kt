@@ -10,7 +10,7 @@ import javafx.util.StringConverter
 
 class NumberTextFieldTableCellFactory<S> : Callback<TableColumn<S, Int>?, TableCell<S, Int>?> {
 
-    @Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
+    @Suppress(Consts.Suppress.UNCHECKED_CAST)
     override fun call(param: TableColumn<S, Int>?): TableCell<S, Int> {
         return XTextFieldTableCell<S, Int>(object : StringConverter<Int?>() {
 

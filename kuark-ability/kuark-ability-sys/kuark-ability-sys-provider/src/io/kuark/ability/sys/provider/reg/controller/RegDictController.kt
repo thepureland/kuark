@@ -48,14 +48,14 @@ open class RegDictController : BaseController() {
     }
 
     @GetMapping("/loadModules")
-    @Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
+    @Suppress(Consts.Suppress.UNCHECKED_CAST)
     fun loadModules(): WebResult<List<String>> {
         val items = regDictItemBiz.getItemsByModuleAndType("kuark:sys", "module")
         return WebResult(items.map { it.itemCode })
     }
 
     @GetMapping("/loadDictTypes")
-    @Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
+    @Suppress(Consts.Suppress.UNCHECKED_CAST)
     fun loadDictTypes(): WebResult<List<String>> {
         val modules = regDictBiz.allSearchProperty(RegDicts.dictType.name) as List<String>
         return WebResult(modules.distinct())

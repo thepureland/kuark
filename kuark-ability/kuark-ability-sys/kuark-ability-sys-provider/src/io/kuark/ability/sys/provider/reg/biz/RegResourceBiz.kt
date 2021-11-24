@@ -55,7 +55,7 @@ open class RegResourceBiz : BaseBiz<String, RegResource, RegResourceDao>(), IReg
         return TreeKit.convertListToTree(menus, Direction.ASC)
     }
 
-    @Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
+    @Suppress(Consts.Suppress.UNCHECKED_CAST)
     override fun loadDirectChildrenForTree(searchPayload: RegResourceSearchPayload): List<RegResourceTreeNode> {
         return when (if (searchPayload.level == null) Int.MAX_VALUE else searchPayload.level) {
             0 -> { // 资源类型
@@ -85,7 +85,7 @@ open class RegResourceBiz : BaseBiz<String, RegResource, RegResourceDao>(), IReg
         if (searchPayload.active == false) { // 非仅启用状态
             searchPayload.active = null
         }
-        @Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
+        @Suppress(Consts.Suppress.UNCHECKED_CAST)
         return pagingSearch(searchPayload) { column, _ ->
             if (column.name == RegResources.parentId.name && searchPayload.level == 2) { // 1层是资源类型，2层是子系统，从第3层开始才是RegResource
                 column.isNull()
@@ -106,7 +106,7 @@ open class RegResourceBiz : BaseBiz<String, RegResource, RegResourceDao>(), IReg
         } else {
             super.pagingSearch(listSearchPayload, whereConditionFactory)
         }
-        @Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
+        @Suppress(Consts.Suppress.UNCHECKED_CAST)
         (result as Pair<List<RegResourceRecord>, Int>).first.forEach {
             transCode(it)
         }

@@ -44,7 +44,7 @@ fun Collection<*>.joinEachToString(prefix: String = "", postfix: String = "", se
  * @author K
  * @since 1.0.0
  */
-@Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
+@Suppress(Consts.Suppress.UNCHECKED_CAST)
 fun <T> Collection<T>.getCardinalityMap(): Map<T, Int> = CollectionUtils.getCardinalityMap(this) as Map<T, Int>
 
 /**

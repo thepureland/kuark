@@ -2,6 +2,7 @@ package io.kuark.base.lang
 
 import io.kuark.base.lang.reflect.getMemberFunction
 import io.kuark.base.lang.reflect.getMemberProperty
+import io.kuark.base.support.Consts
 import io.kuark.base.support.ICallback
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
@@ -113,6 +114,7 @@ internal class GenericKitTest {
 
         fun fun2(): Map<Any, *>? = null
 
+        @Suppress(Consts.Suppress.UNUSED_PARAMETER)
         fun f(str: String, map: Map<String, Boolean>, map1: Map<Any, *>) {}
 
     }

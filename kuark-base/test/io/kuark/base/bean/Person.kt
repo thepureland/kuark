@@ -67,26 +67,26 @@ class Person : IIdEntity<String>, ITreeNode<String?> {
         if (this === other) return true
         if (other == null) return false
         if (javaClass != other.javaClass) return false
-        val other = other as Person
+        val otherPerson = other as Person
         if (address == null) {
-            if (other.address != null) return false
-        } else if (address != other.address) return false
-        if (age != other.age) return false
+            if (otherPerson.address != null) return false
+        } else if (address != otherPerson.address) return false
+        if (age != otherPerson.age) return false
         if (birthday == null) {
-            if (other.birthday != null) return false
-        } else if (birthday.toString() != other.birthday.toString()) return false
+            if (otherPerson.birthday != null) return false
+        } else if (birthday.toString() != otherPerson.birthday.toString()) return false
         if (contact == null) {
-            if (other.contact != null) return false
-        } else if (contact.toString() != other.contact.toString()) return false
+            if (otherPerson.contact != null) return false
+        } else if (contact.toString() != otherPerson.contact.toString()) return false
         if (goods == null) {
-            if (other.goods != null) return false
-        } else if (goods.toString() != other.goods.toString()) return false
+            if (otherPerson.goods != null) return false
+        } else if (goods.toString() != otherPerson.goods.toString()) return false
         if (name == null) {
-            if (other.name != null) return false
-        } else if (name != other.name) return false
+            if (otherPerson.name != null) return false
+        } else if (name != otherPerson.name) return false
         if (sex == null) {
-            if (other.sex != null) return false
-        } else if (sex != other.sex) return false
+            if (otherPerson.sex != null) return false
+        } else if (sex != otherPerson.sex) return false
         return true
     }
 

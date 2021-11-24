@@ -42,7 +42,7 @@ import org.apache.commons.collections.ListUtils
  * @author K
  * @since 1.0.0
  */
-@Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
+@Suppress(Consts.Suppress.UNCHECKED_CAST)
 fun <T : Any?> List<T>.lazyList(factory: Factory): List<T> = ListUtils.lazyList(this, factory) as List<T>
 
 // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

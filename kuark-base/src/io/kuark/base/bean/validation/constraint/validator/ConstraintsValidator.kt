@@ -497,7 +497,7 @@ class ConstraintsValidator : ConstraintValidator<Constraints, Any?> {
     }
 
 
-    @Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
+    @Suppress(Consts.Suppress.UNCHECKED_CAST)
     private fun doValidate(
         validator: Any, annotation: Annotation, value: Any?, context: ConstraintValidatorContext
     ): Boolean =

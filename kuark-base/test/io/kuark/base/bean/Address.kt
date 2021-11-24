@@ -29,19 +29,19 @@ class Address : Serializable {
         if (this === other) return true
         if (other == null) return false
         if (javaClass != other.javaClass) return false
-        val other: Address = other as Address
+        val otherAddr: Address = other as Address
         if (city == null) {
-            if (other.city != null) return false
-        } else if (city != other.city) return false
+            if (otherAddr.city != null) return false
+        } else if (city != otherAddr.city) return false
         if (province == null) {
-            if (other.province != null) return false
-        } else if (province != other.province) return false
+            if (otherAddr.province != null) return false
+        } else if (province != otherAddr.province) return false
         if (street == null) {
-            if (other.street != null) return false
-        } else if (street != other.street) return false
+            if (otherAddr.street != null) return false
+        } else if (street != otherAddr.street) return false
         if (zipcode == null) {
-            if (other.zipcode != null) return false
-        } else if (zipcode != other.zipcode) return false
+            if (otherAddr.zipcode != null) return false
+        } else if (zipcode != otherAddr.zipcode) return false
         return true
     }
 

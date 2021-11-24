@@ -2,6 +2,7 @@ package io.kuark.base.lang.reflect
 
 import io.kuark.base.bean.validation.constraint.annotaions.AtLeast
 import io.kuark.base.bean.validation.constraint.annotaions.NotNullOn
+import io.kuark.base.support.Consts
 import io.kuark.base.support.enums.IDictEnum
 import io.kuark.base.support.enums.Sex
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -213,6 +214,7 @@ class XKClassTest {
     internal annotation class TestAnno
 
     private open class Person { // 没有空构造器，也没有主构造器
+        @Suppress(Consts.Suppress.UNUSED_PARAMETER)
         constructor(name:String, age: Int)
     }
 

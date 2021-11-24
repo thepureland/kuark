@@ -169,7 +169,7 @@ enum class Operator constructor(
      * @author K
      * @since 1.0.0
      */
-    @Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
+    @Suppress(Consts.Suppress.UNCHECKED_CAST)
     fun assert(v1: Any?, v2: Any?): Boolean {
         return when (this) {
             EQ -> {

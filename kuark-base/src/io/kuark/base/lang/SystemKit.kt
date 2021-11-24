@@ -30,7 +30,7 @@ object SystemKit {
      * @author K
      * @since 1.0.0
      */
-    @Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
+    @Suppress(Consts.Suppress.UNCHECKED_CAST)
     fun setEnvVars(vars: Map<String, String>) {
         try {
             val processEnvironmentClass = Class.forName("java.lang.ProcessEnvironment")

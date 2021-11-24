@@ -26,7 +26,7 @@ class CustomValidator : ConstraintValidator<Custom, Any?> {
         return validate(custom.checkClass, value, context)
     }
 
-    @Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
+    @Suppress(Consts.Suppress.UNCHECKED_CAST)
     companion object {
         fun validate(
             checkClass: KClass<out IBeanValidator<*>>, value: Any?, context: ConstraintValidatorContext

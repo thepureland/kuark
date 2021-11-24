@@ -24,7 +24,7 @@ object SqlWhereExpressionFactory {
      * @author K
      * @since 1.0.0
      */
-    @Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
+    @Suppress(Consts.Suppress.UNCHECKED_CAST)
     fun create(column: Column<Any>, operator: Operator, value: Any?): ColumnDeclaring<Boolean>? {
         if (value == null && operator !in arrayOf(Operator.IS_NULL, Operator.IS_NOT_NULL)) {
             return null
@@ -74,30 +74,30 @@ object SqlWhereExpressionFactory {
     }
 
     // 为了解决 <T : Any> ColumnDeclaring<T>.eq(expr: ColumnDeclaring<T>) 的泛型问题
-    @Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
+    @Suppress(Consts.Suppress.UNCHECKED_CAST)
     private fun <T : Any> columnEq(
         column: ColumnDeclaring<T>, anotherColumn: Column<Any>
     ): ColumnDeclaring<Boolean> =
         column.eq(anotherColumn as Column<T>)
 
     // 为了解决 <T : Any> ColumnDeclaring<T>.notEq(expr: ColumnDeclaring<T>) 的泛型问题
-    @Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
+    @Suppress(Consts.Suppress.UNCHECKED_CAST)
     private fun <T : Any> columnNotEq(
         column: ColumnDeclaring<T>, anotherColumn: Column<*>
     ): ColumnDeclaring<Boolean> =
         column.notEq(anotherColumn as Column<T>)
 
     // 为了解决 <T : Any> ColumnDeclaring<T>.inList(list: Collection<T>) 的泛型问题
-    @Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
+    @Suppress(Consts.Suppress.UNCHECKED_CAST)
     private fun <T : Any> columnIn(column: ColumnDeclaring<T>, values: List<T>): ColumnDeclaring<Boolean> =
         column.inList(values)
 
     // 为了解决 <T : Any> ColumnDeclaring<T>.notInList(list: Collection<T>) 的泛型问题
-    @Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
+    @Suppress(Consts.Suppress.UNCHECKED_CAST)
     private fun <T : Any> columnNotIn(column: ColumnDeclaring<T>, values: List<T>): ColumnDeclaring<Boolean> =
         column.notInList(values)
 
-    @Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
+    @Suppress(Consts.Suppress.UNCHECKED_CAST)
     private fun handleIn(isIn: Boolean, value: Any, column: ColumnDeclaring<Any>): ColumnDeclaring<Boolean> {
         var values = value
         if (values !is List<*> && values !is Array<*>) {

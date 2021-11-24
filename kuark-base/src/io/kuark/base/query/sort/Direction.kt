@@ -18,10 +18,10 @@ enum class Direction {
         @JsonCreator
         fun fromString(value: String): Direction {
             return try {
-                Direction.valueOf(value.uppercase(Locale.US))
+                valueOf(value.uppercase(Locale.US))
             } catch (e: Exception) {
                 val msg = "非法排序值${value}！取值必须为 'desc' 或 'asc' (大小写不敏感)。"
-                throw error(msg)
+                error(msg)
             }
         }
     }

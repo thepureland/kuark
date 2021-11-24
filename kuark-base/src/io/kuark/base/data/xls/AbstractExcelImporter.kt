@@ -135,7 +135,7 @@ abstract class AbstractExcelImporter<T : Any> : IExcelImporter<T> {
      * @author K
      * @since 1.0.0
      */
-    @Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
+    @Suppress(Consts.Suppress.UNCHECKED_CAST)
     protected open fun wrapRowObjects(): List<T> {
         val rowObjectList = mutableListOf<T>()
         propertyNames = getPropertyNames()

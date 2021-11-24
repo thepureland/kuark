@@ -34,7 +34,7 @@ object ValueExtractor {
 
     private val valueExtractors = mutableMapOf<Class<*>, Callback<Any, Any>>()
 
-    @Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
+    @Suppress(Consts.Suppress.UNCHECKED_CAST)
     private fun <T : Any> addValueExtractor(clazz: Class<T>, extractor: Callback<T, Any>) {
         valueExtractors[clazz] = extractor as Callback<Any, Any>
     }

@@ -19,7 +19,7 @@ class PropertiesLoader {
         this.properties = properties
     }
 
-    @Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
+    @Suppress(Consts.Suppress.UNCHECKED_CAST)
     constructor(vararg resourcesPaths: String?) {
         properties = loadProperties(*resourcesPaths as Array<out String>)
     }

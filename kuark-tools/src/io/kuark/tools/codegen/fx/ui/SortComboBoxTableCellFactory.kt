@@ -15,7 +15,7 @@ import javafx.util.Callback
  */
 class SortComboBoxTableCellFactory<S>: Callback<TableColumn<S, String>?, TableCell<S, String>?> {
 
-    @Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
+    @Suppress(Consts.Suppress.UNCHECKED_CAST)
     override fun call(param: TableColumn<S, String>?): TableCell<S, String> {
         val strings = FXCollections.observableArrayList("", "升序", "降序")
         return ComboBoxTableCell<S?, Any?>(*strings.toTypedArray()) as TableCell<S, String>

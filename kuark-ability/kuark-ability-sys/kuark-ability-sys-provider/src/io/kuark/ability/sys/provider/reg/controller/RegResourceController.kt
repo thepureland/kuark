@@ -37,7 +37,7 @@ open class RegResourceController : BaseController() {
     }
 
     @PostMapping("/search")
-    @Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
+    @Suppress(Consts.Suppress.UNCHECKED_CAST)
     fun search(@RequestBody searchPayload: RegResourceSearchPayload): WebResult<Pair<List<RegResourceRecord>, Int>> {
         return WebResult(regResourceBiz.pagingSearch(searchPayload) as Pair<List<RegResourceRecord>, Int>)
     }

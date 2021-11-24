@@ -121,7 +121,7 @@ fun Map<*, *>.debugPrint(out: PrintStream, label: Any?) = MapUtils.debugPrint(ou
  * @author K
  * @since 1.0.0
  */
-@Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
+@Suppress(Consts.Suppress.UNCHECKED_CAST)
 fun <K, V> Map<K?, V?>.invertMap(): Map<V?, K?> = MapUtils.invertMap(this) as Map<V?, K?>
 
 /**
@@ -152,7 +152,7 @@ fun <K, V> Map<K?, V?>.invertMap(): Map<V?, K?> = MapUtils.invertMap(this) as Ma
  * @author K
  * @since 1.0.0
  */
-@Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
+@Suppress(Consts.Suppress.UNCHECKED_CAST)
 fun <K : Any?, V : Any?> Map<K, V>.lazyMap(factory: Factory): Map<K, V> = MapUtils.lazyMap(this, factory) as Map<K, V>
 
 /**
@@ -185,7 +185,7 @@ fun <K : Any?, V : Any?> Map<K, V>.lazyMap(factory: Factory): Map<K, V> = MapUti
  * @author K
  * @since 1.0.0
  */
-@Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
+@Suppress(Consts.Suppress.UNCHECKED_CAST)
 fun <K : Any?, V : Any?> Map<K, V>.lazyMap(transformerFactory: Transformer): Map<K, V> =
     MapUtils.lazyMap(this, transformerFactory) as Map<K, V>
 
@@ -199,7 +199,7 @@ fun <K : Any?, V : Any?> Map<K, V>.lazyMap(transformerFactory: Transformer): Map
  * @author K
  * @since 1.0.0
  */
-@Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
+@Suppress(Consts.Suppress.UNCHECKED_CAST)
 fun <K : Any?, V : Any?> Map<K, MutableCollection<out V>?>.multiValueMap(): Map<K, ArrayList<V>> =
     MapUtils.multiValueMap(this) as Map<K, java.util.ArrayList<V>>
 
@@ -215,7 +215,7 @@ fun <K : Any?, V : Any?> Map<K, MutableCollection<out V>?>.multiValueMap(): Map<
  * @author K
  * @since 1.0.0
  */
-@Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
+@Suppress(Consts.Suppress.UNCHECKED_CAST)
 fun <K : Any?, V : Any?, C : Collection<V>> Map<K, MutableCollection<out V>?>.multiValueMap(
     collectionClass: KClass<C>
 ): Map<K, C> = MapUtils.multiValueMap(this, collectionClass.java) as Map<K, C>
@@ -232,7 +232,7 @@ fun <K : Any?, V : Any?, C : Collection<V>> Map<K, MutableCollection<out V>?>.mu
  * @author K
  * @since 1.0.0
  */
-@Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
+@Suppress(Consts.Suppress.UNCHECKED_CAST)
 fun <K : Any?, V : Any?> Map<K, MutableCollection<V>?>.multiValueMap(
     collectionFactory: Factory?
 ): Map<K, MutableCollection<V>?> = MapUtils.multiValueMap(this, collectionFactory) as Map<K, MutableCollection<V>?>

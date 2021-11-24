@@ -104,7 +104,7 @@ class DefaultKeysGenerator : IKeysGenerator {
      * @author K
      * @since 1.0.0
      */
-    @Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
+    @Suppress(Consts.Suppress.UNCHECKED_CAST)
     private fun generateKeys(function: KFunction<*>?, totalCount: Int, vararg params: Any): List<String> {
         val keys = mutableListOf<List<Any>>() // List<List<key同一分段的部分>>
         val paramIndexes = getParamIndexes(function, *params)

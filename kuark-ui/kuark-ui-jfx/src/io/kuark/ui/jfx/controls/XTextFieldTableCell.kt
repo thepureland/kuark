@@ -136,7 +136,7 @@ class XTextFieldTableCell<S, T> @JvmOverloads constructor(converter: StringConve
     /**
      * @param oldTable
      */
-    @Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
+    @Suppress(Consts.Suppress.UNCHECKED_CAST)
     private fun uninstallTerminatingListener(oldTable: TableView<S?>?) {
         if (oldTable is XTableView<*>) {
             (oldTable.terminatingCellProperty() as ObservableValue<*>).removeListener(terminatingListener as ChangeListener<in Any>)

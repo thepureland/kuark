@@ -19,7 +19,7 @@ import java.util.*
  */
 open class TemplateModelCreator {
 
-    @Suppress(Consts.SUPPRESS_UNCHECKED_CAST)
+    @Suppress(Consts.Suppress.UNCHECKED_CAST)
     fun create(): Map<String, Any?> {
         val tableName = CodeGeneratorContext.tableName
         val config = CodeGeneratorContext.config

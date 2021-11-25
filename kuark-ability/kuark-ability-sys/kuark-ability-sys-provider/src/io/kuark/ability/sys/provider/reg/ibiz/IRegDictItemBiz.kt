@@ -1,6 +1,7 @@
 package io.kuark.ability.sys.provider.reg.ibiz
 
 import io.kuark.ability.data.rdb.biz.IBaseBiz
+import io.kuark.ability.sys.common.reg.dict.RegDictItemRecord
 import io.kuark.ability.sys.common.reg.dict.RegDictPayload
 import io.kuark.ability.sys.provider.reg.model.po.RegDictItem
 
@@ -25,7 +26,7 @@ interface IRegDictItemBiz: IBaseBiz<String, RegDictItem> {
      * @author K
      * @since 1.0.0
      */
-    fun getItemsByModuleAndType(module: String, type: String): List<RegDictItem>
+    fun getItemsByModuleAndType(module: String, type: String): List<RegDictItemRecord>
 
     /**
      * 翻译字典项代码

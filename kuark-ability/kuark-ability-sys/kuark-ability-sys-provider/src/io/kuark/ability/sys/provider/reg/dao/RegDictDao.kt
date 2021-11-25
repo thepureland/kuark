@@ -143,9 +143,9 @@ open class RegDictDao : BaseDao<String, RegDict, RegDicts>() {
                 if (StringKit.isNotBlank(searchPayload.itemCode)) {
                     it += whereExpr(RegDictItems.itemCode, Operator.ILIKE, searchPayload.itemCode!!.trim())!!
                 }
-                if (StringKit.isNotBlank(searchPayload.parentCode)) {
-                    it += whereExpr(RegDictItems.parentCode, Operator.ILIKE, searchPayload.parentCode!!.trim())!!
-                }
+//                if (StringKit.isNotBlank(searchPayload.parentCode)) {
+//                    it += whereExpr(RegDictItems.parentCode, Operator.ILIKE, searchPayload.parentCode!!.trim())!!
+//                }
                 if (StringKit.isNotBlank(searchPayload.itemName)) {
                     it += whereExpr(RegDictItems.itemName, Operator.ILIKE, searchPayload.itemName!!.trim())!!
                 }

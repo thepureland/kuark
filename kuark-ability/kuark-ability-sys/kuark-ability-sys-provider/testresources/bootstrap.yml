@@ -4,5 +4,5 @@ spring:
     - context-default
     - ability-cache-default
     - ability-data-rdb-default
-    - ability-settings-provider-default
-    - ability-settings-provider-junit
+    - ability-sys-provider-default
+    - ability-sys-provider-junit

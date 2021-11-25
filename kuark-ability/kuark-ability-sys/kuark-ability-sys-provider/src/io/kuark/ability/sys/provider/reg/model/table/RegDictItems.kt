@@ -24,8 +24,8 @@ object RegDictItems: MaintainableTable<RegDictItem>("reg_dict_item") {
     /** 字典项名称，或其国际化key */
     var itemName = varchar("item_name").bindTo { it.itemName }
 
-    /** 父项编号 */
-    var parentCode = varchar("parent_code").bindTo { it.parentCode }
+//    /** 父项编号 */
+//    var parentCode = varchar("parent_code").bindTo { it.parentCode }
 
     /** 父项主键 */
     var parentId = varchar("parent_id").bindTo { it.parentId }

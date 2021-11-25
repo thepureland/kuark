@@ -3,6 +3,7 @@ package io.kuark.ability.sys.provider.reg.biz
 import io.kuark.ability.cache.context.CacheNames
 import io.kuark.ability.cache.kit.CacheKit
 import io.kuark.ability.data.rdb.biz.BaseBiz
+import io.kuark.ability.sys.common.reg.dict.RegDictItemRecord
 import io.kuark.ability.sys.common.reg.dict.RegDictPayload
 import io.kuark.base.lang.string.StringKit
 import io.kuark.ability.sys.provider.reg.dao.RegDictItemDao
@@ -34,7 +35,7 @@ open class RegDictItemBiz : BaseBiz<String, RegDictItem, RegDictItemDao>(), IReg
     //region yur codes 2
 
     @Cacheable(key = "#module.concat(':').concat(#type)", unless = "#result.isEmpty()")
-    override fun getItemsByModuleAndType(module: String, type: String): List<RegDictItem> {
+    override fun getItemsByModuleAndType(module: String, type: String): List<RegDictItemRecord> {
         // 查出对应的dict id
         val dictId = regDictBiz.getDictIdByModuleAndType(module, type)
 
@@ -42,7 +43,16 @@ open class RegDictItemBiz : BaseBiz<String, RegDictItem, RegDictItemDao>(), IReg
             listOf()
         } else {
             // 查出dict id的所有字典项
-            dao.searchByDictId(dictId)
+            val items = dao.searchByDictId(dictId)
+            items.map {
+                RegDictItemRecord(
+                    it.id!!,
+                    it.itemCode,
+                    it.itemName,
+                    it.parentId,
+                    it.seqNo
+                )
+            }
         }
     }
 

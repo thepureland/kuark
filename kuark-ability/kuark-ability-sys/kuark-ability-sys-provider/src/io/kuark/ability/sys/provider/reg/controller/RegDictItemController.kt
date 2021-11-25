@@ -1,5 +1,6 @@
 package io.kuark.ability.sys.provider.reg.controller
 
+import io.kuark.ability.sys.common.reg.dict.RegDictItemRecord
 import io.kuark.ability.web.common.WebResult
 import io.kuark.base.support.Consts
 import io.kuark.ability.sys.provider.reg.ibiz.IRegDictItemBiz
@@ -34,6 +35,19 @@ class RegDictItemController {
             this.active = active
         }
         return WebResult(regDictItemBiz.update(regDictItem))
+    }
+
+    @GetMapping("/getDictItems")
+    fun getDictItems(module: String, type: String): List<RegDictItemRecord> {
+        return regDictItemBiz.getItemsByModuleAndType(module, type)
+    }
+
+    @GetMapping("/getDictItemMap")
+    fun getDictItemMap(module: String, type: String): LinkedHashMap<String, String> {
+        val items = regDictItemBiz.getItemsByModuleAndType(module, type)
+        val map = linkedMapOf<String, String>()
+        items.forEach { map[it.itemCode!!] = it.itemName!! }
+        return map
     }
 
 }

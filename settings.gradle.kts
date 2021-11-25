@@ -56,6 +56,12 @@ include("kuark-ability:kuark-ability-mq")
 findProject(":kuark-ability:kuark-ability-mq")?.name = "kuark-ability-mq"
 include("kuark-ability:kuark-ability-workflow")
 findProject(":kuark-ability:kuark-ability-workflow")?.name = "kuark-ability-workflow"
+include("kuark-ability:kuark-ability-workflow:kuark-ability-workflow-provider")
+findProject(":kuark-ability:kuark-ability-workflow:kuark-ability-workflow-provider")?.name = "kuark-ability-workflow-provider"
+include("kuark-ability:kuark-ability-workflow:kuark-ability-workflow-common")
+findProject(":kuark-ability:kuark-ability-workflow:kuark-ability-workflow-common")?.name = "kuark-ability-workflow-common"
+include("kuark-ability:kuark-ability-workflow:kuark-ability-workflow-client")
+findProject(":kuark-ability:kuark-ability-workflow:kuark-ability-workflow-client")?.name = "kuark-ability-workflow-client"
 include("kuark-ability:kuark-ability-rules")
 findProject(":kuark-ability:kuark-ability-rules")?.name = "kuark-ability-rules"
 include("kuark-ability:kuark-ability-sys")
@@ -64,17 +70,16 @@ include("kuark-ability:kuark-ability-sys:kuark-ability-sys-provider")
 findProject(":kuark-ability:kuark-ability-sys:kuark-ability-sys-provider")?.name = "kuark-ability-sys-provider"
 include("kuark-ability:kuark-ability-sys:kuark-ability-sys-common")
 findProject(":kuark-ability:kuark-ability-sys:kuark-ability-sys-common")?.name = "kuark-ability-sys-common"
-findProject(":kuark-ability-sys:kuark-ability-sys-api")?.name = "kuark-ability-sys-api"
-include("kuark-ability:kuark-ability-sys:kuark-ability-sys-api")
-findProject(":kuark-ability:kuark-ability-sys:kuark-ability-sys-api")?.name = "kuark-ability-sys-api"
+include("kuark-ability:kuark-ability-sys:kuark-ability-sys-client")
+findProject(":kuark-ability:kuark-ability-sys:kuark-ability-sys-client")?.name = "kuark-ability-sys-client"
 include("kuark-ability:kuark-ability-notify")
 findProject(":kuark-ability:kuark-ability-notify")?.name = "kuark-ability-notify"
 include("kuark-ability:kuark-ability-notify:kuark-ability-notify-provider")
 findProject(":kuark-ability:kuark-ability-notify:kuark-ability-notify-provider")?.name = "kuark-ability-notify-provider"
 include("kuark-ability:kuark-ability-notify:kuark-ability-notify-common")
 findProject(":kuark-ability:kuark-ability-notify:kuark-ability-notify-common")?.name = "kuark-ability-notify-common"
-include("kuark-ability:kuark-ability-notify:kuark-ability-notify-api")
-findProject(":kuark-ability:kuark-ability-notify:kuark-ability-notify-api")?.name = "kuark-ability-notify-api"
+include("kuark-ability:kuark-ability-notify:kuark-ability-notify-client")
+findProject(":kuark-ability:kuark-ability-notify:kuark-ability-notify-client")?.name = "kuark-ability-notify-client"
 
 include("kuark-ui")
 include("kuark-ui:kuark-ui-jfx")
@@ -91,3 +96,4 @@ include("kuark-test:kuark-test-service")
 findProject(":kuark-test:kuark-test-service")?.name = "kuark-test-service"
 include("kuark-test:kuark-test-server:kuark-test-server-eureka")
 findProject(":kuark-test:kuark-test-server:kuark-test-server-eureka")?.name = "kuark-test-server-eureka"
+

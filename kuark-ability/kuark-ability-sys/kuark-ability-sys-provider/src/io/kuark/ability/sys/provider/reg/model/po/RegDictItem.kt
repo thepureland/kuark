@@ -24,8 +24,8 @@ interface RegDictItem: IMaintainableDbEntity<String, RegDictItem> {
     /** 字典项名称，或其国际化key */
     var itemName: String
 
-    /** 父项编号 */
-    var parentCode: String?
+//    /** 父项编号 */
+//    var parentCode: String?
 
     /** 父项主键 */
     var parentId: String?

@@ -96,4 +96,6 @@ include("kuark-test:kuark-test-service")
 findProject(":kuark-test:kuark-test-service")?.name = "kuark-test-service"
 include("kuark-test:kuark-test-server:kuark-test-server-eureka")
 findProject(":kuark-test:kuark-test-server:kuark-test-server-eureka")?.name = "kuark-test-server-eureka"
-
+include("kuark-demo")
+include("kuark-demo:kuark-demo-console-single")
+findProject(":kuark-demo:kuark-demo-console-single")?.name = "kuark-demo-console-single"

@@ -1,6 +1,7 @@
 package io.kuark.ability.sys.provider.reg.controller
 
 import io.kuark.ability.sys.common.reg.resource.*
+import io.kuark.ability.sys.common.vo.reg.resource.*
 import io.kuark.ability.web.common.WebResult
 import io.kuark.ability.web.springmvc.BaseController
 import io.kuark.base.lang.string.StringKit

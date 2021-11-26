@@ -1,4 +1,4 @@
-package io.kuark.ability.sys.common.reg.param
+package io.kuark.ability.sys.common.vo.reg.param
 
 
 class RegParamRecord {

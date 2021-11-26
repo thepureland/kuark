@@ -1,10 +1,10 @@
 package io.kuark.ability.sys.provider.reg.ibiz
 
 import io.kuark.ability.data.rdb.biz.IBaseBiz
-import io.kuark.ability.sys.common.reg.resource.MenuTreeNode
-import io.kuark.ability.sys.common.reg.resource.RegResourceRecord
-import io.kuark.ability.sys.common.reg.resource.RegResourceSearchPayload
-import io.kuark.ability.sys.common.reg.resource.RegResourceTreeNode
+import io.kuark.ability.sys.common.vo.reg.resource.MenuTreeNode
+import io.kuark.ability.sys.common.vo.reg.resource.RegResourceRecord
+import io.kuark.ability.sys.common.vo.reg.resource.RegResourceSearchPayload
+import io.kuark.ability.sys.common.vo.reg.resource.RegResourceTreeNode
 import io.kuark.ability.sys.provider.reg.model.po.RegResource
 import kotlin.reflect.KClass
 

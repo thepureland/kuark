@@ -1,9 +1,9 @@
 package io.kuark.ability.sys.provider.reg.controller
 
-import io.kuark.ability.sys.common.reg.dict.RegDictPayload
-import io.kuark.ability.sys.common.reg.dict.RegDictRecord
-import io.kuark.ability.sys.common.reg.dict.RegDictSearchPayload
-import io.kuark.ability.sys.common.reg.dict.RegDictTreeNode
+import io.kuark.ability.sys.common.vo.reg.dict.RegDictPayload
+import io.kuark.ability.sys.common.vo.reg.dict.RegDictRecord
+import io.kuark.ability.sys.common.vo.reg.dict.RegDictSearchPayload
+import io.kuark.ability.sys.common.vo.reg.dict.RegDictTreeNode
 import io.kuark.ability.web.common.WebResult
 import io.kuark.ability.web.springmvc.BaseController
 import io.kuark.base.support.Consts

@@ -2,10 +2,10 @@ package io.kuark.ability.sys.provider.reg.biz
 
 import io.kuark.ability.data.rdb.biz.BaseBiz
 import io.kuark.ability.data.rdb.support.SqlWhereExpressionFactory
-import io.kuark.ability.sys.common.reg.resource.MenuTreeNode
-import io.kuark.ability.sys.common.reg.resource.RegResourceRecord
-import io.kuark.ability.sys.common.reg.resource.RegResourceSearchPayload
-import io.kuark.ability.sys.common.reg.resource.RegResourceTreeNode
+import io.kuark.ability.sys.common.vo.reg.resource.MenuTreeNode
+import io.kuark.ability.sys.common.vo.reg.resource.RegResourceRecord
+import io.kuark.ability.sys.common.vo.reg.resource.RegResourceSearchPayload
+import io.kuark.ability.sys.common.vo.reg.resource.RegResourceTreeNode
 import io.kuark.base.lang.string.StringKit
 import io.kuark.base.query.Criteria
 import io.kuark.base.query.enums.Operator

@@ -1,8 +1,8 @@
 package io.kuark.ability.sys.provider.reg.controller
 
-import io.kuark.ability.sys.common.reg.param.RegParamPayload
-import io.kuark.ability.sys.common.reg.param.RegParamRecord
-import io.kuark.ability.sys.common.reg.param.RegParamSearchPayload
+import io.kuark.ability.sys.common.vo.reg.param.RegParamPayload
+import io.kuark.ability.sys.common.vo.reg.param.RegParamRecord
+import io.kuark.ability.sys.common.vo.reg.param.RegParamSearchPayload
 import io.kuark.ability.web.common.WebResult
 import io.kuark.ability.web.springmvc.BaseController
 import io.kuark.base.lang.string.StringKit

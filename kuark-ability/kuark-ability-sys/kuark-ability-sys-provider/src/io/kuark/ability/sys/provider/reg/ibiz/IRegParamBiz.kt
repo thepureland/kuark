@@ -2,8 +2,8 @@ package io.kuark.ability.sys.provider.reg.ibiz
 
 import io.kuark.ability.cache.context.CacheNames
 import io.kuark.ability.data.rdb.biz.IBaseBiz
-import io.kuark.ability.sys.common.reg.param.RegParamRecord
-import io.kuark.ability.sys.common.reg.param.RegParamSearchPayload
+import io.kuark.ability.sys.common.vo.reg.param.RegParamRecord
+import io.kuark.ability.sys.common.vo.reg.param.RegParamSearchPayload
 import io.kuark.ability.sys.provider.reg.model.po.RegParam
 import org.springframework.cache.annotation.Cacheable
 

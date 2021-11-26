@@ -1,7 +1,7 @@
 package io.kuark.ability.sys.client.fallback.reg
 
 import io.kuark.ability.sys.client.proxy.reg.IDictClient
-import io.kuark.ability.sys.common.reg.dict.RegDictItemRecord
+import io.kuark.ability.sys.common.vo.reg.dict.RegDictItemRecord
 import org.springframework.stereotype.Component
 
 @Component

@@ -13,8 +13,7 @@ dependencies {
     api("org.apache.xmlgraphics:batik-all")
     api("org.springframework.boot:spring-boot-starter-security")
     api(project(":kuark-ability:kuark-ability-workflow:kuark-ability-workflow-common"))
-    api(project(":kuark-ability:kuark-ability-sys:kuark-ability-sys-client"))
-    api(project(":kuark-ability:kuark-ability-sys:kuark-ability-sys-provider"))
+    api(project(":kuark-ability:kuark-ability-sys:kuark-ability-sys-common"))
 
     testImplementation(project(":kuark-test:kuark-test-common"))
 }

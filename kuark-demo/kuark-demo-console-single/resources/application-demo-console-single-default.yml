@@ -1,0 +1,23 @@
+spring:
+  datasource:
+    auto-commit: true
+
+    platform: h2
+    username: sa
+    password:
+    url: "jdbc:h2:tcp://localhost:9092/./db/h2;DATABASE_TO_LOWER=TRUE;"
+    driver-class-name: org.h2.Driver
+
+  #    platform: postgresql
+  #    username: postgres
+  #    password: postgres
+  #    url: jdbc:postgresql://192.168.0.200:5432/kuark
+  #    driver-class-name: org.postgresql.Driver
+
+  activiti:
+    database-schema-update: none
+    history-level: full
+    db-history-used: true
+    check-process-definitions: false
+    deployment-mode: never-fail
+    #    db-identity-used: false

@@ -1,6 +1,6 @@
 package io.kuark.ability.sys.provider.reg.controller
 
-import io.kuark.ability.sys.common.reg.dict.RegDictItemRecord
+import io.kuark.ability.sys.common.vo.reg.dict.RegDictItemRecord
 import io.kuark.ability.web.common.WebResult
 import io.kuark.base.support.Consts
 import io.kuark.ability.sys.provider.reg.ibiz.IRegDictItemBiz
@@ -46,7 +46,7 @@ class RegDictItemController {
     fun getDictItemMap(module: String, type: String): LinkedHashMap<String, String> {
         val items = regDictItemBiz.getItemsByModuleAndType(module, type)
         val map = linkedMapOf<String, String>()
-        items.forEach { map[it.itemCode!!] = it.itemName!! }
+        items.forEach { map[it.itemCode] = it.itemName }
         return map
     }
 

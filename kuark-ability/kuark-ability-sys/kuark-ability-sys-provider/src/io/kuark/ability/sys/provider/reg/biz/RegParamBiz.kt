@@ -4,8 +4,8 @@ import io.kuark.ability.cache.context.CacheNames
 import io.kuark.ability.data.rdb.biz.BaseBiz
 import io.kuark.ability.data.rdb.kit.RdbKit
 import io.kuark.ability.data.rdb.support.SqlWhereExpressionFactory
-import io.kuark.ability.sys.common.reg.param.RegParamRecord
-import io.kuark.ability.sys.common.reg.param.RegParamSearchPayload
+import io.kuark.ability.sys.common.vo.reg.param.RegParamRecord
+import io.kuark.ability.sys.common.vo.reg.param.RegParamSearchPayload
 import io.kuark.base.query.enums.Operator
 import io.kuark.base.support.Consts
 import io.kuark.ability.sys.provider.reg.dao.RegParamDao

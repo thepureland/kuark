@@ -1,10 +1,10 @@
 package io.kuark.ability.workflow.provider.controller
 
-import io.kuark.ability.sys.client.proxy.reg.IDictClient
+import io.kuark.ability.sys.common.api.reg.IDictApi
 import io.kuark.ability.web.common.WebResult
-import io.kuark.ability.workflow.provider.model.vo.FlowDefinition
 import io.kuark.ability.workflow.common.definition.FlowDefinitionSearchParams
 import io.kuark.ability.workflow.provider.ibiz.IFlowDefinitionBiz
+import io.kuark.ability.workflow.provider.model.vo.FlowDefinition
 import io.kuark.base.image.ImageKit
 import io.kuark.base.query.sort.Order
 import org.springframework.beans.factory.annotation.Autowired
@@ -28,7 +28,7 @@ class FlowDefinitionController {
     private lateinit var flowDefinitionBiz: IFlowDefinitionBiz
 
     @Autowired
-    private lateinit var dictClient: IDictClient
+    private lateinit var dictApi: IDictApi
 
     /**
      * 返回指定key和版本的流程定义
@@ -171,7 +171,7 @@ class FlowDefinitionController {
 
     @GetMapping("/loadCategories")
     fun loadCategories(): WebResult<Map<String, String>> {
-        val map = dictClient.getDictItemMap("kuark:flow", "flow_category")
+        val map = dictApi.getDictItemMap("kuark:flow", "flow_category")
         return WebResult(map)
     }
 

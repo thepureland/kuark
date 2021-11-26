@@ -1,4 +1,4 @@
-package io.kuark.ability.sys.common.reg.resource
+package io.kuark.ability.sys.common.vo.reg.resource
 
 import io.kuark.base.support.enums.IDictEnum
 

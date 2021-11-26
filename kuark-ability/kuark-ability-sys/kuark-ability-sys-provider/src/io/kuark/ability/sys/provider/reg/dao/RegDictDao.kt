@@ -2,8 +2,8 @@ package io.kuark.ability.sys.provider.reg.dao
 
 import io.kuark.ability.data.rdb.support.BaseDao
 import io.kuark.ability.data.rdb.support.ColumnHelper
-import io.kuark.ability.sys.common.reg.dict.RegDictRecord
-import io.kuark.ability.sys.common.reg.dict.RegDictSearchPayload
+import io.kuark.ability.sys.common.vo.reg.dict.RegDictRecord
+import io.kuark.ability.sys.common.vo.reg.dict.RegDictSearchPayload
 import io.kuark.base.error.ObjectNotFoundException
 import io.kuark.base.lang.collections.CollectionKit
 import io.kuark.base.lang.string.StringKit

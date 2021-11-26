@@ -3,8 +3,8 @@ package io.kuark.ability.sys.provider.reg.biz
 import io.kuark.ability.cache.context.CacheNames
 import io.kuark.ability.cache.kit.CacheKit
 import io.kuark.ability.data.rdb.biz.BaseBiz
-import io.kuark.ability.sys.common.reg.dict.RegDictItemRecord
-import io.kuark.ability.sys.common.reg.dict.RegDictPayload
+import io.kuark.ability.sys.common.vo.reg.dict.RegDictItemRecord
+import io.kuark.ability.sys.common.vo.reg.dict.RegDictPayload
 import io.kuark.base.lang.string.StringKit
 import io.kuark.ability.sys.provider.reg.dao.RegDictItemDao
 import io.kuark.ability.sys.provider.reg.ibiz.IRegDictBiz

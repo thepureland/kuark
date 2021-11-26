@@ -1,8 +1,8 @@
 package io.kuark.ability.sys.provider.reg.ibiz
 
 import io.kuark.ability.data.rdb.biz.IBaseBiz
-import io.kuark.ability.sys.common.reg.dict.RegDictItemRecord
-import io.kuark.ability.sys.common.reg.dict.RegDictPayload
+import io.kuark.ability.sys.common.vo.reg.dict.RegDictItemRecord
+import io.kuark.ability.sys.common.vo.reg.dict.RegDictPayload
 import io.kuark.ability.sys.provider.reg.model.po.RegDictItem
 
 /**

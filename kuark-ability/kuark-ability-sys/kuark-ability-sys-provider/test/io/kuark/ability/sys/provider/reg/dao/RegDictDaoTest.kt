@@ -1,6 +1,6 @@
 package io.kuark.ability.sys.provider.reg.dao
 
-import io.kuark.ability.sys.common.reg.dict.RegDictSearchPayload
+import io.kuark.ability.sys.common.vo.reg.dict.RegDictSearchPayload
 import io.kuark.test.common.SpringTest
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test

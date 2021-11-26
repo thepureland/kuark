@@ -1,0 +1,9 @@
+spring:
+  profiles:
+    active:
+    - context-default
+    - ability-cache-default
+    - ability-data-rdb-default
+    - ability-sys-provider-default
+    - ability-workflow-provider-default
+    - demo-console-single-default

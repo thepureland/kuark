@@ -1,4 +1,4 @@
-package io.kuark.ability.sys.common.reg.dict
+package io.kuark.ability.sys.common.vo.reg.dict
 
 import io.kuark.base.bean.validation.constraint.annotaions.AtLeast
 import io.kuark.base.bean.validation.support.AssertLogic

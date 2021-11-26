@@ -1,4 +1,4 @@
-package io.kuark.ability.sys.common.reg.dict
+package io.kuark.ability.sys.common.vo.reg.dict
 
 data class RegDictRecord(
 

@@ -1,4 +1,4 @@
-package io.kuark.ability.sys.common.reg.resource
+package io.kuark.ability.sys.common.vo.reg.resource
 
 import com.fasterxml.jackson.annotation.JsonInclude
 import io.kuark.base.tree.ITreeNode

@@ -1,0 +1,19 @@
+package io.kuark.service.sys.provider.reg.biz
+
+import io.kuark.base.data.json.JsonKit
+import io.kuark.test.common.SpringTest
+import org.junit.jupiter.api.Test
+import org.springframework.beans.factory.annotation.Autowired
+
+internal class RegResourceBizTest : SpringTest() {
+
+    @Autowired
+    private lateinit var regResourceBiz: io.kuark.service.sys.provider.reg.ibiz.IRegResourceBiz
+
+    @Test
+    fun getMenus() {
+        val menus = regResourceBiz.getMenus()
+        println(JsonKit.toJson(menus))
+    }
+
+}

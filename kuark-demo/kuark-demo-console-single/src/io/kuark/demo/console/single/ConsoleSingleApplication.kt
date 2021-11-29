@@ -1,9 +1,11 @@
 package io.kuark.demo.console.single
 
 import org.springframework.boot.SpringApplication
+import org.springframework.boot.actuate.autoconfigure.security.servlet.ManagementWebSecurityAutoConfiguration
 import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
 
-@SpringBootApplication(scanBasePackages = ["io.kuark"])
+@SpringBootApplication(scanBasePackages = ["io.kuark"], exclude = [SecurityAutoConfiguration::class, ManagementWebSecurityAutoConfiguration::class])
 open class ConsoleSingleApplication {
 
     companion object {

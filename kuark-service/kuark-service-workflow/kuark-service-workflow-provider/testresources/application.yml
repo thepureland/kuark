@@ -1,0 +1,5 @@
+spring:
+  profiles:
+    active:
+#      - service-workflow-default
+      - service-workflow-junit

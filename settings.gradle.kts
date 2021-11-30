@@ -64,6 +64,10 @@ include("kuark-ability:kuark-ability-notify:kuark-ability-notify-common")
 findProject(":kuark-ability:kuark-ability-notify:kuark-ability-notify-common")?.name = "kuark-ability-notify-common"
 include("kuark-ability:kuark-ability-notify:kuark-ability-notify-client")
 findProject(":kuark-ability:kuark-ability-notify:kuark-ability-notify-client")?.name = "kuark-ability-notify-client"
+include("kuark-ability:kuark-ability-ui")
+findProject(":kuark-ability:kuark-ability-ui")?.name = "kuark-ability-ui"
+include("kuark-ability:kuark-ability-ui:kuark-ability-ui-jfx")
+findProject(":kuark-ability:kuark-ability-ui:kuark-ability-ui-jfx")?.name = "kuark-ability-ui-jfx"
 
 include("kuark-service")
 include("kuark-service:kuark-service-sys-provider")
@@ -89,10 +93,6 @@ findProject(":kuark-service:kuark-service-workflow:kuark-service-workflow-common
 include("kuark-service:kuark-service-workflow:kuark-service-workflow-provider")
 findProject(":kuark-service:kuark-service-workflow:kuark-service-workflow-provider")?.name = "kuark-service-workflow-provider"
 
-include("kuark-ui")
-include("kuark-ui:kuark-ui-jfx")
-findProject(":kuark-ui:kuark-ui-jfx")?.name = "kuark-ui-jfx"
-
 include("kuark-tools")
 
 include("kuark-test")
@@ -108,3 +108,5 @@ findProject(":kuark-test:kuark-test-server:kuark-test-server-eureka")?.name = "k
 include("kuark-demo")
 include("kuark-demo:kuark-demo-console-single")
 findProject(":kuark-demo:kuark-demo-console-single")?.name = "kuark-demo-console-single"
+include("kuark-demo:kuark-demo-tools")
+findProject(":kuark-demo:kuark-demo-tools")?.name = "kuark-demo-tools"

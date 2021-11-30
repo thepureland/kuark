@@ -93,8 +93,6 @@ findProject(":kuark-service:kuark-service-workflow:kuark-service-workflow-common
 include("kuark-service:kuark-service-workflow:kuark-service-workflow-provider")
 findProject(":kuark-service:kuark-service-workflow:kuark-service-workflow-provider")?.name = "kuark-service-workflow-provider"
 
-include("kuark-tools")
-
 include("kuark-test")
 include("kuark-test:kuark-test-server")
 findProject(":kuark-test:kuark-test-server")?.name = "kuark-test-server"

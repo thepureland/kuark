@@ -79,48 +79,10 @@ open class FlowDefinitionBiz : IFlowDefinitionBiz {
     }
 
     override fun search(searchPayload: FlowDefinitionSearchPayload): List<FlowDefinition> {
-        val whereStr = StringBuilder("1=1")
-
-        // 流程定义key(bpmn文件中process元素的id)
-        val key = searchPayload.key
-        if (StringKit.isNotBlank(key) && !key!!.contains("'")) {
-            whereStr.append(" AND UPPER(key_) LIKE '%${key.uppercase()}%'")
-        }
-
-        // 流程名称，支持忽略大小写模糊搜索
-        val name = searchPayload.name
-        if (StringKit.isNotBlank(name) && !name!!.contains("'")) {
-            whereStr.append(" AND UPPER(name_) LIKE '%${name.uppercase()}%'")
-        }
-
-        // 分类
-        val category = searchPayload.category
-        if (StringKit.isNotBlank(category) && !category!!.contains("'")) {
-            whereStr.append(" AND category_ = '${category}'")
-        }
-
-        // 租户(所属系统)id
-        val tenantId = searchPayload.tenantId
-        if (StringKit.isNotBlank(tenantId) && !tenantId!!.contains("'")) {
-            whereStr.append(" AND tenant_id_ = '${tenantId}'")
-        }
-
-        // 是否已部署
-        val isDeployed = searchPayload.deployed
-        if (isDeployed != null) {
-            if (isDeployed) {
-                whereStr.append(" AND deployment_id_ IS NOT NULL")
-            } else {
-                whereStr.append(" AND deployment_id_ IS NULL")
-            }
-        }
+        val whereStr = handleWhere(searchPayload)
 
         // 只查询最新版本的
-        val latestOnly = searchPayload.latestOnly
         var sql = "SELECT * FROM act_re_model WHERE $whereStr"
-        if (latestOnly != null && latestOnly) {
-            sql = "$sql AND version_ = (SELECT MAX(m.version_) FROM act_re_model m GROUP BY m.key_)"
-        }
 
         // 排序
         val orders = searchPayload.orders
@@ -155,6 +117,13 @@ open class FlowDefinitionBiz : IFlowDefinitionBiz {
                 deploymentMap[it.deploymentId]
             )
         }
+    }
+
+    override fun count(searchPayload: FlowDefinitionSearchPayload): Int {
+        val whereStr = handleWhere(searchPayload)
+        var sql = "SELECT count(*) FROM act_re_model WHERE $whereStr"
+        val query = repositoryService.createNativeModelQuery().sql(sql)
+        return query.count().toInt()
     }
 
     @Transactional
@@ -534,6 +503,53 @@ open class FlowDefinitionBiz : IFlowDefinitionBiz {
         outStream.close()
         svgStream.close()
         return result
+    }
+
+    private fun handleWhere(searchPayload: FlowDefinitionSearchPayload): String {
+        val whereStr = StringBuilder("1=1")
+
+        // 流程定义key(bpmn文件中process元素的id)
+        val key = searchPayload.key
+        if (StringKit.isNotBlank(key) && !key!!.contains("'")) {
+            whereStr.append(" AND UPPER(key_) LIKE '%${key.uppercase()}%'")
+        }
+
+        // 流程名称，支持忽略大小写模糊搜索
+        val name = searchPayload.name
+        if (StringKit.isNotBlank(name) && !name!!.contains("'")) {
+            whereStr.append(" AND UPPER(name_) LIKE '%${name.uppercase()}%'")
+        }
+
+        // 分类
+        val category = searchPayload.category
+        if (StringKit.isNotBlank(category) && !category!!.contains("'")) {
+            whereStr.append(" AND category_ = '${category}'")
+        }
+
+        // 租户(所属系统)id
+        val tenantId = searchPayload.tenantId
+        if (StringKit.isNotBlank(tenantId) && !tenantId!!.contains("'")) {
+            whereStr.append(" AND tenant_id_ = '${tenantId}'")
+        }
+
+        // 是否已部署
+        val isDeployed = searchPayload.deployed
+        if (isDeployed != null) {
+            if (isDeployed) {
+                whereStr.append(" AND deployment_id_ IS NOT NULL")
+            } else {
+                whereStr.append(" AND deployment_id_ IS NULL")
+            }
+        }
+
+        // 只查询最新版本的
+        val latestOnly = searchPayload.latestOnly
+        var sql = "SELECT * FROM act_re_model WHERE $whereStr"
+        if (latestOnly != null && latestOnly) {
+            whereStr.append(" AND version_ = (SELECT MAX(m.version_) FROM act_re_model m GROUP BY m.key_)")
+        }
+
+        return whereStr.toString()
     }
 
 }

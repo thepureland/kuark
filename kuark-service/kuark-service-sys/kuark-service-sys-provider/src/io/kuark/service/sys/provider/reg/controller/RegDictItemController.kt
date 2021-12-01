@@ -7,10 +7,7 @@ import io.kuark.service.sys.provider.reg.ibiz.IRegDictItemBiz
 import io.kuark.service.sys.provider.reg.model.po.RegDictItem
 import io.kuark.service.sys.provider.reg.model.table.RegDictItems
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.web.bind.annotation.CrossOrigin
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 
 @RestController
@@ -29,7 +26,7 @@ class RegDictItemController {
     }
 
     @GetMapping("/updateActive")
-    fun updateActive(id:String, active: Boolean): WebResult<Boolean> {
+    fun updateActive(id: String, active: Boolean): WebResult<Boolean> {
         val regDictItem = RegDictItem {
             this.id = id
             this.active = active
@@ -38,16 +35,22 @@ class RegDictItemController {
     }
 
     @GetMapping("/getDictItems")
-    fun getDictItems(module: String, type: String): List<RegDictItemRecord> {
-        return regDictItemBiz.getItemsByModuleAndType(module, type)
+    fun getDictItems(
+        @RequestParam("module") module: String,
+        @RequestParam("type") type: String
+    ): WebResult<List<RegDictItemRecord>> {
+        return WebResult(regDictItemBiz.getItemsByModuleAndType(module, type))
     }
 
     @GetMapping("/getDictItemMap")
-    fun getDictItemMap(module: String, type: String): LinkedHashMap<String, String> {
+    fun getDictItemMap(
+        @RequestParam("module") module: String,
+        @RequestParam("type") type: String
+    ): WebResult<LinkedHashMap<String, String>> {
         val items = regDictItemBiz.getItemsByModuleAndType(module, type)
         val map = linkedMapOf<String, String>()
         items.forEach { map[it.itemCode] = it.itemName }
-        return map
+        return WebResult(map)
     }
 
 }

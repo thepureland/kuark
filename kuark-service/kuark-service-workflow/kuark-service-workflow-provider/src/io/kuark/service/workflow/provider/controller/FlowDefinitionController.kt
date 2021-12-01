@@ -57,10 +57,11 @@ class FlowDefinitionController {
      * @since 1.0.0
      */
     @PostMapping("/search")
-    fun search(@RequestBody searchPayload: FlowDefinitionSearchPayload): WebResult<List<FlowDefinitionRecord>> {
+    fun search(@RequestBody searchPayload: FlowDefinitionSearchPayload): WebResult<Pair<List<FlowDefinitionRecord>, Int>> {
         val definitions = flowDefinitionBiz.search(searchPayload)
         val records = BeanKit.batchCopyProperties(FlowDefinitionRecord::class, definitions)
-        return WebResult(records)
+        val count = flowDefinitionBiz.count(searchPayload)
+        return WebResult(Pair(records, count))
     }
 
     /**

@@ -64,7 +64,6 @@ internal open class FlowDefinitionBizTest : SpringTest() {
         assertFalse(flowDefinitionBiz.isExists(KEY, 2))
         assertFalse(flowDefinitionBiz.isExists(NO_EXISTS, 1))
         assertThrows<IllegalArgumentException> { flowDefinitionBiz.isExists(" ") }
-
     }
 
     @Test

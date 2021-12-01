@@ -44,12 +44,22 @@ interface IFlowDefinitionBiz {
     /**
      * 查询流程定义
      *
-     * @param searchItems 查询参数
+     * @param searchPayload 查询参数
      * @return List(流程定义对象)，找不到时返回空集合
      * @author K
      * @since 1.0.0
      */
     fun search(searchPayload: FlowDefinitionSearchPayload): List<FlowDefinition>
+
+    /**
+     * 查询记录数
+     *
+     * @param searchPayload 查询参数
+     * @return 总数
+     * @author K
+     * @since 1.0.0
+     */
+    fun count(searchPayload: FlowDefinitionSearchPayload): Int
 
     /**
      * 创建流程定义

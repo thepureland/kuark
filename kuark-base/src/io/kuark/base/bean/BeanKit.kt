@@ -67,8 +67,11 @@ object BeanKit {
     fun <T : Any> copyProperties(srcObj: Any, destObj: T, propertyMap: Map<String, String>? = null): T {
         val map = if (MapKit.isEmpty(propertyMap)) { // 将拷贝所有源对象的属性
             val mappingRule = mutableMapOf<String, String>()
+            val desProps = destObj::class.memberProperties.map { it.name }
             srcObj::class.memberProperties.forEach {
-                mappingRule[it.name] = it.name
+                if (desProps.contains(it.name)) {
+                    mappingRule[it.name] = it.name
+                }
             }
             mappingRule
         } else propertyMap

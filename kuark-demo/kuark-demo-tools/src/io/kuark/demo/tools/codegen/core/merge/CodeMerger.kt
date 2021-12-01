@@ -14,7 +14,7 @@ class CodeMerger(private val file: File) {
 
     private val oldFileContent: String
     private var newFileContent: String? = null
-    private val retriever: io.kuark.demo.tools.codegen.core.merge.CustomCodesRetriever
+    private val retriever: CustomCodesRetriever
 
     /**
      * 代码生成后进行合并
@@ -28,7 +28,7 @@ class CodeMerger(private val file: File) {
     private fun handleRegion() {
         val customCodes = retriever.retrieve()
         newFileContent = FileKit.readFileToString(file)
-        val appendCodesRetriever = io.kuark.demo.tools.codegen.core.merge.AppendCodesRetriever(newFileContent)
+        val appendCodesRetriever = AppendCodesRetriever(newFileContent)
         val appendCodesMap = appendCodesRetriever.retrieve()
         for ((index, value) in customCodes) {
             val codes = StringBuilder(value)
@@ -36,7 +36,7 @@ class CodeMerger(private val file: File) {
             if (pair != null) {
                 val type = pair.first
                 val appendCodes = pair.second
-                if (type == io.kuark.demo.tools.codegen.core.merge.AppendCodeType.PARTIBLE) {
+                if (type == AppendCodeType.PARTIBLE) {
                     val parts = appendCodes.split("\n".toRegex()).toTypedArray()
                     for (lineCode in parts) {
                         if (codes.indexOf(lineCode) == -1) {
@@ -58,8 +58,8 @@ class CodeMerger(private val file: File) {
 
     private fun handleImport() {
         if (file.name.endsWith(".java")) {
-            val oldImports = io.kuark.demo.tools.codegen.core.merge.ImportStmtRetriever(oldFileContent).retrieveImports()
-            val newImports = io.kuark.demo.tools.codegen.core.merge.ImportStmtRetriever(newFileContent).retrieveImports()
+            val oldImports = ImportStmtRetriever(oldFileContent).retrieveImports()
+            val newImports = ImportStmtRetriever(newFileContent).retrieveImports()
             val commonImports = oldImports.intersect(newImports) // 交集
             val customImport = oldImports.subtract(commonImports) // 差集，用户自己导入的import
             val imports = StringBuilder()
@@ -107,6 +107,6 @@ class CodeMerger(private val file: File) {
      */
     init {
         oldFileContent = FileKit.readFileToString(file)
-        retriever = io.kuark.demo.tools.codegen.core.merge.CustomCodesRetriever(oldFileContent)
+        retriever = CustomCodesRetriever(oldFileContent)
     }
 }

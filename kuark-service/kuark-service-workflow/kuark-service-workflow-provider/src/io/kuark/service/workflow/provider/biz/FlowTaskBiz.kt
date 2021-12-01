@@ -7,6 +7,8 @@ import io.kuark.base.lang.string.StringKit
 import io.kuark.base.log.LogFactory
 import io.kuark.base.query.sort.Order
 import io.kuark.service.workflow.common.vo.task.FlowTaskSearchParams
+import io.kuark.service.workflow.provider.ibiz.IFlowTaskBiz
+import io.kuark.service.workflow.provider.model.vo.FlowTask
 import org.activiti.bpmn.model.FlowNode
 import org.activiti.bpmn.model.SequenceFlow
 import org.activiti.engine.HistoryService
@@ -26,7 +28,7 @@ import org.springframework.transaction.annotation.Transactional
  * @author K
  * @since 1.0.0
  */
-open class FlowTaskBiz : io.kuark.service.workflow.provider.ibiz.IFlowTaskBiz {
+open class FlowTaskBiz : IFlowTaskBiz {
 
     @Autowired
     private lateinit var taskService: TaskService
@@ -51,9 +53,9 @@ open class FlowTaskBiz : io.kuark.service.workflow.provider.ibiz.IFlowTaskBiz {
         return count > 0
     }
 
-    override fun get(bizKey: String, taskDefinitionKey: String): io.kuark.service.workflow.provider.model.vo.FlowTask? {
+    override fun get(bizKey: String, taskDefinitionKey: String): FlowTask? {
         val task = getActivitiTask(bizKey, taskDefinitionKey)
-        return if (task == null) null else io.kuark.service.workflow.provider.model.vo.FlowTask(task)
+        return if (task == null) null else FlowTask(task)
     }
 
     override fun search(
@@ -61,7 +63,7 @@ open class FlowTaskBiz : io.kuark.service.workflow.provider.ibiz.IFlowTaskBiz {
         pageNum: Int,
         pageSize: Int,
         vararg orders: Order
-    ): List<io.kuark.service.workflow.provider.model.vo.FlowTask> {
+    ): List<FlowTask> {
         val whereStr = StringBuilder("1=1")
 
         // 任务受理人id
@@ -114,7 +116,7 @@ open class FlowTaskBiz : io.kuark.service.workflow.provider.ibiz.IFlowTaskBiz {
             query.listPage((pageNo - 1) * pageSize, pageSize)
         }
 
-        return tasks.map { io.kuark.service.workflow.provider.model.vo.FlowTask(it) }
+        return tasks.map { FlowTask(it) }
     }
 
     @Transactional
@@ -300,9 +302,9 @@ open class FlowTaskBiz : io.kuark.service.workflow.provider.ibiz.IFlowTaskBiz {
             .singleResult()
     }
 
-    private fun findTask(bizKey: String, taskDefinitionKey: String): io.kuark.service.workflow.provider.model.vo.FlowTask {
+    private fun findTask(bizKey: String, taskDefinitionKey: String): FlowTask {
         val activitiTask = findActivitiTask(bizKey, taskDefinitionKey)
-        return io.kuark.service.workflow.provider.model.vo.FlowTask(activitiTask)
+        return FlowTask(activitiTask)
     }
 
     private fun findActivitiTask(bizKey: String, taskDefinitionKey: String): Task {

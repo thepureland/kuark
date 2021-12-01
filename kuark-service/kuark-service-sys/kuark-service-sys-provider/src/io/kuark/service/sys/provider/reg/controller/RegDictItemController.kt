@@ -3,6 +3,9 @@ package io.kuark.service.sys.provider.reg.controller
 import io.kuark.ability.web.common.WebResult
 import io.kuark.base.support.Consts
 import io.kuark.service.sys.common.vo.reg.dict.RegDictItemRecord
+import io.kuark.service.sys.provider.reg.ibiz.IRegDictItemBiz
+import io.kuark.service.sys.provider.reg.model.po.RegDictItem
+import io.kuark.service.sys.provider.reg.model.table.RegDictItems
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.GetMapping
@@ -16,18 +19,18 @@ import org.springframework.web.bind.annotation.RestController
 class RegDictItemController {
 
     @Autowired
-    private lateinit var regDictItemBiz: io.kuark.service.sys.provider.reg.ibiz.IRegDictItemBiz
+    private lateinit var regDictItemBiz: IRegDictItemBiz
 
     @GetMapping("/loadDictItemCodes")
     @Suppress(Consts.Suppress.UNCHECKED_CAST)
     fun loadDictItemCodes(): WebResult<List<String>> {
-        val modules = regDictItemBiz.allSearchProperty(io.kuark.service.sys.provider.reg.model.table.RegDictItems.itemCode.name) as List<String>
+        val modules = regDictItemBiz.allSearchProperty(RegDictItems.itemCode.name) as List<String>
         return WebResult(modules.distinct())
     }
 
     @GetMapping("/updateActive")
     fun updateActive(id:String, active: Boolean): WebResult<Boolean> {
-        val regDictItem = io.kuark.service.sys.provider.reg.model.po.RegDictItem {
+        val regDictItem = RegDictItem {
             this.id = id
             this.active = active
         }

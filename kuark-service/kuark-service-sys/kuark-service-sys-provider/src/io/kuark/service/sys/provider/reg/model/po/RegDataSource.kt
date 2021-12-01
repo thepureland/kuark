@@ -10,10 +10,10 @@ import io.kuark.ability.data.rdb.support.IMaintainableDbEntity
  * @since 1.0.0
  */
 //region your codes 1
-interface RegDataSource: IMaintainableDbEntity<String, io.kuark.service.sys.provider.reg.model.po.RegDataSource> {
+interface RegDataSource: IMaintainableDbEntity<String, RegDataSource> {
 //endregion your codes 1
 
-    companion object : DbEntityFactory<io.kuark.service.sys.provider.reg.model.po.RegDataSource>()
+    companion object : DbEntityFactory<RegDataSource>()
 
     /** 名称，或其国际化key */
     var name: String

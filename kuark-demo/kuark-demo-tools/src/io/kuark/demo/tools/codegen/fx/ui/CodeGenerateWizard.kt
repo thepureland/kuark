@@ -2,6 +2,8 @@ package io.kuark.demo.tools.codegen.fx.ui
 
 import io.kuark.ability.ui.jfx.controls.wizard.LinearWizardFlow
 import io.kuark.ability.ui.jfx.controls.wizard.Wizard
+import io.kuark.demo.tools.codegen.core.CodeGeneratorContext
+import io.kuark.demo.tools.codegen.core.TemplateModelCreator
 import io.kuark.demo.tools.codegen.fx.controller.ColumnsController
 import io.kuark.demo.tools.codegen.fx.controller.ConfigController
 import io.kuark.demo.tools.codegen.fx.controller.FilesController
@@ -26,13 +28,13 @@ open class CodeGenerateWizard : Application() {
      * 开发者可通过继承CodeGenerateWizard并重写该方法来提供自定义的TemplateModelCreator,
      * 以些来达到模板和填充模板的数据可完全自定义的目的
      */
-    open fun getTemplateModelCreator(): io.kuark.demo.tools.codegen.core.TemplateModelCreator {
+    open fun getTemplateModelCreator(): TemplateModelCreator {
         return io.kuark.demo.tools.codegen.core.TemplateModelCreator()
     }
 
     override fun start(stage: Stage) {
         val wizard = Wizard("代码生成器")
-        io.kuark.demo.tools.codegen.core.CodeGeneratorContext.templateModelCreator = getTemplateModelCreator()
+        CodeGeneratorContext.templateModelCreator = getTemplateModelCreator()
 
         // config page
         var fxmlLoader = FXMLLoader()
@@ -79,10 +81,10 @@ open class CodeGenerateWizard : Application() {
                 if (table == null) {
                     Alert(Alert.AlertType.ERROR, "请先选择表！").show()
                 } else {
-                    io.kuark.demo.tools.codegen.core.CodeGeneratorContext.tableName = table
-                    io.kuark.demo.tools.codegen.core.CodeGeneratorContext.tableComment = columnsController.tableComment
-                    io.kuark.demo.tools.codegen.core.CodeGeneratorContext.columns = columnsController.columns
-                    io.kuark.demo.tools.codegen.core.CodeGeneratorContext.config = columnsController.getConfig()
+                    CodeGeneratorContext.tableName = table
+                    CodeGeneratorContext.tableComment = columnsController.tableComment
+                    CodeGeneratorContext.columns = columnsController.columns
+                    CodeGeneratorContext.config = columnsController.getConfig()
                 }
             }
 

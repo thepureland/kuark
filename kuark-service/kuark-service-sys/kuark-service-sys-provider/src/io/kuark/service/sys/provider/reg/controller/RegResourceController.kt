@@ -5,6 +5,9 @@ import io.kuark.ability.web.springmvc.BaseController
 import io.kuark.base.lang.string.StringKit
 import io.kuark.base.support.Consts
 import io.kuark.service.sys.common.vo.reg.resource.*
+import io.kuark.service.sys.provider.reg.ibiz.IRegDictItemBiz
+import io.kuark.service.sys.provider.reg.ibiz.IRegResourceBiz
+import io.kuark.service.sys.provider.reg.model.po.RegResource
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.*
@@ -17,10 +20,10 @@ import kotlin.reflect.KClass
 open class RegResourceController : BaseController() {
 
     @Autowired
-    private lateinit var regResourceBiz: io.kuark.service.sys.provider.reg.ibiz.IRegResourceBiz
+    private lateinit var regResourceBiz: IRegResourceBiz
 
     @Autowired
-    private lateinit var regDictItemBiz: io.kuark.service.sys.provider.reg.ibiz.IRegDictItemBiz
+    private lateinit var regDictItemBiz: IRegDictItemBiz
 
     @GetMapping("/getMenus")
     fun getMenus(): List<MenuTreeNode> {
@@ -63,7 +66,7 @@ open class RegResourceController : BaseController() {
 
     @GetMapping("/updateActive")
     fun updateActive(id: String, active: Boolean): WebResult<Boolean> {
-        val regResource = io.kuark.service.sys.provider.reg.model.po.RegResource {
+        val regResource = RegResource {
             this.id = id
             this.active = active
         }

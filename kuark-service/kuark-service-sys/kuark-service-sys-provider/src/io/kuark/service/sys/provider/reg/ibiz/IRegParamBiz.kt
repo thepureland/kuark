@@ -4,6 +4,7 @@ import io.kuark.ability.cache.context.CacheNames
 import io.kuark.ability.data.rdb.biz.IBaseBiz
 import io.kuark.service.sys.common.vo.reg.param.RegParamRecord
 import io.kuark.service.sys.common.vo.reg.param.RegParamSearchPayload
+import io.kuark.service.sys.provider.reg.model.po.RegParam
 import org.springframework.cache.annotation.Cacheable
 
 /**
@@ -13,7 +14,7 @@ import org.springframework.cache.annotation.Cacheable
  * @since 1.0.0
  */
 //region your codes 1
-interface IRegParamBiz: IBaseBiz<String, io.kuark.service.sys.provider.reg.model.po.RegParam> {
+interface IRegParamBiz: IBaseBiz<String, RegParam> {
 //endregion your codes 1
 
     //region your codes 2
@@ -28,7 +29,7 @@ interface IRegParamBiz: IBaseBiz<String, io.kuark.service.sys.provider.reg.model
      * @since 1.0.0
      */
     @Cacheable(value = [CacheNames.REG_PARAM], key = "#module.concat(':').concat(#name)", unless = "#result == null")
-    fun getParamByModuleAndName(module: String, name: String): io.kuark.service.sys.provider.reg.model.po.RegParam?
+    fun getParamByModuleAndName(module: String, name: String): RegParam?
 
     /**
      * 分页查询

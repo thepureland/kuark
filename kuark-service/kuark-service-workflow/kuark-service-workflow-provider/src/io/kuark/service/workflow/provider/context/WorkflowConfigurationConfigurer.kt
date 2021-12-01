@@ -15,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired
 open class WorkflowConfigurationConfigurer: ProcessEngineConfigurationConfigurer {
 
     @Autowired
-    private lateinit var globalFlowEventListener: io.kuark.service.workflow.provider.event.GlobalFlowEventListener
+    private lateinit var globalFlowEventListener: GlobalFlowEventListener
 
     override fun configure(processEngineConfiguration: SpringProcessEngineConfiguration) {
         processEngineConfiguration.eventListeners = listOf(globalFlowEventListener)

@@ -10,10 +10,10 @@ import io.kuark.ability.data.rdb.support.IMaintainableDbEntity
  * @since 1.0.0
  */
 //region your codes 1
-interface RegDictItem: IMaintainableDbEntity<String, io.kuark.service.sys.provider.reg.model.po.RegDictItem> {
+interface RegDictItem: IMaintainableDbEntity<String, RegDictItem> {
 //endregion your codes 1
 
-    companion object : DbEntityFactory<io.kuark.service.sys.provider.reg.model.po.RegDictItem>()
+    companion object : DbEntityFactory<RegDictItem>()
 
     /** 外键，reg_dict表的主键 */
     var dictId: String

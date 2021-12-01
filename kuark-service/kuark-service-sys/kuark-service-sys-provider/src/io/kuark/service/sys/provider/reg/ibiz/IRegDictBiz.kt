@@ -5,6 +5,7 @@ import io.kuark.service.sys.common.vo.reg.dict.RegDictPayload
 import io.kuark.service.sys.common.vo.reg.dict.RegDictRecord
 import io.kuark.service.sys.common.vo.reg.dict.RegDictSearchPayload
 import io.kuark.service.sys.common.vo.reg.dict.RegDictTreeNode
+import io.kuark.service.sys.provider.reg.model.po.RegDict
 
 /**
  * 字典主表业务接口
@@ -13,7 +14,7 @@ import io.kuark.service.sys.common.vo.reg.dict.RegDictTreeNode
  * @since 1.0.0
  */
 //region your codes 1
-interface IRegDictBiz : IBaseBiz<String, io.kuark.service.sys.provider.reg.model.po.RegDict> {
+interface IRegDictBiz : IBaseBiz<String, RegDict> {
 //endregion your codes 1
 
     //region your codes 2

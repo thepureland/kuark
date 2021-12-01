@@ -12,7 +12,7 @@ import org.ktorm.schema.varchar
  * @since 1.0.0
  */
 //region your codes 1
-object MsgTemplates: StringIdTable<io.kuark.ability.notify.provider.model.po.MsgTemplate>("msg_template") {
+object MsgTemplates: StringIdTable<MsgTemplate>("msg_template") {
 //endregion your codes 1
 
     /**  */

@@ -1,6 +1,7 @@
 package io.kuark.service.sys.provider.geo.model.table
 
 import io.kuark.ability.data.rdb.support.MaintainableTable
+import io.kuark.service.sys.provider.geo.model.po.GeoIpLibrary
 import org.ktorm.schema.boolean
 import org.ktorm.schema.varchar
 
@@ -11,7 +12,7 @@ import org.ktorm.schema.varchar
  * @since 1.0.0
  */
 //region your codes 1
-object GeoIpLibrarys: MaintainableTable<io.kuark.service.sys.provider.geo.model.po.GeoIpLibrary>("geo_ip_library") {
+object GeoIpLibrarys: MaintainableTable<GeoIpLibrary>("geo_ip_library") {
 //endregion your codes 1
 
     /** ip段起，标准ipv6全格式 */

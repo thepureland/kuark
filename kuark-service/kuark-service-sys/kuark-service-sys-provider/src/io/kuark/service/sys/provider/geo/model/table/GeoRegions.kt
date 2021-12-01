@@ -1,6 +1,7 @@
 package io.kuark.service.sys.provider.geo.model.table
 
 import io.kuark.ability.data.rdb.support.MaintainableTable
+import io.kuark.service.sys.provider.geo.model.po.GeoRegion
 import org.ktorm.schema.varchar
 
 /**
@@ -10,7 +11,7 @@ import org.ktorm.schema.varchar
  * @since 1.0.0
  */
 //region your codes 1
-object GeoRegions: MaintainableTable<io.kuark.service.sys.provider.geo.model.po.GeoRegion>("geo_region") {
+object GeoRegions: MaintainableTable<GeoRegion>("geo_region") {
 //endregion your codes 1
 
     /** 外键，国家或地区id, geo_country表主键 */

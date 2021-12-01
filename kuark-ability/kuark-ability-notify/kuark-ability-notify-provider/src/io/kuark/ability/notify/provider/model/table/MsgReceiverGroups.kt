@@ -11,7 +11,7 @@ import org.ktorm.schema.varchar
  * @since 1.0.0
  */
 //region your codes 1
-object MsgReceiverGroups: MaintainableTable<io.kuark.ability.notify.provider.model.po.MsgReceiverGroup>("msg_receiver_group") {
+object MsgReceiverGroups: MaintainableTable<MsgReceiverGroup>("msg_receiver_group") {
 //endregion your codes 1
 
     /** 接收者群组类型代码 */

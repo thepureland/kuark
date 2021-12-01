@@ -1,6 +1,7 @@
 package io.kuark.service.sys.provider.reg.model.table
 
 import io.kuark.ability.data.rdb.support.MaintainableTable
+import io.kuark.service.sys.provider.reg.model.po.RegResource
 import org.ktorm.schema.int
 import org.ktorm.schema.varchar
 
@@ -11,7 +12,7 @@ import org.ktorm.schema.varchar
  * @since 1.0.0
  */
 //region your codes 1
-object RegResources: MaintainableTable<io.kuark.service.sys.provider.reg.model.po.RegResource>("reg_resource") {
+object RegResources: MaintainableTable<RegResource>("reg_resource") {
 //endregion your codes 1
 
     /** 名称，或其国际化key */

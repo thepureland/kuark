@@ -21,9 +21,9 @@ open class TemplateModelCreator {
 
     @Suppress(Consts.Suppress.UNCHECKED_CAST)
     fun create(): Map<String, Any?> {
-        val tableName = io.kuark.demo.tools.codegen.core.CodeGeneratorContext.tableName
-        val config = io.kuark.demo.tools.codegen.core.CodeGeneratorContext.config
-        val columns = io.kuark.demo.tools.codegen.core.CodeGeneratorContext.columns
+        val tableName = CodeGeneratorContext.tableName
+        val config = CodeGeneratorContext.config
+        val columns = CodeGeneratorContext.columns
         val templateModel = mutableMapOf<String, Any?>()
         templateModel[Config.PROP_KEY_PACKAGE_PREFIX] = config.getPackagePrefix()
         templateModel[Config.PROP_KEY_MODULE_NAME] = config.getModuleName()

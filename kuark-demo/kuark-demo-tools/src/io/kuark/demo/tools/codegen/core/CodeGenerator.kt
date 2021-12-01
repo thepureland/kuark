@@ -6,7 +6,10 @@ import freemarker.template.Configuration
 import io.kuark.base.io.FileKit
 import io.kuark.base.log.LogFactory
 import io.kuark.demo.tools.codegen.biz.CodeGenColumnBiz
+import io.kuark.demo.tools.codegen.biz.CodeGenFileBiz
 import io.kuark.demo.tools.codegen.biz.CodeGenObjectBiz
+import io.kuark.demo.tools.codegen.core.merge.CodeMerger
+import io.kuark.demo.tools.codegen.core.merge.PrivateContentEraser
 import io.kuark.demo.tools.codegen.model.vo.GenFile
 import javafx.scene.control.Alert
 import java.io.File
@@ -41,14 +44,14 @@ class CodeGenerator(
             success = CodeGenColumnBiz.saveColumns()
             if (success) {
                 val filenames = genFiles.filter { it.getGenerate() }.map { it.getFilename() }
-                success = io.kuark.demo.tools.codegen.biz.CodeGenFileBiz.save(filenames)
+                success = CodeGenFileBiz.save(filenames)
             }
         }
         return success
     }
 
     private fun newFreeMarkerConfiguration(): Configuration {
-        val templateRootDir = io.kuark.demo.tools.codegen.core.CodeGeneratorContext.config.getTemplateInfo()!!.rootDir
+        val templateRootDir = CodeGeneratorContext.config.getTemplateInfo()!!.rootDir
         val root = URL("file:$templateRootDir")
         val multiTemplateLoader = MultiTemplateLoader(arrayOf(
             object : URLTemplateLoader() {
@@ -61,14 +64,13 @@ class CodeGenerator(
         conf.booleanFormat = "true,false"
         conf.defaultEncoding = "UTF-8"
         conf.setClassForTemplateLoading(
-            io.kuark.demo.tools.codegen.core.CodeGenerator::class.java,
-            "/template/${io.kuark.demo.tools.codegen.core.CodeGeneratorContext.config.getTemplateInfo()!!.name}"
+            CodeGenerator::class.java,
+            "/template/${CodeGeneratorContext.config.getTemplateInfo()!!.name}"
         )
         val autoIncludes = listOf("macro.include")
-        val availableAutoInclude =
-            io.kuark.demo.tools.codegen.core.FreemarkerKit.getAvailableAutoInclude(conf, autoIncludes)
+        val availableAutoInclude = FreemarkerKit.getAvailableAutoInclude(conf, autoIncludes)
         conf.setAutoIncludes(availableAutoInclude)
-        io.kuark.demo.tools.codegen.core.CodeGenerator.Companion.log.debug("set Freemarker.autoIncludes:$availableAutoInclude for templateName:$templateRootDir autoIncludes:$autoIncludes")
+        log.debug("set Freemarker.autoIncludes:$availableAutoInclude for templateName:$templateRootDir autoIncludes:$autoIncludes")
         return conf
     }
 
@@ -76,30 +78,25 @@ class CodeGenerator(
         val template = newFreeMarkerConfiguration().getTemplate(genFile.templateFileRelativePath)
         template.outputEncoding = "UTF-8"
         val absoluteOutputFilePath =
-            File("${io.kuark.demo.tools.codegen.core.CodeGeneratorContext.config.getCodeLoaction()}/${genFile.finalFileRelativePath}")
+            File("${CodeGeneratorContext.config.getCodeLoaction()}/${genFile.finalFileRelativePath}")
         val exists = absoluteOutputFilePath.exists()
         val existStr = if (exists) "Override " else ""
-        io.kuark.demo.tools.codegen.core.CodeGenerator.Companion.log.debug("[" + existStr + "generate]\t template:${genFile.getDirectory()}/${genFile.getFilename()} ==> ${genFile.finalFileRelativePath}")
-        var codeMerger: io.kuark.demo.tools.codegen.core.merge.CodeMerger? = null
+        log.debug("[" + existStr + "generate]\t template:${genFile.getDirectory()}/${genFile.getFilename()} ==> ${genFile.finalFileRelativePath}")
+        var codeMerger: CodeMerger? = null
         if (exists) {
-            codeMerger = io.kuark.demo.tools.codegen.core.merge.CodeMerger(absoluteOutputFilePath)
+            codeMerger = CodeMerger(absoluteOutputFilePath)
         } else {
             FileKit.touch(absoluteOutputFilePath)
         }
-        io.kuark.demo.tools.codegen.core.FreemarkerKit.processTemplate(
-            template,
-            templateModel,
-            absoluteOutputFilePath,
-            "UTF-8"
-        )
+        FreemarkerKit.processTemplate(template, templateModel, absoluteOutputFilePath, "UTF-8")
         if (codeMerger != null) {
             codeMerger.merge()
         } else {
-            io.kuark.demo.tools.codegen.core.merge.PrivateContentEraser.erase(absoluteOutputFilePath)
+            PrivateContentEraser.erase(absoluteOutputFilePath)
         }
     }
 
     companion object {
-        private val log = LogFactory.getLog(io.kuark.demo.tools.codegen.core.CodeGenerator::class)
+        private val log = LogFactory.getLog(CodeGenerator::class)
     }
 }

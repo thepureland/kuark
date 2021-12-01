@@ -9,6 +9,9 @@ import io.kuark.base.query.enums.Operator
 import io.kuark.base.support.Consts
 import io.kuark.service.sys.common.vo.reg.dict.RegDictRecord
 import io.kuark.service.sys.common.vo.reg.dict.RegDictSearchPayload
+import io.kuark.service.sys.provider.reg.model.po.RegDict
+import io.kuark.service.sys.provider.reg.model.table.RegDictItems
+import io.kuark.service.sys.provider.reg.model.table.RegDicts
 import org.ktorm.dsl.*
 import org.ktorm.expression.OrderByExpression
 import org.springframework.stereotype.Repository
@@ -21,19 +24,19 @@ import org.springframework.stereotype.Repository
  */
 @Repository
 //region your codes 1
-open class RegDictDao : BaseDao<String, io.kuark.service.sys.provider.reg.model.po.RegDict, io.kuark.service.sys.provider.reg.model.table.RegDicts>() {
+open class RegDictDao : BaseDao<String, RegDict, RegDicts>() {
 //endregion your codes 1
 
     //region your codes 2
     @Suppress(Consts.Suppress.UNCHECKED_CAST)
     fun getDictIdByModuleAndType(module: String, type: String): String? {
         val list = querySource()
-            .select(io.kuark.service.sys.provider.reg.model.table.RegDicts.id)
+            .select(RegDicts.id)
             .whereWithConditions {
-                it += io.kuark.service.sys.provider.reg.model.table.RegDicts.module eq module
-                it += io.kuark.service.sys.provider.reg.model.table.RegDicts.dictType eq type
+                it += RegDicts.module eq module
+                it += RegDicts.dictType eq type
             }
-            .map { row -> row[io.kuark.service.sys.provider.reg.model.table.RegDicts.id] }
+            .map { row -> row[RegDicts.id] }
             .toList() as List<String>
         return if(list.isEmpty()) null else list.first()
     }
@@ -50,17 +53,17 @@ open class RegDictDao : BaseDao<String, io.kuark.service.sys.provider.reg.model.
         var query = leftJoinSearch(searchPayload)
         val orders = searchPayload.orders
         if (CollectionKit.isEmpty(orders)) {
-            query = query.orderBy(io.kuark.service.sys.provider.reg.model.table.RegDicts.module.asc(), io.kuark.service.sys.provider.reg.model.table.RegDicts.dictType.asc(), io.kuark.service.sys.provider.reg.model.table.RegDictItems.seqNo.asc())
+            query = query.orderBy(RegDicts.module.asc(), RegDicts.dictType.asc(), RegDictItems.seqNo.asc())
         } else {
             val orderExps = mutableListOf<OrderByExpression>()
             orders!!.forEach {
                 var columns = try {
-                    ColumnHelper.columnOf(io.kuark.service.sys.provider.reg.model.table.RegDicts, it.property)
+                    ColumnHelper.columnOf(RegDicts, it.property)
                 } catch (e: IllegalStateException) {
                     emptyMap()
                 }
                 if (columns.isEmpty()) {
-                    columns = ColumnHelper.columnOf(io.kuark.service.sys.provider.reg.model.table.RegDictItems, it.property)
+                    columns = ColumnHelper.columnOf(RegDictItems, it.property)
                 }
                 if (columns.isEmpty()) {
                     throw ObjectNotFoundException("根据属性【${it.property}】找不到对应的列!")
@@ -79,17 +82,17 @@ open class RegDictDao : BaseDao<String, io.kuark.service.sys.provider.reg.model.
         return query.limit((pageNo - 1) * pageSize, pageSize)
             .map { row ->
                 RegDictRecord(
-                    row[io.kuark.service.sys.provider.reg.model.table.RegDicts.module],
-                    row[io.kuark.service.sys.provider.reg.model.table.RegDicts.id]!!,
-                    row[io.kuark.service.sys.provider.reg.model.table.RegDicts.dictType]!!,
-                    row[io.kuark.service.sys.provider.reg.model.table.RegDicts.dictName],
-                    row[io.kuark.service.sys.provider.reg.model.table.RegDictItems.id]!!,
-                    row[io.kuark.service.sys.provider.reg.model.table.RegDictItems.itemCode]!!,
-                    row[io.kuark.service.sys.provider.reg.model.table.RegDictItems.parentId],
-                    row[io.kuark.service.sys.provider.reg.model.table.RegDictItems.itemName],
-                    row[io.kuark.service.sys.provider.reg.model.table.RegDictItems.seqNo],
-                    row[io.kuark.service.sys.provider.reg.model.table.RegDictItems.active]!!,
-                    row[io.kuark.service.sys.provider.reg.model.table.RegDictItems.remark]
+                    row[RegDicts.module],
+                    row[RegDicts.id]!!,
+                    row[RegDicts.dictType]!!,
+                    row[RegDicts.dictName],
+                    row[RegDictItems.id]!!,
+                    row[RegDictItems.itemCode]!!,
+                    row[RegDictItems.parentId],
+                    row[RegDictItems.itemName],
+                    row[RegDictItems.seqNo],
+                    row[RegDictItems.active]!!,
+                    row[RegDictItems.remark]
                 )
             }
     }
@@ -116,37 +119,37 @@ open class RegDictDao : BaseDao<String, io.kuark.service.sys.provider.reg.model.
      */
     fun leftJoinSearch(searchPayload: RegDictSearchPayload): Query {
         return database()
-            .from(io.kuark.service.sys.provider.reg.model.table.RegDictItems).leftJoin(
-                io.kuark.service.sys.provider.reg.model.table.RegDicts, on = io.kuark.service.sys.provider.reg.model.table.RegDictItems.dictId.eq(
-                    io.kuark.service.sys.provider.reg.model.table.RegDicts.id))
+            .from(RegDictItems).leftJoin(
+                RegDicts, on = RegDictItems.dictId.eq(
+                    RegDicts.id))
             .select()
             .whereWithConditions {
                 if (StringKit.isNotBlank(searchPayload.id)) {
-                    it += io.kuark.service.sys.provider.reg.model.table.RegDictItems.id.eq(searchPayload.id!!)
+                    it += RegDictItems.id.eq(searchPayload.id!!)
                 }
                 if (StringKit.isNotBlank(searchPayload.parentId)) {
-                    it += io.kuark.service.sys.provider.reg.model.table.RegDictItems.parentId.eq(searchPayload.parentId!!)
+                    it += RegDictItems.parentId.eq(searchPayload.parentId!!)
                 }
                 if (searchPayload.active != null) {
-                    it += io.kuark.service.sys.provider.reg.model.table.RegDictItems.active.eq(searchPayload.active!!)
+                    it += RegDictItems.active.eq(searchPayload.active!!)
                 }
                 if (StringKit.isNotBlank(searchPayload.module)) {
-                    it += whereExpr(io.kuark.service.sys.provider.reg.model.table.RegDicts.module, Operator.ILIKE, searchPayload.module!!.trim())!!
+                    it += whereExpr(RegDicts.module, Operator.ILIKE, searchPayload.module!!.trim())!!
                 }
                 if (StringKit.isNotBlank(searchPayload.dictType)) {
-                    it += whereExpr(io.kuark.service.sys.provider.reg.model.table.RegDicts.dictType, Operator.ILIKE, searchPayload.dictType!!.trim())!!
+                    it += whereExpr(RegDicts.dictType, Operator.ILIKE, searchPayload.dictType!!.trim())!!
                 }
                 if (StringKit.isNotBlank(searchPayload.dictName)) {
-                    it += whereExpr(io.kuark.service.sys.provider.reg.model.table.RegDicts.dictName, Operator.ILIKE, searchPayload.dictName!!.trim())!!
+                    it += whereExpr(RegDicts.dictName, Operator.ILIKE, searchPayload.dictName!!.trim())!!
                 }
                 if (StringKit.isNotBlank(searchPayload.itemCode)) {
-                    it += whereExpr(io.kuark.service.sys.provider.reg.model.table.RegDictItems.itemCode, Operator.ILIKE, searchPayload.itemCode!!.trim())!!
+                    it += whereExpr(RegDictItems.itemCode, Operator.ILIKE, searchPayload.itemCode!!.trim())!!
                 }
 //                if (StringKit.isNotBlank(searchPayload.parentCode)) {
 //                    it += whereExpr(RegDictItems.parentCode, Operator.ILIKE, searchPayload.parentCode!!.trim())!!
 //                }
                 if (StringKit.isNotBlank(searchPayload.itemName)) {
-                    it += whereExpr(io.kuark.service.sys.provider.reg.model.table.RegDictItems.itemName, Operator.ILIKE, searchPayload.itemName!!.trim())!!
+                    it += whereExpr(RegDictItems.itemName, Operator.ILIKE, searchPayload.itemName!!.trim())!!
                 }
             }
     }

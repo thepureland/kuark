@@ -10,10 +10,10 @@ import io.kuark.ability.data.rdb.support.IMaintainableDbEntity
  * @since 1.0.0
  */
 //region your codes 1
-interface GeoRegion: IMaintainableDbEntity<String, io.kuark.service.sys.provider.geo.model.po.GeoRegion> {
+interface GeoRegion: IMaintainableDbEntity<String, GeoRegion> {
 //endregion your codes 1
 
-    companion object : DbEntityFactory<io.kuark.service.sys.provider.geo.model.po.GeoRegion>()
+    companion object : DbEntityFactory<GeoRegion>()
 
     /** 外键，国家或地区id, geo_country表主键 */
     var countryId: String

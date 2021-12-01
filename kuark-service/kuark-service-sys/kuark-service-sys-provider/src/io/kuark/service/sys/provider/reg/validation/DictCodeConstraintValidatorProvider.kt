@@ -16,7 +16,7 @@ import kotlin.reflect.KClass
 class DictCodeConstraintValidatorProvider: IConstraintValidatorProviderBean {
 
     override fun <T : Annotation, V : ConstraintValidator<T, *>> provide(): Map<KClass<T>, KClass<V>> {
-        return mapOf(DictCode::class to io.kuark.service.sys.provider.reg.validation.DictCodeValidator::class) as Map<KClass<T>, KClass<V>>
+        return mapOf(DictCode::class to DictCodeValidator::class) as Map<KClass<T>, KClass<V>>
     }
 
 }

@@ -10,10 +10,10 @@ import io.kuark.ability.data.rdb.support.IMaintainableDbEntity
  * @since 1.0.0
  */
 //region your codes 1
-interface UserAccountProtection: IMaintainableDbEntity<String, io.kuark.service.sys.provider.user.model.po.UserAccountProtection> {
+interface UserAccountProtection: IMaintainableDbEntity<String, UserAccountProtection> {
 //endregion your codes 1
 
-    companion object : DbEntityFactory<io.kuark.service.sys.provider.user.model.po.UserAccountProtection>()
+    companion object : DbEntityFactory<UserAccountProtection>()
 
     /** 问题１ */
     var question1: String

@@ -11,7 +11,7 @@ import org.ktorm.schema.*
  * @since 1.0.0
  */
 //region your codes 1
-object FlowForms : StringIdTable<io.kuark.service.workflow.provider.model.po.FlowForm>("flow_form") {
+object FlowForms : StringIdTable<FlowForm>("flow_form") {
 //endregion your codes 1
 
     /** 表单key */

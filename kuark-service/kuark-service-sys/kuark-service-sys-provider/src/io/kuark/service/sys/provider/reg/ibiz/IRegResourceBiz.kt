@@ -5,6 +5,7 @@ import io.kuark.service.sys.common.vo.reg.resource.MenuTreeNode
 import io.kuark.service.sys.common.vo.reg.resource.RegResourceRecord
 import io.kuark.service.sys.common.vo.reg.resource.RegResourceSearchPayload
 import io.kuark.service.sys.common.vo.reg.resource.RegResourceTreeNode
+import io.kuark.service.sys.provider.reg.model.po.RegResource
 import kotlin.reflect.KClass
 
 /**
@@ -14,7 +15,7 @@ import kotlin.reflect.KClass
  * @since 1.0.0
  */
 //region your codes 1
-interface IRegResourceBiz: IBaseBiz<String, io.kuark.service.sys.provider.reg.model.po.RegResource> {
+interface IRegResourceBiz: IBaseBiz<String, RegResource> {
 //endregion your codes 1
 
     //region your codes 2

@@ -11,10 +11,10 @@ import java.time.LocalDate
  * @since 1.0.0
  */
 //region your codes 1
-interface GeoCountry: IMaintainableDbEntity<String, io.kuark.service.sys.provider.geo.model.po.GeoCountry> {
+interface GeoCountry: IMaintainableDbEntity<String, GeoCountry> {
 //endregion your codes 1
 
-    companion object : DbEntityFactory<io.kuark.service.sys.provider.geo.model.po.GeoCountry>()
+    companion object : DbEntityFactory<GeoCountry>()
 
     /** 从属国家 */
     var parentId: String?

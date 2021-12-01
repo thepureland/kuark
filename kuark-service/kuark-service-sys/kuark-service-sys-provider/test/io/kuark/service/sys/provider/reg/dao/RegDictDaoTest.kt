@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired
 internal class RegDictDaoTest: SpringTest() {
 
     @Autowired
-    private lateinit var regDictDao: io.kuark.service.sys.provider.reg.dao.RegDictDao
+    private lateinit var regDictDao: RegDictDao
 
     @Test
     fun searchIdsByModuleAndType() {

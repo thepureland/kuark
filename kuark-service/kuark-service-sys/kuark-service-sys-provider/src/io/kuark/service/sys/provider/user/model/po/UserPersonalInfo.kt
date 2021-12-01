@@ -12,10 +12,10 @@ import java.time.LocalDateTime
  * @since 1.0.0
  */
 //region your codes 1
-interface UserPersonalInfo: IMaintainableDbEntity<String, io.kuark.service.sys.provider.user.model.po.UserPersonalInfo> {
+interface UserPersonalInfo: IMaintainableDbEntity<String, UserPersonalInfo> {
 //endregion your codes 1
 
-    companion object : DbEntityFactory<io.kuark.service.sys.provider.user.model.po.UserPersonalInfo>()
+    companion object : DbEntityFactory<UserPersonalInfo>()
 
     /** 真实姓名 */
     var realName: String?

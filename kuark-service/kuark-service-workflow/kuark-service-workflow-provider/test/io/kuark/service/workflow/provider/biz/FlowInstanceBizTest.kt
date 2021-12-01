@@ -23,14 +23,14 @@ internal open class FlowInstanceBizTest : SpringTest() {
 
 
     @Autowired
-    private lateinit var flowInstanceBiz: io.kuark.service.workflow.provider.ibiz.IFlowInstanceBiz
+    private lateinit var flowInstanceBiz: IFlowInstanceBiz
 
     @Autowired
-    private lateinit var flowTaskBiz: io.kuark.service.workflow.provider.ibiz.IFlowTaskBiz
+    private lateinit var flowTaskBiz: IFlowTaskBiz
 
 
-    private val BIZ_KEY = io.kuark.service.workflow.provider.biz.FlowDefinitionBizTest.Companion.BIZ_KEY
-    private val INSTANCE_NAME = io.kuark.service.workflow.provider.biz.FlowDefinitionBizTest.Companion.INSTANCE_NAME
+    private val BIZ_KEY = FlowDefinitionBizTest.BIZ_KEY
+    private val INSTANCE_NAME = FlowDefinitionBizTest.INSTANCE_NAME
     private val NO_EXISTS = "no exists"
 
     @BeforeAll
@@ -43,7 +43,7 @@ internal open class FlowInstanceBizTest : SpringTest() {
     @Test
     @Transactional
     open fun isExists() {
-        val instance = io.kuark.service.workflow.provider.biz.FlowDefinitionBizTest.Companion.deployThenStart()
+        val instance = FlowDefinitionBizTest.deployThenStart()
 
         assert(flowInstanceBiz.isExists(BIZ_KEY, instance.definitionKey))
         assert(flowInstanceBiz.isExists(BIZ_KEY, instance.definitionKey, 1))
@@ -56,7 +56,7 @@ internal open class FlowInstanceBizTest : SpringTest() {
     @Test
     @Transactional
     open fun get() {
-        val instance = io.kuark.service.workflow.provider.biz.FlowDefinitionBizTest.Companion.deployThenStart()
+        val instance = FlowDefinitionBizTest.deployThenStart()
 
         // 正常结果，未指定版本号
         var flowInstance = flowInstanceBiz.get(BIZ_KEY, instance.definitionKey)
@@ -77,7 +77,7 @@ internal open class FlowInstanceBizTest : SpringTest() {
     @Test
     @Transactional
     open fun search() {
-        val instance = io.kuark.service.workflow.provider.biz.FlowDefinitionBizTest.Companion.deployThenStart()
+        val instance = FlowDefinitionBizTest.deployThenStart()
 
         // 正常结果
         val builder = FlowInstanceSearchParams.Builder().definitionKey(instance.definitionKey).startTimeTo(Date())
@@ -97,7 +97,7 @@ internal open class FlowInstanceBizTest : SpringTest() {
     @Test
     @Transactional
     open fun activate() {
-        val instance = io.kuark.service.workflow.provider.biz.FlowDefinitionBizTest.Companion.deployThenStart()
+        val instance = FlowDefinitionBizTest.deployThenStart()
 
         // 找不到流程实例
         assertThrows<ObjectNotFoundException> { flowInstanceBiz.activate(BIZ_KEY, NO_EXISTS) }
@@ -116,7 +116,7 @@ internal open class FlowInstanceBizTest : SpringTest() {
     @Test
     @Transactional
     open fun suspend() {
-        val instance = io.kuark.service.workflow.provider.biz.FlowDefinitionBizTest.Companion.deployThenStart()
+        val instance = FlowDefinitionBizTest.deployThenStart()
 
         // 找不到流程实例
         assertThrows<ObjectNotFoundException> { flowInstanceBiz.suspend(NO_EXISTS, instance.definitionKey) }
@@ -135,7 +135,7 @@ internal open class FlowInstanceBizTest : SpringTest() {
     @Test
     @Transactional
     open fun delete() {
-        val instance = io.kuark.service.workflow.provider.biz.FlowDefinitionBizTest.Companion.deployThenStart()
+        val instance = FlowDefinitionBizTest.deployThenStart()
 
         // 找不到流程实例
         assertThrows<ObjectNotFoundException> {
@@ -152,7 +152,7 @@ internal open class FlowInstanceBizTest : SpringTest() {
     @Test
     @Transactional
     open fun updateBizKey() {
-        val instance = io.kuark.service.workflow.provider.biz.FlowDefinitionBizTest.Companion.deployThenStart()
+        val instance = FlowDefinitionBizTest.deployThenStart()
         val newBizKey = "new biz key"
 
         // 参数非法
@@ -173,17 +173,17 @@ internal open class FlowInstanceBizTest : SpringTest() {
     @Test
     @Transactional
     open fun getHighLightFlowDiagram() {
-        val instance = io.kuark.service.workflow.provider.biz.FlowDefinitionBizTest.Companion.deployThenStart(
+        val instance = FlowDefinitionBizTest.deployThenStart(
             mapOf(
-                "applicantId" to io.kuark.service.workflow.provider.biz.FlowDefinitionBizTest.Companion.APPLICANT_ID,
-                "deptManagerId" to io.kuark.service.workflow.provider.biz.FlowTaskBizTest.Companion.DEPT_MANAGER_ID
+                "applicantId" to FlowDefinitionBizTest.APPLICANT_ID,
+                "deptManagerId" to FlowTaskBizTest.DEPT_MANAGER_ID
             )
         )
 
         flowTaskBiz.complete(
             instance.bizKey,
-            io.kuark.service.workflow.provider.biz.FlowTaskBizTest.Companion.APPLICANT_TASK_DEFINITION_KEY,
-            io.kuark.service.workflow.provider.biz.FlowTaskBizTest.Companion.APPLICANT_ID
+            FlowTaskBizTest.APPLICANT_TASK_DEFINITION_KEY,
+            FlowTaskBizTest.APPLICANT_ID
         )
         val input = flowInstanceBiz.genHighLightFlowDiagram(instance.bizKey)!!
         val svgXml = input.use {

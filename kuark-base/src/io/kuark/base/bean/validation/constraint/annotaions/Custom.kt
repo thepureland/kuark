@@ -61,5 +61,5 @@ annotation class Custom(
     @Target(AnnotationTarget.FUNCTION, AnnotationTarget.PROPERTY_GETTER, AnnotationTarget.PROPERTY_SETTER)
     @Retention(AnnotationRetention.RUNTIME)
     @MustBeDocumented
-    annotation class List(vararg val value: io.kuark.base.bean.validation.constraint.annotaions.Custom)
+    annotation class List(vararg val value: Custom)
 }

@@ -12,10 +12,10 @@ import java.time.LocalDateTime
  * @since 1.0.0
  */
 //region your codes 1
-interface FlowForm : IDbEntity<String, io.kuark.service.workflow.provider.model.po.FlowForm> {
+interface FlowForm : IDbEntity<String, FlowForm> {
 //endregion your codes 1
 
-    companion object : DbEntityFactory<io.kuark.service.workflow.provider.model.po.FlowForm>()
+    companion object : DbEntityFactory<FlowForm>()
 
     /** 表单key */
     var key: String

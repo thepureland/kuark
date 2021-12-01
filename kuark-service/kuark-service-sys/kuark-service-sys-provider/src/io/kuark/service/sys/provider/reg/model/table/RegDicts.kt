@@ -1,6 +1,7 @@
 package io.kuark.service.sys.provider.reg.model.table
 
 import io.kuark.ability.data.rdb.support.UpdatableTable
+import io.kuark.service.sys.provider.reg.model.po.RegDict
 import org.ktorm.schema.varchar
 
 /**
@@ -10,7 +11,7 @@ import org.ktorm.schema.varchar
  * @since 1.0.0
  */
 //region your codes 1
-object RegDicts: UpdatableTable<io.kuark.service.sys.provider.reg.model.po.RegDict>("reg_dict") {
+object RegDicts: UpdatableTable<RegDict>("reg_dict") {
 //endregion your codes 1
 
     /** 模块 */

@@ -1,5 +1,6 @@
 package io.kuark.service.sys.provider.reg.biz
 
+import io.kuark.service.sys.provider.reg.ibiz.IRegDictItemBiz
 import io.kuark.test.common.SpringTest
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
@@ -8,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired
 internal class RegDictItemBizTest : SpringTest() {
 
     @Autowired
-    private lateinit var regDictItemBiz: io.kuark.service.sys.provider.reg.ibiz.IRegDictItemBiz
+    private lateinit var regDictItemBiz: IRegDictItemBiz
 
     @Test
     fun getItemsByModuleAndType() {

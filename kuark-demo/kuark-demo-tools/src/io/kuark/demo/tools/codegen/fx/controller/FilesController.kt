@@ -4,6 +4,10 @@ import freemarker.template.Configuration
 import io.kuark.base.io.FileKit
 import io.kuark.base.io.FilenameKit
 import io.kuark.base.scanner.classpath.ClassPathScanner
+import io.kuark.demo.tools.codegen.biz.CodeGenFileBiz
+import io.kuark.demo.tools.codegen.core.CodeGenerator
+import io.kuark.demo.tools.codegen.core.CodeGeneratorContext
+import io.kuark.demo.tools.codegen.core.FreemarkerKit
 import io.kuark.demo.tools.codegen.model.vo.GenFile
 import javafx.collections.FXCollections
 import javafx.fxml.FXML
@@ -32,7 +36,7 @@ class FilesController : Initializable {
     }
 
     fun readFiles() {
-        val templateRootDir = io.kuark.demo.tools.codegen.core.CodeGeneratorContext.config.getTemplateInfo()!!.rootDir
+        val templateRootDir = CodeGeneratorContext.config.getTemplateInfo()!!.rootDir
         val fileFilter: IOFileFilter = object : IOFileFilter {
             override fun accept(file: File): Boolean {
                 return "macro.include" != file.name
@@ -45,13 +49,13 @@ class FilesController : Initializable {
         val files =
             if (templateRootDir.contains(".jar")) jarFiles
             else FileKit.listFiles(File(templateRootDir), fileFilter, fileFilter)
-        templateModel = io.kuark.demo.tools.codegen.core.CodeGeneratorContext.templateModelCreator.create()
+        templateModel = CodeGeneratorContext.templateModelCreator.create()
         val cfg = Configuration(Configuration.VERSION_2_3_30)
         val genFiles = mutableListOf<GenFile>()
-        val codeGenFiles = io.kuark.demo.tools.codegen.biz.CodeGenFileBiz.read()
+        val codeGenFiles = CodeGenFileBiz.read()
         for (file in files) {
-            val filename = io.kuark.demo.tools.codegen.core.FreemarkerKit.processTemplateString(file.name, templateModel, cfg)
-            var directory = io.kuark.demo.tools.codegen.core.FreemarkerKit.processTemplateString(file.parent, templateModel, cfg)
+            val filename = FreemarkerKit.processTemplateString(file.name, templateModel, cfg)
+            var directory = FreemarkerKit.processTemplateString(file.parent, templateModel, cfg)
             directory = FilenameKit.normalize(directory, true)
             val finalFileRelativePath =
                 directory.substring(templateRootDir.length + 1).replace('.', '/') + "/" + filename
@@ -74,7 +78,7 @@ class FilesController : Initializable {
     private val jarFiles: Collection<File>
         get() {
             val resources =
-                ClassPathScanner.scanForResources(io.kuark.demo.tools.codegen.core.CodeGeneratorContext.config.getTemplateInfo()!!.rootDir, "", "")
+                ClassPathScanner.scanForResources(CodeGeneratorContext.config.getTemplateInfo()!!.rootDir, "", "")
             val files = mutableListOf<File>()
             for (resource in resources) {
                 if (resource.filename.isNotBlank() && !resource.filename.contains("macro.include")) {
@@ -94,7 +98,7 @@ class FilesController : Initializable {
         }
 
         try {
-            io.kuark.demo.tools.codegen.core.CodeGenerator(templateModel, filePathModel).generate()
+            CodeGenerator(templateModel, filePathModel).generate()
         } catch (e: Exception) {
             e.printStackTrace()
             Alert(Alert.AlertType.ERROR, "生成失败！").show()

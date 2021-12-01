@@ -6,6 +6,8 @@ import io.kuark.base.image.ImageKit
 import io.kuark.service.sys.common.api.reg.IDictApi
 import io.kuark.service.workflow.common.vo.definition.FlowDefinitionRecord
 import io.kuark.service.workflow.common.vo.definition.FlowDefinitionSearchPayload
+import io.kuark.service.workflow.provider.ibiz.IFlowDefinitionBiz
+import io.kuark.service.workflow.provider.model.vo.FlowDefinition
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 import javax.imageio.ImageIO
@@ -18,10 +20,11 @@ import javax.imageio.ImageIO
  */
 @RestController
 @RequestMapping("/flow/definition")
+@CrossOrigin
 class FlowDefinitionController {
 
     @Autowired
-    private lateinit var flowDefinitionBiz: io.kuark.service.workflow.provider.ibiz.IFlowDefinitionBiz
+    private lateinit var flowDefinitionBiz: IFlowDefinitionBiz
 
     @Autowired(required = false)
     private var dictApi: IDictApi? = null
@@ -36,7 +39,7 @@ class FlowDefinitionController {
      * @since 1.0.0
      */
     @RequestMapping(value = ["/get"], method = [RequestMethod.GET])
-    fun get(key: String, version: Int): WebResult<io.kuark.service.workflow.provider.model.vo.FlowDefinition> {
+    fun get(key: String, version: Int): WebResult<FlowDefinition> {
         val definition = flowDefinitionBiz.get(key, version)
         return if (definition == null) {
             WebResult(null,"流程定义不存在！key：$key, version：$version")
@@ -71,7 +74,7 @@ class FlowDefinitionController {
      * @since 1.0.0
      */
     @RequestMapping(value = ["/create"], method = [RequestMethod.POST])
-    fun create(def: io.kuark.service.workflow.provider.model.vo.FlowDefinition, flowJson: String, svgXml: String): WebResult<Boolean> {
+    fun create(def: FlowDefinition, flowJson: String, svgXml: String): WebResult<Boolean> {
         flowDefinitionBiz.create(def.key, def.name, def.category, flowJson, svgXml, def.tenantId)
         return WebResult(true)
     }
@@ -87,7 +90,7 @@ class FlowDefinitionController {
      * @since 1.0.0
      */
     @RequestMapping(value = ["/update"], method = [RequestMethod.PUT])
-    fun update(def: io.kuark.service.workflow.provider.model.vo.FlowDefinition, flowJson: String?, svgXml: String?): WebResult<Boolean> {
+    fun update(def: FlowDefinition, flowJson: String?, svgXml: String?): WebResult<Boolean> {
         flowDefinitionBiz.update(def.key, def.version, def.name, def.category, flowJson, svgXml, def.tenantId)
         return WebResult(true)
     }

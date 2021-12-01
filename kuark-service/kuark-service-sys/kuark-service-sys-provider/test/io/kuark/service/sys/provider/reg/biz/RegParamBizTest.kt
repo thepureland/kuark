@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired
 internal class RegParamBizTest: SpringTest() {
 
     @Autowired
-    private lateinit var regParamService: io.kuark.service.sys.provider.reg.biz.RegParamBiz
+    private lateinit var regParamService: RegParamBiz
 
     @Test
     fun getParamByModuleAndName() {

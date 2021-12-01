@@ -3,6 +3,7 @@ package io.kuark.service.sys.provider.reg.ibiz
 import io.kuark.ability.data.rdb.biz.IBaseBiz
 import io.kuark.service.sys.common.vo.reg.dict.RegDictItemRecord
 import io.kuark.service.sys.common.vo.reg.dict.RegDictPayload
+import io.kuark.service.sys.provider.reg.model.po.RegDictItem
 
 /**
  * 字典子表业务接口
@@ -11,7 +12,7 @@ import io.kuark.service.sys.common.vo.reg.dict.RegDictPayload
  * @since 1.0.0
  */
 //region your codes 1
-interface IRegDictItemBiz: IBaseBiz<String, io.kuark.service.sys.provider.reg.model.po.RegDictItem> {
+interface IRegDictItemBiz: IBaseBiz<String, RegDictItem> {
 //endregion your codes 1
 
     //region your codes 2

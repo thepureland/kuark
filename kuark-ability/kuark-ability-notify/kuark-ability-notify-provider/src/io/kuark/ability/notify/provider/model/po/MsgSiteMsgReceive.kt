@@ -11,10 +11,10 @@ import java.time.LocalDateTime
  * @since 1.0.0
  */
 //region your codes 1
-interface MsgSiteMsgReceive : IDbEntity<String, io.kuark.ability.notify.provider.model.po.MsgSiteMsgReceive> {
+interface MsgSiteMsgReceive : IDbEntity<String, MsgSiteMsgReceive> {
 //endregion your codes 1
 
-    companion object : DbEntityFactory<io.kuark.ability.notify.provider.model.po.MsgSiteMsgReceive>()
+    companion object : DbEntityFactory<MsgSiteMsgReceive>()
 
     /** 接收者id */
     var receiverId: String

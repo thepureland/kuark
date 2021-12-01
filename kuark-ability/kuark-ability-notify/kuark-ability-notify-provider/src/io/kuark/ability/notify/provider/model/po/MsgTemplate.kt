@@ -10,10 +10,10 @@ import io.kuark.ability.data.rdb.support.IDbEntity
  * @since 1.0.0
  */
 //region your codes 1
-interface MsgTemplate : IDbEntity<String, io.kuark.ability.notify.provider.model.po.MsgTemplate> {
+interface MsgTemplate : IDbEntity<String, MsgTemplate> {
 //endregion your codes 1
 
-    companion object : DbEntityFactory<io.kuark.ability.notify.provider.model.po.MsgTemplate>()
+    companion object : DbEntityFactory<MsgTemplate>()
 
     /**  */
     var sendTypeDictCode: String

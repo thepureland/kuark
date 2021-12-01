@@ -1,6 +1,7 @@
 package io.kuark.service.sys.provider.user.model.table
 
 import io.kuark.ability.data.rdb.support.StringIdTable
+import io.kuark.service.sys.provider.user.model.po.UserDbAuditLogItem
 import org.ktorm.schema.varchar
 
 /**
@@ -10,7 +11,7 @@ import org.ktorm.schema.varchar
  * @since 1.0.0
  */
 //region your codes 1
-object UserDbAuditLogItems: StringIdTable<io.kuark.service.sys.provider.user.model.po.UserDbAuditLogItem>("user_db_audit_log_item") {
+object UserDbAuditLogItems: StringIdTable<UserDbAuditLogItem>("user_db_audit_log_item") {
 //endregion your codes 1
 
     /** 外键，数据库操作审计日志id，user_db_audit_log表主键 */

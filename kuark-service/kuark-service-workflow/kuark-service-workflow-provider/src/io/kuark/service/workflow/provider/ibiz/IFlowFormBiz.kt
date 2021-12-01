@@ -12,7 +12,7 @@ import io.kuark.base.query.sort.Order
  * @since 1.0.0
  */
 //region your codes 1
-interface IFlowFormBiz : IBaseBiz<String, io.kuark.service.workflow.provider.model.po.FlowForm> {
+interface IFlowFormBiz : IBaseBiz<String, FlowForm> {
 //endregion your codes 1
 
     //region your codes 2
@@ -27,7 +27,7 @@ interface IFlowFormBiz : IBaseBiz<String, io.kuark.service.workflow.provider.mod
      * @author K
      * @since 1.0.0
      */
-    fun get(key: String, version: Int? = null): io.kuark.service.workflow.provider.model.po.FlowForm?
+    fun get(key: String, version: Int? = null): FlowForm?
 
     /**
      * 新增或更新表单信息
@@ -37,7 +37,7 @@ interface IFlowFormBiz : IBaseBiz<String, io.kuark.service.workflow.provider.mod
      * @author K
      * @since 1.0.0
      */
-    fun saveOrUpdate(flowForm: io.kuark.service.workflow.provider.model.po.FlowForm): Boolean
+    fun saveOrUpdate(flowForm: FlowForm): Boolean
 
     /**
      * 查询表单
@@ -55,7 +55,7 @@ interface IFlowFormBiz : IBaseBiz<String, io.kuark.service.workflow.provider.mod
         pageNum: Int = 1,
         pageSize: Int = 20,
         vararg orders: Order
-    ): List<io.kuark.service.workflow.provider.model.po.FlowForm>
+    ): List<FlowForm>
 
     //endregion your codes 2
 

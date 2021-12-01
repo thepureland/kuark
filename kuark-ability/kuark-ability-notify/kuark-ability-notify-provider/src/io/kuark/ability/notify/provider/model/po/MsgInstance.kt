@@ -11,10 +11,10 @@ import java.time.LocalDateTime
  * @since 1.0.0
  */
 //region your codes 1
-interface MsgInstance : IDbEntity<String, io.kuark.ability.notify.provider.model.po.MsgInstance> {
+interface MsgInstance : IDbEntity<String, MsgInstance> {
 //endregion your codes 1
 
-    companion object : DbEntityFactory<io.kuark.ability.notify.provider.model.po.MsgInstance>()
+    companion object : DbEntityFactory<MsgInstance>()
 
     /** 国家-语言代码 */
     var localeDictCode: String?

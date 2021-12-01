@@ -1,5 +1,7 @@
 package io.kuark.demo.tools.codegen.biz
 
+import io.kuark.demo.tools.codegen.core.CodeGeneratorContext
+import io.kuark.demo.tools.codegen.dao.CodeGenFileDao
 import io.kuark.demo.tools.codegen.model.po.CodeGenFile
 
 /**
@@ -11,21 +13,21 @@ import io.kuark.demo.tools.codegen.model.po.CodeGenFile
 object CodeGenFileBiz {
 
     fun read(): List<String> {
-        return io.kuark.demo.tools.codegen.dao.CodeGenFileDao.searchCodeGenFileNames(io.kuark.demo.tools.codegen.core.CodeGeneratorContext.tableName)
+        return CodeGenFileDao.searchCodeGenFileNames(CodeGeneratorContext.tableName)
     }
 
     fun save(files: Collection<String>): Boolean {
-        val filesInDb = io.kuark.demo.tools.codegen.biz.CodeGenFileBiz.read()
+        val filesInDb = read()
         val codeGenFileList = mutableListOf<CodeGenFile>()
         files.filter { !filesInDb.contains(it) }.forEach { file ->
             codeGenFileList.add(
                 CodeGenFile {
                     filename = file
-                    objectName = io.kuark.demo.tools.codegen.core.CodeGeneratorContext.tableName
+                    objectName = CodeGeneratorContext.tableName
                 }
             )
         }
-        return io.kuark.demo.tools.codegen.dao.CodeGenFileDao.batchInsert(codeGenFileList) == codeGenFileList.size
+        return CodeGenFileDao.batchInsert(codeGenFileList) == codeGenFileList.size
     }
 
 }

@@ -18,7 +18,7 @@ interface IFlowEventListener : ActivitiEventListener {
      * @author K
      * @since 1.0.0
      */
-    fun onEvent(event: io.kuark.service.workflow.provider.event.FlowEvent)
+    fun onEvent(event: FlowEvent)
 
     /**
      * 当该事件监听器有异常抛出时，当前操作是否失败
@@ -32,7 +32,7 @@ interface IFlowEventListener : ActivitiEventListener {
     }
 
     override fun onEvent(event: ActivitiEvent) {
-        onEvent(io.kuark.service.workflow.provider.event.FlowEvent(event))
+        onEvent(FlowEvent(event))
     }
 
 }

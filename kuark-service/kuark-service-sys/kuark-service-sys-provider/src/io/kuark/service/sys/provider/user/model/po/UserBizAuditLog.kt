@@ -11,10 +11,10 @@ import java.time.LocalDateTime
  * @since 1.0.0
  */
 //region your codes 1
-interface UserBizAuditLog: IDbEntity<String, io.kuark.service.sys.provider.user.model.po.UserBizAuditLog> {
+interface UserBizAuditLog: IDbEntity<String, UserBizAuditLog> {
 //endregion your codes 1
 
-    companion object : DbEntityFactory<io.kuark.service.sys.provider.user.model.po.UserBizAuditLog>()
+    companion object : DbEntityFactory<UserBizAuditLog>()
 
     /** 外键，用户账号id，user_account表主键 */
     var userAccountId: String

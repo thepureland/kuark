@@ -1,6 +1,9 @@
 package io.kuark.demo.tools.codegen.fx.controller
 
 import io.kuark.ability.ui.jfx.controls.AutoCompleteComboBoxListener
+import io.kuark.demo.tools.codegen.biz.CodeGenColumnBiz
+import io.kuark.demo.tools.codegen.biz.CodeGenObjectBiz
+import io.kuark.demo.tools.codegen.core.CodeGeneratorContext
 import io.kuark.demo.tools.codegen.model.vo.ColumnInfo
 import io.kuark.demo.tools.codegen.model.vo.Config
 import javafx.application.Platform
@@ -44,7 +47,7 @@ class ColumnsController : Initializable {
         val table = table
         val tableComment = tableComment
         val items = tableComboBox.items
-        tableMap = io.kuark.demo.tools.codegen.biz.CodeGenObjectBiz.readTables()
+        tableMap = CodeGenObjectBiz.readTables()
         tableComboBox.setItems(FXCollections.observableArrayList(tableMap!!.keys.toSortedSet()))
         AutoCompleteComboBoxListener<Any>(tableComboBox)
         if (items.isEmpty()) {
@@ -54,10 +57,10 @@ class ColumnsController : Initializable {
                     if (newValue != null) {
                         if (tableMap!!.containsKey(newValue)) {
                             tableCommentTextField.text = tableMap!![newValue]
-                            io.kuark.demo.tools.codegen.core.CodeGeneratorContext.tableName = newValue
+                            CodeGeneratorContext.tableName = newValue
                             object : Thread() {
                                 override fun run() {
-                                    val columns = io.kuark.demo.tools.codegen.biz.CodeGenColumnBiz.readColumns()
+                                    val columns = CodeGenColumnBiz.readColumns()
                                     Platform.runLater { columnTable.setItems(FXCollections.observableArrayList(columns)) }
                                 }
                             }.start()

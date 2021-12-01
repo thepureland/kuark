@@ -10,10 +10,10 @@ import io.kuark.ability.data.rdb.support.IMaintainableDbEntity
  * @since 1.0.0
  */
 //region your codes 1
-interface GeoIpLibrary: IMaintainableDbEntity<String, io.kuark.service.sys.provider.geo.model.po.GeoIpLibrary> {
+interface GeoIpLibrary: IMaintainableDbEntity<String, GeoIpLibrary> {
 //endregion your codes 1
 
-    companion object : DbEntityFactory<io.kuark.service.sys.provider.geo.model.po.GeoIpLibrary>()
+    companion object : DbEntityFactory<GeoIpLibrary>()
 
     /** ip段起，标准ipv6全格式 */
     var ipStart: String

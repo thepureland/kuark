@@ -50,7 +50,7 @@ object CodeGenColumnBiz {
         val columnInfos = CodeGeneratorContext.columns
 
         // delete old columns first
-        io.kuark.demo.tools.codegen.dao.CodeGenColumnDao.deleteCodeGenColumn(table)
+        CodeGenColumnDao.deleteCodeGenColumn(table)
 
         // insert new columns
         val codeGenColumns = mutableListOf<CodeGenColumn>()

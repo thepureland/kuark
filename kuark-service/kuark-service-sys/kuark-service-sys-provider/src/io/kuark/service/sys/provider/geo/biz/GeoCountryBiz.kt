@@ -1,5 +1,6 @@
 package io.kuark.service.sys.provider.geo.biz
 
+import io.kuark.service.sys.provider.geo.ibiz.IGeoCountryBiz
 import org.springframework.stereotype.Service
 
 /**
@@ -10,7 +11,7 @@ import org.springframework.stereotype.Service
  */
 @Service
 //region your codes 1
-class GeoCountryBiz: io.kuark.service.sys.provider.geo.ibiz.IGeoCountryBiz {
+class GeoCountryBiz: IGeoCountryBiz {
 //endregion your codes 1
 
     //region your codes 2

@@ -6,6 +6,9 @@ import io.kuark.ability.data.rdb.biz.BaseBiz
 import io.kuark.base.lang.string.StringKit
 import io.kuark.service.sys.common.vo.reg.dict.RegDictItemRecord
 import io.kuark.service.sys.common.vo.reg.dict.RegDictPayload
+import io.kuark.service.sys.provider.reg.dao.RegDictItemDao
+import io.kuark.service.sys.provider.reg.ibiz.IRegDictBiz
+import io.kuark.service.sys.provider.reg.ibiz.IRegDictItemBiz
 import io.kuark.service.sys.provider.reg.model.po.RegDictItem
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.CacheConfig
@@ -23,12 +26,11 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 //region your codes 1
 @CacheConfig(cacheNames = [CacheNames.REG_DICT_ITEM])
-open class RegDictItemBiz : BaseBiz<String, io.kuark.service.sys.provider.reg.model.po.RegDictItem, io.kuark.service.sys.provider.reg.dao.RegDictItemDao>(),
-    io.kuark.service.sys.provider.reg.ibiz.IRegDictItemBiz {
+open class RegDictItemBiz : BaseBiz<String, RegDictItem, RegDictItemDao>(), IRegDictItemBiz {
 //endregion your codes 1
 
     @Autowired
-    private lateinit var regDictBiz: io.kuark.service.sys.provider.reg.ibiz.IRegDictBiz
+    private lateinit var regDictBiz: IRegDictBiz
 
     //region yur codes 2
 
@@ -63,7 +65,7 @@ open class RegDictItemBiz : BaseBiz<String, io.kuark.service.sys.provider.reg.mo
     @CacheEvict(key = "#payload.module.concat(':').concat(#payload.dictType)")
     override fun saveOrUpdate(payload: RegDictPayload): String {
         return if (StringKit.isBlank(payload.id)) { // 新增
-            val regDictItem = io.kuark.service.sys.provider.reg.model.po.RegDictItem().apply {
+            val regDictItem = RegDictItem().apply {
                 dictId = payload.dictId!!
                 parentId = payload.parentId
                 itemCode = payload.code!!
@@ -73,7 +75,7 @@ open class RegDictItemBiz : BaseBiz<String, io.kuark.service.sys.provider.reg.mo
             }
             dao.insert(regDictItem)
         } else { // 更新
-            val regDictItem = io.kuark.service.sys.provider.reg.model.po.RegDictItem {
+            val regDictItem = RegDictItem {
                 id = payload.id
                 dictId = payload.dictId!!
                 parentId = payload.parentId
@@ -102,7 +104,7 @@ open class RegDictItemBiz : BaseBiz<String, io.kuark.service.sys.provider.reg.mo
             dao.batchDelete(childItemIds)
         }
         if (CacheKit.isCacheActive()) {
-            val dictIds = dao.oneSearchProperty(io.kuark.service.sys.provider.reg.model.po.RegDictItem::id.name, id, io.kuark.service.sys.provider.reg.model.po.RegDictItem::dictId.name)
+            val dictIds = dao.oneSearchProperty(RegDictItem::id.name, id, RegDictItem::dictId.name)
             val dict = regDictBiz.get(dictIds.first() as String)!!
             CacheKit.evict(CacheNames.REG_DICT_ITEM, "${dict.module}:${dict.dictType}") // 字典的缓存粒度为字典类型
         }
@@ -110,7 +112,7 @@ open class RegDictItemBiz : BaseBiz<String, io.kuark.service.sys.provider.reg.mo
     }
 
     private fun recursionFindAllParentId(itemId: String, results: MutableList<String>) {
-        val list = dao.oneSearchProperty(io.kuark.service.sys.provider.reg.model.po.RegDictItem::id.name, itemId, io.kuark.service.sys.provider.reg.model.po.RegDictItem::parentId.name)
+        val list = dao.oneSearchProperty(RegDictItem::id.name, itemId, RegDictItem::parentId.name)
         if (list.isNotEmpty()) {
             val parentId = list.first() as String
             results.add(parentId)
@@ -119,7 +121,7 @@ open class RegDictItemBiz : BaseBiz<String, io.kuark.service.sys.provider.reg.mo
     }
 
     private fun recursionFindAllChildId(itemId: String, results: MutableList<String>) {
-        val itemIds = dao.oneSearchProperty(io.kuark.service.sys.provider.reg.model.po.RegDictItem::parentId.name, itemId, io.kuark.service.sys.provider.reg.model.po.RegDictItem::id.name)
+        val itemIds = dao.oneSearchProperty(RegDictItem::parentId.name, itemId, RegDictItem::id.name)
         itemIds.forEach { id ->
             results.add(id as String)
             recursionFindAllChildId(id, results)

@@ -11,6 +11,6 @@ import org.activiti.engine.delegate.event.ActivitiEvent
 open class FlowEvent(private val event: ActivitiEvent) {
 
     /** 事件类型枚举 */
-    val type = io.kuark.service.workflow.provider.event.FlowEventType.Companion.of(event.type)
+    val type = FlowEventType.of(event.type)
 
 }

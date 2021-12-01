@@ -1,6 +1,8 @@
 package io.kuark.service.sys.provider.user.dao
 
 import io.kuark.ability.data.rdb.support.BaseDao
+import io.kuark.service.sys.provider.user.model.po.UserContactWay
+import io.kuark.service.sys.provider.user.model.table.UserContactWays
 import org.springframework.stereotype.Repository
 
 /**
@@ -11,7 +13,7 @@ import org.springframework.stereotype.Repository
  */
 @Repository
 //region your codes 1
-open class UserContactWayDao : BaseDao<String, io.kuark.service.sys.provider.user.model.po.UserContactWay, io.kuark.service.sys.provider.user.model.table.UserContactWays>() {
+open class UserContactWayDao : BaseDao<String, UserContactWay, UserContactWays>() {
 //endregion your codes 1
 
     //region your codes 2

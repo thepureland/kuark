@@ -10,10 +10,10 @@ import io.kuark.ability.data.rdb.support.IMaintainableDbEntity
  * @since 1.0.0
  */
 //region your codes 1
-interface UserContactWay: IMaintainableDbEntity<String, io.kuark.service.sys.provider.user.model.po.UserContactWay> {
+interface UserContactWay: IMaintainableDbEntity<String, UserContactWay> {
 //endregion your codes 1
 
-    companion object : DbEntityFactory<io.kuark.service.sys.provider.user.model.po.UserContactWay>()
+    companion object : DbEntityFactory<UserContactWay>()
 
     /** 外键，用户账号id，user_account表主键 */
     var userId: String

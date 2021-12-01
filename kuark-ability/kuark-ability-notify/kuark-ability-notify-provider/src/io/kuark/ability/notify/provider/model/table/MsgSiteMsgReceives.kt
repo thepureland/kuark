@@ -12,7 +12,7 @@ import org.ktorm.schema.varchar
  * @since 1.0.0
  */
 //region your codes 1
-object MsgSiteMsgReceives: StringIdTable<io.kuark.ability.notify.provider.model.po.MsgSiteMsgReceive>("msg_site_msg_receive") {
+object MsgSiteMsgReceives: StringIdTable<MsgSiteMsgReceive>("msg_site_msg_receive") {
 //endregion your codes 1
 
     /** 接收者id */

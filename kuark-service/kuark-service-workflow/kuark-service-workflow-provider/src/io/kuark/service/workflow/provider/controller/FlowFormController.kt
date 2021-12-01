@@ -3,6 +3,8 @@ package io.kuark.service.workflow.provider.controller
 import io.kuark.ability.web.common.WebResult
 import io.kuark.base.query.sort.Order
 import io.kuark.service.workflow.common.vo.form.FlowFormSearchParams
+import io.kuark.service.workflow.provider.ibiz.IFlowFormBiz
+import io.kuark.service.workflow.provider.model.po.FlowForm
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 
@@ -22,7 +24,7 @@ class FlowFormController {
     //region your codes 2
 
     @Autowired
-    private lateinit var flowFormBiz: io.kuark.service.workflow.provider.ibiz.IFlowFormBiz
+    private lateinit var flowFormBiz: IFlowFormBiz
 
     /**
      * 返回指定id的流程表单
@@ -33,7 +35,7 @@ class FlowFormController {
      * @since 1.0.0
      */
     @GetMapping("/get")
-    fun get(id: String): WebResult<io.kuark.service.workflow.provider.model.po.FlowForm> {
+    fun get(id: String): WebResult<FlowForm> {
         val flowForm = flowFormBiz.get(id)
         return if (flowForm == null) {
             WebResult(null,"找不到流程表单！id：$id")
@@ -56,7 +58,7 @@ class FlowFormController {
     @GetMapping("/search")
     fun search(
         searchParams: FlowFormSearchParams, pageNum: Int, pageSize: Int, vararg orders: Order
-    ): WebResult<List<io.kuark.service.workflow.provider.model.po.FlowForm>> {
+    ): WebResult<List<FlowForm>> {
         val flowForms = flowFormBiz.search(searchParams, pageNum, pageSize,  *orders)
         return WebResult(flowForms)
     }
@@ -70,7 +72,7 @@ class FlowFormController {
      * @since 1.0.0
      */
     @PostMapping("/save")
-    fun save(flowForm: io.kuark.service.workflow.provider.model.po.FlowForm): WebResult<Boolean> {
+    fun save(flowForm: FlowForm): WebResult<Boolean> {
         return WebResult(flowFormBiz.saveOrUpdate(flowForm))
     }
 
@@ -83,7 +85,7 @@ class FlowFormController {
      * @since 1.0.0
      */
     @PutMapping("/update")
-    fun update(flowForm: io.kuark.service.workflow.provider.model.po.FlowForm): WebResult<Boolean> {
+    fun update(flowForm: FlowForm): WebResult<Boolean> {
         return WebResult(flowFormBiz.saveOrUpdate(flowForm))
     }
 

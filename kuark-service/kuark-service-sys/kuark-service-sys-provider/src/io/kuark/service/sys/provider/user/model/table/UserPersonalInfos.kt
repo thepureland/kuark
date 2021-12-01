@@ -1,6 +1,7 @@
 package io.kuark.service.sys.provider.user.model.table
 
 import io.kuark.ability.data.rdb.support.MaintainableTable
+import io.kuark.service.sys.provider.user.model.po.UserPersonalInfo
 import org.ktorm.schema.date
 import org.ktorm.schema.datetime
 import org.ktorm.schema.float
@@ -13,7 +14,7 @@ import org.ktorm.schema.varchar
  * @since 1.0.0
  */
 //region your codes 1
-object UserPersonalInfos: MaintainableTable<io.kuark.service.sys.provider.user.model.po.UserPersonalInfo>("user_personal_info") {
+object UserPersonalInfos: MaintainableTable<UserPersonalInfo>("user_personal_info") {
 //endregion your codes 1
 
     /** 真实姓名 */

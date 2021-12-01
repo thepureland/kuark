@@ -8,6 +8,12 @@ import io.kuark.base.io.IoKit
 import io.kuark.base.io.PathKit
 import io.kuark.context.kit.SpringKit
 import io.kuark.service.workflow.common.vo.definition.FlowDefinitionSearchPayload
+import io.kuark.service.workflow.provider.event.FlowEvent
+import io.kuark.service.workflow.provider.event.FlowEventType
+import io.kuark.service.workflow.provider.event.IFlowEventListener
+import io.kuark.service.workflow.provider.ibiz.IFlowDefinitionBiz
+import io.kuark.service.workflow.provider.model.vo.FlowDefinition
+import io.kuark.service.workflow.provider.model.vo.FlowInstance
 import io.kuark.test.common.SpringTest
 import org.activiti.engine.RepositoryService
 import org.junit.jupiter.api.Assertions.*
@@ -25,7 +31,7 @@ import javax.imageio.ImageIO
 internal open class FlowDefinitionBizTest : SpringTest() {
 
     @Autowired
-    private lateinit var flowDefinitionBiz: io.kuark.service.workflow.provider.ibiz.IFlowDefinitionBiz
+    private lateinit var flowDefinitionBiz: IFlowDefinitionBiz
 
     @Autowired
     private lateinit var repositoryService: RepositoryService
@@ -41,19 +47,21 @@ internal open class FlowDefinitionBizTest : SpringTest() {
     @Test
     @Transactional
     open fun isExists() {
-        io.kuark.service.workflow.provider.biz.FlowDefinitionBizTest.Companion.createModel()
+        createModel()
 
-        assert(flowDefinitionBiz.isExists(io.kuark.service.workflow.provider.biz.FlowDefinitionBizTest.Companion.KEY, 1))
-        assert(flowDefinitionBiz.isExists(io.kuark.service.workflow.provider.biz.FlowDefinitionBizTest.Companion.KEY))
-        assertFalse(flowDefinitionBiz.isExists(io.kuark.service.workflow.provider.biz.FlowDefinitionBizTest.Companion.KEY, 2))
+        assert(flowDefinitionBiz.isExists(KEY, 1))
+        assert(flowDefinitionBiz.isExists(KEY))
+        assertFalse(
+            flowDefinitionBiz.isExists(KEY, 2)
+        )
         assertFalse(flowDefinitionBiz.isExists(NO_EXISTS, 1))
         assertThrows<IllegalArgumentException> { flowDefinitionBiz.isExists(" ") }
 
-        io.kuark.service.workflow.provider.biz.FlowDefinitionBizTest.Companion.deployModel()
+        deployModel()
 
-        assert(flowDefinitionBiz.isExists(io.kuark.service.workflow.provider.biz.FlowDefinitionBizTest.Companion.KEY, 1))
-        assert(flowDefinitionBiz.isExists(io.kuark.service.workflow.provider.biz.FlowDefinitionBizTest.Companion.KEY))
-        assertFalse(flowDefinitionBiz.isExists(io.kuark.service.workflow.provider.biz.FlowDefinitionBizTest.Companion.KEY, 2))
+        assert(flowDefinitionBiz.isExists(KEY, 1))
+        assert(flowDefinitionBiz.isExists(KEY))
+        assertFalse(flowDefinitionBiz.isExists(KEY, 2))
         assertFalse(flowDefinitionBiz.isExists(NO_EXISTS, 1))
         assertThrows<IllegalArgumentException> { flowDefinitionBiz.isExists(" ") }
 
@@ -62,27 +70,27 @@ internal open class FlowDefinitionBizTest : SpringTest() {
     @Test
     @Transactional
     open fun get() {
-        io.kuark.service.workflow.provider.biz.FlowDefinitionBizTest.Companion.createModel()
+        createModel()
 
-        assertNotNull(flowDefinitionBiz.get(io.kuark.service.workflow.provider.biz.FlowDefinitionBizTest.Companion.KEY, 1))
-        assertNull(flowDefinitionBiz.get(io.kuark.service.workflow.provider.biz.FlowDefinitionBizTest.Companion.KEY, 2))
+        assertNotNull(flowDefinitionBiz.get(KEY, 1))
+        assertNull(flowDefinitionBiz.get(KEY, 2))
         assertNull(flowDefinitionBiz.get(NO_EXISTS, 1))
-        assertEquals(1, flowDefinitionBiz.get(io.kuark.service.workflow.provider.biz.FlowDefinitionBizTest.Companion.KEY)!!.version)
+        assertEquals(1, flowDefinitionBiz.get(KEY)!!.version)
         assertThrows<IllegalArgumentException> { flowDefinitionBiz.get(" ") }
 
-        io.kuark.service.workflow.provider.biz.FlowDefinitionBizTest.Companion.deployModel()
+        deployModel()
 
-        assert(flowDefinitionBiz.get(io.kuark.service.workflow.provider.biz.FlowDefinitionBizTest.Companion.KEY, 1)!!.deployed)
-        assertNull(flowDefinitionBiz.get(io.kuark.service.workflow.provider.biz.FlowDefinitionBizTest.Companion.KEY, 2))
+        assert(flowDefinitionBiz.get(KEY, 1)!!.deployed)
+        assertNull(flowDefinitionBiz.get(KEY, 2))
         assertNull(flowDefinitionBiz.get(NO_EXISTS, 1))
-        assertEquals(1, flowDefinitionBiz.get(io.kuark.service.workflow.provider.biz.FlowDefinitionBizTest.Companion.KEY)!!.version)
+        assertEquals(1, flowDefinitionBiz.get(KEY)!!.version)
         assertThrows<IllegalArgumentException> { flowDefinitionBiz.get(" ") }
     }
 
     @Test
     @Transactional
     open fun search() {
-        io.kuark.service.workflow.provider.biz.FlowDefinitionBizTest.Companion.createThenDeploy()
+        createThenDeploy()
 
         // 指定条件模糊搜索
         var searchPayload = FlowDefinitionSearchPayload().apply {
@@ -107,44 +115,26 @@ internal open class FlowDefinitionBizTest : SpringTest() {
         val svgXml = FileKit.readFileToString(File(PathKit.getResourcePath("bpmn/test-svg.xml")))
         val flowJson = FileKit.readFileToString(File(PathKit.getResourcePath("bpmn/test-flow.json")))
         val definition = flowDefinitionBiz.create(
-            io.kuark.service.workflow.provider.biz.FlowDefinitionBizTest.Companion.KEY,
-            io.kuark.service.workflow.provider.biz.FlowDefinitionBizTest.Companion.NAME,
-            io.kuark.service.workflow.provider.biz.FlowDefinitionBizTest.Companion.CATEGORY, flowJson, svgXml)
+            KEY,
+            NAME,
+            CATEGORY, flowJson, svgXml
+        )
         assertNotNull(definition._modelId)
 
         // 参数非法
-        assertThrows<IllegalArgumentException> { flowDefinitionBiz.create("",
-            io.kuark.service.workflow.provider.biz.FlowDefinitionBizTest.Companion.NAME,
-            io.kuark.service.workflow.provider.biz.FlowDefinitionBizTest.Companion.CATEGORY, flowJson, svgXml) }
-        assertThrows<IllegalArgumentException> {
-            flowDefinitionBiz.create(
-                io.kuark.service.workflow.provider.biz.FlowDefinitionBizTest.Companion.KEY, "",
-                io.kuark.service.workflow.provider.biz.FlowDefinitionBizTest.Companion.CATEGORY, flowJson, svgXml)
-        }
-        assertThrows<IllegalArgumentException> {
-            flowDefinitionBiz.create(
-                io.kuark.service.workflow.provider.biz.FlowDefinitionBizTest.Companion.KEY,
-                io.kuark.service.workflow.provider.biz.FlowDefinitionBizTest.Companion.NAME,
-                io.kuark.service.workflow.provider.biz.FlowDefinitionBizTest.Companion.CATEGORY, flowJson, " ")
-        }
-        assertThrows<IllegalArgumentException> { flowDefinitionBiz.create(
-            io.kuark.service.workflow.provider.biz.FlowDefinitionBizTest.Companion.KEY,
-            io.kuark.service.workflow.provider.biz.FlowDefinitionBizTest.Companion.NAME,
-            io.kuark.service.workflow.provider.biz.FlowDefinitionBizTest.Companion.CATEGORY, "", svgXml) }
+        assertThrows<IllegalArgumentException> { flowDefinitionBiz.create("", NAME, CATEGORY, flowJson, svgXml) }
+        assertThrows<IllegalArgumentException> { flowDefinitionBiz.create(KEY, "", CATEGORY, flowJson, svgXml) }
+        assertThrows<IllegalArgumentException> { flowDefinitionBiz.create(KEY, NAME, CATEGORY, flowJson, " ") }
+        assertThrows<IllegalArgumentException> { flowDefinitionBiz.create(KEY, NAME, CATEGORY, "", svgXml) }
 
         // 重复新增
-        assertThrows<ObjectAlreadyExistsException> {
-            flowDefinitionBiz.create(
-                io.kuark.service.workflow.provider.biz.FlowDefinitionBizTest.Companion.KEY,
-                io.kuark.service.workflow.provider.biz.FlowDefinitionBizTest.Companion.NAME,
-                io.kuark.service.workflow.provider.biz.FlowDefinitionBizTest.Companion.CATEGORY, flowJson, svgXml)
-        }
+        assertThrows<ObjectAlreadyExistsException> { flowDefinitionBiz.create(KEY, NAME, CATEGORY, flowJson, svgXml) }
     }
 
     @Test
     @Transactional
     open fun deploy() {
-        val model = io.kuark.service.workflow.provider.biz.FlowDefinitionBizTest.Companion.createModel()
+        val model = createModel()
 
         // 非法参数
         assertThrows<IllegalArgumentException> { flowDefinitionBiz.deploy("") }
@@ -165,19 +155,20 @@ internal open class FlowDefinitionBizTest : SpringTest() {
     @Transactional
     open fun deployWithBpmn() {
         assertThrows<ObjectNotFoundException> {
-            flowDefinitionBiz.deployWithBpmn(io.kuark.service.workflow.provider.biz.FlowDefinitionBizTest.Companion.DEPLOYMENT_NAME, NO_EXISTS, "test")
+            flowDefinitionBiz.deployWithBpmn(DEPLOYMENT_NAME, NO_EXISTS, "test")
         }
         assertThrows<ObjectNotFoundException> {
-            flowDefinitionBiz.deployWithBpmn(
-                io.kuark.service.workflow.provider.biz.FlowDefinitionBizTest.Companion.DEPLOYMENT_NAME,
-                io.kuark.service.workflow.provider.biz.FlowDefinitionBizTest.Companion.CATEGORY, NO_EXISTS)
+            flowDefinitionBiz.deployWithBpmn(DEPLOYMENT_NAME, CATEGORY, NO_EXISTS)
         }
     }
 
     @Test
     @Transactional
     open fun deployWithZip() {
-        val definitions = flowDefinitionBiz.deployWithZip(io.kuark.service.workflow.provider.biz.FlowDefinitionBizTest.Companion.DEPLOYMENT_NAME, "bpmn")
+        val definitions = flowDefinitionBiz.deployWithZip(
+            DEPLOYMENT_NAME,
+            "bpmn"
+        )
         assertEquals(2, definitions.size)
         definitions.forEach {
             var d = repositoryService.createProcessDefinitionQuery().processDefinitionKey(it.key).singleResult()
@@ -187,13 +178,15 @@ internal open class FlowDefinitionBizTest : SpringTest() {
         }
 
         // 文件不存在
-        assertThrows<ObjectNotFoundException> { flowDefinitionBiz.deployWithZip(io.kuark.service.workflow.provider.biz.FlowDefinitionBizTest.Companion.DEPLOYMENT_NAME, "no exists") }
+        assertThrows<ObjectNotFoundException> {
+            flowDefinitionBiz.deployWithZip(DEPLOYMENT_NAME, "no exists")
+        }
     }
 
     @Test
     @Transactional
     open fun getFlowDiagram() {
-        val definition = io.kuark.service.workflow.provider.biz.FlowDefinitionBizTest.Companion.createThenDeploy()
+        val definition = createThenDeploy()
 
         val inputStream = flowDefinitionBiz.getFlowDiagram(definition.key)
         val bufferedImage = ImageIO.read(inputStream)
@@ -217,21 +210,21 @@ internal open class FlowDefinitionBizTest : SpringTest() {
     @Test
     @Transactional
     open fun activate() {
-        val definition = io.kuark.service.workflow.provider.biz.FlowDefinitionBizTest.Companion.createThenDeploy()
+        val definition = createThenDeploy()
         flowDefinitionBiz.activate(definition.key)
     }
 
     @Test
     @Transactional
     open fun suspend() {
-        val definition = io.kuark.service.workflow.provider.biz.FlowDefinitionBizTest.Companion.createThenDeploy()
+        val definition = createThenDeploy()
         flowDefinitionBiz.suspend(definition.key)
     }
 
     @Test
     @Transactional
     open fun delete() {
-        val definition = io.kuark.service.workflow.provider.biz.FlowDefinitionBizTest.Companion.createThenDeploy()
+        val definition = createThenDeploy()
         flowDefinitionBiz.delete(definition.key, null, true)
         assertThrows<ObjectNotFoundException> { flowDefinitionBiz.delete(NO_EXISTS, null, true) }
     }
@@ -239,54 +232,67 @@ internal open class FlowDefinitionBizTest : SpringTest() {
     @Test
     @Transactional
     open fun start() {
-        val definition = io.kuark.service.workflow.provider.biz.FlowDefinitionBizTest.Companion.createThenDeploy()
+        val definition = createThenDeploy()
 
         // 非法参数
-        assertThrows<IllegalArgumentException> { flowDefinitionBiz.start("",
-            io.kuark.service.workflow.provider.biz.FlowDefinitionBizTest.Companion.BIZ_KEY,
-            io.kuark.service.workflow.provider.biz.FlowDefinitionBizTest.Companion.INSTANCE_NAME
-        ) }
-        assertThrows<IllegalArgumentException> { flowDefinitionBiz.start(
-            io.kuark.service.workflow.provider.biz.FlowDefinitionBizTest.Companion.KEY, " ",
-            io.kuark.service.workflow.provider.biz.FlowDefinitionBizTest.Companion.INSTANCE_NAME
-        ) }
-        assertThrows<IllegalArgumentException> { flowDefinitionBiz.start(
-            io.kuark.service.workflow.provider.biz.FlowDefinitionBizTest.Companion.KEY, "biz'key",
-            io.kuark.service.workflow.provider.biz.FlowDefinitionBizTest.Companion.INSTANCE_NAME
-        ) }
-        assertThrows<IllegalArgumentException> { flowDefinitionBiz.start(
-            io.kuark.service.workflow.provider.biz.FlowDefinitionBizTest.Companion.KEY,
-            io.kuark.service.workflow.provider.biz.FlowDefinitionBizTest.Companion.BIZ_KEY, "") }
+        assertThrows<IllegalArgumentException> {
+            flowDefinitionBiz.start(
+                "",
+                BIZ_KEY,
+                INSTANCE_NAME
+            )
+        }
+        assertThrows<IllegalArgumentException> {
+            flowDefinitionBiz.start(
+                KEY, " ",
+                INSTANCE_NAME
+            )
+        }
+        assertThrows<IllegalArgumentException> {
+            flowDefinitionBiz.start(
+                KEY, "biz'key",
+                INSTANCE_NAME
+            )
+        }
+        assertThrows<IllegalArgumentException> {
+            flowDefinitionBiz.start(
+                KEY,
+                BIZ_KEY, ""
+            )
+        }
 
         // 传不存在的流程定义key
-        assertThrows<ObjectNotFoundException> { flowDefinitionBiz.start(NO_EXISTS,
-            io.kuark.service.workflow.provider.biz.FlowDefinitionBizTest.Companion.BIZ_KEY,
-            io.kuark.service.workflow.provider.biz.FlowDefinitionBizTest.Companion.INSTANCE_NAME
-        ) }
+        assertThrows<ObjectNotFoundException> {
+            flowDefinitionBiz.start(
+                NO_EXISTS,
+                BIZ_KEY,
+                INSTANCE_NAME
+            )
+        }
 
         // 成功启动
         var isEventFire = false
-        val listener = object : io.kuark.service.workflow.provider.event.IFlowEventListener {
-            override fun onEvent(event: io.kuark.service.workflow.provider.event.FlowEvent) {
-                if (event.type == io.kuark.service.workflow.provider.event.FlowEventType.ACTIVITY_STARTED) {
+        val listener = object : IFlowEventListener {
+            override fun onEvent(event: FlowEvent) {
+                if (event.type == FlowEventType.ACTIVITY_STARTED) {
                     isEventFire = true
                 }
             }
         }
-        var variables = mapOf("applicantId" to io.kuark.service.workflow.provider.biz.FlowDefinitionBizTest.Companion.APPLICANT_ID)
-        val instance = flowDefinitionBiz.start(definition.key,
-            io.kuark.service.workflow.provider.biz.FlowDefinitionBizTest.Companion.BIZ_KEY,
-            io.kuark.service.workflow.provider.biz.FlowDefinitionBizTest.Companion.INSTANCE_NAME, variables, listener)
+        val variables =
+            mapOf("applicantId" to APPLICANT_ID)
+        val instance = flowDefinitionBiz.start(definition.key, BIZ_KEY, INSTANCE_NAME, variables, listener)
         assertNotNull(instance)
         assertNotNull(instance!!._id)
         assert(isEventFire)
-        assertEquals(io.kuark.service.workflow.provider.biz.FlowDefinitionBizTest.Companion.INSTANCE_NAME, instance.name)
+        assertEquals(
+            INSTANCE_NAME,
+            instance.name
+        )
 
         // 重复启动
         assertThrows<ObjectAlreadyExistsException> {
-            flowDefinitionBiz.start(definition.key,
-                io.kuark.service.workflow.provider.biz.FlowDefinitionBizTest.Companion.BIZ_KEY,
-                io.kuark.service.workflow.provider.biz.FlowDefinitionBizTest.Companion.INSTANCE_NAME, variables, listener)
+            flowDefinitionBiz.start(definition.key, BIZ_KEY, INSTANCE_NAME, variables, listener)
         }
     }
 
@@ -301,33 +307,27 @@ internal open class FlowDefinitionBizTest : SpringTest() {
         const val APPLICANT_ID = "applicantId"
         const val DEPLOYMENT_NAME = "请假申请(junit)"
 
-        internal fun createModel(): io.kuark.service.workflow.provider.model.vo.FlowDefinition {
+        internal fun createModel(): FlowDefinition {
             val svgXml = FileKit.readFileToString(File(PathKit.getResourcePath("bpmn/test-svg.xml")), "UTF-8")
             val flowJson = FileKit.readFileToString(File(PathKit.getResourcePath("bpmn/test-flow.json")), "UTF-8")
-            val flowDefinitionBiz = SpringKit.getBean(io.kuark.service.workflow.provider.ibiz.IFlowDefinitionBiz::class)
-            return flowDefinitionBiz.create(
-                io.kuark.service.workflow.provider.biz.FlowDefinitionBizTest.Companion.KEY,
-                io.kuark.service.workflow.provider.biz.FlowDefinitionBizTest.Companion.NAME,
-                io.kuark.service.workflow.provider.biz.FlowDefinitionBizTest.Companion.CATEGORY, flowJson, svgXml)
+            val flowDefinitionBiz = SpringKit.getBean(IFlowDefinitionBiz::class)
+            return flowDefinitionBiz.create(KEY, NAME, CATEGORY, flowJson, svgXml)
         }
 
-        internal fun deployModel(): io.kuark.service.workflow.provider.model.vo.FlowDefinition {
-            val flowDefinitionBiz = SpringKit.getBean(io.kuark.service.workflow.provider.ibiz.IFlowDefinitionBiz::class)
-            return flowDefinitionBiz.deploy(io.kuark.service.workflow.provider.biz.FlowDefinitionBizTest.Companion.KEY)
+        internal fun deployModel(): FlowDefinition {
+            val flowDefinitionBiz = SpringKit.getBean(IFlowDefinitionBiz::class)
+            return flowDefinitionBiz.deploy(KEY)
         }
 
-        internal fun createThenDeploy(): io.kuark.service.workflow.provider.model.vo.FlowDefinition {
-            io.kuark.service.workflow.provider.biz.FlowDefinitionBizTest.Companion.createModel()
-            return io.kuark.service.workflow.provider.biz.FlowDefinitionBizTest.Companion.deployModel()
+        internal fun createThenDeploy(): FlowDefinition {
+            createModel()
+            return deployModel()
         }
 
-        internal fun deployThenStart(variables: Map<String, *>? = mapOf("applicantId" to io.kuark.service.workflow.provider.biz.FlowDefinitionBizTest.Companion.APPLICANT_ID)): io.kuark.service.workflow.provider.model.vo.FlowInstance {
-            val flowDefinitionBiz = SpringKit.getBean(io.kuark.service.workflow.provider.ibiz.IFlowDefinitionBiz::class)
-            io.kuark.service.workflow.provider.biz.FlowDefinitionBizTest.Companion.createThenDeploy()
-            return flowDefinitionBiz.start(
-                io.kuark.service.workflow.provider.biz.FlowDefinitionBizTest.Companion.KEY,
-                io.kuark.service.workflow.provider.biz.FlowDefinitionBizTest.Companion.BIZ_KEY,
-                io.kuark.service.workflow.provider.biz.FlowDefinitionBizTest.Companion.INSTANCE_NAME, variables)!!
+        internal fun deployThenStart(variables: Map<String, *>? = mapOf("applicantId" to APPLICANT_ID)): FlowInstance {
+            val flowDefinitionBiz = SpringKit.getBean(IFlowDefinitionBiz::class)
+            createThenDeploy()
+            return flowDefinitionBiz.start(KEY, BIZ_KEY, INSTANCE_NAME, variables)!!
         }
 
     }

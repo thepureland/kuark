@@ -1,6 +1,8 @@
 package io.kuark.service.sys.provider.geo.dao
 
 import io.kuark.ability.data.rdb.support.BaseDao
+import io.kuark.service.sys.provider.geo.model.po.GeoRegion
+import io.kuark.service.sys.provider.geo.model.table.GeoRegions
 import org.springframework.stereotype.Repository
 
 /**
@@ -11,7 +13,7 @@ import org.springframework.stereotype.Repository
  */
 @Repository
 //region your codes 1
-open class GeoRegionDao : BaseDao<String, io.kuark.service.sys.provider.geo.model.po.GeoRegion, io.kuark.service.sys.provider.geo.model.table.GeoRegions>() {
+open class GeoRegionDao : BaseDao<String, GeoRegion, GeoRegions>() {
 //endregion your codes 1
 
     //region your codes 2

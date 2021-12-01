@@ -11,6 +11,10 @@ import io.kuark.base.lang.string.StringKit
 import io.kuark.base.lang.string.appendIfMissing
 import io.kuark.base.log.LogFactory
 import io.kuark.service.workflow.common.vo.definition.FlowDefinitionSearchPayload
+import io.kuark.service.workflow.provider.event.IFlowEventListener
+import io.kuark.service.workflow.provider.ibiz.IFlowDefinitionBiz
+import io.kuark.service.workflow.provider.model.vo.FlowDefinition
+import io.kuark.service.workflow.provider.model.vo.FlowInstance
 import org.activiti.bpmn.converter.BpmnXMLConverter
 import org.activiti.editor.language.json.converter.BpmnJsonConverter
 import org.activiti.engine.*
@@ -35,7 +39,7 @@ import javax.xml.stream.XMLInputFactory
  * @author K
  * @since 1.0.0
  */
-open class FlowDefinitionBiz : io.kuark.service.workflow.provider.ibiz.IFlowDefinitionBiz {
+open class FlowDefinitionBiz : IFlowDefinitionBiz {
 
     @Autowired
     private lateinit var repositoryService: RepositoryService
@@ -56,7 +60,7 @@ open class FlowDefinitionBiz : io.kuark.service.workflow.provider.ibiz.IFlowDefi
         return query.count() > 0
     }
 
-    override fun get(key: String, version: Int?): io.kuark.service.workflow.provider.model.vo.FlowDefinition? {
+    override fun get(key: String, version: Int?): FlowDefinition? {
         require(key.isNotBlank()) { "获取流程定义失败！【key】参数不能为空！" }
 
         val model = getActivitiModel(key, version)
@@ -66,15 +70,15 @@ open class FlowDefinitionBiz : io.kuark.service.workflow.provider.ibiz.IFlowDefi
         } else {
             val def = getActivitiDefinition(key, version)
             if (def == null) {
-                io.kuark.service.workflow.provider.model.vo.FlowDefinition(model)
+                FlowDefinition(model)
             } else {
                 val deployment = repositoryService.createDeploymentQuery().deploymentId(def.deploymentId).singleResult()
-                io.kuark.service.workflow.provider.model.vo.FlowDefinition(def, deployment)
+                FlowDefinition(def, deployment)
             }
         }
     }
 
-    override fun search(searchPayload: FlowDefinitionSearchPayload): List<io.kuark.service.workflow.provider.model.vo.FlowDefinition> {
+    override fun search(searchPayload: FlowDefinitionSearchPayload): List<FlowDefinition> {
         val whereStr = StringBuilder("1=1")
 
         // 流程定义key(bpmn文件中process元素的id)
@@ -146,7 +150,7 @@ open class FlowDefinitionBiz : io.kuark.service.workflow.provider.ibiz.IFlowDefi
         val deploymentMap = mutableMapOf<String, Deployment>()
         deployments.forEach { deploymentMap[it.id] = it }
         return models.map {
-            io.kuark.service.workflow.provider.model.vo.FlowDefinition(
+            FlowDefinition(
                 it,
                 deploymentMap[it.deploymentId]
             )
@@ -156,7 +160,7 @@ open class FlowDefinitionBiz : io.kuark.service.workflow.provider.ibiz.IFlowDefi
     @Transactional
     override fun create(
         key: String, name: String, category: String, flowJson: String, svgXml: String, tenantId: String?
-    ): io.kuark.service.workflow.provider.model.vo.FlowDefinition {
+    ): FlowDefinition {
         require(key.isNotBlank()) { "创建流程定义失败！【key】参数不能为空！" }
         require(name.isNotBlank()) { "创建流程定义失败！【name】参数不能为空！" }
         require(flowJson.isNotBlank()) { "创建流程定义失败！【flowJson】参数不能为空！" }
@@ -182,7 +186,7 @@ open class FlowDefinitionBiz : io.kuark.service.workflow.provider.ibiz.IFlowDefi
         repositoryService.addModelEditorSourceExtra(model.id, svgToByteArray(svgXml))
 
         log.info("创建流程定义成功！【key：$key，name：$name】")
-        return io.kuark.service.workflow.provider.model.vo.FlowDefinition(model)
+        return FlowDefinition(model)
     }
 
     @Transactional
@@ -194,7 +198,7 @@ open class FlowDefinitionBiz : io.kuark.service.workflow.provider.ibiz.IFlowDefi
         flowJson: String?,
         svgXml: String?,
         tenantId: String?
-    ): io.kuark.service.workflow.provider.model.vo.FlowDefinition {
+    ): FlowDefinition {
         require(key.isNotBlank()) { "更新流程定义失败！【流程定义key】参数不能为空！" }
         if (name != null) {
             require(!name.contains("'")) { "更新流程定义失败！【流程名称】参数不能包含单引号！" }
@@ -228,11 +232,11 @@ open class FlowDefinitionBiz : io.kuark.service.workflow.provider.ibiz.IFlowDefi
         }
 
         log.info("更新流程定义成功！【key：$key，version：$version】")
-        return io.kuark.service.workflow.provider.model.vo.FlowDefinition(model)
+        return FlowDefinition(model)
     }
 
     @Transactional
-    override fun deploy(key: String, version: Int?): io.kuark.service.workflow.provider.model.vo.FlowDefinition {
+    override fun deploy(key: String, version: Int?): FlowDefinition {
         require(key.isNotBlank()) { "部署流程失败！【流程定义key】不能为空！" }
 
         // 获取流程定义
@@ -274,13 +278,13 @@ open class FlowDefinitionBiz : io.kuark.service.workflow.provider.ibiz.IFlowDefi
         repositoryService.saveModel(model)
 
         log.info("部署流程成功！【key：$key，version：$version】")
-        return io.kuark.service.workflow.provider.model.vo.FlowDefinition(deployment, model.id)
+        return FlowDefinition(deployment, model.id)
     }
 
     @Transactional
     override fun deployWithBpmn(
         name: String, bpmnFileName: String, diagramFileName: String?, prefixPath: String
-    ): io.kuark.service.workflow.provider.model.vo.FlowDefinition {
+    ): FlowDefinition {
         val bpmnFilePath = "${prefixPath}/${bpmnFileName}".appendIfMissing(".bpmn")
         val deploymentBuilder = repositoryService.createDeployment().name(name)
         try {
@@ -295,11 +299,11 @@ open class FlowDefinitionBiz : io.kuark.service.workflow.provider.ibiz.IFlowDefi
         }
         val deployment = deploymentBuilder.deploy()
         val definition = repositoryService.createProcessDefinitionQuery().deploymentId(deployment.id).singleResult()
-        return io.kuark.service.workflow.provider.model.vo.FlowDefinition(definition, deployment)
+        return FlowDefinition(definition, deployment)
     }
 
     @Transactional
-    override fun deployWithZip(deploymentName: String, zipFileName: String, prefixPath: String): List<io.kuark.service.workflow.provider.model.vo.FlowDefinition> {
+    override fun deployWithZip(deploymentName: String, zipFileName: String, prefixPath: String): List<FlowDefinition> {
         val zipPath = "${prefixPath}/${zipFileName}".appendIfMissing(".zip")
         val zipFile = File(zipPath)
         val inputStream = try {
@@ -313,7 +317,7 @@ open class FlowDefinitionBiz : io.kuark.service.workflow.provider.ibiz.IFlowDefi
             repositoryService.createDeployment().name(deploymentName).addZipInputStream(it).deploy()
         }
         val definitions = repositoryService.createProcessDefinitionQuery().deploymentId(deployment.id).list()
-        return definitions.map { io.kuark.service.workflow.provider.model.vo.FlowDefinition(it, deployment) }.toList()
+        return definitions.map { FlowDefinition(it, deployment) }.toList()
     }
 
     override fun getFlowDiagram(key: String, version: Int?): InputStream? {
@@ -411,9 +415,9 @@ open class FlowDefinitionBiz : io.kuark.service.workflow.provider.ibiz.IFlowDefi
         bizKey: String,
         instanceName: String,
         variables: Map<String, *>?,
-        eventListener: io.kuark.service.workflow.provider.event.IFlowEventListener?,
+        eventListener: IFlowEventListener?,
         version: Int?
-    ): io.kuark.service.workflow.provider.model.vo.FlowInstance? {
+    ): FlowInstance? {
         // 参数处理
         require(key.isNotBlank()) { "启动流程失败！【key】参数不能为空！【bizKey: $bizKey】" }
         require(instanceName.isNotBlank()) { "启动流程失败！【instanceName】参数不能为空！【key：$key，bizKey: $bizKey】" }
@@ -468,7 +472,7 @@ open class FlowDefinitionBiz : io.kuark.service.workflow.provider.ibiz.IFlowDefi
             // 设置流程实例名称
             runtimeService.setProcessInstanceName(instance.processInstanceId, instanceName)
             log.info("启动流程后设置流程实例名称成功！【instanceName：$instanceName，key：$key，version：$version，bizKey：$bizKey】")
-            io.kuark.service.workflow.provider.model.vo.FlowInstance(instance).apply {
+            FlowInstance(instance).apply {
                 this.name = instanceName
             }
         }

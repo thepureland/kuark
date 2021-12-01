@@ -6,6 +6,8 @@ import io.kuark.base.lang.string.StringKit
 import io.kuark.base.log.LogFactory
 import io.kuark.base.query.sort.Order
 import io.kuark.service.workflow.common.vo.instance.FlowInstanceSearchParams
+import io.kuark.service.workflow.provider.ibiz.IFlowInstanceBiz
+import io.kuark.service.workflow.provider.model.vo.FlowInstance
 import org.activiti.bpmn.model.BpmnModel
 import org.activiti.bpmn.model.FlowNode
 import org.activiti.engine.*
@@ -22,7 +24,7 @@ import java.sql.Timestamp
  * @author K
  * @since 1.0.0
  */
-open class FlowInstanceBiz : io.kuark.service.workflow.provider.ibiz.IFlowInstanceBiz {
+open class FlowInstanceBiz : IFlowInstanceBiz {
 
     @Autowired
     private lateinit var runtimeService: RuntimeService
@@ -52,7 +54,7 @@ open class FlowInstanceBiz : io.kuark.service.workflow.provider.ibiz.IFlowInstan
         return query.count() > 0
     }
 
-    override fun get(bizKey: String, key: String?, version: Int?): io.kuark.service.workflow.provider.model.vo.FlowInstance? {
+    override fun get(bizKey: String, key: String?, version: Int?): FlowInstance? {
         val query = runtimeService.createProcessInstanceQuery()
             .processInstanceBusinessKey(bizKey)
         if (StringKit.isNotBlank(key)) {
@@ -68,12 +70,12 @@ open class FlowInstanceBiz : io.kuark.service.workflow.provider.ibiz.IFlowInstan
         }
         query.orderBy { "start_time_" }.desc()
         val instances = query.list()
-        return if (instances.isEmpty()) null else io.kuark.service.workflow.provider.model.vo.FlowInstance(instances.first())
+        return if (instances.isEmpty()) null else FlowInstance(instances.first())
     }
 
     override fun search(
         searchParams: FlowInstanceSearchParams, pageNum: Int, pageSize: Int, vararg orders: Order
-    ): List<io.kuark.service.workflow.provider.model.vo.FlowInstance> {
+    ): List<FlowInstance> {
         val whereStr = StringBuilder("e.proc_inst_id_ = e.id_") // 只查询流程实例
 
         // 流程定义key(bpmn文件中process元素的id)
@@ -152,7 +154,7 @@ open class FlowInstanceBiz : io.kuark.service.workflow.provider.ibiz.IFlowInstan
         }
 
         // 结果处理
-        return instances.map { io.kuark.service.workflow.provider.model.vo.FlowInstance(it) }
+        return instances.map { FlowInstance(it) }
     }
 
     @Transactional

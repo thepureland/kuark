@@ -23,6 +23,12 @@ class FlowDefinitionRecord : Serializable {
     /** 部署时间 */
     var deploymentTime: Date? = null
 
+    /** 创建时间 */
+    var createTime: Date? = null
+
+    /** 最近更新时间 */
+    var lastUpdateTime: Date? = null
+
     /** 租户(所属系统)id */
     var tenantId: String? = null
 

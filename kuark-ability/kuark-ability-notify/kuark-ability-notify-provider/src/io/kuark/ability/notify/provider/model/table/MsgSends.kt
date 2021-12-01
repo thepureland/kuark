@@ -13,7 +13,7 @@ import org.ktorm.schema.varchar
  * @since 1.0.0
  */
 //region your codes 1
-object MsgSends: StringIdTable<io.kuark.ability.notify.provider.model.po.MsgSend>("msg_send") {
+object MsgSends: StringIdTable<MsgSend>("msg_send") {
 //endregion your codes 1
 
     /** 接收者群组类型代码 */

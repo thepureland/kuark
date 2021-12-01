@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository
  */
 @Repository
 //region your codes 1
-open class MsgTemplateDao : BaseDao<String, io.kuark.ability.notify.provider.model.po.MsgTemplate, io.kuark.ability.notify.provider.model.table.MsgTemplates>() {
+open class MsgTemplateDao : BaseDao<String, MsgTemplate, MsgTemplates>() {
 //endregion your codes 1
 
     //region your codes 2

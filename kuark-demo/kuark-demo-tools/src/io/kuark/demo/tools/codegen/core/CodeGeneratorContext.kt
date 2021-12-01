@@ -16,6 +16,6 @@ object CodeGeneratorContext {
     lateinit var tableComment: String
     lateinit var columns: List<ColumnInfo>
     lateinit var config: Config
-    lateinit var templateModelCreator: io.kuark.demo.tools.codegen.core.TemplateModelCreator
+    lateinit var templateModelCreator: TemplateModelCreator
 
 }

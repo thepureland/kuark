@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository
  */
 @Repository
 //region your codes 1
-open class FlowFormDao : BaseDao<String, io.kuark.service.workflow.provider.model.po.FlowForm, io.kuark.service.workflow.provider.model.table.FlowForms>() {
+open class FlowFormDao : BaseDao<String, FlowForm, FlowForms>() {
 //endregion your codes 1
 
     //region your codes 2

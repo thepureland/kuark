@@ -12,7 +12,7 @@ import org.ktorm.schema.varchar
  * @since 1.0.0
  */
 //region your codes 1
-object MsgInstances: StringIdTable<io.kuark.ability.notify.provider.model.po.MsgInstance>("msg_instance") {
+object MsgInstances: StringIdTable<MsgInstance>("msg_instance") {
 //endregion your codes 1
 
     /** 国家-语言代码 */

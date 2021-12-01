@@ -10,13 +10,13 @@ import org.activiti.engine.delegate.event.ActivitiEventListener
  * @since 1.0.0
  */
 open class GlobalFlowEventListener(
-    private val eventListeners: Map<io.kuark.service.workflow.provider.event.FlowEventType, io.kuark.service.workflow.provider.event.IFlowEventListener>
+    private val eventListeners: Map<FlowEventType, IFlowEventListener>
 ) : ActivitiEventListener {
 
     override fun onEvent(event: ActivitiEvent) {
-        val eventType = io.kuark.service.workflow.provider.event.FlowEventType.Companion.of(event.type)
+        val eventType = FlowEventType.of(event.type)
         val eventListener = eventListeners[eventType]
-        eventListener?.onEvent(io.kuark.service.workflow.provider.event.FlowEvent(event))
+        eventListener?.onEvent(FlowEvent(event))
     }
 
     override fun isFailOnException(): Boolean = false

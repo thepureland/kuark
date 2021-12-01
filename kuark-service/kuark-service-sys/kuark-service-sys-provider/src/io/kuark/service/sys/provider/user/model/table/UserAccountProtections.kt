@@ -1,6 +1,7 @@
 package io.kuark.service.sys.provider.user.model.table
 
 import io.kuark.ability.data.rdb.support.MaintainableTable
+import io.kuark.service.sys.provider.user.model.po.UserAccountProtection
 import org.ktorm.schema.int
 import org.ktorm.schema.varchar
 
@@ -11,7 +12,7 @@ import org.ktorm.schema.varchar
  * @since 1.0.0
  */
 //region your codes 1
-object UserAccountProtections: MaintainableTable<io.kuark.service.sys.provider.user.model.po.UserAccountProtection>("user_account_protection") {
+object UserAccountProtections: MaintainableTable<UserAccountProtection>("user_account_protection") {
 //endregion your codes 1
 
     /** 问题１ */

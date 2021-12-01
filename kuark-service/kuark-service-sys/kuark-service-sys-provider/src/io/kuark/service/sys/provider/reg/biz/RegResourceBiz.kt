@@ -14,7 +14,11 @@ import io.kuark.service.sys.common.vo.reg.resource.MenuTreeNode
 import io.kuark.service.sys.common.vo.reg.resource.RegResourceRecord
 import io.kuark.service.sys.common.vo.reg.resource.RegResourceSearchPayload
 import io.kuark.service.sys.common.vo.reg.resource.RegResourceTreeNode
+import io.kuark.service.sys.provider.reg.dao.RegResourceDao
+import io.kuark.service.sys.provider.reg.ibiz.IRegDictItemBiz
+import io.kuark.service.sys.provider.reg.ibiz.IRegResourceBiz
 import io.kuark.service.sys.provider.reg.model.po.RegResource
+import io.kuark.service.sys.provider.reg.model.table.RegResources
 import org.ktorm.dsl.isNull
 import org.ktorm.schema.Column
 import org.ktorm.schema.ColumnDeclaring
@@ -31,21 +35,20 @@ import kotlin.reflect.KClass
  */
 @Service
 //region your codes 1
-open class RegResourceBiz : BaseBiz<String, io.kuark.service.sys.provider.reg.model.po.RegResource, io.kuark.service.sys.provider.reg.dao.RegResourceDao>(),
-    io.kuark.service.sys.provider.reg.ibiz.IRegResourceBiz {
+open class RegResourceBiz : BaseBiz<String, RegResource, RegResourceDao>(), IRegResourceBiz {
 //endregion your codes 1
 
     //region your codes 2
 
     @Autowired
-    private lateinit var dictItemBiz: io.kuark.service.sys.provider.reg.ibiz.IRegDictItemBiz
+    private lateinit var dictItemBiz: IRegDictItemBiz
 
     override fun getMenus(): List<MenuTreeNode> {
         //TODO 加入权限
-        val criteria = Criteria.add(io.kuark.service.sys.provider.reg.model.po.RegResource::active.name, Operator.EQ, true)
+        val criteria = Criteria.add(RegResource::active.name, Operator.EQ, true)
         val subSysCode = KuarkContextHolder.get().subSysCode
         if (StringKit.isNotBlank(subSysCode)) {
-            criteria.addAnd(io.kuark.service.sys.provider.reg.model.po.RegResource::subSysDictCode.name, Operator.EQ, subSysCode)
+            criteria.addAnd(RegResource::subSysDictCode.name, Operator.EQ, subSysCode)
         }
         val origMenus = dao.search(criteria)
         val menus = origMenus.map { MenuTreeNode(it.name, it.url, it.icon, it.id!!, it.parentId, it.seqNo) }
@@ -70,7 +73,7 @@ open class RegResourceBiz : BaseBiz<String, io.kuark.service.sys.provider.reg.mo
                 searchPayload.returnEntityClass = RegResourceTreeNode::class
                 searchPayload.pageNo = null // 不分页
                 dao.search(searchPayload) { column, _ ->
-                    if (column.name == io.kuark.service.sys.provider.reg.model.table.RegResources.parentId.name && searchPayload.level == 2) { // 1层是资源类型，2层是子系统，从第3层开始才是RegResource
+                    if (column.name == RegResources.parentId.name && searchPayload.level == 2) { // 1层是资源类型，2层是子系统，从第3层开始才是RegResource
                         column.isNull()
                     } else null
                 } as List<RegResourceTreeNode>
@@ -84,7 +87,7 @@ open class RegResourceBiz : BaseBiz<String, io.kuark.service.sys.provider.reg.mo
         }
         @Suppress(Consts.Suppress.UNCHECKED_CAST)
         return pagingSearch(searchPayload) { column, _ ->
-            if (column.name == io.kuark.service.sys.provider.reg.model.table.RegResources.parentId.name && searchPayload.level == 2) { // 1层是资源类型，2层是子系统，从第3层开始才是RegResource
+            if (column.name == RegResources.parentId.name && searchPayload.level == 2) { // 1层是资源类型，2层是子系统，从第3层开始才是RegResource
                 column.isNull()
             } else null
         } as Pair<List<RegResourceRecord>, Int>
@@ -96,7 +99,7 @@ open class RegResourceBiz : BaseBiz<String, io.kuark.service.sys.provider.reg.mo
     ): Pair<List<*>, Int> {
         val result = if (whereConditionFactory == null) {
             super.pagingSearch(listSearchPayload) { column, value ->
-                if (column.name == io.kuark.service.sys.provider.reg.model.table.RegResources.name.name) {
+                if (column.name == RegResources.name.name) {
                     SqlWhereExpressionFactory.create(column, Operator.ILIKE, value)
                 } else null
             }
@@ -142,7 +145,11 @@ open class RegResourceBiz : BaseBiz<String, io.kuark.service.sys.provider.reg.mo
     }
 
     private fun recursionFindAllParentId(itemId: String, results: MutableList<String>) {
-        val list = dao.oneSearchProperty(io.kuark.service.sys.provider.reg.model.table.RegResources.id.name, itemId, io.kuark.service.sys.provider.reg.model.table.RegResources.parentId.name)
+        val list = dao.oneSearchProperty(
+            RegResources.id.name,
+            itemId,
+            RegResources.parentId.name
+        )
         if (list.isNotEmpty()) {
             val parentId = list.first() as String?
             if (parentId != null) {
@@ -153,7 +160,11 @@ open class RegResourceBiz : BaseBiz<String, io.kuark.service.sys.provider.reg.mo
     }
 
     private fun recursionFindAllChildId(resId: String, results: MutableList<String>) {
-        val itemIds = dao.oneSearchProperty(io.kuark.service.sys.provider.reg.model.table.RegResources.parentId.name, resId, io.kuark.service.sys.provider.reg.model.table.RegResources.id.name)
+        val itemIds = dao.oneSearchProperty(
+            RegResources.parentId.name,
+            resId,
+            RegResources.id.name
+        )
         itemIds.forEach { id ->
             results.add(id as String)
             recursionFindAllChildId(id, results)

@@ -2,6 +2,7 @@ package io.kuark.service.sys.provider.reg.api
 
 import io.kuark.service.sys.common.api.reg.IDictApi
 import io.kuark.service.sys.common.vo.reg.dict.RegDictItemRecord
+import io.kuark.service.sys.provider.reg.ibiz.IRegDictItemBiz
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
@@ -9,7 +10,7 @@ import org.springframework.stereotype.Service
 open class DictApi: IDictApi {
 
     @Autowired
-    private lateinit var regDictItemBiz: io.kuark.service.sys.provider.reg.ibiz.IRegDictItemBiz
+    private lateinit var regDictItemBiz: IRegDictItemBiz
 
     override fun getDictItems(module: String, type: String): List<RegDictItemRecord> {
         return regDictItemBiz.getItemsByModuleAndType(module, type)

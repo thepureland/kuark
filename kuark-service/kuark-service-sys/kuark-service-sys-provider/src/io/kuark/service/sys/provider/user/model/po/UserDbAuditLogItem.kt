@@ -10,10 +10,10 @@ import io.kuark.ability.data.rdb.support.IDbEntity
  * @since 1.0.0
  */
 //region your codes 1
-interface UserDbAuditLogItem: IDbEntity<String, io.kuark.service.sys.provider.user.model.po.UserDbAuditLogItem> {
+interface UserDbAuditLogItem: IDbEntity<String, UserDbAuditLogItem> {
 //endregion your codes 1
 
-    companion object : DbEntityFactory<io.kuark.service.sys.provider.user.model.po.UserDbAuditLogItem>()
+    companion object : DbEntityFactory<UserDbAuditLogItem>()
 
     /** 外键，数据库操作审计日志id，user_db_audit_log表主键 */
     var dbAuditLogId: String

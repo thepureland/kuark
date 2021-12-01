@@ -7,6 +7,8 @@ import io.kuark.base.query.Criteria
 import io.kuark.base.query.enums.Operator
 import io.kuark.base.query.sort.Order
 import io.kuark.service.workflow.common.vo.form.FlowFormSearchParams
+import io.kuark.service.workflow.provider.dao.FlowFormDao
+import io.kuark.service.workflow.provider.ibiz.IFlowFormBiz
 import io.kuark.service.workflow.provider.model.po.FlowForm
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
@@ -19,32 +21,31 @@ import java.time.LocalDateTime
  */
 @Service
 //region your codes 1
-open class FlowFormBiz : BaseBiz<String, io.kuark.service.workflow.provider.model.po.FlowForm, io.kuark.service.workflow.provider.dao.FlowFormDao>(),
-    io.kuark.service.workflow.provider.ibiz.IFlowFormBiz {
+open class FlowFormBiz : BaseBiz<String, FlowForm, FlowFormDao>(), IFlowFormBiz {
 //endregion your codes 1
 
     //region your codes 2
 
     protected val log = LogFactory.getLog(this::class)
 
-    override fun get(key: String, version: Int?): io.kuark.service.workflow.provider.model.po.FlowForm? {
+    override fun get(key: String, version: Int?): FlowForm? {
         require(key.isNotBlank()) { "获取流程表单失败！【key】参数不能为空！" }
 
-        val criteria = Criteria.add(io.kuark.service.workflow.provider.model.po.FlowForm::key.name, Operator.EQ, key)
+        val criteria = Criteria.add(FlowForm::key.name, Operator.EQ, key)
         var ver: Int? = version
         if (version == null) {
-            ver = dao.max(io.kuark.service.workflow.provider.model.po.FlowForm::version.name, criteria) as Int?
+            ver = dao.max(FlowForm::version.name, criteria) as Int?
         }
         return if (ver == null) {
             null
         } else {
-            criteria.addAnd(io.kuark.service.workflow.provider.model.po.FlowForm::version.name, Operator.EQ, ver)
+            criteria.addAnd(FlowForm::version.name, Operator.EQ, ver)
             val forms = dao.search(criteria)
             if (forms.isEmpty()) null else forms.first()
         }
     }
 
-    override fun saveOrUpdate(flowForm: io.kuark.service.workflow.provider.model.po.FlowForm): Boolean {
+    override fun saveOrUpdate(flowForm: FlowForm): Boolean {
         return if (StringKit.isBlank(flowForm.id)) {
             try {
                 flowForm.version = 1
@@ -63,24 +64,24 @@ open class FlowFormBiz : BaseBiz<String, io.kuark.service.workflow.provider.mode
 
     override fun search(
         searchParams: FlowFormSearchParams, pageNum: Int, pageSize: Int, vararg orders: Order,
-    ): List<io.kuark.service.workflow.provider.model.po.FlowForm> {
+    ): List<FlowForm> {
         val criteria = Criteria()
         if (StringKit.isNotBlank(searchParams.key)) {
-            criteria.addAnd(io.kuark.service.workflow.provider.model.po.FlowForm::key.name, Operator.ILIKE, searchParams.key)
+            criteria.addAnd(FlowForm::key.name, Operator.ILIKE, searchParams.key)
         }
         if (StringKit.isNotBlank(searchParams.name)) {
-            criteria.addAnd(io.kuark.service.workflow.provider.model.po.FlowForm::name.name, Operator.ILIKE, searchParams.name)
+            criteria.addAnd(FlowForm::name.name, Operator.ILIKE, searchParams.name)
         }
         if (StringKit.isNotBlank(searchParams.categoryDictCode)) {
-            criteria.addAnd(io.kuark.service.workflow.provider.model.po.FlowForm::categoryDictCode.name, Operator.EQ, searchParams.categoryDictCode)
+            criteria.addAnd(FlowForm::categoryDictCode.name, Operator.EQ, searchParams.categoryDictCode)
         }
         if (searchParams.version == null) {
             if (searchParams.latestOnly) {
-                val latestVersion = dao.max(io.kuark.service.workflow.provider.model.po.FlowForm::version.name, criteria)
+                val latestVersion = dao.max(FlowForm::version.name, criteria)
                 latestVersion ?: return emptyList()
             }
         } else {
-            criteria.addAnd(io.kuark.service.workflow.provider.model.po.FlowForm::version.name, Operator.EQ, searchParams.version)
+            criteria.addAnd(FlowForm::version.name, Operator.EQ, searchParams.version)
         }
         val pageNo = if (pageNum < 1) 1 else pageNum
         return dao.pagingSearch(criteria, pageNo, pageSize, *orders)

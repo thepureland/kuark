@@ -22,6 +22,12 @@ data class FlowDefinition(
     var category: String
 ) {
 
+    /** 创建时间 */
+    var createTime: Date? = null
+
+    /** 最近更新时间 */
+    var lastUpdateTime: Date? = null
+
     /** 是否已部署 */
     var deployed: Boolean = false
 
@@ -70,6 +76,7 @@ data class FlowDefinition(
         if (deployment != null) {
             deployed = true
             deploymentTime = deployment.deploymentTime
+            lastUpdateTime = deploymentTime
         }
     }
 
@@ -89,6 +96,7 @@ data class FlowDefinition(
     ) {
         _modelId = modelId
         deploymentTime = deployment.deploymentTime
+        lastUpdateTime = deploymentTime
         _deploymentId = deployment.id
         tenantId = deployment.tenantId
         deployed = true
@@ -111,9 +119,12 @@ data class FlowDefinition(
         _modelId = model.id
         _deploymentId = model.deploymentId
         tenantId = model.tenantId
+        createTime = model.createTime
+        lastUpdateTime = model.lastUpdateTime
         if (deployment != null) {
             deployed = true
             deploymentTime = deployment.deploymentTime
+            lastUpdateTime = deploymentTime
         }
     }
 

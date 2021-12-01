@@ -1,6 +1,8 @@
 package io.kuark.service.sys.provider.user.dao
 
 import io.kuark.ability.data.rdb.support.BaseDao
+import io.kuark.service.sys.provider.user.model.po.UserBizAuditLog
+import io.kuark.service.sys.provider.user.model.table.UserBizAuditLogs
 import org.springframework.stereotype.Repository
 
 /**
@@ -11,7 +13,7 @@ import org.springframework.stereotype.Repository
  */
 @Repository
 //region your codes 1
-open class UserBizAuditLogDao : BaseDao<String, io.kuark.service.sys.provider.user.model.po.UserBizAuditLog, io.kuark.service.sys.provider.user.model.table.UserBizAuditLogs>() {
+open class UserBizAuditLogDao : BaseDao<String, UserBizAuditLog, UserBizAuditLogs>() {
 //endregion your codes 1
 
     //region your codes 2

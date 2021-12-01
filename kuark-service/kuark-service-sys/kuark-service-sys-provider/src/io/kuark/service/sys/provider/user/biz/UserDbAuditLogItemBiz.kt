@@ -1,5 +1,6 @@
 package io.kuark.service.sys.provider.user.biz
 
+import io.kuark.service.sys.provider.user.ibiz.IUserDbAuditLogItemBiz
 import org.springframework.stereotype.Service
 
 /**
@@ -10,7 +11,7 @@ import org.springframework.stereotype.Service
  */
 @Service
 //region your codes 1
-open class UserDbAuditLogItemBiz: io.kuark.service.sys.provider.user.ibiz.IUserDbAuditLogItemBiz {
+open class UserDbAuditLogItemBiz: IUserDbAuditLogItemBiz {
 //endregion your codes 1
 
     //region your codes 2

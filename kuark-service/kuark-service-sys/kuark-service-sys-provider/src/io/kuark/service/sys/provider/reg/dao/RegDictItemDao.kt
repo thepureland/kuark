@@ -1,6 +1,8 @@
 package io.kuark.service.sys.provider.reg.dao
 
 import io.kuark.ability.data.rdb.support.BaseDao
+import io.kuark.service.sys.provider.reg.model.po.RegDictItem
+import io.kuark.service.sys.provider.reg.model.table.RegDictItems
 import org.ktorm.dsl.eq
 import org.ktorm.entity.filter
 import org.ktorm.entity.sortedBy
@@ -15,13 +17,13 @@ import org.springframework.stereotype.Repository
  */
 @Repository
 //region your codes 1
-open class RegDictItemDao : BaseDao<String, io.kuark.service.sys.provider.reg.model.po.RegDictItem, io.kuark.service.sys.provider.reg.model.table.RegDictItems>() {
+open class RegDictItemDao : BaseDao<String, RegDictItem, RegDictItems>() {
 //endregion your codes 1
 
     //region your codes 2
 
-    fun searchByDictId(dictId: String): List<io.kuark.service.sys.provider.reg.model.po.RegDictItem> {
-        return entitySequence().filter { io.kuark.service.sys.provider.reg.model.table.RegDictItems.dictId eq dictId }.sortedBy { io.kuark.service.sys.provider.reg.model.table.RegDictItems.seqNo }.toList()
+    fun searchByDictId(dictId: String): List<RegDictItem> {
+        return entitySequence().filter { RegDictItems.dictId eq dictId }.sortedBy { RegDictItems.seqNo }.toList()
 //        return querySource()
 //            .select(RegDictItems.columns)
 //            .orderBy()

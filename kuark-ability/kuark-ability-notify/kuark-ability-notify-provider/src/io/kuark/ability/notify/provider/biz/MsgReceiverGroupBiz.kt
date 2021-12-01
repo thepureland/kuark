@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service
  */
 @Service
 //region your codes 1
-class MsgReceiverGroupBiz: io.kuark.ability.notify.provider.ibiz.IMsgReceiverGroupBiz {
+class MsgReceiverGroupBiz: IMsgReceiverGroupBiz {
 //endregion your codes 1
 
     //region your codes 2

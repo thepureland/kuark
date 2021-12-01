@@ -8,6 +8,10 @@ import io.kuark.base.query.enums.Operator
 import io.kuark.base.support.Consts
 import io.kuark.service.sys.common.vo.reg.param.RegParamRecord
 import io.kuark.service.sys.common.vo.reg.param.RegParamSearchPayload
+import io.kuark.service.sys.provider.reg.dao.RegParamDao
+import io.kuark.service.sys.provider.reg.ibiz.IRegParamBiz
+import io.kuark.service.sys.provider.reg.model.po.RegParam
+import io.kuark.service.sys.provider.reg.model.table.RegParams
 import org.ktorm.dsl.*
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Service
@@ -20,32 +24,36 @@ import org.springframework.stereotype.Service
  */
 @Service
 //region your codes 1
-open class RegParamBiz : BaseBiz<String, io.kuark.service.sys.provider.reg.model.po.RegParam, io.kuark.service.sys.provider.reg.dao.RegParamDao>(),
-    io.kuark.service.sys.provider.reg.ibiz.IRegParamBiz {
+open class RegParamBiz : BaseBiz<String, RegParam, RegParamDao>(), IRegParamBiz {
 //endregion your codes 1
 
     //region your codes 2
 
     @Cacheable(value = [CacheNames.REG_PARAM], key = "#module.concat(':').concat(#name)", unless = "#result == null")
-    override fun getParamByModuleAndName(module: String, name: String): io.kuark.service.sys.provider.reg.model.po.RegParam? {
-        val paramList = RdbKit.getDatabase().from(io.kuark.service.sys.provider.reg.model.table.RegParams)
-            .select(io.kuark.service.sys.provider.reg.model.table.RegParams.columns)
+    override fun getParamByModuleAndName(module: String, name: String): RegParam? {
+        val paramList = RdbKit.getDatabase().from(RegParams)
+            .select(RegParams.columns)
             .whereWithConditions {
-                it += (io.kuark.service.sys.provider.reg.model.table.RegParams.paramName eq name) and (io.kuark.service.sys.provider.reg.model.table.RegParams.active eq true)
+                it += (RegParams.paramName eq name) and (RegParams.active eq true)
                 if (module.isNotEmpty()) {
-                    it += io.kuark.service.sys.provider.reg.model.table.RegParams.module eq module
+                    it += RegParams.module eq module
                 }
             }
-            .map { row -> io.kuark.service.sys.provider.reg.model.table.RegParams.createEntity(row) }
+            .map { row -> RegParams.createEntity(row) }
             .toList()
         return if (paramList.isEmpty()) null else paramList.first()
     }
 
     override fun pagingSearch(searchPayload: RegParamSearchPayload): Pair<List<RegParamRecord>, Int> {
         val records = dao.search(searchPayload) { column, value ->
-            if (value != null && column.name in arrayOf(io.kuark.service.sys.provider.reg.model.table.RegParams.module.name, io.kuark.service.sys.provider.reg.model.table.RegParams.paramName.name, io.kuark.service.sys.provider.reg.model.table.RegParams.defaultValue.name)) {
+            if (value != null && column.name in arrayOf(
+                    RegParams.module.name,
+                    RegParams.paramName.name,
+                    RegParams.defaultValue.name
+                )
+            ) {
                 SqlWhereExpressionFactory.create(column, Operator.ILIKE, value.toString().trim())
-            } else if (column.name == io.kuark.service.sys.provider.reg.model.table.RegParams.active.name && value == true) {
+            } else if (column.name == RegParams.active.name && value == true) {
                 SqlWhereExpressionFactory.create(column, Operator.EQ, true)
             } else null
         }

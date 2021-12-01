@@ -7,6 +7,9 @@ import io.kuark.service.sys.common.vo.reg.dict.RegDictPayload
 import io.kuark.service.sys.common.vo.reg.dict.RegDictRecord
 import io.kuark.service.sys.common.vo.reg.dict.RegDictSearchPayload
 import io.kuark.service.sys.common.vo.reg.dict.RegDictTreeNode
+import io.kuark.service.sys.provider.reg.ibiz.IRegDictBiz
+import io.kuark.service.sys.provider.reg.ibiz.IRegDictItemBiz
+import io.kuark.service.sys.provider.reg.model.table.RegDicts
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.*
@@ -19,10 +22,10 @@ import kotlin.reflect.KClass
 open class RegDictController : BaseController() {
 
     @Autowired
-    private lateinit var regDictBiz: io.kuark.service.sys.provider.reg.ibiz.IRegDictBiz
+    private lateinit var regDictBiz: IRegDictBiz
 
     @Autowired
-    private lateinit var regDictItemBiz: io.kuark.service.sys.provider.reg.ibiz.IRegDictItemBiz
+    private lateinit var regDictItemBiz: IRegDictItemBiz
 
     @PostMapping("/loadTreeNodes")
     fun laodTreeNodes(@RequestBody searchPayload: RegDictSearchPayload): WebResult<List<RegDictTreeNode>> {
@@ -54,7 +57,7 @@ open class RegDictController : BaseController() {
     @GetMapping("/loadDictTypes")
     @Suppress(Consts.Suppress.UNCHECKED_CAST)
     fun loadDictTypes(): WebResult<List<String>> {
-        val modules = regDictBiz.allSearchProperty(io.kuark.service.sys.provider.reg.model.table.RegDicts.dictType.name) as List<String>
+        val modules = regDictBiz.allSearchProperty(RegDicts.dictType.name) as List<String>
         return WebResult(modules.distinct())
     }
 

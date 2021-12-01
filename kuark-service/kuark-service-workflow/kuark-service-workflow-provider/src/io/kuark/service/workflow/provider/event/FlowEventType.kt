@@ -207,7 +207,7 @@ enum class FlowEventType {
 
     /**
      * 流程已被取消。在流程实例被通过
-     * @see io.kuark.service.workflow.instance.FlowInstanceBiz#deleteInstance(String, String, String)删除时, 但在数据库删除之前。
+     * @see FlowInstanceBiz#deleteInstance(String, String, String)删除时, 但在数据库删除之前。
      */
     PROCESS_CANCELLED,
 
@@ -248,51 +248,51 @@ enum class FlowEventType {
 
 
     companion object {
-        fun of(activitiEventType: ActivitiEventType): io.kuark.service.workflow.provider.event.FlowEventType {
+        fun of(activitiEventType: ActivitiEventType): FlowEventType {
             return when (activitiEventType) {
-                ActivitiEventType.ENTITY_CREATED -> io.kuark.service.workflow.provider.event.FlowEventType.ENTITY_CREATED
-                ActivitiEventType.ENTITY_INITIALIZED -> io.kuark.service.workflow.provider.event.FlowEventType.ENTITY_INITIALIZED
-                ActivitiEventType.ENTITY_UPDATED -> io.kuark.service.workflow.provider.event.FlowEventType.ENTITY_UPDATED
-                ActivitiEventType.ENTITY_DELETED -> io.kuark.service.workflow.provider.event.FlowEventType.ENTITY_DELETED
-                ActivitiEventType.ENTITY_SUSPENDED -> io.kuark.service.workflow.provider.event.FlowEventType.ENTITY_SUSPENDED
-                ActivitiEventType.ENTITY_ACTIVATED -> io.kuark.service.workflow.provider.event.FlowEventType.ENTITY_ACTIVATED
-                ActivitiEventType.TIMER_SCHEDULED -> io.kuark.service.workflow.provider.event.FlowEventType.TIMER_SCHEDULED
-                ActivitiEventType.TIMER_FIRED -> io.kuark.service.workflow.provider.event.FlowEventType.TIMER_FIRED
-                ActivitiEventType.JOB_CANCELED -> io.kuark.service.workflow.provider.event.FlowEventType.JOB_CANCELED
-                ActivitiEventType.JOB_EXECUTION_SUCCESS -> io.kuark.service.workflow.provider.event.FlowEventType.JOB_EXECUTION_SUCCESS
-                ActivitiEventType.JOB_EXECUTION_FAILURE -> io.kuark.service.workflow.provider.event.FlowEventType.JOB_EXECUTION_FAILURE
-                ActivitiEventType.JOB_RETRIES_DECREMENTED -> io.kuark.service.workflow.provider.event.FlowEventType.JOB_RETRIES_DECREMENTED
-                ActivitiEventType.CUSTOM -> io.kuark.service.workflow.provider.event.FlowEventType.CUSTOM
-                ActivitiEventType.ENGINE_CREATED -> io.kuark.service.workflow.provider.event.FlowEventType.ENGINE_CREATED
-                ActivitiEventType.ENGINE_CLOSED -> io.kuark.service.workflow.provider.event.FlowEventType.ENGINE_CLOSED
-                ActivitiEventType.ACTIVITY_STARTED -> io.kuark.service.workflow.provider.event.FlowEventType.ACTIVITY_STARTED
-                ActivitiEventType.ACTIVITY_COMPLETED -> io.kuark.service.workflow.provider.event.FlowEventType.ACTIVITY_COMPLETED
-                ActivitiEventType.ACTIVITY_CANCELLED -> io.kuark.service.workflow.provider.event.FlowEventType.ACTIVITY_CANCELLED
-                ActivitiEventType.ACTIVITY_SIGNALED -> io.kuark.service.workflow.provider.event.FlowEventType.ACTIVITY_SIGNALED
-                ActivitiEventType.ACTIVITY_COMPENSATE -> io.kuark.service.workflow.provider.event.FlowEventType.ACTIVITY_COMPENSATE
-                ActivitiEventType.ACTIVITY_MESSAGE_SENT -> io.kuark.service.workflow.provider.event.FlowEventType.ACTIVITY_MESSAGE_SENT
-                ActivitiEventType.ACTIVITY_MESSAGE_WAITING -> io.kuark.service.workflow.provider.event.FlowEventType.ACTIVITY_MESSAGE_WAITING
-                ActivitiEventType.ACTIVITY_MESSAGE_RECEIVED -> io.kuark.service.workflow.provider.event.FlowEventType.ACTIVITY_MESSAGE_RECEIVED
-                ActivitiEventType.ACTIVITY_ERROR_RECEIVED -> io.kuark.service.workflow.provider.event.FlowEventType.ACTIVITY_ERROR_RECEIVED
-                ActivitiEventType.HISTORIC_ACTIVITY_INSTANCE_CREATED -> io.kuark.service.workflow.provider.event.FlowEventType.HISTORIC_ACTIVITY_INSTANCE_CREATED
-                ActivitiEventType.HISTORIC_ACTIVITY_INSTANCE_ENDED -> io.kuark.service.workflow.provider.event.FlowEventType.HISTORIC_ACTIVITY_INSTANCE_ENDED
-                ActivitiEventType.SEQUENCEFLOW_TAKEN -> io.kuark.service.workflow.provider.event.FlowEventType.SEQUENCEFLOW_TAKEN
-                ActivitiEventType.UNCAUGHT_BPMN_ERROR -> io.kuark.service.workflow.provider.event.FlowEventType.UNCAUGHT_BPMN_ERROR
-                ActivitiEventType.VARIABLE_CREATED -> io.kuark.service.workflow.provider.event.FlowEventType.VARIABLE_CREATED
-                ActivitiEventType.VARIABLE_UPDATED -> io.kuark.service.workflow.provider.event.FlowEventType.VARIABLE_UPDATED
-                ActivitiEventType.VARIABLE_DELETED -> io.kuark.service.workflow.provider.event.FlowEventType.VARIABLE_DELETED
-                ActivitiEventType.TASK_CREATED -> io.kuark.service.workflow.provider.event.FlowEventType.TASK_CREATED
-                ActivitiEventType.TASK_ASSIGNED -> io.kuark.service.workflow.provider.event.FlowEventType.TASK_ASSIGNED
-                ActivitiEventType.TASK_COMPLETED -> io.kuark.service.workflow.provider.event.FlowEventType.TASK_COMPLETED
-                ActivitiEventType.PROCESS_STARTED -> io.kuark.service.workflow.provider.event.FlowEventType.PROCESS_STARTED
-                ActivitiEventType.PROCESS_COMPLETED -> io.kuark.service.workflow.provider.event.FlowEventType.PROCESS_COMPLETED
-                ActivitiEventType.PROCESS_COMPLETED_WITH_ERROR_END_EVENT -> io.kuark.service.workflow.provider.event.FlowEventType.PROCESS_COMPLETED_WITH_ERROR_END_EVENT
-                ActivitiEventType.PROCESS_CANCELLED -> io.kuark.service.workflow.provider.event.FlowEventType.PROCESS_CANCELLED
-                ActivitiEventType.HISTORIC_PROCESS_INSTANCE_CREATED -> io.kuark.service.workflow.provider.event.FlowEventType.HISTORIC_PROCESS_INSTANCE_CREATED
-                ActivitiEventType.HISTORIC_PROCESS_INSTANCE_ENDED -> io.kuark.service.workflow.provider.event.FlowEventType.HISTORIC_PROCESS_INSTANCE_ENDED
-                ActivitiEventType.MEMBERSHIP_CREATED -> io.kuark.service.workflow.provider.event.FlowEventType.MEMBERSHIP_CREATED
-                ActivitiEventType.MEMBERSHIP_DELETED -> io.kuark.service.workflow.provider.event.FlowEventType.MEMBERSHIP_DELETED
-                ActivitiEventType.MEMBERSHIPS_DELETED -> io.kuark.service.workflow.provider.event.FlowEventType.MEMBERSHIPS_DELETED
+                ActivitiEventType.ENTITY_CREATED -> ENTITY_CREATED
+                ActivitiEventType.ENTITY_INITIALIZED -> ENTITY_INITIALIZED
+                ActivitiEventType.ENTITY_UPDATED -> ENTITY_UPDATED
+                ActivitiEventType.ENTITY_DELETED -> ENTITY_DELETED
+                ActivitiEventType.ENTITY_SUSPENDED -> ENTITY_SUSPENDED
+                ActivitiEventType.ENTITY_ACTIVATED -> ENTITY_ACTIVATED
+                ActivitiEventType.TIMER_SCHEDULED -> TIMER_SCHEDULED
+                ActivitiEventType.TIMER_FIRED -> TIMER_FIRED
+                ActivitiEventType.JOB_CANCELED -> JOB_CANCELED
+                ActivitiEventType.JOB_EXECUTION_SUCCESS -> JOB_EXECUTION_SUCCESS
+                ActivitiEventType.JOB_EXECUTION_FAILURE -> JOB_EXECUTION_FAILURE
+                ActivitiEventType.JOB_RETRIES_DECREMENTED -> JOB_RETRIES_DECREMENTED
+                ActivitiEventType.CUSTOM -> CUSTOM
+                ActivitiEventType.ENGINE_CREATED -> ENGINE_CREATED
+                ActivitiEventType.ENGINE_CLOSED -> ENGINE_CLOSED
+                ActivitiEventType.ACTIVITY_STARTED -> ACTIVITY_STARTED
+                ActivitiEventType.ACTIVITY_COMPLETED -> ACTIVITY_COMPLETED
+                ActivitiEventType.ACTIVITY_CANCELLED -> ACTIVITY_CANCELLED
+                ActivitiEventType.ACTIVITY_SIGNALED -> ACTIVITY_SIGNALED
+                ActivitiEventType.ACTIVITY_COMPENSATE -> ACTIVITY_COMPENSATE
+                ActivitiEventType.ACTIVITY_MESSAGE_SENT -> ACTIVITY_MESSAGE_SENT
+                ActivitiEventType.ACTIVITY_MESSAGE_WAITING -> ACTIVITY_MESSAGE_WAITING
+                ActivitiEventType.ACTIVITY_MESSAGE_RECEIVED -> ACTIVITY_MESSAGE_RECEIVED
+                ActivitiEventType.ACTIVITY_ERROR_RECEIVED -> ACTIVITY_ERROR_RECEIVED
+                ActivitiEventType.HISTORIC_ACTIVITY_INSTANCE_CREATED -> HISTORIC_ACTIVITY_INSTANCE_CREATED
+                ActivitiEventType.HISTORIC_ACTIVITY_INSTANCE_ENDED -> HISTORIC_ACTIVITY_INSTANCE_ENDED
+                ActivitiEventType.SEQUENCEFLOW_TAKEN -> SEQUENCEFLOW_TAKEN
+                ActivitiEventType.UNCAUGHT_BPMN_ERROR -> UNCAUGHT_BPMN_ERROR
+                ActivitiEventType.VARIABLE_CREATED -> VARIABLE_CREATED
+                ActivitiEventType.VARIABLE_UPDATED -> VARIABLE_UPDATED
+                ActivitiEventType.VARIABLE_DELETED -> VARIABLE_DELETED
+                ActivitiEventType.TASK_CREATED -> TASK_CREATED
+                ActivitiEventType.TASK_ASSIGNED -> TASK_ASSIGNED
+                ActivitiEventType.TASK_COMPLETED -> TASK_COMPLETED
+                ActivitiEventType.PROCESS_STARTED -> PROCESS_STARTED
+                ActivitiEventType.PROCESS_COMPLETED -> PROCESS_COMPLETED
+                ActivitiEventType.PROCESS_COMPLETED_WITH_ERROR_END_EVENT -> PROCESS_COMPLETED_WITH_ERROR_END_EVENT
+                ActivitiEventType.PROCESS_CANCELLED -> PROCESS_CANCELLED
+                ActivitiEventType.HISTORIC_PROCESS_INSTANCE_CREATED -> HISTORIC_PROCESS_INSTANCE_CREATED
+                ActivitiEventType.HISTORIC_PROCESS_INSTANCE_ENDED -> HISTORIC_PROCESS_INSTANCE_ENDED
+                ActivitiEventType.MEMBERSHIP_CREATED -> MEMBERSHIP_CREATED
+                ActivitiEventType.MEMBERSHIP_DELETED -> MEMBERSHIP_DELETED
+                ActivitiEventType.MEMBERSHIPS_DELETED -> MEMBERSHIPS_DELETED
                 else -> error("未支持的工作流事件类型：${activitiEventType.name}")
             }
         }

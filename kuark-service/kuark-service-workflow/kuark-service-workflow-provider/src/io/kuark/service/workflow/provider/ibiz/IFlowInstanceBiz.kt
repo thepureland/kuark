@@ -36,7 +36,7 @@ interface IFlowInstanceBiz {
      * @author K
      * @since 1.0.0
      */
-    fun get(bizKey: String, key: String? = null, version: Int? = null): io.kuark.service.workflow.provider.model.vo.FlowInstance?
+    fun get(bizKey: String, key: String? = null, version: Int? = null): FlowInstance?
 
     /**
      * 查询流程实例
@@ -54,7 +54,7 @@ interface IFlowInstanceBiz {
         pageNum: Int = 1,
         pageSize: Int = 20,
         vararg orders: Order
-    ): List<io.kuark.service.workflow.provider.model.vo.FlowInstance>
+    ): List<FlowInstance>
 
     /**
      * 激活流程实例，重复激活将忽略操作

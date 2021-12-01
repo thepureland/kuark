@@ -8,7 +8,12 @@ import io.kuark.service.sys.common.vo.reg.dict.RegDictPayload
 import io.kuark.service.sys.common.vo.reg.dict.RegDictRecord
 import io.kuark.service.sys.common.vo.reg.dict.RegDictSearchPayload
 import io.kuark.service.sys.common.vo.reg.dict.RegDictTreeNode
+import io.kuark.service.sys.provider.reg.dao.RegDictDao
+import io.kuark.service.sys.provider.reg.ibiz.IRegDictBiz
+import io.kuark.service.sys.provider.reg.ibiz.IRegDictItemBiz
 import io.kuark.service.sys.provider.reg.model.po.RegDict
+import io.kuark.service.sys.provider.reg.model.table.RegDictItems
+import io.kuark.service.sys.provider.reg.model.table.RegDicts
 import org.ktorm.dsl.asc
 import org.ktorm.dsl.eq
 import org.ktorm.dsl.map
@@ -25,14 +30,13 @@ import org.springframework.transaction.annotation.Transactional
  */
 @Service
 //region your codes 1
-open class RegDictBiz : BaseBiz<String, io.kuark.service.sys.provider.reg.model.po.RegDict, io.kuark.service.sys.provider.reg.dao.RegDictDao>(),
-    io.kuark.service.sys.provider.reg.ibiz.IRegDictBiz {
+open class RegDictBiz : BaseBiz<String, RegDict, RegDictDao>(), IRegDictBiz {
 //endregion your codes 1
 
     //region your codes 2
 
     @Autowired
-    private lateinit var regDictItemBiz: io.kuark.service.sys.provider.reg.ibiz.IRegDictItemBiz
+    private lateinit var regDictItemBiz: IRegDictItemBiz
 
     override fun getDictIdByModuleAndType(module: String, type: String): String? {
         return dao.getDictIdByModuleAndType(module, type)
@@ -43,12 +47,12 @@ open class RegDictBiz : BaseBiz<String, io.kuark.service.sys.provider.reg.model.
         val totalCount = if (dictItems.isNotEmpty()) {
             // 查询parentCode
             val parentIds = dictItems.filter { StringKit.isNotBlank(it.parentId) }.map { it.parentId }.toSet()
-            val returnProperties = listOf(io.kuark.service.sys.provider.reg.model.table.RegDictItems.id.name, io.kuark.service.sys.provider.reg.model.table.RegDictItems.itemCode.name)
-            val idAndCodeMaps = regDictItemBiz.inSearchProperties(io.kuark.service.sys.provider.reg.model.table.RegDictItems.id.name, parentIds, returnProperties)
+            val returnProperties = listOf(RegDictItems.id.name, RegDictItems.itemCode.name)
+            val idAndCodeMaps = regDictItemBiz.inSearchProperties(RegDictItems.id.name, parentIds, returnProperties)
             dictItems.forEach { dictItem ->
-                val idAndCodeMap = idAndCodeMaps.singleOrNull { it[io.kuark.service.sys.provider.reg.model.table.RegDictItems.id.name] == dictItem.parentId }
+                val idAndCodeMap = idAndCodeMaps.singleOrNull { it[RegDictItems.id.name] == dictItem.parentId }
                 if (idAndCodeMap != null) {
-                    dictItem.parentCode = idAndCodeMap[io.kuark.service.sys.provider.reg.model.table.RegDictItems.itemCode.name] as String
+                    dictItem.parentCode = idAndCodeMap[RegDictItems.itemCode.name] as String?
                 }
             }
             dao.count(searchPayload)
@@ -72,14 +76,12 @@ open class RegDictBiz : BaseBiz<String, io.kuark.service.sys.provider.reg.model.
                 }
             }
             isModule -> { // 加载RegDict数据
-                val results = dao.oneSearch(
-                    io.kuark.service.sys.provider.reg.model.table.RegDicts.module.name, parent, Order.asc(
-                        io.kuark.service.sys.provider.reg.model.table.RegDicts.dictType.name))
+                val results = dao.oneSearch(RegDicts.module.name, parent, Order.asc(RegDicts.dictType.name))
                 results.map {
                     val treeNode = BeanKit.copyProperties(
                         RegDictTreeNode::class, it, mapOf(
-                            io.kuark.service.sys.provider.reg.model.po.RegDict::id.name to RegDictTreeNode::id.name,
-                            io.kuark.service.sys.provider.reg.model.po.RegDict::dictType.name to RegDictTreeNode::code.name,
+                            RegDict::id.name to RegDictTreeNode::id.name,
+                            RegDict::dictType.name to RegDictTreeNode::code.name,
                         )
                     )
                     treeNode
@@ -91,11 +93,11 @@ open class RegDictBiz : BaseBiz<String, io.kuark.service.sys.provider.reg.model.
                     this.active = if (activeOnly) true else null
                 }
                 dao.leftJoinSearch(searchPayload)
-                    .orderBy(io.kuark.service.sys.provider.reg.model.table.RegDictItems.seqNo.asc())
+                    .orderBy(RegDictItems.seqNo.asc())
                     .map { row ->
                         RegDictTreeNode().apply {
-                            id = row[io.kuark.service.sys.provider.reg.model.table.RegDictItems.id]
-                            code = row[io.kuark.service.sys.provider.reg.model.table.RegDictItems.itemCode]
+                            id = row[RegDictItems.id]
+                            code = row[RegDictItems.itemCode]
                         }
                     }
             }
@@ -144,7 +146,7 @@ open class RegDictBiz : BaseBiz<String, io.kuark.service.sys.provider.reg.model.
     override fun saveOrUpdate(payload: RegDictPayload): String {
         return if (StringKit.isBlank(payload.id)) { // 新增
             if (StringKit.isBlank(payload.parentId)) { // 添加RegDict
-                val regDict = io.kuark.service.sys.provider.reg.model.po.RegDict().apply {
+                val regDict = RegDict().apply {
                     module = payload.module
                     dictType = payload.code!!
                     dictName = payload.name
@@ -156,7 +158,7 @@ open class RegDictBiz : BaseBiz<String, io.kuark.service.sys.provider.reg.model.
             }
         } else { // 更新
             if (StringKit.isBlank(payload.parentId)) { // RegDict
-                val regDict = io.kuark.service.sys.provider.reg.model.po.RegDict {
+                val regDict = RegDict {
                     id = payload.id
                     module = payload.module
                     dictType = payload.code!!
@@ -175,7 +177,7 @@ open class RegDictBiz : BaseBiz<String, io.kuark.service.sys.provider.reg.model.
     override fun delete(id: String, isDict: Boolean): Boolean {
         return if (isDict) {
             regDictItemBiz.batchDeleteWhen { column, _ ->
-                if (column.name == io.kuark.service.sys.provider.reg.model.table.RegDictItems.dictId.name) {
+                if (column.name == RegDictItems.dictId.name) {
                     column.eq(id)
                 } else null
             }

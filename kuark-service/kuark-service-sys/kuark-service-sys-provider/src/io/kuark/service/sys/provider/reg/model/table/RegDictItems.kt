@@ -1,6 +1,7 @@
 package io.kuark.service.sys.provider.reg.model.table
 
 import io.kuark.ability.data.rdb.support.MaintainableTable
+import io.kuark.service.sys.provider.reg.model.po.RegDictItem
 import org.ktorm.schema.int
 import org.ktorm.schema.varchar
 
@@ -11,7 +12,7 @@ import org.ktorm.schema.varchar
  * @since 1.0.0
  */
 //region your codes 1
-object RegDictItems: MaintainableTable<io.kuark.service.sys.provider.reg.model.po.RegDictItem>("reg_dict_item") {
+object RegDictItems: MaintainableTable<RegDictItem>("reg_dict_item") {
 //endregion your codes 1
 
     /** 外键，reg_dict表的主键 */

@@ -1,5 +1,6 @@
 package io.kuark.service.sys.provider.reg.biz
 
+import io.kuark.service.sys.provider.reg.ibiz.IRegDataSourceBiz
 import org.springframework.stereotype.Service
 
 /**
@@ -10,7 +11,7 @@ import org.springframework.stereotype.Service
  */
 @Service
 //region your codes 1
-open class RegDataSourceBiz: io.kuark.service.sys.provider.reg.ibiz.IRegDataSourceBiz {
+open class RegDataSourceBiz: IRegDataSourceBiz {
 //endregion your codes 1
 
     //region your codes 2

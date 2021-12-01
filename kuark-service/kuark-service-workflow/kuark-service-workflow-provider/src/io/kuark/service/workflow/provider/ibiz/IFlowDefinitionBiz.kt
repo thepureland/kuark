@@ -39,7 +39,7 @@ interface IFlowDefinitionBiz {
      * @author K
      * @since 1.0.0
      */
-    fun get(key: String, version: Int? = null): io.kuark.service.workflow.provider.model.vo.FlowDefinition?
+    fun get(key: String, version: Int? = null): FlowDefinition?
 
     /**
      * 查询流程定义
@@ -49,7 +49,7 @@ interface IFlowDefinitionBiz {
      * @author K
      * @since 1.0.0
      */
-    fun search(searchPayload: FlowDefinitionSearchPayload): List<io.kuark.service.workflow.provider.model.vo.FlowDefinition>
+    fun search(searchPayload: FlowDefinitionSearchPayload): List<FlowDefinition>
 
     /**
      * 创建流程定义
@@ -68,7 +68,7 @@ interface IFlowDefinitionBiz {
      */
     fun create(
         key: String, name: String, category: String, flowJson: String, svgXml: String, tenantId: String? = null
-    ): io.kuark.service.workflow.provider.model.vo.FlowDefinition
+    ): FlowDefinition
 
     /**
      * 更新流程定义。
@@ -96,7 +96,7 @@ interface IFlowDefinitionBiz {
         flowJson: String?,
         svgXml: String?,
         tenantId: String? = null
-    ): io.kuark.service.workflow.provider.model.vo.FlowDefinition
+    ): FlowDefinition
 
     /**
      * 部署流程，通过已经存在的流程定义。一个版本的定义限制只能部署一次！
@@ -110,7 +110,7 @@ interface IFlowDefinitionBiz {
      * @author K
      * @since 1.0.0
      */
-    fun deploy(key: String, version: Int? = null): io.kuark.service.workflow.provider.model.vo.FlowDefinition
+    fun deploy(key: String, version: Int? = null): FlowDefinition
 
     /**
      * 部署流程，通过指定的bpmn文件相关信息
@@ -126,7 +126,7 @@ interface IFlowDefinitionBiz {
      */
     fun deployWithBpmn(
         name: String, bpmnFileName: String, diagramFileName: String? = null, prefixPath: String = "bpmn"
-    ): io.kuark.service.workflow.provider.model.vo.FlowDefinition
+    ): FlowDefinition
 
     /**
      * 部署多个流程，通过zip压缩包。包中可包含bpmn和流程图文件,文件名(不含后缀)一样视为同一流程，流程图为可选。
@@ -143,7 +143,7 @@ interface IFlowDefinitionBiz {
         deploymentName: String,
         zipFileName: String,
         prefixPath: String = PathKit.getResourcePath("bpmn")
-    ): List<io.kuark.service.workflow.provider.model.vo.FlowDefinition>
+    ): List<FlowDefinition>
 
     /**
      * 获取流程图
@@ -226,8 +226,8 @@ interface IFlowDefinitionBiz {
         bizKey: String,
         instanceName: String,
         variables: Map<String, *>? = null,
-        eventListener: io.kuark.service.workflow.provider.event.IFlowEventListener? = null,
+        eventListener: IFlowEventListener? = null,
         version: Int? = null
-    ): io.kuark.service.workflow.provider.model.vo.FlowInstance?
+    ): FlowInstance?
 
 }

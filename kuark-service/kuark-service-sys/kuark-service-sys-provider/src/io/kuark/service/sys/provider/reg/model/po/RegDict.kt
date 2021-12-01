@@ -10,10 +10,10 @@ import io.kuark.ability.data.rdb.support.IUpdatableDbEntity
  * @since 1.0.0
  */
 //region your codes 1
-interface RegDict : IUpdatableDbEntity<String, io.kuark.service.sys.provider.reg.model.po.RegDict> {
+interface RegDict : IUpdatableDbEntity<String, RegDict> {
 //endregion your codes 1
 
-    companion object : DbEntityFactory<io.kuark.service.sys.provider.reg.model.po.RegDict>()
+    companion object : DbEntityFactory<RegDict>()
 
     /** 模块 */
     var module: String?

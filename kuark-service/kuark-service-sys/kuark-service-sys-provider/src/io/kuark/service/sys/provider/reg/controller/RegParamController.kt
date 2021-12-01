@@ -6,6 +6,9 @@ import io.kuark.base.lang.string.StringKit
 import io.kuark.service.sys.common.vo.reg.param.RegParamPayload
 import io.kuark.service.sys.common.vo.reg.param.RegParamRecord
 import io.kuark.service.sys.common.vo.reg.param.RegParamSearchPayload
+import io.kuark.service.sys.provider.reg.ibiz.IRegDictItemBiz
+import io.kuark.service.sys.provider.reg.ibiz.IRegParamBiz
+import io.kuark.service.sys.provider.reg.model.po.RegParam
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.*
@@ -18,10 +21,10 @@ import kotlin.reflect.KClass
 open class RegParamController : BaseController() {
 
     @Autowired
-    private lateinit var regParamBiz: io.kuark.service.sys.provider.reg.ibiz.IRegParamBiz
+    private lateinit var regParamBiz: IRegParamBiz
 
     @Autowired
-    private lateinit var regDictItemBiz: io.kuark.service.sys.provider.reg.ibiz.IRegDictItemBiz
+    private lateinit var regDictItemBiz: IRegDictItemBiz
 
     @PostMapping("/search")
     fun search(@RequestBody searchPayload: RegParamSearchPayload): WebResult<Pair<List<RegParamRecord>, Int>> {
@@ -47,7 +50,7 @@ open class RegParamController : BaseController() {
 
     @GetMapping("/updateActive")
     fun updateActive(id: String, active: Boolean): WebResult<Boolean> {
-        val param = io.kuark.service.sys.provider.reg.model.po.RegParam {
+        val param = RegParam {
             this.id = id
             this.active = active
         }

@@ -10,10 +10,10 @@ import io.kuark.ability.data.rdb.support.IMaintainableDbEntity
  * @since 1.0.0
  */
 //region your codes 1
-interface MsgReceiverGroup : IMaintainableDbEntity<String, io.kuark.ability.notify.provider.model.po.MsgReceiverGroup> {
+interface MsgReceiverGroup : IMaintainableDbEntity<String, MsgReceiverGroup> {
 //endregion your codes 1
 
-    companion object : DbEntityFactory<io.kuark.ability.notify.provider.model.po.MsgReceiverGroup>()
+    companion object : DbEntityFactory<MsgReceiverGroup>()
 
     /** 接收者群组类型代码 */
     var receiverGroupTypeDictCode: String

@@ -1,6 +1,7 @@
 package io.kuark.service.sys.provider.user.model.table
 
 import io.kuark.ability.data.rdb.support.MaintainableTable
+import io.kuark.service.sys.provider.user.model.po.UserContactWay
 import org.ktorm.schema.int
 import org.ktorm.schema.varchar
 
@@ -11,7 +12,7 @@ import org.ktorm.schema.varchar
  * @since 1.0.0
  */
 //region your codes 1
-object UserContactWays: MaintainableTable<io.kuark.service.sys.provider.user.model.po.UserContactWay>("user_contact_way") {
+object UserContactWays: MaintainableTable<UserContactWay>("user_contact_way") {
 //endregion your codes 1
 
     /** 外键，用户账号id，user_account表主键 */

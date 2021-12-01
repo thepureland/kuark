@@ -34,7 +34,7 @@ interface IFlowTaskBiz {
      * @author K
      * @since 1.0.0
      */
-    fun get(bizKey: String, taskDefinitionKey: String): io.kuark.service.workflow.provider.model.vo.FlowTask?
+    fun get(bizKey: String, taskDefinitionKey: String): FlowTask?
 
     /**
      * 查询任务
@@ -53,7 +53,7 @@ interface IFlowTaskBiz {
         pageNum: Int = 1,
         pageSize: Int = 20,
         vararg orders: Order,
-    ): List<io.kuark.service.workflow.provider.model.vo.FlowTask>
+    ): List<FlowTask>
 
     /**
      * 用户签收(受理)流程任务

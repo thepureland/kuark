@@ -22,30 +22,26 @@ open class WorkflowAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    open fun flowDefinitionBiz(): io.kuark.service.workflow.provider.ibiz.IFlowDefinitionBiz =
-        io.kuark.service.workflow.provider.biz.FlowDefinitionBiz()
+    open fun flowDefinitionBiz(): IFlowDefinitionBiz = FlowDefinitionBiz()
 
     @Bean
     @ConditionalOnMissingBean
-    open fun flowInstanceBiz(): io.kuark.service.workflow.provider.ibiz.IFlowInstanceBiz =
-        io.kuark.service.workflow.provider.biz.FlowInstanceBiz()
+    open fun flowInstanceBiz(): IFlowInstanceBiz = FlowInstanceBiz()
 
     @Bean
     @ConditionalOnMissingBean
-    open fun flowTaskBiz(): io.kuark.service.workflow.provider.ibiz.IFlowTaskBiz =
-        io.kuark.service.workflow.provider.biz.FlowTaskBiz()
+    open fun flowTaskBiz(): IFlowTaskBiz = FlowTaskBiz()
 
     @Bean
     @ConditionalOnMissingBean
-    open fun globalFlowEventListener(): io.kuark.service.workflow.provider.event.GlobalFlowEventListener {
+    open fun globalFlowEventListener(): GlobalFlowEventListener {
         // 要注册全局事件，可提供同名的bean，并加@Primary注解
         // 通过向构建器传入全局事件监听器的map
-        return io.kuark.service.workflow.provider.event.GlobalFlowEventListener(emptyMap())
+        return GlobalFlowEventListener(emptyMap())
     }
 
     @Bean
     @ConditionalOnMissingBean
-    open fun workflowConfigurationConfigurer() =
-        io.kuark.service.workflow.provider.context.WorkflowConfigurationConfigurer()
+    open fun workflowConfigurationConfigurer() = WorkflowConfigurationConfigurer()
 
 }

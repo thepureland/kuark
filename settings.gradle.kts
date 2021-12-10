@@ -7,8 +7,6 @@ include("kuark-base")
 include("kuark-context")
 
 include("kuark-ability")
-include("kuark-ability:kuark-ability-auth")
-findProject(":kuark-ability:kuark-ability-auth")?.name = "kuark-ability-auth"
 include("kuark-ability:kuark-ability-cache")
 findProject(":kuark-ability:kuark-ability-cache")?.name = "kuark-ability-cache"
 include("kuark-ability:kuark-ability-data")
@@ -56,14 +54,6 @@ include("kuark-ability:kuark-ability-mq")
 findProject(":kuark-ability:kuark-ability-mq")?.name = "kuark-ability-mq"
 include("kuark-ability:kuark-ability-rules")
 findProject(":kuark-ability:kuark-ability-rules")?.name = "kuark-ability-rules"
-include("kuark-ability:kuark-ability-notify")
-findProject(":kuark-ability:kuark-ability-notify")?.name = "kuark-ability-notify"
-include("kuark-ability:kuark-ability-notify:kuark-ability-notify-provider")
-findProject(":kuark-ability:kuark-ability-notify:kuark-ability-notify-provider")?.name = "kuark-ability-notify-provider"
-include("kuark-ability:kuark-ability-notify:kuark-ability-notify-common")
-findProject(":kuark-ability:kuark-ability-notify:kuark-ability-notify-common")?.name = "kuark-ability-notify-common"
-include("kuark-ability:kuark-ability-notify:kuark-ability-notify-client")
-findProject(":kuark-ability:kuark-ability-notify:kuark-ability-notify-client")?.name = "kuark-ability-notify-client"
 include("kuark-ability:kuark-ability-ui")
 findProject(":kuark-ability:kuark-ability-ui")?.name = "kuark-ability-ui"
 include("kuark-ability:kuark-ability-ui:kuark-ability-ui-jfx")
@@ -92,6 +82,22 @@ include("kuark-service:kuark-service-workflow:kuark-service-workflow-common")
 findProject(":kuark-service:kuark-service-workflow:kuark-service-workflow-common")?.name = "kuark-service-workflow-common"
 include("kuark-service:kuark-service-workflow:kuark-service-workflow-provider")
 findProject(":kuark-service:kuark-service-workflow:kuark-service-workflow-provider")?.name = "kuark-service-workflow-provider"
+include("kuark-service:kuark-service-auth")
+findProject(":kuark-service:kuark-service-auth")?.name = "kuark-service-auth"
+include("kuark-service:kuark-service-auth:kuark-service-auth-common")
+findProject(":kuark-service:kuark-service-auth:kuark-service-auth-common")?.name = "kuark-service-auth-common"
+include("kuark-service:kuark-service-auth:kuark-service-auth-client")
+findProject(":kuark-service:kuark-service-auth:kuark-service-auth-client")?.name = "kuark-service-auth-client"
+include("kuark-service:kuark-service-auth:kuark-service-auth-provider")
+findProject(":kuark-service:kuark-service-auth:kuark-service-auth-provider")?.name = "kuark-service-auth-provider"
+include("kuark-service:kuark-service-msg")
+findProject(":kuark-service:kuark-service-msg")?.name = "kuark-service-msg"
+include("kuark-service:kuark-service-msg:kuark-service-msg-client")
+findProject(":kuark-service:kuark-service-msg:kuark-service-msg-client")?.name = "kuark-service-msg-client"
+include("kuark-service:kuark-service-msg:kuark-service-msg-common")
+findProject(":kuark-service:kuark-service-msg:kuark-service-msg-common")?.name = "kuark-service-msg-common"
+include("kuark-service:kuark-service-msg:kuark-service-msg-provider")
+findProject(":kuark-service:kuark-service-msg:kuark-service-msg-provider")?.name = "kuark-service-msg-provider"
 
 include("kuark-test")
 include("kuark-test:kuark-test-server")

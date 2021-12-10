@@ -1,7 +1,0 @@
-spring:
-  profiles:
-    active:
-      - context-default
-      - ability-cache-default
-      - ability-auth-default
-      - ability-auth-junit

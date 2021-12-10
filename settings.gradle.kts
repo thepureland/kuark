@@ -60,12 +60,6 @@ include("kuark-ability:kuark-ability-ui:kuark-ability-ui-jfx")
 findProject(":kuark-ability:kuark-ability-ui:kuark-ability-ui-jfx")?.name = "kuark-ability-ui-jfx"
 
 include("kuark-service")
-include("kuark-service:kuark-service-sys-provider")
-findProject(":kuark-service:kuark-service-sys-provider")?.name = "kuark-service-sys-provider"
-include("kuark-service:kuark-service-sys-common")
-findProject(":kuark-service:kuark-service-sys-common")?.name = "kuark-service-sys-common"
-include("kuark-service:kuark-service-sys-client")
-findProject(":kuark-service:kuark-service-sys-client")?.name = "kuark-service-sys-client"
 include("kuark-service:kuark-service-sys")
 findProject(":kuark-service:kuark-service-sys")?.name = "kuark-service-sys"
 include("kuark-service:kuark-service-sys:kuark-service-sys-client")

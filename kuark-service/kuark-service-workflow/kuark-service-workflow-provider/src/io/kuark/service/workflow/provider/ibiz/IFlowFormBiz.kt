@@ -1,6 +1,6 @@
 package io.kuark.service.workflow.provider.ibiz
 
-import io.kuark.ability.data.rdb.biz.IBaseBiz
+import io.kuark.base.support.biz.IBaseBiz
 import io.kuark.service.workflow.common.vo.form.FlowFormSearchParams
 import io.kuark.service.workflow.provider.model.po.FlowForm
 import io.kuark.base.query.sort.Order

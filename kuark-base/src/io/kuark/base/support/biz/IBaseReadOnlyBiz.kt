@@ -1,12 +1,10 @@
-package io.kuark.ability.data.rdb.biz
+package io.kuark.base.support.biz
 
-import io.kuark.ability.data.rdb.support.IDbEntity
 import io.kuark.base.query.Criteria
 import io.kuark.base.query.sort.Order
+import io.kuark.base.support.IIdEntity
 import io.kuark.base.support.payload.ListSearchPayload
 import io.kuark.base.support.payload.SearchPayload
-import org.ktorm.schema.Column
-import org.ktorm.schema.ColumnDeclaring
 import kotlin.reflect.KClass
 
 /**
@@ -17,7 +15,7 @@ import kotlin.reflect.KClass
  * @author K
  * @since 1.0.0
  */
-interface IBaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>> {
+interface IBaseReadOnlyBiz<PK : Any, E : IIdEntity<PK>> {
 
     //region Search
 
@@ -149,7 +147,7 @@ interface IBaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>> {
     fun andSearch(
         properties: Map<String, *>,
         vararg orders: Order,
-        whereConditionFactory: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)? = null
+//        whereConditionFactory: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)? = null
     ): List<E>
 
     /**
@@ -167,7 +165,7 @@ interface IBaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>> {
         properties: Map<String, *>,
         returnProperty: String,
         vararg orders: Order,
-        whereConditionFactory: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)? = null
+//        whereConditionFactory: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)? = null
     ): List<*>
 
     /**
@@ -185,7 +183,7 @@ interface IBaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>> {
         properties: Map<String, *>,
         returnProperties: Collection<String>,
         vararg orders: Order,
-        whereConditionFactory: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)? = null
+//        whereConditionFactory: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)? = null
     ): List<Map<String, *>>
 
     //endregion andSearch
@@ -205,7 +203,7 @@ interface IBaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>> {
     fun orSearch(
         properties: Map<String, *>,
         vararg orders: Order,
-        whereConditionFactory: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)? = null
+//        whereConditionFactory: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)? = null
     ): List<E>
 
     /**
@@ -223,7 +221,7 @@ interface IBaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>> {
         properties: Map<String, *>,
         returnProperty: String,
         vararg orders: Order,
-        whereConditionFactory: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)? = null
+//        whereConditionFactory: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)? = null
     ): List<*>
 
     /**
@@ -241,7 +239,7 @@ interface IBaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>> {
         properties: Map<String, *>,
         returnProperties: Collection<String>,
         vararg orders: Order,
-        whereConditionFactory: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)? = null
+//        whereConditionFactory: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)? = null
     ): List<Map<String, *>>
 
     //endregion orSearch
@@ -427,8 +425,8 @@ interface IBaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>> {
      * @since 1.0.0
      */
     fun pagingSearch(
-        listSearchPayload: ListSearchPayload? = null,
-        whereConditionFactory: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)? = null
+        listSearchPayload: ListSearchPayload
+//        whereConditionFactory: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)? = null
     ): Pair<List<*>, Int>
 
     //endregion pagingSearch
@@ -446,8 +444,8 @@ interface IBaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>> {
      * @since 1.0.0
      */
     fun search(
-        listSearchPayload: ListSearchPayload? = null,
-        whereConditionFactory: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)? = null
+        listSearchPayload: ListSearchPayload
+//        whereConditionFactory: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)? = null
     ): List<*>
 
     //endregion payload search
@@ -476,7 +474,7 @@ interface IBaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>> {
      */
     fun count(
         searchPayload: SearchPayload? = null,
-        whereConditionFactory: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)? = null
+//        whereConditionFactory: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)? = null
     ): Int
 
     /**

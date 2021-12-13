@@ -3,10 +3,9 @@ package io.kuark.ability.data.rdb.biz
 import io.kuark.ability.data.rdb.support.BaseDao
 import io.kuark.ability.data.rdb.support.IDbEntity
 import io.kuark.base.query.Criteria
+import io.kuark.base.support.biz.IBaseBiz
 import io.kuark.base.support.payload.SearchPayload
 import io.kuark.base.support.payload.UpdatePayload
-import org.ktorm.schema.Column
-import org.ktorm.schema.ColumnDeclaring
 import org.springframework.transaction.annotation.Transactional
 
 /**
@@ -78,10 +77,8 @@ open class BaseBiz<PK : Any, E : IDbEntity<PK, E>, DAO : BaseDao<PK, E, *>>
         dao.batchUpdateWhen(entities, criteria, countOfEachBatch)
 
     @Transactional
-    override fun <S : SearchPayload> batchUpdateWhen(
-        updatePayload: UpdatePayload<S>,
-        whereConditionFactory: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)?
-    ): Int = dao.batchUpdateWhen(updatePayload, whereConditionFactory)
+    override fun <S : SearchPayload> batchUpdateWhen(updatePayload: UpdatePayload<S>): Int =
+        dao.batchUpdateWhen(updatePayload)
 
     @Transactional
     override fun updateExcludeProperties(entity: E, vararg excludePropertyNames: String): Boolean =
@@ -120,10 +117,7 @@ open class BaseBiz<PK : Any, E : IDbEntity<PK, E>, DAO : BaseDao<PK, E, *>>
     override fun batchDeleteCriteria(criteria: Criteria): Int = dao.batchDeleteCriteria(criteria)
 
     @Transactional
-    override fun batchDeleteWhen(
-        searchPayload: SearchPayload?,
-        whereConditionFactory: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)?
-    ): Int = dao.batchDeleteWhen(searchPayload, whereConditionFactory)
+    override fun batchDeleteWhen(searchPayload: SearchPayload?): Int = dao.batchDeleteWhen(searchPayload)
 
     @Transactional
     override fun delete(entity: E): Boolean = dao.delete(entity)

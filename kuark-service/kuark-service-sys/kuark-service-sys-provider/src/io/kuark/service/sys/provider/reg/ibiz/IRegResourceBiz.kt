@@ -1,6 +1,6 @@
 package io.kuark.service.sys.provider.reg.ibiz
 
-import io.kuark.ability.data.rdb.biz.IBaseBiz
+import io.kuark.base.support.biz.IBaseBiz
 import io.kuark.service.sys.common.vo.reg.resource.MenuTreeNode
 import io.kuark.service.sys.common.vo.reg.resource.RegResourceRecord
 import io.kuark.service.sys.common.vo.reg.resource.RegResourceSearchPayload

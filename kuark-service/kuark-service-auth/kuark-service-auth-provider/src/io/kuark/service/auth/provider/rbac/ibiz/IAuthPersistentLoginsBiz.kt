@@ -1,6 +1,6 @@
 package io.kuark.service.auth.provider.rbac.ibiz
 
-import io.kuark.ability.data.rdb.biz.IBaseBiz
+import io.kuark.base.support.biz.IBaseBiz
 import io.kuark.service.auth.provider.rbac.model.po.AuthPersistentLogins
 
 /**

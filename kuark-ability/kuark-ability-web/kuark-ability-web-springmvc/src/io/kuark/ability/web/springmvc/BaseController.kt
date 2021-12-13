@@ -1,19 +1,10 @@
 package io.kuark.ability.web.springmvc
 
-import io.kuark.ability.web.common.WebResult
-import io.kuark.base.bean.validation.teminal.TeminalConstraintsCreator
-import org.springframework.web.bind.annotation.GetMapping
-import kotlin.reflect.KClass
+import io.kuark.base.support.payload.ListSearchPayload
+import java.io.Serializable
 
-abstract class BaseController {
+open class BaseController<B: IBaseR S : ListSearchPayload, R : Serializable, F : Any>
+    : BaseReadOnlyController<S>() {
 
-    @GetMapping("/getValidationRule")
-    fun getValidationRule(): WebResult<Map<String, LinkedHashMap<String, Array<Map<String, Any>>>>> {
-        val formModelClass = getFormModelClass()
-        val rule = TeminalConstraintsCreator.create(formModelClass)
-        return WebResult(rule)
-    }
-
-    abstract fun getFormModelClass(): KClass<*>
 
 }

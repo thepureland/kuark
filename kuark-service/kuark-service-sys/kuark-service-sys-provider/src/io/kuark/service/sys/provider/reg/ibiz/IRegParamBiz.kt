@@ -1,7 +1,7 @@
 package io.kuark.service.sys.provider.reg.ibiz
 
 import io.kuark.ability.cache.context.CacheNames
-import io.kuark.ability.data.rdb.biz.IBaseBiz
+import io.kuark.base.support.biz.IBaseBiz
 import io.kuark.service.sys.common.vo.reg.param.RegParamRecord
 import io.kuark.service.sys.common.vo.reg.param.RegParamSearchPayload
 import io.kuark.service.sys.provider.reg.model.po.RegParam

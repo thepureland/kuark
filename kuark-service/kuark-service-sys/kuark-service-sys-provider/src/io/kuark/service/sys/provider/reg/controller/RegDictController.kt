@@ -18,13 +18,14 @@ import javax.validation.Valid
 @RestController
 @RequestMapping("/regDict")
 @CrossOrigin
-open class RegDictController : BaseReadOnlyController<String, IRegDictBiz, RegDictSearchPayload, RegDictRecord>() {
+open class RegDictController :
+    BaseReadOnlyController<String, IRegDictBiz, RegDictSearchPayload, RegDictRecord, RegDictPayload>() {
 
     @Autowired
     private lateinit var regDictItemBiz: IRegDictItemBiz
 
     @PostMapping("/loadTreeNodes")
-    fun laodTreeNodes(@RequestBody searchPayload: RegDictSearchPayload): WebResult<List<RegDictTreeNode>> {
+    fun loadTreeNodes(@RequestBody searchPayload: RegDictSearchPayload): WebResult<List<RegDictTreeNode>> {
         val activeOnly = searchPayload.active ?: false
         return WebResult(
             biz.loadDirectChildrenForTree(
@@ -52,7 +53,7 @@ open class RegDictController : BaseReadOnlyController<String, IRegDictBiz, RegDi
         return WebResult(modules.distinct())
     }
 
-    @GetMapping("/get")
+    @GetMapping("/getDict")
     fun get(id: String, isDict: Boolean?, fetchAllParentIds: Boolean = false): WebResult<RegDictRecord> {
         val dict = biz.get(id, isDict, fetchAllParentIds)
         return if (dict == null) {

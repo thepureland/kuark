@@ -34,7 +34,7 @@ open class RegResourceController :
         return WebResult(biz.loadDirectChildrenForList(searchPayload))
     }
 
-    @GetMapping("/get")
+    @GetMapping("/getRes")
     fun get(id: String, fetchAllParentIds: Boolean = false): WebResult<RegResourceRecord> {
         return WebResult(biz.get(id, RegResourceRecord::class, fetchAllParentIds))
     }

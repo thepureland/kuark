@@ -38,7 +38,7 @@ open class RegDictDao : BaseCrudDao<String, RegDict, RegDicts>() {
             }
             .map { row -> row[RegDicts.id] }
             .toList() as List<String>
-        return if(list.isEmpty()) null else list.first()
+        return if (list.isEmpty()) null else list.first()
     }
 
     /**
@@ -81,19 +81,19 @@ open class RegDictDao : BaseCrudDao<String, RegDict, RegDicts>() {
         val pageSize = searchPayload.pageSize ?: 10
         return query.limit((pageNo - 1) * pageSize, pageSize)
             .map { row ->
-                RegDictRecord(
-                    row[RegDicts.module],
-                    row[RegDicts.id]!!,
-                    row[RegDicts.dictType]!!,
-                    row[RegDicts.dictName],
-                    row[RegDictItems.id]!!,
-                    row[RegDictItems.itemCode]!!,
-                    row[RegDictItems.parentId],
-                    row[RegDictItems.itemName],
-                    row[RegDictItems.seqNo],
-                    row[RegDictItems.active]!!,
-                    row[RegDictItems.remark]
-                )
+                RegDictRecord().apply {
+                    module = row[RegDicts.module]
+                    dictId = row[RegDicts.id]
+                    dictType = row[RegDicts.dictType]
+                    dictName = row[RegDicts.dictName]
+                    itemId = row[RegDictItems.id]
+                    itemCode = row[RegDictItems.itemCode]
+                    parentId = row[RegDictItems.parentId]
+                    itemName = row[RegDictItems.itemName]
+                    seqNo = row[RegDictItems.seqNo]
+                    active = row[RegDictItems.active]
+                    remark = row[RegDictItems.remark]
+                }
             }
     }
 
@@ -121,7 +121,9 @@ open class RegDictDao : BaseCrudDao<String, RegDict, RegDicts>() {
         return database()
             .from(RegDictItems).leftJoin(
                 RegDicts, on = RegDictItems.dictId.eq(
-                    RegDicts.id))
+                    RegDicts.id
+                )
+            )
             .select()
             .whereWithConditions {
                 if (StringKit.isNotBlank(searchPayload.id)) {

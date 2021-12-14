@@ -120,9 +120,9 @@ open class RegDictBiz : BaseBiz<String, RegDict, RegDictDao>(), IRegDictBiz {
     override fun get(id: String, isDict: Boolean?, fetchAllParentIds: Boolean): RegDictRecord? {
         return if (isDict == true) {
             val dict = dao.get(id) ?: return null
-            RegDictRecord(
-                dict.module, id, dict.dictType, dict.dictName, null, null, null, null, null, null, dict.remark
-            )
+            val regDictRecord = RegDictRecord()
+            BeanKit.copyProperties(dict, regDictRecord)
+            regDictRecord
         } else {
             val searchPayload = RegDictSearchPayload().apply {
                 this.id = id
@@ -176,7 +176,7 @@ open class RegDictBiz : BaseBiz<String, RegDict, RegDictDao>(), IRegDictBiz {
     @Transactional
     override fun delete(id: String, isDict: Boolean): Boolean {
         return if (isDict) {
-            regDictItemBiz.batchDeleteWhen { column, _ ->
+            dao.batchDeleteWhen { column, _ ->
                 if (column.name == RegDictItems.dictId.name) {
                     column.eq(id)
                 } else null

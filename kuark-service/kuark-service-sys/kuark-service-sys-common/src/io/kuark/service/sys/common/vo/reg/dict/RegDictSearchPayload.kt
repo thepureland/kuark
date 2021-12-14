@@ -1,6 +1,7 @@
 package io.kuark.service.sys.common.vo.reg.dict
 
 import io.kuark.base.support.payload.ListSearchPayload
+import kotlin.reflect.KClass
 
 /**
  * 字典查询参数
@@ -39,5 +40,7 @@ class RegDictSearchPayload: ListSearchPayload() {
 
     /** 是否为第一层树节点 */
     var firstLevel: Boolean? = null
+
+    override var returnEntityClass: KClass<*>? = RegDictRecord::class
 
 }

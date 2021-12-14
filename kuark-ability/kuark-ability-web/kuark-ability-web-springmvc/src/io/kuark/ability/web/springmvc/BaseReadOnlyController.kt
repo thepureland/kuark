@@ -44,7 +44,8 @@ open class BaseReadOnlyController<PK: Any, B : IBaseReadOnlyBiz<PK, *>, S : List
     @PostMapping("/search")
     @Suppress(Consts.Suppress.UNCHECKED_CAST)
     open fun search(@RequestBody searchPayload: S): WebResult<Pair<List<R>, Int>> {
-        return WebResult(biz.pagingSearch(searchPayload) as Pair<List<R>, Int>)
+        val result = biz.pagingSearch(searchPayload) as Pair<List<R>, Int>
+        return WebResult(result)
     }
 
     /**

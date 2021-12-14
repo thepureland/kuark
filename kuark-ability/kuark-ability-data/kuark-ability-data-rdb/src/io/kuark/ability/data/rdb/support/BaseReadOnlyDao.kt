@@ -635,24 +635,28 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
         // result
         val returnProperties = listSearchPayload?.returnProperties ?: emptyList()
         val mapList = processResult(query, returnColumnMap)
-        return if (CollectionKit.isEmpty(returnProperties)) {
-            val beanList = mutableListOf<Any>()
-            mapList.forEach { map ->
-                val bean = if (listSearchPayload?.returnEntityClass != null) {
-                    listSearchPayload.returnEntityClass!!.newInstance()
-                } else {
-                    Entity.create(table().entityClass!!)
+        return when {
+            CollectionKit.isEmpty(returnProperties) -> {
+                val beanList = mutableListOf<Any>()
+                mapList.forEach { map ->
+                    val bean = if (listSearchPayload?.returnEntityClass != null) {
+                        listSearchPayload.returnEntityClass!!.newInstance()
+                    } else {
+                        Entity.create(table().entityClass!!)
+                    }
+                    returnProps.forEach { prop ->
+                        BeanKit.setProperty(bean, prop, map[prop])
+                    }
+                    beanList.add(bean)
                 }
-                returnProps.forEach { prop ->
-                    BeanKit.setProperty(bean, prop, map[prop])
-                }
-                beanList.add(bean)
+                beanList
             }
-            beanList
-        } else if (returnProperties.size == 1) {
-            mapList.flatMap { it.values }
-        } else {
-            mapList
+            returnProperties.size == 1 -> {
+                mapList.flatMap { it.values }
+            }
+            else -> {
+                mapList
+            }
         }
     }
 

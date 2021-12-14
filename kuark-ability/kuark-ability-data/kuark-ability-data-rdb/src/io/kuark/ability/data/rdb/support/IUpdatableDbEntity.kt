@@ -14,7 +14,7 @@ import java.time.LocalDateTime
 interface IUpdatableDbEntity<ID, E : Entity<E>> : IDbEntity<ID, E> {
 
     /** 记录创建时间 */
-    val createTime: LocalDateTime?
+    var createTime: LocalDateTime?
 
     /** 记录创建用户 */
     var createUser: String?

@@ -85,32 +85,28 @@ open class RegResourceBiz : BaseBiz<String, RegResource, RegResourceDao>(), IReg
         if (searchPayload.active == false) { // 非仅启用状态
             searchPayload.active = null
         }
-        @Suppress(Consts.Suppress.UNCHECKED_CAST)
-        return pagingSearch(searchPayload) { column, _ ->
+        val whereConditionFactory: (Column<Any>, Any?) -> ColumnDeclaring<Boolean>? = { column, value ->
             if (column.name == RegResources.parentId.name && searchPayload.level == 2) { // 1层是资源类型，2层是子系统，从第3层开始才是RegResource
                 column.isNull()
             } else null
-        } as Pair<List<RegResourceRecord>, Int>
-    }
-
-    override fun pagingSearch(
-        listSearchPayload: ListSearchPayload?,
-        whereConditionFactory: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)?
-    ): Pair<List<*>, Int> {
-        val result = if (whereConditionFactory == null) {
-            super.pagingSearch(listSearchPayload) { column, value ->
-                if (column.name == RegResources.name.name) {
-                    SqlWhereExpressionFactory.create(column, Operator.ILIKE, value)
-                } else null
-            }
-        } else {
-            super.pagingSearch(listSearchPayload, whereConditionFactory)
         }
         @Suppress(Consts.Suppress.UNCHECKED_CAST)
-        (result as Pair<List<RegResourceRecord>, Int>).first.forEach {
-            transCode(it)
+        val result = dao.search(searchPayload, whereConditionFactory) as List<RegResourceRecord>
+        val count = dao.count(searchPayload, whereConditionFactory)
+        return Pair(result, count)
+    }
+
+    override fun pagingSearch(listSearchPayload: ListSearchPayload): Pair<List<*>, Int> {
+        val whereConditionFactory: (Column<Any>, Any?) -> ColumnDeclaring<Boolean>? = { column, value ->
+            if (column.name == RegResources.name.name) {
+                SqlWhereExpressionFactory.create(column, Operator.ILIKE, value)
+            } else null
         }
-        return result
+        val result = dao.search(listSearchPayload, whereConditionFactory)
+        @Suppress(Consts.Suppress.UNCHECKED_CAST)
+        (result as List<RegResourceRecord>).forEach { transCode(it) }
+        val count = dao.count(listSearchPayload, whereConditionFactory)
+        return Pair(result, count)
     }
 
     override fun <R : Any> get(id: String, returnType: KClass<R>, fetchAllParentIds: Boolean): R? {

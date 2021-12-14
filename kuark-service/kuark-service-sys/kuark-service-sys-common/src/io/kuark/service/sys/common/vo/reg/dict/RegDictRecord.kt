@@ -2,42 +2,40 @@ package io.kuark.service.sys.common.vo.reg.dict
 
 import java.io.Serializable
 
-data class RegDictRecord(
+class RegDictRecord: Serializable {
 
     /** 模块 */
-    val module: String?,
+    var module: String? = null
 
     /** 字典id */
-    val dictId: String,
+    var dictId: String? = null
 
     /** 字典类型 */
-    val dictType: String,
+    var dictType: String? = null
 
     /** 字典名称，或其国际化key */
-    val dictName: String?,
+    var dictName: String? = null
 
     /** 字典项ID */
-    val itemId: String?,
+    var itemId: String? = null
 
     /** 字典项编号 */
-    val itemCode: String?,
+    var itemCode: String? = null
 
     /** 父项ID */
-    val parentId: String?,
+    var parentId: String? = null
 
     /** 字典项名称，或其国际化key */
-    val itemName: String?,
+    var itemName: String? = null
 
     /** 该字典编号在同父节点下的排序号 */
-    val seqNo: Int?,
+    var seqNo: Int? = null
 
     /** 是否启用 */
-    val active: Boolean?,
+    var active: Boolean? = null
 
     /** 备注 */
-    val remark: String?
-
-): Serializable {
+    var remark: String? = null
 
     /** 父项编号 */
     var parentCode: String? = null

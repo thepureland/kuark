@@ -26,7 +26,7 @@ import org.ktorm.schema.Table
  * @author K
  * @since 1.0.0
  */
-open class BaseDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadOnlyDao<PK, E, T>() {
+open class BaseCrudDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadOnlyDao<PK, E, T>() {
 
 
     //region Insert

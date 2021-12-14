@@ -1,15 +1,16 @@
 package io.kuark.service.sys.common.vo.reg.param
 
+import io.kuark.base.support.IIdEntity
 import javax.validation.constraints.Digits
 import javax.validation.constraints.Max
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.Positive
 
 
-class RegParamPayload {
+class RegParamPayload: IIdEntity<String> {
 
     /** 主键 */
-    var id: String? = null
+    override var id: String? = null
 
     @get:NotBlank(message = "模块不能为空！")
     /** 模块 */

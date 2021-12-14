@@ -1,6 +1,6 @@
 package io.kuark.demo.tools.codegen.dao
 
-import io.kuark.ability.data.rdb.support.BaseDao
+import io.kuark.ability.data.rdb.support.BaseCrudDao
 import io.kuark.demo.tools.codegen.model.po.CodeGenObject
 import io.kuark.demo.tools.codegen.model.table.CodeGenObjects
 import org.ktorm.dsl.eq
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Repository
  */
 @Repository
 //region your codes 1
-object CodeGenObjectDao: BaseDao<String, CodeGenObject, CodeGenObjects>() {
+object CodeGenObjectDao: BaseCrudDao<String, CodeGenObject, CodeGenObjects>() {
 //endregion your codes 1
 
     //region your codes 2

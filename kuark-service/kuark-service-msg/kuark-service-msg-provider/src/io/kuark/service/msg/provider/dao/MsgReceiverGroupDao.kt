@@ -1,6 +1,6 @@
 package io.kuark.service.msg.provider.dao
 
-import io.kuark.ability.data.rdb.support.BaseDao
+import io.kuark.ability.data.rdb.support.BaseCrudDao
 import io.kuark.service.msg.provider.model.po.MsgReceiverGroup
 import io.kuark.service.msg.provider.model.table.MsgReceiverGroups
 import org.springframework.stereotype.Repository
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository
  */
 @Repository
 //region your codes 1
-open class MsgReceiverGroupDao : BaseDao<String, MsgReceiverGroup, MsgReceiverGroups>() {
+open class MsgReceiverGroupDao : BaseCrudDao<String, MsgReceiverGroup, MsgReceiverGroups>() {
 //endregion your codes 1
 
     //region your codes 2

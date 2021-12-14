@@ -1,6 +1,6 @@
 package io.kuark.service.sys.provider.reg.dao
 
-import io.kuark.ability.data.rdb.support.BaseDao
+import io.kuark.ability.data.rdb.support.BaseCrudDao
 import io.kuark.service.sys.provider.reg.model.po.RegDictItem
 import io.kuark.service.sys.provider.reg.model.table.RegDictItems
 import org.ktorm.dsl.eq
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Repository
  */
 @Repository
 //region your codes 1
-open class RegDictItemDao : BaseDao<String, RegDictItem, RegDictItems>() {
+open class RegDictItemDao : BaseCrudDao<String, RegDictItem, RegDictItems>() {
 //endregion your codes 1
 
     //region your codes 2

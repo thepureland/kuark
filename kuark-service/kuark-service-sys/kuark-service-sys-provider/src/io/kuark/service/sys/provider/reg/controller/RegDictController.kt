@@ -1,7 +1,7 @@
 package io.kuark.service.sys.provider.reg.controller
 
 import io.kuark.ability.web.common.WebResult
-import io.kuark.ability.web.springmvc.BaseController
+import io.kuark.ability.web.springmvc.BaseReadOnlyController
 import io.kuark.base.support.Consts
 import io.kuark.service.sys.common.vo.reg.dict.RegDictPayload
 import io.kuark.service.sys.common.vo.reg.dict.RegDictRecord
@@ -14,15 +14,11 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.*
 import javax.validation.Valid
-import kotlin.reflect.KClass
 
 @RestController
 @RequestMapping("/regDict")
 @CrossOrigin
-open class RegDictController : BaseController() {
-
-    @Autowired
-    private lateinit var regDictBiz: IRegDictBiz
+open class RegDictController : BaseReadOnlyController<String, IRegDictBiz, RegDictSearchPayload, RegDictRecord>() {
 
     @Autowired
     private lateinit var regDictItemBiz: IRegDictItemBiz
@@ -31,7 +27,7 @@ open class RegDictController : BaseController() {
     fun laodTreeNodes(@RequestBody searchPayload: RegDictSearchPayload): WebResult<List<RegDictTreeNode>> {
         val activeOnly = searchPayload.active ?: false
         return WebResult(
-            regDictBiz.loadDirectChildrenForTree(
+            biz.loadDirectChildrenForTree(
                 searchPayload.parentId, searchPayload.firstLevel ?: false, activeOnly
             )
         )
@@ -39,12 +35,7 @@ open class RegDictController : BaseController() {
 
     @PostMapping("/searchByTree")
     fun searchByTree(@RequestBody searchPayload: RegDictSearchPayload): WebResult<Pair<List<RegDictRecord>, Int>> {
-        return WebResult(regDictBiz.loadDirectChildrenForList(searchPayload))
-    }
-
-    @PostMapping("/search")
-    fun search(@RequestBody searchPayload: RegDictSearchPayload): WebResult<Pair<List<RegDictRecord>, Int>> {
-        return WebResult(regDictBiz.pagingSearch(searchPayload))
+        return WebResult(biz.loadDirectChildrenForList(searchPayload))
     }
 
     @GetMapping("/loadModules")
@@ -57,13 +48,13 @@ open class RegDictController : BaseController() {
     @GetMapping("/loadDictTypes")
     @Suppress(Consts.Suppress.UNCHECKED_CAST)
     fun loadDictTypes(): WebResult<List<String>> {
-        val modules = regDictBiz.allSearchProperty(RegDicts.dictType.name) as List<String>
+        val modules = biz.allSearchProperty(RegDicts.dictType.name) as List<String>
         return WebResult(modules.distinct())
     }
 
     @GetMapping("/get")
     fun get(id: String, isDict: Boolean?, fetchAllParentIds: Boolean = false): WebResult<RegDictRecord> {
-        val dict = regDictBiz.get(id, isDict, fetchAllParentIds)
+        val dict = biz.get(id, isDict, fetchAllParentIds)
         return if (dict == null) {
             WebResult(null, "找不到对应的字典/字典项！")
         } else {
@@ -74,25 +65,23 @@ open class RegDictController : BaseController() {
     @PostMapping("/saveOrUpdate")
     fun saveOrUpdate(@RequestBody @Valid payload: RegDictPayload, bindingResult: BindingResult): WebResult<String> {
         if (bindingResult.hasErrors()) error("数据校验失败！")
-        return WebResult(regDictBiz.saveOrUpdate(payload))
+        return WebResult(biz.saveOrUpdate(payload))
     }
 
     @DeleteMapping("/delete")
     fun delete(id: String, isDict: Boolean): WebResult<Boolean> {
-        return WebResult(regDictBiz.delete(id, isDict))
+        return WebResult(biz.delete(id, isDict))
     }
 
     @PostMapping("/batchDelete")
     fun batchDelete(@RequestBody map: Map<String, Boolean>): WebResult<Boolean> {
         map.forEach { (id, isDict) ->
-            val success = regDictBiz.delete(id, isDict)
+            val success = biz.delete(id, isDict)
             if (!success) {
                 return WebResult(false)
             }
         }
         return WebResult(true)
     }
-
-    override fun getFormModelClass(): KClass<RegDictPayload> = RegDictPayload::class
 
 }

@@ -1,6 +1,6 @@
 package io.kuark.service.sys.provider.reg.dao
 
-import io.kuark.ability.data.rdb.support.BaseDao
+import io.kuark.ability.data.rdb.support.BaseCrudDao
 import io.kuark.service.sys.provider.reg.model.po.RegResource
 import io.kuark.service.sys.provider.reg.model.table.RegResources
 import org.springframework.stereotype.Repository
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository
  */
 @Repository
 //region your codes 1
-open class RegResourceDao : BaseDao<String, RegResource, RegResources>() {
+open class RegResourceDao : BaseCrudDao<String, RegResource, RegResources>() {
 //endregion your codes 1
 
     //region your codes 2

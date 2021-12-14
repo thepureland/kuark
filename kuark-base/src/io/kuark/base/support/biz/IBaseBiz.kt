@@ -1,6 +1,5 @@
 package io.kuark.base.support.biz
 
-//import io.kuark.ability.data.rdb.support.IDbEntity
 import io.kuark.base.query.Criteria
 import io.kuark.base.support.Consts
 import io.kuark.base.support.IIdEntity
@@ -200,18 +199,14 @@ interface IBaseBiz<PK : Any, E : IIdEntity<PK>> : IBaseReadOnlyBiz<PK, E> {
      * 更新规则见 @see UpdatePayload 类，查询规则见 @see SearchPayload
      *
      * @param S 查询项载体类型
-     * @param updatePayload 更新项载体，当 whereConditionFactory 为null时，updatePayload.searchPayload不能为null。updatePayload.searchPayload为null时，条件间的查询逻辑为AND
-     * @param whereConditionFactory where条件表达式工厂函数，可对updatePayload.searchPayload的项定义操作符，也可完全自定义查询逻辑，函数返回null时将按“等于”操作处理updatePayload.searchPayload的项。该参数为null时，updatePayload.searchPayload 必须指定，默认为null
+     * @param updatePayload 更新项载体
      * @return 更新的记录数
      * @throws IllegalArgumentException 无查询条件时
      * @author K
      * @since 1.0.0
      */
     @Suppress(Consts.Suppress.UNCHECKED_CAST)
-    fun <S : SearchPayload> batchUpdateWhen(
-        updatePayload: UpdatePayload<S>,
-//        whereConditionFactory: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)? = null
-    ): Int
+    fun <S : SearchPayload> batchUpdateWhen(updatePayload: UpdatePayload<S>): Int
 
     /**
      * 有条件的批量更新实体对象（仅当满足给定的附加查询条件时）
@@ -350,17 +345,13 @@ interface IBaseBiz<PK : Any, E : IIdEntity<PK>> : IBaseReadOnlyBiz<PK, E> {
     /**
      * 批量删除指定条件的实体对象
      *
-     * @param searchPayload 查询项载体，为null时 whereConditionFactory 必须指定，此时条件间的查询逻辑为AND，默认为null
-     * @param whereConditionFactory where条件表达式工厂函数，可对searchPayload的项定义操作符，也可完全自定义查询逻辑，函数返回null时将按“等于”操作处理searchPayload的项。该参数为null时，searchPayload 必须指定，默认为null
+     * @param searchPayload 查询项载体
      * @return 删除的记录数
      * @throws IllegalArgumentException 无查询条件时
      * @author K
      * @since 1.0.0
      */
-    fun batchDeleteWhen(
-        searchPayload: SearchPayload? = null,
-//        whereConditionFactory: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)? = null
-    ): Int
+    fun batchDeleteWhen(searchPayload: SearchPayload): Int
 
     /**
      * 删除实体对应的记录

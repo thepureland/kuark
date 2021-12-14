@@ -121,7 +121,7 @@ open class BaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>, DAO : BaseReadOnlyDao
 
     override fun count(criteria: Criteria?): Int = dao.count(criteria)
 
-    override fun count(searchPayload: SearchPayload?): Int = dao.count(searchPayload)
+    override fun count(searchPayload: SearchPayload): Int = dao.count(searchPayload)
 
     override fun sum(property: String, criteria: Criteria?): Number = dao.sum(property, criteria)
 

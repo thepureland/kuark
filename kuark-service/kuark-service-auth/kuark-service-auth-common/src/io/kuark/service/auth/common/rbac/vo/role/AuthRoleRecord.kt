@@ -1,4 +1,6 @@
 package io.kuark.service.auth.common.rbac.vo.role
 
-class AuthRoleRecord {
+import java.io.Serializable
+
+class AuthRoleRecord: Serializable {
 }

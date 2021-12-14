@@ -1,6 +1,6 @@
 package io.kuark.service.auth.provider.rbac.dao
 
-import io.kuark.ability.data.rdb.support.BaseDao
+import io.kuark.ability.data.rdb.support.BaseCrudDao
 import io.kuark.service.auth.provider.rbac.model.po.AuthPersistentLogins
 import io.kuark.service.auth.provider.rbac.model.table.AuthPersistentLoginss
 import org.springframework.stereotype.Repository
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository
  */
 @Repository
 //region your codes 1
-open class AuthPersistentLoginsDao : BaseDao<String, AuthPersistentLogins, AuthPersistentLoginss>() {
+open class AuthPersistentLoginsDao : BaseCrudDao<String, AuthPersistentLogins, AuthPersistentLoginss>() {
 //endregion your codes 1
 
     //region your codes 2

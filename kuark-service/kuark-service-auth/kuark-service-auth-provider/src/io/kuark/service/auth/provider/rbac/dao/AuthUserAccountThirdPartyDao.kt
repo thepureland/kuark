@@ -1,7 +1,7 @@
 package io.kuark.service.auth.provider.rbac.dao
 
 import io.kuark.ability.data.rdb.kit.RdbKit
-import io.kuark.ability.data.rdb.support.BaseDao
+import io.kuark.ability.data.rdb.support.BaseCrudDao
 import io.kuark.base.lang.string.StringKit
 import io.kuark.context.core.KuarkContextHolder
 import io.kuark.service.auth.provider.rbac.model.po.AuthUserAccountThirdParty
@@ -22,7 +22,7 @@ import org.springframework.stereotype.Repository
  */
 @Repository
 //region your codes 1
-open class AuthUserAccountThirdPartyDao : BaseDao<String, AuthUserAccountThirdParty, AuthUserAccountThirdPartys>() {
+open class AuthUserAccountThirdPartyDao : BaseCrudDao<String, AuthUserAccountThirdParty, AuthUserAccountThirdPartys>() {
 //endregion your codes 1
 
     //region your codes 2

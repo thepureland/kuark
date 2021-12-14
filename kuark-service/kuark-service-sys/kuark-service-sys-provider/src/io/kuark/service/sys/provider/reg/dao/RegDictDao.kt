@@ -1,6 +1,6 @@
 package io.kuark.service.sys.provider.reg.dao
 
-import io.kuark.ability.data.rdb.support.BaseDao
+import io.kuark.ability.data.rdb.support.BaseCrudDao
 import io.kuark.ability.data.rdb.support.ColumnHelper
 import io.kuark.base.error.ObjectNotFoundException
 import io.kuark.base.lang.collections.CollectionKit
@@ -24,7 +24,7 @@ import org.springframework.stereotype.Repository
  */
 @Repository
 //region your codes 1
-open class RegDictDao : BaseDao<String, RegDict, RegDicts>() {
+open class RegDictDao : BaseCrudDao<String, RegDict, RegDicts>() {
 //endregion your codes 1
 
     //region your codes 2

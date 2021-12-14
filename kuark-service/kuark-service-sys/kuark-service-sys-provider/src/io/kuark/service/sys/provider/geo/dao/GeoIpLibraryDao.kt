@@ -1,6 +1,6 @@
 package io.kuark.service.sys.provider.geo.dao
 
-import io.kuark.ability.data.rdb.support.BaseDao
+import io.kuark.ability.data.rdb.support.BaseCrudDao
 import io.kuark.service.sys.provider.geo.model.po.GeoIpLibrary
 import io.kuark.service.sys.provider.geo.model.table.GeoIpLibrarys
 import org.springframework.stereotype.Repository
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository
  */
 @Repository
 //region your codes 1
-open class GeoIpLibraryDao : BaseDao<String, GeoIpLibrary, GeoIpLibrarys>() {
+open class GeoIpLibraryDao : BaseCrudDao<String, GeoIpLibrary, GeoIpLibrarys>() {
 //endregion your codes 1
 
     //region your codes 2

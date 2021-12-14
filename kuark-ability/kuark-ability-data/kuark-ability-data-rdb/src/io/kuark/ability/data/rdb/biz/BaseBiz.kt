@@ -1,6 +1,6 @@
 package io.kuark.ability.data.rdb.biz
 
-import io.kuark.ability.data.rdb.support.BaseDao
+import io.kuark.ability.data.rdb.support.BaseCrudDao
 import io.kuark.ability.data.rdb.support.IDbEntity
 import io.kuark.base.query.Criteria
 import io.kuark.base.support.biz.IBaseBiz
@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional
  * @author K
  * @since 1.0.0
  */
-open class BaseBiz<PK : Any, E : IDbEntity<PK, E>, DAO : BaseDao<PK, E, *>>
+open class BaseBiz<PK : Any, E : IDbEntity<PK, E>, DAO : BaseCrudDao<PK, E, *>>
     : BaseReadOnlyBiz<PK, E, DAO>(), IBaseBiz<PK, E> {
 
     @Transactional
@@ -117,7 +117,7 @@ open class BaseBiz<PK : Any, E : IDbEntity<PK, E>, DAO : BaseDao<PK, E, *>>
     override fun batchDeleteCriteria(criteria: Criteria): Int = dao.batchDeleteCriteria(criteria)
 
     @Transactional
-    override fun batchDeleteWhen(searchPayload: SearchPayload?): Int = dao.batchDeleteWhen(searchPayload)
+    override fun batchDeleteWhen(searchPayload: SearchPayload): Int = dao.batchDeleteWhen(searchPayload)
 
     @Transactional
     override fun delete(entity: E): Boolean = dao.delete(entity)

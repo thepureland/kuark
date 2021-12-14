@@ -1,15 +1,16 @@
 package io.kuark.service.sys.common.vo.reg.resource
 
 import io.kuark.base.bean.validation.constraint.annotaions.DictCode
+import io.kuark.base.support.IIdEntity
 import javax.validation.constraints.Digits
 import javax.validation.constraints.Max
 import javax.validation.constraints.NotBlank
 import javax.validation.constraints.Positive
 
-class RegResourcePayload {
+class RegResourcePayload: IIdEntity<String> {
 
     /** 主键 */
-    var id: String? = null
+    override var id: String? = null
 
     @get:NotBlank(message = "资源名称不能为空！")
     /** 名称，或其国际化key */

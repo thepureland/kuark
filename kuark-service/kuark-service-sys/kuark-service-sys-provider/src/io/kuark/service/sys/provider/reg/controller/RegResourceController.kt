@@ -1,67 +1,42 @@
 package io.kuark.service.sys.provider.reg.controller
 
 import io.kuark.ability.web.common.WebResult
-import io.kuark.ability.web.springmvc.BaseController
-import io.kuark.base.lang.string.StringKit
-import io.kuark.base.support.Consts
+import io.kuark.ability.web.springmvc.BaseCrudController
+import io.kuark.service.sys.common.api.reg.IDictApi
 import io.kuark.service.sys.common.vo.reg.resource.*
-import io.kuark.service.sys.provider.reg.ibiz.IRegDictItemBiz
 import io.kuark.service.sys.provider.reg.ibiz.IRegResourceBiz
 import io.kuark.service.sys.provider.reg.model.po.RegResource
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.*
-import javax.validation.Valid
-import kotlin.reflect.KClass
 
 @RestController
 @RequestMapping("/regResource")
 @CrossOrigin
-open class RegResourceController : BaseController() {
+open class RegResourceController :
+    BaseCrudController<String, IRegResourceBiz, RegResourceSearchPayload, RegResourceRecord, RegResourcePayload>() {
 
     @Autowired
-    private lateinit var regResourceBiz: IRegResourceBiz
-
-    @Autowired
-    private lateinit var regDictItemBiz: IRegDictItemBiz
+    private lateinit var dictApi: IDictApi
 
     @GetMapping("/getMenus")
     fun getMenus(): List<MenuTreeNode> {
-        return regResourceBiz.getMenus()
+        return biz.getMenus()
     }
 
     @PostMapping("/loadTreeNodes")
     fun laodTreeNodes(@RequestBody searchPayload: RegResourceSearchPayload): WebResult<List<RegResourceTreeNode>> {
-        val results = regResourceBiz.loadDirectChildrenForTree(searchPayload)
+        val results = biz.loadDirectChildrenForTree(searchPayload)
         return WebResult(results)
-    }
-
-    @PostMapping("/search")
-    @Suppress(Consts.Suppress.UNCHECKED_CAST)
-    fun search(@RequestBody searchPayload: RegResourceSearchPayload): WebResult<Pair<List<RegResourceRecord>, Int>> {
-        return WebResult(regResourceBiz.pagingSearch(searchPayload) as Pair<List<RegResourceRecord>, Int>)
     }
 
     @PostMapping("/searchByTree")
     fun searchByTree(@RequestBody searchPayload: RegResourceSearchPayload): WebResult<Pair<List<RegResourceRecord>, Int>> {
-        return WebResult(regResourceBiz.loadDirectChildrenForList(searchPayload))
+        return WebResult(biz.loadDirectChildrenForList(searchPayload))
     }
 
     @GetMapping("/get")
     fun get(id: String, fetchAllParentIds: Boolean = false): WebResult<RegResourceRecord> {
-        return WebResult(regResourceBiz.get(id, RegResourceRecord::class, fetchAllParentIds))
-    }
-
-    @PostMapping("/saveOrUpdate")
-    fun saveOrUpdate(@RequestBody @Valid payload: RegResourcePayload, bindingResult: BindingResult): WebResult<String> {
-        if (bindingResult.hasErrors()) error("数据校验失败！")
-        val id = if (StringKit.isBlank(payload.id)) {
-            regResourceBiz.insert(payload)
-        } else {
-            regResourceBiz.update(payload)
-            payload.id
-        }
-        return WebResult(id)
+        return WebResult(biz.get(id, RegResourceRecord::class, fetchAllParentIds))
     }
 
     @GetMapping("/updateActive")
@@ -70,35 +45,22 @@ open class RegResourceController : BaseController() {
             this.id = id
             this.active = active
         }
-        return WebResult(regResourceBiz.update(regResource))
+        return WebResult(biz.update(regResource))
     }
 
     @DeleteMapping("/delete")
-    fun delete(id: String): WebResult<Boolean> {
-        return WebResult(regResourceBiz.cascadeDeleteChildren(id))
-    }
-
-    @PostMapping("/batchDelete")
-    fun batchDelete(@RequestBody ids: List<String>): WebResult<Boolean> {
-        return WebResult(regResourceBiz.batchDelete(ids) == ids.size)
+    override fun delete(id: String): WebResult<Boolean> {
+        return WebResult(biz.cascadeDeleteChildren(id))
     }
 
     @GetMapping("/loadSubSyses")
     fun loadModules(): WebResult<Map<String, String>> {
-        val items = regDictItemBiz.getItemsByModuleAndType("kuark:sys", "sub_sys")
-        val map = mutableMapOf<String, String>()
-        items.forEach { map[it.itemCode] = it.itemName }
-        return WebResult(map)
+        return WebResult(dictApi.getDictItemMap("kuark:sys", "sub_sys"))
     }
 
     @GetMapping("/loadResourceTypes")
     fun loadResourceTypes(): WebResult<Map<String, String>> {
-        val items = regDictItemBiz.getItemsByModuleAndType("kuark:sys", "resource_type")
-        val map = mutableMapOf<String, String>()
-        items.forEach { map[it.itemCode] = it.itemName }
-        return WebResult(map)
+        return WebResult(dictApi.getDictItemMap("kuark:sys", "resource_type"))
     }
-
-    override fun getFormModelClass(): KClass<*> = RegResourcePayload::class
 
 }

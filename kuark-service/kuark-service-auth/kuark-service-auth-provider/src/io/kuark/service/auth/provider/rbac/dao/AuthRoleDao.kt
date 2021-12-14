@@ -1,6 +1,6 @@
 package io.kuark.service.auth.provider.rbac.dao
 
-import io.kuark.ability.data.rdb.support.BaseDao
+import io.kuark.ability.data.rdb.support.BaseCrudDao
 import io.kuark.service.auth.provider.rbac.model.po.AuthRole
 import io.kuark.service.auth.provider.rbac.model.table.AuthRoles
 import org.springframework.stereotype.Repository
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository
  */
 @Repository
 //region your codes 1
-open class AuthRoleDao : BaseDao<String, AuthRole, AuthRoles>() {
+open class AuthRoleDao : BaseCrudDao<String, AuthRole, AuthRoles>() {
 //endregion your codes 1
 
     //region your codes 2

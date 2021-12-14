@@ -1,6 +1,6 @@
 package io.kuark.distributed.tx.table
 
-import io.kuark.ability.data.rdb.support.BaseDao
+import io.kuark.ability.data.rdb.support.BaseCrudDao
 import org.springframework.stereotype.Repository
 
 /**
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository
  */
 @Repository
 //region your codes 1
-internal open class TestTableDao: BaseDao<Int, TestTable, TestTables>() {
+internal open class TestTableDao: BaseCrudDao<Int, TestTable, TestTables>() {
 //endregion your codes 1
 
     //region your codes 2

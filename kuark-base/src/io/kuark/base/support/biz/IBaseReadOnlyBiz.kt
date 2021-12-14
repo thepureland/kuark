@@ -37,7 +37,7 @@ interface IBaseReadOnlyBiz<PK : Any, E : IIdEntity<PK>> {
      * @author K
      * @since 1.0.0
      */
-    fun <R: Any> get(id: PK, returnType: KClass<R>): R?
+    fun <R : Any> get(id: PK, returnType: KClass<R>): R?
 
     /**
      * 批量查询指定主键值的实体
@@ -139,16 +139,11 @@ interface IBaseReadOnlyBiz<PK : Any, E : IIdEntity<PK>> {
      *
      * @param properties Map(属性名，属性值)
      * @param orders     排序规则
-     * @param whereConditionFactory where条件表达式工厂函数，可对properties参数定义查询逻辑，也可完全自定义查询逻辑，函数返回null时将按“等于”操作处理properties参数中属性。参数默认为null
      * @return 实体对象列表
      * @author K
      * @since 1.0.0
      */
-    fun andSearch(
-        properties: Map<String, *>,
-        vararg orders: Order,
-//        whereConditionFactory: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)? = null
-    ): List<E>
+    fun andSearch(properties: Map<String, *>, vararg orders: Order): List<E>
 
     /**
      * 根据多个属性进行and条件查询，只返回指定的单个属性的列表
@@ -156,17 +151,11 @@ interface IBaseReadOnlyBiz<PK : Any, E : IIdEntity<PK>> {
      * @param properties     Map(属性名，属性值）
      * @param returnProperty 要返回的属性名
      * @param orders         排序规则
-     * @param whereConditionFactory where条件表达式工厂函数，可对properties参数定义查询逻辑，也可完全自定义查询逻辑，函数返回null时将按“等于”操作处理properties参数中属性。参数默认为null
      * @return List(指定的属性的值)
      * @author K
      * @since 1.0.0
      */
-    fun andSearchProperty(
-        properties: Map<String, *>,
-        returnProperty: String,
-        vararg orders: Order,
-//        whereConditionFactory: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)? = null
-    ): List<*>
+    fun andSearchProperty(properties: Map<String, *>, returnProperty: String, vararg orders: Order): List<*>
 
     /**
      * 根据多个属性进行and条件查询，只返回指定属性的列表
@@ -174,16 +163,12 @@ interface IBaseReadOnlyBiz<PK : Any, E : IIdEntity<PK>> {
      * @param properties       Map(属性名，属性值)
      * @param returnProperties 要返回的属性名集合
      * @param orders           排序规则
-     * @param whereConditionFactory where条件表达式工厂函数，可对properties参数定义查询逻辑，也可完全自定义查询逻辑，函数返回null时将按“等于”操作处理properties参数中属性。参数默认为null
      * @return List(Map(指定的属性名，属性值))
      * @author K
      * @since 1.0.0
      */
     fun andSearchProperties(
-        properties: Map<String, *>,
-        returnProperties: Collection<String>,
-        vararg orders: Order,
-//        whereConditionFactory: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)? = null
+        properties: Map<String, *>, returnProperties: Collection<String>, vararg orders: Order
     ): List<Map<String, *>>
 
     //endregion andSearch
@@ -195,16 +180,11 @@ interface IBaseReadOnlyBiz<PK : Any, E : IIdEntity<PK>> {
      *
      * @param properties Map(属性名，属性值)
      * @param orders     排序规则
-     * @param whereConditionFactory where条件表达式工厂函数，可对properties参数定义查询逻辑，也可完全自定义查询逻辑，函数返回null时将按“等于”操作处理properties参数中属性。参数默认为null
      * @return 实体对象列表
      * @author K
      * @since 1.0.0
      */
-    fun orSearch(
-        properties: Map<String, *>,
-        vararg orders: Order,
-//        whereConditionFactory: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)? = null
-    ): List<E>
+    fun orSearch(properties: Map<String, *>, vararg orders: Order): List<E>
 
     /**
      * 根据多个属性进行or条件查询，只返回指定的单个属性的列表
@@ -212,17 +192,11 @@ interface IBaseReadOnlyBiz<PK : Any, E : IIdEntity<PK>> {
      * @param properties     Map(属性名，属性值)
      * @param returnProperty 要返回的属性名
      * @param orders         排序规则
-     * @param whereConditionFactory where条件表达式工厂函数，可对properties参数定义查询逻辑，也可完全自定义查询逻辑，函数返回null时将按“等于”操作处理properties参数中属性。参数默认为null
      * @return List(指定的属性的值)
      * @author K
      * @since 1.0.0
      */
-    fun orSearchProperty(
-        properties: Map<String, *>,
-        returnProperty: String,
-        vararg orders: Order,
-//        whereConditionFactory: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)? = null
-    ): List<*>
+    fun orSearchProperty(properties: Map<String, *>, returnProperty: String, vararg orders: Order): List<*>
 
     /**
      * 根据多个属性进行or条件查询，只返回指定的属性的列表
@@ -230,16 +204,12 @@ interface IBaseReadOnlyBiz<PK : Any, E : IIdEntity<PK>> {
      * @param properties       Map(属性名，属性值)
      * @param returnProperties 要返回的属性名集合
      * @param orders           排序规则
-     * @param whereConditionFactory where条件表达式工厂函数，可对properties参数定义查询逻辑，也可完全自定义查询逻辑，函数返回null时将按“等于”操作处理properties参数中属性。参数默认为null
      * @return List(Map(指定的属性名，属性值))
      * @author K
      * @since 1.0.0
      */
     fun orSearchProperties(
-        properties: Map<String, *>,
-        returnProperties: Collection<String>,
-        vararg orders: Order,
-//        whereConditionFactory: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)? = null
+        properties: Map<String, *>, returnProperties: Collection<String>, vararg orders: Order,
     ): List<Map<String, *>>
 
     //endregion orSearch
@@ -418,16 +388,12 @@ interface IBaseReadOnlyBiz<PK : Any, E : IIdEntity<PK>> {
     /**
      * 根据查询载体对象分页查询，返回查询结果及总记录数
      *
-     * @param listSearchPayload 查询载体对象，默认为null,为null时返回的列表元素类型为PO实体类，此时，若whereConditionFactory有指定，各条件间的查询逻辑为AND
-     * @param whereConditionFactory where条件表达式工厂函数，可对listSearchPayload参数定义查询逻辑，也可完全自定义查询逻辑，函数返回null时将按“等于”操作处理listSearchPayload中的属性。参数默认为null
+     * @param listSearchPayload 查询载体对象
      * @return Pair(List(结果对象), 总记录数)， 结果对象有三种类型可能, @see SearchPayload
      * @author K
      * @since 1.0.0
      */
-    fun pagingSearch(
-        listSearchPayload: ListSearchPayload
-//        whereConditionFactory: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)? = null
-    ): Pair<List<*>, Int>
+    fun pagingSearch(listSearchPayload: ListSearchPayload): Pair<List<*>, Int>
 
     //endregion pagingSearch
 
@@ -437,16 +403,12 @@ interface IBaseReadOnlyBiz<PK : Any, E : IIdEntity<PK>> {
     /**
      * 根据查询载体对象查询(包括分页), 具体规则见 @see SearchPayload
      *
-     * @param listSearchPayload 查询载体对象，默认为null,为null时返回的列表元素类型为PO实体类，此时，若whereConditionFactory有指定，各条件间的查询逻辑为AND
-     * @param whereConditionFactory where条件表达式工厂函数，可对listSearchPayload参数定义查询逻辑，也可完全自定义查询逻辑，函数返回null时将按“等于”操作处理listSearchPayload中的属性。参数默认为null
+     * @param listSearchPayload 查询载体对象
      * @return 结果列表, 有三种类型可能, @see SearchPayload
      * @author K
      * @since 1.0.0
      */
-    fun search(
-        listSearchPayload: ListSearchPayload
-//        whereConditionFactory: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)? = null
-    ): List<*>
+    fun search(listSearchPayload: ListSearchPayload): List<*>
 
     //endregion payload search
 
@@ -466,16 +428,12 @@ interface IBaseReadOnlyBiz<PK : Any, E : IIdEntity<PK>> {
     /**
      * 计算记录数
      *
-     * @param searchPayload 查询载体对象，默认为null,为null时返回的列表元素类型为PO实体类，此时，若whereConditionFactory有指定，各条件间的查询逻辑为AND
-     * @param whereConditionFactory where条件表达式工厂函数，可对searchPayload参数定义查询逻辑，也可完全自定义查询逻辑，函数返回null时将按“等于”操作处理searchPayload中的属性。参数默认为null
+     * @param searchPayload 查询载体对象
      * @return 记录数
      * @author K
      * @since 1.0.0
      */
-    fun count(
-        searchPayload: SearchPayload? = null,
-//        whereConditionFactory: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)? = null
-    ): Int
+    fun count(searchPayload: SearchPayload): Int
 
     /**
      * 求和. 对满足条件的记录根据指定属性进行求和

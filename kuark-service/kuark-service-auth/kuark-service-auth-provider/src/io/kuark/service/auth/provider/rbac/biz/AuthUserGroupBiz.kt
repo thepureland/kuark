@@ -1,6 +1,9 @@
 package io.kuark.service.auth.provider.rbac.biz
 
+import io.kuark.ability.data.rdb.biz.BaseCrudBiz
+import io.kuark.service.auth.provider.rbac.dao.AuthUserGroupDao
 import io.kuark.service.auth.provider.rbac.ibiz.IAuthUserGroupBiz
+import io.kuark.service.auth.provider.rbac.model.po.AuthUserGroup
 import org.springframework.stereotype.Service
 
 /**
@@ -11,7 +14,7 @@ import org.springframework.stereotype.Service
  */
 @Service
 //region your codes 1
-class AuthUserGroupBiz: IAuthUserGroupBiz {
+open class AuthUserGroupBiz: IAuthUserGroupBiz, BaseCrudBiz<String, AuthUserGroup, AuthUserGroupDao>() {
 //endregion your codes 1
 
     //region your codes 2

@@ -14,6 +14,9 @@ import org.ktorm.schema.varchar
 object AuthRoles: MaintainableTable<AuthRole>("auth_role") {
 //endregion your codes 1
 
+    /** 角色编码 */
+    var roleCode = varchar("role_code").bindTo { it.roleCode }
+
     /** 角色名 */
     var roleName = varchar("role_name").bindTo { it.roleName }
 

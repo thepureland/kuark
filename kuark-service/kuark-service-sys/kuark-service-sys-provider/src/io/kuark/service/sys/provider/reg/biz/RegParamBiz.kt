@@ -1,7 +1,7 @@
 package io.kuark.service.sys.provider.reg.biz
 
 import io.kuark.ability.cache.context.CacheNames
-import io.kuark.ability.data.rdb.biz.BaseBiz
+import io.kuark.ability.data.rdb.biz.BaseCrudBiz
 import io.kuark.ability.data.rdb.kit.RdbKit
 import io.kuark.ability.data.rdb.support.SqlWhereExpressionFactory
 import io.kuark.base.query.enums.Operator
@@ -24,7 +24,7 @@ import org.springframework.stereotype.Service
  */
 @Service
 //region your codes 1
-open class RegParamBiz : BaseBiz<String, RegParam, RegParamDao>(), IRegParamBiz {
+open class RegParamBiz : BaseCrudBiz<String, RegParam, RegParamDao>(), IRegParamBiz {
 //endregion your codes 1
 
     //region your codes 2

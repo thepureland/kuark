@@ -1,6 +1,6 @@
 package io.kuark.service.sys.provider.reg.ibiz
 
-import io.kuark.base.support.biz.IBaseBiz
+import io.kuark.base.support.biz.IBaseCrudBiz
 import io.kuark.service.sys.common.vo.reg.resource.MenuTreeNode
 import io.kuark.service.sys.common.vo.reg.resource.RegResourceRecord
 import io.kuark.service.sys.common.vo.reg.resource.RegResourceSearchPayload
@@ -15,7 +15,7 @@ import kotlin.reflect.KClass
  * @since 1.0.0
  */
 //region your codes 1
-interface IRegResourceBiz: IBaseBiz<String, RegResource> {
+interface IRegResourceBiz: IBaseCrudBiz<String, RegResource> {
 //endregion your codes 1
 
     //region your codes 2

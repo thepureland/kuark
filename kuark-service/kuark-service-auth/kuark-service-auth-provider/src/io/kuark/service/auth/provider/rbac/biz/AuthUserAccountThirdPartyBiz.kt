@@ -1,6 +1,6 @@
 package io.kuark.service.auth.provider.rbac.biz
 
-import io.kuark.ability.data.rdb.biz.BaseBiz
+import io.kuark.ability.data.rdb.biz.BaseCrudBiz
 import io.kuark.service.auth.provider.login.general.PrincipalType
 import io.kuark.service.auth.provider.rbac.dao.AuthUserAccountThirdPartyDao
 import io.kuark.service.auth.provider.rbac.ibiz.IAuthUserAccountThirdPartyBiz
@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service
 @Service
 //region your codes 1
 open class AuthUserAccountThirdPartyBiz :
-    BaseBiz<String, AuthUserAccountThirdParty, AuthUserAccountThirdPartyDao>(),
+    BaseCrudBiz<String, AuthUserAccountThirdParty, AuthUserAccountThirdPartyDao>(),
     IAuthUserAccountThirdPartyBiz {
 //endregion your codes 1
 

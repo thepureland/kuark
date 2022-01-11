@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*
 
 
 @RestController
-@RequestMapping("/regDictItem")
+@RequestMapping("/reg/dictItem")
 @CrossOrigin
 class RegDictItemController {
 

@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.springframework.boot.gradle.tasks.bundling.BootJar
 
 object Version {
-    const val KOTLIN = "1.6.0"
+    const val KOTLIN = "1.6.10"
     const val SPRING_BOOT = "2.4.6"
     const val SPRING_SESSION = "2.5.2"
     const val SPRING_CLOUD = "2020.0.3"
@@ -21,8 +21,8 @@ plugins {
     id("org.springframework.boot") version "2.4.6"
     id("io.spring.dependency-management") version "1.0.10.RELEASE"
     id("org.openjfx.javafxplugin") version "0.0.8"
-    kotlin("jvm") version "1.6.0"
-//    kotlin("plugin.spring") version "1.6.0"
+    kotlin("jvm") version "1.6.10"
+//    kotlin("plugin.spring") version "1.6.10"
 }
 
 /* 插件的配置需要在buildscript元素中 */
@@ -218,7 +218,7 @@ subprojects {
 //            dependency("io.ktor:ktor-server-tomcat:${DependencyVersions.KTOR_VERSION}")
             dependency("io.ktor:ktor-server-core:${Version.KTOR}")
             dependency("io.ktor:ktor-html-builder:${Version.KTOR}")
-            dependency("org.jetbrains:kotlin-css-jvm:1.0.0-pre.31-kotlin-1.2.41")
+//            dependency("org.jetbrains:kotlin-css-jvm:1.0.0-pre.31-kotlin-1.2.41")
             dependency("io.ktor:ktor-client-core:${Version.KTOR}")
             dependency("io.ktor:ktor-client-core-jvm:${Version.KTOR}")
             dependency("io.ktor:ktor-client-apache:${Version.KTOR}")

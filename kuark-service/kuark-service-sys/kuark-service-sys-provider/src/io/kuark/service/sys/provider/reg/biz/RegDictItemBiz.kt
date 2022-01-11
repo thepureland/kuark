@@ -2,7 +2,7 @@ package io.kuark.service.sys.provider.reg.biz
 
 import io.kuark.ability.cache.context.CacheNames
 import io.kuark.ability.cache.kit.CacheKit
-import io.kuark.ability.data.rdb.biz.BaseBiz
+import io.kuark.ability.data.rdb.biz.BaseCrudBiz
 import io.kuark.base.lang.string.StringKit
 import io.kuark.service.sys.common.vo.reg.dict.RegDictItemRecord
 import io.kuark.service.sys.common.vo.reg.dict.RegDictPayload
@@ -26,7 +26,7 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 //region your codes 1
 @CacheConfig(cacheNames = [CacheNames.REG_DICT_ITEM])
-open class RegDictItemBiz : BaseBiz<String, RegDictItem, RegDictItemDao>(), IRegDictItemBiz {
+open class RegDictItemBiz : BaseCrudBiz<String, RegDictItem, RegDictItemDao>(), IRegDictItemBiz {
 //endregion your codes 1
 
     @Autowired

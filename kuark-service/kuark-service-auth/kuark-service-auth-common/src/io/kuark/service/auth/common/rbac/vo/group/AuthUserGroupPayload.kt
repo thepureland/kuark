@@ -1,18 +1,18 @@
-package io.kuark.service.auth.common.rbac.vo.role
+package io.kuark.service.auth.common.rbac.vo.group
 
 import io.kuark.base.support.IIdEntity
 import java.time.LocalDateTime
 
-class AuthRolePayload: IIdEntity<String> {
+class AuthUserGroupPayload: IIdEntity<String> {
 
     /** 主键 */
     override var id: String? = null
 
-    /** 角色编码 */
-    var roleCode: String? = null
+    /** 组编码 */
+    var groupCode: String? = null
 
-    /** 角色名 */
-    var roleName: String? = null
+    /** 组名 */
+    var groupName: String? = null
 
     /** 子系统代码 */
     var subSysDictCode: String? = null

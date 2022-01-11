@@ -1,6 +1,6 @@
 package io.kuark.service.sys.provider.reg.ibiz
 
-import io.kuark.base.support.biz.IBaseBiz
+import io.kuark.base.support.biz.IBaseCrudBiz
 import io.kuark.service.sys.common.vo.reg.dict.RegDictItemRecord
 import io.kuark.service.sys.common.vo.reg.dict.RegDictPayload
 import io.kuark.service.sys.provider.reg.model.po.RegDictItem
@@ -12,7 +12,7 @@ import io.kuark.service.sys.provider.reg.model.po.RegDictItem
  * @since 1.0.0
  */
 //region your codes 1
-interface IRegDictItemBiz: IBaseBiz<String, RegDictItem> {
+interface IRegDictItemBiz: IBaseCrudBiz<String, RegDictItem> {
 //endregion your codes 1
 
     //region your codes 2

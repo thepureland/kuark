@@ -14,7 +14,7 @@ import io.kuark.base.support.payload.UpdatePayload
  * @author K
  * @since 1.0.0
  */
-interface IBaseBiz<PK : Any, E : IIdEntity<PK>> : IBaseReadOnlyBiz<PK, E> {
+interface IBaseCrudBiz<PK : Any, E : IIdEntity<PK>> : IBaseReadOnlyBiz<PK, E> {
 
     //region Insert
 

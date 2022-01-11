@@ -2,7 +2,7 @@ package io.kuark.ability.web.springmvc
 
 import io.kuark.ability.web.common.WebResult
 import io.kuark.base.support.IIdEntity
-import io.kuark.base.support.biz.IBaseBiz
+import io.kuark.base.support.biz.IBaseCrudBiz
 import io.kuark.base.support.payload.ListSearchPayload
 import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -22,7 +22,7 @@ import javax.validation.Valid
  * @author K
  * @since 1.0.0
  */
-open class BaseCrudController<PK : Any, B : IBaseBiz<PK, *>, S : ListSearchPayload, R : Serializable, F : IIdEntity<PK>> :
+open class BaseCrudController<PK : Any, B : IBaseCrudBiz<PK, *>, S : ListSearchPayload, R : Serializable, F : IIdEntity<PK>> :
     BaseReadOnlyController<PK, B, S, R, F>() {
 
     /**

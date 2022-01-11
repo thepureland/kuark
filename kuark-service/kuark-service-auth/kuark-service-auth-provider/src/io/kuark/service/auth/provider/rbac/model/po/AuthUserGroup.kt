@@ -15,6 +15,9 @@ interface AuthUserGroup: IMaintainableDbEntity<String, AuthUserGroup> {
 
     companion object : DbEntityFactory<AuthUserGroup>()
 
+    /** 用户组编码 */
+    var groupCode: String
+
     /** 用户组名 */
     var groupName: String
 

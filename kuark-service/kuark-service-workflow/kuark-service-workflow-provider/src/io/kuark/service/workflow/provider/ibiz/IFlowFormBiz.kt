@@ -1,6 +1,6 @@
 package io.kuark.service.workflow.provider.ibiz
 
-import io.kuark.base.support.biz.IBaseBiz
+import io.kuark.base.support.biz.IBaseCrudBiz
 import io.kuark.service.workflow.common.vo.form.FlowFormSearchParams
 import io.kuark.service.workflow.provider.model.po.FlowForm
 import io.kuark.base.query.sort.Order
@@ -12,7 +12,7 @@ import io.kuark.base.query.sort.Order
  * @since 1.0.0
  */
 //region your codes 1
-interface IFlowFormBiz : IBaseBiz<String, FlowForm> {
+interface IFlowFormBiz : IBaseCrudBiz<String, FlowForm> {
 //endregion your codes 1
 
     //region your codes 2

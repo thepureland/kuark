@@ -15,6 +15,9 @@ interface AuthRole: IMaintainableDbEntity<String, AuthRole> {
 
     companion object : DbEntityFactory<AuthRole>()
 
+    /** 角色编码 */
+    var roleCode: String
+
     /** 角色名 */
     var roleName: String
 

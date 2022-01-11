@@ -14,6 +14,9 @@ import org.ktorm.schema.varchar
 object AuthUserGroups: MaintainableTable<AuthUserGroup>("auth_user_group") {
 //endregion your codes 1
 
+    /** 用户组编码 */
+    var groupCode = varchar("group_code").bindTo { it.groupCode }
+
     /** 用户组名 */
     var groupName = varchar("group_name").bindTo { it.groupName }
 

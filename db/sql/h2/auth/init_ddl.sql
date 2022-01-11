@@ -2,9 +2,9 @@ create table "auth_user_account"
 (
     "id"                        CHAR(36) default RANDOM_UUID() not null
         primary key,
-    "username"             VARCHAR(63) not null,
-    "password"             VARCHAR(63) not null,
-    "sub_sys_dict_code"             VARCHAR(31),
+    "username"             VARCHAR(64) not null,
+    "password"             VARCHAR(64) not null,
+    "sub_sys_dict_code"             VARCHAR(32),
     "user_status_dict_code"         CHAR(2),
     "user_status_reason"        VARCHAR(127),
     "user_type_dict_code"           CHAR(2),
@@ -17,8 +17,8 @@ create table "auth_user_account"
     "total_online_time"         REAL,
     "register_ip"               CHAR(39),
     "register_url"              VARCHAR(127),
-    "dynamic_auth_key"          VARCHAR(63),
-    "second_password"           VARCHAR(63),
+    "dynamic_auth_key"          VARCHAR(64),
+    "second_password"           VARCHAR(64),
     "remark"                    VARCHAR(127),
     "active"                 BOOLEAN  default TRUE          not null,
     "built_in"               BOOLEAN  default FALSE         not null,
@@ -92,9 +92,9 @@ create table "auth_user_account_third_party"
         primary key,
     "user_account_id"     CHAR(36)                       not null,
     "principal_type_dict_code" VARCHAR(15)                    not null,
-    "principal"          VARCHAR(63)                    not null,
-    "credentials"          VARCHAR(63),
-    "sub_sys_dict_code"       VARCHAR(31),
+    "principal"          VARCHAR(64)                    not null,
+    "credentials"          VARCHAR(64),
+    "sub_sys_dict_code"       VARCHAR(32),
     "owner_id"       VARCHAR(36),
     "remark"              VARCHAR(127),
     "active"           BOOLEAN  default TRUE          not null,
@@ -141,9 +141,9 @@ create unique index "uq_u_a_a__principal_id_type_sub_sys_owner"
 
 create table "auth_persistent_logins"
 (
-    "id"                        CHAR(63) not null        primary key,
-    "username"             VARCHAR(63) not null,
-    "token"             VARCHAR(63),
+    "id"                        CHAR(64) not null        primary key,
+    "username"             VARCHAR(64) not null,
+    "token"             VARCHAR(64),
     "last_used"               TIMESTAMP
 );
 
@@ -164,8 +164,9 @@ create table "auth_user_group"
 (
     "id"          CHAR(36) default RANDOM_UUID() not null
         primary key,
-    "group_name"  VARCHAR(63)                    not null,
-    "sub_sys_dict_code"       VARCHAR(31),
+    "group_code"  VARCHAR(64)                    not null,
+    "group_name"  VARCHAR(64)                    not null,
+    "sub_sys_dict_code"       VARCHAR(32),
     "remark"      VARCHAR(127),
     "active"   BOOLEAN  default TRUE          not null,
     "built_in" BOOLEAN  default FALSE         not null,
@@ -179,6 +180,8 @@ create table "auth_user_group"
 comment on table "auth_user_group" is '用户组';
 
 comment on column "auth_user_group"."id" is '主键';
+
+comment on column "auth_user_group"."group_code" is '用户编码';
 
 comment on column "auth_user_group"."group_name" is '用户组名';
 
@@ -219,8 +222,9 @@ create table "auth_role"
 (
     "id"          CHAR(36) default RANDOM_UUID() not null
         primary key,
-    "role_name"   VARCHAR(63)                    not null,
-    "sub_sys_dict_code"       VARCHAR(31),
+    "role_code"   VARCHAR(64)                    not null,
+    "role_name"   VARCHAR(64)                    not null,
+    "sub_sys_dict_code"       VARCHAR(32),
     "remark"      VARCHAR(127),
     "active"   BOOLEAN  default TRUE          not null,
     "built_in" BOOLEAN  default FALSE         not null,
@@ -234,6 +238,8 @@ create table "auth_role"
 comment on table "auth_role" is '角色';
 
 comment on column "auth_role"."id" is '主键';
+
+comment on column "auth_role"."role_code" is '角色编码';
 
 comment on column "auth_role"."role_name" is '角色名';
 

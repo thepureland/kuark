@@ -5,7 +5,7 @@ dependencies {
     api("io.ktor:ktor-server-netty")
     api("io.ktor:ktor-server-core")
     api("io.ktor:ktor-html-builder")
-    api("org.jetbrains:kotlin-css-jvm")
+//    api("org.jetbrains:kotlin-css-jvm")
     api("io.ktor:ktor-client-core")
     api("io.ktor:ktor-client-core-jvm")
     api("io.ktor:ktor-client-apache")

@@ -1,0 +1,17 @@
+<configuration>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+<!--            <pattern>%d{YYYY-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>-->
+            <pattern>%blue(%d{yyyy-MM-dd HH:mm:ss.SSS}) %red([%thread]) %cyan(%-5level %logger{20}) - %green([%method,%line] - %msg%n)</pattern>
+        </encoder>
+    </appender>
+    <root level="debug">
+        <appender-ref ref="STDOUT"/>
+    </root>
+    <logger name="org.eclipse.jetty" level="INFO"/>
+    <logger name="io.netty" level="INFO"/>
+    <logger name="org.activiti" level="INFO"/>
+    <logger name="org.springframework.jdbc.support.JdbcTransactionManager" level="INFO"/>
+    <logger name="org.apache.ibatis.transaction.managed.ManagedTransaction" level="INFO"/>
+    <logger name="com.zaxxer.hikari.pool.HikariPool" level="INFO"/>
+</configuration>

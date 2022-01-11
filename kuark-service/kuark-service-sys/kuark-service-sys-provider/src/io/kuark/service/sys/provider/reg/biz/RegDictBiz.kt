@@ -1,6 +1,6 @@
 package io.kuark.service.sys.provider.reg.biz
 
-import io.kuark.ability.data.rdb.biz.BaseBiz
+import io.kuark.ability.data.rdb.biz.BaseCrudBiz
 import io.kuark.base.bean.BeanKit
 import io.kuark.base.lang.string.StringKit
 import io.kuark.base.query.sort.Order
@@ -30,7 +30,7 @@ import org.springframework.transaction.annotation.Transactional
  */
 @Service
 //region your codes 1
-open class RegDictBiz : BaseBiz<String, RegDict, RegDictDao>(), IRegDictBiz {
+open class RegDictBiz : BaseCrudBiz<String, RegDict, RegDictDao>(), IRegDictBiz {
 //endregion your codes 1
 
     //region your codes 2

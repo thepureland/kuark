@@ -1,6 +1,6 @@
 package io.kuark.service.auth.provider.rbac.biz
 
-import io.kuark.ability.data.rdb.biz.BaseBiz
+import io.kuark.ability.data.rdb.biz.BaseCrudBiz
 import io.kuark.service.auth.provider.rbac.dao.AuthUserAccountDao
 import io.kuark.service.auth.provider.rbac.ibiz.IAuthUserAccountBiz
 import io.kuark.service.auth.provider.rbac.model.po.AuthUserAccount
@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional
  */
 @Service
 //region your codes 1
-open class AuthUserAccountBiz : BaseBiz<String, AuthUserAccount, AuthUserAccountDao>(), IAuthUserAccountBiz {
+open class AuthUserAccountBiz : BaseCrudBiz<String, AuthUserAccount, AuthUserAccountDao>(), IAuthUserAccountBiz {
 //endregion your codes 1
 
 

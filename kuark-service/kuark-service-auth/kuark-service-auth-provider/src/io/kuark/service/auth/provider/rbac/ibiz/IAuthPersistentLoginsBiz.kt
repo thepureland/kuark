@@ -1,6 +1,6 @@
 package io.kuark.service.auth.provider.rbac.ibiz
 
-import io.kuark.base.support.biz.IBaseBiz
+import io.kuark.base.support.biz.IBaseCrudBiz
 import io.kuark.service.auth.provider.rbac.model.po.AuthPersistentLogins
 
 /**
@@ -10,7 +10,7 @@ import io.kuark.service.auth.provider.rbac.model.po.AuthPersistentLogins
  * @since 1.0.0
  */
 //region your codes 1
-interface IAuthPersistentLoginsBiz: IBaseBiz<String, AuthPersistentLogins> {
+interface IAuthPersistentLoginsBiz: IBaseCrudBiz<String, AuthPersistentLogins> {
 //endregion your codes 1
 
     //region your codes 2

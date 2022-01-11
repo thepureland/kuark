@@ -1,18 +1,18 @@
-package io.kuark.service.auth.common.rbac.vo.role
+package io.kuark.service.auth.common.rbac.vo.group
 
 import java.io.Serializable
 import java.time.LocalDateTime
 
-class AuthRoleRecord: Serializable {
+class AuthUserGroupRecord: Serializable {
 
     /** 主键 */
     var id: String? = null
 
-    /** 角色编码 */
-    var roleCode: String? = null
+    /** 组编码 */
+    var groupCode: String? = null
 
-    /** 角色名 */
-    var roleName: String? = null
+    /** 组名 */
+    var groupName: String? = null
 
     /** 子系统代码 */
     var subSysDictCode: String? = null

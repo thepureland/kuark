@@ -3,7 +3,7 @@ package io.kuark.ability.data.rdb.biz
 import io.kuark.ability.data.rdb.support.BaseCrudDao
 import io.kuark.ability.data.rdb.support.IDbEntity
 import io.kuark.base.query.Criteria
-import io.kuark.base.support.biz.IBaseBiz
+import io.kuark.base.support.biz.IBaseCrudBiz
 import io.kuark.base.support.payload.SearchPayload
 import io.kuark.base.support.payload.UpdatePayload
 import org.springframework.transaction.annotation.Transactional
@@ -16,8 +16,8 @@ import org.springframework.transaction.annotation.Transactional
  * @author K
  * @since 1.0.0
  */
-open class BaseBiz<PK : Any, E : IDbEntity<PK, E>, DAO : BaseCrudDao<PK, E, *>>
-    : BaseReadOnlyBiz<PK, E, DAO>(), IBaseBiz<PK, E> {
+open class BaseCrudBiz<PK : Any, E : IDbEntity<PK, E>, DAO : BaseCrudDao<PK, E, *>>
+    : BaseReadOnlyBiz<PK, E, DAO>(), IBaseCrudBiz<PK, E> {
 
     @Transactional
     override fun insert(any: Any): PK = dao.insert(any)

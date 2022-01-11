@@ -1,6 +1,6 @@
 package io.kuark.service.sys.provider.reg.biz
 
-import io.kuark.ability.data.rdb.biz.BaseBiz
+import io.kuark.ability.data.rdb.biz.BaseCrudBiz
 import io.kuark.ability.data.rdb.support.SqlWhereExpressionFactory
 import io.kuark.base.lang.string.StringKit
 import io.kuark.base.query.Criteria
@@ -35,7 +35,7 @@ import kotlin.reflect.KClass
  */
 @Service
 //region your codes 1
-open class RegResourceBiz : BaseBiz<String, RegResource, RegResourceDao>(), IRegResourceBiz {
+open class RegResourceBiz : BaseCrudBiz<String, RegResource, RegResourceDao>(), IRegResourceBiz {
 //endregion your codes 1
 
     //region your codes 2

@@ -1,7 +1,7 @@
 package io.kuark.service.sys.provider.reg.ibiz
 
 import io.kuark.ability.cache.context.CacheNames
-import io.kuark.base.support.biz.IBaseBiz
+import io.kuark.base.support.biz.IBaseCrudBiz
 import io.kuark.service.sys.common.vo.reg.param.RegParamRecord
 import io.kuark.service.sys.common.vo.reg.param.RegParamSearchPayload
 import io.kuark.service.sys.provider.reg.model.po.RegParam
@@ -14,7 +14,7 @@ import org.springframework.cache.annotation.Cacheable
  * @since 1.0.0
  */
 //region your codes 1
-interface IRegParamBiz: IBaseBiz<String, RegParam> {
+interface IRegParamBiz: IBaseCrudBiz<String, RegParam> {
 //endregion your codes 1
 
     //region your codes 2

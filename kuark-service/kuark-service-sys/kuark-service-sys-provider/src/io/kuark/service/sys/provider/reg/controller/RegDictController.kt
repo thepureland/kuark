@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*
 import javax.validation.Valid
 
 @RestController
-@RequestMapping("/regDict")
+@RequestMapping("/reg/dict")
 @CrossOrigin
 open class RegDictController :
     BaseReadOnlyController<String, IRegDictBiz, RegDictSearchPayload, RegDictRecord, RegDictPayload>() {

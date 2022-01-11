@@ -1,6 +1,6 @@
 package io.kuark.service.workflow.provider.biz
 
-import io.kuark.ability.data.rdb.biz.BaseBiz
+import io.kuark.ability.data.rdb.biz.BaseCrudBiz
 import io.kuark.base.lang.string.StringKit
 import io.kuark.base.log.LogFactory
 import io.kuark.base.query.Criteria
@@ -21,7 +21,7 @@ import java.time.LocalDateTime
  */
 @Service
 //region your codes 1
-open class FlowFormBiz : BaseBiz<String, FlowForm, FlowFormDao>(), IFlowFormBiz {
+open class FlowFormBiz : BaseCrudBiz<String, FlowForm, FlowFormDao>(), IFlowFormBiz {
 //endregion your codes 1
 
     //region your codes 2

@@ -110,7 +110,7 @@ open class SecurityConfig : WebSecurityConfigurerAdapter() {
                 out.flush()
                 out.close()
             }
-
+        http .csrf().disable() //TODO
     }
 
     override fun configure(web: WebSecurity) {

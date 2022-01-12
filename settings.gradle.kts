@@ -76,14 +76,14 @@ include("kuark-service:kuark-service-workflow:kuark-service-workflow-common")
 findProject(":kuark-service:kuark-service-workflow:kuark-service-workflow-common")?.name = "kuark-service-workflow-common"
 include("kuark-service:kuark-service-workflow:kuark-service-workflow-provider")
 findProject(":kuark-service:kuark-service-workflow:kuark-service-workflow-provider")?.name = "kuark-service-workflow-provider"
-include("kuark-service:kuark-service-auth")
-findProject(":kuark-service:kuark-service-auth")?.name = "kuark-service-auth"
-include("kuark-service:kuark-service-auth:kuark-service-auth-common")
-findProject(":kuark-service:kuark-service-auth:kuark-service-auth-common")?.name = "kuark-service-auth-common"
-include("kuark-service:kuark-service-auth:kuark-service-auth-client")
-findProject(":kuark-service:kuark-service-auth:kuark-service-auth-client")?.name = "kuark-service-auth-client"
-include("kuark-service:kuark-service-auth:kuark-service-auth-provider")
-findProject(":kuark-service:kuark-service-auth:kuark-service-auth-provider")?.name = "kuark-service-auth-provider"
+include("kuark-service:kuark-service-user")
+findProject(":kuark-service:kuark-service-user")?.name = "kuark-service-user"
+include("kuark-service:kuark-service-user:kuark-service-user-common")
+findProject(":kuark-service:kuark-service-user:kuark-service-user-common")?.name = "kuark-service-user-common"
+include("kuark-service:kuark-service-user:kuark-service-user-client")
+findProject(":kuark-service:kuark-service-user:kuark-service-user-client")?.name = "kuark-service-user-client"
+include("kuark-service:kuark-service-user:kuark-service-user-provider")
+findProject(":kuark-service:kuark-service-user:kuark-service-user-provider")?.name = "kuark-service-user-provider"
 include("kuark-service:kuark-service-msg")
 findProject(":kuark-service:kuark-service-msg")?.name = "kuark-service-msg"
 include("kuark-service:kuark-service-msg:kuark-service-msg-client")

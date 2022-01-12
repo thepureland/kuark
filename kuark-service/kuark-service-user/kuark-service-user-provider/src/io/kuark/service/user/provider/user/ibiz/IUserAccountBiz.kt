@@ -1,0 +1,28 @@
+package io.kuark.service.user.provider.user.ibiz
+
+import io.kuark.service.user.provider.user.model.po.UserAccount
+
+
+/**
+ * 用户账号业务接口
+ *
+ * @author K
+ * @since 1.0.0
+ */
+//region your codes 1
+interface IUserAccountBiz {
+//endregion your codes 1
+
+    //region your codes 2
+
+    fun isUsernameExists(username: String): Boolean
+
+    fun register(userAccount: UserAccount): Boolean
+
+    fun getByUsername(username: String): UserAccount?
+
+    fun getPermissions(userId: String): Set<String>
+
+    //endregion your codes 2
+
+}

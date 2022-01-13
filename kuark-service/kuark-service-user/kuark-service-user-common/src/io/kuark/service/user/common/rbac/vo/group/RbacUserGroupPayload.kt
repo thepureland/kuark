@@ -2,6 +2,7 @@ package io.kuark.service.user.common.rbac.vo.group
 
 import io.kuark.base.support.IIdEntity
 import java.time.LocalDateTime
+import javax.validation.constraints.NotBlank
 
 class RbacUserGroupPayload: IIdEntity<String> {
 
@@ -9,9 +10,11 @@ class RbacUserGroupPayload: IIdEntity<String> {
     override var id: String? = null
 
     /** 组编码 */
+    @get:NotBlank(message = "组编码不能为空！")
     var groupCode: String? = null
 
     /** 组名 */
+    @get:NotBlank(message = "组名不能为空！")
     var groupName: String? = null
 
     /** 子系统代码 */

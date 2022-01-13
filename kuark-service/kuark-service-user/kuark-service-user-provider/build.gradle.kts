@@ -12,6 +12,7 @@ dependencies {
 
     api(project(":kuark-ability:kuark-ability-web:kuark-ability-web-springmvc"))
     api(project(":kuark-service:kuark-service-user:kuark-service-user-common"))
+    api(project(":kuark-service:kuark-service-sys:kuark-service-sys-common"))
 
     testImplementation(project(":kuark-test:kuark-test-common"))
 }

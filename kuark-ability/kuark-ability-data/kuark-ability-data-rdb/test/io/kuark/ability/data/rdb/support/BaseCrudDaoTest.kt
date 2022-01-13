@@ -25,7 +25,7 @@ import java.time.LocalDateTime
  * @since 1.0.0
  */
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-internal open class BaseDaoTest : SpringTest() {
+internal open class BaseCrudDaoTest : SpringTest() {
 
     @Autowired
     private lateinit var testTableDao: TestTableDao

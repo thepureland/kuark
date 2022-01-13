@@ -1,5 +1,6 @@
 package io.kuark.service.user.provider.user.ibiz
 
+import io.kuark.base.support.biz.IBaseCrudBiz
 import io.kuark.service.user.provider.user.model.po.UserAccount
 
 
@@ -10,7 +11,7 @@ import io.kuark.service.user.provider.user.model.po.UserAccount
  * @since 1.0.0
  */
 //region your codes 1
-interface IUserAccountBiz {
+interface IUserAccountBiz: IBaseCrudBiz<String, UserAccount> {
 //endregion your codes 1
 
     //region your codes 2

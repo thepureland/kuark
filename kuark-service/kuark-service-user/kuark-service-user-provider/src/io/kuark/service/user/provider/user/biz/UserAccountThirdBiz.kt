@@ -15,9 +15,7 @@ import org.springframework.stereotype.Service
  */
 @Service
 //region your codes 1
-open class UserAccountThirdBiz :
-    BaseCrudBiz<String, UserAccountThird, UserAccountThirdDao>(),
-    IUserAccountThirdBiz {
+open class UserAccountThirdBiz : BaseCrudBiz<String, UserAccountThird, UserAccountThirdDao>(), IUserAccountThirdBiz {
 //endregion your codes 1
 
 

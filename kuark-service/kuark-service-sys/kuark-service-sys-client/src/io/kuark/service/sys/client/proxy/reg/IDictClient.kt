@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.GetMapping
 @FeignClient(name = "reg-dict", fallback = DictFallback::class)
 interface IDictClient: IDictApi {
 
-    @GetMapping("/regDictItem/getDictItems")
+    @GetMapping("/reg/dictItem/getDictItems")
     override fun getDictItems(module: String, type: String): List<RegDictItemRecord>
 
-    @GetMapping("/regDictItem/getDictItemMap")
+    @GetMapping("/reg/dictItem/getDictItemMap")
     override fun getDictItemMap(module: String, type: String): LinkedHashMap<String, String>
 
 }

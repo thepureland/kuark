@@ -349,6 +349,8 @@ open class BaseCrudDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadO
      * 有条件的批量更新指定属性
      * 更新规则见 @see UpdatePayload 类，查询规则见 @see SearchPayload
      *
+     * 同一属性的查询逻辑在 updatePayload.searchPayload 和 whereConditionFactory 都有指定时，以 whereConditionFactory 为准！
+     *
      * @param S 查询项载体类型
      * @param updatePayload 更新项载体，当 whereConditionFactory 为null时，updatePayload.searchPayload不能为null。updatePayload.searchPayload为null时，条件间的查询逻辑为AND
      * @param whereConditionFactory where条件表达式工厂函数，可对updatePayload.searchPayload的项定义操作符，也可完全自定义查询逻辑，函数返回null时将按“等于”操作处理updatePayload.searchPayload的项。该参数为null时，updatePayload.searchPayload 必须指定，默认为null
@@ -364,7 +366,7 @@ open class BaseCrudDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadO
     ): Int {
         val searchPayload = updatePayload.searchPayload
         val wherePropertyMap = if (searchPayload == null) {
-            emptyMap<String, Any>()
+            emptyMap()
         } else {
             val entityProperties = getEntityProperties()
             getWherePropertyMap(searchPayload, entityProperties)
@@ -565,6 +567,8 @@ open class BaseCrudDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadO
     /**
      * 批量删除指定条件的实体对象
      *
+     * 同一属性的查询逻辑在 listSearchPayload 和 whereConditionFactory 都有指定时，以 whereConditionFactory 为准！
+     *
      * @param searchPayload 查询项载体，为null时 whereConditionFactory 必须指定，此时条件间的查询逻辑为AND，默认为null
      * @param whereConditionFactory where条件表达式工厂函数，可对searchPayload的项定义操作符，也可完全自定义查询逻辑，函数返回null时将按“等于”操作处理searchPayload的项。该参数为null时，searchPayload 必须指定，默认为null
      * @return 删除的记录数
@@ -577,7 +581,7 @@ open class BaseCrudDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadO
         whereConditionFactory: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)? = null
     ): Int {
         val wherePropertyMap = if (searchPayload == null) {
-            emptyMap<String, Any>()
+            emptyMap()
         } else {
             val entityProperties = getEntityProperties()
             getWherePropertyMap(searchPayload, entityProperties)

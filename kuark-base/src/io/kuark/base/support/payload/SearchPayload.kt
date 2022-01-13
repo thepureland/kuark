@@ -1,5 +1,6 @@
 package io.kuark.base.support.payload
 
+import io.kuark.base.query.enums.Operator
 import io.kuark.base.support.logic.AndOr
 import kotlin.reflect.KClass
 
@@ -36,5 +37,16 @@ open class SearchPayload {
      * 该类中定义的属性可以比PO的多,但是只会自动封装名字一致的(类型要能兼容).
      */
     open var returnEntityClass: KClass<*>? = null
+
+    /**
+     * 返回属性名的查询操作逻辑
+     *
+     * @return Map(属性名，查询操作枚举)
+     * @author K
+     * @since 1.0.0
+     */
+    open fun getOperators(): Map<String, Operator> {
+        return emptyMap()
+    }
 
 }

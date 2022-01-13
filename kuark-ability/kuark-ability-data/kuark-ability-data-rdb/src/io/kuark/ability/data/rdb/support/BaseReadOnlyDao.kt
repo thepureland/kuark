@@ -105,7 +105,7 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
      * @since 1.0.0
      */
     @Suppress(Consts.Suppress.UNCHECKED_CAST)
-    fun <A: Any> whereExpr(column: Column<A>, operator: Operator, value: A?): ColumnDeclaring<Boolean>? {
+    fun <A : Any> whereExpr(column: Column<A>, operator: Operator, value: A?): ColumnDeclaring<Boolean>? {
         return SqlWhereExpressionFactory.create(column as Column<Any>, operator, value)
     }
 
@@ -131,7 +131,7 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
      * @author K
      * @since 1.0.0
      */
-    open fun <R: Any> get(id: PK, returnType: KClass<R>): R? {
+    open fun <R : Any> get(id: PK, returnType: KClass<R>): R? {
         val query = querySource()
             .select()
             .where { getPkColumn().eq(id) }
@@ -597,6 +597,8 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
     /**
      * 根据查询载体对象查询(包括分页), 具体规则见 @see SearchPayload
      *
+     * 同一属性的查询逻辑在 listSearchPayload 和 whereConditionFactory 都有指定时，以 whereConditionFactory 为准！
+     *
      * @param listSearchPayload 查询载体对象，默认为null,为null时返回的列表元素类型为PO实体类，此时，若whereConditionFactory有指定，各条件间的查询逻辑为AND
      * @param whereConditionFactory where条件表达式工厂函数，可对listSearchPayload参数定义查询逻辑，也可完全自定义查询逻辑，函数返回null时将按“等于”操作处理listSearchPayload中的属性。参数默认为null
      * @return 结果列表, 有三种类型可能, @see SearchPayload
@@ -800,7 +802,7 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
 
     @Suppress(Consts.Suppress.UNCHECKED_CAST)
     protected fun processWhere(
-        propertyMap: Map<String, *>,
+        propertyMap: Map<String, Pair<Operator, *>>,
         andOr: AndOr?,
         ignoreNull: Boolean = false,
         whereConditionFactory: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)? = null
@@ -809,7 +811,9 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
         val columns = ColumnHelper.columnOf(table(), *properties)
         val expressions = mutableListOf<ColumnDeclaring<Boolean>>()
         columns.forEach { (property, column) ->
-            val value = propertyMap[property]
+            val operatorAndValue = propertyMap[property]
+            val operator = operatorAndValue!!.first
+            val value = operatorAndValue.second
             val expression = if (value == null || value == "") {
                 if (ignoreNull) {
                     whereConditionFactory?.let { it(column, value) }
@@ -818,7 +822,7 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
                 }
             } else {
                 if (whereConditionFactory == null) {
-                    column eq value
+                    SqlWhereExpressionFactory.create(column, operator, value)
                 } else {
                     whereConditionFactory(column, value) ?: column eq value
                 }
@@ -864,7 +868,11 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
     ): List<E> {
         var entitySequence = entitySequence()
         if (propertyMap != null) {
-            val fullExpression = processWhere(propertyMap, logic, false, whereConditionFactory)
+            val propMap = mutableMapOf<String, Pair<Operator, *>>()
+            propertyMap.forEach { (prop, value) ->
+                propMap[prop] = Pair(Operator.EQ, value)
+            }
+            val fullExpression = processWhere(propMap, logic, false, whereConditionFactory)
             entitySequence = entitySequence.filter { fullExpression!! }
         }
 
@@ -885,7 +893,11 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
 
         // where
         if (propertyMap != null) {
-            val fullExpression = processWhere(propertyMap, logic, false, whereConditionFactory)
+            val propMap = mutableMapOf<String, Pair<Operator, *>>()
+            propertyMap.forEach { (prop, value) ->
+                propMap[prop] = Pair(Operator.EQ, value)
+            }
+            val fullExpression = processWhere(propMap, logic, false, whereConditionFactory)
             query = query.where { fullExpression!! }
         }
 
@@ -981,7 +993,7 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
 
         // where
         val propMap = if (searchPayload == null) {
-            emptyMap<String, Any>()
+            emptyMap()
         } else {
             getWherePropertyMap(searchPayload, entityProperties)
         }
@@ -1000,8 +1012,20 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
             .map { it.name }
     }
 
-    protected fun getWherePropertyMap(searchPayload: SearchPayload, entityProperties: List<String>): Map<String, *> {
-        return BeanKit.extract(searchPayload).filter { entityProperties.contains(it.key) }
+    protected fun getWherePropertyMap(
+        searchPayload: SearchPayload, entityProperties: List<String>
+    ): Map<String, Pair<Operator, *>> {
+        val propAndValueMap = BeanKit.extract(searchPayload).filter { entityProperties.contains(it.key) }
+        val operatorMap = searchPayload.getOperators()
+        val resultMap = mutableMapOf<String, Pair<Operator, *>>()
+        propAndValueMap.forEach { (prop, value) ->
+            var operator = operatorMap[prop]
+            if (operator == null) {
+                operator = Operator.EQ
+            }
+            resultMap[prop] = Pair(operator, value)
+        }
+        return resultMap
     }
 
     protected fun getColumns(returnType: KClass<*>): Map<String, Column<Any>> {

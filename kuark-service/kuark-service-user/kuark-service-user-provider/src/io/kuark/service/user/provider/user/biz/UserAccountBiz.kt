@@ -1,6 +1,7 @@
 package io.kuark.service.user.provider.user.biz
 
 import io.kuark.ability.data.rdb.biz.BaseCrudBiz
+import io.kuark.base.support.payload.ListSearchPayload
 import io.kuark.service.user.provider.user.dao.UserAccountDao
 import io.kuark.service.user.provider.user.ibiz.IUserAccountBiz
 import io.kuark.service.user.provider.user.model.po.UserAccount
@@ -42,6 +43,11 @@ open class UserAccountBiz : BaseCrudBiz<String, UserAccount, UserAccountDao>(), 
 
 
         TODO("Not yet implemented")
+    }
+
+    override fun pagingSearch(listSearchPayload: ListSearchPayload): Pair<List<*>, Int> {
+
+        return super.pagingSearch(listSearchPayload)
     }
 
 

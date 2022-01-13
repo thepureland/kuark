@@ -439,7 +439,7 @@ internal class BaseReadOnlyDaoTest : SpringTest() {
         assert(result.first() is Result)
         assertEquals(-1, (result.first() as Result).id)
 
-        // 自定义查询逻辑
+        // 自定义查询逻辑（通过工厂）
         searchPayload1.name = "nAme1"
         searchPayload1.pageNo = null
         result = testTableDao.search(searchPayload1) { column, value ->
@@ -450,6 +450,30 @@ internal class BaseReadOnlyDaoTest : SpringTest() {
             }
         }
         assertEquals(3, result.size)
+
+        // 自定义查询逻辑（通过工厂+通过SearchPayload，工厂方式优先）
+        class SearchPayload2 : ListSearchPayload() {
+            var name: String? = null
+            var weight: Double? = null
+            var noExistProp: String? = "noExistProp"
+            override var returnProperties: List<String>? = listOf("id", "name", "height")
+            override fun getOperators(): Map<String, Operator> {
+                return mapOf(SearchPayload2::name.name to Operator.ILIKE)
+            }
+        }
+        val searchPayload2 = SearchPayload2().apply {
+            name = "nAme1"
+            weight = 56.5
+            pageNo = null
+        }
+        result = testTableDao.search(searchPayload2) { column, value ->
+            if (column.name == TestTables::name.name) {
+                testTableDao.whereExpr(column, Operator.ILIKE_S, value)
+            } else {
+                null
+            }
+        }
+        assertEquals(1, result.size)
 
         // 仅指定whereConditionFactory
         result = testTableDao.search { column, _ ->

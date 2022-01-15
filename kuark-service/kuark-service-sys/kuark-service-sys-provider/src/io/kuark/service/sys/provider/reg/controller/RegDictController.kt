@@ -3,10 +3,7 @@ package io.kuark.service.sys.provider.reg.controller
 import io.kuark.ability.web.common.WebResult
 import io.kuark.ability.web.springmvc.BaseReadOnlyController
 import io.kuark.base.support.Consts
-import io.kuark.service.sys.common.vo.reg.dict.RegDictPayload
-import io.kuark.service.sys.common.vo.reg.dict.RegDictRecord
-import io.kuark.service.sys.common.vo.reg.dict.RegDictSearchPayload
-import io.kuark.service.sys.common.vo.reg.dict.RegDictTreeNode
+import io.kuark.service.sys.common.vo.reg.dict.*
 import io.kuark.service.sys.provider.reg.ibiz.IRegDictBiz
 import io.kuark.service.sys.provider.reg.ibiz.IRegDictItemBiz
 import io.kuark.service.sys.provider.reg.model.table.RegDicts
@@ -19,7 +16,7 @@ import javax.validation.Valid
 @RequestMapping("/reg/dict")
 @CrossOrigin
 open class RegDictController :
-    BaseReadOnlyController<String, IRegDictBiz, RegDictSearchPayload, RegDictRecord, RegDictPayload>() {
+    BaseReadOnlyController<String, IRegDictBiz, RegDictSearchPayload, RegDictRecord, RegDictDetail, RegDictPayload>() {
 
     @Autowired
     private lateinit var regDictItemBiz: IRegDictItemBiz

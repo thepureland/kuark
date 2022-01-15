@@ -22,8 +22,8 @@ import javax.validation.Valid
  * @author K
  * @since 1.0.0
  */
-open class BaseCrudController<PK : Any, B : IBaseCrudBiz<PK, *>, S : ListSearchPayload, R : Serializable, F : IIdEntity<PK>> :
-    BaseReadOnlyController<PK, B, S, R, F>() {
+open class BaseCrudController<PK : Any, B : IBaseCrudBiz<PK, *>, S : ListSearchPayload, R : Serializable, D : Serializable, F : IIdEntity<PK>> :
+    BaseReadOnlyController<PK, B, S, R, D, F>() {
 
     /**
      * 保存或更新记录

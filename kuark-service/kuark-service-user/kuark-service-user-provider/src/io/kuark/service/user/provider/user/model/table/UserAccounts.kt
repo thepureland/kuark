@@ -35,10 +35,10 @@ object UserAccounts : UpdatableTable<UserAccount>("user_account") {
     var userTypeDictCode = varchar("user_type_dict_code").bindTo { it.userTypeDictCode }
 
     /** 账号锁定时间起 */
-    var lockTimeStart = datetime("freeze_time_start").bindTo { it.lockTimeStart }
+    var lockTimeStart = datetime("lock_time_start").bindTo { it.lockTimeStart }
 
     /** 账号锁定时间止 */
-    var lockTimeEnd = datetime("freeze_time_end").bindTo { it.lockTimeEnd }
+    var lockTimeEnd = datetime("lock_time_end").bindTo { it.lockTimeEnd }
 
     /** 最后一次登入时间 */
     var lastLoginTime = datetime("last_login_time").bindTo { it.lastLoginTime }

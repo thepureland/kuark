@@ -25,13 +25,14 @@ import kotlin.reflect.KClass
  * @author K
  * @since 1.0.0
  */
-open class BaseReadOnlyController<PK: Any, B : IBaseReadOnlyBiz<PK, *>, S : ListSearchPayload, R : Serializable, F : IIdEntity<PK>>
+open class BaseReadOnlyController<PK : Any, B : IBaseReadOnlyBiz<PK, *>, S : ListSearchPayload, R : Serializable, D : Serializable, F : IIdEntity<PK>>
     : BaseController<F>() {
 
     @Autowired
     protected lateinit var biz: B
 
     private var resultClass: KClass<R>? = null
+    private var detailClass: KClass<D>? = null
 
     /**
      * 列表查询
@@ -62,6 +63,22 @@ open class BaseReadOnlyController<PK: Any, B : IBaseReadOnlyBiz<PK, *>, S : List
             resultClass = GenericKit.getSuperClassGenricClass(this::class, 3) as KClass<R>
         }
         return WebResult(biz.get(id, resultClass!!))
+    }
+
+    /**
+     * 返回指定主键的记录详情
+     *
+     * @return WebResult(记录详情)
+     * @author K
+     * @since 1.0.0
+     */
+    @GetMapping("/getDetail")
+    @Suppress(Consts.Suppress.UNCHECKED_CAST)
+    open fun getDetail(id: PK): WebResult<D> {
+        if (detailClass == null) {
+            detailClass = GenericKit.getSuperClassGenricClass(this::class, 4) as KClass<D>
+        }
+        return WebResult(biz.get(id, detailClass!!))
     }
 
 }

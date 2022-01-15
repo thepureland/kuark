@@ -3,6 +3,7 @@ package io.kuark.service.sys.provider.reg.controller
 import io.kuark.ability.web.common.WebResult
 import io.kuark.ability.web.springmvc.BaseCrudController
 import io.kuark.service.sys.common.api.reg.IParamApi
+import io.kuark.service.sys.common.vo.reg.param.RegParamDetail
 import io.kuark.service.sys.common.vo.reg.param.RegParamPayload
 import io.kuark.service.sys.common.vo.reg.param.RegParamRecord
 import io.kuark.service.sys.common.vo.reg.param.RegParamSearchPayload
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/reg/param")
 @CrossOrigin
 open class RegParamController :
-    BaseCrudController<String, IRegParamBiz, RegParamSearchPayload, RegParamRecord, RegParamPayload>() {
+    BaseCrudController<String, IRegParamBiz, RegParamSearchPayload, RegParamRecord, RegParamDetail, RegParamPayload>() {
 
     @Autowired
     private lateinit var regDictItemBiz: IRegDictItemBiz

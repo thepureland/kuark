@@ -2,6 +2,7 @@ package io.kuark.service.user.provider.rbac.controller
 
 import io.kuark.ability.web.common.WebResult
 import io.kuark.ability.web.springmvc.BaseCrudController
+import io.kuark.service.user.common.rbac.vo.role.RbacRoleDetail
 import io.kuark.service.user.common.rbac.vo.role.RbacRolePayload
 import io.kuark.service.user.common.rbac.vo.role.RbacRoleRecord
 import io.kuark.service.user.common.rbac.vo.role.RbacRoleSearchPayload
@@ -17,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/rbac/role")
 @CrossOrigin
 open class RbacRoleController :
-    BaseCrudController<String, IRbacRoleBiz, RbacRoleSearchPayload, RbacRoleRecord, RbacRolePayload>() {
+    BaseCrudController<String, IRbacRoleBiz, RbacRoleSearchPayload, RbacRoleRecord, RbacRoleDetail, RbacRolePayload>() {
 
     @GetMapping("/updateActive")
     fun updateActive(id: String, active: Boolean): WebResult<Boolean> {

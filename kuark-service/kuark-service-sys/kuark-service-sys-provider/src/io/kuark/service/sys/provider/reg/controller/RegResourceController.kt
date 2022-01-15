@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/reg/resource")
 @CrossOrigin
 open class RegResourceController :
-    BaseCrudController<String, IRegResourceBiz, RegResourceSearchPayload, RegResourceRecord, RegResourcePayload>() {
+    BaseCrudController<String, IRegResourceBiz, RegResourceSearchPayload, RegResourceRecord, RegResourceDetail, RegResourcePayload>() {
 
     @Autowired
     private lateinit var dictApi: IDictApi

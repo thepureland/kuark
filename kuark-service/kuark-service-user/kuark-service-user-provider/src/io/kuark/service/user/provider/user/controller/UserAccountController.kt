@@ -5,6 +5,7 @@ import io.kuark.ability.web.springmvc.BaseCrudController
 import io.kuark.base.lang.string.StringKit
 import io.kuark.base.security.DigestKit
 import io.kuark.service.sys.common.api.reg.IParamApi
+import io.kuark.service.user.common.user.vo.account.UserAccountDetail
 import io.kuark.service.user.common.user.vo.account.UserAccountPayload
 import io.kuark.service.user.common.user.vo.account.UserAccountRecord
 import io.kuark.service.user.common.user.vo.account.UserAccountSearchPayload
@@ -18,7 +19,7 @@ import javax.validation.Valid
 @RequestMapping("/user/account")
 @CrossOrigin
 open class UserAccountController :
-    BaseCrudController<String, IUserAccountBiz, UserAccountSearchPayload, UserAccountRecord, UserAccountPayload>() {
+    BaseCrudController<String, IUserAccountBiz, UserAccountSearchPayload, UserAccountRecord, UserAccountDetail, UserAccountPayload>() {
 
     @Autowired
     private lateinit var paramApi: IParamApi

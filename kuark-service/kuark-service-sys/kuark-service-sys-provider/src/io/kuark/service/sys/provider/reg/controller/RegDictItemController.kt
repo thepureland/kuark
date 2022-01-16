@@ -1,10 +1,11 @@
 package io.kuark.service.sys.provider.reg.controller
 
 import io.kuark.ability.web.common.WebResult
+import io.kuark.ability.web.springmvc.BaseReadOnlyController
 import io.kuark.base.bean.validation.kit.ValidationKit
 import io.kuark.base.support.Consts
-import io.kuark.service.sys.common.vo.reg.dict.DictModuleAndTypePayload
-import io.kuark.service.sys.common.vo.reg.dict.RegDictItemRecord
+import io.kuark.service.sys.common.vo.reg.dict.*
+import io.kuark.service.sys.provider.reg.ibiz.IRegDictBiz
 import io.kuark.service.sys.provider.reg.ibiz.IRegDictItemBiz
 import io.kuark.service.sys.provider.reg.model.po.RegDictItem
 import io.kuark.service.sys.provider.reg.model.table.RegDictItems
@@ -15,15 +16,13 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/reg/dictItem")
 @CrossOrigin
-class RegDictItemController {
-
-    @Autowired
-    private lateinit var regDictItemBiz: IRegDictItemBiz
+class RegDictItemController:
+    BaseReadOnlyController<String, IRegDictItemBiz, RegDictSearchPayload, RegDictRecord, RegDictItemDetail, RegDictPayload>(){
 
     @GetMapping("/loadDictItemCodes")
     @Suppress(Consts.Suppress.UNCHECKED_CAST)
     fun loadDictItemCodes(): WebResult<List<String>> {
-        val modules = regDictItemBiz.allSearchProperty(RegDictItems.itemCode.name) as List<String>
+        val modules = biz.allSearchProperty(RegDictItems.itemCode.name) as List<String>
         return WebResult(modules.distinct())
     }
 
@@ -33,7 +32,7 @@ class RegDictItemController {
             this.id = id
             this.active = active
         }
-        return WebResult(regDictItemBiz.update(regDictItem))
+        return WebResult(biz.update(regDictItem))
     }
 
     @GetMapping("/getDictItems")
@@ -41,7 +40,7 @@ class RegDictItemController {
         @RequestParam("module") module: String,
         @RequestParam("dictType") dictType: String
     ): WebResult<List<RegDictItemRecord>> {
-        return WebResult(regDictItemBiz.getItemsByModuleAndType(module, dictType))
+        return WebResult(biz.getItemsByModuleAndType(module, dictType))
     }
 
     @GetMapping("/getDictItemMap")
@@ -49,7 +48,7 @@ class RegDictItemController {
         @RequestParam("module") module: String,
         @RequestParam("dictType") dictType: String
     ): WebResult<LinkedHashMap<String, String>> {
-        val items = regDictItemBiz.getItemsByModuleAndType(module, dictType)
+        val items = biz.getItemsByModuleAndType(module, dictType)
         val map = linkedMapOf<String, String>()
         items.forEach { map[it.itemCode] = it.itemName }
         return WebResult(map)
@@ -62,7 +61,7 @@ class RegDictItemController {
             val errors = ValidationKit.validateBean(payload)
             if (errors.isEmpty()) {
                 val module = payload.module ?: ""
-                val items = regDictItemBiz.getItemsByModuleAndType(module, payload.dictType!!)
+                val items = biz.getItemsByModuleAndType(module, payload.dictType!!)
                 recordMap["${module}---${payload.dictType}"] = items
             } else {
                 return WebResult(errors.first().message, 500)
@@ -78,7 +77,7 @@ class RegDictItemController {
             val errors = ValidationKit.validateBean(payload)
             if (errors.isEmpty()) {
                 val module = payload.module ?: ""
-                val items = regDictItemBiz.getItemsByModuleAndType(module, payload.dictType!!)
+                val items = biz.getItemsByModuleAndType(module, payload.dictType!!)
                 val map = linkedMapOf<String, String>()
                 items.forEach { map[it.itemCode] = it.itemName }
                 recordMap["${module}---${payload.dictType}"] = map

@@ -41,6 +41,9 @@ class RegDictSearchPayload: ListSearchPayload() {
     /** 是否为第一层树节点 */
     var firstLevel: Boolean? = null
 
+    /** 是否只查询Dict */
+    var isDict: Boolean = false
+
     override var returnEntityClass: KClass<*>? = RegDictRecord::class
 
 }

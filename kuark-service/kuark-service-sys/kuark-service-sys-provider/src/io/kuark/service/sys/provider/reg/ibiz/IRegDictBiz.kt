@@ -30,15 +30,15 @@ interface IRegDictBiz : IBaseCrudBiz<String, RegDict> {
      */
     fun getDictIdByModuleAndType(module: String, type: String): String?
 
-    /**
-     * 查询符合条件的字典项及字典
-     *
-     * @param searchPayload 查询参数
-     * @return Pair(List(RegDictListModel), 总记录数)
-     * @author K
-     * @since 1.0.0
-     */
-    fun pagingSearch(searchPayload: RegDictSearchPayload): Pair<List<RegDictRecord>, Int>
+//    /**
+//     * 查询符合条件的字典项及字典
+//     *
+//     * @param searchPayload 查询参数
+//     * @return Pair(List(RegDictListModel), 总记录数)
+//     * @author K
+//     * @since 1.0.0
+//     */
+//    fun pagingSearch(searchPayload: RegDictSearchPayload): Pair<List<RegDictRecord>, Int>
 
     /**
      * 加载直接孩子结点(用于树)

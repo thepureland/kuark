@@ -53,7 +53,11 @@ open class RegDictDao : BaseCrudDao<String, RegDict, RegDicts>() {
         var query = leftJoinSearch(searchPayload)
         val orders = searchPayload.orders
         if (CollectionKit.isEmpty(orders)) {
-            query = query.orderBy(RegDicts.module.asc(), RegDicts.dictType.asc(), RegDictItems.seqNo.asc())
+            val orders = mutableListOf(RegDicts.module.asc(), RegDicts.dictType.asc())
+            if (!searchPayload.isDict) {
+                orders.add(RegDictItems.seqNo.asc())
+            }
+            query = query.orderBy()
         } else {
             val orderExps = mutableListOf<OrderByExpression>()
             orders!!.forEach {
@@ -62,7 +66,7 @@ open class RegDictDao : BaseCrudDao<String, RegDict, RegDicts>() {
                 } catch (e: IllegalStateException) {
                     emptyMap()
                 }
-                if (columns.isEmpty()) {
+                if (columns.isEmpty() && !searchPayload.isDict) {
                     columns = ColumnHelper.columnOf(RegDictItems, it.property)
                 }
                 if (columns.isEmpty()) {
@@ -118,13 +122,18 @@ open class RegDictDao : BaseCrudDao<String, RegDict, RegDicts>() {
      * @since 1.0.0
      */
     fun leftJoinSearch(searchPayload: RegDictSearchPayload): Query {
-        return database()
-            .from(RegDictItems).leftJoin(
+        val querySource = if (searchPayload.isDict) {
+            searchPayload.active = null // reg_dict表无此字段
+            database().from(RegDicts)
+        } else {
+            database().from(RegDictItems).leftJoin(
                 RegDicts, on = RegDictItems.dictId.eq(
                     RegDicts.id
                 )
             )
-            .select()
+        }
+
+        return querySource.select()
             .whereWithConditions {
                 if (StringKit.isNotBlank(searchPayload.id)) {
                     it += RegDictItems.id.eq(searchPayload.id!!)

@@ -4,6 +4,7 @@ import io.kuark.ability.data.rdb.biz.BaseCrudBiz
 import io.kuark.base.bean.BeanKit
 import io.kuark.base.lang.string.StringKit
 import io.kuark.base.query.sort.Order
+import io.kuark.base.support.payload.ListSearchPayload
 import io.kuark.service.sys.common.vo.reg.dict.RegDictPayload
 import io.kuark.service.sys.common.vo.reg.dict.RegDictRecord
 import io.kuark.service.sys.common.vo.reg.dict.RegDictSearchPayload
@@ -42,8 +43,8 @@ open class RegDictBiz : BaseCrudBiz<String, RegDict, RegDictDao>(), IRegDictBiz 
         return dao.getDictIdByModuleAndType(module, type)
     }
 
-    override fun pagingSearch(searchPayload: RegDictSearchPayload): Pair<List<RegDictRecord>, Int> {
-        val dictItems = dao.pagingSearch(searchPayload)
+    override fun pagingSearch(searchPayload: ListSearchPayload): Pair<List<RegDictRecord>, Int> {
+        val dictItems = dao.pagingSearch(searchPayload as RegDictSearchPayload)
         val totalCount = if (dictItems.isNotEmpty()) {
             // 查询parentCode
             val parentIds = dictItems.filter { StringKit.isNotBlank(it.parentId) }.map { it.parentId }.toSet()

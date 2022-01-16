@@ -56,6 +56,9 @@ open class RegDictController :
         return if (dict == null) {
             WebResult(null, "找不到对应的字典/字典项！")
         } else {
+            if (isDict == true) {
+                dict.dictId = id
+            }
             WebResult(dict)
         }
     }

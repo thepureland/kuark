@@ -1,8 +1,8 @@
-package io.kuark.service.sys.provider.validation
+package io.kuark.service.sys.common.validation
 
 import io.kuark.base.bean.validation.constraint.annotaions.DictCode
 import io.kuark.context.kit.SpringKit
-import io.kuark.service.sys.provider.ibiz.ISysDictItemBiz
+import io.kuark.service.sys.common.api.IDictApi
 import javax.validation.ConstraintValidator
 import javax.validation.ConstraintValidatorContext
 
@@ -15,18 +15,18 @@ import javax.validation.ConstraintValidatorContext
 class DictCodeValidator: ConstraintValidator<DictCode, CharSequence?> {
 
     private lateinit var dictCode: DictCode
-    private lateinit var sysDictItemBiz: ISysDictItemBiz
+    private lateinit var dictApi: IDictApi
 
     override fun initialize(dictCode: DictCode) {
         this.dictCode = dictCode
-        sysDictItemBiz = SpringKit.getBean(ISysDictItemBiz::class)
+        dictApi = SpringKit.getBean(IDictApi::class)
     }
 
     override fun isValid(value: CharSequence?, context: ConstraintValidatorContext): Boolean {
         if (value == null) {
             return true
         }
-        val dictItems = sysDictItemBiz.getItemsByModuleAndType(dictCode.module, dictCode.dictType)
+        val dictItems = dictApi.getDictItems(dictCode.module, dictCode.dictType)
         val itemCodes = dictItems.map { it.itemCode }
         return itemCodes.contains(value)
     }

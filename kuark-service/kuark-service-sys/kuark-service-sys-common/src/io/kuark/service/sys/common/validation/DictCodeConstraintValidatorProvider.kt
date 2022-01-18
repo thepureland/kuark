@@ -1,4 +1,4 @@
-package io.kuark.service.sys.provider.validation
+package io.kuark.service.sys.common.validation
 
 import io.kuark.base.bean.validation.constraint.annotaions.DictCode
 import io.kuark.context.context.IConstraintValidatorProviderBean

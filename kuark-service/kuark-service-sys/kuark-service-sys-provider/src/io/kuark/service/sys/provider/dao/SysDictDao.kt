@@ -7,6 +7,8 @@ import io.kuark.base.lang.collections.CollectionKit
 import io.kuark.base.lang.string.StringKit
 import io.kuark.base.query.enums.Operator
 import io.kuark.base.support.Consts
+import io.kuark.service.sys.common.vo.dict.SysDictRecord
+import io.kuark.service.sys.common.vo.dict.SysDictSearchPayload
 import io.kuark.service.sys.provider.model.po.SysDict
 import io.kuark.service.sys.provider.model.table.SysDictItems
 import io.kuark.service.sys.provider.model.table.SysDicts
@@ -47,7 +49,7 @@ open class SysDictDao : BaseCrudDao<String, SysDict, SysDicts>() {
      * @author K
      * @since 1.0.0
      */
-    fun pagingSearch(searchPayload: io.kuark.service.sys.common.vo.dict.SysDictSearchPayload): List<io.kuark.service.sys.common.vo.dict.SysDictRecord> {
+    fun pagingSearch(searchPayload: SysDictSearchPayload): List<SysDictRecord> {
         var query = leftJoinSearch(searchPayload)
         val orders = searchPayload.orders
         if (CollectionKit.isEmpty(orders)) {
@@ -107,7 +109,7 @@ open class SysDictDao : BaseCrudDao<String, SysDict, SysDicts>() {
      * @author K
      * @since 1.0.0
      */
-    fun count(searchPayload: io.kuark.service.sys.common.vo.dict.SysDictSearchPayload): Int {
+    fun count(searchPayload: SysDictSearchPayload): Int {
         return leftJoinSearch(searchPayload).totalRecords
     }
 
@@ -119,7 +121,7 @@ open class SysDictDao : BaseCrudDao<String, SysDict, SysDicts>() {
      * @author K
      * @since 1.0.0
      */
-    fun leftJoinSearch(searchPayload: io.kuark.service.sys.common.vo.dict.SysDictSearchPayload): Query {
+    fun leftJoinSearch(searchPayload: SysDictSearchPayload): Query {
         val querySource = if (searchPayload.isDict) {
             searchPayload.active = null // reg_dict表无此字段
             database().from(SysDicts)

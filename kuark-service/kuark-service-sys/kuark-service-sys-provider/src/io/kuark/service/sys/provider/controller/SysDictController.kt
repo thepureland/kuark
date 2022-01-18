@@ -3,6 +3,7 @@ package io.kuark.service.sys.provider.controller
 import io.kuark.ability.web.common.WebResult
 import io.kuark.ability.web.springmvc.BaseReadOnlyController
 import io.kuark.base.support.Consts
+import io.kuark.service.sys.common.vo.dict.*
 import io.kuark.service.sys.provider.ibiz.ISysDictBiz
 import io.kuark.service.sys.provider.ibiz.ISysDictItemBiz
 import io.kuark.service.sys.provider.model.table.SysDicts
@@ -15,13 +16,13 @@ import javax.validation.Valid
 @RequestMapping("/sys/dict")
 @CrossOrigin
 open class SysDictController :
-    BaseReadOnlyController<String, ISysDictBiz, io.kuark.service.sys.common.vo.dict.SysDictSearchPayload, io.kuark.service.sys.common.vo.dict.SysDictRecord, io.kuark.service.sys.common.vo.dict.SysDictDetail, io.kuark.service.sys.common.vo.dict.SysDictPayload>() {
+    BaseReadOnlyController<String, ISysDictBiz, SysDictSearchPayload, SysDictRecord, SysDictDetail, SysDictPayload>() {
 
     @Autowired
     private lateinit var sysDictItemBiz: ISysDictItemBiz
 
     @PostMapping("/loadTreeNodes")
-    fun loadTreeNodes(@RequestBody searchPayload: io.kuark.service.sys.common.vo.dict.SysDictSearchPayload): WebResult<List<io.kuark.service.sys.common.vo.dict.SysDictTreeNode>> {
+    fun loadTreeNodes(@RequestBody searchPayload: SysDictSearchPayload): WebResult<List<SysDictTreeNode>> {
         val activeOnly = searchPayload.active ?: false
         return WebResult(
             biz.loadDirectChildrenForTree(
@@ -31,7 +32,7 @@ open class SysDictController :
     }
 
     @PostMapping("/searchByTree")
-    fun searchByTree(@RequestBody searchPayload: io.kuark.service.sys.common.vo.dict.SysDictSearchPayload): WebResult<Pair<List<io.kuark.service.sys.common.vo.dict.SysDictRecord>, Int>> {
+    fun searchByTree(@RequestBody searchPayload: SysDictSearchPayload): WebResult<Pair<List<SysDictRecord>, Int>> {
         return WebResult(biz.loadDirectChildrenForList(searchPayload))
     }
 
@@ -50,7 +51,7 @@ open class SysDictController :
     }
 
     @GetMapping("/getDict")
-    fun get(id: String, isDict: Boolean?, fetchAllParentIds: Boolean = false): WebResult<io.kuark.service.sys.common.vo.dict.SysDictRecord> {
+    fun get(id: String, isDict: Boolean?, fetchAllParentIds: Boolean = false): WebResult<SysDictRecord> {
         val dict = biz.get(id, isDict, fetchAllParentIds)
         return if (dict == null) {
             WebResult(null, "找不到对应的字典/字典项！")
@@ -63,7 +64,7 @@ open class SysDictController :
     }
 
     @PostMapping("/saveOrUpdate")
-    fun saveOrUpdate(@RequestBody @Valid payload: io.kuark.service.sys.common.vo.dict.SysDictPayload, bindingResult: BindingResult): WebResult<String> {
+    fun saveOrUpdate(@RequestBody @Valid payload: SysDictPayload, bindingResult: BindingResult): WebResult<String> {
         if (bindingResult.hasErrors()) error("数据校验失败！")
         return WebResult(biz.saveOrUpdate(payload))
     }

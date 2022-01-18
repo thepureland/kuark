@@ -4,7 +4,7 @@ import io.kuark.ability.web.common.WebResult
 import io.kuark.ability.web.springmvc.BaseCrudController
 import io.kuark.base.lang.string.StringKit
 import io.kuark.base.security.DigestKit
-import io.kuark.service.sys.common.api.IParamApi
+import io.kuark.service.sys.common.api.ISysParamApi
 import io.kuark.service.user.common.user.vo.account.UserAccountDetail
 import io.kuark.service.user.common.user.vo.account.UserAccountPayload
 import io.kuark.service.user.common.user.vo.account.UserAccountRecord
@@ -22,7 +22,7 @@ open class UserAccountController :
     BaseCrudController<String, IUserAccountBiz, UserAccountSearchPayload, UserAccountRecord, UserAccountDetail, UserAccountPayload>() {
 
     @Autowired
-    private lateinit var paramApi: IParamApi
+    private lateinit var paramApi: ISysParamApi
 
 
     @PostMapping("/saveOrUpdate")

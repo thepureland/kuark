@@ -1,6 +1,8 @@
 package io.kuark.service.sys.provider.ibiz
 
 import io.kuark.base.support.biz.IBaseCrudBiz
+import io.kuark.service.sys.common.vo.dict.SysDictItemRecord
+import io.kuark.service.sys.common.vo.dict.SysDictPayload
 import io.kuark.service.sys.provider.model.po.SysDictItem
 
 /**
@@ -24,7 +26,7 @@ interface ISysDictItemBiz: IBaseCrudBiz<String, SysDictItem> {
      * @author K
      * @since 1.0.0
      */
-    fun getItemsByModuleAndType(module: String, type: String): List<io.kuark.service.sys.common.vo.dict.SysDictItemRecord>
+    fun getItemsByModuleAndType(module: String, type: String): List<SysDictItemRecord>
 
     /**
      * 翻译字典项代码
@@ -46,7 +48,7 @@ interface ISysDictItemBiz: IBaseCrudBiz<String, SysDictItem> {
      * @author K
      * @since 1.0.0
      */
-    fun saveOrUpdate(payload: io.kuark.service.sys.common.vo.dict.SysDictPayload): String
+    fun saveOrUpdate(payload: SysDictPayload): String
 
     /**
      * 获取字典项的所有祖先id

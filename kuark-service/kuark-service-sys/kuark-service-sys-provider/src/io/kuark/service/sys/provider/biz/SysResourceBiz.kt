@@ -10,6 +10,9 @@ import io.kuark.base.support.Consts
 import io.kuark.base.support.payload.ListSearchPayload
 import io.kuark.base.tree.TreeKit
 import io.kuark.context.core.KuarkContextHolder
+import io.kuark.service.sys.common.vo.resource.MenuTreeNode
+import io.kuark.service.sys.common.vo.resource.SysResourceRecord
+import io.kuark.service.sys.common.vo.resource.SysResourceSearchPayload
 import io.kuark.service.sys.common.vo.resource.SysResourceTreeNode
 import io.kuark.service.sys.provider.dao.SysResourceDao
 import io.kuark.service.sys.provider.ibiz.ISysDictItemBiz
@@ -40,7 +43,7 @@ open class SysResourceBiz : BaseCrudBiz<String, SysResource, SysResourceDao>(), 
     @Autowired
     private lateinit var dictItemBiz: ISysDictItemBiz
 
-    override fun getMenus(): List<io.kuark.service.sys.common.vo.resource.MenuTreeNode> {
+    override fun getMenus(): List<MenuTreeNode> {
         //TODO 加入权限
         val criteria = Criteria.add(SysResource::active.name, Operator.EQ, true)
         val subSysCode = KuarkContextHolder.get().subSysCode
@@ -49,7 +52,7 @@ open class SysResourceBiz : BaseCrudBiz<String, SysResource, SysResourceDao>(), 
         }
         val origMenus = dao.search(criteria)
         val menus = origMenus.map {
-            io.kuark.service.sys.common.vo.resource.MenuTreeNode(
+            MenuTreeNode(
                 it.name,
                 it.url,
                 it.icon,
@@ -62,16 +65,16 @@ open class SysResourceBiz : BaseCrudBiz<String, SysResource, SysResourceDao>(), 
     }
 
     @Suppress(Consts.Suppress.UNCHECKED_CAST)
-    override fun loadDirectChildrenForTree(searchPayload: io.kuark.service.sys.common.vo.resource.SysResourceSearchPayload): List<io.kuark.service.sys.common.vo.resource.SysResourceTreeNode> {
+    override fun loadDirectChildrenForTree(searchPayload: SysResourceSearchPayload): List<SysResourceTreeNode> {
         return when (if (searchPayload.level == null) Int.MAX_VALUE else searchPayload.level) {
             0 -> { // 资源类型
                 val dictItems = dictItemBiz.getItemsByModuleAndType("kuark:sys", "resource_type")
-                dictItems.map { io.kuark.service.sys.common.vo.resource.SysResourceTreeNode()
+                dictItems.map { SysResourceTreeNode()
                     .apply { this.id = it.itemCode;this.name = it.itemName } }
             }
             1 -> { // 子系统
                 val dictItems = dictItemBiz.getItemsByModuleAndType("kuark:sys", "sub_sys")
-                dictItems.map { io.kuark.service.sys.common.vo.resource.SysResourceTreeNode()
+                dictItems.map { SysResourceTreeNode()
                     .apply { this.id = it.itemCode;this.name = it.itemName } }
             }
             else -> { // 资源
@@ -84,12 +87,12 @@ open class SysResourceBiz : BaseCrudBiz<String, SysResource, SysResourceDao>(), 
                     if (column.name == SysResources.parentId.name && searchPayload.level == 2) { // 1层是资源类型，2层是子系统，从第3层开始才是RegResource
                         column.isNull()
                     } else null
-                } as List<io.kuark.service.sys.common.vo.resource.SysResourceTreeNode>
+                } as List<SysResourceTreeNode>
             }
         }
     }
 
-    override fun loadDirectChildrenForList(searchPayload: io.kuark.service.sys.common.vo.resource.SysResourceSearchPayload): Pair<List<io.kuark.service.sys.common.vo.resource.SysResourceRecord>, Int> {
+    override fun loadDirectChildrenForList(searchPayload: SysResourceSearchPayload): Pair<List<SysResourceRecord>, Int> {
         if (searchPayload.active == false) { // 非仅启用状态
             searchPayload.active = null
         }
@@ -99,7 +102,7 @@ open class SysResourceBiz : BaseCrudBiz<String, SysResource, SysResourceDao>(), 
             } else null
         }
         @Suppress(Consts.Suppress.UNCHECKED_CAST)
-        val result = dao.search(searchPayload, whereConditionFactory) as List<io.kuark.service.sys.common.vo.resource.SysResourceRecord>
+        val result = dao.search(searchPayload, whereConditionFactory) as List<SysResourceRecord>
         val count = dao.count(searchPayload, whereConditionFactory)
         return Pair(result, count)
     }
@@ -112,14 +115,14 @@ open class SysResourceBiz : BaseCrudBiz<String, SysResource, SysResourceDao>(), 
         }
         val result = dao.search(listSearchPayload, whereConditionFactory)
         @Suppress(Consts.Suppress.UNCHECKED_CAST)
-        (result as List<io.kuark.service.sys.common.vo.resource.SysResourceRecord>).forEach { transCode(it) }
+        (result as List<SysResourceRecord>).forEach { transCode(it) }
         val count = dao.count(listSearchPayload, whereConditionFactory)
         return Pair(result, count)
     }
 
     override fun <R : Any> get(id: String, returnType: KClass<R>, fetchAllParentIds: Boolean): R? {
         val result = super.get(id, returnType)
-        if (result is io.kuark.service.sys.common.vo.resource.SysResourceRecord) {
+        if (result is SysResourceRecord) {
             transCode(result)
             if (fetchAllParentIds) {
                 val realParentIds = fetchAllParentIds(id)
@@ -175,7 +178,7 @@ open class SysResourceBiz : BaseCrudBiz<String, SysResource, SysResourceDao>(), 
         }
     }
 
-    private fun transCode(record: io.kuark.service.sys.common.vo.resource.SysResourceRecord) {
+    private fun transCode(record: SysResourceRecord) {
         record.resourceTypeName = dictItemBiz.transDictCode("kuark:sys", "resource_type", record.resourceTypeDictCode!!)
         record.subSysName = dictItemBiz.transDictCode("kuark:sys", "sub_sys", record.subSysDictCode!!)
     }

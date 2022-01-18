@@ -5,7 +5,10 @@ import io.kuark.base.bean.BeanKit
 import io.kuark.base.lang.string.StringKit
 import io.kuark.base.query.sort.Order
 import io.kuark.base.support.payload.ListSearchPayload
+import io.kuark.service.sys.common.vo.dict.SysDictPayload
+import io.kuark.service.sys.common.vo.dict.SysDictRecord
 import io.kuark.service.sys.common.vo.dict.SysDictSearchPayload
+import io.kuark.service.sys.common.vo.dict.SysDictTreeNode
 import io.kuark.service.sys.provider.dao.SysDictDao
 import io.kuark.service.sys.provider.ibiz.ISysDictBiz
 import io.kuark.service.sys.provider.ibiz.ISysDictItemBiz
@@ -40,8 +43,8 @@ open class SysDictBiz : BaseCrudBiz<String, SysDict, SysDictDao>(), ISysDictBiz 
         return dao.getDictIdByModuleAndType(module, type)
     }
 
-    override fun pagingSearch(searchPayload: ListSearchPayload): Pair<List<io.kuark.service.sys.common.vo.dict.SysDictRecord>, Int> {
-        val dictItems = dao.pagingSearch(searchPayload as io.kuark.service.sys.common.vo.dict.SysDictSearchPayload)
+    override fun pagingSearch(searchPayload: ListSearchPayload): Pair<List<SysDictRecord>, Int> {
+        val dictItems = dao.pagingSearch(searchPayload as SysDictSearchPayload)
         val totalCount = if (dictItems.isNotEmpty()) {
             // 查询parentCode
             val parentIds = dictItems.filter { StringKit.isNotBlank(it.parentId) }.map { it.parentId }.toSet()
@@ -62,12 +65,12 @@ open class SysDictBiz : BaseCrudBiz<String, SysDict, SysDictDao>(), ISysDictBiz 
         parent: String?,
         isModule: Boolean,
         activeOnly: Boolean
-    ): List<io.kuark.service.sys.common.vo.dict.SysDictTreeNode> {
+    ): List<SysDictTreeNode> {
         return when {
             StringKit.isBlank(parent) -> { // 加载模块列表
                 val items = sysDictItemBiz.getItemsByModuleAndType("kuark:sys", "module")
                 items.map {
-                    io.kuark.service.sys.common.vo.dict.SysDictTreeNode().apply {
+                    SysDictTreeNode().apply {
                         code = it.itemCode
                         id = code
                     }
@@ -77,9 +80,9 @@ open class SysDictBiz : BaseCrudBiz<String, SysDict, SysDictDao>(), ISysDictBiz 
                 val results = dao.oneSearch(SysDicts.module.name, parent, Order.asc(SysDicts.dictType.name))
                 results.map {
                     val treeNode = BeanKit.copyProperties(
-                        io.kuark.service.sys.common.vo.dict.SysDictTreeNode::class, it, mapOf(
-                            SysDict::id.name to io.kuark.service.sys.common.vo.dict.SysDictTreeNode::id.name,
-                            SysDict::dictType.name to io.kuark.service.sys.common.vo.dict.SysDictTreeNode::code.name,
+                        SysDictTreeNode::class, it, mapOf(
+                            SysDict::id.name to SysDictTreeNode::id.name,
+                            SysDict::dictType.name to SysDictTreeNode::code.name,
                         )
                     )
                     treeNode
@@ -93,7 +96,7 @@ open class SysDictBiz : BaseCrudBiz<String, SysDict, SysDictDao>(), ISysDictBiz 
                 dao.leftJoinSearch(searchPayload)
                     .orderBy(SysDictItems.seqNo.asc())
                     .map { row ->
-                        io.kuark.service.sys.common.vo.dict.SysDictTreeNode().apply {
+                        SysDictTreeNode().apply {
                             id = row[SysDictItems.id]
                             code = row[SysDictItems.itemCode]
                         }
@@ -102,7 +105,7 @@ open class SysDictBiz : BaseCrudBiz<String, SysDict, SysDictDao>(), ISysDictBiz 
         }
     }
 
-    override fun loadDirectChildrenForList(searchPayload: io.kuark.service.sys.common.vo.dict.SysDictSearchPayload): Pair<List<io.kuark.service.sys.common.vo.dict.SysDictRecord>, Int> {
+    override fun loadDirectChildrenForList(searchPayload: SysDictSearchPayload): Pair<List<SysDictRecord>, Int> {
         val activeOnly = searchPayload.active ?: false // 是否只加载启用状态的数据, 默认为是
         searchPayload.active = if (activeOnly) true else null
         val isModule = searchPayload.firstLevel ?: false // 是否parent代表模块名
@@ -115,10 +118,10 @@ open class SysDictBiz : BaseCrudBiz<String, SysDict, SysDictDao>(), ISysDictBiz 
         return Pair(records, totalCount)
     }
 
-    override fun get(id: String, isDict: Boolean?, fetchAllParentIds: Boolean): io.kuark.service.sys.common.vo.dict.SysDictRecord? {
+    override fun get(id: String, isDict: Boolean?, fetchAllParentIds: Boolean): SysDictRecord? {
         return if (isDict == true) {
             val dict = dao.get(id) ?: return null
-            val sysDictRecord = io.kuark.service.sys.common.vo.dict.SysDictRecord()
+            val sysDictRecord = SysDictRecord()
             BeanKit.copyProperties(dict, sysDictRecord)
             sysDictRecord
         } else {
@@ -141,7 +144,7 @@ open class SysDictBiz : BaseCrudBiz<String, SysDict, SysDictDao>(), ISysDictBiz 
     }
 
     @Transactional
-    override fun saveOrUpdate(payload: io.kuark.service.sys.common.vo.dict.SysDictPayload): String {
+    override fun saveOrUpdate(payload: SysDictPayload): String {
         return if (StringKit.isBlank(payload.id)) { // 新增
             if (StringKit.isBlank(payload.parentId)) { // 添加RegDict
                 val sysDict = SysDict().apply {

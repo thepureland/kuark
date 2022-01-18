@@ -4,6 +4,8 @@ import io.kuark.ability.cache.context.CacheNames
 import io.kuark.ability.cache.kit.CacheKit
 import io.kuark.ability.data.rdb.biz.BaseCrudBiz
 import io.kuark.base.lang.string.StringKit
+import io.kuark.service.sys.common.vo.dict.SysDictItemRecord
+import io.kuark.service.sys.common.vo.dict.SysDictPayload
 import io.kuark.service.sys.provider.dao.SysDictItemDao
 import io.kuark.service.sys.provider.ibiz.ISysDictBiz
 import io.kuark.service.sys.provider.ibiz.ISysDictItemBiz
@@ -33,7 +35,7 @@ open class SysDictItemBiz : BaseCrudBiz<String, SysDictItem, SysDictItemDao>(), 
     //region yur codes 2
 
     @Cacheable(key = "#module.concat(':').concat(#type)", unless = "#result.isEmpty()")
-    override fun getItemsByModuleAndType(module: String, type: String): List<io.kuark.service.sys.common.vo.dict.SysDictItemRecord> {
+    override fun getItemsByModuleAndType(module: String, type: String): List<SysDictItemRecord> {
         // 查出对应的dict id
         val dictId = sysDictBiz.getDictIdByModuleAndType(module, type)
 
@@ -43,7 +45,7 @@ open class SysDictItemBiz : BaseCrudBiz<String, SysDictItem, SysDictItemDao>(), 
             // 查出dict id的所有字典项
             val items = dao.searchByDictId(dictId)
             items.map {
-                io.kuark.service.sys.common.vo.dict.SysDictItemRecord(
+                SysDictItemRecord(
                     it.id!!,
                     it.itemCode,
                     it.itemName,
@@ -61,7 +63,7 @@ open class SysDictItemBiz : BaseCrudBiz<String, SysDictItem, SysDictItemDao>(), 
 
     @Transactional
     @CacheEvict(key = "#payload.module.concat(':').concat(#payload.dictType)")
-    override fun saveOrUpdate(payload: io.kuark.service.sys.common.vo.dict.SysDictPayload): String {
+    override fun saveOrUpdate(payload: SysDictPayload): String {
         return if (StringKit.isBlank(payload.id)) { // 新增
             val sysDictItem = SysDictItem().apply {
                 dictId = payload.dictId!!

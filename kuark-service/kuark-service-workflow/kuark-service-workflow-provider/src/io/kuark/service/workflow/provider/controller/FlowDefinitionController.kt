@@ -3,7 +3,7 @@ package io.kuark.service.workflow.provider.controller
 import io.kuark.ability.web.common.WebResult
 import io.kuark.base.bean.BeanKit
 import io.kuark.base.image.ImageKit
-import io.kuark.service.sys.common.api.IDictApi
+import io.kuark.service.sys.common.api.ISysDictApi
 import io.kuark.service.workflow.common.vo.definition.FlowDefinitionRecord
 import io.kuark.service.workflow.common.vo.definition.FlowDefinitionSearchPayload
 import io.kuark.service.workflow.provider.ibiz.IFlowDefinitionBiz
@@ -27,7 +27,7 @@ class FlowDefinitionController {
     private lateinit var flowDefinitionBiz: IFlowDefinitionBiz
 
     @Autowired(required = false)
-    private var dictApi: IDictApi? = null
+    private var dictApi: ISysDictApi? = null
 
     /**
      * 返回指定key和版本的流程定义

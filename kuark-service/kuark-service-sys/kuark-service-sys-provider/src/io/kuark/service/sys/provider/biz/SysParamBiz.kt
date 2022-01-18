@@ -6,6 +6,8 @@ import io.kuark.ability.data.rdb.kit.RdbKit
 import io.kuark.ability.data.rdb.support.SqlWhereExpressionFactory
 import io.kuark.base.query.enums.Operator
 import io.kuark.base.support.Consts
+import io.kuark.service.sys.common.vo.param.SysParamRecord
+import io.kuark.service.sys.common.vo.param.SysParamSearchPayload
 import io.kuark.service.sys.provider.dao.SysParamDao
 import io.kuark.service.sys.provider.ibiz.ISysParamBiz
 import io.kuark.service.sys.provider.model.po.SysParam
@@ -42,7 +44,7 @@ open class SysParamBiz : BaseCrudBiz<String, SysParam, SysParamDao>(), ISysParam
         return if (paramList.isEmpty()) null else paramList.first()
     }
 
-    override fun pagingSearch(searchPayload: io.kuark.service.sys.common.vo.param.SysParamSearchPayload): Pair<List<io.kuark.service.sys.common.vo.param.SysParamRecord>, Int> {
+    override fun pagingSearch(searchPayload: SysParamSearchPayload): Pair<List<SysParamRecord>, Int> {
         val records = dao.search(searchPayload) { column, value ->
             if (value != null && column.name in arrayOf(
                     SysParams.module.name,
@@ -57,7 +59,7 @@ open class SysParamBiz : BaseCrudBiz<String, SysParam, SysParamDao>(), ISysParam
         }
         val count = if (records.isEmpty()) 0 else dao.count(searchPayload)
         @Suppress(Consts.Suppress.UNCHECKED_CAST)
-        return Pair(records as List<io.kuark.service.sys.common.vo.param.SysParamRecord>, count)
+        return Pair(records as List<SysParamRecord>, count)
     }
 
     //endregion your codes 2

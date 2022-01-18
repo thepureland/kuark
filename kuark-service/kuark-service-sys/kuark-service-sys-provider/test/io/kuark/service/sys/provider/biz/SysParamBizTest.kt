@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 
-internal class RegParamBizTest: SpringTest() {
+internal class SysParamBizTest: SpringTest() {
 
     @Autowired
     private lateinit var sysParamService: SysParamBiz

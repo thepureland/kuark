@@ -2,7 +2,9 @@ package io.kuark.service.sys.provider.controller
 
 import io.kuark.ability.web.common.WebResult
 import io.kuark.ability.web.springmvc.BaseCrudController
-import io.kuark.service.sys.common.api.IDictApi
+import io.kuark.service.sys.common.api.ISysDictApi
+import io.kuark.service.sys.common.api.ISysResourceApi
+import io.kuark.service.sys.common.vo.resource.*
 import io.kuark.service.sys.provider.ibiz.ISysResourceBiz
 import io.kuark.service.sys.provider.model.po.SysResource
 import org.springframework.beans.factory.annotation.Autowired
@@ -12,30 +14,33 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/sys/resource")
 @CrossOrigin
 open class SysResourceController :
-    BaseCrudController<String, ISysResourceBiz, io.kuark.service.sys.common.vo.resource.SysResourceSearchPayload, io.kuark.service.sys.common.vo.resource.SysResourceRecord, io.kuark.service.sys.common.vo.resource.SysResourceDetail, io.kuark.service.sys.common.vo.resource.SysResourcePayload>() {
+    BaseCrudController<String, ISysResourceBiz, SysResourceSearchPayload, SysResourceRecord, SysResourceDetail, SysResourcePayload>() {
 
     @Autowired
-    private lateinit var dictApi: IDictApi
+    private lateinit var dictApi: ISysDictApi
+
+    @Autowired
+    private lateinit var resourceApi: ISysResourceApi
 
     @GetMapping("/getMenus")
-    fun getMenus(): List<io.kuark.service.sys.common.vo.resource.MenuTreeNode> {
+    fun getMenus(): List<MenuTreeNode> {
         return biz.getMenus()
     }
 
     @PostMapping("/loadTreeNodes")
-    fun laodTreeNodes(@RequestBody searchPayload: io.kuark.service.sys.common.vo.resource.SysResourceSearchPayload): WebResult<List<io.kuark.service.sys.common.vo.resource.SysResourceTreeNode>> {
+    fun laodTreeNodes(@RequestBody searchPayload: SysResourceSearchPayload): WebResult<List<SysResourceTreeNode>> {
         val results = biz.loadDirectChildrenForTree(searchPayload)
         return WebResult(results)
     }
 
     @PostMapping("/searchByTree")
-    fun searchByTree(@RequestBody searchPayload: io.kuark.service.sys.common.vo.resource.SysResourceSearchPayload): WebResult<Pair<List<io.kuark.service.sys.common.vo.resource.SysResourceRecord>, Int>> {
+    fun searchByTree(@RequestBody searchPayload: SysResourceSearchPayload): WebResult<Pair<List<SysResourceRecord>, Int>> {
         return WebResult(biz.loadDirectChildrenForList(searchPayload))
     }
 
     @GetMapping("/getRes")
-    fun get(id: String, fetchAllParentIds: Boolean = false): WebResult<io.kuark.service.sys.common.vo.resource.SysResourceRecord> {
-        return WebResult(biz.get(id, io.kuark.service.sys.common.vo.resource.SysResourceRecord::class, fetchAllParentIds))
+    fun get(id: String, fetchAllParentIds: Boolean = false): WebResult<SysResourceRecord> {
+        return WebResult(biz.get(id, SysResourceRecord::class, fetchAllParentIds))
     }
 
     @GetMapping("/updateActive")
@@ -60,6 +65,11 @@ open class SysResourceController :
     @GetMapping("/loadResourceTypes")
     fun loadResourceTypes(): WebResult<Map<String, String>> {
         return WebResult(dictApi.getDictItemMap("kuark:sys", "resource_type"))
+    }
+
+    @GetMapping("/getResources")
+    fun getResources(subSysDictCode: String, resourceType: ResourceType): List<SysResourceRecord> {
+        return resourceApi.getResources(subSysDictCode, resourceType)
     }
 
 }

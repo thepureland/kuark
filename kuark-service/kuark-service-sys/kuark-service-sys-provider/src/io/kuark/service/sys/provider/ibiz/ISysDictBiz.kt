@@ -1,6 +1,10 @@
 package io.kuark.service.sys.provider.ibiz
 
 import io.kuark.base.support.biz.IBaseCrudBiz
+import io.kuark.service.sys.common.vo.dict.SysDictPayload
+import io.kuark.service.sys.common.vo.dict.SysDictRecord
+import io.kuark.service.sys.common.vo.dict.SysDictSearchPayload
+import io.kuark.service.sys.common.vo.dict.SysDictTreeNode
 import io.kuark.service.sys.provider.model.po.SysDict
 
 /**
@@ -46,7 +50,7 @@ interface ISysDictBiz : IBaseCrudBiz<String, SysDict> {
      * @author K
      * @since 1.0.0
      */
-    fun loadDirectChildrenForTree(parent: String?, isModule: Boolean, activeOnly: Boolean = true): List<io.kuark.service.sys.common.vo.dict.SysDictTreeNode>
+    fun loadDirectChildrenForTree(parent: String?, isModule: Boolean, activeOnly: Boolean = true): List<SysDictTreeNode>
 
     /**
      * 加载直接孩子结点(用于列表)
@@ -56,7 +60,7 @@ interface ISysDictBiz : IBaseCrudBiz<String, SysDict> {
      * @author K
      * @since 1.0.0
      */
-    fun loadDirectChildrenForList(searchPayload: io.kuark.service.sys.common.vo.dict.SysDictSearchPayload): Pair<List<io.kuark.service.sys.common.vo.dict.SysDictRecord>, Int>
+    fun loadDirectChildrenForList(searchPayload: SysDictSearchPayload): Pair<List<SysDictRecord>, Int>
 
     /**
      * 返回指定id的字典信息
@@ -68,7 +72,7 @@ interface ISysDictBiz : IBaseCrudBiz<String, SysDict> {
      * @author K
      * @since 1.0.0
      */
-    fun get(id: String, isDict: Boolean?, fetchAllParentIds: Boolean = false): io.kuark.service.sys.common.vo.dict.SysDictRecord?
+    fun get(id: String, isDict: Boolean?, fetchAllParentIds: Boolean = false): SysDictRecord?
 
     /**
      * 保存或更新字典或字典项
@@ -78,7 +82,7 @@ interface ISysDictBiz : IBaseCrudBiz<String, SysDict> {
      * @author K
      * @since 1.0.0
      */
-    fun saveOrUpdate(payload: io.kuark.service.sys.common.vo.dict.SysDictPayload): String
+    fun saveOrUpdate(payload: SysDictPayload): String
 
     /**
      * 删除字典或字典项

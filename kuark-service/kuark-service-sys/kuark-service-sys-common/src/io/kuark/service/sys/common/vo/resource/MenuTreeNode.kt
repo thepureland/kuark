@@ -29,7 +29,7 @@ data class MenuTreeNode(
     /** 在同父节点下的排序号 */
     @get:Transient
     val seqNo: Int?,
-) : ITreeNode<String>, Comparable<io.kuark.service.sys.common.vo.resource.MenuTreeNode> {
+) : ITreeNode<String>, Comparable<MenuTreeNode> {
 
     /** 孩子结点 */
     val subs: MutableList<ITreeNode<String>> = mutableListOf()
@@ -40,7 +40,7 @@ data class MenuTreeNode(
 
     override fun _getChildren(): MutableList<ITreeNode<String>> = subs
 
-    override fun compareTo(other: io.kuark.service.sys.common.vo.resource.MenuTreeNode): Int {
+    override fun compareTo(other: MenuTreeNode): Int {
         if (seqNo == null || other.seqNo == null) return 0
         return seqNo.compareTo(other.seqNo)
     }

@@ -2,6 +2,8 @@ package io.kuark.service.sys.provider.ibiz
 
 import io.kuark.ability.cache.context.CacheNames
 import io.kuark.base.support.biz.IBaseCrudBiz
+import io.kuark.service.sys.common.vo.param.SysParamRecord
+import io.kuark.service.sys.common.vo.param.SysParamSearchPayload
 import io.kuark.service.sys.provider.model.po.SysParam
 import org.springframework.cache.annotation.Cacheable
 
@@ -37,7 +39,7 @@ interface ISysParamBiz: IBaseCrudBiz<String, SysParam> {
      * @author K
      * @since 1.0.0
      */
-    fun pagingSearch(searchPayload: io.kuark.service.sys.common.vo.param.SysParamSearchPayload): Pair<List<io.kuark.service.sys.common.vo.param.SysParamRecord>, Int>
+    fun pagingSearch(searchPayload: SysParamSearchPayload): Pair<List<SysParamRecord>, Int>
 
     //endregion your codes 2
 

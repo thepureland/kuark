@@ -2,7 +2,7 @@ package io.kuark.service.sys.common.validation
 
 import io.kuark.base.bean.validation.constraint.annotaions.DictCode
 import io.kuark.context.kit.SpringKit
-import io.kuark.service.sys.common.api.IDictApi
+import io.kuark.service.sys.common.api.ISysDictApi
 import javax.validation.ConstraintValidator
 import javax.validation.ConstraintValidatorContext
 
@@ -15,11 +15,11 @@ import javax.validation.ConstraintValidatorContext
 class DictCodeValidator: ConstraintValidator<DictCode, CharSequence?> {
 
     private lateinit var dictCode: DictCode
-    private lateinit var dictApi: IDictApi
+    private lateinit var dictApi: ISysDictApi
 
     override fun initialize(dictCode: DictCode) {
         this.dictCode = dictCode
-        dictApi = SpringKit.getBean(IDictApi::class)
+        dictApi = SpringKit.getBean(ISysDictApi::class)
     }
 
     override fun isValid(value: CharSequence?, context: ConstraintValidatorContext): Boolean {

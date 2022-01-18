@@ -1,6 +1,10 @@
 package io.kuark.service.sys.provider.ibiz
 
 import io.kuark.base.support.biz.IBaseCrudBiz
+import io.kuark.service.sys.common.vo.resource.MenuTreeNode
+import io.kuark.service.sys.common.vo.resource.SysResourceRecord
+import io.kuark.service.sys.common.vo.resource.SysResourceSearchPayload
+import io.kuark.service.sys.common.vo.resource.SysResourceTreeNode
 import io.kuark.service.sys.provider.model.po.SysResource
 import kotlin.reflect.KClass
 
@@ -16,11 +20,11 @@ interface ISysResourceBiz: IBaseCrudBiz<String, SysResource> {
 
     //region your codes 2
 
-    fun getMenus(): List<io.kuark.service.sys.common.vo.resource.MenuTreeNode>
+    fun getMenus(): List<MenuTreeNode>
 
-    fun loadDirectChildrenForTree(searchPayload: io.kuark.service.sys.common.vo.resource.SysResourceSearchPayload): List<io.kuark.service.sys.common.vo.resource.SysResourceTreeNode>
+    fun loadDirectChildrenForTree(searchPayload: SysResourceSearchPayload): List<SysResourceTreeNode>
 
-    fun loadDirectChildrenForList(searchPayload: io.kuark.service.sys.common.vo.resource.SysResourceSearchPayload): Pair<List<io.kuark.service.sys.common.vo.resource.SysResourceRecord>, Int>
+    fun loadDirectChildrenForList(searchPayload: SysResourceSearchPayload): Pair<List<SysResourceRecord>, Int>
 
     fun <R : Any> get(id: String, returnType: KClass<R>, fetchAllParentIds: Boolean = false): R?
 

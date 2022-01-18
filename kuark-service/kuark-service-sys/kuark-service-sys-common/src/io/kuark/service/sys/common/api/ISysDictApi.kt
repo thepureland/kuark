@@ -2,7 +2,14 @@ package io.kuark.service.sys.common.api
 
 import io.kuark.service.sys.common.vo.dict.SysDictItemRecord
 
-interface IDictApi {
+
+/**
+ * 系统字典服务对外的接口
+ *
+ * @author K
+ * @since 1.0.0
+ */
+interface ISysDictApi {
 
     /**
      * 根据模块和字典类型，取得对应字典项(仅包括处于启用状态的)

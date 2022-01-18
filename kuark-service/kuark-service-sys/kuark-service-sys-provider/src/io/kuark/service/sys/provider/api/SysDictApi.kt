@@ -1,17 +1,18 @@
 package io.kuark.service.sys.provider.api
 
-import io.kuark.service.sys.common.api.IDictApi
+import io.kuark.service.sys.common.api.ISysDictApi
+import io.kuark.service.sys.common.vo.dict.SysDictItemRecord
 import io.kuark.service.sys.provider.ibiz.ISysDictItemBiz
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
 @Service
-open class DictApi: IDictApi {
+open class SysDictApi: ISysDictApi {
 
     @Autowired
     private lateinit var sysDictItemBiz: ISysDictItemBiz
 
-    override fun getDictItems(module: String, type: String): List<io.kuark.service.sys.common.vo.dict.SysDictItemRecord> {
+    override fun getDictItems(module: String, type: String): List<SysDictItemRecord> {
         return sysDictItemBiz.getItemsByModuleAndType(module, type)
     }
 

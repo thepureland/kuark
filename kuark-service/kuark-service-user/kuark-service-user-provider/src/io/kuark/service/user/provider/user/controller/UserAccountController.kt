@@ -4,7 +4,7 @@ import io.kuark.ability.web.common.WebResult
 import io.kuark.ability.web.springmvc.BaseCrudController
 import io.kuark.base.lang.string.StringKit
 import io.kuark.base.security.DigestKit
-import io.kuark.service.sys.common.api.reg.IParamApi
+import io.kuark.service.sys.common.api.IParamApi
 import io.kuark.service.user.common.user.vo.account.UserAccountDetail
 import io.kuark.service.user.common.user.vo.account.UserAccountPayload
 import io.kuark.service.user.common.user.vo.account.UserAccountRecord

@@ -1,4 +1,4 @@
-create table "reg_dict"
+create table "sys_dict"
 (
     "id"          CHAR(36) default RANDOM_UUID() not null
         primary key,
@@ -14,33 +14,33 @@ create table "reg_dict"
     "update_time" TIMESTAMP
 );
 
-comment on table "reg_dict" is '字典主表';
+comment on table "sys_dict" is '字典主表';
 
-comment on column "reg_dict"."id" is '主键';
+comment on column "sys_dict"."id" is '主键';
 
-comment on column "reg_dict"."module" is '模块';
+comment on column "sys_dict"."module" is '模块';
 
-comment on column "reg_dict"."dict_type" is '字典类型';
+comment on column "sys_dict"."dict_type" is '字典类型';
 
-comment on column "reg_dict"."dict_name" is '字典名称，或其国际化key';
+comment on column "sys_dict"."dict_name" is '字典名称，或其国际化key';
 
-comment on column "reg_dict"."remark" is '备注，或其国际化key';
+comment on column "sys_dict"."remark" is '备注，或其国际化key';
 
-comment on column "reg_dict"."active" is '是否启用';
+comment on column "sys_dict"."active" is '是否启用';
 
-comment on column "reg_dict"."built_in" is '是否内置';
+comment on column "sys_dict"."built_in" is '是否内置';
 
-comment on column "reg_dict"."create_user" is '创建用户';
+comment on column "sys_dict"."create_user" is '创建用户';
 
-comment on column "reg_dict"."create_time" is '创建时间';
+comment on column "sys_dict"."create_time" is '创建时间';
 
-comment on column "reg_dict"."update_user" is '更新用户';
+comment on column "sys_dict"."update_user" is '更新用户';
 
-comment on column "reg_dict"."update_time" is '更新时间';
+comment on column "sys_dict"."update_time" is '更新时间';
 
-create unique index "uq_reg_dict__dict_name_module" on "reg_dict" ("dict_name", "module");
+create unique index "uq_sys_dict__dict_name_module" on "sys_dict" ("dict_name", "module");
 
-create table "reg_dict_item"
+create table "sys_dict_item"
 (
     "id"          CHAR(36) default RANDOM_UUID() not null
         primary key,
@@ -57,43 +57,43 @@ create table "reg_dict_item"
     "create_time" TIMESTAMP default now(),
     "update_user" VARCHAR(36),
     "update_time" TIMESTAMP,
-    constraint "fk_reg_dict_item"
-        foreign key ("dict_id") references "reg_dict" ("id")
+    constraint "fk_sys_dict_item"
+        foreign key ("dict_id") references "sys_dict" ("id")
 );
 
-comment on table "reg_dict_item" is '字典项';
+comment on table "sys_dict_item" is '字典项';
 
-comment on column "reg_dict_item"."id" is '主键';
+comment on column "sys_dict_item"."id" is '主键';
 
-comment on column "reg_dict_item"."dict_id" is '外键，reg_dict表的主键';
+comment on column "sys_dict_item"."dict_id" is '外键，sys_dict表的主键';
 
-comment on column "reg_dict_item"."item_code" is '字典项编号';
+comment on column "sys_dict_item"."item_code" is '字典项编号';
 
-comment on column "reg_dict_item"."item_name" is '字典项名称，或其国际化key';
+comment on column "sys_dict_item"."item_name" is '字典项名称，或其国际化key';
 
-comment on column "reg_dict_item"."parent_code" is '父项编号';
+comment on column "sys_dict_item"."parent_code" is '父项编号';
 
-comment on column "reg_dict_item"."parent_id" is '父项主键';
+comment on column "sys_dict_item"."parent_id" is '父项主键';
 
-comment on column "reg_dict_item"."seq_no" is '该字典编号在同父节点下的排序号';
+comment on column "sys_dict_item"."seq_no" is '该字典编号在同父节点下的排序号';
 
-comment on column "reg_dict_item"."remark" is '备注，或其国际化key';
+comment on column "sys_dict_item"."remark" is '备注，或其国际化key';
 
-comment on column "reg_dict_item"."active" is '是否启用';
+comment on column "sys_dict_item"."active" is '是否启用';
 
-comment on column "reg_dict_item"."built_in" is '是否内置';
+comment on column "sys_dict_item"."built_in" is '是否内置';
 
-comment on column "reg_dict_item"."create_user" is '创建用户';
+comment on column "sys_dict_item"."create_user" is '创建用户';
 
-comment on column "reg_dict_item"."create_time" is '创建时间';
+comment on column "sys_dict_item"."create_time" is '创建时间';
 
-comment on column "reg_dict_item"."update_user" is '更新用户';
+comment on column "sys_dict_item"."update_user" is '更新用户';
 
-comment on column "reg_dict_item"."update_time" is '更新时间';
+comment on column "sys_dict_item"."update_time" is '更新时间';
 
-create unique index "uq_reg_dict_item__dict_id_item_code" on "reg_dict_item" ("dict_id", "item_code");
+create unique index "uq_sys_dict_item__dict_id_item_code" on "sys_dict_item" ("dict_id", "item_code");
 
-create table "reg_param"
+create table "sys_param"
 (
     "id"            CHAR(36) default RANDOM_UUID() not null
         primary key,
@@ -111,37 +111,37 @@ create table "reg_param"
     "update_time"   TIMESTAMP
 );
 
-comment on table "reg_param" is '参数';
+comment on table "sys_param" is '参数';
 
-comment on column "reg_param"."id" is '主键';
+comment on column "sys_param"."id" is '主键';
 
-comment on column "reg_param"."module" is '模块';
+comment on column "sys_param"."module" is '模块';
 
-comment on column "reg_param"."param_name" is '参数名称';
+comment on column "sys_param"."param_name" is '参数名称';
 
-comment on column "reg_param"."param_value" is '参数值，或其国际化key';
+comment on column "sys_param"."param_value" is '参数值，或其国际化key';
 
-comment on column "reg_param"."default_value" is '默认参数值，或其国际化key';
+comment on column "sys_param"."default_value" is '默认参数值，或其国际化key';
 
-comment on column "reg_param"."seq_no" is '序号';
+comment on column "sys_param"."seq_no" is '序号';
 
-comment on column "reg_param"."remark" is '备注，或其国际化key';
+comment on column "sys_param"."remark" is '备注，或其国际化key';
 
-comment on column "reg_param"."active" is '是否启用';
+comment on column "sys_param"."active" is '是否启用';
 
-comment on column "reg_param"."built_in" is '是否内置';
+comment on column "sys_param"."built_in" is '是否内置';
 
-comment on column "reg_param"."create_user" is '创建用户';
+comment on column "sys_param"."create_user" is '创建用户';
 
-comment on column "reg_param"."create_time" is '创建时间';
+comment on column "sys_param"."create_time" is '创建时间';
 
-comment on column "reg_param"."update_user" is '更新用户';
+comment on column "sys_param"."update_user" is '更新用户';
 
-comment on column "reg_param"."update_time" is '更新时间';
+comment on column "sys_param"."update_time" is '更新时间';
 
-create unique index "uq_reg_param__param_name_module" on "reg_param" ("param_name", "module");
+create unique index "uq_sys_param__param_name_module" on "sys_param" ("param_name", "module");
 
-create table "reg_resource"
+create table "sys_resource"
 (
     "id"                  CHAR(36) default RANDOM_UUID() not null
         primary key,
@@ -150,7 +150,7 @@ create table "reg_resource"
     "resource_type_dict_code" CHAR(1)                        not null,
     "parent_id"           CHAR(36),
     "seq_no"              INT2,
-    "sub_reg_dict_code"       VARCHAR(31),
+    "sub_sys_dict_code"       VARCHAR(31),
     "icon"            VARCHAR(127),
     "remark"              VARCHAR(127),
     "active"           BOOLEAN  default TRUE          not null,
@@ -161,41 +161,41 @@ create table "reg_resource"
     "update_time"         TIMESTAMP
 );
 
-comment on table "reg_resource" is '资源';
+comment on table "sys_resource" is '资源';
 
-comment on column "reg_resource"."id" is '主键';
+comment on column "sys_resource"."id" is '主键';
 
-comment on column "reg_resource"."name" is '名称，或其国际化key';
+comment on column "sys_resource"."name" is '名称，或其国际化key';
 
-comment on column "reg_resource"."url" is 'url';
+comment on column "sys_resource"."url" is 'url';
 
-comment on column "reg_resource"."resource_type_dict_code" is '资源类型字典代码';
+comment on column "sys_resource"."resource_type_dict_code" is '资源类型字典代码';
 
-comment on column "reg_resource"."parent_id" is '父id';
+comment on column "sys_resource"."parent_id" is '父id';
 
-comment on column "reg_resource"."seq_no" is '在同父节点下的排序号';
+comment on column "sys_resource"."seq_no" is '在同父节点下的排序号';
 
-comment on column "reg_resource"."sub_reg_dict_code" is '子系统代码';
+comment on column "sys_resource"."sub_sys_dict_code" is '子系统代码';
 
-comment on column "reg_resource"."icon" is '图标';
+comment on column "sys_resource"."icon" is '图标';
 
-comment on column "reg_resource"."remark" is '备注，或其国际化key';
+comment on column "sys_resource"."remark" is '备注，或其国际化key';
 
-comment on column "reg_resource"."active" is '是否启用';
+comment on column "sys_resource"."active" is '是否启用';
 
-comment on column "reg_resource"."built_in" is '是否内置';
+comment on column "sys_resource"."built_in" is '是否内置';
 
-comment on column "reg_resource"."create_user" is '创建用户';
+comment on column "sys_resource"."create_user" is '创建用户';
 
-comment on column "reg_resource"."create_time" is '创建时间';
+comment on column "sys_resource"."create_time" is '创建时间';
 
-comment on column "reg_resource"."update_user" is '更新用户';
+comment on column "sys_resource"."update_user" is '更新用户';
 
-comment on column "reg_resource"."update_time" is '更新时间';
+comment on column "sys_resource"."update_time" is '更新时间';
 
-create unique index "uq_reg_resource__name_sub_sys"  on "reg_resource" ("name", "sub_reg_dict_code");
+create unique index "uq_sys_resource__name_sub_sys"  on "sys_resource" ("name", "sub_sys_dict_code");
 
-create table "reg_data_source"
+create table "sys_data_source"
 (
     "id"           VARCHAR(36) default RANDOM_UUID() not null
         primary key,
@@ -216,36 +216,36 @@ create table "reg_data_source"
     "update_time"  TIMESTAMP
 );
 
-comment on table "reg_data_source" is '数据源';
+comment on table "sys_data_source" is '数据源';
 
-comment on column "reg_data_source"."id" is '主键';
+comment on column "sys_data_source"."id" is '主键';
 
-comment on column "reg_data_source"."name" is '名称，或其国际化key';
+comment on column "sys_data_source"."name" is '名称，或其国际化key';
 
-comment on column "reg_data_source"."url" is 'url';
+comment on column "sys_data_source"."url" is 'url';
 
-comment on column "reg_data_source"."username" is '用户名';
+comment on column "sys_data_source"."username" is '用户名';
 
-comment on column "reg_data_source"."password" is '密码，强烈建议加密';
+comment on column "sys_data_source"."password" is '密码，强烈建议加密';
 
-comment on column "reg_data_source"."initial_size" is '初始化时建立物理连接的个数。初始化发生在显示调用init方法，或者第一次getConnection时';
+comment on column "sys_data_source"."initial_size" is '初始化时建立物理连接的个数。初始化发生在显示调用init方法，或者第一次getConnection时';
 
-comment on column "reg_data_source"."max_active" is '最大连接池数量';
+comment on column "sys_data_source"."max_active" is '最大连接池数量';
 
-comment on column "reg_data_source"."min_idle" is '最小连接池数量';
+comment on column "sys_data_source"."min_idle" is '最小连接池数量';
 
-comment on column "reg_data_source"."max_wait" is '获取连接时最大等待时间，单位毫秒';
+comment on column "sys_data_source"."max_wait" is '获取连接时最大等待时间，单位毫秒';
 
-comment on column "reg_data_source"."remark" is '备注，或其国际化key';
+comment on column "sys_data_source"."remark" is '备注，或其国际化key';
 
-comment on column "reg_data_source"."active" is '是否启用';
+comment on column "sys_data_source"."active" is '是否启用';
 
-comment on column "reg_data_source"."built_in" is '是否内置';
+comment on column "sys_data_source"."built_in" is '是否内置';
 
-comment on column "reg_data_source"."create_user" is '创建用户';
+comment on column "sys_data_source"."create_user" is '创建用户';
 
-comment on column "reg_data_source"."create_time" is '创建时间';
+comment on column "sys_data_source"."create_time" is '创建时间';
 
-comment on column "reg_data_source"."update_user" is '更新用户';
+comment on column "sys_data_source"."update_user" is '更新用户';
 
-comment on column "reg_data_source"."update_time" is '更新时间';
+comment on column "sys_data_source"."update_time" is '更新时间';

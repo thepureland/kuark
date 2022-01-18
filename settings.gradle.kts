@@ -92,6 +92,14 @@ include("kuark-service:kuark-service-msg:kuark-service-msg-common")
 findProject(":kuark-service:kuark-service-msg:kuark-service-msg-common")?.name = "kuark-service-msg-common"
 include("kuark-service:kuark-service-msg:kuark-service-msg-provider")
 findProject(":kuark-service:kuark-service-msg:kuark-service-msg-provider")?.name = "kuark-service-msg-provider"
+include("kuark-service:kuark-service-geo")
+findProject(":kuark-service:kuark-service-geo")?.name = "kuark-service-geo"
+include("kuark-service:kuark-service-geo:kuark-service-geo-client")
+findProject(":kuark-service:kuark-service-geo:kuark-service-geo-client")?.name = "kuark-service-geo-client"
+include("kuark-service:kuark-service-geo:kuark-service-geo-common")
+findProject(":kuark-service:kuark-service-geo:kuark-service-geo-common")?.name = "kuark-service-geo-common"
+include("kuark-service:kuark-service-geo:kuark-service-geo-provider")
+findProject(":kuark-service:kuark-service-geo:kuark-service-geo-provider")?.name = "kuark-service-geo-provider"
 
 include("kuark-test")
 include("kuark-test:kuark-test-server")

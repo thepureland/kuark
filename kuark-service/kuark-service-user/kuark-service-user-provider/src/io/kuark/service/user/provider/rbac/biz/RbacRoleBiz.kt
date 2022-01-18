@@ -17,8 +17,19 @@ import org.springframework.stereotype.Service
 open class RbacRoleBiz: IRbacRoleBiz, BaseCrudBiz<String, RbacRole, RbacRoleDao>() {
 //endregion your codes 1
 
+
     //region your codes 2
 
-	//endregion your codes 2
+    override fun getRolePermissions(roleCode: String, resourceType: io.kuark.service.sys.common.vo.resource.ResourceType): List<io.kuark.service.sys.common.vo.resource.SysResourceRecord> {
+
+
+        TODO("Not yet implemented")
+    }
+
+    override fun setRolePermissions(roleCode: String, resourceIds: List<String>): Boolean {
+        TODO("Not yet implemented")
+    }
+
+    //endregion your codes 2
 
 }

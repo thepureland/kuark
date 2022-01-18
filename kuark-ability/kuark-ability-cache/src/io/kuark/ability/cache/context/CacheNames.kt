@@ -15,10 +15,10 @@ object CacheNames: ICacheNames {
     const val TEST = "test"
 
     /** 字典项 */
-    const val REG_DICT_ITEM = "reg_dict_item"
+    const val SYS_DICT_ITEM = "sys_dict_item"
 
     /** 参数 */
-    const val REG_PARAM = "reg_param"
+    const val SYS_PARAM = "sys_param"
 
     /** Session */
     const val SESSION = "session"

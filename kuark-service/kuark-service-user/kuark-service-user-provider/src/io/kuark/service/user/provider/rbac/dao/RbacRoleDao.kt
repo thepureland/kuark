@@ -18,6 +18,8 @@ open class RbacRoleDao : BaseCrudDao<String, RbacRole, RbacRoles>() {
 
     //region your codes 2
 
+
+
     //endregion your codes 2
 
 }

@@ -113,7 +113,11 @@ open class BaseReadOnlyBiz<PK : Any, E : IDbEntity<PK, E>, DAO : BaseReadOnlyDao
 
     override fun pagingSearch(listSearchPayload: ListSearchPayload): Pair<List<*>, Int> {
         val results = search(listSearchPayload)
-        val count = count(listSearchPayload)
+        val count = if (listSearchPayload.pageNo != null) {
+            count(listSearchPayload)
+        } else {
+            results.size
+        }
         return Pair(results, count)
     }
 

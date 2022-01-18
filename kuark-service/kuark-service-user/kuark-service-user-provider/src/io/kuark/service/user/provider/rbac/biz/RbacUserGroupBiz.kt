@@ -19,6 +19,14 @@ open class RbacUserGroupBiz: IRbacUserGroupBiz, BaseCrudBiz<String, RbacUserGrou
 
     //region your codes 2
 
-	//endregion your codes 2
+    override fun getGroupPermissions(groupCode: String, resourceType: io.kuark.service.sys.common.vo.resource.ResourceType): List<io.kuark.service.sys.common.vo.resource.SysResourceRecord> {
+        TODO("Not yet implemented")
+    }
+
+    override fun setGroupPermissions(groupCode: String, resourceIds: List<String>): Boolean {
+        TODO("Not yet implemented")
+    }
+
+    //endregion your codes 2
 
 }

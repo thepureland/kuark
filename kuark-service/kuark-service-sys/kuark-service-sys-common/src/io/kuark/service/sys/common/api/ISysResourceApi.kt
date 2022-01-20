@@ -23,4 +23,14 @@ interface ISysResourceApi {
      */
     fun getResources(subSysDictCode: String, resourceType: ResourceType): List<SysResourceRecord>
 
+    /**
+     * 根据资源id返回对应的资源
+     *
+     * @param resourceIds 资源id可变数组
+     * @return List(资源对象)
+     * @author K
+     * @since 1.0.0
+     */
+    fun getResources(vararg resourceIds: String): List<SysResourceRecord>
+
 }

@@ -72,4 +72,9 @@ open class SysResourceController :
         return resourceApi.getResources(subSysDictCode, resourceType)
     }
 
+    @GetMapping("/getResourcesByIds")
+    fun getResourcesByIds(vararg resourceIds: String): List<SysResourceRecord> {
+        return resourceApi.getResources(*resourceIds)
+    }
+
 }

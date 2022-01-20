@@ -21,6 +21,10 @@ class Criteria : Serializable {
 
     constructor()
 
+    constructor(property: String, operator: Operator, value: Any?) {
+        addAnd(property, operator, value)
+    }
+
     /**
      * 封装单个查询条件
      *

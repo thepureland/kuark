@@ -1,6 +1,6 @@
 package io.kuark.service.sys.common.vo.dict
 
-import java.io.Serializable
+import io.kuark.base.support.result.IJsonResult
 
 class SysDictItemRecord(
     /** 主键 */
@@ -17,4 +17,4 @@ class SysDictItemRecord(
 
     /** 该字典编号在同父节点下的排序号 */
     val seqNo: Int? = null
-): Serializable
+): IJsonResult

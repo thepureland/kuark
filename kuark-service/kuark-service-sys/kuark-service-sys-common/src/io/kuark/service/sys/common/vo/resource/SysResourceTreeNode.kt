@@ -1,10 +1,8 @@
 package io.kuark.service.sys.common.vo.resource
 
-import java.io.Serializable
+import io.kuark.base.support.result.IdJsonResult
 
-class SysResourceTreeNode : Serializable {
-
-    var id: String? = null
+class SysResourceTreeNode : IdJsonResult<String>() {
 
     var name: String? = null
 

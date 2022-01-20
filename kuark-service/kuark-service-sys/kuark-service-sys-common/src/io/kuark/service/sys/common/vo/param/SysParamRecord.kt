@@ -1,12 +1,9 @@
 package io.kuark.service.sys.common.vo.param
 
-import java.io.Serializable
+import io.kuark.base.support.result.IdJsonResult
 
 
-class SysParamRecord: Serializable {
-
-    /** 主键 */
-    var id: String? = null
+class SysParamRecord: IdJsonResult<String>() {
 
     /** 模块 */
     var module: String? = null

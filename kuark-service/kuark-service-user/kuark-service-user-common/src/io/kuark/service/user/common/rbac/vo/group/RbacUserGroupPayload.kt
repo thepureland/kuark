@@ -1,13 +1,9 @@
 package io.kuark.service.user.common.rbac.vo.group
 
-import io.kuark.base.support.IIdEntity
-import java.time.LocalDateTime
+import io.kuark.base.support.payload.FormPayload
 import javax.validation.constraints.NotBlank
 
-class RbacUserGroupPayload: IIdEntity<String> {
-
-    /** 主键 */
-    override var id: String? = null
+class RbacUserGroupPayload: FormPayload<String>() {
 
     /** 组编码 */
     @get:NotBlank(message = "组编码不能为空！")

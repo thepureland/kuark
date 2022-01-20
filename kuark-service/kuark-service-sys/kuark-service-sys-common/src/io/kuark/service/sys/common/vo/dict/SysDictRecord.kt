@@ -1,8 +1,8 @@
 package io.kuark.service.sys.common.vo.dict
 
-import java.io.Serializable
+import io.kuark.base.support.result.IJsonResult
 
-class SysDictRecord: Serializable {
+class SysDictRecord: IJsonResult {
 
     /** 模块 */
     var module: String? = null

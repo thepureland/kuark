@@ -2,13 +2,10 @@ package io.kuark.service.user.common.user.vo.account
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import io.kuark.base.bean.validation.constraint.annotaions.DictCode
-import io.kuark.base.support.IIdEntity
+import io.kuark.base.support.payload.FormPayload
 import javax.validation.constraints.NotBlank
 
-class UserAccountPayload: IIdEntity<String> {
-
-    /** 主键 */
-    override var id: String? = null
+class UserAccountPayload: FormPayload<String>() {
 
     /** 用户名 */
     @get:NotBlank(message = "用户名不能为空！")

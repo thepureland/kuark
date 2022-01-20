@@ -1,13 +1,9 @@
 package io.kuark.service.user.common.rbac.vo.role
 
-import io.kuark.base.support.IIdEntity
-import java.time.LocalDateTime
+import io.kuark.base.support.payload.FormPayload
 import javax.validation.constraints.NotBlank
 
-class RbacRolePayload: IIdEntity<String> {
-
-    /** 主键 */
-    override var id: String? = null
+class RbacRolePayload: FormPayload<String>() {
 
     /** 角色编码 */
     @get:NotBlank(message = "角色编码不能为空！")

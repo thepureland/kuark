@@ -2,7 +2,7 @@ package io.kuark.service.sys.common.vo.dict
 
 import io.kuark.base.bean.validation.constraint.annotaions.AtLeast
 import io.kuark.base.bean.validation.support.AssertLogic
-import io.kuark.base.support.IIdEntity
+import io.kuark.base.support.payload.FormPayload
 import javax.validation.constraints.Digits
 import javax.validation.constraints.Max
 import javax.validation.constraints.NotBlank
@@ -13,10 +13,7 @@ import javax.validation.constraints.Positive
     logic = AssertLogic.IS_NOT_BLANK,
     message = "parentId、module两个至少一个不能为空"
 )
-class SysDictPayload: IIdEntity<String> {
-
-    /** 主键 */
-    override var id: String? = null
+class SysDictPayload: FormPayload<String>() {
 
     /** 字典id */
     var dictId: String? = null

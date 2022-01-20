@@ -1,9 +1,9 @@
 package io.kuark.service.workflow.common.vo.definition
 
-import java.io.Serializable
+import io.kuark.base.support.result.IJsonResult
 import java.util.*
 
-class FlowDefinitionRecord : Serializable {
+class FlowDefinitionRecord : IJsonResult {
 
     /** 流程定义key(bpmn文件中process元素的id) */
     var key: String? = null

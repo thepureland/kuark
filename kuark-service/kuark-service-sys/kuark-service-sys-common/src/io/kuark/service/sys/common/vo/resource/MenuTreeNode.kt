@@ -1,6 +1,7 @@
 package io.kuark.service.sys.common.vo.resource
 
 import com.fasterxml.jackson.annotation.JsonInclude
+import io.kuark.base.support.result.IJsonResult
 import io.kuark.base.tree.ITreeNode
 import java.beans.Transient
 
@@ -11,7 +12,6 @@ import java.beans.Transient
  * @author K
  * @since 1.0.0
  */
-@JsonInclude(JsonInclude.Include.NON_EMPTY)
 data class MenuTreeNode(
     /** 名称，或其国际化key */
     val title: String,
@@ -29,9 +29,10 @@ data class MenuTreeNode(
     /** 在同父节点下的排序号 */
     @get:Transient
     val seqNo: Int?,
-) : ITreeNode<String>, Comparable<MenuTreeNode> {
+) : IJsonResult, ITreeNode<String>, Comparable<MenuTreeNode> {
 
     /** 孩子结点 */
+    @get:JsonInclude(JsonInclude.Include.NON_EMPTY)
     val subs: MutableList<ITreeNode<String>> = mutableListOf()
 
     override fun _getId(): String = id

@@ -1,12 +1,9 @@
 package io.kuark.service.user.common.user.vo.account
 
-import java.io.Serializable
+import io.kuark.base.support.result.IdJsonResult
 import java.time.LocalDateTime
 
-class UserAccountRecord : Serializable {
-
-    /** 主键 */
-    var id: String? = null
+class UserAccountRecord : IdJsonResult<String>() {
 
     /** 用户名 */
     var username: String? = null

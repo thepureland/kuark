@@ -1,12 +1,9 @@
 package io.kuark.service.sys.common.vo.resource
 
-import java.io.Serializable
+import io.kuark.base.support.result.IdJsonResult
 import java.time.LocalDateTime
 
-class SysResourceDetail: Serializable {
-
-    /** 主键 */
-    var id: String? = null
+class SysResourceDetail: IdJsonResult<String>() {
 
     /** 名称，或其国际化key */
     var name: String? = null

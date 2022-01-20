@@ -14,4 +14,7 @@ interface ISysResourceClient: ISysResourceApi {
     @GetMapping("/sys/resource/getResources")
     override fun getResources(subSysDictCode: String, resourceType: ResourceType): List<SysResourceRecord>
 
+    @GetMapping("/sys/resource/getResourcesByIds")
+    override fun getResources(vararg resourceIds: String): List<SysResourceRecord>
+
 }

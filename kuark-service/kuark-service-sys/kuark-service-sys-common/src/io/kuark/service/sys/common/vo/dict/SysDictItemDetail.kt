@@ -1,12 +1,9 @@
 package io.kuark.service.sys.common.vo.dict
 
-import java.io.Serializable
+import io.kuark.base.support.result.IdJsonResult
 import java.time.LocalDateTime
 
-class SysDictItemDetail: Serializable {
-
-    /** 主键 */
-    var id: String? = null
+class SysDictItemDetail: IdJsonResult<String>() {
 
     /** 外键，sys_dict表的主键 */
     var dictId: String? = null

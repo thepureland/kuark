@@ -9,6 +9,7 @@ package io.kuark.base.support
  */
 interface IIdEntity<T> {
 
+    /** 惟一标识 */
     var id: T?
 
 }

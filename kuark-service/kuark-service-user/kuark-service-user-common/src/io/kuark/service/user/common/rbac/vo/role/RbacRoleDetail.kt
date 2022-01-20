@@ -1,12 +1,10 @@
 package io.kuark.service.user.common.rbac.vo.role
 
-import java.io.Serializable
+import io.kuark.base.support.result.IdJsonResult
 import java.time.LocalDateTime
 
-class RbacRoleDetail: Serializable {
 
-    /** 主键 */
-    var id: String? = null
+class RbacRoleDetail: IdJsonResult<String>() {
 
     /** 角色编码 */
     var roleCode: String? = null

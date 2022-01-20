@@ -1,13 +1,9 @@
 package io.kuark.service.sys.common.vo.param
 
-import java.io.Serializable
+import io.kuark.base.support.result.IdJsonResult
 import java.time.LocalDateTime
 
-
-class SysParamDetail: Serializable {
-
-    /** 主键 */
-    var id: String? = null
+class SysParamDetail: IdJsonResult<String>() {
 
     /** 模块 */
     var module: String? = null

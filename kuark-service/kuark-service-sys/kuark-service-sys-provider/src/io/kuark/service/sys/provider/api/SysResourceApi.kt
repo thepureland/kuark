@@ -1,5 +1,6 @@
 package io.kuark.service.sys.provider.api
 
+import io.kuark.base.bean.BeanKit
 import io.kuark.base.support.Consts
 import io.kuark.service.sys.common.api.ISysResourceApi
 import io.kuark.service.sys.common.vo.resource.ResourceType
@@ -16,7 +17,7 @@ open class SysResourceApi: ISysResourceApi {
     @Autowired
     private lateinit var sysResourceBiz: ISysResourceBiz
 
-    @SuppressWarnings(Consts.Suppress.UNCHECKED_CAST)
+    @Suppress(Consts.Suppress.UNCHECKED_CAST)
     override fun getResources(subSysDictCode: String, resourceType: ResourceType): List<SysResourceRecord> {
         val searchPayload = SysResourceSearchPayload().apply {
             pageNo = null
@@ -24,6 +25,11 @@ open class SysResourceApi: ISysResourceApi {
             resourceTypeDictCode = resourceType.code
         }
         return sysResourceBiz.search(searchPayload) as List<SysResourceRecord>
+    }
+
+    override fun getResources(vararg resourceIds: String): List<SysResourceRecord> {
+        val resources = sysResourceBiz.inSearchById(resourceIds.asList())
+        return BeanKit.batchCopyProperties(SysResourceRecord::class, resources)
     }
 
 }

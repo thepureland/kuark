@@ -3,12 +3,13 @@ package io.kuark.ability.web.springmvc
 import io.kuark.ability.web.common.WebResult
 import io.kuark.base.support.IIdEntity
 import io.kuark.base.support.biz.IBaseCrudBiz
+import io.kuark.base.support.payload.FormPayload
 import io.kuark.base.support.payload.ListSearchPayload
+import io.kuark.base.support.result.IJsonResult
 import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
-import java.io.Serializable
 import javax.validation.Valid
 
 /**
@@ -22,7 +23,7 @@ import javax.validation.Valid
  * @author K
  * @since 1.0.0
  */
-open class BaseCrudController<PK : Any, B : IBaseCrudBiz<PK, *>, S : ListSearchPayload, R : Serializable, D : Serializable, F : IIdEntity<PK>> :
+open class BaseCrudController<PK : Any, B : IBaseCrudBiz<PK, *>, S : ListSearchPayload, R : IJsonResult, D : IJsonResult, F : FormPayload<PK>> :
     BaseReadOnlyController<PK, B, S, R, D, F>() {
 
     /**

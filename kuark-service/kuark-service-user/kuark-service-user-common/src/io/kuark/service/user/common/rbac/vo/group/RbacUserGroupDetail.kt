@@ -1,12 +1,9 @@
 package io.kuark.service.user.common.rbac.vo.group
 
-import java.io.Serializable
+import io.kuark.base.support.result.IdJsonResult
 import java.time.LocalDateTime
 
-class RbacUserGroupDetail: Serializable {
-
-    /** 主键 */
-    var id: String? = null
+class RbacUserGroupDetail: IdJsonResult<String>() {
 
     /** 用户组编码 */
     var groupCode: String? = null

@@ -3,14 +3,14 @@ package io.kuark.ability.web.springmvc
 import io.kuark.ability.web.common.WebResult
 import io.kuark.base.lang.GenericKit
 import io.kuark.base.support.Consts
-import io.kuark.base.support.IIdEntity
 import io.kuark.base.support.biz.IBaseReadOnlyBiz
+import io.kuark.base.support.payload.FormPayload
 import io.kuark.base.support.payload.ListSearchPayload
+import io.kuark.base.support.result.IJsonResult
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
-import java.io.Serializable
 import kotlin.reflect.KClass
 
 
@@ -25,7 +25,7 @@ import kotlin.reflect.KClass
  * @author K
  * @since 1.0.0
  */
-open class BaseReadOnlyController<PK : Any, B : IBaseReadOnlyBiz<PK, *>, S : ListSearchPayload, R : Serializable, D : Serializable, F : IIdEntity<PK>>
+open class BaseReadOnlyController<PK : Any, B : IBaseReadOnlyBiz<PK, *>, S : ListSearchPayload, R : IJsonResult, D : IJsonResult, F : FormPayload<PK>>
     : BaseController<F>() {
 
     @Autowired

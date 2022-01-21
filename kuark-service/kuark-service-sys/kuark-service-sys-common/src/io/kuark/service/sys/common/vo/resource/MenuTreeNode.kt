@@ -12,38 +12,12 @@ import java.beans.Transient
  * @author K
  * @since 1.0.0
  */
-data class MenuTreeNode(
-    /** 名称，或其国际化key */
-    val title: String,
+open class MenuTreeNode : BaseMenuTreeNode() {
+
     /** url */
-    val index: String?,
+    var index: String? = null
+
     /** 图标 */
-    val icon: String?,
-
-    /** id */
-    @get:Transient
-    val id: String,
-    /** 父id */
-    @get:Transient
-    val parentId: String?,
-    /** 在同父节点下的排序号 */
-    @get:Transient
-    val seqNo: Int?,
-) : IJsonResult, ITreeNode<String>, Comparable<MenuTreeNode> {
-
-    /** 孩子结点 */
-    @get:JsonInclude(JsonInclude.Include.NON_EMPTY)
-    val subs: MutableList<ITreeNode<String>> = mutableListOf()
-
-    override fun _getId(): String = id
-
-    override fun _getParentId(): String? = parentId
-
-    override fun _getChildren(): MutableList<ITreeNode<String>> = subs
-
-    override fun compareTo(other: MenuTreeNode): Int {
-        if (seqNo == null || other.seqNo == null) return 0
-        return seqNo.compareTo(other.seqNo)
-    }
+    var icon: String? = null
 
 }

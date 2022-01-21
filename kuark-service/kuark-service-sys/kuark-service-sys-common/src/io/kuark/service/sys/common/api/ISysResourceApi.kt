@@ -1,5 +1,6 @@
 package io.kuark.service.sys.common.api
 
+import io.kuark.service.sys.common.vo.resource.BaseMenuTreeNode
 import io.kuark.service.sys.common.vo.resource.ResourceType
 import io.kuark.service.sys.common.vo.resource.SysResourceRecord
 
@@ -32,5 +33,15 @@ interface ISysResourceApi {
      * @since 1.0.0
      */
     fun getResources(vararg resourceIds: String): List<SysResourceRecord>
+
+    /**
+     * 根据子系统和资源类型，返回对应的资源
+     *
+     * @param subSysDictCode 子系统代码
+     * @return List(基础的菜单树结点)
+     * @author K
+     * @since 1.0.0
+     */
+    fun getSimpleMenus(subSysDictCode: String): List<BaseMenuTreeNode>
 
 }

@@ -1,12 +1,12 @@
 package io.kuark.service.workflow.provider.context
 
-import io.kuark.service.workflow.provider.biz.FlowDefinitionBiz
-import io.kuark.service.workflow.provider.biz.FlowInstanceBiz
-import io.kuark.service.workflow.provider.biz.FlowTaskBiz
+import io.kuark.service.workflow.provider.biz.impl.FlowDefinitionBiz
+import io.kuark.service.workflow.provider.biz.impl.FlowInstanceBiz
+import io.kuark.service.workflow.provider.biz.impl.FlowTaskBiz
 import io.kuark.service.workflow.provider.event.GlobalFlowEventListener
-import io.kuark.service.workflow.provider.ibiz.IFlowDefinitionBiz
-import io.kuark.service.workflow.provider.ibiz.IFlowInstanceBiz
-import io.kuark.service.workflow.provider.ibiz.IFlowTaskBiz
+import io.kuark.service.workflow.provider.biz.ibiz.IFlowDefinitionBiz
+import io.kuark.service.workflow.provider.biz.ibiz.IFlowInstanceBiz
+import io.kuark.service.workflow.provider.biz.ibiz.IFlowTaskBiz
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration

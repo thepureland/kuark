@@ -1,7 +1,7 @@
 package io.kuark.service.user.provider.context
 
-import io.kuark.service.user.provider.user.ibiz.IUserAccountBiz
-import io.kuark.service.user.provider.user.ibiz.IUserAccountThirdBiz
+import io.kuark.service.user.provider.user.biz.ibiz.IUserAccountBiz
+import io.kuark.service.user.provider.user.biz.ibiz.IUserAccountThirdBiz
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService

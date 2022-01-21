@@ -1,8 +1,8 @@
 package io.kuark.service.workflow.provider.biz
 
 import io.kuark.service.workflow.common.vo.instance.FlowInstanceSearchParams
-import io.kuark.service.workflow.provider.ibiz.IFlowInstanceBiz
-import io.kuark.service.workflow.provider.ibiz.IFlowTaskBiz
+import io.kuark.service.workflow.provider.biz.ibiz.IFlowInstanceBiz
+import io.kuark.service.workflow.provider.biz.ibiz.IFlowTaskBiz
 import io.kuark.base.error.ObjectNotFoundException
 import io.kuark.base.image.ImageKit
 import io.kuark.base.io.IoKit

@@ -2,6 +2,7 @@ package io.kuark.service.sys.client.proxy
 
 import io.kuark.service.sys.client.fallback.SysResourceFallback
 import io.kuark.service.sys.common.api.ISysResourceApi
+import io.kuark.service.sys.common.vo.resource.BaseMenuTreeNode
 import io.kuark.service.sys.common.vo.resource.ResourceType
 import io.kuark.service.sys.common.vo.resource.SysResourceRecord
 import org.springframework.cloud.openfeign.FeignClient
@@ -16,5 +17,8 @@ interface ISysResourceClient: ISysResourceApi {
 
     @GetMapping("/sys/resource/getResourcesByIds")
     override fun getResources(vararg resourceIds: String): List<SysResourceRecord>
+
+    @GetMapping("/sys/resource/getSimpleMenus")
+    override fun getSimpleMenus(subSysDictCode: String): List<BaseMenuTreeNode>
 
 }

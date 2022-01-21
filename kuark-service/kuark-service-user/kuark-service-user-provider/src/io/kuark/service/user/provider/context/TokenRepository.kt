@@ -5,7 +5,7 @@ import io.kuark.base.query.Criteria
 import io.kuark.base.query.enums.Operator
 import io.kuark.base.time.toDate
 import io.kuark.base.time.toLocalDateTime
-import io.kuark.service.user.provider.user.ibiz.IUserLoginPersistentBiz
+import io.kuark.service.user.provider.user.biz.ibiz.IUserLoginPersistentBiz
 import io.kuark.service.user.provider.user.model.po.UserLoginPersistent
 import io.kuark.service.user.provider.user.model.table.UserLoginPersistents
 import org.springframework.beans.factory.annotation.Autowired

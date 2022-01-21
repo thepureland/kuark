@@ -1,7 +1,7 @@
 package io.kuark.service.workflow.provider.biz
 
 import io.kuark.service.workflow.common.vo.task.FlowTaskSearchParams
-import io.kuark.service.workflow.provider.ibiz.IFlowTaskBiz
+import io.kuark.service.workflow.provider.biz.ibiz.IFlowTaskBiz
 import io.kuark.base.error.ObjectNotFoundException
 import io.kuark.test.common.SpringTest
 import org.junit.jupiter.api.Assertions.*

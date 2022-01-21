@@ -11,4 +11,11 @@ class DictModuleAndTypePayload {
     @get:NotBlank(message = "字典类型不能为空！")
     var dictType: String? = null
 
+    constructor()
+
+    constructor(module: String?, dictType: String) {
+        this.module = module
+        this.dictType = dictType
+    }
+
 }

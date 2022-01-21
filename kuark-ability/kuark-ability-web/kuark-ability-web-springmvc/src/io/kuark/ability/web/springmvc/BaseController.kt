@@ -1,10 +1,8 @@
 package io.kuark.ability.web.springmvc
 
-import io.kuark.ability.web.common.WebResult
 import io.kuark.base.bean.validation.teminal.TeminalConstraintsCreator
 import io.kuark.base.lang.GenericKit
 import io.kuark.base.support.Consts
-import io.kuark.base.support.IIdEntity
 import org.springframework.web.bind.annotation.GetMapping
 import kotlin.reflect.KClass
 
@@ -28,11 +26,11 @@ open class BaseController<F: Any> {
      */
     @GetMapping("/getValidationRule")
     @Suppress(Consts.Suppress.UNCHECKED_CAST)
-    open fun getValidationRule(): WebResult<Map<String, LinkedHashMap<String, Array<Map<String, Any>>>>> {
+    open fun getValidationRule(): Map<String, LinkedHashMap<String, Array<Map<String, Any>>>> {
         if (formModelClass == null) {
             formModelClass = GenericKit.getSuperClassGenricClass(this::class, 0) as KClass<F>
         }
-        return WebResult(TeminalConstraintsCreator.create(formModelClass!!))
+        return TeminalConstraintsCreator.create(formModelClass!!)
     }
 
 }

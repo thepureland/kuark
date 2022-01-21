@@ -1,7 +1,5 @@
 package io.kuark.ability.web.springmvc
 
-import io.kuark.ability.web.common.WebResult
-import io.kuark.base.support.IIdEntity
 import io.kuark.base.support.biz.IBaseCrudBiz
 import io.kuark.base.support.payload.FormPayload
 import io.kuark.base.support.payload.ListSearchPayload
@@ -36,15 +34,14 @@ open class BaseCrudController<PK : Any, B : IBaseCrudBiz<PK, *>, S : ListSearchP
      * @since 1.0.0
      */
     @PostMapping("/saveOrUpdate")
-    open fun saveOrUpdate(@RequestBody @Valid payload: F, bindingResult: BindingResult): WebResult<PK> {
+    open fun saveOrUpdate(@RequestBody @Valid payload: F, bindingResult: BindingResult): PK {
         if (bindingResult.hasErrors()) error("数据校验失败！")
-        val id = if (payload.id == null || payload.id == "") {
+        return if (payload.id == null || payload.id == "") {
             biz.insert(payload)
         } else {
             biz.update(payload)
-            payload.id
+            payload.id!!
         }
-        return WebResult(id)
     }
 
     /**
@@ -56,8 +53,8 @@ open class BaseCrudController<PK : Any, B : IBaseCrudBiz<PK, *>, S : ListSearchP
      * @since 1.0.0
      */
     @DeleteMapping("/delete")
-    open fun delete(id: PK): WebResult<Boolean> {
-        return WebResult(biz.deleteById(id))
+    open fun delete(id: PK): Boolean {
+        return biz.deleteById(id)
     }
 
     /**
@@ -69,8 +66,8 @@ open class BaseCrudController<PK : Any, B : IBaseCrudBiz<PK, *>, S : ListSearchP
      * @since 1.0.0
      */
     @PostMapping("/batchDelete")
-    open fun batchDelete(@RequestBody ids: List<PK>): WebResult<Boolean> {
-        return WebResult(biz.batchDelete(ids) == ids.size)
+    open fun batchDelete(@RequestBody ids: List<PK>): Boolean {
+        return biz.batchDelete(ids) == ids.size
     }
 
 }

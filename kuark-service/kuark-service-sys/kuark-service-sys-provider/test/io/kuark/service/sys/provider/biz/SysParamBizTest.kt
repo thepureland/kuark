@@ -1,5 +1,6 @@
 package io.kuark.service.sys.provider.biz
 
+import io.kuark.service.sys.provider.biz.impl.SysParamBiz
 import io.kuark.test.common.SpringTest
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Test

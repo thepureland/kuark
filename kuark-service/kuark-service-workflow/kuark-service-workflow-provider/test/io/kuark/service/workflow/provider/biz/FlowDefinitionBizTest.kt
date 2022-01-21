@@ -11,7 +11,7 @@ import io.kuark.service.workflow.common.vo.definition.FlowDefinitionSearchPayloa
 import io.kuark.service.workflow.provider.event.FlowEvent
 import io.kuark.service.workflow.provider.event.FlowEventType
 import io.kuark.service.workflow.provider.event.IFlowEventListener
-import io.kuark.service.workflow.provider.ibiz.IFlowDefinitionBiz
+import io.kuark.service.workflow.provider.biz.ibiz.IFlowDefinitionBiz
 import io.kuark.service.workflow.provider.model.vo.FlowDefinition
 import io.kuark.service.workflow.provider.model.vo.FlowInstance
 import io.kuark.test.common.SpringTest

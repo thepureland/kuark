@@ -1,6 +1,6 @@
 package io.kuark.ability.web.springmvc
 
-import io.kuark.ability.web.common.WebResult
+import io.kuark.base.error.ObjectNotFoundException
 import io.kuark.base.lang.GenericKit
 import io.kuark.base.support.Consts
 import io.kuark.base.support.biz.IBaseReadOnlyBiz
@@ -44,9 +44,8 @@ open class BaseReadOnlyController<PK : Any, B : IBaseReadOnlyBiz<PK, *>, S : Lis
      */
     @PostMapping("/search")
     @Suppress(Consts.Suppress.UNCHECKED_CAST)
-    open fun search(@RequestBody searchPayload: S): WebResult<Pair<List<R>, Int>> {
-        val result = biz.pagingSearch(searchPayload) as Pair<List<R>, Int>
-        return WebResult(result)
+    open fun search(@RequestBody searchPayload: S): Pair<List<R>, Int> {
+        return biz.pagingSearch(searchPayload) as Pair<List<R>, Int>
     }
 
     /**
@@ -58,11 +57,11 @@ open class BaseReadOnlyController<PK : Any, B : IBaseReadOnlyBiz<PK, *>, S : Lis
      */
     @GetMapping("/get")
     @Suppress(Consts.Suppress.UNCHECKED_CAST)
-    open fun get(id: PK): WebResult<R> {
+    open fun get(id: PK): R {
         if (resultClass == null) {
             resultClass = GenericKit.getSuperClassGenricClass(this::class, 3) as KClass<R>
         }
-        return WebResult(biz.get(id, resultClass!!))
+        return biz.get(id, resultClass!!) ?: throw ObjectNotFoundException("找不到记录！")
     }
 
     /**
@@ -74,11 +73,11 @@ open class BaseReadOnlyController<PK : Any, B : IBaseReadOnlyBiz<PK, *>, S : Lis
      */
     @GetMapping("/getDetail")
     @Suppress(Consts.Suppress.UNCHECKED_CAST)
-    open fun getDetail(id: PK): WebResult<D> {
+    open fun getDetail(id: PK): D {
         if (detailClass == null) {
             detailClass = GenericKit.getSuperClassGenricClass(this::class, 4) as KClass<D>
         }
-        return WebResult(biz.get(id, detailClass!!))
+        return biz.get(id, detailClass!!) ?: throw ObjectNotFoundException("找不到记录！")
     }
 
 }

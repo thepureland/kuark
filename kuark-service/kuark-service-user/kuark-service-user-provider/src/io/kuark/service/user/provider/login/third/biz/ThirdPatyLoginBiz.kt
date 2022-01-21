@@ -6,8 +6,8 @@ import io.kuark.context.core.KuarkContextHolder
 import io.kuark.service.user.provider.login.third.core.AuthParam
 import io.kuark.service.user.provider.login.third.core.IThirdPartyAuthBizFactory
 import io.kuark.service.user.provider.login.third.ibiz.IThirdPatyLoginBiz
-import io.kuark.service.user.provider.user.ibiz.IUserAccountBiz
-import io.kuark.service.user.provider.user.ibiz.IUserAccountThirdBiz
+import io.kuark.service.user.provider.user.biz.ibiz.IUserAccountBiz
+import io.kuark.service.user.provider.user.biz.ibiz.IUserAccountThirdBiz
 import io.kuark.service.user.provider.user.model.po.UserAccount
 import io.kuark.service.user.provider.user.model.po.UserAccountThird
 import org.springframework.beans.factory.annotation.Autowired

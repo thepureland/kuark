@@ -31,9 +31,14 @@ object FreemarkerKit {
 
     fun processTemplateString(templateString: String?, model: Map<String, *>?, conf: Configuration?): String {
         StringWriter().use {
-            val template = Template("templateString...", StringReader(templateString), conf)
-            template.process(model, it)
-            return it.toString()
+            try {
+                val template = Template("templateString...", StringReader(templateString), conf)
+                template.process(model, it)
+                return it.toString()
+            } catch (e: Exception) {
+                error("解析模板串失败：$templateString")
+                e.printStackTrace()
+            }
         }
     }
 }

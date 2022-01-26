@@ -4,7 +4,7 @@ import io.kuark.base.query.enums.Operator
 import io.kuark.base.support.payload.ListSearchPayload
 import kotlin.reflect.KClass
 
-class UserAccountSearchPayload: ListSearchPayload() {
+open class UserAccountSearchPayload: ListSearchPayload() {
 
     override var returnEntityClass: KClass<*>? = UserAccountRecord::class
 

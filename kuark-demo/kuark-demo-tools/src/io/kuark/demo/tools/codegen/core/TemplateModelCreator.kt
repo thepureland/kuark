@@ -4,6 +4,7 @@ import io.kuark.ability.data.rdb.metadata.Column
 import io.kuark.ability.data.rdb.metadata.RdbMetadataKit
 import io.kuark.ability.data.rdb.support.*
 import io.kuark.base.bean.BeanKit
+import io.kuark.base.lang.string.StringKit
 import io.kuark.base.lang.string.capitalizeString
 import io.kuark.base.lang.string.humpToUnderscore
 import io.kuark.base.lang.string.underscoreToHump
@@ -27,7 +28,11 @@ open class TemplateModelCreator {
         val templateModel = mutableMapOf<String, Any?>()
         templateModel[Config.PROP_KEY_PACKAGE_PREFIX] = config.getPackagePrefix()
         templateModel[Config.PROP_KEY_MODULE_NAME] = config.getModuleName()
-        templateModel["className"] = tableName.underscoreToHump().capitalizeString()
+        val entityName = tableName.underscoreToHump().capitalizeString()
+        templateModel["entityName"] = entityName
+        val shortEntityName = entityName.replaceFirst(config.getModuleName(), "")
+        templateModel["shortEntityName"] = shortEntityName
+        templateModel["lowerShortEntityName"] = shortEntityName.lowercase()
         templateModel["table"] = RdbMetadataKit.getTableByName(tableName)
         val origColumns = RdbMetadataKit.getColumnsByTableName(tableName).values
         templateModel["columns"] = origColumns

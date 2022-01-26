@@ -9,8 +9,10 @@ import io.kuark.demo.tools.codegen.model.vo.Config
 import javafx.application.Platform
 import javafx.beans.value.ObservableValue
 import javafx.collections.FXCollections
+import javafx.event.Event
 import javafx.fxml.FXML
 import javafx.fxml.Initializable
+import javafx.scene.control.CheckBox
 import javafx.scene.control.ComboBox
 import javafx.scene.control.TableView
 import javafx.scene.control.TextField
@@ -48,7 +50,7 @@ class ColumnsController : Initializable {
         val tableComment = tableComment
         val items = tableComboBox.items
         tableMap = CodeGenObjectBiz.readTables()
-        tableComboBox.setItems(FXCollections.observableArrayList(tableMap!!.keys.toSortedSet()))
+        tableComboBox.items = FXCollections.observableArrayList(tableMap!!.keys.toSortedSet())
         AutoCompleteComboBoxListener<Any>(tableComboBox)
         if (items.isEmpty()) {
             tableComboBox.editor.textProperty()
@@ -76,6 +78,12 @@ class ColumnsController : Initializable {
     }
 
     private fun bindEvents() {}
+
+    @FXML
+    fun selectDetailItems(e: Event) {
+        val selected = (e.target as CheckBox).isSelected
+        columnTable.items.forEach { it.setDetailItem(selected) }
+    }
 
     fun setConfig(config: Config) {
         this.config = config

@@ -5,7 +5,7 @@ import io.kuark.base.bean.validation.constraint.annotaions.DictCode
 import io.kuark.base.support.payload.FormPayload
 import javax.validation.constraints.NotBlank
 
-class UserAccountPayload: FormPayload<String>() {
+open class UserAccountPayload: FormPayload<String>() {
 
     /** 用户名 */
     @get:NotBlank(message = "用户名不能为空！")

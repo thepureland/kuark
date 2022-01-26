@@ -10,9 +10,11 @@ import io.kuark.demo.tools.codegen.core.CodeGeneratorContext
 import io.kuark.demo.tools.codegen.core.FreemarkerKit
 import io.kuark.demo.tools.codegen.model.vo.GenFile
 import javafx.collections.FXCollections
+import javafx.event.Event
 import javafx.fxml.FXML
 import javafx.fxml.Initializable
 import javafx.scene.control.Alert
+import javafx.scene.control.CheckBox
 import javafx.scene.control.TableView
 import org.apache.commons.io.filefilter.IOFileFilter
 import java.io.File
@@ -107,7 +109,7 @@ class FilesController : Initializable {
 
     @FXML
     fun generateAll() {
-        selectAll()
+        fileTable.items.forEach { it.setGenerate(true) }
         generate()
     }
 
@@ -120,11 +122,8 @@ class FilesController : Initializable {
     }
 
     @FXML
-    private fun selectAll() = select(true)
-
-    @FXML
-    private fun deselectAll() = select(false)
-
-    private fun select(select: Boolean) = fileTable.items.forEach { it.setGenerate(select) }
-
+    fun select(e: Event) {
+        val selected = (e.target as CheckBox).isSelected
+        fileTable.items.forEach { it.setGenerate(selected) }
+    }
 }

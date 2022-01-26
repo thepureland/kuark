@@ -1,7 +1,6 @@
 package io.kuark.service.sys.provider.api.frontend
 
 import io.kuark.ability.web.springmvc.BaseReadOnlyController
-import io.kuark.ability.web.springmvc.FrontEndApi
 import io.kuark.base.error.ObjectNotFoundException
 import io.kuark.base.support.Consts
 import io.kuark.service.sys.common.vo.dict.*
@@ -15,7 +14,6 @@ import javax.validation.Valid
 
 @RestController
 @RequestMapping("/sys/dict")
-@FrontEndApi
 @CrossOrigin
 open class SysDictController :
     BaseReadOnlyController<String, ISysDictBiz, SysDictSearchPayload, SysDictRecord, SysDictDetail, SysDictPayload>() {

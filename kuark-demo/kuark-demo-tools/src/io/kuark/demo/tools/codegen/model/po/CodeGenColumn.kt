@@ -24,23 +24,17 @@ interface CodeGenColumn : IDbEntity<String, CodeGenColumn> {
     /** 注释 */
     var comment: String?
 
-    /** 是否可查询 */
-    var searchable: Boolean
+    /** 是否查询项 */
+    var searchItem: Boolean
 
-    /** 是否列表中可排序 */
-    var sortable: Boolean
+    /** 是否列表项 */
+    var listItem: Boolean
 
-    /** 列表中列序 */
-    var orderInList: Int?
+    /** 是否编辑项 */
+    var editItem: Boolean
 
-    /** 列表默认排序 */
-    var defaultOrder: String?
-
-    /** 编辑页中的顺序 */
-    var orderInEdit: Int?
-
-    /** 详情页中的顺序 */
-    var orderInView: Int?
+    /** 是否详情项 */
+    var detailItem: Boolean
 
 
     //region your codes 2

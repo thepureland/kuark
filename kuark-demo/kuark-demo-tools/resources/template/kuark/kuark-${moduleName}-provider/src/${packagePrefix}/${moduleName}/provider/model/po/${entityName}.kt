@@ -1,8 +1,4 @@
-package $
-
-import io.kuark.ability.data.rdb.support.DbEntityFactory
-
-{packagePrefix}.${moduleName}.model.po
+package ${packagePrefix}.${moduleName}.provider.model.po
 
 import io.kuark.ability.data.rdb.support.DbEntityFactory
 <#if poSuperClass == "IDbEntity">
@@ -40,10 +36,10 @@ import java.sql.SQLXML
 
 <@generateClassComment table.comment+"数据库实体"/>
 //region your codes 1
-interface ${className} : ${poSuperClass}<${pkColumn.kotlinTypeName}, ${className}> {
+interface ${entityName} : ${poSuperClass}<${pkColumn.kotlinTypeName}, ${entityName}> {
 //endregion your codes 1
 
-    companion object : DbEntityFactory<${className}>()
+    companion object : DbEntityFactory<${entityName}>()
 
 	<#list columns as column>
     /** ${column.comment!""} */

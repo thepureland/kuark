@@ -59,14 +59,14 @@ open class RbacRoleBiz : IRbacRoleBiz, BaseCrudBiz<String, RbacRole, RbacRoleDao
     override fun setRolePermissions(roleId: String, resourceIds: Collection<String>): Boolean {
         rbacRoleResourceDao.batchDeleteCriteria(Criteria(RbacRoleResources.roleId.name, Operator.EQ, roleId))
         val roleResources = resourceIds.map { RbacRoleResource { this.roleId = roleId; resourceId = it } }
-        return batchInsert(roleResources) == resourceIds.size
+        return rbacRoleResourceDao.batchInsert(roleResources) == resourceIds.size
     }
 
     @Transactional
     override fun assignUser(roleId: String, userIds: Collection<String>): Boolean {
         rbacRoleUserDao.batchDeleteCriteria(Criteria(RbacRoleUsers.roleId.name, Operator.EQ, roleId))
         val roleUsers = userIds.map { RbacRoleUser { this.roleId = roleId; userId = it } }
-        return batchInsert(roleUsers) == userIds.size
+        return rbacRoleUserDao.batchInsert(roleUsers) == userIds.size
     }
 
     @Suppress(Consts.Suppress.UNCHECKED_CAST)

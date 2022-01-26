@@ -1,7 +1,6 @@
 package io.kuark.service.sys.provider.api.frontend
 
 import io.kuark.ability.web.springmvc.BaseCrudController
-import io.kuark.ability.web.springmvc.FrontEndApi
 import io.kuark.base.error.ObjectNotFoundException
 import io.kuark.service.sys.common.api.ISysDictApi
 import io.kuark.service.sys.common.api.ISysResourceApi
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/sys/resource")
-@FrontEndApi
 @CrossOrigin
 open class SysResourceController :
     BaseCrudController<String, ISysResourceBiz, SysResourceSearchPayload, SysResourceRecord, SysResourceDetail, SysResourcePayload>() {

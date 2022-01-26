@@ -25,24 +25,17 @@ object CodeGenColumns : StringIdTable<CodeGenColumn>("code_gen_column") {
     /** 注释 */
     var comment = varchar("comment").bindTo { it.comment }
 
-    /** 是否可查询 */
-    var searchable = boolean("searchable").bindTo { it.searchable }
+    /** 是否查询项 */
+    var searchItem = boolean("search_item").bindTo { it.searchItem }
 
-    /** 是否列表中可排序 */
-    var sortable = boolean("sortable").bindTo { it.sortable }
+    /** 是否列表项 */
+    var listItem = boolean("list_item").bindTo { it.listItem }
 
-    /** 列表中列序 */
-    var orderInList = int("order_in_list").bindTo { it.orderInList }
+    /** 是否编辑项 */
+    var editItem = boolean("edit_item").bindTo { it.editItem }
 
-    /** 列表默认排序 */
-    var defaultOrder = varchar("default_order").bindTo { it.defaultOrder }
-
-    /** 编辑页中的顺序 */
-    var orderInEdit = int("order_in_edit").bindTo { it.orderInEdit }
-
-    /** 详情页中的顺序 */
-    var orderInView = int("order_in_view").bindTo { it.orderInView }
-
+    /** 是否详情项 */
+    var detailItem = boolean("detail_item").bindTo { it.detailItem }
 
     //region your codes 2
 

@@ -1,7 +1,6 @@
 package io.kuark.service.sys.provider.api.frontend
 
 import io.kuark.ability.web.springmvc.BaseCrudController
-import io.kuark.ability.web.springmvc.FrontEndApi
 import io.kuark.service.sys.common.api.ISysParamApi
 import io.kuark.service.sys.common.vo.param.SysParamDetail
 import io.kuark.service.sys.common.vo.param.SysParamPayload
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/sys/param")
-@FrontEndApi
 @CrossOrigin
 open class SysParamController :
     BaseCrudController<String, ISysParamBiz, SysParamSearchPayload, SysParamRecord, SysParamDetail, SysParamPayload>() {

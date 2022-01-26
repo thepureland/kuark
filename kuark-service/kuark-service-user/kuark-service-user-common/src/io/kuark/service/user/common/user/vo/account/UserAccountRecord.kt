@@ -3,7 +3,7 @@ package io.kuark.service.user.common.user.vo.account
 import io.kuark.base.support.result.IdJsonResult
 import java.time.LocalDateTime
 
-class UserAccountRecord : IdJsonResult<String>() {
+open class UserAccountRecord : IdJsonResult<String>() {
 
     /** 用户名 */
     var username: String? = null

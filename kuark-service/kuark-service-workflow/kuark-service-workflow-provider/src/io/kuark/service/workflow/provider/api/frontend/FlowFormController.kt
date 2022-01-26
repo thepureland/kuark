@@ -1,6 +1,5 @@
 package io.kuark.service.workflow.provider.api.frontend
 
-import io.kuark.ability.web.springmvc.FrontEndApi
 import io.kuark.base.query.sort.Order
 import io.kuark.service.workflow.common.vo.form.FlowFormSearchParams
 import io.kuark.service.workflow.provider.biz.ibiz.IFlowFormBiz
@@ -19,7 +18,6 @@ import org.springframework.web.bind.annotation.*
 @RestController
 //region your codes 1
 @RequestMapping("/flow/form")
-@FrontEndApi
 @CrossOrigin
 class FlowFormController {
 //endregion your codes 1

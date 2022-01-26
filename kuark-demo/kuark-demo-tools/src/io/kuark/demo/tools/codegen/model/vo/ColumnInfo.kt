@@ -14,12 +14,10 @@ class ColumnInfo {
     private var name: String? = null
     private var origComment: String? = null
     private val customComment: StringProperty = SimpleStringProperty()
-    private val searchable: BooleanProperty = SimpleBooleanProperty()
-    private val orderInList: IntegerProperty = SimpleIntegerProperty()
-    private val sortable: BooleanProperty = SimpleBooleanProperty()
-    private val defaultOrder: StringProperty = SimpleStringProperty()
-    private val orderInEdit: IntegerProperty = SimpleIntegerProperty()
-    private val orderInView: IntegerProperty = SimpleIntegerProperty()
+    private val searchItem: BooleanProperty = SimpleBooleanProperty()
+    private val listItem: BooleanProperty = SimpleBooleanProperty()
+    private val editItem: BooleanProperty = SimpleBooleanProperty()
+    private val detailItem: BooleanProperty = SimpleBooleanProperty()
 
     fun getName(): String? = name
 
@@ -27,41 +25,29 @@ class ColumnInfo {
         this.name = name
     }
 
-    fun getSearchable(): Boolean = searchable.get()
+    fun getSearchItem(): Boolean = searchItem.get()
 
-    fun searchableProperty(): BooleanProperty = searchable
+    fun searchItemProperty(): BooleanProperty = searchItem
 
-    fun setSearchable(searchable: Boolean) = this.searchable.set(searchable)
+    fun setSearchItem(searchItem: Boolean) = this.searchItem.set(searchItem)
 
-    fun getOrderInList(): Int = orderInList.get()
+    fun getListItem(): Boolean = listItem.get()
 
-    fun orderInListProperty(): IntegerProperty = orderInList
+    fun listItemProperty(): BooleanProperty = listItem
 
-    fun setOrderInList(orderInList: Int) = this.orderInList.set(orderInList)
+    fun setListItem(listItem: Boolean) = this.listItem.set(listItem)
 
-    fun getSortable(): Boolean = sortable.get()
+    fun getEditItem(): Boolean = editItem.get()
 
-    fun sortableProperty(): BooleanProperty = sortable
+    fun editItemProperty(): BooleanProperty = editItem
 
-    fun setSortable(sortable: Boolean) = this.sortable.set(sortable)
+    fun setEditItem(editItem: Boolean) = this.editItem.set(editItem)
 
-    fun getDefaultOrder(): String? = defaultOrder.get()
+    fun getDetailItem(): Boolean = detailItem.get()
 
-    fun defaultOrderProperty(): StringProperty = defaultOrder
+    fun detailItemProperty(): BooleanProperty = detailItem
 
-    fun setDefaultOrder(defaultOrder: String?) = this.defaultOrder.set(defaultOrder)
-
-    fun getOrderInEdit(): Int = orderInEdit.get()
-
-    fun orderInEditProperty(): IntegerProperty = orderInEdit
-
-    fun setOrderInEdit(orderInEdit: Int) = this.orderInEdit.set(orderInEdit)
-
-    fun getOrderInView(): Int = orderInView.get()
-
-    fun orderInViewProperty(): IntegerProperty = orderInView
-
-    fun setOrderInView(orderInView: Int) = this.orderInView.set(orderInView)
+    fun setDetailItem(detailItem: Boolean) = this.detailItem.set(detailItem)
 
     fun getCustomComment(): String? = customComment.get()
 

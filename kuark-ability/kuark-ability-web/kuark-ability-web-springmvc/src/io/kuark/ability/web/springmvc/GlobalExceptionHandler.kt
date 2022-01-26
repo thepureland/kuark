@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletResponse
  * @author K
  * @since 1.0.0
  */
-@ControllerAdvice(basePackages = ["io.kuark.**.frontend"])
+@ControllerAdvice
 open class GlobalExceptionHandler {
 
     /** 未知错误的提示消息 */

@@ -12,13 +12,12 @@ import java.beans.Transient
  * @author K
  * @since 1.0.0
  */
-open class BaseMenuTreeNode: IJsonResult, ITreeNode<String>, Comparable<MenuTreeNode> {
+open class BaseMenuTreeNode: IJsonResult, ITreeNode<String>, Comparable<BaseMenuTreeNode> {
 
     /** 名称，或其国际化key */
     var title: String? = null
 
     /** id */
-    @get:Transient
     var id: String? = null
     /** 父id */
     @get:Transient
@@ -30,15 +29,15 @@ open class BaseMenuTreeNode: IJsonResult, ITreeNode<String>, Comparable<MenuTree
 
     /** 孩子结点 */
     @get:JsonInclude(JsonInclude.Include.NON_EMPTY)
-    var subs: MutableList<ITreeNode<String>> = mutableListOf()
+    var children: MutableList<ITreeNode<String>> = mutableListOf()
 
     override fun _getId(): String = this.id!!
 
     override fun _getParentId(): String? = parentId
 
-    override fun _getChildren(): MutableList<ITreeNode<String>> = subs
+    override fun _getChildren(): MutableList<ITreeNode<String>> = children
 
-    override fun compareTo(other: MenuTreeNode): Int {
+    override fun compareTo(other: BaseMenuTreeNode): Int {
         if (seqNo == null || other.seqNo == null) return 0
         return seqNo!!.compareTo(other.seqNo!!)
     }

@@ -1,7 +1,6 @@
 package io.kuark.service.user.provider.user.api.frontend
 
 import io.kuark.ability.web.springmvc.BaseCrudController
-import io.kuark.ability.web.springmvc.FrontEndApi
 import io.kuark.base.lang.string.StringKit
 import io.kuark.base.security.DigestKit
 import io.kuark.service.sys.common.api.ISysParamApi
@@ -17,7 +16,6 @@ import javax.validation.Valid
 
 @RestController
 @RequestMapping("/user/account")
-@FrontEndApi
 @CrossOrigin
 open class UserAccountController :
     BaseCrudController<String, IUserAccountBiz, UserAccountSearchPayload, UserAccountRecord, UserAccountDetail, UserAccountPayload>() {

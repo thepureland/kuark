@@ -1,6 +1,5 @@
 package io.kuark.service.workflow.provider.api.frontend
 
-import io.kuark.ability.web.springmvc.FrontEndApi
 import io.kuark.base.bean.BeanKit
 import io.kuark.base.image.ImageKit
 import io.kuark.service.sys.common.api.ISysDictApi
@@ -22,7 +21,6 @@ import javax.imageio.ImageIO
  */
 @RestController
 @RequestMapping("/flow/definition")
-@FrontEndApi
 @CrossOrigin
 class FlowDefinitionController {
 

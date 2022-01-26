@@ -1,7 +1,6 @@
 package io.kuark.service.sys.provider.api.frontend
 
 import io.kuark.ability.web.springmvc.BaseReadOnlyController
-import io.kuark.ability.web.springmvc.FrontEndApi
 import io.kuark.base.query.sort.Order
 import io.kuark.base.support.Consts
 import io.kuark.service.sys.common.api.ISysDictApi
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/sys/dictItem")
-@FrontEndApi
 @CrossOrigin
 class SysDictItemController :
     BaseReadOnlyController<String, ISysDictItemBiz, SysDictSearchPayload, SysDictRecord, SysDictItemDetail, SysDictPayload>() {

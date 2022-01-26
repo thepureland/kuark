@@ -70,6 +70,9 @@ object UserAccounts : UpdatableTable<UserAccount>("user_account") {
     /** 所有者id，依业务可以是店铺id、站点id、商户id等 */
     var ownerId = varchar("owner_id").bindTo { it.ownerId }
 
+    /** 组织id */
+    var organizationId = varchar("organization_id").bindTo { it.organizationId }
+
 
     //region your codes 2
 

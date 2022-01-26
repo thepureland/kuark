@@ -60,12 +60,10 @@ object CodeGenColumnBiz {
                     name = column.getName()!!
                     objectName = table
                     comment = column.getCustomComment()
-                    searchable = column.getSearchable()
-                    sortable = column.getSortable()
-                    orderInEdit = column.getOrderInEdit()
-                    orderInList = column.getOrderInList()
-                    orderInView = column.getOrderInView()
-                    defaultOrder = column.getDefaultOrder()
+                    searchItem = column.getSearchItem()
+                    listItem = column.getListItem()
+                    editItem = column.getEditItem()
+                    detailItem = column.getDetailItem()
                 }
             )
         }

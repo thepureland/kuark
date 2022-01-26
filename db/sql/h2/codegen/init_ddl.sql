@@ -35,21 +35,17 @@ CREATE TABLE "code_gen_column" (
   "name" VARCHAR(63) NOT NULL,
   "object_name" VARCHAR(63) NOT NULL,
   "comment" VARCHAR(127),
-  "searchable" bool NOT NULL DEFAULT false,
-  "sortable" bool NOT NULL DEFAULT false,
-  "order_in_list" INT2,
-  "default_order" VARCHAR(7),
-  "order_in_edit" INT2,
-  "order_in_view" INT2
+  "search_item" bool NOT NULL DEFAULT false,
+  "list_item" bool NOT NULL DEFAULT false,
+  "edit_item" bool NOT NULL DEFAULT false,
+  "detail_item" bool NOT NULL DEFAULT false
 );
 COMMENT ON TABLE "code_gen_column" IS '代码生成-列信息';
 COMMENT ON COLUMN "code_gen_column"."id" IS '主键';
 COMMENT ON COLUMN "code_gen_column"."name" IS '字段名';
 COMMENT ON COLUMN "code_gen_column"."object_name" IS '对象名称';
 COMMENT ON COLUMN "code_gen_column"."comment" IS '注释';
-COMMENT ON COLUMN "code_gen_column"."searchable" IS '是否可查询';
-COMMENT ON COLUMN "code_gen_column"."sortable" IS '是否列表中可排序';
-COMMENT ON COLUMN "code_gen_column"."order_in_list" IS '列表中列序';
-COMMENT ON COLUMN "code_gen_column"."default_order" IS '列表默认排序';
-COMMENT ON COLUMN "code_gen_column"."order_in_edit" IS '编辑页中的顺序';
-COMMENT ON COLUMN "code_gen_column"."order_in_view" IS '详情页中的顺序';
+COMMENT ON COLUMN "code_gen_column"."search_item" IS '是否查询项';
+COMMENT ON COLUMN "code_gen_column"."list_item" IS '是否列表项';
+COMMENT ON COLUMN "code_gen_column"."edit_item" IS '是否编辑项';
+COMMENT ON COLUMN "code_gen_column"."detail_item" IS '是否详情项';

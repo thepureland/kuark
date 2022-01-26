@@ -70,6 +70,9 @@ interface UserAccount : IUpdatableDbEntity<String, UserAccount> {
     /** 所有者id，依业务可以是店铺id、站点id、商户id等 */
     var ownerId: String?
 
+    /** 组织id */
+    var organizationId: String?
+
 
     //region your codes 2
 

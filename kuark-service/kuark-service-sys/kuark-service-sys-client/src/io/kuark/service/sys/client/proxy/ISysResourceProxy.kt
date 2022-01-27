@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping
 
 
 @FeignClient(name = "sys-resource", fallback = SysResourceFallback::class)
-interface ISysResourceClient: ISysResourceApi {
+interface ISysResourceProxy: ISysResourceApi {
 
     @GetMapping("/sys/resource/getResources")
     override fun getResources(subSysDictCode: String, resourceType: ResourceType): List<SysResourceRecord>

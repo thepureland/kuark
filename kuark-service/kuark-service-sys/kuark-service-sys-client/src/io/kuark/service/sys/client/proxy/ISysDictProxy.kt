@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 
 @FeignClient(name = "sys-dict", fallback = SysDictFallback::class)
-interface ISysDictClient: ISysDictApi {
+interface ISysDictProxy: ISysDictApi {
 
     @GetMapping("/sys/dict/api/getDictItems")
     override fun getDictItems(payload: DictModuleAndTypePayload): List<SysDictItemRecord>

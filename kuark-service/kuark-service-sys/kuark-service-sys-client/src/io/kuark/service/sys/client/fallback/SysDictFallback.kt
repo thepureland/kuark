@@ -1,12 +1,12 @@
 package io.kuark.service.sys.client.fallback
 
-import io.kuark.service.sys.client.proxy.ISysDictClient
+import io.kuark.service.sys.client.proxy.ISysDictProxy
 import io.kuark.service.sys.common.vo.dict.DictModuleAndTypePayload
 import io.kuark.service.sys.common.vo.dict.SysDictItemRecord
 import org.springframework.stereotype.Component
 
 @Component
-class SysDictFallback: ISysDictClient {
+class SysDictFallback: ISysDictProxy {
 
     override fun getDictItems(payload: DictModuleAndTypePayload): List<SysDictItemRecord> {
         TODO("Not yet implemented")

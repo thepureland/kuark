@@ -7,7 +7,7 @@ import org.springframework.cloud.openfeign.FeignClient
 import org.springframework.web.bind.annotation.GetMapping
 
 @FeignClient(name = "sys-param", fallback = SysDictFallback::class)
-interface ISysParamClient: ISysParamApi {
+interface ISysParamProxy: ISysParamApi {
 
     @GetMapping("/sys/param/getParam")
     override fun getParam(module: String, paramName: String): SysParamRecord?

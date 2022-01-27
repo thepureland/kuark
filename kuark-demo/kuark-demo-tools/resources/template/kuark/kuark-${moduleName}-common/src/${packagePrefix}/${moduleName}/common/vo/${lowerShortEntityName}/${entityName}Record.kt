@@ -10,6 +10,12 @@ open class ${shortEntityName}Record : IdJsonResult<${pkColumn.kotlinTypeName}>()
 
     //region your codes 2
 
+    <#list listItemColumns as column>
+    /** ${column.comment!""} */
+    var ${column.columnHumpName}: ${column.kotlinTypeName}? = null
+
+    </#list>
+
     //endregion your codes 2
 
 }

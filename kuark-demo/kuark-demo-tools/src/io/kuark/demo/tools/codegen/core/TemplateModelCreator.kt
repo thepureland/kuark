@@ -4,7 +4,6 @@ import io.kuark.ability.data.rdb.metadata.Column
 import io.kuark.ability.data.rdb.metadata.RdbMetadataKit
 import io.kuark.ability.data.rdb.support.*
 import io.kuark.base.bean.BeanKit
-import io.kuark.base.lang.string.StringKit
 import io.kuark.base.lang.string.capitalizeString
 import io.kuark.base.lang.string.humpToUnderscore
 import io.kuark.base.lang.string.underscoreToHump
@@ -39,25 +38,53 @@ open class TemplateModelCreator {
         templateModel["pkColumn"] = origColumns.first { it.primaryKey }
         templateModel[Config.PROP_KEY_AUTHOR] = config.getAuthor()
         templateModel[Config.PROP_KEY_VERSION] = config.getVersion()
-        val columnConfMap = columns.map { it.getColumn() to it }.toMap()
+        val columnConfMap = columns.associateBy { it.getColumn() }
+
+        // 查询项
+        val searchItemColumns = mutableListOf<Column>()
+        templateModel["searchItemColumns"] = searchItemColumns
+        // 列表项
+        val listItemColumns = mutableListOf<Column>()
+        templateModel["listItemColumns"] = listItemColumns
+        // 编辑项
+        val editItemColumns = mutableListOf<Column>()
+        templateModel["editItemColumns"] = editItemColumns
+        // 详情项
+        val detailItemColumns = mutableListOf<Column>()
+        templateModel["detailItemColumns"] = detailItemColumns
+
         for (origColumn in origColumns) {
             val columnName = origColumn.name.lowercase(Locale.getDefault())
             val columnInfo = columnConfMap[columnName]
             if (columnInfo != null) {
                 BeanKit.copyProperties(columnInfo, origColumn)
                 origColumn.comment = columnInfo.getComment()
+
+                if (columnInfo.getSearchItem()) {
+                    searchItemColumns.add(origColumn)
+                }
+                if (columnInfo.getListItem()) {
+                    listItemColumns.add(origColumn)
+                }
+                if (columnInfo.getEditItem()) {
+                    editItemColumns.add(origColumn)
+                }
+                if (columnInfo.getDetailItem()) {
+                    detailItemColumns.add(origColumn)
+                }
             }
         }
-        determinPoDaoSuperClass(templateModel, origColumns)
+
+        determinePoDaoSuperClass(templateModel, origColumns)
         initOtherParameters(templateModel, templateModel["columns"] as Collection<Column>)
         return templateModel
     }
 
-    open fun determinPoDaoSuperClass(templateModel: MutableMap<String, Any?>, origColumns: Collection<Column>) {
-        val pkKotylinType = origColumns.first { it.primaryKey }.kotlinType
+    open fun determinePoDaoSuperClass(templateModel: MutableMap<String, Any?>, origColumns: Collection<Column>) {
+        val pkKotlinType = origColumns.first { it.primaryKey }.kotlinType
         var poSuperClass = IDbEntity::class.simpleName
         lateinit var daoSuperClass: String
-        when (pkKotylinType) {
+        when (pkKotlinType) {
             String::class -> {
                 val maintainColumns = listOf(
                     MaintainableTable<*>::id.name,

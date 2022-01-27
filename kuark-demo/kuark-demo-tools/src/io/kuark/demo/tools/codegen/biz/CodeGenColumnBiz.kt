@@ -20,7 +20,7 @@ object CodeGenColumnBiz {
     fun readColumns(): List<ColumnInfo> {
         val table = CodeGeneratorContext.tableName
         // from meta data
-        val columns: Map<String, Column> = RdbMetadataKit.getColumnsByTableName(table)
+        val columns = RdbMetadataKit.getColumnsByTableName(table)
 
         // from code_gen_column table
         val columnMap = CodeGenColumnDao.searchCodeGenColumnMap(table)
@@ -41,6 +41,9 @@ object CodeGenColumnBiz {
                     setOrigComment(column.comment)
                 }
             }
+        }
+        if (columnMap.isEmpty()) { // 默认都为详情项
+            results.map { it.setDetailItem(true) }
         }
         return results
     }

@@ -36,6 +36,9 @@ class ColumnsController : Initializable {
     @FXML
     lateinit var columnTable: TableView<ColumnInfo>
 
+    @FXML
+    lateinit var detailCheckBox: CheckBox
+
     private lateinit var config: Config
     private var tableMap: Map<String, String?>? = null
 
@@ -64,6 +67,9 @@ class ColumnsController : Initializable {
                                 override fun run() {
                                     val columns = CodeGenColumnBiz.readColumns()
                                     Platform.runLater { columnTable.setItems(FXCollections.observableArrayList(columns)) }
+                                    if(columnTable.items.all { it.getDetailItem() }) {
+                                        detailCheckBox.selectedProperty().value = true
+                                    }
                                 }
                             }.start()
                         }

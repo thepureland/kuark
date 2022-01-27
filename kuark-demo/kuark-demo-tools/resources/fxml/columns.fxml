@@ -63,7 +63,7 @@
                         <CheckBoxTableCellFactory/>
                     </cellFactory>
                     <graphic>
-                        <CheckBox onAction="#selectDetailItems"/>
+                        <CheckBox fx:id="detailCheckBox" onAction="#selectDetailItems"/>
                     </graphic>
                 </TableColumn>
             </columns>

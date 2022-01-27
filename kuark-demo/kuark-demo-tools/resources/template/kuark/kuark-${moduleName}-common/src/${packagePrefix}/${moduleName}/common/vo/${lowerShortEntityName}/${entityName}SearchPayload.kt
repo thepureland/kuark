@@ -13,6 +13,12 @@ open class ${shortEntityName} : ListSearchPayload() {
 
     override var returnEntityClass: KClass<*>? = ${entityName}Record::class
 
+    <#list searchItemColumns as column>
+    /** ${column.comment!""} */
+    var ${column.columnHumpName}: ${column.kotlinTypeName}? = null
+
+    </#list>
+
     //endregion your codes 2
 
 }

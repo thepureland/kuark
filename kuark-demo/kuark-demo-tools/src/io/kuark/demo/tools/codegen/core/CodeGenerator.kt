@@ -80,8 +80,6 @@ class CodeGenerator(
         val absoluteOutputFilePath =
             File("${CodeGeneratorContext.config.getCodeLoaction()}/${genFile.finalFileRelativePath}")
         val exists = absoluteOutputFilePath.exists()
-        val existStr = if (exists) "Override " else ""
-        log.debug("[" + existStr + "generate]\t template:${genFile.getDirectory()}/${genFile.getFilename()} ==> ${genFile.finalFileRelativePath}")
         var codeMerger: CodeMerger? = null
         if (exists) {
             codeMerger = CodeMerger(absoluteOutputFilePath)

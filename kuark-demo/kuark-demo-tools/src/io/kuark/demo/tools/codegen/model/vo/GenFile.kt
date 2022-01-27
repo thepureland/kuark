@@ -12,8 +12,16 @@ import javafx.beans.property.StringProperty
  * @since 1.0.0
  */
 class GenFile(
-    generate: Boolean, filename: String, directory: String,// 参数化后的文件相对路径
-    var finalFileRelativePath: String,// 模板文件相对路径，为了生成时能找得到模板文件
+    generate: Boolean,
+
+    filename: String,
+
+    directory: String,
+
+    // 参数化后的文件相对路径
+    var finalFileRelativePath: String,
+
+    // 模板文件相对路径，为了生成时能找得到模板文件
     var templateFileRelativePath: String
 ) : Comparable<GenFile> {
 

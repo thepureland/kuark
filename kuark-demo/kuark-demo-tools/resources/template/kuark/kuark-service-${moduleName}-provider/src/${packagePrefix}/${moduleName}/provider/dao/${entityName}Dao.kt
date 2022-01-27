@@ -2,15 +2,16 @@ package ${packagePrefix}.${moduleName}.provider.dao
 
 import ${packagePrefix}.${moduleName}.provider.model.po.${entityName}
 import ${packagePrefix}.${moduleName}.provider.model.table.${entityName}s
-import org.ktorm.dsl.*
 import org.springframework.stereotype.Repository
-
 <#if table.type.name() == "TABLE">
-<#assign superDao = "BaseDao">
+import io.kuark.ability.data.rdb.support.BaseCrudDao
+<#assign superDao = "BaseCrudDao">
 </#if>
 <#if table.type.name() == "VIEW">
+import io.kuark.ability.data.rdb.support.BaseReadOnlyDao
 <#assign superDao = "BaseReadOnlyDao">
 </#if>
+
 
 <@generateClassComment table.comment+"数据访问对象"/>
 @Repository

@@ -48,24 +48,25 @@ class FilesController : Initializable {
                 return "macro.include" != s
             }
         }
-        val files =
+        val templateFiles =
             if (templateRootDir.contains(".jar")) jarFiles
             else FileKit.listFiles(File(templateRootDir), fileFilter, fileFilter)
         templateModel = CodeGeneratorContext.templateModelCreator.create()
         val cfg = Configuration(Configuration.VERSION_2_3_30)
         val genFiles = mutableListOf<GenFile>()
         val codeGenFiles = CodeGenFileBiz.read()
-        for (file in files) {
+        for (file in templateFiles) {
             val filename = FreemarkerKit.processTemplateString(file.name, templateModel, cfg)
             var directory = FreemarkerKit.processTemplateString(file.parent, templateModel, cfg)
             directory = FilenameKit.normalize(directory, true)
-            val finalFileRelativePath =
-                directory.substring(templateRootDir.length + 1).replace('.', '/') + "/" + filename
+            val destRelativeDirectory = directory.substring(templateRootDir.length + 1).replace('.', '/')
+            val finalFileRelativePath = "$destRelativeDirectory/$filename"
             val templateFileRelativePath =
                 FilenameKit.normalize(file.absolutePath, true).substring(templateRootDir.lastIndex + 2)
             genFiles.add(
                 GenFile(
-                    codeGenFiles.contains(filename), filename, directory,
+                    codeGenFiles.contains(filename), filename,
+                    "${CodeGeneratorContext.config.getCodeLoaction()}/${destRelativeDirectory}",
                     finalFileRelativePath, templateFileRelativePath
                 )
             )

@@ -29,7 +29,7 @@ open class TemplateModelCreator {
         templateModel[Config.PROP_KEY_MODULE_NAME] = config.getModuleName()
         val entityName = tableName.underscoreToHump().capitalizeString()
         templateModel["entityName"] = entityName
-        val shortEntityName = entityName.replaceFirst(config.getModuleName(), "")
+        val shortEntityName = entityName.replaceFirst(config.getModuleName(), "", true)
         templateModel["shortEntityName"] = shortEntityName
         templateModel["lowerShortEntityName"] = shortEntityName.lowercase()
         templateModel["table"] = RdbMetadataKit.getTableByName(tableName)
@@ -121,6 +121,7 @@ open class TemplateModelCreator {
         templateModel["daoSuperClass"] = daoSuperClass
     }
 
+    @Suppress(Consts.Suppress.UNCHECKED_CAST)
     open fun initOtherParameters(templateModel: MutableMap<String, Any?>, origColumns: Collection<Column>) {
         // 为了PO模板中，非kotlin类型的import
         val kotlinTypeMap = mapOf(
@@ -134,8 +135,30 @@ open class TemplateModelCreator {
             "containsRowIdColumn" to java.sql.RowId::class,
             "containsSQLXMLColumn" to java.sql.SQLXML::class
         )
+
+        // po中
         for ((key, value) in kotlinTypeMap)
             templateModel[key] = origColumns.any { it.kotlinType == value }
+
+        // 查询载体类中
+        val searchItemColumns = templateModel["searchItemColumns"] as List<Column>
+        for ((key, value) in kotlinTypeMap)
+            templateModel[key+"InSearchItems"] = searchItemColumns.any { it.kotlinType == value }
+
+        // 列表记录类中
+        val listItemColumns = templateModel["listItemColumns"] as List<Column>
+        for ((key, value) in kotlinTypeMap)
+            templateModel[key+"InListItems"] = listItemColumns.any { it.kotlinType == value }
+
+        // 编辑载体类中
+        val editItemColumns = templateModel["editItemColumns"] as List<Column>
+        for ((key, value) in kotlinTypeMap)
+            templateModel[key+"InEditItems"] = editItemColumns.any { it.kotlinType == value }
+
+        // 详情编辑类中
+        val detailItemColumns =  templateModel["detailItemColumns"] as List<Column>
+        for ((key, value) in kotlinTypeMap)
+            templateModel[key+"InDetailItems"] = detailItemColumns.any { it.kotlinType == value }
     }
 
 }

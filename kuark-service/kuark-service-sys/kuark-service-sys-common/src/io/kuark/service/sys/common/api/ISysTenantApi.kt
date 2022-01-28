@@ -8,7 +8,7 @@ package io.kuark.service.sys.common.api
  * @since 1.0.0
  */
 //region your codes 1
-interface ISysTenementApi {
+interface ISysTenantApi {
 //endregion your codes 1
 
     //region your codes 2

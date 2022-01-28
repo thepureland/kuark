@@ -1,6 +1,6 @@
 package io.kuark.service.sys.provider.api.local
 
-import io.kuark.service.sys.common.api.ISysTenementApi
+import io.kuark.service.sys.common.api.ISysTenantApi
 import org.springframework.stereotype.Service
 
 
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service
  */
 //region your codes 1
 @Service
-open class SysTenementApi: ISysTenementApi {
+open class SysTenantApi : ISysTenantApi {
 //endregion your codes 1
 
     //region your codes 2

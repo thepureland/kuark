@@ -1,16 +1,16 @@
-package io.kuark.service.sys.common.vo.tenement
+package io.kuark.service.sys.common.vo.tenant
 
-import io.kuark.base.support.payload.FormPayload
+import io.kuark.base.support.result.IdJsonResult
 
 
 /**
- * 租户表单载体
+ * 租户查询记录
  *
  * @author K
  * @since 1.0.0
  */
 //region your codes 1
-open class SysTenementPayload : FormPayload<String>() {
+open class SysTenantRecord : IdJsonResult<String>() {
 //endregion your codes 1
 
     //region your codes 2
@@ -26,6 +26,9 @@ open class SysTenementPayload : FormPayload<String>() {
 
     /** 是否启用 */
     var active: Boolean? = null
+
+    /** 创建用户 */
+    var createUser: String? = null
 
     //endregion your codes 2
 

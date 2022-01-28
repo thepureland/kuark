@@ -1,4 +1,4 @@
-package io.kuark.service.sys.common.vo.tenement
+package io.kuark.service.sys.common.vo.tenant
 
 import io.kuark.base.support.payload.ListSearchPayload
 import kotlin.reflect.KClass
@@ -11,21 +11,18 @@ import kotlin.reflect.KClass
  * @since 1.0.0
  */
 //region your codes 1
-open class SysTenementSearchPayload : ListSearchPayload() {
+open class SysTenantSearchPayload : ListSearchPayload() {
 //endregion your codes 1
 
     //region your codes 2
 
-    override var returnEntityClass: KClass<*>? = SysTenementRecord::class
+    override var returnEntityClass: KClass<*>? = SysTenantRecord::class
 
     /** 子系统代码 */
     var subSysDictCode: String? = null
 
     /** 名称 */
     var name: String? = null
-
-    /** 是否启用 */
-    var active: Boolean? = null
 
     //endregion your codes 2
 

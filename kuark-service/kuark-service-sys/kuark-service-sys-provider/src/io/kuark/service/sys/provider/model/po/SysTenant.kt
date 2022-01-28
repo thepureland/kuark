@@ -10,10 +10,10 @@ import io.kuark.ability.data.rdb.support.IMaintainableDbEntity
  * @since 1.0.0
  */
 //region your codes 1
-interface SysTenement : IMaintainableDbEntity<String, SysTenement> {
+interface SysTenant : IMaintainableDbEntity<String, SysTenant> {
 //endregion your codes 1
 
-    companion object : DbEntityFactory<SysTenement>()
+    companion object : DbEntityFactory<SysTenant>()
 
     /** 子系统代码 */
     var subSysDictCode: String

@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping
  */
 @RestController
 //region your codes 1
-@RequestMapping("SysTenement/api")
-open class SysTenementApiController {
+@RequestMapping("SysTenant/api")
+open class SysTenantApiController {
 //endregion your codes 1
 
     //region your codes 2

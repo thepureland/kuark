@@ -1,7 +1,7 @@
 package io.kuark.service.sys.provider.api.frontend
 
-import io.kuark.service.sys.common.vo.tenement.*
-import io.kuark.service.sys.provider.biz.ibiz.ISysTenementBiz
+import io.kuark.service.sys.common.vo.tenant.*
+import io.kuark.service.sys.provider.biz.ibiz.ISysTenantBiz
 import io.kuark.ability.web.springmvc.BaseCrudController
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.bind.annotation.RequestMapping
@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.RequestMapping
  */
 @RestController
 //region your codes 1
-@RequestMapping("SysTenement")
-open class SysTenementController :
-    BaseCrudController<String, ISysTenementBiz, SysTenementSearchPayload, SysTenementRecord, SysTenementDetail, SysTenementPayload>() {
+@RequestMapping("SysTenant")
+open class SysTenantController :
+    BaseCrudController<String, ISysTenantBiz, SysTenantSearchPayload, SysTenantRecord, SysTenantDetail, SysTenantPayload>() {
 //endregion your codes 1
 
     //region your codes 2

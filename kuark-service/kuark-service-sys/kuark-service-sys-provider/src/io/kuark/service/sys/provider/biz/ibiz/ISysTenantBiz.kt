@@ -1,7 +1,7 @@
 package io.kuark.service.sys.provider.biz.ibiz
 
 import io.kuark.base.support.biz.IBaseCrudBiz
-import io.kuark.service.sys.provider.model.po.SysTenement
+import io.kuark.service.sys.provider.model.po.SysTenant
 
 
 /**
@@ -11,7 +11,7 @@ import io.kuark.service.sys.provider.model.po.SysTenement
  * @since 1.0.0
  */
 //region your codes 1
-interface ISysTenementBiz : IBaseCrudBiz<String, SysTenement> {
+interface ISysTenantBiz : IBaseCrudBiz<String, SysTenant> {
 //endregion your codes 1
 
     //region your codes 2

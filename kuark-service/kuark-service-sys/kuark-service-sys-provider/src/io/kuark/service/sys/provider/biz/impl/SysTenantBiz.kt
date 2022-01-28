@@ -1,8 +1,8 @@
 package io.kuark.service.sys.provider.biz.impl
 
-import io.kuark.service.sys.provider.biz.ibiz.ISysTenementBiz
-import io.kuark.service.sys.provider.model.po.SysTenement
-import io.kuark.service.sys.provider.dao.SysTenementDao
+import io.kuark.service.sys.provider.biz.ibiz.ISysTenantBiz
+import io.kuark.service.sys.provider.model.po.SysTenant
+import io.kuark.service.sys.provider.dao.SysTenantDao
 import io.kuark.ability.data.rdb.biz.BaseCrudBiz
 import org.springframework.stereotype.Service
 
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service
  */
 @Service
 //region your codes 1
-open class SysTenementBiz : BaseCrudBiz<String, SysTenement, SysTenementDao>(), ISysTenementBiz {
+open class SysTenantBiz : BaseCrudBiz<String, SysTenant, SysTenantDao>(), ISysTenantBiz {
 //endregion your codes 1
 
     //region your codes 2

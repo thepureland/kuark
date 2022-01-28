@@ -1,6 +1,6 @@
 package io.kuark.service.sys.client.fallback
 
-import io.kuark.service.sys.client.proxy.ISysTenementProxy
+import io.kuark.service.sys.client.proxy.ISysTenantProxy
 import org.springframework.stereotype.Component
 
 
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component
  */
 @Component
 //region your codes 1
-interface SysTenementFallback : ISysTenementProxy {
+interface SysTenantFallback : ISysTenantProxy {
 //endregion your codes 1
 
     //region your codes 2

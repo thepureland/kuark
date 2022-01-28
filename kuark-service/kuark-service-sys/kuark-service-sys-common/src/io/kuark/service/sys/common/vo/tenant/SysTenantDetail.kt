@@ -1,4 +1,4 @@
-package io.kuark.service.sys.common.vo.tenement
+package io.kuark.service.sys.common.vo.tenant
 
 import io.kuark.base.support.result.IdJsonResult
 import java.time.LocalDateTime
@@ -11,7 +11,7 @@ import java.time.LocalDateTime
  * @since 1.0.0
  */
 //region your codes 1
-open class SysTenementDetail : IdJsonResult<String>() {
+open class SysTenantDetail : IdJsonResult<String>() {
 //endregion your codes 1
 
     //region your codes 2

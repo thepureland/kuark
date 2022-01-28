@@ -329,7 +329,7 @@ comment
 on column "sys_data_source"."update_time" is '更新时间';
 
 
-create table "sys_tenement"
+create table "sys_tenant"
 (
     "id"                CHAR(36)  default RANDOM_UUID() not null primary key,
     "sub_sys_dict_code" VARCHAR(32)                     not null,
@@ -344,38 +344,38 @@ create table "sys_tenement"
 );
 
 create
-unique index "uq_sys_tenement" on "sys_tenement" ("sub_sys_dict_code", "name");
+unique index "uq_sys_tenant" on "sys_tenant" ("sub_sys_dict_code", "name");
 
 comment
-on table "sys_tenement" is '租户';
+on table "sys_tenant" is '租户';
 
 comment
-on column "sys_tenement"."id" is '主键';
+on column "sys_tenant"."id" is '主键';
 
 comment
-on column "sys_tenement"."sub_sys_dict_code" is '子系统代码';
+on column "sys_tenant"."sub_sys_dict_code" is '子系统代码';
 
 comment
-on column "sys_tenement"."name" is '名称';
+on column "sys_tenant"."name" is '名称';
 
 comment
-on column "sys_tenement"."remark" is '备注，或其国际化key';
+on column "sys_tenant"."remark" is '备注，或其国际化key';
 
 comment
-on column "sys_tenement"."active" is '是否启用';
+on column "sys_tenant"."active" is '是否启用';
 
 comment
-on column "sys_tenement"."built_in" is '是否内置';
+on column "sys_tenant"."built_in" is '是否内置';
 
 comment
-on column "sys_tenement"."create_user" is '创建用户';
+on column "sys_tenant"."create_user" is '创建用户';
 
 comment
-on column "sys_tenement"."create_time" is '创建时间';
+on column "sys_tenant"."create_time" is '创建时间';
 
 comment
-on column "sys_tenement"."update_user" is '更新用户';
+on column "sys_tenant"."update_user" is '更新用户';
 
 comment
-on column "sys_tenement"."update_time" is '更新时间';
+on column "sys_tenant"."update_time" is '更新时间';
 

@@ -1,7 +1,7 @@
 package io.kuark.service.sys.provider.dao
 
-import io.kuark.service.sys.provider.model.po.SysTenement
-import io.kuark.service.sys.provider.model.table.SysTenements
+import io.kuark.service.sys.provider.model.po.SysTenant
+import io.kuark.service.sys.provider.model.table.SysTenants
 import org.springframework.stereotype.Repository
 import io.kuark.ability.data.rdb.support.BaseCrudDao
 
@@ -14,7 +14,7 @@ import io.kuark.ability.data.rdb.support.BaseCrudDao
  */
 @Repository
 //region your codes 1
-open class SysTenementDao : BaseCrudDao<String, SysTenement, SysTenements>() {
+open class SysTenantDao : BaseCrudDao<String, SysTenant, SysTenants>() {
 //endregion your codes 1
 
     //region your codes 2

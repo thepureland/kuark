@@ -1,17 +1,16 @@
-package io.kuark.service.sys.common.vo.tenement
+package io.kuark.service.sys.common.vo.tenant
 
-import io.kuark.base.support.result.IdJsonResult
-import java.time.LocalDateTime
+import io.kuark.base.support.payload.FormPayload
 
 
 /**
- * 租户查询记录
+ * 租户表单载体
  *
  * @author K
  * @since 1.0.0
  */
 //region your codes 1
-open class SysTenementRecord : IdJsonResult<String>() {
+open class SysTenantPayload : FormPayload<String>() {
 //endregion your codes 1
 
     //region your codes 2
@@ -27,9 +26,6 @@ open class SysTenementRecord : IdJsonResult<String>() {
 
     /** 是否启用 */
     var active: Boolean? = null
-
-    /** 创建时间 */
-    var createTime: LocalDateTime? = null
 
     //endregion your codes 2
 

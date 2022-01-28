@@ -67,8 +67,8 @@ object UserAccounts : UpdatableTable<UserAccount>("user_account") {
     /** 二级密码 */
     var secondPassword = varchar("second_password").bindTo { it.secondPassword }
 
-    /** 所有者id，依业务可以是店铺id、站点id、商户id等 */
-    var ownerId = varchar("owner_id").bindTo { it.ownerId }
+    /** 租户id */
+    var tenantId = varchar("tenant_id").bindTo { it.tenantId }
 
     /** 组织id */
     var organizationId = varchar("organization_id").bindTo { it.organizationId }

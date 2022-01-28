@@ -42,8 +42,8 @@ object MsgInstances: StringIdTable<MsgInstance>("msg_instance") {
     /** 有效期止 */
     var validTimeEnd = datetime("valid_time_end").bindTo { it.validTimeEnd }
 
-    /** 所有者id，依业务可以是店铺id、站点id、商户id等 */
-    var ownerId = varchar("owner_id").bindTo { it.ownerId }
+    /** 租户id */
+    var tenantId = varchar("tenant_id").bindTo { it.tenantId }
 
 
     //region your codes 2

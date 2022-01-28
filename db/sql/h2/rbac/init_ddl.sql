@@ -12,7 +12,7 @@ create table "rbac_user_group"
     "create_time" TIMESTAMP  default now() not null,
     "update_user" VARCHAR(36),
     "update_time" TIMESTAMP,
-    "owner_id" VARCHAR(36)
+    "tenant_id" VARCHAR(36)
 );
 
 comment on table "rbac_user_group" is '用户组';
@@ -38,7 +38,7 @@ comment on column "rbac_user_group"."create_time" is '创建时间';
 comment on column "rbac_user_group"."update_user" is '更新用户';
 
 comment on column "rbac_user_group"."update_time" is '更新时间';
-COMMENT ON COLUMN "rbac_user_group"."owner_id" IS '所有者id，依业务可以是店铺id、站点id、商户id等';
+COMMENT ON COLUMN "rbac_user_group"."tenant_id" IS '租户id';
 
 create table "rbac_user_group_user"
 (
@@ -70,7 +70,7 @@ create table "rbac_role"
     "create_time" TIMESTAMP  default now() not null,
     "update_user" VARCHAR(36),
     "update_time" TIMESTAMP,
-    "owner_id" VARCHAR(36)
+    "tenant_id" VARCHAR(36)
 );
 
 comment on table "rbac_role" is '角色';
@@ -96,7 +96,7 @@ comment on column "rbac_role"."create_time" is '创建时间';
 comment on column "rbac_role"."update_user" is '更新用户';
 
 comment on column "rbac_role"."update_time" is '更新时间';
-COMMENT ON COLUMN "rbac_role"."owner_id" IS '所有者id，依业务可以是店铺id、站点id、商户id等';
+COMMENT ON COLUMN "rbac_role"."tenant_id" IS '租户id';
 
 create table "rbac_role_user"
 (

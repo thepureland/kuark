@@ -30,7 +30,7 @@ open class UserAccountThirdDao : BaseCrudDao<String, UserAccountThird, UserAccou
     fun isIdentifierExists(identityTypeDictCode: String, identifier: String): Boolean {
         val context = KuarkContextHolder.get()
         val subSysDictCode = context.subSysCode
-        val ownerId = context.ownerId
+        val tenantId = context.tenantId
 
         return querySource()
             .select(UserAccountThirds.id)
@@ -41,8 +41,8 @@ open class UserAccountThirdDao : BaseCrudDao<String, UserAccountThird, UserAccou
                 if (StringKit.isNotBlank(subSysDictCode)) {
                     it += (UserAccountThirds.subSysDictCode eq subSysDictCode!!)
                 }
-                if (StringKit.isNotBlank(ownerId)) {
-                    it += (UserAccountThirds.ownerId eq ownerId!!)
+                if (StringKit.isNotBlank(tenantId)) {
+                    it += (UserAccountThirds.tenantId eq tenantId!!)
                 }
             }
             .totalRecords != 0

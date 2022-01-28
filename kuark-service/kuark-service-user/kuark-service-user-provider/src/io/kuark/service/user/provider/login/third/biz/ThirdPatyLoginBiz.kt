@@ -40,7 +40,7 @@ class ThirdPatyLoginBiz : IThirdPatyLoginBiz {
         val authBiz = thirdPartyAuthBizFactory.getAuthBiz(type)
         val context = KuarkContextHolder.get()
         val subSysCode = context.subSysCode
-        val ownerId = context.ownerId
+        val tenantId = context.tenantId
 
         // 获取第三方token
         val authParamBuilder = AuthParam.Builder().code(code).state(state)
@@ -72,7 +72,7 @@ class ThirdPatyLoginBiz : IThirdPatyLoginBiz {
                 username = loginAccount
                 password = psd
                 subSysDictCode = subSysCode
-                this.ownerId = ownerId
+                this.tenantId = tenantId
             }
             // 注册本地用户
             if (userAccountBiz.register(userAccount)) {
@@ -82,7 +82,7 @@ class ThirdPatyLoginBiz : IThirdPatyLoginBiz {
                     principalTypeDictCode = type
                     principal = thirdPartyUser.getOpenId()
                     subSysDictCode = subSysCode
-                    this.ownerId = ownerId
+                    this.tenantId = tenantId
                 }
                 userAccountThirdPartyBiz.save(userAccountThirdParty)
             }

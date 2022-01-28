@@ -418,12 +418,12 @@ create table "user_account"
     "create_time"                   TIMESTAMP default now()         not null,
     "update_user"                   VARCHAR(36),
     "update_time"                   TIMESTAMP,
-    "owner_id"                      VARCHAR(36),
+    "tenant_id"                      VARCHAR(36),
     "organization_id"               CHAR(36)
 );
 
 create
-unique index "uq_user_account__name_subsys_owner" on "user_account" ("username", "sub_sys_dict_code", "owner_id");
+unique index "uq_user_account__name_subsys_owner" on "user_account" ("username", "sub_sys_dict_code", "tenant_id");
 
 comment
 on table "user_account" is '用户账号';
@@ -504,7 +504,7 @@ comment
 on column "user_account"."update_time" is '更新时间';
 
 COMMENT
-ON COLUMN "user_account"."owner_id" IS '所有者id，依业务可以是店铺id、站点id、商户id等';
+ON COLUMN "user_account"."tenant_id" IS '租户id';
 
 comment
 on column "user_account"."organization_id" is '组织id';
@@ -520,7 +520,7 @@ create table "user_account_third"
     "principal"                VARCHAR(64)                     not null,
     "credentials"              VARCHAR(64),
     "sub_sys_dict_code"        VARCHAR(32),
-    "owner_id"                 VARCHAR(36),
+    "tenant_id"                 VARCHAR(36),
     "remark"                   VARCHAR(127),
     "active"                   BOOLEAN   default TRUE          not null,
     "built_in"                 BOOLEAN   default FALSE         not null,
@@ -571,11 +571,11 @@ on column "user_account_third"."update_user" is '更新用户';
 comment
 on column "user_account_third"."update_time" is '更新时间';
 COMMENT
-ON COLUMN "user_account_third"."owner_id" IS '所有者id，依业务可以是店铺id、站点id、商户id等';
+ON COLUMN "user_account_third"."tenant_id" IS '租户id';
 
 create
 unique index "uq_u_a_a__principal_id_type_sub_sys_owner"
-    on "user_account_third" ("principal", "principal_type_dict_code", "sub_sys_dict_code", "owner_id");
+    on "user_account_third" ("principal", "principal_type_dict_code", "sub_sys_dict_code", "tenant_id");
 
 
 
@@ -588,7 +588,7 @@ create table "user_organization"
     "parent_id"          CHAR(36),
     "seq_no"             INT4,
     "sub_sys_dict_code"  VARCHAR(32),
-    "owner_id"           VARCHAR(36),
+    "tenant_id"           VARCHAR(36),
     "remark"             VARCHAR(127),
     "active"             BOOLEAN   default TRUE          not null,
     "built_in"           BOOLEAN   default FALSE         not null,
@@ -623,7 +623,7 @@ comment
 on column "user_organization"."sub_sys_dict_code" is '子系统代码';
 
 comment
-on column "user_organization"."owner_id" is '所有者id，依业务可以是店铺id、站点id、商户id等';
+on column "user_organization"."tenant_id" is '租户id';
 
 comment
 on column "user_organization"."remark" is '备注，或其国际化key';
@@ -647,7 +647,7 @@ comment
 on column "user_organization"."update_time" is '更新时间';
 
 COMMENT
-ON COLUMN "user_organization"."owner_id" IS '所有者id，依业务可以是店铺id、站点id、商户id等';
+ON COLUMN "user_organization"."tenant_id" IS '租户id';
 
 create
-unique index "uq_user_organization" on "user_organization" ("name", "sub_sys_dict_code", "owner_id");
+unique index "uq_user_organization" on "user_organization" ("name", "sub_sys_dict_code", "tenant_id");

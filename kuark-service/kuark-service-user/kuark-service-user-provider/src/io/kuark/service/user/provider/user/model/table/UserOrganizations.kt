@@ -32,8 +32,8 @@ object UserOrganizations : MaintainableTable<UserOrganization>("user_organizatio
     /** 子系统代码 */
     var subSysDictCode = varchar("sub_sys_dict_code").bindTo { it.subSysDictCode }
 
-    /** 所有者id，依业务可以是店铺id、站点id、商户id等 */
-    var ownerId = varchar("owner_id").bindTo { it.ownerId }
+    /** 租户id */
+    var tenantId = varchar("tenant_id").bindTo { it.tenantId }
 
 
     //region your codes 2

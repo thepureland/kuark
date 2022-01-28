@@ -28,7 +28,7 @@ open class UserAccountDao : BaseCrudDao<String, UserAccount, UserAccounts>() {
     fun isUsernameExists(username: String): Boolean {
         val context = KuarkContextHolder.get()
         val subSysDictCode = context.subSysCode
-        val ownerId = context.ownerId
+        val tenantId = context.tenantId
 
         return querySource()
             .select(UserAccounts.username)
@@ -37,8 +37,8 @@ open class UserAccountDao : BaseCrudDao<String, UserAccount, UserAccounts>() {
                 if (StringKit.isNotBlank(subSysDictCode)) {
                     it += (UserAccounts.subSysDictCode eq subSysDictCode!!)
                 }
-                if (StringKit.isNotBlank(ownerId)) {
-                    it += (UserAccounts.ownerId eq ownerId!!)
+                if (StringKit.isNotBlank(tenantId)) {
+                    it += (UserAccounts.tenantId eq tenantId!!)
                 }
             }
             .totalRecords != 0
@@ -47,7 +47,7 @@ open class UserAccountDao : BaseCrudDao<String, UserAccount, UserAccounts>() {
     fun getByUsername(username: String): UserAccount? {
         val context = KuarkContextHolder.get()
         val subSysDictCode = context.subSysCode
-        val ownerId = context.ownerId
+        val tenantId = context.tenantId
 
 
         val userAccounts = querySource()
@@ -57,8 +57,8 @@ open class UserAccountDao : BaseCrudDao<String, UserAccount, UserAccounts>() {
                 if (StringKit.isNotBlank(subSysDictCode)) {
                     it += (UserAccounts.subSysDictCode eq subSysDictCode!!)
                 }
-                if (StringKit.isNotBlank(ownerId)) {
-                    it += (UserAccounts.ownerId eq ownerId!!)
+                if (StringKit.isNotBlank(tenantId)) {
+                    it += (UserAccounts.tenantId eq tenantId!!)
                 }
             }.map { row -> UserAccounts.createEntity(row) }
 

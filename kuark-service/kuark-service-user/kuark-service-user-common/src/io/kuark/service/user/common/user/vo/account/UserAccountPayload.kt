@@ -19,8 +19,8 @@ open class UserAccountPayload: FormPayload<String>() {
     @get:DictCode(message = "用户类型不在取值范围内！", module = "kuark:user", dictType = "user_type")
     var userTypeDictCode: String? = null
 
-    /** 所有者id，依业务可以是店铺id、站点id、商户id等 */
-    var ownerId: String? = null
+    /** 租户id */
+    var tenantId: String? = null
 
     /** 备注 */
     var remark: String? = null

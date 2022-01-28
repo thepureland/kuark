@@ -17,8 +17,8 @@ class KuarkContext private constructor(builder: Builder) {
     /** 子系统编码 */
     var subSysCode: String? = null
 
-    /** 所有者id，依业务可以是店铺id、站点id、商户id等 */
-    var ownerId: String? = null
+    /** 租户id */
+    var tenantId: String? = null
 
     /** 用户id */
     var userId: String? = null
@@ -38,7 +38,7 @@ class KuarkContext private constructor(builder: Builder) {
     init {
         dataSourceId = builder.dataSourceId
         subSysCode = builder.subSysCode
-        ownerId = builder.ownerId
+        tenantId = builder.tenantId
         userId = builder.userId
         traceKey = builder.traceKey
         otherInfos = builder.otherInfos
@@ -59,8 +59,8 @@ class KuarkContext private constructor(builder: Builder) {
         /** 子系统编码 */
         internal var subSysCode: String? = null
 
-        /** 所有者id，依业务可以是店铺id、站点id、商户id等 */
-        internal var ownerId: String? = null
+        /** 租户id */
+        internal var tenantId: String? = null
 
         /** 用户id */
         internal var userId: String? = null
@@ -86,8 +86,8 @@ class KuarkContext private constructor(builder: Builder) {
             return this
         }
 
-        fun ownerId(ownerId: String?): Builder {
-            this.ownerId = ownerId
+        fun tenantId(tenantId: String?): Builder {
+            this.tenantId = tenantId
             return this
         }
 

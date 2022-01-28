@@ -16,8 +16,8 @@ class RbacUserGroupPayload: FormPayload<String>() {
     /** 子系统代码 */
     var subSysDictCode: String? = null
 
-    /** 所有者id，依业务可以是店铺id、站点id、商户id等 */
-    var ownerId: String? = null
+    /** 租户id */
+    var tenantId: String? = null
 
     /** 备注 */
     var remark: String? = null

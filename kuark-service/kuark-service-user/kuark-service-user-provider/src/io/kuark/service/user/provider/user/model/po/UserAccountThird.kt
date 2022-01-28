@@ -30,8 +30,8 @@ interface UserAccountThird: IMaintainableDbEntity<String, UserAccountThird> {
     /** 子系统代码 */
     var subSysDictCode: String?
 
-    /** 所有者id，依业务可以是店铺id、站点id、商户id等 */
-    var ownerId: String?
+    /** 租户id */
+    var tenantId: String?
 
 
     //region your codes 2

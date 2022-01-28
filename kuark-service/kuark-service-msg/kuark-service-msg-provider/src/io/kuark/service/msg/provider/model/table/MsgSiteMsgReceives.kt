@@ -30,8 +30,8 @@ object MsgSiteMsgReceives: StringIdTable<MsgSiteMsgReceive>("msg_site_msg_receiv
     /** 更新时间 */
     var updateTime = datetime("update_time").bindTo { it.updateTime }
 
-    /** 所有者id，依业务可以是店铺id、站点id、商户id等 */
-    var ownerId = varchar("owner_id").bindTo { it.ownerId }
+    /** 租户id */
+    var tenantId = varchar("tenant_id").bindTo { it.tenantId }
 
 
     //region your codes 2

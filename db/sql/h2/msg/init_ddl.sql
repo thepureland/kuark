@@ -10,7 +10,7 @@ CREATE TABLE "msg_template" (
   "default_active" bool NOT NULL DEFAULT false,
   "default_title" VARCHAR(127),
   "default_content" varchar,
-  "owner_id" VARCHAR(36)
+  "tenant_id" VARCHAR(36)
 );
 
 COMMENT ON TABLE "msg_template" IS '消息模板';
@@ -25,7 +25,7 @@ COMMENT ON COLUMN "msg_template"."content" IS '模板内容';
 COMMENT ON COLUMN "msg_template"."default_active" IS '是否启用默认值';
 COMMENT ON COLUMN "msg_template"."default_title" IS '模板标题默认值';
 COMMENT ON COLUMN "msg_template"."default_content" IS '模板内容默认值';
-COMMENT ON COLUMN "msg_template"."owner_id" IS '所有者id，依业务可以是店铺id、站点id、商户id等';
+COMMENT ON COLUMN "msg_template"."tenant_id" IS '租户id';
 
 
 
@@ -40,7 +40,7 @@ CREATE TABLE "msg_instance" (
   "msg_type_dict_code" VARCHAR(15),
   "valid_time_start" TIMESTAMP default now() not null,
   "valid_time_end" TIMESTAMP default (now()+99999) not null,  -- +99999非标准sql，pg不兼容
-  "owner_id" VARCHAR(36),
+  "tenant_id" VARCHAR(36),
   constraint "fk_msg_instance"
           foreign key ("template_id") references "msg_template" ("id")
 );
@@ -56,7 +56,7 @@ COMMENT ON COLUMN "msg_instance"."event_type_dict_code" IS '事件类型代码';
 COMMENT ON COLUMN "msg_instance"."msg_type_dict_code" IS '消息类型代码';
 COMMENT ON COLUMN "msg_instance"."valid_time_start" IS '有效期起';
 COMMENT ON COLUMN "msg_instance"."valid_time_end" IS '有效期止';
-COMMENT ON COLUMN "msg_instance"."owner_id" IS '所有者id，依业务可以是店铺id、站点id、商户id等';
+COMMENT ON COLUMN "msg_instance"."tenant_id" IS '租户id';
 
 
 
@@ -103,7 +103,7 @@ CREATE TABLE "msg_send" (
   "success_count" int4 DEFAULT 0,
   "fail_count" int4 DEFAULT 0,
   "job_id" varchar(36),
-  "owner_id" VARCHAR(36),
+  "tenant_id" VARCHAR(36),
   constraint "fk_msg_send"
             foreign key ("instance_id") references "msg_instance" ("id")
 );
@@ -121,7 +121,7 @@ COMMENT ON COLUMN "msg_send"."update_time" IS '更新时间';
 COMMENT ON COLUMN "msg_send"."success_count" IS '发送成功数量';
 COMMENT ON COLUMN "msg_send"."fail_count" IS '发送失败数量';
 COMMENT ON COLUMN "msg_send"."job_id" IS '定时任务id';
-COMMENT ON COLUMN "msg_send"."owner_id" IS '所有者id，依业务可以是店铺id、站点id、商户id等';
+COMMENT ON COLUMN "msg_send"."tenant_id" IS '租户id';
 
 
 
@@ -132,7 +132,7 @@ CREATE TABLE "msg_site_msg_receive" (
   "receive_status_dict_code" varchar(2) NOT NULL,
   "create_time" timestamp default now() NOT NULL,
   "update_time" timestamp,
-  "owner_id" VARCHAR(36),
+  "tenant_id" VARCHAR(36),
   constraint "fk_msg_site_msg_receive"
               foreign key ("send_id") references "msg_send" ("id")
 );
@@ -143,4 +143,4 @@ COMMENT ON COLUMN "msg_site_msg_receive"."send_id" IS '发送id';
 COMMENT ON COLUMN "msg_site_msg_receive"."receive_status_dict_code" IS '接收状态代码';
 COMMENT ON COLUMN "msg_site_msg_receive"."create_time" IS '创建时间';
 COMMENT ON COLUMN "msg_site_msg_receive"."update_time" IS '更新时间';
-COMMENT ON COLUMN "msg_site_msg_receive"."owner_id" IS '所有者id，依业务可以是店铺id、站点id、商户id等';
+COMMENT ON COLUMN "msg_site_msg_receive"."tenant_id" IS '租户id';

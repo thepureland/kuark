@@ -21,6 +21,9 @@ open class SearchPayload {
     /** 各属性间的查询逻辑关系，默认为AND */
     open var andOr: AndOr = AndOr.AND
 
+    /** 值为null的属性的列表 */
+    open var nullProperties: List<String>? = null
+
     /**
      * 查询结果的属性列表
      * 查询结果类型:

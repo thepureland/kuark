@@ -1,6 +1,7 @@
 package io.kuark.service.sys.common.vo.tenant
 
 import io.kuark.base.support.result.IdJsonResult
+import java.time.LocalDateTime
 
 
 /**
@@ -27,8 +28,8 @@ open class SysTenantRecord : IdJsonResult<String>() {
     /** 是否启用 */
     var active: Boolean? = null
 
-    /** 创建用户 */
-    var createUser: String? = null
+    /** 记录创建时间 */
+    var createTime: LocalDateTime? = null
 
     //endregion your codes 2
 

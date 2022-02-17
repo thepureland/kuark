@@ -1,5 +1,6 @@
 package io.kuark.service.sys.common.vo.tenant
 
+import io.kuark.base.query.enums.Operator
 import io.kuark.base.support.payload.ListSearchPayload
 import kotlin.reflect.KClass
 
@@ -23,6 +24,10 @@ open class SysTenantSearchPayload : ListSearchPayload() {
 
     /** 名称 */
     var name: String? = null
+
+    override fun getOperators(): Map<String, Operator> {
+        return mapOf(this::name.name to Operator.ILIKE)
+    }
 
     //endregion your codes 2
 

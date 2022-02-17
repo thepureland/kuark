@@ -16,22 +16,22 @@ class SysDictApiController {
     @Autowired
     private lateinit var sysDictApi: ISysDictApi
 
-    @GetMapping("/sys/dict/api/getDictItems")
+    @GetMapping("/getDictItems")
     fun getDictItems(payload: DictModuleAndTypePayload): List<SysDictItemRecord> {
         return sysDictApi.getDictItems(payload)
     }
 
-    @GetMapping("/sys/dict/api/getDictItemMap")
+    @GetMapping("/getDictItemMap")
     fun getDictItemMap(payload: DictModuleAndTypePayload): LinkedHashMap<String, String> {
         return sysDictApi.getDictItemMap(payload)
     }
 
-    @PostMapping("/sys/dict/api/batchGetDictItems")
+    @PostMapping("/batchGetDictItems")
     fun batchGetDictItems(payloads: List<DictModuleAndTypePayload>): Map<Pair<String, String>, List<SysDictItemRecord>> {
         return sysDictApi.batchGetDictItems(payloads)
     }
 
-    @PostMapping("/sys/dict/api/batchGetDictItemMap")
+    @PostMapping("/batchGetDictItemMap")
     fun batchGetDictItemMap(payloads: List<DictModuleAndTypePayload>): Map<Pair<String, String>, LinkedHashMap<String, String>> {
          return sysDictApi.batchGetDictItemMap(payloads)
     }

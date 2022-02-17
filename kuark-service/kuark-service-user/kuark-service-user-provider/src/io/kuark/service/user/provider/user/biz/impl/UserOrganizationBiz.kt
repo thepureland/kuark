@@ -1,15 +1,19 @@
 package io.kuark.service.user.provider.user.biz.impl
 
 import io.kuark.ability.data.rdb.biz.BaseCrudBiz
+import io.kuark.base.lang.string.StringKit
 import io.kuark.base.query.sort.Direction
 import io.kuark.base.support.Consts
 import io.kuark.base.tree.TreeKit
+import io.kuark.service.sys.common.api.ISysTenantApi
 import io.kuark.service.user.common.user.vo.organization.BaseOrganizationTreeNode
 import io.kuark.service.user.common.user.vo.organization.OrganizationTreeNode
 import io.kuark.service.user.common.user.vo.organization.UserOrganizationSearchPayload
 import io.kuark.service.user.provider.user.biz.ibiz.IUserOrganizationBiz
 import io.kuark.service.user.provider.user.dao.UserOrganizationDao
 import io.kuark.service.user.provider.user.model.po.UserOrganization
+import io.kuark.service.user.provider.user.model.table.UserOrganizations
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
 /**
@@ -25,6 +29,9 @@ open class UserOrganizationBiz : BaseCrudBiz<String, UserOrganization, UserOrgan
 
     //region your codes 2
 
+    @Autowired
+    private lateinit var sysTenantApi: ISysTenantApi
+
     @Suppress(Consts.Suppress.UNCHECKED_CAST)
     override fun searchTree(activeOnly: Boolean?): List<OrganizationTreeNode> {
         val payload = UserOrganizationSearchPayload().apply {
@@ -38,13 +45,38 @@ open class UserOrganizationBiz : BaseCrudBiz<String, UserOrganization, UserOrgan
     }
 
     @Suppress(Consts.Suppress.UNCHECKED_CAST)
-    override fun loadTree(): List<BaseOrganizationTreeNode> {
-        val payload = UserOrganizationSearchPayload().apply {
-            returnEntityClass = BaseOrganizationTreeNode::class
-            active = true
+    override fun loadTree(searchPayload: UserOrganizationSearchPayload): List<BaseOrganizationTreeNode> {
+        if (StringKit.isBlank(searchPayload.subSysDictCode)) {
+            throw IllegalArgumentException("子系统未指定！")
         }
-        val organizations = dao.search(payload) as List<BaseOrganizationTreeNode>
-        return TreeKit.convertListToTree(organizations, Direction.ASC)
+
+        val result = if (StringKit.isBlank(searchPayload.tenantId)) { // 加载租户
+            val tenants = sysTenantApi.getTenants(searchPayload.subSysDictCode!!)
+            if (tenants.isEmpty()) { // 该子系统没有租户，直接加载组织机构
+                searchPayload.returnEntityClass = BaseOrganizationTreeNode::class
+                searchPayload.active = true
+                searchPayload.nullProperties = listOf(UserOrganizations.parentId.name)
+                dao.search(searchPayload)
+            } else { // 该子系统有租户，返回租户列表
+                tenants.map {
+                    BaseOrganizationTreeNode().apply {
+                        this.id = it.id
+                        this.name = it.name
+                        this.organization = false
+                    }
+                }
+            }
+        } else { // 加载组织机构
+            searchPayload.returnEntityClass = BaseOrganizationTreeNode::class
+            searchPayload.active = true
+            if (StringKit.isBlank(searchPayload.parentId)) { // 加载租户下的组织机构
+                searchPayload.nullProperties = listOf(UserOrganizations.parentId.name)
+            } else { // 加载组织机构的下级机构
+                // do nothing
+            }
+            dao.search(searchPayload)
+        }
+        return result as List<BaseOrganizationTreeNode>
     }
 
     //endregion your codes 2

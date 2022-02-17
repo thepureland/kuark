@@ -21,7 +21,7 @@ interface IUserOrganizationBiz: IBaseCrudBiz<String, UserOrganization> {
 
     fun searchTree(activeOnly: Boolean?): List<OrganizationTreeNode>
 
-    fun loadTree(): List<BaseOrganizationTreeNode>
+    fun loadTree(searchPayload: UserOrganizationSearchPayload): List<BaseOrganizationTreeNode>
 
     //endregion your codes 2
 

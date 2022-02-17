@@ -13,7 +13,6 @@ open class UserOrganizationPayload: FormPayload<String>() {
     /** 组织类型 */
     var orgTypeDictCode: String? = null
 
-
     /** 父id */
     var parentId: String? = null
 

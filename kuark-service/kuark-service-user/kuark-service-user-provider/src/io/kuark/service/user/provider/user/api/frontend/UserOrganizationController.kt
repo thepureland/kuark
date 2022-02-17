@@ -1,4 +1,4 @@
-package io.kuark.service.user.provider.rbac.api.frontend
+package io.kuark.service.user.provider.user.api.frontend
 
 import io.kuark.ability.web.springmvc.BaseCrudController
 import io.kuark.service.user.common.user.vo.organization.*
@@ -27,8 +27,8 @@ class UserOrganizationController :
     }
 
     @PostMapping("/loadTree")
-    fun loadTree(): List<BaseOrganizationTreeNode> {
-        return biz.loadTree()
+    fun loadTree(@RequestBody payload: UserOrganizationSearchPayload): List<BaseOrganizationTreeNode> {
+        return biz.loadTree(payload)
     }
 
     //endregion your codes 2

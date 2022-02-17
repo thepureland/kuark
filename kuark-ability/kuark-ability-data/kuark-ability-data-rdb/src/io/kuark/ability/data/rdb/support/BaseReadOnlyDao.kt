@@ -1025,6 +1025,12 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
             }
             resultMap[prop] = Pair(operator, value)
         }
+        val nullProperties = searchPayload.nullProperties
+        if (CollectionKit.isNotEmpty(nullProperties)) {
+            nullProperties!!.forEach {
+                resultMap[it] = Pair(Operator.IS_NULL, null)
+            }
+        }
         return resultMap
     }
 

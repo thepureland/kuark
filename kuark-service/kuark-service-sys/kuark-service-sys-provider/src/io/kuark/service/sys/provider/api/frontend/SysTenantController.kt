@@ -24,6 +24,12 @@ open class SysTenantController :
 
     //region your codes 2
 
+    @RequestMapping("/getAllActiveTenants")
+    fun getAllActiveTenants(): Map<String, Map<String, String>> {
+        val tenants = biz.getAllActiveTenants()
+        return tenants.mapValues { v -> v.value.associate { it.id!! to it.name!! } }
+    }
+
     //endregion your codes 2
 
 }

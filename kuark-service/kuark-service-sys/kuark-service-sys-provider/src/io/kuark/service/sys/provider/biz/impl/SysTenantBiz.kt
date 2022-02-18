@@ -4,6 +4,9 @@ import io.kuark.service.sys.provider.biz.ibiz.ISysTenantBiz
 import io.kuark.service.sys.provider.model.po.SysTenant
 import io.kuark.service.sys.provider.dao.SysTenantDao
 import io.kuark.ability.data.rdb.biz.BaseCrudBiz
+import io.kuark.base.support.Consts
+import io.kuark.service.sys.common.vo.tenant.SysTenantRecord
+import io.kuark.service.sys.common.vo.tenant.SysTenantSearchPayload
 import org.springframework.stereotype.Service
 
 
@@ -19,6 +22,13 @@ open class SysTenantBiz : BaseCrudBiz<String, SysTenant, SysTenantDao>(), ISysTe
 //endregion your codes 1
 
     //region your codes 2
+
+    @Suppress(Consts.Suppress.UNCHECKED_CAST)
+    override fun getAllActiveTenants(): Map<String, List<SysTenantRecord>> {
+        val searchPayload = SysTenantSearchPayload().apply { active = true }
+        val records = dao.search(searchPayload) as List<SysTenantRecord>
+        return records.groupBy { it.subSysDictCode!! }
+    }
 
     //endregion your codes 2
 

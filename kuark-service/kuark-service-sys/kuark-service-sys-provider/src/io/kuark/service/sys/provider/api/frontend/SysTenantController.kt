@@ -24,6 +24,13 @@ open class SysTenantController :
 
     //region your codes 2
 
+    /**
+     * 返回所有启用的租户
+     *
+     * @return Map(子系统代码，Map(租户id，租户名称))
+     * @author K
+     * @since 1.0.0
+     */
     @RequestMapping("/getAllActiveTenants")
     fun getAllActiveTenants(): Map<String, Map<String, String>> {
         val tenants = biz.getAllActiveTenants()

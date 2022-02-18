@@ -23,12 +23,12 @@ class UserOrganizationController :
 
     @PostMapping("/searchTree")
     fun searchTree(@RequestBody payload: UserOrganizationSearchPayload): List<OrganizationTreeNode> {
-        return biz.searchTree(payload.active)
+        return biz.searchTree(payload)
     }
 
-    @PostMapping("/loadTree")
-    fun loadTree(@RequestBody payload: UserOrganizationSearchPayload): List<BaseOrganizationTreeNode> {
-        return biz.loadTree(payload)
+    @PostMapping("/lazyLoadTree")
+    fun lazyLoadTree(@RequestBody payload: UserOrganizationSearchPayload): List<BaseOrganizationTreeNode> {
+        return biz.lazyLoadTree(payload)
     }
 
     //endregion your codes 2

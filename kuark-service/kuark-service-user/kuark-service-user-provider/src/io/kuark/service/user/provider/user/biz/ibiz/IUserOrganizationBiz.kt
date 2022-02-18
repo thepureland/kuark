@@ -19,9 +19,25 @@ interface IUserOrganizationBiz: IBaseCrudBiz<String, UserOrganization> {
 
     //region your codes 2
 
-    fun searchTree(activeOnly: Boolean?): List<OrganizationTreeNode>
+    /**
+     * 查询组织机构，返回树结点，不分页
+     *
+     * @param searchPayload 查询载体
+     * @return List(组织机构树结点)
+     * @author K
+     * @since 1.0.0
+     */
+    fun searchTree(searchPayload: UserOrganizationSearchPayload): List<OrganizationTreeNode>
 
-    fun loadTree(searchPayload: UserOrganizationSearchPayload): List<BaseOrganizationTreeNode>
+    /**
+     * 懒加载组织机构，返回基础树结点
+     *
+     * @param searchPayload 查询载体
+     * @return List(组织机构基础树结点)
+     * @author K
+     * @since 1.0.0
+     */
+    fun lazyLoadTree(searchPayload: UserOrganizationSearchPayload): List<BaseOrganizationTreeNode>
 
     //endregion your codes 2
 

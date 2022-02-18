@@ -12,6 +12,13 @@ import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.*
 import javax.validation.Valid
 
+
+/**
+ * 字典前端控制器
+ *
+ * @author K
+ * @since 1.0.0
+ */
 @RestController
 @RequestMapping("/sys/dict")
 @CrossOrigin
@@ -21,31 +28,57 @@ open class SysDictController :
     @Autowired
     private lateinit var sysDictItemBiz: ISysDictItemBiz
 
+    /**
+     * 懒加载字典树
+     *
+     * @param searchPayload 查询载体
+     * @return List(字典树结点)
+     * @author K
+     * @since 1.0.0
+     */
     @PostMapping("/loadTreeNodes")
     fun loadTreeNodes(@RequestBody searchPayload: SysDictSearchPayload): List<SysDictTreeNode> {
         val activeOnly = searchPayload.active ?: false
         return biz.loadDirectChildrenForTree(searchPayload.parentId, searchPayload.firstLevel ?: false, activeOnly)
     }
 
+    /**
+     * 加载直接孩子结点(用于列表)
+     *
+     * @param searchPayload 查询参数
+     * @return Pair(List(RegDictListModel), 总记录数)
+     * @author K
+     * @since 1.0.0
+     */
     @PostMapping("/searchByTree")
     fun searchByTree(@RequestBody searchPayload: SysDictSearchPayload): Pair<List<SysDictRecord>, Int> {
         return biz.loadDirectChildrenForList(searchPayload)
     }
 
-    @GetMapping("/loadModules")
-    @Suppress(Consts.Suppress.UNCHECKED_CAST)
-    fun loadModules(): List<String> {
-        val items = sysDictItemBiz.getItemsByModuleAndType("kuark:sys", "module")
-        return items.map { it.itemCode }
-    }
-
+    /**
+     * 加载所有字典类型
+     *
+     * @return List(字典类型)
+     * @author K
+     * @since 1.0.0
+     */
     @GetMapping("/loadDictTypes")
     @Suppress(Consts.Suppress.UNCHECKED_CAST)
     fun loadDictTypes(): List<String> {
-        val modules = biz.allSearchProperty(SysDicts.dictType.name) as List<String>
-        return modules.distinct()
+        val dictTypes = biz.allSearchProperty(SysDicts.dictType.name) as List<String>
+        return dictTypes.distinct()
     }
 
+    /**
+     * 返回指定id的字典或字典项
+     *
+     * @param id 字典或字典项id，由isDict参数决定
+     * @param isDict true: 字典id，false：字典项id
+     * @param fetchAllParentIds 是否要获取所有父项id，默认为false
+     * @return SysDictRecord
+     * @author K
+     * @since 1.0.0
+     */
     @GetMapping("/getDict")
     fun get(id: String, isDict: Boolean?, fetchAllParentIds: Boolean = false): SysDictRecord {
         val dict = biz.get(id, isDict, fetchAllParentIds)
@@ -59,17 +92,43 @@ open class SysDictController :
         }
     }
 
+    /**
+     * 保存或更新字典或字典项
+     *
+     * @param payload 数据载体
+     * @param bindingResult 表单校验结果
+     * @return 主键
+     * @author K
+     * @since 1.0.0
+     */
     @PostMapping("/saveOrUpdate")
     fun saveOrUpdate(@RequestBody @Valid payload: SysDictPayload, bindingResult: BindingResult): String {
         if (bindingResult.hasErrors()) error("数据校验失败！")
         return biz.saveOrUpdate(payload)
     }
 
+    /**
+     * 删除字典或字典项
+     *
+     * @param id 主键
+     * @param isDict true: 字典id，false：字典项id
+     * @return 是否删除成功
+     * @author K
+     * @since 1.0.0
+     */
     @DeleteMapping("/delete")
     fun delete(id: String, isDict: Boolean): Boolean {
         return biz.delete(id, isDict)
     }
 
+    /**
+     * 批量删除字典或字典项
+     *
+     * @param map Map(字典或字典项id，是否字典项)
+     * @return 是否删除成功
+     * @author K
+     * @since 1.0.0
+     */
     @PostMapping("/batchDelete")
     fun batchDelete(@RequestBody map: Map<String, Boolean>): Boolean {
         map.forEach { (id, isDict) ->

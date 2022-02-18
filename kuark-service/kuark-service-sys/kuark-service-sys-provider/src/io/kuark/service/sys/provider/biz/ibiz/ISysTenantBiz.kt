@@ -17,6 +17,13 @@ interface ISysTenantBiz : IBaseCrudBiz<String, SysTenant> {
 
     //region your codes 2
 
+    /**
+     * 返回所有启用的租户
+     *
+     * @return Map(子系统代码，List(租户记录对象))
+     * @author K
+     * @since 1.0.0
+     */
     fun getAllActiveTenants(): Map<String, List<SysTenantRecord>>
 
     //endregion your codes 2

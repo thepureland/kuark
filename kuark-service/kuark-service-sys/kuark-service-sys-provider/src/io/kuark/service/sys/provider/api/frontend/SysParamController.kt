@@ -33,12 +33,6 @@ open class SysParamController :
         return biz.update(param)
     }
 
-    @GetMapping("/loadModules")
-    fun loadModules(): List<String> {
-        val items = sysDictItemBiz.getItemsByModuleAndType("kuark:sys", "module")
-        return items.map { it.itemCode }
-    }
-
     @GetMapping("/getParam")
     fun getParam(
         @RequestParam("module") module: String,

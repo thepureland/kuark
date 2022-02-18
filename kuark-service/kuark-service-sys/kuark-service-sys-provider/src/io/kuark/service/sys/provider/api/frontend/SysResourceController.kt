@@ -57,11 +57,6 @@ open class SysResourceController :
         return biz.cascadeDeleteChildren(id)
     }
 
-    @GetMapping("/loadSubSyses")
-    fun loadModules(): Map<String, String> {
-        return dictApi.getDictItemMap(DictModuleAndTypePayload("kuark:sys", "sub_sys"))
-    }
-
     @GetMapping("/loadResourceTypes")
     fun loadResourceTypes(): Map<String, String> {
         return dictApi.getDictItemMap(DictModuleAndTypePayload("kuark:sys", "resource_type"))

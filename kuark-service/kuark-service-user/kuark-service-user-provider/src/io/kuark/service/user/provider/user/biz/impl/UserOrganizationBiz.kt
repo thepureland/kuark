@@ -33,19 +33,17 @@ open class UserOrganizationBiz : BaseCrudBiz<String, UserOrganization, UserOrgan
     private lateinit var sysTenantApi: ISysTenantApi
 
     @Suppress(Consts.Suppress.UNCHECKED_CAST)
-    override fun searchTree(activeOnly: Boolean?): List<OrganizationTreeNode> {
-        val payload = UserOrganizationSearchPayload().apply {
-            returnEntityClass = OrganizationTreeNode::class
-            if (activeOnly == true) {
-                active = true
-            }
+    override fun searchTree(searchPayload: UserOrganizationSearchPayload): List<OrganizationTreeNode> {
+        searchPayload.returnEntityClass = OrganizationTreeNode::class
+        if (searchPayload.active == false) { // 这里的active实为activeOnly
+            searchPayload.active = null
         }
-        val organizations = dao.search(payload) as List<OrganizationTreeNode>
+        val organizations = dao.search(searchPayload) as List<OrganizationTreeNode>
         return TreeKit.convertListToTree(organizations, Direction.ASC)
     }
 
     @Suppress(Consts.Suppress.UNCHECKED_CAST)
-    override fun loadTree(searchPayload: UserOrganizationSearchPayload): List<BaseOrganizationTreeNode> {
+    override fun lazyLoadTree(searchPayload: UserOrganizationSearchPayload): List<BaseOrganizationTreeNode> {
         if (StringKit.isBlank(searchPayload.subSysDictCode)) {
             throw IllegalArgumentException("子系统未指定！")
         }

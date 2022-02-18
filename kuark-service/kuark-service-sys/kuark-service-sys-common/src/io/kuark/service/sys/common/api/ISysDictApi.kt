@@ -27,7 +27,7 @@ interface ISysDictApi {
      * 根据模块和字典类型，取得对应字典项的编码和名称(仅包括处于启用状态的)
      *
      * @param payload 模块和字典类型的载体（如果模块未指定，此时请保证type的惟一性，否则结果将不确定是哪条记录）
-     * @return Map(编码，名称)，自然排序。如果module为空串，且存在多个同名type，将任意返回一个type对应的字典项。查无结果返回空Map。
+     * @return LinkedHashMap(编码，名称)，自然排序。如果module为空串，且存在多个同名type，将任意返回一个type对应的字典项。查无结果返回空Map。
      * @throws IllegalArgumentException 参数校验不通过时
      * @author K
      * @since 1.0.0
@@ -47,6 +47,7 @@ interface ISysDictApi {
 
     /**
      * 根据模块和字典类型的载体列表，取得对应字典项的编码和名称(仅包括处于启用状态的)
+     *
      * @param payloads 模块和字典类型的载体列表（如果模块未指定，此时请保证type的惟一性，否则结果将不确定是哪条记录）
      * @return Map(Pair(模块，字典类型)，LinkedHashMap(编码，名称))
      * @throws IllegalArgumentException 参数校验不通过时

@@ -16,6 +16,8 @@ import org.ktorm.entity.update
 import org.ktorm.schema.Column
 import org.ktorm.schema.ColumnDeclaring
 import org.ktorm.schema.Table
+import java.time.LocalDateTime
+import kotlin.reflect.full.superclasses
 
 /**
  * 基础数据访问对象，封装某数据库表的通用操作
@@ -188,10 +190,12 @@ open class BaseCrudDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadO
     @Suppress(Consts.Suppress.UNCHECKED_CAST)
     open fun update(any: Any): Boolean {
         return if (any is IDbEntity<*, *>) {
-            entitySequence().update(any as E) == 1
+            setDefault(any as E)
+            entitySequence().update(any) == 1
         } else {
             val entity = Entity.create(table().entityClass!!)
             BeanKit.copyProperties(any, entity)
+            setDefault(entity as E)
             this.update(entity)
         }
     }
@@ -208,6 +212,7 @@ open class BaseCrudDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadO
      */
     open fun updateWhen(entity: E, criteria: Criteria): Boolean {
         require(!criteria.isEmpty()) { "有条件的更新实体对象时，查询条件不能为空！" }
+        setDefault(entity)
         return updateByCriteria(entity.id, entity.properties, criteria)
     }
 
@@ -221,10 +226,12 @@ open class BaseCrudDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadO
      * @since 1.0.0
      */
     open fun updateProperties(id: PK, properties: Map<String, *>): Boolean {
-        val propertyNames = properties.keys.filter { it != IDbEntity<PK, E>::id.name }.toTypedArray()
+        val props = properties.toMutableMap()
+        setDefault(props)
+        val propertyNames = props.keys.filter { it != IDbEntity<PK, E>::id.name }.toTypedArray()
         val columnMap = ColumnHelper.columnOf(table(), *propertyNames)
         return database().update(table()) {
-            properties.forEach { (name, value) ->
+            props.forEach { (name, value) ->
                 set(columnMap[name]!!, value)
             }
             where { getPkColumn() eq id }
@@ -373,7 +380,8 @@ open class BaseCrudDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadO
         }
 
         val updatePropertyMap = mutableMapOf<String, Any?>()
-        val updatePropMap = BeanKit.extract(updatePayload)
+        val updatePropMap = BeanKit.extract(updatePayload).toMutableMap()
+        setDefault(updatePropMap)
         updatePropMap.filter {
             it.value != null && it.key != IDbEntity<PK, E>::id.name && it.key != UpdatePayload<S>::searchPayload.name
         }.forEach { (prop, value) ->
@@ -417,11 +425,13 @@ open class BaseCrudDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadO
         require(properties.isNotEmpty()) { "未指定要更新的属性Map！" }
         require(!criteria.isEmpty()) { "批量更新实体对象时，查询条件不能为空！" }
 
+        val props = properties.toMutableMap()
+        setDefault(props)
         val whereExpression = CriteriaConverter.convert(criteria, table())
-        val columnMap = ColumnHelper.columnOf(table(), *properties.keys.toTypedArray())
+        val columnMap = ColumnHelper.columnOf(table(), *props.keys.toTypedArray())
         return database().batchUpdate(table()) {
             item {
-                properties.forEach { (name, value) ->
+                props.forEach { (name, value) ->
                     set(columnMap[name]!!, value)
                 }
                 where { whereExpression }
@@ -597,10 +607,12 @@ open class BaseCrudDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadO
 
     private fun updateByCriteria(id: PK?, propertyMap: Map<String, *>, criteria: Criteria?): Boolean {
         require(id != null) { "更新操作时，数据库实体主键不能为空！" }
-        val propertyNames = propertyMap.keys.toTypedArray()
+        val props = propertyMap.toMutableMap()
+        setDefault(props)
+        val propertyNames = props.keys.toTypedArray()
         val columnMap = ColumnHelper.columnOf(table(), *propertyNames)
         return database().update(table()) {
-            propertyMap.filter { it.key != IDbEntity<PK, E>::id.name }.forEach { (name, value) ->
+            props.filter { it.key != IDbEntity<PK, E>::id.name }.forEach { (name, value) ->
                 set(columnMap[name]!!, value)
             }
             where {
@@ -624,6 +636,7 @@ open class BaseCrudDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadO
         require(!entities.any { it.id == null }) { "由于存在主键为null的实体，批量更新失败！" }
 
         var totalCount = 0
+        entities.forEach { setDefault(it) }
         var columnMap = ColumnHelper.columnOf(table(), *entities.first().properties.keys.toTypedArray())
         if (propertyNames.isNotEmpty()) {
             columnMap = if (exclude) {
@@ -655,6 +668,29 @@ open class BaseCrudDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : BaseReadO
             totalCount += counts.sum()
         }.execute()
         return totalCount
+    }
+
+    /**
+     * 设置要自动更新的字段
+     *
+     * @param e 数据库表实体
+     */
+    private fun setDefault(e: E) {
+        if (e is IUpdatableDbEntity<*, *> && e.updateTime == null) {
+            e.updateTime = LocalDateTime.now()
+        }
+    }
+
+    /**
+     * 设置要自动更新的字段
+     *
+     * @param properties Map(属性名，属性值)
+     */
+    private fun setDefault(properties: MutableMap<String, Any?>) {
+        val key = IUpdatableDbEntity<*, *>::updateTime.name
+        if (!properties.containsKey(key) && entityClass().superclasses.contains(IUpdatableDbEntity::class)) {
+            properties[key] = LocalDateTime.now()
+        }
     }
 
 }

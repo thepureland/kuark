@@ -25,4 +25,7 @@ open class UserOrganizationPayload: FormPayload<String>() {
     /** 租户id */
     var tenantId: String? = null
 
+    /** 备注 */
+    var remark: String? = null
+
 }

@@ -35,7 +35,7 @@ open class UserOrganizationBiz : BaseCrudBiz<String, UserOrganization, UserOrgan
     @Suppress(Consts.Suppress.UNCHECKED_CAST)
     override fun searchTree(searchPayload: UserOrganizationSearchPayload): List<OrganizationTreeNode> {
         searchPayload.returnEntityClass = OrganizationTreeNode::class
-        if (searchPayload.active == false) { // 这里的active实为activeOnly
+        if (searchPayload.active == false) { // 这里的active应理解为activeOnly
             searchPayload.active = null
         }
         val organizations = dao.search(searchPayload) as List<OrganizationTreeNode>
@@ -68,7 +68,7 @@ open class UserOrganizationBiz : BaseCrudBiz<String, UserOrganization, UserOrgan
             searchPayload.returnEntityClass = BaseOrganizationTreeNode::class
             searchPayload.active = true
             if (StringKit.isBlank(searchPayload.parentId)) { // 加载租户下的组织机构
-                searchPayload.nullProperties = listOf(UserOrganizations.parentId.name)
+                searchPayload.nullProperties = listOf(UserOrganization::parentId.name)
             } else { // 加载组织机构的下级机构
                 // do nothing
             }

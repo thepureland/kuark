@@ -13,12 +13,6 @@ open class OrganizationTreeNode : BaseOrganizationTreeNode(), ITreeNode<String>,
     /** 组织类型 */
     var orgTypeDictCode: String? = null
 
-    /** 子系统代码 */
-    var subSysDictCode: String? = null
-
-    /** 租户id */
-    var tenantId: String? = null
-
     /** 是否启用 */
     var active: Boolean? = null
 
@@ -30,7 +24,6 @@ open class OrganizationTreeNode : BaseOrganizationTreeNode(), ITreeNode<String>,
     var parentId: String? = null
 
     /** 在同父节点下的排序号 */
-    @get:Transient
     var seqNo: Int? = null
 
 

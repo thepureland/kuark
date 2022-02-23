@@ -6,6 +6,7 @@ import io.kuark.base.support.Consts
 import org.springframework.web.bind.annotation.GetMapping
 import kotlin.reflect.KClass
 
+
 /**
  * 基础的Controller
  *
@@ -25,12 +26,24 @@ open class BaseController<F: Any> {
      * @since 1.0.0
      */
     @GetMapping("/getValidationRule")
-    @Suppress(Consts.Suppress.UNCHECKED_CAST)
     open fun getValidationRule(): Map<String, LinkedHashMap<String, Array<Map<String, Any>>>> {
         if (formModelClass == null) {
-            formModelClass = GenericKit.getSuperClassGenricClass(this::class, 0) as KClass<F>
+            formModelClass = getFormModelClass()
         }
         return TeminalConstraintsCreator.create(formModelClass!!)
+    }
+
+    /**
+     * 返回表单模型类
+     *
+     * @param F 表单模型类
+     * @return KClass
+     * @author K
+     * @since 1.0.0
+     */
+    @Suppress(Consts.Suppress.UNCHECKED_CAST)
+    open fun getFormModelClass(): KClass<F> {
+        return GenericKit.getSuperClassGenricClass(this::class, 5) as KClass<F>
     }
 
 }

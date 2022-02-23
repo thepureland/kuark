@@ -37,7 +37,9 @@ import kotlin.reflect.full.memberProperties
 open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
 
     /** 数据库表-实体关联对象 */
-    protected var table: T? = null
+    private var table: T? = null
+
+    private var entityClass: KClass<E>? = null
 
     /**
      * 返回数据库表-实体关联对象
@@ -53,6 +55,14 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
             table = tableClass.objectInstance!!
         }
         return table!!
+    }
+
+    @Suppress(Consts.Suppress.UNCHECKED_CAST)
+    protected fun entityClass(): KClass<E> {
+        if (entityClass == null) {
+            return GenericKit.getSuperClassGenricClass(this::class, 1) as KClass<E>
+        }
+        return entityClass!!
     }
 
     /**
@@ -814,7 +824,11 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
             val operatorAndValue = propertyMap[property]
             val operator = operatorAndValue!!.first
             val value = operatorAndValue.second
-            val expression = if (value == null || value == "") {
+            val expression = if (operator == Operator.IS_NULL) {
+                column.isNull()
+            } else if (operator == Operator.IS_NOT_NULL) {
+                column.isNotNull()
+            } else if (value == null || value == "") {
                 if (ignoreNull) {
                     whereConditionFactory?.let { it(column, value) }
                 } else {

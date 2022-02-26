@@ -1,7 +1,11 @@
 package io.kuark.service.user.provider.user.biz.impl
 
 import io.kuark.ability.data.rdb.biz.BaseCrudBiz
+import io.kuark.base.query.sort.Order
+import io.kuark.base.support.Consts
 import io.kuark.base.support.payload.ListSearchPayload
+import io.kuark.service.user.common.user.vo.account.UserAccountRecord
+import io.kuark.service.user.common.user.vo.account.UserAccountSearchPayload
 import io.kuark.service.user.provider.user.dao.UserAccountDao
 import io.kuark.service.user.provider.user.biz.ibiz.IUserAccountBiz
 import io.kuark.service.user.provider.user.model.po.UserAccount
@@ -45,11 +49,13 @@ open class UserAccountBiz : BaseCrudBiz<String, UserAccount, UserAccountDao>(), 
         TODO("Not yet implemented")
     }
 
-    override fun pagingSearch(listSearchPayload: ListSearchPayload): Pair<List<*>, Int> {
-
-        return super.pagingSearch(listSearchPayload)
+    @Suppress(Consts.Suppress.UNCHECKED_CAST)
+    override fun getAccounts(subSysDictCode: String): List<UserAccountRecord> {
+        val searchPayload = UserAccountSearchPayload()
+        searchPayload.subSysDictCode = subSysDictCode
+        searchPayload.orders = listOf(Order.asc(UserAccount::username.name))
+        return dao.search(searchPayload) as List<UserAccountRecord>
     }
-
 
     //endregion your codes 2
 

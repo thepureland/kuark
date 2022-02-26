@@ -1,6 +1,7 @@
 package io.kuark.service.user.provider.user.biz.ibiz
 
 import io.kuark.base.support.biz.IBaseCrudBiz
+import io.kuark.service.user.common.user.vo.account.UserAccountRecord
 import io.kuark.service.user.provider.user.model.po.UserAccount
 
 
@@ -23,6 +24,8 @@ interface IUserAccountBiz: IBaseCrudBiz<String, UserAccount> {
     fun getByUsername(username: String): UserAccount?
 
     fun getPermissions(userId: String): Set<String>
+
+    fun getAccounts(subSysDictCode: String): List<UserAccountRecord>
 
     //endregion your codes 2
 

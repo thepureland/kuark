@@ -52,6 +52,26 @@ interface IRbacRoleBiz: IBaseCrudBiz<String, RbacRole> {
     fun assignUser(roleId: String, userIds: Collection<String>): Boolean
 
     /**
+     * 返回已关联的用户的id
+     *
+     * @param roleId 角色id
+     * @return Set(用户id)
+     * @author K
+     * @since 1.0.0
+     */
+    fun getAssignUsers(roleId: String): Set<String>
+
+    /**
+     * 返回候选的用户
+     *
+     * @param subSysDictCode 子系统代码
+     * @return LinkedHashMap(用户id， 用户名)
+     * @author K
+     * @since 1.0.0
+     */
+    fun getCandidateUsers(subSysDictCode: String): LinkedHashMap<String, String>
+
+    /**
      * 返回角色最大权限的菜单和其当前已分配权限的菜单ID
      *
      * @param roleId 角色ID

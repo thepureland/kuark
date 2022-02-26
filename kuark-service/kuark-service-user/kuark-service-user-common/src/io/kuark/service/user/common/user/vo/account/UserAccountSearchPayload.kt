@@ -15,4 +15,7 @@ open class UserAccountSearchPayload: ListSearchPayload() {
     /** 用户名 */
     var username: String? = null
 
+    /** 子系统代码 */
+    var subSysDictCode: String? = null
+
 }

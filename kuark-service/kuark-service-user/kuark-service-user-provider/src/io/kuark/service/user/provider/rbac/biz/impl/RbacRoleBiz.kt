@@ -18,6 +18,7 @@ import io.kuark.service.user.provider.rbac.model.po.RbacRoleResource
 import io.kuark.service.user.provider.rbac.model.po.RbacRoleUser
 import io.kuark.service.user.provider.rbac.model.table.RbacRoleResources
 import io.kuark.service.user.provider.rbac.model.table.RbacRoleUsers
+import io.kuark.service.user.provider.user.biz.ibiz.IUserAccountBiz
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -41,6 +42,9 @@ open class RbacRoleBiz : IRbacRoleBiz, BaseCrudBiz<String, RbacRole, RbacRoleDao
 
     @Autowired
     private lateinit var rbacRoleUserDao: RbacRoleUserDao
+
+    @Autowired
+    private lateinit var userAccountBiz: IUserAccountBiz
 
     //region your codes 2
 
@@ -67,6 +71,19 @@ open class RbacRoleBiz : IRbacRoleBiz, BaseCrudBiz<String, RbacRole, RbacRoleDao
         rbacRoleUserDao.batchDeleteCriteria(Criteria(RbacRoleUsers.roleId.name, Operator.EQ, roleId))
         val roleUsers = userIds.map { RbacRoleUser { this.roleId = roleId; userId = it } }
         return rbacRoleUserDao.batchInsert(roleUsers) == userIds.size
+    }
+
+    @Suppress(Consts.Suppress.UNCHECKED_CAST)
+    override fun getAssignUsers(roleId: String): Set<String> {
+        val userIds = rbacRoleUserDao.oneSearchProperty(RbacRoleUser::roleId.name, roleId, RbacRoleUser::userId.name)
+        return userIds.toSet() as Set<String>
+    }
+
+    override fun getCandidateUsers(subSysDictCode: String): LinkedHashMap<String, String> {
+        val accounts = userAccountBiz.getAccounts(subSysDictCode)
+        val map = linkedMapOf<String, String>()
+        accounts.forEach { map[it.id!!] = it.username!! }
+        return map
     }
 
     @Suppress(Consts.Suppress.UNCHECKED_CAST)

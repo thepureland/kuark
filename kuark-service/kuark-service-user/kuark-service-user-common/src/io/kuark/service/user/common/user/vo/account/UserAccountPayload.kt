@@ -12,6 +12,7 @@ open class UserAccountPayload: FormPayload<String>() {
     var username: String? = null
 
     /** 子系统代码 */
+    @get:NotBlank(message = "子系统不能为空！")
     @get:DictCode(message = "子系统不在取值范围内！", module = "kuark:sys", dictType = "sub_sys")
     var subSysDictCode: String? = null
 

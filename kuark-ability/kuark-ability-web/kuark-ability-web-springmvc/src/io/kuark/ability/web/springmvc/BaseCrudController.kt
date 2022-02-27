@@ -35,8 +35,7 @@ open class BaseCrudController<PK : Any, B : IBaseCrudBiz<PK, *>, S : ListSearchP
      * @since 1.0.0
      */
     @PostMapping("/saveOrUpdate")
-    open fun saveOrUpdate(@RequestBody @Valid payload: F, bindingResult: BindingResult): PK {
-        if (bindingResult.hasErrors()) error("数据校验失败！")
+    open fun saveOrUpdate(@RequestBody @Valid payload: F): PK {
         return if (payload.id == null || payload.id == "") {
             biz.insert(payload)
         } else {

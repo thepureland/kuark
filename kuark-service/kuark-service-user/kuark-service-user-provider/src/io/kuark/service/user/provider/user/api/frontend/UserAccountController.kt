@@ -25,8 +25,7 @@ open class UserAccountController :
 
 
     @PostMapping("/saveOrUpdate")
-    override fun saveOrUpdate(@RequestBody @Valid payload: UserAccountPayload, bindingResult: BindingResult): String {
-        if (bindingResult.hasErrors()) error("数据校验失败！")
+    override fun saveOrUpdate(@RequestBody @Valid payload: UserAccountPayload): String {
         return if (payload.id == null || payload.id == "") {
             // 设置默认密码
             val param = paramApi.getParam("kuark:sys", "account_default_password")

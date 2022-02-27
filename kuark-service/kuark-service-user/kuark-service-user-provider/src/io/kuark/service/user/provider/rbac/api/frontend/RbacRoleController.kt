@@ -33,4 +33,38 @@ open class RbacRoleController :
         return biz.setRolePermissions(payload.roleId!!, payload.resourceIds!!)
     }
 
+//    /**
+//     * 为角色分配用户
+//     *
+//     * @param roleId 角色ID
+//     * @param userIds 用户id集合
+//     * @return 是否分配成功
+//     * @author K
+//     * @since 1.0.0
+//     */
+//    @PostMapping("/assignUser")
+//    fun assignUser(@RequestBody payload: RoleAssignUserPayload): Boolean {
+//        return biz.assignUser(payload.roleId, payload.userIds)
+//    }
+//
+//    /**
+//     * 返回已关联的用户的id
+//     *
+//     * @param roleId 角色id
+//     * @return Set(用户id)
+//     * @author K
+//     * @since 1.0.0
+//     */
+//    fun getAssignUsers(roleId: String): Set<String>
+//
+//    /**
+//     * 返回候选的用户
+//     *
+//     * @param subSysDictCode 子系统代码
+//     * @return LinkedHashMap(用户id， 用户名)
+//     * @author K
+//     * @since 1.0.0
+//     */
+//    fun getCandidateUsers(subSysDictCode: String): LinkedHashMap<String, String>
+
 }

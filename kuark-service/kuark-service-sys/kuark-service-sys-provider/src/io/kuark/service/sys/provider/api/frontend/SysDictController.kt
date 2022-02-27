@@ -102,8 +102,7 @@ open class SysDictController :
      * @since 1.0.0
      */
     @PostMapping("/saveOrUpdate")
-    fun saveOrUpdate(@RequestBody @Valid payload: SysDictPayload, bindingResult: BindingResult): String {
-        if (bindingResult.hasErrors()) error("数据校验失败！")
+    fun saveOrUpdate(@RequestBody @Valid payload: SysDictPayload): String {
         return biz.saveOrUpdate(payload)
     }
 

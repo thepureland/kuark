@@ -61,26 +61,33 @@ open class RbacRoleBiz : IRbacRoleBiz, BaseCrudBiz<String, RbacRole, RbacRoleDao
 
     @Transactional
     override fun setRolePermissions(roleId: String, resourceIds: Collection<String>): Boolean {
-        rbacRoleResourceDao.batchDeleteCriteria(Criteria(RbacRoleResources.roleId.name, Operator.EQ, roleId))
-        val roleResources = resourceIds.map { RbacRoleResource { this.roleId = roleId; resourceId = it } }
-        return rbacRoleResourceDao.batchInsert(roleResources) == resourceIds.size
+        val criteria = Criteria(RbacRoleResources.roleId.name, Operator.EQ, roleId)
+        var success = rbacRoleResourceDao.batchDeleteCriteria(criteria) != 0
+        if (resourceIds.isNotEmpty()) {
+            val roleResources = resourceIds.map { RbacRoleResource { this.roleId = roleId; resourceId = it } }
+            success = rbacRoleResourceDao.batchInsert(roleResources) == resourceIds.size
+        }
+        return success
     }
 
     @Transactional
     override fun assignUser(roleId: String, userIds: Collection<String>): Boolean {
-        rbacRoleUserDao.batchDeleteCriteria(Criteria(RbacRoleUsers.roleId.name, Operator.EQ, roleId))
-        val roleUsers = userIds.map { RbacRoleUser { this.roleId = roleId; userId = it } }
-        return rbacRoleUserDao.batchInsert(roleUsers) == userIds.size
+        var success = rbacRoleUserDao.batchDeleteCriteria(Criteria(RbacRoleUsers.roleId.name, Operator.EQ, roleId)) != 0
+        if (userIds.isNotEmpty()) {
+            val roleUsers = userIds.map { RbacRoleUser { this.roleId = roleId; userId = it } }
+            success = rbacRoleUserDao.batchInsert(roleUsers) == userIds.size
+        }
+        return success
     }
 
     @Suppress(Consts.Suppress.UNCHECKED_CAST)
-    override fun getAssignUsers(roleId: String): Set<String> {
+    override fun getAssignedUsers(roleId: String): Set<String> {
         val userIds = rbacRoleUserDao.oneSearchProperty(RbacRoleUser::roleId.name, roleId, RbacRoleUser::userId.name)
         return userIds.toSet() as Set<String>
     }
 
-    override fun getCandidateUsers(subSysDictCode: String): LinkedHashMap<String, String> {
-        val accounts = userAccountBiz.getAccounts(subSysDictCode)
+    override fun getCandidateUsers(subSysDictCode: String, tenantId: String?): LinkedHashMap<String, String> {
+        val accounts = userAccountBiz.getAccounts(subSysDictCode, tenantId)
         val map = linkedMapOf<String, String>()
         accounts.forEach { map[it.id!!] = it.username!! }
         return map

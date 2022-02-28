@@ -18,4 +18,7 @@ open class UserAccountSearchPayload: ListSearchPayload() {
     /** 子系统代码 */
     var subSysDictCode: String? = null
 
+    /** 租户id */
+    var tenantId: String? = null
+
 }

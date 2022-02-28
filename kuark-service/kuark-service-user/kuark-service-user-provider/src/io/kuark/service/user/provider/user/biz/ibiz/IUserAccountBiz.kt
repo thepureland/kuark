@@ -25,7 +25,7 @@ interface IUserAccountBiz: IBaseCrudBiz<String, UserAccount> {
 
     fun getPermissions(userId: String): Set<String>
 
-    fun getAccounts(subSysDictCode: String): List<UserAccountRecord>
+    fun getAccounts(subSysDictCode: String, tenantId: String?): List<UserAccountRecord>
 
     //endregion your codes 2
 

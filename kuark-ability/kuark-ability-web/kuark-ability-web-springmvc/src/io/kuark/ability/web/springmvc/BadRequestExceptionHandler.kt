@@ -1,6 +1,7 @@
 package io.kuark.ability.web.springmvc
 
 import io.kuark.ability.web.common.WebResult
+import io.kuark.base.log.LogFactory
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -20,13 +21,17 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @ControllerAdvice
 class BadRequestExceptionHandler: ResponseEntityExceptionHandler() {
 
+    private val log = LogFactory.getLog(this::class)
+
     override fun handleMethodArgumentNotValid(
         ex: MethodArgumentNotValidException,
         headers: HttpHeaders,
         status: HttpStatus,
         request: WebRequest
     ): ResponseEntity<Any> {
-        val result = WebResult<Any?>("非法请求参数！", 500)
+        val errMsg = "非法请求参数！"
+        log.error(ex, errMsg)
+        val result = WebResult<Any?>(errMsg, 500)
         return ResponseEntity<Any>(result, headers, status)
     }
 

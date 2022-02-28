@@ -33,7 +33,7 @@ interface IRbacRoleBiz: IBaseCrudBiz<String, RbacRole> {
      * 设置角色可操作的资源
      *
      * @param roleId 角色ID
-     * @param resourceIds 资源id集合
+     * @param resourceIds 资源id集合，为空时相当于解除所有关联资源
      * @return 是否设置成功
      * @author K
      * @since 1.0.0
@@ -44,7 +44,7 @@ interface IRbacRoleBiz: IBaseCrudBiz<String, RbacRole> {
      * 为角色分配用户
      *
      * @param roleId 角色ID
-     * @param userIds 用户id集合
+     * @param userIds 用户id集合，为空时相当于解除所有关联用户
      * @return 是否分配成功
      * @author K
      * @since 1.0.0
@@ -59,17 +59,18 @@ interface IRbacRoleBiz: IBaseCrudBiz<String, RbacRole> {
      * @author K
      * @since 1.0.0
      */
-    fun getAssignUsers(roleId: String): Set<String>
+    fun getAssignedUsers(roleId: String): Set<String>
 
     /**
      * 返回候选的用户
      *
      * @param subSysDictCode 子系统代码
+     * @param tenantId 租户id
      * @return LinkedHashMap(用户id， 用户名)
      * @author K
      * @since 1.0.0
      */
-    fun getCandidateUsers(subSysDictCode: String): LinkedHashMap<String, String>
+    fun getCandidateUsers(subSysDictCode: String, tenantId: String?): LinkedHashMap<String, String>
 
     /**
      * 返回角色最大权限的菜单和其当前已分配权限的菜单ID

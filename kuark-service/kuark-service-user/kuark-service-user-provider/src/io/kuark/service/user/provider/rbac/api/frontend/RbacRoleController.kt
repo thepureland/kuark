@@ -7,6 +7,7 @@ import io.kuark.service.user.provider.rbac.biz.ibiz.IRbacRoleBiz
 
 import io.kuark.service.user.provider.rbac.model.po.RbacRole
 import org.springframework.web.bind.annotation.*
+import javax.validation.Valid
 
 @RestController
 @RequestMapping("/rbac/role")
@@ -29,42 +30,44 @@ open class RbacRoleController :
     }
 
     @PostMapping("/setRolePermissions")
-    fun setRolePermissions(@RequestBody payload: RoleAuthorizationPayload): Boolean {
+    fun setRolePermissions(@RequestBody @Valid payload: RoleResourceAssignmentPayload): Boolean {
         return biz.setRolePermissions(payload.roleId!!, payload.resourceIds!!)
     }
 
-//    /**
-//     * 为角色分配用户
-//     *
-//     * @param roleId 角色ID
-//     * @param userIds 用户id集合
-//     * @return 是否分配成功
-//     * @author K
-//     * @since 1.0.0
-//     */
-//    @PostMapping("/assignUser")
-//    fun assignUser(@RequestBody payload: RoleAssignUserPayload): Boolean {
-//        return biz.assignUser(payload.roleId, payload.userIds)
-//    }
-//
-//    /**
-//     * 返回已关联的用户的id
-//     *
-//     * @param roleId 角色id
-//     * @return Set(用户id)
-//     * @author K
-//     * @since 1.0.0
-//     */
-//    fun getAssignUsers(roleId: String): Set<String>
-//
-//    /**
-//     * 返回候选的用户
-//     *
-//     * @param subSysDictCode 子系统代码
-//     * @return LinkedHashMap(用户id， 用户名)
-//     * @author K
-//     * @since 1.0.0
-//     */
-//    fun getCandidateUsers(subSysDictCode: String): LinkedHashMap<String, String>
+    /**
+     * 为角色分配用户
+     *
+     * @param payload 角色关联用户载体，当关联的用户id列表为空时相当于解除所有关联用户
+     * @return 是否分配成功
+     * @author K
+     * @since 1.0.0
+     */
+    @PostMapping("/assignUser")
+    fun assignUser(@RequestBody @Valid payload: RoleUserAssignmentPayload): Boolean {
+        return biz.assignUser(payload.roleId!!, payload.userIds!!)
+    }
+
+    /**
+     * 返回用户关联情况
+     *
+     * @param roleId 角色id
+     * @param subSysDictCode 子系统代码
+     * @param tenantId 租户id
+     * @return List(RoleAssignUserResult)
+     * @author K
+     * @since 1.0.0
+     */
+    @GetMapping("/getUserAssignment")
+    fun getUserAssignment(roleId: String, subSysDictCode: String, tenantId: String?): List<RoleUserAssignmentResult> {
+        val candidateUsers = biz.getCandidateUsers(subSysDictCode, tenantId)
+        val assignedUsers = biz.getAssignedUsers(roleId)
+        return candidateUsers.map {
+            RoleUserAssignmentResult().apply {
+                userId = it.key
+                username = it.value
+                assigned = assignedUsers.contains(userId)
+            }
+        }
+    }
 
 }

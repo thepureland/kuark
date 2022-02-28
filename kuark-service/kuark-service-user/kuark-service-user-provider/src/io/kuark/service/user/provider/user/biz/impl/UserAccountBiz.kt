@@ -50,9 +50,10 @@ open class UserAccountBiz : BaseCrudBiz<String, UserAccount, UserAccountDao>(), 
     }
 
     @Suppress(Consts.Suppress.UNCHECKED_CAST)
-    override fun getAccounts(subSysDictCode: String): List<UserAccountRecord> {
+    override fun getAccounts(subSysDictCode: String, tenantId: String?): List<UserAccountRecord> {
         val searchPayload = UserAccountSearchPayload()
         searchPayload.subSysDictCode = subSysDictCode
+        searchPayload.tenantId = tenantId
         searchPayload.orders = listOf(Order.asc(UserAccount::username.name))
         return dao.search(searchPayload) as List<UserAccountRecord>
     }

@@ -1,6 +1,9 @@
 package io.kuark.service.user.provider.user.biz.impl
 
+import io.kuark.ability.cache.context.CacheNames
+import io.kuark.ability.cache.kit.CacheKit
 import io.kuark.ability.data.rdb.biz.BaseCrudBiz
+import io.kuark.base.bean.BeanKit
 import io.kuark.base.lang.collections.CollectionKit
 import io.kuark.base.lang.string.StringKit
 import io.kuark.base.query.Criterion
@@ -9,9 +12,12 @@ import io.kuark.base.query.sort.Direction
 import io.kuark.base.support.Consts
 import io.kuark.base.tree.TreeKit
 import io.kuark.service.sys.common.api.ISysTenantApi
+import io.kuark.service.sys.common.vo.dict.SysDictRecord
+import io.kuark.service.sys.common.vo.dict.SysDictSearchPayload
 import io.kuark.service.sys.common.vo.tenant.SysTenantRecord
 import io.kuark.service.user.common.user.vo.organization.BaseOrganizationTreeNode
 import io.kuark.service.user.common.user.vo.organization.OrganizationTreeNode
+import io.kuark.service.user.common.user.vo.organization.UserOrganizationRecord
 import io.kuark.service.user.common.user.vo.organization.UserOrganizationSearchPayload
 import io.kuark.service.user.provider.user.biz.ibiz.IUserOrganizationBiz
 import io.kuark.service.user.provider.user.dao.UserOrganizationDao
@@ -19,6 +25,7 @@ import io.kuark.service.user.provider.user.model.po.UserOrganization
 import io.kuark.service.user.provider.user.model.table.UserOrganizations
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 /**
  * 组织机构业务
@@ -117,6 +124,64 @@ open class UserOrganizationBiz : BaseCrudBiz<String, UserOrganization, UserOrgan
         }
 
         return TreeKit.convertListToTree(nodes)
+    }
+
+    override fun fetchAllParentIds(orgId: String): List<String> {
+        val results = mutableListOf<String>()
+        recursionFindAllParentId(orgId, results)
+        results.reverse()
+        return results
+    }
+
+    @Transactional
+    override fun cascadeDeleteChildren(id: String): Boolean {
+        val childIds = mutableListOf<String>()
+        recursionFindAllChildId(id, childIds)
+        if (childIds.isNotEmpty()) {
+            dao.batchDelete(childIds)
+        }
+        //TODO 从缓存中踢除
+//        if (CacheKit.isCacheActive()) {
+//            val dictIds = dao.oneSearchProperty(UserOrganization::id.name, id, UserOrganization::dictId.name)
+//            val dict = sysDictBiz.get(dictIds.first() as String)!!
+//            CacheKit.evict(CacheNames.SYS_DICT_ITEM, "${dict.module}:${dict.dictType}") // 字典的缓存粒度为字典类型
+//        }
+        return dao.deleteById(id)
+    }
+
+    @Transactional
+    override fun deleteById(id: String): Boolean {
+        val childIds = mutableListOf<String>()
+        recursionFindAllChildId(id, childIds)
+        if (childIds.isNotEmpty()) {
+            dao.batchDelete(childIds)
+        }
+        //TODO 从缓存中踢除
+//        if (CacheKit.isCacheActive()) {
+//            val dictIds = dao.oneSearchProperty(SysDictItem::id.name, id, SysDictItem::dictId.name)
+//            val dict = sysDictBiz.get(dictIds.first() as String)!!
+//            CacheKit.evict(CacheNames.SYS_DICT_ITEM, "${dict.module}:${dict.dictType}") // 字典的缓存粒度为字典类型
+//        }
+        return dao.deleteById(id)
+    }
+
+    private fun recursionFindAllParentId(orgId: String, results: MutableList<String>) {
+        val list = dao.oneSearchProperty(UserOrganization::id.name, orgId, UserOrganization::parentId.name) //TODO 从缓存中找
+        if (list.isNotEmpty()) {
+            val parentId = list.first()
+            if(parentId != null) {
+                results.add(parentId as String)
+                recursionFindAllParentId(parentId, results)
+            }
+        }
+    }
+
+    private fun recursionFindAllChildId(itemId: String, results: MutableList<String>) {
+        val itemIds = dao.oneSearchProperty(UserOrganization::parentId.name, itemId, UserOrganization::id.name)
+        itemIds.forEach { id ->
+            results.add(id as String)
+            recursionFindAllChildId(id, results)
+        }
     }
 
     //endregion your codes 2

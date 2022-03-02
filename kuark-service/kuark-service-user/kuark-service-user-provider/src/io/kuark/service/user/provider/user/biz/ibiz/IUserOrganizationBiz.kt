@@ -50,6 +50,10 @@ interface IUserOrganizationBiz: IBaseCrudBiz<String, UserOrganization> {
      */
     fun loadTree(subSysDictCode: String, tenantId: String?): List<BaseOrganizationTreeNode>
 
+    fun fetchAllParentIds(orgId: String): List<String>
+
+    fun cascadeDeleteChildren(id: String): Boolean
+
     //endregion your codes 2
 
 }

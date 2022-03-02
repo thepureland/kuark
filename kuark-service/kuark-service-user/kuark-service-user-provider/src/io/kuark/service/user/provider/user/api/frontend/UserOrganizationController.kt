@@ -16,10 +16,17 @@ import org.springframework.web.bind.annotation.*
 @CrossOrigin
 //region your codes 1
 class UserOrganizationController :
-    BaseCrudController<String, IUserOrganizationBiz, UserOrganizationSearchPayload, UserOrganizationDetail, UserOrganizationDetail, UserOrganizationPayload>() {
+    BaseCrudController<String, IUserOrganizationBiz, UserOrganizationSearchPayload, UserOrganizationRecord, UserOrganizationDetail, UserOrganizationPayload>() {
 //endregion your codes 1
 
     //region your codes 2
+
+    @GetMapping("/get")
+    override fun get(id: String): UserOrganizationRecord {
+        val record = super.get(id)
+        record.parentIds = biz.fetchAllParentIds(id)
+        return record
+    }
 
     @PostMapping("/searchTree")
     fun searchTree(@RequestBody payload: UserOrganizationSearchPayload): List<OrganizationTreeNode> {

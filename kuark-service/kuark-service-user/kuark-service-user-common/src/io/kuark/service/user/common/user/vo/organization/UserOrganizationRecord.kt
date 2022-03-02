@@ -20,6 +20,12 @@ open class UserOrganizationRecord: IdJsonResult<String>() {
     /** 租户id */
     var tenantId: String? = null
 
+    /** 父id */
+    var parentId: String? = null
+
+    /** 所有父id列表 */
+    var parentIds: List<String>? = null
+
     /** 是否启用 */
     var active: Boolean? = null
 

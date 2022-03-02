@@ -8,12 +8,10 @@ class RbacUserGroupSearchPayload: ListSearchPayload() {
 
     override var returnEntityClass: KClass<*>? = RbacUserGroupRecord::class
 
-    override fun getOperators(): Map<String, Operator> {
-        return mapOf(
-            this::groupCode.name to Operator.ILIKE,
-            this::groupName.name to Operator.ILIKE,
-        )
-    }
+    override var operators: Map<String, Operator>? = mapOf(
+        this::groupCode.name to Operator.ILIKE,
+        this::groupName.name to Operator.ILIKE,
+    )
 
     /** 组编码 */
     var groupCode: String? = null

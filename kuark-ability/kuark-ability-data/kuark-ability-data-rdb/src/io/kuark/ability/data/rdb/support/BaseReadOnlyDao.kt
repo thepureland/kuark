@@ -1030,7 +1030,7 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
         searchPayload: SearchPayload, entityProperties: List<String>
     ): Map<String, Pair<Operator, *>> {
         val propAndValueMap = BeanKit.extract(searchPayload).filter { entityProperties.contains(it.key) }
-        val operatorMap = searchPayload.getOperators()
+        val operatorMap = searchPayload.operators ?: emptyMap()
         val resultMap = mutableMapOf<String, Pair<Operator, *>>()
         propAndValueMap.forEach { (prop, value) ->
             var operator = operatorMap[prop]
@@ -1043,6 +1043,12 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
         if (CollectionKit.isNotEmpty(nullProperties)) {
             nullProperties!!.forEach {
                 resultMap[it] = Pair(Operator.IS_NULL, null)
+            }
+        }
+        val criterions = searchPayload.criterions
+        if (CollectionKit.isNotEmpty(criterions)) {
+            criterions!!.forEach {
+                resultMap[it.property] = Pair(it.operator, it.getValue())
             }
         }
         return resultMap

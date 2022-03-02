@@ -28,9 +28,7 @@ open class SysTenantSearchPayload : ListSearchPayload() {
     /** 是否启用 */
     var active: Boolean? = null
 
-    override fun getOperators(): Map<String, Operator> {
-        return mapOf(this::name.name to Operator.ILIKE)
-    }
+    override var operators: Map<String, Operator>? = mapOf(SysTenantSearchPayload::name.name to Operator.ILIKE)
 
     //endregion your codes 2
 

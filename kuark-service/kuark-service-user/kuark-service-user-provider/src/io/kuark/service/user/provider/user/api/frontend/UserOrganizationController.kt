@@ -31,6 +31,23 @@ class UserOrganizationController :
         return biz.lazyLoadTree(payload)
     }
 
+    /**
+     * 加载组织机构，返回基础树结点
+     *
+     * @param subSysDictCode 子系统代码
+     * @param tenantId 租户id
+     * @return List(组织机构基础树结点)
+     * @author K
+     * @since 1.0.0
+     */
+    @GetMapping("/loadTree")
+    fun loadTree(
+        @RequestParam("subSysDictCode") subSysDictCode: String,
+        @RequestParam("tenantId") tenantId: String?
+    ): List<BaseOrganizationTreeNode> {
+        return biz.loadTree(subSysDictCode, tenantId)
+    }
+
     //endregion your codes 2
 
 }

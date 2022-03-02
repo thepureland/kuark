@@ -5,12 +5,10 @@ import io.kuark.base.support.payload.ListSearchPayload
 
 class FlowDefinitionSearchPayload: ListSearchPayload() {
 
-    override fun getOperators(): Map<String, Operator> {
-        return mapOf(
-            this::key.name to Operator.ILIKE,
-            this::name.name to Operator.ILIKE
-        )
-    }
+    override var operators: Map<String, Operator>? = mapOf(
+        this::key.name to Operator.ILIKE,
+        this::name.name to Operator.ILIKE
+    )
 
     /** 流程定义key(bpmn文件中process元素的id) */
     var key: String? = null

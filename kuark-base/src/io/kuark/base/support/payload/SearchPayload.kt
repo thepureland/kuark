@@ -1,5 +1,6 @@
 package io.kuark.base.support.payload
 
+import io.kuark.base.query.Criterion
 import io.kuark.base.query.enums.Operator
 import io.kuark.base.support.logic.AndOr
 import kotlin.reflect.KClass
@@ -42,14 +43,13 @@ open class SearchPayload {
     open var returnEntityClass: KClass<*>? = null
 
     /**
-     * 返回属性名的查询操作逻辑
-     *
-     * @return Map(属性名，查询操作枚举)
-     * @author K
-     * @since 1.0.0
+     * 属性的特殊(非等于)查询操作逻辑，key必须为该类的属性名
      */
-    open fun getOperators(): Map<String, Operator> {
-        return emptyMap()
-    }
+    open var operators: Map<String, Operator>? = null
+
+    /**
+     * 完全自定义的属性查询逻辑。优先级最高，会覆盖原来的查询逻辑！
+     */
+    open var criterions: List<Criterion>? = null
 
 }

@@ -1,11 +1,15 @@
 package io.kuark.service.user.provider.user.biz.impl
 
 import io.kuark.ability.data.rdb.biz.BaseCrudBiz
+import io.kuark.base.lang.collections.CollectionKit
 import io.kuark.base.lang.string.StringKit
+import io.kuark.base.query.Criterion
+import io.kuark.base.query.enums.Operator
 import io.kuark.base.query.sort.Direction
 import io.kuark.base.support.Consts
 import io.kuark.base.tree.TreeKit
 import io.kuark.service.sys.common.api.ISysTenantApi
+import io.kuark.service.sys.common.vo.tenant.SysTenantRecord
 import io.kuark.service.user.common.user.vo.organization.BaseOrganizationTreeNode
 import io.kuark.service.user.common.user.vo.organization.OrganizationTreeNode
 import io.kuark.service.user.common.user.vo.organization.UserOrganizationSearchPayload
@@ -75,6 +79,44 @@ open class UserOrganizationBiz : BaseCrudBiz<String, UserOrganization, UserOrgan
             dao.search(searchPayload)
         }
         return result as List<BaseOrganizationTreeNode>
+    }
+
+    @Suppress(Consts.Suppress.UNCHECKED_CAST)
+    override fun loadTree(subSysDictCode: String, tenantId: String?): List<BaseOrganizationTreeNode> {
+        if (subSysDictCode.isBlank()) {
+            throw IllegalArgumentException("子系统未指定！")
+        }
+
+        var tenants: List<SysTenantRecord>? = null
+        val tenantIds = if (StringKit.isBlank(tenantId)) {  // 加载租户
+            tenants = sysTenantApi.getTenants(subSysDictCode)
+            tenants.map { it.id }
+        } else {
+            listOf(tenantId)
+        }
+
+        val payload = UserOrganizationSearchPayload().apply {
+            returnEntityClass = BaseOrganizationTreeNode::class
+            this.subSysDictCode = subSysDictCode
+            this.active = true
+            if (tenantIds.isNotEmpty()) {
+                criterions = listOf(Criterion(UserOrganization::tenantId.name, Operator.IN, tenantIds))
+            }
+        }
+        val nodes = (dao.search(payload) as List<BaseOrganizationTreeNode>).toMutableList()
+
+        if (CollectionKit.isNotEmpty(tenants)) {
+            val basicTenants = tenants!!.map {
+                BaseOrganizationTreeNode().apply {
+                    this.id = it.id
+                    this.name = it.name
+                    this.organization = false
+                }
+            }
+            nodes.addAll(basicTenants)
+        }
+
+        return TreeKit.convertListToTree(nodes)
     }
 
     //endregion your codes 2

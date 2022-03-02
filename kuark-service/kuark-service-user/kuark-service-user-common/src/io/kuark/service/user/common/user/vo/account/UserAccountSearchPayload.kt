@@ -8,9 +8,7 @@ open class UserAccountSearchPayload: ListSearchPayload() {
 
     override var returnEntityClass: KClass<*>? = UserAccountRecord::class
 
-    override fun getOperators(): Map<String, Operator> {
-        return mapOf(this::username.name to Operator.ILIKE)
-    }
+    override var operators: Map<String, Operator>? = mapOf(this::username.name to Operator.ILIKE)
 
     /** 用户名 */
     var username: String? = null

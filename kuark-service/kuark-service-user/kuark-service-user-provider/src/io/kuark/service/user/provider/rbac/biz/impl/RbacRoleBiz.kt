@@ -2,13 +2,17 @@ package io.kuark.service.user.provider.rbac.biz.impl
 
 import io.kuark.ability.data.rdb.biz.BaseCrudBiz
 import io.kuark.base.error.ObjectNotFoundException
+import io.kuark.base.lang.string.StringKit
 import io.kuark.base.query.Criteria
+import io.kuark.base.query.Criterion
 import io.kuark.base.query.enums.Operator
 import io.kuark.base.support.Consts
 import io.kuark.service.sys.common.api.ISysResourceApi
 import io.kuark.service.sys.common.vo.resource.BaseMenuTreeNode
 import io.kuark.service.sys.common.vo.resource.ResourceType
 import io.kuark.service.sys.common.vo.resource.SysResourceRecord
+import io.kuark.service.user.common.user.vo.account.UserAccountRecord
+import io.kuark.service.user.common.user.vo.account.UserAccountSearchPayload
 import io.kuark.service.user.provider.rbac.dao.RbacRoleDao
 import io.kuark.service.user.provider.rbac.dao.RbacRoleResourceDao
 import io.kuark.service.user.provider.rbac.dao.RbacRoleUserDao
@@ -19,6 +23,7 @@ import io.kuark.service.user.provider.rbac.model.po.RbacRoleUser
 import io.kuark.service.user.provider.rbac.model.table.RbacRoleResources
 import io.kuark.service.user.provider.rbac.model.table.RbacRoleUsers
 import io.kuark.service.user.provider.user.biz.ibiz.IUserAccountBiz
+import io.kuark.service.user.provider.user.model.po.UserAccount
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -101,6 +106,23 @@ open class RbacRoleBiz : IRbacRoleBiz, BaseCrudBiz<String, RbacRole, RbacRoleDao
             RbacRoleResources.roleId.name, roleId, RbacRoleResources.resourceId.name
         ) as List<String>
         return Pair(simpleMenus, resourceIds)
+    }
+
+    @Suppress(Consts.Suppress.UNCHECKED_CAST)
+    override fun searchAssignedUsers(
+        searchPayload: UserAccountSearchPayload, userIds: List<String>?
+    ): List<UserAccountRecord> {
+        var ids = userIds
+        if (ids == null) {
+            val roleId = searchPayload._roleId
+            require(StringKit.isNotBlank(roleId)) { "角色id必须指定！" }
+            ids = getAssignedUsers(roleId!!).toList()
+        }
+        return if (ids.isNotEmpty()) {
+            searchPayload.criterions = listOf(Criterion(UserAccount::id.name, Operator.IN, ids))
+            searchPayload._roleId = null
+            userAccountBiz.search(searchPayload) as List<UserAccountRecord>
+        } else emptyList()
     }
 
     //endregion your codes 2

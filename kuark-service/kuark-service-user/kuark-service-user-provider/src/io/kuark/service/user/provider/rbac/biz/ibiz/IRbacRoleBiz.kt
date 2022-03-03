@@ -1,10 +1,16 @@
 package io.kuark.service.user.provider.rbac.biz.ibiz
 
+import io.kuark.base.lang.string.StringKit
+import io.kuark.base.query.Criterion
+import io.kuark.base.query.enums.Operator
 import io.kuark.base.support.biz.IBaseCrudBiz
 import io.kuark.service.sys.common.vo.resource.BaseMenuTreeNode
 import io.kuark.service.sys.common.vo.resource.ResourceType
 import io.kuark.service.sys.common.vo.resource.SysResourceRecord
+import io.kuark.service.user.common.user.vo.account.UserAccountRecord
+import io.kuark.service.user.common.user.vo.account.UserAccountSearchPayload
 import io.kuark.service.user.provider.rbac.model.po.RbacRole
+import io.kuark.service.user.provider.user.model.po.UserAccount
 
 /**
  * 角色业务接口
@@ -77,8 +83,22 @@ interface IRbacRoleBiz: IBaseCrudBiz<String, RbacRole> {
      *
      * @param roleId 角色ID
      * @return Pair(最大权限的菜单列表，已分配权限的菜单ID列表)
+     * @author K
+     * @since 1.0.0
      */
     fun getMenuPermissions(roleId: String): Pair<List<BaseMenuTreeNode>, List<String>>
+
+    /**
+     * 分页查询已分配的用户
+     *
+     * @param searchPayload 查询载体
+     * @param userIds 用户id列表，为null将会根据_roleId去查询
+     * @return List(UserAccountRecord)
+     * @throws IllegalArgumentException 用户id列表且searchPayload._roleId为空时
+     * @author K
+     * @since 1.0.0
+     */
+    fun searchAssignedUsers(searchPayload: UserAccountSearchPayload, userIds: List<String>?): List<UserAccountRecord>
 
     //endregion your codes 2
 

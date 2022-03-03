@@ -457,9 +457,7 @@ internal class BaseReadOnlyDaoTest : SpringTest() {
             var weight: Double? = null
             var noExistProp: String? = "noExistProp"
             override var returnProperties: List<String>? = listOf("id", "name", "height")
-            override fun getOperators(): Map<String, Operator> {
-                return mapOf(SearchPayload2::name.name to Operator.ILIKE)
-            }
+            override var operators: Map<String, Operator>? = mapOf(SearchPayload2::name.name to Operator.ILIKE)
         }
         val searchPayload2 = SearchPayload2().apply {
             name = "nAme1"

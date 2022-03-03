@@ -19,4 +19,7 @@ open class UserAccountSearchPayload: ListSearchPayload() {
     /** 租户id */
     var tenantId: String? = null
 
+    /** 角色id */
+    var _roleId: String? = null
+
 }

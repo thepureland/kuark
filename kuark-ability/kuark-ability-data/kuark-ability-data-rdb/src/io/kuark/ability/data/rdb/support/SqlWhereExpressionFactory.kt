@@ -3,6 +3,7 @@ package io.kuark.ability.data.rdb.support
 import io.kuark.base.query.enums.Operator
 import io.kuark.base.support.Consts
 import org.ktorm.dsl.*
+import org.ktorm.expression.InListExpression
 import org.ktorm.schema.Column
 import org.ktorm.schema.ColumnDeclaring
 
@@ -89,27 +90,27 @@ object SqlWhereExpressionFactory {
 
     // 为了解决 <T : Any> ColumnDeclaring<T>.inList(list: Collection<T>) 的泛型问题
     @Suppress(Consts.Suppress.UNCHECKED_CAST)
-    private fun <T : Any> columnIn(column: ColumnDeclaring<T>, values: List<T>): ColumnDeclaring<Boolean> =
+    private fun <T : Any> columnIn(column: ColumnDeclaring<T>, values: Collection<T>): ColumnDeclaring<Boolean> =
         column.inList(values)
 
     // 为了解决 <T : Any> ColumnDeclaring<T>.notInList(list: Collection<T>) 的泛型问题
     @Suppress(Consts.Suppress.UNCHECKED_CAST)
-    private fun <T : Any> columnNotIn(column: ColumnDeclaring<T>, values: List<T>): ColumnDeclaring<Boolean> =
+    private fun <T : Any> columnNotIn(column: ColumnDeclaring<T>, values: Collection<T>): ColumnDeclaring<Boolean> =
         column.notInList(values)
 
     @Suppress(Consts.Suppress.UNCHECKED_CAST)
     private fun handleIn(isIn: Boolean, value: Any, column: ColumnDeclaring<Any>): ColumnDeclaring<Boolean> {
         var values = value
-        if (values !is List<*> && values !is Array<*>) {
+        if (values !is Collection<*> && values !is Array<*>) {
             values = arrayOf(values)
         }
         if (values is Array<*>) {
             values = listOf(*values)
         }
         return if (isIn) {
-            columnIn(column, values as List<Any>)
+            columnIn(column, values as Collection<Any>)
         } else {
-            columnNotIn(column, values as List<Any>)
+            columnNotIn(column, values as Collection<Any>)
         }
     }
 

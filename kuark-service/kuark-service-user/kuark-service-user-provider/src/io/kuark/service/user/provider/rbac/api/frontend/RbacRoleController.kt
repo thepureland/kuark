@@ -1,10 +1,12 @@
 package io.kuark.service.user.provider.rbac.api.frontend
 
 import io.kuark.ability.web.springmvc.BaseCrudController
+import io.kuark.base.lang.string.StringKit
 import io.kuark.service.sys.common.vo.resource.BaseMenuTreeNode
 import io.kuark.service.user.common.rbac.vo.role.*
+import io.kuark.service.user.common.user.vo.account.UserAccountRecord
+import io.kuark.service.user.common.user.vo.account.UserAccountSearchPayload
 import io.kuark.service.user.provider.rbac.biz.ibiz.IRbacRoleBiz
-
 import io.kuark.service.user.provider.rbac.model.po.RbacRole
 import org.springframework.web.bind.annotation.*
 import javax.validation.Valid
@@ -68,6 +70,24 @@ open class RbacRoleController :
                 assigned = assignedUsers.contains(userId)
             }
         }
+    }
+
+    /**
+     * 分页查询已分配的用户
+     *
+     * @param searchPayload 查询载体，_roleId必须指定
+     * @return Pair<List<UserAccountRecord>, 总记录数>
+     * @throws IllegalArgumentException searchPayload._roleId为空时
+     * @author K
+     * @since 1.0.0
+     */
+    @PostMapping("/searchAssignedUsers")
+    fun searchAssignedUsers(@RequestBody searchPayload: UserAccountSearchPayload): Pair<List<UserAccountRecord>, Int> {
+        val roleId = searchPayload._roleId
+        require(StringKit.isNotBlank(roleId)) { "角色id必须指定！" }
+        val userIds = biz.getAssignedUsers(roleId!!).toList()
+        val users = biz.searchAssignedUsers(searchPayload, userIds)
+        return Pair(users, userIds.size)
     }
 
 }

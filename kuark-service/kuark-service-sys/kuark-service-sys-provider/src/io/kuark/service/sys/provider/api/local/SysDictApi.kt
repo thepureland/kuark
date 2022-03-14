@@ -15,7 +15,6 @@ open class SysDictApi : ISysDictApi {
     private lateinit var sysDictItemBiz: ISysDictItemBiz
 
     override fun getDictItems(payload: DictModuleAndTypePayload): List<SysDictItemRecord> {
-
         return sysDictItemBiz.getItemsByModuleAndType(payload.module ?: "", payload.dictType!!)
     }
 

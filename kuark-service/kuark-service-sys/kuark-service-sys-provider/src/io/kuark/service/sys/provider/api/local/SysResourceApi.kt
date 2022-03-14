@@ -13,22 +13,19 @@ import org.springframework.stereotype.Service
 
 
 @Service
-open class SysResourceApi: ISysResourceApi {
+open class SysResourceApi : ISysResourceApi {
 
     @Autowired
     private lateinit var sysResourceBiz: ISysResourceBiz
 
     @Suppress(Consts.Suppress.UNCHECKED_CAST)
     override fun getResources(subSysDictCode: String, resourceType: ResourceType): List<SysResourceRecord> {
-        val searchPayload = SysResourceSearchPayload().apply {
-            pageNo = null
-            this.subSysDictCode = subSysDictCode
-            resourceTypeDictCode = resourceType.code
-        }
-        return sysResourceBiz.search(searchPayload) as List<SysResourceRecord>
+        return sysResourceBiz.getResources(subSysDictCode, resourceType)
     }
 
-    override fun getResources(vararg resourceIds: String): List<SysResourceRecord> {
+    override fun getResources(
+        subSysDictCode: String, resourceType: ResourceType, vararg resourceIds: String
+    ): List<SysResourceRecord> {
         val resources = sysResourceBiz.inSearchById(resourceIds.asList())
         return BeanKit.batchCopyProperties(SysResourceRecord::class, resources)
     }

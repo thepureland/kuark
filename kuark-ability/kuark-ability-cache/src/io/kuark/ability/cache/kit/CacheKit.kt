@@ -111,4 +111,15 @@ object CacheKit {
         getCache(cacheName)!!.evict(key)
     }
 
+    /**
+     * 清空缓存
+     *
+     * @param cacheName 缓存名称
+     * @author K
+     * @since 1.0.0
+     */
+    fun clear(cacheName: String) {
+        getCache(cacheName)!!.clear()
+    }
+
 }

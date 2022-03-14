@@ -88,11 +88,7 @@ object EnumKit {
      */
     fun getCodeMap(enumClass: KClass<out IDictEnum>): Map<String, String> {
         val enumConstants = enumClass.java.enumConstants
-        val codeMap = mutableMapOf<String, String>()
-        for (e in enumConstants) {
-            codeMap[e.code] = e.trans
-        }
-        return codeMap
+        return enumConstants.associate { it.code to it.trans }
     }
 
     /**

@@ -8,13 +8,15 @@ import org.springframework.stereotype.Component
 
 
 @Component
-class SysResourceFallback: ISysResourceProxy {
+class SysResourceFallback : ISysResourceProxy {
 
     override fun getResources(subSysDictCode: String, resourceType: ResourceType): List<SysResourceRecord> {
         TODO("Not yet implemented")
     }
 
-    override fun getResources(vararg resourceIds: String): List<SysResourceRecord> {
+    override fun getResources(
+        subSysDictCode: String, resourceType: ResourceType, vararg resourceIds: String
+    ): List<SysResourceRecord> {
         TODO("Not yet implemented")
     }
 

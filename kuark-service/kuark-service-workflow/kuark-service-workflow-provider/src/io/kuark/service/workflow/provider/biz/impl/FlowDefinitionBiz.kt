@@ -544,8 +544,8 @@ open class FlowDefinitionBiz : IFlowDefinitionBiz {
 
         // 只查询最新版本的
         val latestOnly = searchPayload.latestOnly
-        var sql = "SELECT * FROM act_re_model WHERE $whereStr"
-        if (latestOnly != null && latestOnly) {
+//        var sql = "SELECT * FROM act_re_model WHERE $whereStr"
+        if (latestOnly == true) {
             whereStr.append(" AND version_ = (SELECT MAX(m.version_) FROM act_re_model m GROUP BY m.key_)")
         }
 

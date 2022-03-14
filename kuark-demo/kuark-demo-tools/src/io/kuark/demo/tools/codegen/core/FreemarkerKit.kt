@@ -37,7 +37,6 @@ object FreemarkerKit {
                 return it.toString()
             } catch (e: Exception) {
                 error("解析模板串失败：$templateString")
-                e.printStackTrace()
             }
         }
     }

@@ -12,14 +12,14 @@ import kotlin.reflect.KClass
  * @since 1.0.0
  */
 //region your codes 1
-interface ISysResourceBiz: IBaseCrudBiz<String, SysResource> {
+interface ISysResourceBiz : IBaseCrudBiz<String, SysResource> {
 //endregion your codes 1
 
     //region your codes 2
 
     fun getSimpleMenus(subSysDictCode: String): List<BaseMenuTreeNode>
 
-    fun getMenus(): List<MenuTreeNode>
+    fun getMenus(subSysDictCode: String): List<MenuTreeNode>
 
     fun loadDirectChildrenForTree(searchPayload: SysResourceSearchPayload): List<SysResourceTreeNode>
 
@@ -46,6 +46,32 @@ interface ISysResourceBiz: IBaseCrudBiz<String, SysResource> {
      * @since 1.0.0
      */
     fun cascadeDeleteChildren(id: String): Boolean
+
+    /**
+     * 根据子系统代码和资源类型，取得对应资源(仅包括处于启用状态的)，并将结果缓存，查不到不缓存.
+     * 缓存的名称为 sys_resource，key为 子系统代码:资源类型代码。
+     *
+     * @param subSysDictCode 子系统代码
+     * @param resourceType 资源类型枚举
+     * @return List(资源记录)
+     * @author K
+     * @since 1.0.0
+     */
+    fun getResources(subSysDictCode: String, resourceType: ResourceType): List<SysResourceRecord>
+
+    /**
+     * 根据子系统代码、资源类型和资源id，从缓存中取得对应资源(仅包括处于启用状态的)
+     *
+     * @param subSysDictCode 子系统代码
+     * @param resourceType 资源类型枚举
+     * @param resourceIds 资源id可变数组
+     * @return List(资源记录)
+     * @author K
+     * @since 1.0.0
+     */
+    fun getResources(
+        subSysDictCode: String, resourceType: ResourceType, vararg resourceIds: String
+    ): List<SysResourceRecord>
 
     //endregion your codes 2
 

@@ -20,6 +20,12 @@ object CacheNames: ICacheNames {
     /** 参数 */
     const val SYS_PARAM = "sys_param"
 
+    /** 资源 */
+    const val SYS_RESOURCE = "sys_resource"
+
+    /** 角色 */
+    const val RBAC_ROLE = "rbac_role"
+
     /** Session */
     const val SESSION = "session"
 

@@ -234,11 +234,7 @@ object I18nKit {
      * @return
      */
     private fun resourceGroup(resources: Array<Resource>): Map<String, List<Resource>> {
-        val resourceGroup = mutableMapOf<String, List<Resource>>()
-        for (locale in supportLocales) {
-            resourceGroup[locale] = resources.filter { it.filename.contains(locale) }
-        }
-        return resourceGroup
+        return supportLocales.map {locale -> locale to resources.filter { it.filename.contains(locale) } }.toMap()
     }
 
     /**

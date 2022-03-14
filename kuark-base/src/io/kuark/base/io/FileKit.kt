@@ -43,7 +43,7 @@ object FileKit {
      */
     fun zip(file: File, fileName: String?, password: String?): File? {
         var filename: String? = fileName
-        var zipFile: File?
+        val zipFile: File?
         var enc: AesZipFileEncrypter? = null
         var input: InputStream? = null
         var zipOut: ZipOutputStream? = null

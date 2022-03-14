@@ -7,7 +7,6 @@ import io.kuark.service.user.common.rbac.vo.role.*
 import io.kuark.service.user.common.user.vo.account.UserAccountRecord
 import io.kuark.service.user.common.user.vo.account.UserAccountSearchPayload
 import io.kuark.service.user.provider.rbac.biz.ibiz.IRbacRoleBiz
-import io.kuark.service.user.provider.rbac.model.po.RbacRole
 import org.springframework.web.bind.annotation.*
 import javax.validation.Valid
 
@@ -18,12 +17,22 @@ open class RbacRoleController :
     BaseCrudController<String, IRbacRoleBiz, RbacRoleSearchPayload, RbacRoleRecord, RbacRoleDetail, RbacRolePayload>() {
 
     @GetMapping("/updateActive")
-    fun updateActive(id: String, active: Boolean): Boolean {
-        val param = RbacRole {
-            this.id = id
-            this.active = active
-        }
-        return biz.update(param)
+    fun updateActive(subSysDictCode: String, roleId: String, active: Boolean): Boolean {
+        return biz.updateActive(subSysDictCode, roleId, active)
+    }
+
+    /**
+     * 删除指定主键的记录
+     *
+     * @param subSysDictCode 子系统代码（为了踢除缓存）
+     * @param id 主键
+     * @return WebResult(是否删除成功)
+     * @author K
+     * @since 1.0.0
+     */
+    @DeleteMapping("/delete")
+    fun delete(subSysDictCode: String, id: String): Boolean {
+        return biz.delete(subSysDictCode, id)
     }
 
     @GetMapping("/getMenuPermissions")

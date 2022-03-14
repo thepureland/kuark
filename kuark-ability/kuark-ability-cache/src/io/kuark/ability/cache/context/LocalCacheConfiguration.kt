@@ -3,12 +3,12 @@ package io.kuark.ability.cache.context
 import com.github.benmanes.caffeine.cache.Caffeine
 import com.github.benmanes.caffeine.cache.CaffeineSpec
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.boot.SpringBootConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression
 import org.springframework.cache.CacheManager
 import org.springframework.cache.caffeine.CaffeineCacheManager
 import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
 
 /**
  * 本地缓存(第一级缓存)springboot配置类
@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Configuration
  * @author K
  * @since 1.0.0
  */
-@Configuration
+@SpringBootConfiguration
 @ConditionalOnBean(MixCacheConfiguration::class)
 @ConditionalOnExpression("'\${cache.config.strategy}'.equals('SINGLE_LOCAL') || '\${cache.config.strategy}'.equals('LOCAL_REMOTE')")
 open class LocalCacheConfiguration {

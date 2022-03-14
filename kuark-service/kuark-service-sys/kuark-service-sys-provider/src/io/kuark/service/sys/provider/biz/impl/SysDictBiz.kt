@@ -43,8 +43,8 @@ open class SysDictBiz : BaseCrudBiz<String, SysDict, SysDictDao>(), ISysDictBiz 
         return dao.getDictIdByModuleAndType(module, type)
     }
 
-    override fun pagingSearch(searchPayload: ListSearchPayload): Pair<List<SysDictRecord>, Int> {
-        val dictItems = dao.pagingSearch(searchPayload as SysDictSearchPayload)
+    override fun pagingSearch(listSearchPayload: ListSearchPayload): Pair<List<SysDictRecord>, Int> {
+        val dictItems = dao.pagingSearch(listSearchPayload as SysDictSearchPayload)
         val totalCount = if (dictItems.isNotEmpty()) {
             // 查询parentCode
             val parentIds = dictItems.filter { StringKit.isNotBlank(it.parentId) }.map { it.parentId }.toSet()
@@ -56,7 +56,7 @@ open class SysDictBiz : BaseCrudBiz<String, SysDict, SysDictDao>(), ISysDictBiz 
                     dictItem.parentCode = idAndCodeMap[SysDictItems.itemCode.name] as String?
                 }
             }
-            dao.count(searchPayload)
+            dao.count(listSearchPayload)
         } else 0
         return Pair(dictItems, totalCount)
     }

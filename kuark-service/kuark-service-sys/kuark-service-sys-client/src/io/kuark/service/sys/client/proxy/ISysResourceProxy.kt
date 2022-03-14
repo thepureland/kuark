@@ -10,13 +10,15 @@ import org.springframework.web.bind.annotation.GetMapping
 
 
 @FeignClient(name = "sys-resource", fallback = SysResourceFallback::class)
-interface ISysResourceProxy: ISysResourceApi {
+interface ISysResourceProxy : ISysResourceApi {
 
     @GetMapping("/sys/resource/getResources")
     override fun getResources(subSysDictCode: String, resourceType: ResourceType): List<SysResourceRecord>
 
     @GetMapping("/sys/resource/getResourcesByIds")
-    override fun getResources(vararg resourceIds: String): List<SysResourceRecord>
+    override fun getResources(
+        subSysDictCode: String, resourceType: ResourceType, vararg resourceIds: String
+    ): List<SysResourceRecord>
 
     @GetMapping("/sys/resource/getSimpleMenus")
     override fun getSimpleMenus(subSysDictCode: String): List<BaseMenuTreeNode>

@@ -53,11 +53,11 @@ open class SysDictDao : BaseCrudDao<String, SysDict, SysDicts>() {
         var query = leftJoinSearch(searchPayload)
         val orders = searchPayload.orders
         if (CollectionKit.isEmpty(orders)) {
-            val orders = mutableListOf(SysDicts.module.asc(), SysDicts.dictType.asc())
+            val orderList = mutableListOf(SysDicts.module.asc(), SysDicts.dictType.asc())
             if (!searchPayload.isDict) {
-                orders.add(SysDictItems.seqNo.asc())
+                orderList.add(SysDictItems.seqNo.asc())
             }
-            query = query.orderBy()
+            query = query.orderBy(*orderList.toTypedArray())
         } else {
             val orderExps = mutableListOf<OrderByExpression>()
             orders!!.forEach {

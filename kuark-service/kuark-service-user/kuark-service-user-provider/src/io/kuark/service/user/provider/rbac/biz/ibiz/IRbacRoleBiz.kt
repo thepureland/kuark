@@ -1,16 +1,13 @@
 package io.kuark.service.user.provider.rbac.biz.ibiz
 
-import io.kuark.base.lang.string.StringKit
-import io.kuark.base.query.Criterion
-import io.kuark.base.query.enums.Operator
 import io.kuark.base.support.biz.IBaseCrudBiz
 import io.kuark.service.sys.common.vo.resource.BaseMenuTreeNode
 import io.kuark.service.sys.common.vo.resource.ResourceType
 import io.kuark.service.sys.common.vo.resource.SysResourceRecord
+import io.kuark.service.user.common.rbac.vo.role.RbacRoleDetail
 import io.kuark.service.user.common.user.vo.account.UserAccountRecord
 import io.kuark.service.user.common.user.vo.account.UserAccountSearchPayload
 import io.kuark.service.user.provider.rbac.model.po.RbacRole
-import io.kuark.service.user.provider.user.model.po.UserAccount
 
 /**
  * 角色业务接口
@@ -23,6 +20,48 @@ interface IRbacRoleBiz: IBaseCrudBiz<String, RbacRole> {
 //endregion your codes 1
 
     //region your codes 2
+
+    /**
+     * 缓存所有启用状态的角色信息，缓存前会先清除之前的数据（如果有的话）。
+     * 如果缓存未开启，什么也不做。
+     *
+     * @author K
+     * @since 1.0.0
+     */
+    fun cacheAllActiveRoles()
+
+    /**
+     * 从缓存中返回指定id的角色，如果不存在，从数据库加载，并缓存。
+     * 如果缓存未开启，只加载不缓存。
+     *
+     * @param roleId 角色id
+     * @return 角色详细信息，找不到返回null
+     * @author K
+     * @since 1.0.0
+     */
+    fun getRoleFromCache(roleId: String): RbacRoleDetail?
+
+    /**
+     * 批量从缓存中返回指定id集合的角色，如果不存在，从数据库加载，并缓存。
+     * 如果缓存未开启，只加载不缓存。
+     *
+     * @param roleIds 角色id集合
+     * @return Map(角色id，角色详细信息)
+     * @author K
+     * @since 1.0.0
+     */
+    fun getRolesFromCache(roleIds: Collection<String>): Map<String, RbacRoleDetail>
+
+    /**
+     * 更新启用状态，并清除缓存
+     *
+     * @param roleId 角色id
+     * @param active 是否启用
+     * @return 是否更新成功
+     * @author K
+     * @since 1.0.0
+     */
+    fun updateActive(roleId: String, active: Boolean): Boolean
 
     /**
      * 返回角色可操作的资源

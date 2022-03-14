@@ -510,7 +510,7 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
      * @author K
      * @since 1.0.0
      */
-    open fun search(criteria: Criteria, vararg orders: Order): List<E> {
+    open fun search(criteria: Criteria, vararg orders: Order, clazz: KClass<E>): List<E> {
         return searchEntityCriteria(criteria, 0, 0, *orders)
     }
 
@@ -882,10 +882,7 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
     ): List<E> {
         var entitySequence = entitySequence()
         if (propertyMap != null) {
-            val propMap = mutableMapOf<String, Pair<Operator, *>>()
-            propertyMap.forEach { (prop, value) ->
-                propMap[prop] = Pair(Operator.EQ, value)
-            }
+            val propMap = propertyMap.map { (prop, value) -> prop to Pair(Operator.EQ, value) }.toMap()
             val fullExpression = processWhere(propMap, logic, false, whereConditionFactory)
             entitySequence = entitySequence.filter { fullExpression!! }
         }
@@ -907,10 +904,7 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
 
         // where
         if (propertyMap != null) {
-            val propMap = mutableMapOf<String, Pair<Operator, *>>()
-            propertyMap.forEach { (prop, value) ->
-                propMap[prop] = Pair(Operator.EQ, value)
-            }
+            val propMap = propertyMap.map { (prop, value) -> prop to Pair(Operator.EQ, value) }.toMap()
             val fullExpression = processWhere(propMap, logic, false, whereConditionFactory)
             query = query.where { fullExpression!! }
         }
@@ -925,10 +919,7 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
     private fun processResult(query: Query, returnColumnMap: Map<String, Column<Any>>): List<Map<String, *>> {
         val returnValues = mutableListOf<Map<String, Any?>>()
         query.forEach { row ->
-            val map = mutableMapOf<String, Any?>()
-            returnColumnMap.forEach { (propertyName, column) ->
-                map[propertyName] = row[column]
-            }
+            val map = returnColumnMap.map { (propName, column) -> propName to row[column] }.toMap()
             returnValues.add(map)
         }
         return returnValues

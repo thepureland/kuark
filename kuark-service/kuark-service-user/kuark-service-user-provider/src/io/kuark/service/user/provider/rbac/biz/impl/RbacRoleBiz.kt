@@ -33,7 +33,6 @@ import io.kuark.service.user.provider.rbac.model.table.RbacRoleUsers
 import io.kuark.service.user.provider.user.biz.ibiz.IUserAccountBiz
 import io.kuark.service.user.provider.user.model.po.UserAccount
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -46,7 +45,6 @@ import org.springframework.transaction.annotation.Transactional
  */
 @Service
 //region your codes 1
-@CacheConfig(cacheNames = [CacheNames.RBAC_ROLE])
 open class RbacRoleBiz : IRbacRoleBiz, BaseCrudBiz<String, RbacRole, RbacRoleDao>() {
 //endregion your codes 1
 
@@ -78,40 +76,68 @@ open class RbacRoleBiz : IRbacRoleBiz, BaseCrudBiz<String, RbacRole, RbacRoleDao
             pageNo = null
             returnEntityClass = RbacRoleDetail::class
         }
+
         @Suppress(Consts.Suppress.UNCHECKED_CAST)
         val roles = dao.search(searchPayload) as List<RbacRoleDetail>
         log.debug("从数据库加载了${roles.size}条角色信息。")
 
         // 清空缓存（如果有的话）
         CacheKit.clear(CacheNames.RBAC_ROLE)
-        log.debug("清空所有角色缓存。")
+        CacheKit.clear(CacheNames.RBAC_ROLE_ID)
+        log.debug("清空所有角色缓存和角色id缓存。")
 
         // 缓存角色
         roles.forEach {
             CacheKit.put(CacheNames.RBAC_ROLE, it.id!!, it)
         }
         log.debug("缓存了${roles.size}条角色信息。")
+
+        // 缓存角色id
+        val map = mutableMapOf<String, MutableList<String>>()
+        roles.forEach {
+            val key = "${it.subSysDictCode}:${it.tenantId}"
+            var roleIds = map[key]
+            if (roleIds == null) {
+                roleIds = mutableListOf()
+                map[key] = roleIds
+            }
+            roleIds.add(it.id!!)
+        }
+        map.forEach { (key, value) ->
+            CacheKit.put(CacheNames.RBAC_ROLE, key, value)
+            log.debug("缓存了${value.size}条角色id。")
+        }
     }
 
-    @Cacheable(key = "#roleId", unless = "#result == null")
+    @Cacheable(
+        cacheNames = [CacheNames.RBAC_ROLE],
+        key = "#roleId",
+        unless = "#result == null"
+    )
     override fun getRoleFromCache(roleId: String): RbacRoleDetail? {
+        require(roleId.isNotBlank()) { log.error("从缓存中获取角色时必须指定角色id！") }
         if (CacheKit.isCacheActive()) log.debug("缓存中不存在id为${roleId}的角色，从数据库中加载...")
-        val result = dao.get(roleId, RbacRoleDetail::class)
+        var result = dao.get(roleId, RbacRoleDetail::class)
         if (result == null) {
             log.warn("数据库中不存在id为${roleId}的角色！")
         } else {
             log.debug("从数据库中加载id为${roleId}的角色成功。")
-            if (CacheKit.isCacheActive()) log.debug("缓存从数据库加载的角色。")
+            if (result.active == true) {
+                if (CacheKit.isCacheActive()) log.debug("缓存从数据库加载的角色。")
+            } else {
+                log.debug("从数据库中加载id为${roleId}的角色为未启用状态，返回null，且不缓存。")
+                result = null
+            }
         }
         return result
     }
 
-    @BatchCacheable(valueClass = RbacRoleDetail::class)
+    @BatchCacheable(
+        cacheNames = [CacheNames.RBAC_ROLE],
+        valueClass = RbacRoleDetail::class
+    )
     override fun getRolesFromCache(roleIds: Collection<String>): Map<String, RbacRoleDetail> {
-        if (!CacheKit.isCacheActive()) {
-            log.info("缓存未开启，不批量加载和缓存所有启用状态的角色！")
-            return emptyMap()
-        }
+        require(roleIds.isNotEmpty()) { log.error("批量从缓存中获取角色时，角色id集合不能为空！") }
 
         // 加载所有可用的角色
         val searchPayload = RbacRoleSearchPayload().apply {
@@ -120,11 +146,43 @@ open class RbacRoleBiz : IRbacRoleBiz, BaseCrudBiz<String, RbacRole, RbacRoleDao
             criterions = listOf(Criterion(RbacRole::id.name, Operator.IN, roleIds))
             returnEntityClass = RbacRoleDetail::class
         }
+
         @Suppress(Consts.Suppress.UNCHECKED_CAST)
         val roles = dao.search(searchPayload) as List<RbacRoleDetail>
         log.debug("从数据库加载了${roles.size}条角色信息。")
 
         return roles.associateBy { it.id!! }
+    }
+
+    @Cacheable(
+        cacheNames = [CacheNames.RBAC_ROLE_ID],
+        key = "#subSysDictCode.concat(':').concat(#tenantId)",
+        unless = "#result == null || #result.size() == 0"
+    )
+    override fun getRoleIdsFromCache(subSysDictCode: String, tenantId: String?): List<String> {
+        require(subSysDictCode.isNotBlank()) { log.error("从缓存中获取角色id时，必须指定子系统代码！") }
+        if (CacheKit.isCacheActive()) {
+            log.debug("缓存中不存在子系统为${subSysDictCode}且租户id为${tenantId}的角色id，从数据库中加载...")
+        }
+        val criteria = Criteria(RbacRole::subSysDictCode.name, Operator.EQ, subSysDictCode)
+        criteria.addAnd(RbacRole::active.name, Operator.EQ, true)
+        if (StringKit.isNotBlank(tenantId)) {
+            criteria.addAnd(RbacRole::tenantId.name, Operator.EQ, tenantId)
+        }
+        @Suppress(Consts.Suppress.UNCHECKED_CAST)
+        val roleIds = dao.searchProperty(criteria, RbacRole::id.name) as List<String>
+        log.debug("从数据库中加载到的角色id数量为${roleIds.size}。")
+        return roleIds
+    }
+
+    override fun getRolesFromCache(subSysDictCode: String, tenantId: String?): Map<String, RbacRoleDetail> {
+        val thisBean = SpringKit.getBean(IRbacRoleBiz::class) // 由于缓存注解的底层实现为AOP，必须通过Bean调用，否则缓存操作不生效
+        val roleIds = thisBean.getRoleIdsFromCache(subSysDictCode, tenantId)
+        return if (roleIds.isNotEmpty()) {
+            thisBean.getRolesFromCache(roleIds)
+        } else {
+            emptyMap()
+        }
     }
 
     @Transactional
@@ -134,7 +192,11 @@ open class RbacRoleBiz : IRbacRoleBiz, BaseCrudBiz<String, RbacRole, RbacRoleDao
         // 同步缓存
         if (CacheKit.isCacheActive()) {
             log.debug("新增id为${id}的角色后，同步缓存...")
-            SpringKit.getBean(IRbacRoleBiz::class).getRoleFromCache(id) // 由于缓存注解的底层实现为AOP，必须通过Bean调用，否则缓存操作不生效
+            val thisBean = SpringKit.getBean(IRbacRoleBiz::class) // 由于缓存注解的底层实现为AOP，必须通过Bean调用，否则缓存操作不生效
+            val role = thisBean.getRoleFromCache(id)!! // 缓存角色
+            CacheKit.evict(CacheNames.RBAC_ROLE_ID, "${role.subSysDictCode}:${role.tenantId}") // 踢除角色id的缓存
+            thisBean.getRolesFromCache(role.subSysDictCode!!, role.tenantId)  // 缓存角色id
+            log.debug("缓存同步完成。")
         }
         return id
     }
@@ -147,8 +209,10 @@ open class RbacRoleBiz : IRbacRoleBiz, BaseCrudBiz<String, RbacRole, RbacRoleDao
             log.debug("更新id为${id}的角色。")
             if (CacheKit.isCacheActive()) {
                 log.debug("更新id为${id}的角色后，同步缓存...")
-                CacheKit.evict(CacheNames.RBAC_ROLE, id) // 踢除缓存
-                SpringKit.getBean(IRbacRoleBiz::class).getRoleFromCache(id) // 由于缓存注解的底层实现为AOP，必须通过Bean调用，否则缓存操作不生效
+                val thisBean = SpringKit.getBean(IRbacRoleBiz::class) // 由于缓存注解的底层实现为AOP，必须通过Bean调用，否则缓存操作不生效
+                CacheKit.evict(CacheNames.RBAC_ROLE, id) // 踢除角色缓存
+                thisBean.getRoleFromCache(id) // 缓存角色
+                log.debug("缓存同步完成。")
             }
         } else {
             log.error("更新id为${id}的角色失败！")
@@ -162,8 +226,13 @@ open class RbacRoleBiz : IRbacRoleBiz, BaseCrudBiz<String, RbacRole, RbacRoleDao
         if (success) {
             log.debug("删除id为${id}的角色成功！")
             if (CacheKit.isCacheActive()) {
+                log.debug("删除id为${id}的角色后，同步从缓存中踢除...")
+                val thisBean = SpringKit.getBean(IRbacRoleBiz::class) // 由于缓存注解的底层实现为AOP，必须通过Bean调用，否则缓存操作不生效
+                val role = thisBean.getRoleFromCache(id)!!
                 CacheKit.evict(CacheNames.RBAC_ROLE, id) // 踢除缓存
-                log.debug("删除id为${id}的角色后，同步从缓存中踢除。")
+                CacheKit.evict(CacheNames.RBAC_ROLE_ID, "${role.subSysDictCode}:${role.tenantId}") // 踢除角色id的缓存
+                thisBean.getRolesFromCache(role.subSysDictCode!!, role.tenantId)  // 缓存角色id
+                log.debug("缓存同步完成。")
             }
         } else {
             log.error("删除id为${id}的角色失败！")
@@ -176,10 +245,17 @@ open class RbacRoleBiz : IRbacRoleBiz, BaseCrudBiz<String, RbacRole, RbacRoleDao
         val count = super.batchDelete(ids)
         log.debug("批量删除角色，期望删除${ids.size}条，实际删除${count}条。")
         if (CacheKit.isCacheActive()) {
-            ids.forEach {
-                CacheKit.evict(CacheNames.RBAC_ROLE, it) // 踢除缓存
+            log.debug("批量删除id为${ids}的角色后，同步从缓存中踢除...")
+            val thisBean = SpringKit.getBean(IRbacRoleBiz::class) // 由于缓存注解的底层实现为AOP，必须通过Bean调用，否则缓存操作不生效
+            val roleMap = thisBean.getRolesFromCache(ids)
+            val keys = roleMap.map { "${it.value.subSysDictCode}:${it.value.tenantId}" }.toSet()
+            keys.forEach {
+                CacheKit.evict(CacheNames.RBAC_ROLE, it) // 踢除角色id缓存
             }
-            log.debug("从角色缓存中，踢除以下id对应的角色：${ids}")
+            ids.forEach {
+                CacheKit.evict(CacheNames.RBAC_ROLE, it) // 踢除角色缓存
+            }
+            log.debug("缓存同步完成。")
         }
         return count
     }
@@ -195,13 +271,14 @@ open class RbacRoleBiz : IRbacRoleBiz, BaseCrudBiz<String, RbacRole, RbacRoleDao
             log.debug("更新id为${roleId}的角色的启用状态为${active}。")
             if (CacheKit.isCacheActive()) {
                 log.debug("更新id为${roleId}的角色的启用状态后，同步缓存...")
-                if (active) {
-                    SpringKit.getBean(IRbacRoleBiz::class)
-                        .getRoleFromCache(roleId) // 由于缓存注解的底层实现为AOP，必须通过Bean调用，否则缓存操作不生效
-                } else {
-                    CacheKit.evict(CacheNames.RBAC_ROLE, roleId) // 踢除缓存
-                    log.debug("将id为${roleId}的角色从缓存中踢除。")
+                val thisBean = SpringKit.getBean(IRbacRoleBiz::class) // 由于缓存注解的底层实现为AOP，必须通过Bean调用，否则缓存操作不生效
+                val r = thisBean.getRoleFromCache(roleId)!!
+                if (!active) {
+                    CacheKit.evict(CacheNames.RBAC_ROLE, roleId) // 踢除角色缓存
                 }
+                CacheKit.evict(CacheNames.RBAC_ROLE_ID, "${r.subSysDictCode}:${r.tenantId}") // 踢除角色id的缓存
+                thisBean.getRolesFromCache(r.subSysDictCode!!, r.tenantId)  // 缓存角色id
+                log.debug("缓存同步完成。")
             }
         } else {
             log.error("更新id为${roleId}的角色的启用状态为${active}失败！")

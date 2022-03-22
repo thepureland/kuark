@@ -26,6 +26,9 @@ object CacheNames: ICacheNames {
     /** 角色 */
     const val RBAC_ROLE = "rbac_role"
 
+    /** 角色id */
+    const val RBAC_ROLE_ID = "rbac_role_id"
+
     /** Session */
     const val SESSION = "session"
 

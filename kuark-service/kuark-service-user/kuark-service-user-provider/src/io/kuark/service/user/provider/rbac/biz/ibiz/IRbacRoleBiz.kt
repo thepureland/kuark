@@ -16,7 +16,7 @@ import io.kuark.service.user.provider.rbac.model.po.RbacRole
  * @since 1.0.0
  */
 //region your codes 1
-interface IRbacRoleBiz: IBaseCrudBiz<String, RbacRole> {
+interface IRbacRoleBiz : IBaseCrudBiz<String, RbacRole> {
 //endregion your codes 1
 
     //region your codes 2
@@ -31,7 +31,7 @@ interface IRbacRoleBiz: IBaseCrudBiz<String, RbacRole> {
     fun cacheAllActiveRoles()
 
     /**
-     * 从缓存中返回指定id的角色，如果不存在，从数据库加载，并缓存。
+     * 从缓存中返回指定id的角色(启用的)，如果不存在，从数据库加载，并缓存。
      * 如果缓存未开启，只加载不缓存。
      *
      * @param roleId 角色id
@@ -42,15 +42,39 @@ interface IRbacRoleBiz: IBaseCrudBiz<String, RbacRole> {
     fun getRoleFromCache(roleId: String): RbacRoleDetail?
 
     /**
-     * 批量从缓存中返回指定id集合的角色，如果不存在，从数据库加载，并缓存。
+     * 批量从缓存中返回指定id集合的角色(启用的)，如果不存在，从数据库加载，并缓存。
      * 如果缓存未开启，只加载不缓存。
      *
-     * @param roleIds 角色id集合
+     * @param roleIds 角色id集合，不能为空
      * @return Map(角色id，角色详细信息)
      * @author K
      * @since 1.0.0
      */
     fun getRolesFromCache(roleIds: Collection<String>): Map<String, RbacRoleDetail>
+
+    /**
+     * 从缓存中返回指定子系统和租户的角色id(启用的)，如果不存在，从数据库加载，并缓存。
+     * 如果缓存未开启，只加载不缓存。
+     *
+     * @param subSysDictCode 子系统代码，不能为空
+     * @param tenantId 租户id，为null时表示该子系统非多租户，将返回该子系统的所有角色id。当子系统为多租户时，务必要传该参数！
+     * @return List(角色id)，找不到时返回空列表且不缓存
+     * @author K
+     * @since 1.0.0
+     */
+    fun getRoleIdsFromCache(subSysDictCode: String, tenantId: String?): List<String>
+
+    /**
+     * 从缓存中返回指定子系统和租户的角色(启用的)，如果不存在，从数据库加载，并缓存。
+     * 如果缓存未开启，只加载不缓存。
+     *
+     * @param subSysDictCode 子系统代码，不能为空
+     * @param tenantId 租户id，为null时表示该子系统非多租户，将返回该子系统的所有角色。当子系统为多租户时，务必要传该参数！
+     * @return Map(角色id，角色详细信息)，找不到时返回空Map且不缓存
+     * @author K
+     * @since 1.0.0
+     */
+    fun getRolesFromCache(subSysDictCode: String, tenantId: String?): Map<String, RbacRoleDetail>
 
     /**
      * 更新启用状态，并清除缓存

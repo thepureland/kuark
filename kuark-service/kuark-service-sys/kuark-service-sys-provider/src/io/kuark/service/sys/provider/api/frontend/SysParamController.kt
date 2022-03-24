@@ -37,7 +37,7 @@ open class SysParamController :
     fun getParam(
         @RequestParam("module") module: String,
         @RequestParam("paramName") paramName: String
-    ): SysParamRecord? {
+    ): SysParamDetail? {
         return paramApi.getParam(module, paramName)
     }
 

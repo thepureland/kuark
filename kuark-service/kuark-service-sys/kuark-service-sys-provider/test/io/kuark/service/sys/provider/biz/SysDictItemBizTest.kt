@@ -13,9 +13,9 @@ internal class SysDictItemBizTest : SpringTest() {
 
     @Test
     fun getItemsByModuleAndType() {
-        assertTrue(sysDictItemBiz.getItemsByModuleAndType("kuark", "sex").size >= 2)
-        assertTrue(sysDictItemBiz.getItemsByModuleAndType("", "sex").size >= 2)
-        assertTrue(sysDictItemBiz.getItemsByModuleAndType("", "sex_no_exist").isEmpty())
+        assertTrue(sysDictItemBiz.getItemsFromCache("kuark", "sex").size >= 2)
+        assertTrue(sysDictItemBiz.getItemsFromCache("", "sex").size >= 2)
+        assertTrue(sysDictItemBiz.getItemsFromCache("", "sex_no_exist").isEmpty())
 
 //        val result = regDictItemService.testBatchCache("", listOf("1", "2"), arrayOf("3"))
 //        print(result)

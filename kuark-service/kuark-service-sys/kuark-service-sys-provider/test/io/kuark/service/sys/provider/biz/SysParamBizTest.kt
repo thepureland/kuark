@@ -13,7 +13,7 @@ internal class SysParamBizTest: SpringTest() {
 
     @Test
     fun getParamByModuleAndName() {
-        assertNull(sysParamService.getParamByModuleAndName("", "name_no_exist"))
+        assertNull(sysParamService.getParamFromCache("", "name_no_exist"))
     }
 
 }

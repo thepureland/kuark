@@ -14,7 +14,7 @@ open class ListSearchPayload: SearchPayload() {
     open var pageNo: Int? = 1
 
     /** 页面大小(仅当pageNo不为null时才应用) */
-    open var pageSize: Int? = null
+    open var pageSize: Int? = Int.MAX_VALUE
 
     /** 排序规则 */
     open var orders: List<Order>? = null

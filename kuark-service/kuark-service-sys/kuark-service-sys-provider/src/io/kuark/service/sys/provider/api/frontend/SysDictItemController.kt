@@ -52,11 +52,7 @@ class SysDictItemController :
      */
     @GetMapping("/updateActive")
     fun updateActive(id: String, active: Boolean): Boolean {
-        val sysDictItem = SysDictItem {
-            this.id = id
-            this.active = active
-        }
-        return biz.update(sysDictItem)
+        return biz.updateActive(id, active)
     }
 
     /**

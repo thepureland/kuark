@@ -60,19 +60,27 @@ open class SysResourceController :
         return biz.cascadeDeleteChildren(id)
     }
 
+    @PostMapping("/batchDelete")
+    override fun batchDelete(@RequestBody ids: List<String>): Boolean {
+        ids.forEach {
+            biz.cascadeDeleteChildren(it)
+        }
+        return true
+    }
+
     @GetMapping("/loadResourceTypes")
     fun loadResourceTypes(): Map<String, String> {
         return dictApi.getDictItemMap(DictModuleAndTypePayload("kuark:sys", "resource_type"))
     }
 
     @GetMapping("/getResources")
-    fun getResources(subSysDictCode: String, resourceType: ResourceType): List<SysResourceRecord> {
+    fun getResources(subSysDictCode: String, resourceType: ResourceType): List<SysResourceDetail> {
         return resourceApi.getResources(subSysDictCode, resourceType)
     }
 
     @GetMapping("/getResourcesByIds")
-    fun getResourcesByIds(vararg resourceIds: String): List<SysResourceRecord> {
-        return resourceApi.getResources(*resourceIds)
+    fun getResourcesByIds(subSysDictCode: String, resourceType: ResourceType, vararg resourceIds: String): List<SysResourceDetail> {
+        return resourceApi.getResources(subSysDictCode, resourceType, *resourceIds)
     }
 
     @GetMapping("/getSimpleMenus")

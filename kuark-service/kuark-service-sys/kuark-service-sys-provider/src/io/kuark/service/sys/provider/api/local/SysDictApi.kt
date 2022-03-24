@@ -15,11 +15,11 @@ open class SysDictApi : ISysDictApi {
     private lateinit var sysDictItemBiz: ISysDictItemBiz
 
     override fun getDictItems(payload: DictModuleAndTypePayload): List<SysDictItemRecord> {
-        return sysDictItemBiz.getItemsByModuleAndType(payload.module ?: "", payload.dictType!!)
+        return sysDictItemBiz.getItemsFromCache(payload.module ?: "", payload.dictType!!)
     }
 
     override fun getDictItemMap(payload: DictModuleAndTypePayload): LinkedHashMap<String, String> {
-        val items = sysDictItemBiz.getItemsByModuleAndType(payload.module ?: "", payload.dictType!!)
+        val items = sysDictItemBiz.getItemsFromCache(payload.module ?: "", payload.dictType!!)
         val map = linkedMapOf<String, String>()
         items.forEach { map[it.itemCode] = it.itemName }
         return map
@@ -31,7 +31,7 @@ open class SysDictApi : ISysDictApi {
             val errors = ValidationKit.validateBean(payload)
             if (errors.isEmpty()) {
                 val module = payload.module ?: ""
-                val items = sysDictItemBiz.getItemsByModuleAndType(module, payload.dictType!!)
+                val items = sysDictItemBiz.getItemsFromCache(module, payload.dictType!!)
                 recordMap[Pair(module, payload.dictType!!)] = items
             } else {
                 throw IllegalArgumentException(errors.first().message)
@@ -46,7 +46,7 @@ open class SysDictApi : ISysDictApi {
             val errors = ValidationKit.validateBean(payload)
             if (errors.isEmpty()) {
                 val module = payload.module ?: ""
-                val items = sysDictItemBiz.getItemsByModuleAndType(module, payload.dictType!!)
+                val items = sysDictItemBiz.getItemsFromCache(module, payload.dictType!!)
                 val map = linkedMapOf<String, String>()
                 items.forEach { map[it.itemCode] = it.itemName }
                 recordMap[Pair(module, payload.dictType!!)] = map

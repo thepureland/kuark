@@ -2,6 +2,7 @@ package io.kuark.service.sys.provider.biz.ibiz
 
 import io.kuark.ability.cache.context.CacheNames
 import io.kuark.base.support.biz.IBaseCrudBiz
+import io.kuark.service.sys.common.vo.param.SysParamDetail
 import io.kuark.service.sys.common.vo.param.SysParamRecord
 import io.kuark.service.sys.common.vo.param.SysParamSearchPayload
 import io.kuark.service.sys.provider.model.po.SysParam
@@ -28,8 +29,7 @@ interface ISysParamBiz: IBaseCrudBiz<String, SysParam> {
      * @author K
      * @since 1.0.0
      */
-    @Cacheable(value = [CacheNames.SYS_PARAM], key = "#module.concat(':').concat(#name)", unless = "#result == null")
-    fun getParamByModuleAndName(module: String, name: String): SysParam?
+    fun getParamFromCache(module: String, name: String): SysParamDetail?
 
     /**
      * 分页查询
@@ -40,6 +40,17 @@ interface ISysParamBiz: IBaseCrudBiz<String, SysParam> {
      * @since 1.0.0
      */
     fun pagingSearch(searchPayload: SysParamSearchPayload): Pair<List<SysParamRecord>, Int>
+
+    /**
+     * 更新启用状态，并同步缓存
+     *
+     * @param id 主键
+     * @param active 是否启用
+     * @return 是否更新成功
+     * @author K
+     * @since 1.0.0
+     */
+    fun updateActive(id: String, active: Boolean): Boolean
 
     //endregion your codes 2
 

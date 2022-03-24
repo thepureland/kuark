@@ -85,7 +85,7 @@ open class SysDictDao : BaseCrudDao<String, SysDict, SysDicts>() {
         val pageSize = searchPayload.pageSize ?: 10
         return query.limit((pageNo - 1) * pageSize, pageSize)
             .map { row ->
-                io.kuark.service.sys.common.vo.dict.SysDictRecord().apply {
+                SysDictRecord().apply {
                     module = row[SysDicts.module]
                     dictId = row[SysDicts.id]
                     dictType = row[SysDicts.dictType]

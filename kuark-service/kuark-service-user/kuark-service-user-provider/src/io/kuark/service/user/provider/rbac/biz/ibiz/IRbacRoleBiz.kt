@@ -21,14 +21,6 @@ interface IRbacRoleBiz : IBaseCrudBiz<String, RbacRole> {
 
     //region your codes 2
 
-    /**
-     * 缓存所有启用状态的角色信息，缓存前会先清除之前的数据（如果有的话）。
-     * 如果缓存未开启，什么也不做。
-     *
-     * @author K
-     * @since 1.0.0
-     */
-    fun cacheAllActiveRoles()
 
     /**
      * 从缓存中返回指定id的角色(启用的)，如果不存在，从数据库加载，并缓存。
@@ -77,7 +69,7 @@ interface IRbacRoleBiz : IBaseCrudBiz<String, RbacRole> {
     fun getRolesFromCache(subSysDictCode: String, tenantId: String?): Map<String, RbacRoleDetail>
 
     /**
-     * 更新启用状态，并清除缓存
+     * 更新启用状态，并同步缓存
      *
      * @param roleId 角色id
      * @param active 是否启用

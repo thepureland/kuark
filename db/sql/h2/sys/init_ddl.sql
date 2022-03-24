@@ -194,7 +194,7 @@ create table "sys_resource"
     "resource_type_dict_code" CHAR(1)                         not null,
     "parent_id"               CHAR(36),
     "seq_no"                  INT2,
-    "sub_sys_dict_code"       VARCHAR(32),
+    "sub_sys_dict_code"       VARCHAR(32)                     not null,
     "icon"                    VARCHAR(128),
     "remark"                  VARCHAR(128),
     "active"                  BOOLEAN   default TRUE          not null,

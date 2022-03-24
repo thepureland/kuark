@@ -4,6 +4,7 @@ import io.kuark.ability.cache.enums.CacheStrategy
 import io.kuark.context.kit.SpringKit
 import org.springframework.cache.Cache
 import org.springframework.data.redis.core.RedisTemplate
+import org.springframework.lang.Nullable
 import java.util.concurrent.Callable
 
 /**
@@ -43,6 +44,19 @@ class MixCache(
 //                localCache?.put(key, value)
             }
         }
+    }
+
+    override fun putIfAbsent(key: Any, value: Any?): Cache.ValueWrapper? {
+        when (strategy) {
+            CacheStrategy.SINGLE_LOCAL -> localCache?.putIfAbsent(key, value)
+            CacheStrategy.REMOTE -> remoteCache?.putIfAbsent(key, value)
+            CacheStrategy.LOCAL_REMOTE -> {
+                remoteCache?.putIfAbsent(key, value)
+                pushMsg(name, key) //TODO 异步?
+//                localCache?.putIfAbsent(key, value)
+            }
+        }
+        return super.putIfAbsent(key, value)
     }
 
     override fun getName(): String =

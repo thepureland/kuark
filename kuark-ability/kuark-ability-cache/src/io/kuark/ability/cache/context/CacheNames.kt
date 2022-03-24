@@ -15,6 +15,9 @@ object CacheNames: ICacheNames {
     const val TEST = "test"
 
     /** 字典项 */
+    const val SYS_DICT = "sys_dict"
+
+    /** 字典项 */
     const val SYS_DICT_ITEM = "sys_dict_item"
 
     /** 参数 */
@@ -22,6 +25,9 @@ object CacheNames: ICacheNames {
 
     /** 资源 */
     const val SYS_RESOURCE = "sys_resource"
+
+    /** 租户 */
+    const val SYS_TENANT = "sys_tenant"
 
     /** 角色 */
     const val RBAC_ROLE = "rbac_role"

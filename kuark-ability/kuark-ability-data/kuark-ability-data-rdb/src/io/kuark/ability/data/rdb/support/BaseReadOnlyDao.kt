@@ -510,7 +510,7 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
      * @author K
      * @since 1.0.0
      */
-    open fun search(criteria: Criteria, vararg orders: Order, clazz: KClass<E>): List<E> {
+    open fun search(criteria: Criteria, vararg orders: Order): List<E> {
         return searchEntityCriteria(criteria, 0, 0, *orders)
     }
 

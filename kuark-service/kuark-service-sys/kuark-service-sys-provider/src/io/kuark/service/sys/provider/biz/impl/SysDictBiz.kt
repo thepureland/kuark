@@ -1,14 +1,15 @@
 package io.kuark.service.sys.provider.biz.impl
 
+import io.kuark.ability.cache.context.CacheNames
+import io.kuark.ability.cache.kit.CacheKit
 import io.kuark.ability.data.rdb.biz.BaseCrudBiz
 import io.kuark.base.bean.BeanKit
 import io.kuark.base.lang.string.StringKit
+import io.kuark.base.log.LogFactory
 import io.kuark.base.query.sort.Order
+import io.kuark.base.support.Consts
 import io.kuark.base.support.payload.ListSearchPayload
-import io.kuark.service.sys.common.vo.dict.SysDictPayload
-import io.kuark.service.sys.common.vo.dict.SysDictRecord
-import io.kuark.service.sys.common.vo.dict.SysDictSearchPayload
-import io.kuark.service.sys.common.vo.dict.SysDictTreeNode
+import io.kuark.service.sys.common.vo.dict.*
 import io.kuark.service.sys.provider.dao.SysDictDao
 import io.kuark.service.sys.provider.biz.ibiz.ISysDictBiz
 import io.kuark.service.sys.provider.biz.ibiz.ISysDictItemBiz
@@ -19,7 +20,9 @@ import org.ktorm.dsl.asc
 import org.ktorm.dsl.eq
 import org.ktorm.dsl.map
 import org.ktorm.dsl.orderBy
+import org.springframework.beans.factory.InitializingBean
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -31,13 +34,59 @@ import org.springframework.transaction.annotation.Transactional
  */
 @Service
 //region your codes 1
-open class SysDictBiz : BaseCrudBiz<String, SysDict, SysDictDao>(), ISysDictBiz {
+open class SysDictBiz : BaseCrudBiz<String, SysDict, SysDictDao>(), ISysDictBiz, InitializingBean {
 //endregion your codes 1
 
     //region your codes 2
 
     @Autowired
     private lateinit var sysDictItemBiz: ISysDictItemBiz
+
+    @Autowired
+    private lateinit var self: ISysDictBiz
+
+    private val log = LogFactory.getLog(this::class)
+
+    override fun afterPropertiesSet() {
+        cacheAllActiveDicts()
+    }
+
+    /**
+     * 缓存所有字典(主表)信息。
+     * 如果缓存未开启，什么也不做。
+     *
+     * @author K
+     * @since 1.0.0
+     */
+    protected fun cacheAllActiveDicts() {
+        if (!CacheKit.isCacheActive()) {
+            log.info("缓存未开启，不加载和缓存所有字典(主表)信息！")
+            return
+        }
+
+        // 加载所有字典
+        val searchPayload = ListSearchPayload().apply {
+            returnEntityClass = SysDictDetail::class
+        }
+        @Suppress(Consts.Suppress.UNCHECKED_CAST)
+        val dicts = dao.search(searchPayload) as List<SysDictDetail>
+        log.debug("从数据库加载了${dicts.size}条字典(主表)信息。")
+
+        // 缓存字典(主表)信息
+        dicts.forEach {
+            CacheKit.putIfAbsent(CacheNames.SYS_DICT, it.id!!, it)
+        }
+        log.debug("缓存了${dicts.size}条字典(主表)信息。")
+    }
+
+    @Cacheable(
+        cacheNames = [CacheNames.SYS_DICT],
+        key = "#dictId",
+        unless = "#result == null"
+    )
+    override fun getDictFromCache(dictId: String): SysDictDetail? {
+        return dao.get(dictId, SysDictDetail::class)
+    }
 
     override fun getDictIdByModuleAndType(module: String, type: String): String? {
         return dao.getDictIdByModuleAndType(module, type)
@@ -68,7 +117,7 @@ open class SysDictBiz : BaseCrudBiz<String, SysDict, SysDictDao>(), ISysDictBiz 
     ): List<SysDictTreeNode> {
         return when {
             StringKit.isBlank(parent) -> { // 加载模块列表
-                val items = sysDictItemBiz.getItemsByModuleAndType("kuark:sys", "module")
+                val items = sysDictItemBiz.getItemsFromCache("kuark:sys", "module")
                 items.map {
                     SysDictTreeNode().apply {
                         code = it.itemCode
@@ -153,7 +202,14 @@ open class SysDictBiz : BaseCrudBiz<String, SysDict, SysDictDao>(), ISysDictBiz 
                     dictName = payload.name
                     remark = payload.remark
                 }
-                dao.insert(sysDict)
+                val id = dao.insert(sysDict)
+                // 同步缓存
+                if (CacheKit.isCacheActive()) {
+                    log.debug("新增id为${id}的字典后，同步缓存...")
+                    self.getDictFromCache(id)
+                    log.debug("缓存同步完成。")
+                }
+                id
             } else { // 添加RegDictItem
                 sysDictItemBiz.saveOrUpdate(payload)
             }
@@ -166,7 +222,19 @@ open class SysDictBiz : BaseCrudBiz<String, SysDict, SysDictDao>(), ISysDictBiz 
                     dictName = payload.name
                     remark = payload.remark
                 }
-                dao.update(sysDict)
+                val success = dao.update(sysDict)
+                if (success) {
+                    // 同步缓存
+                    if (CacheKit.isCacheActive()) {
+                        log.debug("更新id为${sysDict.id}的字典后，同步缓存...")
+                        CacheKit.evict(CacheNames.SYS_DICT, sysDict.id!!) // 踢除缓存
+                        self.getDictFromCache(sysDict.id!!) // 缓存
+                        log.debug("缓存同步完成。")
+                    }
+                } else {
+                    log.error("删除id为${sysDict.id}的字典失败！")
+                }
+
             } else { // SysDictItem
                 sysDictItemBiz.saveOrUpdate(payload)
             }
@@ -182,7 +250,18 @@ open class SysDictBiz : BaseCrudBiz<String, SysDict, SysDictDao>(), ISysDictBiz 
                     column.eq(id)
                 } else null
             }
-            dao.deleteById(id)
+            val success = dao.deleteById(id)
+            if (success) {
+                // 同步缓存
+                if (CacheKit.isCacheActive()) {
+                    log.debug("删除id为${id}的字典后，同步缓存...")
+                    CacheKit.evict(CacheNames.SYS_DICT, id) // 踢除缓存
+                    log.debug("缓存同步完成。")
+                }
+            } else {
+                log.error("删除id为${id}的字典失败！")
+            }
+            success
         } else {
             sysDictItemBiz.cascadeDeleteChildren(id)
         }

@@ -26,7 +26,7 @@ interface ISysDictItemBiz: IBaseCrudBiz<String, SysDictItem> {
      * @author K
      * @since 1.0.0
      */
-    fun getItemsByModuleAndType(module: String, type: String): List<SysDictItemRecord>
+    fun getItemsFromCache(module: String, type: String): List<SysDictItemRecord>
 
     /**
      * 翻译字典项代码
@@ -69,6 +69,17 @@ interface ISysDictItemBiz: IBaseCrudBiz<String, SysDictItem> {
      * @since 1.0.0
      */
     fun cascadeDeleteChildren(id: String): Boolean
+
+    /**
+     * 更新启用状态，并同步缓存
+     *
+     * @param dictItemId 字典项id
+     * @param active 是否启用
+     * @return 是否更新成功
+     * @author K
+     * @since 1.0.0
+     */
+    fun updateActive(dictItemId: String, active: Boolean): Boolean
 
     //endregion your codes 2
 

@@ -2,6 +2,7 @@ package io.kuark.service.sys.common.api
 
 import io.kuark.service.sys.common.vo.resource.BaseMenuTreeNode
 import io.kuark.service.sys.common.vo.resource.ResourceType
+import io.kuark.service.sys.common.vo.resource.SysResourceDetail
 import io.kuark.service.sys.common.vo.resource.SysResourceRecord
 
 
@@ -22,7 +23,7 @@ interface ISysResourceApi {
      * @author K
      * @since 1.0.0
      */
-    fun getResources(subSysDictCode: String, resourceType: ResourceType): List<SysResourceRecord>
+    fun getResources(subSysDictCode: String, resourceType: ResourceType): List<SysResourceDetail>
 
     /**
      * 根据资源id返回对应的资源
@@ -36,7 +37,7 @@ interface ISysResourceApi {
      */
     fun getResources(
         subSysDictCode: String, resourceType: ResourceType, vararg resourceIds: String
-    ): List<SysResourceRecord>
+    ): List<SysResourceDetail>
 
     /**
      * 根据子系统和资源类型，返回对应的资源

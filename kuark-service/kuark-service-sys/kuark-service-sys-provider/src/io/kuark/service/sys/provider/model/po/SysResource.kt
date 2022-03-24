@@ -31,7 +31,7 @@ interface SysResource: IMaintainableDbEntity<String, SysResource> {
     var seqNo: Int?
 
     /** 子系统代码 */
-    var subSysDictCode: String?
+    var subSysDictCode: String
 
     /** 图标 */
     var icon: String?

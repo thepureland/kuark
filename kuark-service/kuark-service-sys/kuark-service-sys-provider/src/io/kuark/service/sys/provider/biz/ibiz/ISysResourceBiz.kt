@@ -17,6 +17,18 @@ interface ISysResourceBiz : IBaseCrudBiz<String, SysResource> {
 
     //region your codes 2
 
+    /**
+     * 根据子系统代码和资源类型，取得对应资源(仅包括处于启用状态的)，并将结果缓存，查不到不缓存.
+     * 缓存的名称为 sys_resource，key为 子系统代码:资源类型代码。
+     *
+     * @param subSysDictCode 子系统代码
+     * @param resourceTypeDictCode 资源类型代码
+     * @return List(资源详情)
+     * @author K
+     * @since 1.0.0
+     */
+    fun getResourcesFromCache(subSysDictCode: String, resourceTypeDictCode: String): List<SysResourceDetail>
+
     fun getSimpleMenus(subSysDictCode: String): List<BaseMenuTreeNode>
 
     fun getMenus(subSysDictCode: String): List<MenuTreeNode>
@@ -48,30 +60,29 @@ interface ISysResourceBiz : IBaseCrudBiz<String, SysResource> {
     fun cascadeDeleteChildren(id: String): Boolean
 
     /**
-     * 根据子系统代码和资源类型，取得对应资源(仅包括处于启用状态的)，并将结果缓存，查不到不缓存.
-     * 缓存的名称为 sys_resource，key为 子系统代码:资源类型代码。
-     *
-     * @param subSysDictCode 子系统代码
-     * @param resourceType 资源类型枚举
-     * @return List(资源记录)
-     * @author K
-     * @since 1.0.0
-     */
-    fun getResources(subSysDictCode: String, resourceType: ResourceType): List<SysResourceRecord>
-
-    /**
      * 根据子系统代码、资源类型和资源id，从缓存中取得对应资源(仅包括处于启用状态的)
      *
      * @param subSysDictCode 子系统代码
      * @param resourceType 资源类型枚举
      * @param resourceIds 资源id可变数组
-     * @return List(资源记录)
+     * @return List(资源详情)
      * @author K
      * @since 1.0.0
      */
     fun getResources(
         subSysDictCode: String, resourceType: ResourceType, vararg resourceIds: String
-    ): List<SysResourceRecord>
+    ): List<SysResourceDetail>
+
+    /**
+     * 更新启用状态，并同步缓存
+     *
+     * @param id 主键
+     * @param active 是否启用
+     * @return 是否更新成功
+     * @author K
+     * @since 1.0.0
+     */
+    fun updateActive(id: String, active: Boolean): Boolean
 
     //endregion your codes 2
 

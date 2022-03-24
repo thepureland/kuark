@@ -4,25 +4,23 @@ import io.kuark.ability.cache.context.CacheNames
 import io.kuark.ability.cache.kit.CacheKit
 import io.kuark.ability.data.rdb.biz.BaseCrudBiz
 import io.kuark.ability.data.rdb.support.SqlWhereExpressionFactory
-import io.kuark.base.lang.string.StringKit
+import io.kuark.base.bean.BeanKit
 import io.kuark.base.log.LogFactory
-import io.kuark.base.query.Criteria
 import io.kuark.base.query.enums.Operator
 import io.kuark.base.query.sort.Direction
 import io.kuark.base.support.Consts
 import io.kuark.base.support.payload.ListSearchPayload
 import io.kuark.base.tree.TreeKit
-import io.kuark.context.core.KuarkContextHolder
 import io.kuark.service.sys.common.vo.resource.*
 import io.kuark.service.sys.provider.dao.SysResourceDao
 import io.kuark.service.sys.provider.biz.ibiz.ISysDictItemBiz
 import io.kuark.service.sys.provider.biz.ibiz.ISysResourceBiz
-import io.kuark.service.sys.provider.model.po.SysDictItem
 import io.kuark.service.sys.provider.model.po.SysResource
 import io.kuark.service.sys.provider.model.table.SysResources
 import org.ktorm.dsl.isNull
 import org.ktorm.schema.Column
 import org.ktorm.schema.ColumnDeclaring
+import org.springframework.beans.factory.InitializingBean
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.Cacheable
@@ -39,7 +37,7 @@ import kotlin.reflect.KClass
 @Service
 //region your codes 1
 @CacheConfig(cacheNames = [CacheNames.SYS_RESOURCE])
-open class SysResourceBiz : BaseCrudBiz<String, SysResource, SysResourceDao>(), ISysResourceBiz {
+open class SysResourceBiz : BaseCrudBiz<String, SysResource, SysResourceDao>(), ISysResourceBiz, InitializingBean {
 //endregion your codes 1
 
     //region your codes 2
@@ -49,8 +47,131 @@ open class SysResourceBiz : BaseCrudBiz<String, SysResource, SysResourceDao>(), 
     @Autowired
     private lateinit var dictItemBiz: ISysDictItemBiz
 
+    @Autowired
+    private lateinit var self: ISysResourceBiz
+
+    override fun afterPropertiesSet() {
+        cacheAllActiveResources()
+    }
+
+    /**
+     * 缓存所有启用状态的资源信息。
+     * 如果缓存未开启，什么也不做。
+     *
+     * @author K
+     * @since 1.0.0
+     */
+    protected fun cacheAllActiveResources() {
+        if (!CacheKit.isCacheActive()) {
+            log.info("缓存未开启，不加载和缓存所有启用状态的资源！")
+            return
+        }
+
+        // 加载所有可用的资源
+        val searchPayload = SysResourceSearchPayload().apply {
+            active = true
+            returnEntityClass = SysResourceDetail::class
+        }
+
+        @Suppress(Consts.Suppress.UNCHECKED_CAST)
+        val resources = dao.search(searchPayload) as List<SysResourceDetail>
+        log.debug("从数据库加载了${resources.size}条资源信息。")
+
+        // 缓存资源
+        val resMap = resources.groupBy { "${it.subSysDictCode}:${it.resourceTypeDictCode}" }
+        resMap.forEach { (key, value) ->
+            CacheKit.putIfAbsent(CacheNames.SYS_RESOURCE, key, value)
+            log.debug("缓存了key为${key}的${value.size}条资源。")
+        }
+    }
+
+    @Cacheable(
+        key = "#subSysDictCode.concat(':').concat(#resourceTypeDictCode)",
+        unless = "#result == null || #result.isEmpty()"
+    )
+    override fun getResourcesFromCache(subSysDictCode: String, resourceTypeDictCode: String): List<SysResourceDetail> {
+        if (CacheKit.isCacheActive()) {
+            log.debug("缓存中不存在子系统为${subSysDictCode}且资源类型为${resourceTypeDictCode}的资源，从数据库中加载...")
+        }
+        require(subSysDictCode.isNotBlank()) { "获取资源时，子系统代码必须指定！" }
+        require(resourceTypeDictCode.isNotBlank()) { "获取资源时，资源类型代码必须指定！" }
+        val searchPayload = SysResourceSearchPayload().apply {
+            returnEntityClass = SysResourceDetail::class
+            active = true
+            this.subSysDictCode = subSysDictCode
+            this.resourceTypeDictCode = resourceTypeDictCode
+        }
+
+        @Suppress(Consts.Suppress.UNCHECKED_CAST)
+        val results = dao.search(searchPayload) as List<SysResourceDetail>
+        log.debug("从数据库加载了${results.size}条的资源。")
+        return results
+    }
+
+    @Transactional
+    override fun insert(any: Any): String {
+        val id = super.insert(any)
+        log.debug("新增id为${id}的资源。")
+        // 同步缓存
+        if (CacheKit.isCacheActive()) {
+            log.debug("新增id为${id}的资源后，同步缓存...")
+            val subSysDictCode = BeanKit.getProperty(any, SysResource::subSysDictCode.name) as String
+            val resourceTypeDictCode = BeanKit.getProperty(any, SysResource::resourceTypeDictCode.name) as String
+            self.getResourcesFromCache(subSysDictCode, resourceTypeDictCode) // 缓存
+            log.debug("缓存同步完成。")
+        }
+        return id
+    }
+
+    @Transactional
+    override fun update(any: Any): Boolean {
+        val success = super.update(any)
+        val id = BeanKit.getProperty(any, SysResource::id.name) as String
+        if (success) {
+            log.debug("更新id为${id}的资源。")
+            if (CacheKit.isCacheActive()) {
+                log.debug("更新id为${id}的资源后，同步缓存...")
+                val subSysDictCode = BeanKit.getProperty(any, SysResource::subSysDictCode.name) as String
+                val resourceTypeDictCode = BeanKit.getProperty(any, SysResource::resourceTypeDictCode.name) as String
+                val key = "${subSysDictCode}:${resourceTypeDictCode}"
+                CacheKit.evict(CacheNames.SYS_RESOURCE, key) // 踢除资源缓存
+                self.getResourcesFromCache(subSysDictCode, resourceTypeDictCode) // 重新缓存
+                log.debug("缓存同步完成。")
+            }
+        } else {
+            log.error("更新id为${id}的资源失败！")
+        }
+        return success
+    }
+
+    @Transactional
+    override fun updateActive(id: String, active: Boolean): Boolean {
+        val res = SysResource {
+            this.id = id
+            this.active = active
+        }
+        val success = dao.update(res)
+        if (success) {
+            log.debug("更新id为${id}的资源的启用状态为${active}。")
+            if (CacheKit.isCacheActive()) {
+                log.debug("更新id为${id}的资源的启用状态后，同步缓存...")
+                val sysRes = dao.get(id)!!
+                if (active) {
+                    self.getResourcesFromCache(sysRes.subSysDictCode, sysRes.resourceTypeDictCode) // 重新缓存
+                } else {
+                    val key = "${sysRes.subSysDictCode}:${sysRes.resourceTypeDictCode}"
+                    CacheKit.evict(CacheNames.SYS_RESOURCE, key) // 踢除资源缓存
+                }
+                log.debug("缓存同步完成。")
+            }
+        } else {
+            log.error("更新id为${id}的资源的启用状态为${active}失败！")
+        }
+        return success
+    }
+
     override fun getSimpleMenus(subSysDictCode: String): List<BaseMenuTreeNode> {
-        val origMenus = searchMenus(subSysDictCode)
+        val origMenus = self.getResourcesFromCache(subSysDictCode, ResourceType.MENU.code)
         val menus = origMenus.map {
             BaseMenuTreeNode().apply {
                 title = it.name
@@ -63,7 +184,7 @@ open class SysResourceBiz : BaseCrudBiz<String, SysResource, SysResourceDao>(), 
     }
 
     override fun getMenus(subSysDictCode: String): List<MenuTreeNode> {
-        val origMenus = searchMenus(subSysDictCode)
+        val origMenus = self.getResourcesFromCache(subSysDictCode, ResourceType.MENU.code)
         val menus = origMenus.map {
             MenuTreeNode().apply {
                 title = it.name
@@ -77,26 +198,18 @@ open class SysResourceBiz : BaseCrudBiz<String, SysResource, SysResourceDao>(), 
         return TreeKit.convertListToTree(menus, Direction.ASC)
     }
 
-    private fun searchMenus(subSysCode: String): List<SysResource> {
-        val criteria = Criteria.add(SysResource::active.name, Operator.EQ, true)
-        if (StringKit.isNotBlank(subSysCode)) {
-            criteria.addAnd(SysResource::subSysDictCode.name, Operator.EQ, subSysCode)
-        }
-        return dao.search(criteria)
-    }
-
     @Suppress(Consts.Suppress.UNCHECKED_CAST)
     override fun loadDirectChildrenForTree(searchPayload: SysResourceSearchPayload): List<SysResourceTreeNode> {
         return when (if (searchPayload.level == null) Int.MAX_VALUE else searchPayload.level) {
             0 -> { // 资源类型
-                val dictItems = dictItemBiz.getItemsByModuleAndType("kuark:sys", "resource_type")
+                val dictItems = dictItemBiz.getItemsFromCache("kuark:sys", "resource_type")
                 dictItems.map {
                     SysResourceTreeNode()
                         .apply { this.id = it.itemCode;this.name = it.itemName }
                 }
             }
             1 -> { // 子系统
-                val dictItems = dictItemBiz.getItemsByModuleAndType("kuark:sys", "sub_sys")
+                val dictItems = dictItemBiz.getItemsFromCache("kuark:sys", "sub_sys")
                 dictItems.map {
                     SysResourceTreeNode()
                         .apply { this.id = it.itemCode;this.name = it.itemName }
@@ -208,22 +321,11 @@ open class SysResourceBiz : BaseCrudBiz<String, SysResource, SysResourceDao>(), 
         return true
     }
 
-    @Suppress(Consts.Suppress.UNCHECKED_CAST)
-    @Cacheable(key = "#subSysDictCode.concat(':').concat(#resourceType)", unless = "#result.isEmpty()")
-    override fun getResources(subSysDictCode: String, resourceType: ResourceType): List<SysResourceRecord> {
-        val searchPayload = SysResourceSearchPayload().apply {
-            pageNo = null
-            this.subSysDictCode = subSysDictCode
-            resourceTypeDictCode = resourceType.code
-        }
-        return dao.search(searchPayload) as List<SysResourceRecord>
-    }
-
     override fun getResources(
         subSysDictCode: String, resourceType: ResourceType, vararg resourceIds: String
-    ): List<SysResourceRecord> {
-
-        TODO("Not yet implemented")
+    ): List<SysResourceDetail> {
+        val resources = self.getResourcesFromCache(subSysDictCode, resourceType.code)
+        return resources.filter { it.id in resourceIds }
     }
 
     private fun recursionFindAllParentId(itemId: String, results: MutableList<String>) {

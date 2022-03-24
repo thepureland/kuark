@@ -1,10 +1,7 @@
 package io.kuark.service.sys.provider.biz.ibiz
 
 import io.kuark.base.support.biz.IBaseCrudBiz
-import io.kuark.service.sys.common.vo.dict.SysDictPayload
-import io.kuark.service.sys.common.vo.dict.SysDictRecord
-import io.kuark.service.sys.common.vo.dict.SysDictSearchPayload
-import io.kuark.service.sys.common.vo.dict.SysDictTreeNode
+import io.kuark.service.sys.common.vo.dict.*
 import io.kuark.service.sys.provider.model.po.SysDict
 
 /**
@@ -18,6 +15,8 @@ interface ISysDictBiz : IBaseCrudBiz<String, SysDict> {
 //endregion your codes 1
 
     //region your codes 2
+
+    fun getDictFromCache(dictId: String): SysDictDetail?
 
     /**
      * 返回模块和字典类型对应的字典id

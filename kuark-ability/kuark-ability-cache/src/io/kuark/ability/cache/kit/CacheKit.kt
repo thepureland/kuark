@@ -69,8 +69,8 @@ object CacheKit {
      * @author K
      * @since 1.0.0
      */
-    fun getValue(cacheName: String, key: Any): Cache.ValueWrapper? {
-        return getCache(cacheName)!!.get(key)
+    fun getValue(cacheName: String, key: Any): Any? {
+        return getCache(cacheName)!!.get(key)?.get()
     }
 
     /**

@@ -3,6 +3,7 @@ package io.kuark.service.user.provider.rbac.biz.ibiz
 import io.kuark.base.support.biz.IBaseCrudBiz
 import io.kuark.service.sys.common.vo.resource.BaseMenuTreeNode
 import io.kuark.service.sys.common.vo.resource.ResourceType
+import io.kuark.service.sys.common.vo.resource.SysResourceDetail
 import io.kuark.service.sys.common.vo.resource.SysResourceRecord
 import io.kuark.service.user.common.rbac.vo.role.RbacRoleDetail
 import io.kuark.service.user.common.user.vo.account.UserAccountRecord
@@ -83,12 +84,13 @@ interface IRbacRoleBiz : IBaseCrudBiz<String, RbacRole> {
      * 返回角色可操作的资源
      *
      * @param roleId 角色ID
+     * @param subSysDictCode 子系统代码，不能为空
      * @param resourceType 资源类型
      * @return List(资源对象)
      * @author K
      * @since 1.0.0
      */
-    fun getRolePermissions(roleId: String, resourceType: ResourceType): List<SysResourceRecord>
+    fun getRolePermissions(roleId: String, subSysDictCode: String, resourceType: ResourceType): List<SysResourceDetail>
 
     /**
      * 设置角色可操作的资源

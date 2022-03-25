@@ -15,7 +15,7 @@ import io.kuark.base.support.Consts
 import io.kuark.service.sys.common.api.ISysResourceApi
 import io.kuark.service.sys.common.vo.resource.BaseMenuTreeNode
 import io.kuark.service.sys.common.vo.resource.ResourceType
-import io.kuark.service.sys.common.vo.resource.SysResourceRecord
+import io.kuark.service.sys.common.vo.resource.SysResourceDetail
 import io.kuark.service.user.common.rbac.vo.role.RbacRoleDetail
 import io.kuark.service.user.common.rbac.vo.role.RbacRoleSearchPayload
 import io.kuark.service.user.common.user.vo.account.UserAccountRecord
@@ -289,12 +289,12 @@ open class RbacRoleBiz : IRbacRoleBiz, InitializingBean, BaseCrudBiz<String, Rba
     }
 
     @Suppress(Consts.Suppress.UNCHECKED_CAST)
-    override fun getRolePermissions(roleId: String, resourceType: ResourceType): List<SysResourceRecord> {
+    override fun getRolePermissions(roleId: String, subSysDictCode: String,resourceType: ResourceType): List<SysResourceDetail> {
         val resourceIds = rbacRoleResourceDao.oneSearchProperty(
             RbacRoleResources.roleId.name, roleId, RbacRoleResources.resourceId.name
         ) as List<String>
         if (resourceIds.isNotEmpty()) {
-            return resourceApi.getResources(resourceType, *resourceIds.toTypedArray())
+            return resourceApi.getResources(subSysDictCode, resourceType, *resourceIds.toTypedArray())
         }
         return emptyList()
     }

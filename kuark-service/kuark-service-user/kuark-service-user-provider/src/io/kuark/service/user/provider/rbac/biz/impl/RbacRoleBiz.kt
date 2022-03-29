@@ -1,6 +1,6 @@
 package io.kuark.service.user.provider.rbac.biz.impl
 
-import io.kuark.ability.cache.context.CacheNames
+import io.kuark.ability.cache.support.CacheNames
 import io.kuark.ability.cache.core.BatchCacheable
 import io.kuark.ability.cache.kit.CacheKit
 import io.kuark.ability.data.rdb.biz.BaseCrudBiz

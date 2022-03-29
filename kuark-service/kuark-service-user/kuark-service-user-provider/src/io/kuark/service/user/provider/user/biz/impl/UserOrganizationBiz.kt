@@ -1,9 +1,6 @@
 package io.kuark.service.user.provider.user.biz.impl
 
-import io.kuark.ability.cache.context.CacheNames
-import io.kuark.ability.cache.kit.CacheKit
 import io.kuark.ability.data.rdb.biz.BaseCrudBiz
-import io.kuark.base.bean.BeanKit
 import io.kuark.base.lang.collections.CollectionKit
 import io.kuark.base.lang.string.StringKit
 import io.kuark.base.query.Criterion
@@ -12,12 +9,9 @@ import io.kuark.base.query.sort.Direction
 import io.kuark.base.support.Consts
 import io.kuark.base.tree.TreeKit
 import io.kuark.service.sys.common.api.ISysTenantApi
-import io.kuark.service.sys.common.vo.dict.SysDictRecord
-import io.kuark.service.sys.common.vo.dict.SysDictSearchPayload
 import io.kuark.service.sys.common.vo.tenant.SysTenantRecord
 import io.kuark.service.user.common.user.vo.organization.BaseOrganizationTreeNode
 import io.kuark.service.user.common.user.vo.organization.OrganizationTreeNode
-import io.kuark.service.user.common.user.vo.organization.UserOrganizationRecord
 import io.kuark.service.user.common.user.vo.organization.UserOrganizationSearchPayload
 import io.kuark.service.user.provider.user.biz.ibiz.IUserOrganizationBiz
 import io.kuark.service.user.provider.user.dao.UserOrganizationDao

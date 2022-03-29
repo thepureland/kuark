@@ -1,6 +1,6 @@
 package io.kuark.ability.cache.core
 
-import io.kuark.ability.cache.context.CacheNames
+import io.kuark.ability.cache.support.CacheNames
 import io.kuark.ability.cache.enums.CacheStrategy
 import io.kuark.test.common.SpringTest
 import io.kuark.test.common.TestSpringBootContextLoader

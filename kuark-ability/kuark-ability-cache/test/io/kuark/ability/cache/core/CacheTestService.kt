@@ -1,6 +1,6 @@
 package io.kuark.ability.cache.core
 
-import io.kuark.ability.cache.context.CacheNames
+import io.kuark.ability.cache.support.CacheNames
 import io.kuark.base.lang.string.RandomStringKit
 import io.kuark.base.log.LogFactory
 import org.springframework.beans.factory.annotation.Value

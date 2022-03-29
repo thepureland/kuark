@@ -1,6 +1,6 @@
 package io.kuark.ability.cache.core
 
-import io.kuark.ability.cache.context.CacheNameResolver
+import io.kuark.ability.cache.support.CacheNameResolver
 import io.kuark.ability.cache.context.MixCacheConfiguration
 import io.kuark.ability.cache.enums.CacheStrategy
 import io.kuark.base.log.LogFactory

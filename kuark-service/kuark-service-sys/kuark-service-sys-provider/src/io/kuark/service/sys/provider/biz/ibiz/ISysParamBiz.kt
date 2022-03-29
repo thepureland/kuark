@@ -1,12 +1,10 @@
 package io.kuark.service.sys.provider.biz.ibiz
 
-import io.kuark.ability.cache.context.CacheNames
 import io.kuark.base.support.biz.IBaseCrudBiz
 import io.kuark.service.sys.common.vo.param.SysParamDetail
 import io.kuark.service.sys.common.vo.param.SysParamRecord
 import io.kuark.service.sys.common.vo.param.SysParamSearchPayload
 import io.kuark.service.sys.provider.model.po.SysParam
-import org.springframework.cache.annotation.Cacheable
 
 /**
  * 参数业务接口

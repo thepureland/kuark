@@ -3,7 +3,7 @@ package io.kuark.ability.web.ktor.session
 import io.ktor.sessions.*
 import io.ktor.util.cio.*
 import io.ktor.utils.io.*
-import io.kuark.ability.cache.context.CacheNames
+import io.kuark.ability.cache.support.CacheNames
 import io.kuark.ability.cache.context.MixCacheConfiguration
 import io.kuark.ability.cache.core.MixCacheManager
 import io.kuark.ability.cache.kit.CacheKit

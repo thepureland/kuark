@@ -1,18 +1,17 @@
 package io.kuark.service.sys.provider.biz.impl
 
-import io.kuark.ability.cache.support.CacheNames
 import io.kuark.ability.cache.kit.CacheKit
+import io.kuark.ability.cache.support.CacheNames
 import io.kuark.ability.data.rdb.biz.BaseCrudBiz
 import io.kuark.base.bean.BeanKit
 import io.kuark.base.lang.string.StringKit
 import io.kuark.base.log.LogFactory
 import io.kuark.base.query.sort.Order
-import io.kuark.base.support.Consts
 import io.kuark.base.support.payload.ListSearchPayload
 import io.kuark.service.sys.common.vo.dict.*
-import io.kuark.service.sys.provider.dao.SysDictDao
 import io.kuark.service.sys.provider.biz.ibiz.ISysDictBiz
 import io.kuark.service.sys.provider.biz.ibiz.ISysDictItemBiz
+import io.kuark.service.sys.provider.dao.SysDictDao
 import io.kuark.service.sys.provider.model.po.SysDict
 import io.kuark.service.sys.provider.model.table.SysDictItems
 import io.kuark.service.sys.provider.model.table.SysDicts
@@ -20,7 +19,6 @@ import org.ktorm.dsl.asc
 import org.ktorm.dsl.eq
 import org.ktorm.dsl.map
 import org.ktorm.dsl.orderBy
-import org.springframework.beans.factory.InitializingBean
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Service
@@ -34,7 +32,7 @@ import org.springframework.transaction.annotation.Transactional
  */
 @Service
 //region your codes 1
-open class SysDictBiz : BaseCrudBiz<String, SysDict, SysDictDao>(), ISysDictBiz, InitializingBean {
+open class SysDictBiz : BaseCrudBiz<String, SysDict, SysDictDao>(), ISysDictBiz {
 //endregion your codes 1
 
     //region your codes 2
@@ -46,38 +44,6 @@ open class SysDictBiz : BaseCrudBiz<String, SysDict, SysDictDao>(), ISysDictBiz,
     private lateinit var self: ISysDictBiz
 
     private val log = LogFactory.getLog(this::class)
-
-    override fun afterPropertiesSet() {
-        cacheAllActiveDicts()
-    }
-
-    /**
-     * 缓存所有字典(主表)信息。
-     * 如果缓存未开启，什么也不做。
-     *
-     * @author K
-     * @since 1.0.0
-     */
-    protected fun cacheAllActiveDicts() {
-        if (!CacheKit.isCacheActive()) {
-            log.info("缓存未开启，不加载和缓存所有字典(主表)信息！")
-            return
-        }
-
-        // 加载所有字典
-        val searchPayload = ListSearchPayload().apply {
-            returnEntityClass = SysDictDetail::class
-        }
-        @Suppress(Consts.Suppress.UNCHECKED_CAST)
-        val dicts = dao.search(searchPayload) as List<SysDictDetail>
-        log.debug("从数据库加载了${dicts.size}条字典(主表)信息。")
-
-        // 缓存字典(主表)信息
-        dicts.forEach {
-            CacheKit.putIfAbsent(CacheNames.SYS_DICT, it.id!!, it)
-        }
-        log.debug("缓存了${dicts.size}条字典(主表)信息。")
-    }
 
     @Cacheable(
         cacheNames = [CacheNames.SYS_DICT],

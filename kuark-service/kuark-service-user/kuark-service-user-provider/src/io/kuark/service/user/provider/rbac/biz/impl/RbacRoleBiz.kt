@@ -1,8 +1,8 @@
 package io.kuark.service.user.provider.rbac.biz.impl
 
-import io.kuark.ability.cache.support.CacheNames
 import io.kuark.ability.cache.core.BatchCacheable
 import io.kuark.ability.cache.kit.CacheKit
+import io.kuark.ability.cache.support.CacheNames
 import io.kuark.ability.data.rdb.biz.BaseCrudBiz
 import io.kuark.base.bean.BeanKit
 import io.kuark.base.error.ObjectNotFoundException
@@ -31,7 +31,6 @@ import io.kuark.service.user.provider.rbac.model.table.RbacRoleResources
 import io.kuark.service.user.provider.rbac.model.table.RbacRoleUsers
 import io.kuark.service.user.provider.user.biz.ibiz.IUserAccountBiz
 import io.kuark.service.user.provider.user.model.po.UserAccount
-import org.springframework.beans.factory.InitializingBean
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Service
@@ -45,7 +44,7 @@ import org.springframework.transaction.annotation.Transactional
  */
 @Service
 //region your codes 1
-open class RbacRoleBiz : IRbacRoleBiz, InitializingBean, BaseCrudBiz<String, RbacRole, RbacRoleDao>() {
+open class RbacRoleBiz : IRbacRoleBiz, BaseCrudBiz<String, RbacRole, RbacRoleDao>() {
 //endregion your codes 1
 
     //region your codes 2
@@ -66,56 +65,6 @@ open class RbacRoleBiz : IRbacRoleBiz, InitializingBean, BaseCrudBiz<String, Rba
 
     @Autowired
     private lateinit var self: IRbacRoleBiz // 由于缓存注解的底层实现为AOP，本类间方法必须通过Bean调用，否则缓存操作不生效
-
-    override fun afterPropertiesSet() {
-        cacheAllActiveRoles()
-    }
-
-    /**
-     * 缓存所有启用状态的角色信息。
-     * 如果缓存未开启，什么也不做。
-     *
-     * @author K
-     * @since 1.0.0
-     */
-    protected fun cacheAllActiveRoles() {
-        if (!CacheKit.isCacheActive()) {
-            log.info("缓存未开启，不加载和缓存所有启用状态的角色！")
-            return
-        }
-
-        // 加载所有可用的角色
-        val searchPayload = RbacRoleSearchPayload().apply {
-            active = true
-            returnEntityClass = RbacRoleDetail::class
-        }
-
-        @Suppress(Consts.Suppress.UNCHECKED_CAST)
-        val roles = dao.search(searchPayload) as List<RbacRoleDetail>
-        log.debug("从数据库加载了${roles.size}条角色信息。")
-
-        // 缓存角色
-        roles.forEach {
-            CacheKit.putIfAbsent(CacheNames.RBAC_ROLE, it.id!!, it)
-        }
-        log.debug("缓存了${roles.size}条角色信息。")
-
-        // 缓存角色id
-        val map = mutableMapOf<String, MutableList<String>>()
-        roles.forEach {
-            val key = "${it.subSysDictCode}:${it.tenantId}"
-            var roleIds = map[key]
-            if (roleIds == null) {
-                roleIds = mutableListOf()
-                map[key] = roleIds
-            }
-            roleIds.add(it.id!!)
-        }
-        map.forEach { (key, value) ->
-            CacheKit.putIfAbsent(CacheNames.RBAC_ROLE, key, value)
-            log.debug("缓存了key为${key}的${value.size}条角色id。")
-        }
-    }
 
     @Cacheable(
         cacheNames = [CacheNames.RBAC_ROLE],

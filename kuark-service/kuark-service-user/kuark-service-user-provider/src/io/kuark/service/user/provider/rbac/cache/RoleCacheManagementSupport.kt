@@ -1,15 +1,12 @@
-package io.kuark.service.user.provider.rbac.biz.impl
+package io.kuark.service.user.provider.rbac.cache
 
 import io.kuark.ability.cache.kit.CacheKit
 import io.kuark.ability.cache.support.AbstractCacheManagementSupport
 import io.kuark.ability.cache.support.CacheNames
-import io.kuark.base.query.Criteria
-import io.kuark.base.query.enums.Operator
 import io.kuark.base.support.Consts
 import io.kuark.service.user.common.rbac.vo.role.RbacRoleDetail
 import io.kuark.service.user.common.rbac.vo.role.RbacRoleSearchPayload
 import io.kuark.service.user.provider.rbac.biz.ibiz.IRbacRoleBiz
-import io.kuark.service.user.provider.rbac.model.po.RbacRole
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
@@ -20,31 +17,9 @@ class RoleCacheManagementSupport: AbstractCacheManagementSupport<RbacRoleDetail>
     @Autowired
     private lateinit var rbacRoleBiz: IRbacRoleBiz
 
-    override fun cacheName(): String {
-        return CacheNames.RBAC_ROLE
-    }
+    override fun cacheName(): String = CacheNames.RBAC_ROLE
 
-    @Suppress(Consts.Suppress.UNCHECKED_CAST)
-    override fun keys(): Set<String> {
-        val criteria = Criteria(RbacRole::active.name, Operator.EQ, true)
-        val ids = rbacRoleBiz.searchProperty(criteria, RbacRole::id.name) as List<String>
-        return ids.filter { isExists(it) }.toSet()
-    }
-
-    override fun values(): List<RbacRoleDetail> {
-        TODO("Not yet implemented")
-    }
-
-    override fun reload(key: String) {
-        evict(key)
-        log.info("手动重载名称为${cacheName()}，key为${key}的缓存...")
-        val role = rbacRoleBiz.getRoleFromCache(key)
-        if (role == null) {
-            log.info("数据库中已不存在对应数据！")
-        } else {
-            log.info("重载成功。")
-        }
-    }
+    override fun doReload(key: String): RbacRoleDetail? = rbacRoleBiz.getRoleFromCache(key)
 
     override fun reloadAll(clear: Boolean) {
         if (!CacheKit.isCacheActive()) {
@@ -69,10 +44,9 @@ class RoleCacheManagementSupport: AbstractCacheManagementSupport<RbacRoleDetail>
 
         // 缓存角色
         roles.forEach {
-            CacheKit.putIfAbsent(CacheNames.RBAC_ROLE, it.id!!, it)
+            CacheKit.putIfAbsent(cacheName(), it.id!!, it)
         }
         log.info("缓存了${roles.size}条角色信息。")
     }
-
 
 }

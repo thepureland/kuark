@@ -1,7 +1,7 @@
 package io.kuark.service.sys.provider.biz.impl
 
-import io.kuark.ability.cache.support.CacheNames
 import io.kuark.ability.cache.kit.CacheKit
+import io.kuark.ability.cache.support.CacheNames
 import io.kuark.ability.data.rdb.biz.BaseCrudBiz
 import io.kuark.ability.data.rdb.support.SqlWhereExpressionFactory
 import io.kuark.base.bean.BeanKit
@@ -12,15 +12,14 @@ import io.kuark.base.support.Consts
 import io.kuark.base.support.payload.ListSearchPayload
 import io.kuark.base.tree.TreeKit
 import io.kuark.service.sys.common.vo.resource.*
-import io.kuark.service.sys.provider.dao.SysResourceDao
 import io.kuark.service.sys.provider.biz.ibiz.ISysDictItemBiz
 import io.kuark.service.sys.provider.biz.ibiz.ISysResourceBiz
+import io.kuark.service.sys.provider.dao.SysResourceDao
 import io.kuark.service.sys.provider.model.po.SysResource
 import io.kuark.service.sys.provider.model.table.SysResources
 import org.ktorm.dsl.isNull
 import org.ktorm.schema.Column
 import org.ktorm.schema.ColumnDeclaring
-import org.springframework.beans.factory.InitializingBean
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.Cacheable
@@ -37,7 +36,7 @@ import kotlin.reflect.KClass
 @Service
 //region your codes 1
 @CacheConfig(cacheNames = [CacheNames.SYS_RESOURCE])
-open class SysResourceBiz : BaseCrudBiz<String, SysResource, SysResourceDao>(), ISysResourceBiz, InitializingBean {
+open class SysResourceBiz : BaseCrudBiz<String, SysResource, SysResourceDao>(), ISysResourceBiz {
 //endregion your codes 1
 
     //region your codes 2
@@ -49,41 +48,6 @@ open class SysResourceBiz : BaseCrudBiz<String, SysResource, SysResourceDao>(), 
 
     @Autowired
     private lateinit var self: ISysResourceBiz
-
-    override fun afterPropertiesSet() {
-        cacheAllActiveResources()
-    }
-
-    /**
-     * 缓存所有启用状态的资源信息。
-     * 如果缓存未开启，什么也不做。
-     *
-     * @author K
-     * @since 1.0.0
-     */
-    protected fun cacheAllActiveResources() {
-        if (!CacheKit.isCacheActive()) {
-            log.info("缓存未开启，不加载和缓存所有启用状态的资源！")
-            return
-        }
-
-        // 加载所有可用的资源
-        val searchPayload = SysResourceSearchPayload().apply {
-            active = true
-            returnEntityClass = SysResourceDetail::class
-        }
-
-        @Suppress(Consts.Suppress.UNCHECKED_CAST)
-        val resources = dao.search(searchPayload) as List<SysResourceDetail>
-        log.debug("从数据库加载了${resources.size}条资源信息。")
-
-        // 缓存资源
-        val resMap = resources.groupBy { "${it.subSysDictCode}:${it.resourceTypeDictCode}" }
-        resMap.forEach { (key, value) ->
-            CacheKit.putIfAbsent(CacheNames.SYS_RESOURCE, key, value)
-            log.debug("缓存了key为${key}的${value.size}条资源。")
-        }
-    }
 
     @Cacheable(
         key = "#subSysDictCode.concat(':').concat(#resourceTypeDictCode)",

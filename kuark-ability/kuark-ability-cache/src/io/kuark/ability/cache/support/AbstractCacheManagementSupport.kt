@@ -22,14 +22,10 @@ abstract class AbstractCacheManagementSupport<T>: InitializingBean {
         return value(key) == null
     }
 
-    abstract fun keys(): Set<String>
-
     @Suppress(Consts.Suppress.UNCHECKED_CAST)
     fun value(key: String): T? {
         return CacheKit.getValue(cacheName(), key) as T?
     }
-
-    abstract fun values(): List<T>
 
     fun evict(key: String) {
         CacheKit.evict(cacheName(), key)
@@ -41,7 +37,18 @@ abstract class AbstractCacheManagementSupport<T>: InitializingBean {
         log.info("手动清除名称为${cacheName()}的所有缓存。")
     }
 
-    abstract fun reload(key: String)
+    protected fun reload(key: String) {
+        evict(key)
+        log.info("手动重载名称为${cacheName()}，key为${key}的缓存...")
+        val role = doReload(key)
+        if (role == null) {
+            log.info("数据库中已不存在对应数据！")
+        } else {
+            log.info("重载成功。")
+        }
+    }
+
+    abstract fun doReload(key: String): T?
 
     abstract fun reloadAll(clear: Boolean)
 

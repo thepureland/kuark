@@ -1,19 +1,17 @@
 package io.kuark.service.sys.provider.biz.impl
 
-import io.kuark.ability.cache.support.CacheNames
 import io.kuark.ability.cache.kit.CacheKit
+import io.kuark.ability.cache.support.CacheNames
 import io.kuark.ability.data.rdb.biz.BaseCrudBiz
 import io.kuark.base.lang.string.StringKit
 import io.kuark.base.log.LogFactory
 import io.kuark.service.sys.common.vo.dict.SysDictItemRecord
 import io.kuark.service.sys.common.vo.dict.SysDictPayload
-import io.kuark.service.sys.common.vo.dict.SysDictSearchPayload
-import io.kuark.service.sys.provider.dao.SysDictItemDao
 import io.kuark.service.sys.provider.biz.ibiz.ISysDictBiz
 import io.kuark.service.sys.provider.biz.ibiz.ISysDictItemBiz
 import io.kuark.service.sys.provider.dao.SysDictDao
+import io.kuark.service.sys.provider.dao.SysDictItemDao
 import io.kuark.service.sys.provider.model.po.SysDictItem
-import org.springframework.beans.factory.InitializingBean
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.Cacheable
@@ -29,7 +27,7 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 //region your codes 1
 @CacheConfig(cacheNames = [CacheNames.SYS_DICT_ITEM])
-open class SysDictItemBiz : BaseCrudBiz<String, SysDictItem, SysDictItemDao>(), ISysDictItemBiz, InitializingBean {
+open class SysDictItemBiz : BaseCrudBiz<String, SysDictItem, SysDictItemDao>(), ISysDictItemBiz {
 //endregion your codes 1
 
 
@@ -46,36 +44,6 @@ open class SysDictItemBiz : BaseCrudBiz<String, SysDictItem, SysDictItemDao>(), 
 
     private val log = LogFactory.getLog(this::class)
 
-    override fun afterPropertiesSet() {
-        cacheAllActiveItems()
-    }
-
-    /**
-     * 缓存所有启用状态的字典项信息。
-     * 如果缓存未开启，什么也不做。
-     *
-     * @author K
-     * @since 1.0.0
-     */
-    protected fun cacheAllActiveItems() {
-        if (!CacheKit.isCacheActive()) {
-            log.info("缓存未开启，不加载和缓存所有启用状态的字典！")
-            return
-        }
-
-        // 加载所有可用的字典
-        val payload = SysDictSearchPayload().apply {
-            active = true
-        }
-        val results = sysDictDao.pagingSearch(payload)
-        val dictMap = results.groupBy {
-            "${it.module}:${it.dictType}"
-        }
-        dictMap.forEach { (key, value) ->
-            CacheKit.putIfAbsent(CacheNames.SYS_DICT_ITEM, key, value)
-            log.debug("缓存字典${key}，共${value.size}条字典项。")
-        }
-    }
 
     @Cacheable(key = "#module.concat(':').concat(#type)", unless = "#result == null || #result.isEmpty()")
     override fun getItemsFromCache(module: String, type: String): List<SysDictItemRecord> {

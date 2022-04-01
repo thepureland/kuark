@@ -1,7 +1,7 @@
 package io.kuark.service.sys.provider.biz.impl
 
-import io.kuark.ability.cache.support.CacheNames
 import io.kuark.ability.cache.kit.CacheKit
+import io.kuark.ability.cache.support.CacheNames
 import io.kuark.ability.data.rdb.biz.BaseCrudBiz
 import io.kuark.ability.data.rdb.kit.RdbKit
 import io.kuark.ability.data.rdb.support.SqlWhereExpressionFactory
@@ -12,12 +12,11 @@ import io.kuark.base.support.Consts
 import io.kuark.service.sys.common.vo.param.SysParamDetail
 import io.kuark.service.sys.common.vo.param.SysParamRecord
 import io.kuark.service.sys.common.vo.param.SysParamSearchPayload
-import io.kuark.service.sys.provider.dao.SysParamDao
 import io.kuark.service.sys.provider.biz.ibiz.ISysParamBiz
+import io.kuark.service.sys.provider.dao.SysParamDao
 import io.kuark.service.sys.provider.model.po.SysParam
 import io.kuark.service.sys.provider.model.table.SysParams
 import org.ktorm.dsl.*
-import org.springframework.beans.factory.InitializingBean
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Service
@@ -31,7 +30,7 @@ import org.springframework.transaction.annotation.Transactional
  */
 @Service
 //region your codes 1
-open class SysParamBiz : BaseCrudBiz<String, SysParam, SysParamDao>(), ISysParamBiz, InitializingBean {
+open class SysParamBiz : BaseCrudBiz<String, SysParam, SysParamDao>(), ISysParamBiz {
 //endregion your codes 1
 
     //region your codes 2
@@ -40,40 +39,6 @@ open class SysParamBiz : BaseCrudBiz<String, SysParam, SysParamDao>(), ISysParam
 
     @Autowired
     private lateinit var self: ISysParamBiz
-
-    override fun afterPropertiesSet() {
-        cacheAllActiveParams()
-    }
-
-    /**
-     * 缓存所有启用状态的参数信息。
-     * 如果缓存未开启，什么也不做。
-     *
-     * @author K
-     * @since 1.0.0
-     */
-    protected fun cacheAllActiveParams() {
-        if (!CacheKit.isCacheActive()) {
-            log.info("缓存未开启，不加载和缓存所有启用状态的参数！")
-            return
-        }
-
-        // 加载所有可用的参数
-        val searchPayload = SysParamSearchPayload().apply {
-            active = true
-            returnEntityClass = SysParamDetail::class
-        }
-        @Suppress(Consts.Suppress.UNCHECKED_CAST)
-        val params = dao.search(searchPayload) as List<SysParamDetail>
-        log.debug("从数据库加载了${params.size}条参数信息。")
-
-        // 缓存参数
-        params.forEach {
-            val key = "${it.module}:${it.paramName}"
-            CacheKit.putIfAbsent(CacheNames.SYS_PARAM, key, it)
-        }
-        log.debug("缓存了${params.size}条参数信息。")
-    }
 
     @Cacheable(value = [CacheNames.SYS_PARAM], key = "#module.concat(':').concat(#name)", unless = "#result == null")
     override fun getParamFromCache(module: String, name: String): SysParamDetail? {

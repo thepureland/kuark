@@ -1,10 +1,7 @@
 package io.kuark.service.sys.provider.biz.impl
 
-import io.kuark.ability.cache.support.CacheNames
 import io.kuark.ability.cache.kit.CacheKit
-import io.kuark.service.sys.provider.biz.ibiz.ISysTenantBiz
-import io.kuark.service.sys.provider.model.po.SysTenant
-import io.kuark.service.sys.provider.dao.SysTenantDao
+import io.kuark.ability.cache.support.CacheNames
 import io.kuark.ability.data.rdb.biz.BaseCrudBiz
 import io.kuark.base.bean.BeanKit
 import io.kuark.base.log.LogFactory
@@ -12,8 +9,10 @@ import io.kuark.base.support.Consts
 import io.kuark.service.sys.common.vo.tenant.SysTenantDetail
 import io.kuark.service.sys.common.vo.tenant.SysTenantRecord
 import io.kuark.service.sys.common.vo.tenant.SysTenantSearchPayload
+import io.kuark.service.sys.provider.biz.ibiz.ISysTenantBiz
+import io.kuark.service.sys.provider.dao.SysTenantDao
 import io.kuark.service.sys.provider.model.po.SysParam
-import org.springframework.beans.factory.InitializingBean
+import io.kuark.service.sys.provider.model.po.SysTenant
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.Cacheable
@@ -30,7 +29,7 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 //region your codes 1
 @CacheConfig(cacheNames = [CacheNames.SYS_TENANT])
-open class SysTenantBiz : BaseCrudBiz<String, SysTenant, SysTenantDao>(), ISysTenantBiz, InitializingBean {
+open class SysTenantBiz : BaseCrudBiz<String, SysTenant, SysTenantDao>(), ISysTenantBiz {
 //endregion your codes 1
 
     //region your codes 2
@@ -39,41 +38,6 @@ open class SysTenantBiz : BaseCrudBiz<String, SysTenant, SysTenantDao>(), ISysTe
 
     @Autowired
     private lateinit var self: ISysTenantBiz
-
-    override fun afterPropertiesSet() {
-        cacheAllActiveTenants()
-    }
-
-    /**
-     * 缓存所有启用状态的租户信息。
-     * 如果缓存未开启，什么也不做。
-     *
-     * @author K
-     * @since 1.0.0
-     */
-    protected fun cacheAllActiveTenants() {
-        if (!CacheKit.isCacheActive()) {
-            log.info("缓存未开启，不加载和缓存所有启用状态的租户！")
-            return
-        }
-
-        // 加载所有可用的租户
-        val searchPayload = SysTenantSearchPayload().apply {
-            returnEntityClass = SysTenantDetail::class
-            active = true
-        }
-
-        @Suppress(Consts.Suppress.UNCHECKED_CAST)
-        val tenants = dao.search(searchPayload) as List<SysTenantDetail>
-        log.debug("从数据库加载了${tenants.size}条租户信息。")
-
-        // 缓存租户
-        val tenantMap = tenants.groupBy { it.subSysDictCode!! }
-        tenantMap.forEach { (key, value) ->
-            CacheKit.putIfAbsent(CacheNames.SYS_TENANT, key, value)
-            log.debug("缓存了子系统${key}的${tenants.size}条租户信息。")
-        }
-    }
 
     @Cacheable(key = "#subSysDictCode", unless = "#result == null || #result.isEmpty()")
     override fun getTenantsFromCache(subSysDictCode: String): List<SysTenantDetail> {

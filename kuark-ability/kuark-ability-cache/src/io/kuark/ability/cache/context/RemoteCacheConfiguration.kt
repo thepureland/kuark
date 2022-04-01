@@ -9,6 +9,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression
 import org.springframework.cache.CacheManager
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.data.redis.cache.RedisCacheConfiguration
 import org.springframework.data.redis.cache.RedisCacheManager
 import org.springframework.data.redis.cache.RedisCacheWriter
 import org.springframework.data.redis.connection.RedisConnectionFactory
@@ -31,16 +32,30 @@ open class RemoteCacheConfiguration {
 
     @Bean(name = ["remoteCacheManager"])
     open fun remoteCacheManager(redisConnectionFactory: RedisConnectionFactory): CacheManager {
-        var redisCacheConfiguration = org.springframework.data.redis.cache.RedisCacheConfiguration.defaultCacheConfig()
+        var redisCacheConfiguration = RedisCacheConfiguration.defaultCacheConfig()
 
         redisCacheConfiguration = redisCacheConfiguration.entryTtl(Duration.ofMinutes(30L)) //设置缓存的默认超时时间：30分钟
             .disableCachingNullValues()             //如果是空值，不缓存
             .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(RedisConfiguration.keySerializer()))
 //            .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer((RedisConfiguration.valueSerializer())))
 
-        return RedisCacheManager
+        val builder = RedisCacheManager
             .builder(RedisCacheWriter.nonLockingRedisCacheWriter(redisConnectionFactory))
-            .cacheDefaults(redisCacheConfiguration).build()
+            .cacheDefaults(redisCacheConfiguration)
+
+        val map: MutableMap<String, RedisCacheConfiguration> = Maps.newHashMap()
+        Optional.ofNullable(customCacheProperties)
+            .map { p -> p.getCustomCache() }
+            .ifPresent { customCache ->
+                customCache.forEach { key, cache ->
+                    val cfg: RedisCacheConfiguration =
+                        handleRedisCacheConfiguration(cache, defaultConfiguration)
+                    map.put(key, cfg)
+                }
+            }
+        builder.withInitialCacheConfigurations(map)
+
+        return builder.build()
     }
 
     @Bean

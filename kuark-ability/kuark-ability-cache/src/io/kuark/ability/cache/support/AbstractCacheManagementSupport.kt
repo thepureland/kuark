@@ -18,6 +18,10 @@ abstract class AbstractCacheManagementSupport<T>: InitializingBean {
 
     abstract fun cacheName(): String
 
+    abstract fun desc(): String
+
+    abstract fun subSysDictCode(): String
+
     fun isExists(key: String): Boolean {
         return value(key) == null
     }

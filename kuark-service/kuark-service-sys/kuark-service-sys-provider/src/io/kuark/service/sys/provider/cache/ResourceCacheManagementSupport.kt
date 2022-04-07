@@ -2,7 +2,6 @@ package io.kuark.service.sys.provider.cache
 
 import io.kuark.ability.cache.kit.CacheKit
 import io.kuark.ability.cache.support.AbstractCacheManagementSupport
-import io.kuark.ability.cache.support.CacheNames
 import io.kuark.base.support.Consts
 import io.kuark.service.sys.common.vo.resource.SysResourceDetail
 import io.kuark.service.sys.common.vo.resource.SysResourceSearchPayload
@@ -17,7 +16,7 @@ class ResourceCacheManagementSupport: AbstractCacheManagementSupport<List<SysRes
     @Autowired
     private lateinit var sysResourceBiz: ISysResourceBiz
 
-    override fun cacheName(): String = CacheNames.SYS_RESOURCE
+    override fun cacheName(): String = SysCacheNames.SYS_RESOURCE
 
     override fun doReload(key: String): List<SysResourceDetail> {
         require(key.contains(":")) { "缓存${cacheName()}的key格式必须是 子系统代码:资源类型代码" }

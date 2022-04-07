@@ -4,6 +4,7 @@ import io.kuark.ability.cache.kit.CacheKit
 import io.kuark.base.log.LogFactory
 import io.kuark.base.support.Consts
 import org.springframework.beans.factory.InitializingBean
+import org.springframework.beans.factory.annotation.Autowired
 
 
 /**
@@ -12,15 +13,14 @@ import org.springframework.beans.factory.InitializingBean
  * @author K
  * @since 1.0.0
  */
-abstract class AbstractCacheManagementSupport<T>: InitializingBean {
+abstract class AbstractCacheManagementSupport<T> : InitializingBean {
 
     protected val log = LogFactory.getLog(this::class)
 
+    @Autowired
+    private lateinit var cacheConfigProvider: ICacheConfigProvider
+
     abstract fun cacheName(): String
-
-    abstract fun desc(): String
-
-    abstract fun subSysDictCode(): String
 
     fun isExists(key: String): Boolean {
         return value(key) == null
@@ -57,7 +57,10 @@ abstract class AbstractCacheManagementSupport<T>: InitializingBean {
     abstract fun reloadAll(clear: Boolean)
 
     override fun afterPropertiesSet() {
-        reloadAll(false)
+        val cacheConfig = cacheConfigProvider.getCacheConfig(cacheName())
+        if (cacheConfig != null && cacheConfig.writeOnBoot == true) {
+            reloadAll(false)
+        }
     }
 
 }

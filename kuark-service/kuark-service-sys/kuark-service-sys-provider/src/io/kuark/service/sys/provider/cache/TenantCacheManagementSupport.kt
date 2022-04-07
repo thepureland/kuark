@@ -2,7 +2,6 @@ package io.kuark.service.sys.provider.cache
 
 import io.kuark.ability.cache.kit.CacheKit
 import io.kuark.ability.cache.support.AbstractCacheManagementSupport
-import io.kuark.ability.cache.support.CacheNames
 import io.kuark.base.support.Consts
 import io.kuark.service.sys.common.vo.tenant.SysTenantDetail
 import io.kuark.service.sys.common.vo.tenant.SysTenantSearchPayload
@@ -17,7 +16,7 @@ class TenantCacheManagementSupport: AbstractCacheManagementSupport<List<SysTenan
     @Autowired
     private lateinit var sysTenantBiz: ISysTenantBiz
 
-    override fun cacheName(): String = CacheNames.SYS_TENANT
+    override fun cacheName(): String = SysCacheNames.SYS_TENANT
 
     override fun doReload(key: String): List<SysTenantDetail> = sysTenantBiz.getTenantsFromCache(key)
 

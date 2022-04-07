@@ -1,7 +1,6 @@
 package io.kuark.service.sys.provider.biz.impl
 
 import io.kuark.ability.cache.kit.CacheKit
-import io.kuark.ability.cache.support.CacheNames
 import io.kuark.ability.data.rdb.biz.BaseCrudBiz
 import io.kuark.base.lang.string.StringKit
 import io.kuark.base.log.LogFactory
@@ -9,6 +8,7 @@ import io.kuark.service.sys.common.vo.dict.SysDictItemRecord
 import io.kuark.service.sys.common.vo.dict.SysDictPayload
 import io.kuark.service.sys.provider.biz.ibiz.ISysDictBiz
 import io.kuark.service.sys.provider.biz.ibiz.ISysDictItemBiz
+import io.kuark.service.sys.provider.cache.SysCacheNames
 import io.kuark.service.sys.provider.dao.SysDictDao
 import io.kuark.service.sys.provider.dao.SysDictItemDao
 import io.kuark.service.sys.provider.model.po.SysDictItem
@@ -26,7 +26,7 @@ import org.springframework.transaction.annotation.Transactional
  */
 @Service
 //region your codes 1
-@CacheConfig(cacheNames = [CacheNames.SYS_DICT_ITEM])
+@CacheConfig(cacheNames = [SysCacheNames.SYS_DICT_ITEM])
 open class SysDictItemBiz : BaseCrudBiz<String, SysDictItem, SysDictItemDao>(), ISysDictItemBiz {
 //endregion your codes 1
 
@@ -88,7 +88,7 @@ open class SysDictItemBiz : BaseCrudBiz<String, SysDictItem, SysDictItemDao>(), 
             if (CacheKit.isCacheActive()) {
                 log.debug("新增id为${id}的字典项后，同步缓存...")
                 val dict = sysDictBiz.getDictFromCache(sysDictItem.dictId)!!
-                CacheKit.evict(CacheNames.SYS_DICT_ITEM, "${dict.module}:${dict.dictType}") // 踢除缓存
+                CacheKit.evict(SysCacheNames.SYS_DICT_ITEM, "${dict.module}:${dict.dictType}") // 踢除缓存
                 self.getItemsFromCache(dict.module!!, dict.dictType!!)
                 log.debug("缓存同步完成。")
             }
@@ -109,7 +109,7 @@ open class SysDictItemBiz : BaseCrudBiz<String, SysDictItem, SysDictItemDao>(), 
                 if (CacheKit.isCacheActive()) {
                     log.debug("更新id为${sysDictItem.id}的字典项后，同步缓存...")
                     val dict = sysDictBiz.getDictFromCache(sysDictItem.dictId)!!
-                    CacheKit.evict(CacheNames.SYS_DICT_ITEM, "${dict.module}:${dict.dictType}") // 踢除缓存
+                    CacheKit.evict(SysCacheNames.SYS_DICT_ITEM, "${dict.module}:${dict.dictType}") // 踢除缓存
                     self.getItemsFromCache(dict.module!!, dict.dictType!!)
                     log.debug("缓存同步完成。")
                 }
@@ -140,7 +140,7 @@ open class SysDictItemBiz : BaseCrudBiz<String, SysDictItem, SysDictItemDao>(), 
             if (CacheKit.isCacheActive()) {
                 val dictIds = dao.oneSearchProperty(SysDictItem::id.name, id, SysDictItem::dictId.name)
                 val dict = sysDictBiz.get(dictIds.first() as String)!!
-                CacheKit.evict(CacheNames.SYS_DICT_ITEM, "${dict.module}:${dict.dictType}") // 字典的缓存粒度为字典类型
+                CacheKit.evict(SysCacheNames.SYS_DICT_ITEM, "${dict.module}:${dict.dictType}") // 字典的缓存粒度为字典类型
                 self.getItemsFromCache(dict.module!!, dict.dictType) // 重新缓存
             }
         } else {
@@ -162,7 +162,7 @@ open class SysDictItemBiz : BaseCrudBiz<String, SysDictItem, SysDictItemDao>(), 
                 log.debug("更新id为${dictItemId}的字典项的启用状态后，同步缓存...")
                 val dictIds = dao.oneSearchProperty(SysDictItem::id.name, dictItemId, SysDictItem::dictId.name)
                 val dict = sysDictBiz.get(dictIds.first() as String)!!
-                CacheKit.evict(CacheNames.SYS_DICT_ITEM, "${dict.module}:${dict.dictType}") // 字典的缓存粒度为字典类型
+                CacheKit.evict(SysCacheNames.SYS_DICT_ITEM, "${dict.module}:${dict.dictType}") // 字典的缓存粒度为字典类型
                 self.getItemsFromCache(dict.module!!, dict.dictType) // 重新缓存
                 log.debug("缓存同步完成。")
             }

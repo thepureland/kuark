@@ -3,6 +3,7 @@ package io.kuark.ability.cache.context
 import io.kuark.ability.cache.core.CacheMessageListener
 import io.kuark.ability.cache.core.MixCache
 import io.kuark.ability.cache.core.MixCacheManager
+import io.kuark.ability.cache.support.ICacheConfigProvider
 import io.kuark.ability.data.redis.context.RedisConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression
@@ -19,6 +20,7 @@ import org.springframework.data.redis.listener.RedisMessageListenerContainer
 import org.springframework.data.redis.serializer.RedisSerializationContext
 import java.time.Duration
 
+
 /**
  * 远程缓存(第二级缓存)springboot配置类
  *
@@ -31,31 +33,29 @@ import java.time.Duration
 open class RemoteCacheConfiguration {
 
     @Bean(name = ["remoteCacheManager"])
-    open fun remoteCacheManager(redisConnectionFactory: RedisConnectionFactory): CacheManager {
-        var redisCacheConfiguration = RedisCacheConfiguration.defaultCacheConfig()
-
-        redisCacheConfiguration = redisCacheConfiguration.entryTtl(Duration.ofMinutes(30L)) //设置缓存的默认超时时间：30分钟
-            .disableCachingNullValues()             //如果是空值，不缓存
-            .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(RedisConfiguration.keySerializer()))
-//            .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer((RedisConfiguration.valueSerializer())))
-
-        val builder = RedisCacheManager
-            .builder(RedisCacheWriter.nonLockingRedisCacheWriter(redisConnectionFactory))
-            .cacheDefaults(redisCacheConfiguration)
-
-        val map: MutableMap<String, RedisCacheConfiguration> = Maps.newHashMap()
-        Optional.ofNullable(customCacheProperties)
-            .map { p -> p.getCustomCache() }
-            .ifPresent { customCache ->
-                customCache.forEach { key, cache ->
-                    val cfg: RedisCacheConfiguration =
-                        handleRedisCacheConfiguration(cache, defaultConfiguration)
-                    map.put(key, cfg)
-                }
+    open fun remoteCacheManager(
+        redisConnectionFactory: RedisConnectionFactory,
+        cacheConfigProvider: ICacheConfigProvider
+    ): CacheManager {
+        val remoteCacheConfigs = cacheConfigProvider.getRemoteCacheConfigs()
+        val localRemoteCacheConfigs = cacheConfigProvider.getLocalRemoteCacheConfigs()
+        val cacheConfigs = remoteCacheConfigs.plus(localRemoteCacheConfigs)
+        val configMap = cacheConfigs.values.associate {
+            val redisCacheConfiguration = RedisCacheConfiguration.defaultCacheConfig()
+                .disableCachingNullValues()             //如果是空值，不缓存
+                .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(RedisConfiguration.keySerializer()))
+//              .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer((RedisConfiguration.valueSerializer())))
+            if (it.ttl != null) {
+                redisCacheConfiguration.entryTtl(Duration.ofSeconds(it.ttl!!.toLong()))
             }
-        builder.withInitialCacheConfigurations(map)
+            it.name to redisCacheConfiguration
+        }
 
-        return builder.build()
+        return RedisCacheManager
+            .builder(RedisCacheWriter.nonLockingRedisCacheWriter(redisConnectionFactory))
+            .initialCacheNames(configMap.keys)
+            .withInitialCacheConfigurations(configMap)
+            .build()
     }
 
     @Bean

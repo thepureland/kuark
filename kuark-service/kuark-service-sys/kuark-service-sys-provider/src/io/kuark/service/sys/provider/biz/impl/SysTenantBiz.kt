@@ -1,7 +1,6 @@
 package io.kuark.service.sys.provider.biz.impl
 
 import io.kuark.ability.cache.kit.CacheKit
-import io.kuark.ability.cache.support.CacheNames
 import io.kuark.ability.data.rdb.biz.BaseCrudBiz
 import io.kuark.base.bean.BeanKit
 import io.kuark.base.log.LogFactory
@@ -10,6 +9,7 @@ import io.kuark.service.sys.common.vo.tenant.SysTenantDetail
 import io.kuark.service.sys.common.vo.tenant.SysTenantRecord
 import io.kuark.service.sys.common.vo.tenant.SysTenantSearchPayload
 import io.kuark.service.sys.provider.biz.ibiz.ISysTenantBiz
+import io.kuark.service.sys.provider.cache.SysCacheNames
 import io.kuark.service.sys.provider.dao.SysTenantDao
 import io.kuark.service.sys.provider.model.po.SysParam
 import io.kuark.service.sys.provider.model.po.SysTenant
@@ -28,7 +28,7 @@ import org.springframework.transaction.annotation.Transactional
  */
 @Service
 //region your codes 1
-@CacheConfig(cacheNames = [CacheNames.SYS_TENANT])
+@CacheConfig(cacheNames = [SysCacheNames.SYS_TENANT])
 open class SysTenantBiz : BaseCrudBiz<String, SysTenant, SysTenantDao>(), ISysTenantBiz {
 //endregion your codes 1
 
@@ -64,7 +64,7 @@ open class SysTenantBiz : BaseCrudBiz<String, SysTenant, SysTenantDao>(), ISysTe
         if (CacheKit.isCacheActive()) {
             log.debug("新增id为${id}的租户后，同步缓存...")
             val subSysDictCode = BeanKit.getProperty(any, SysTenant::subSysDictCode.name) as String
-            CacheKit.evict(CacheNames.SYS_TENANT, subSysDictCode) // 踢除缓存，因为缓存的粒度为子系统
+            CacheKit.evict(SysCacheNames.SYS_TENANT, subSysDictCode) // 踢除缓存，因为缓存的粒度为子系统
             self.getTenantsFromCache(subSysDictCode) // 重新缓存
             log.debug("缓存同步完成。")
         }
@@ -80,7 +80,7 @@ open class SysTenantBiz : BaseCrudBiz<String, SysTenant, SysTenantDao>(), ISysTe
             if (CacheKit.isCacheActive()) {
                 log.debug("更新id为${id}的租户后，同步缓存...")
                 val subSysDictCode = BeanKit.getProperty(any, SysTenant::subSysDictCode.name) as String
-                CacheKit.evict(CacheNames.SYS_TENANT, subSysDictCode) // 踢除缓存，因为缓存的粒度为子系统
+                CacheKit.evict(SysCacheNames.SYS_TENANT, subSysDictCode) // 踢除缓存，因为缓存的粒度为子系统
                 self.getTenantsFromCache(subSysDictCode) // 重新缓存
                 log.debug("缓存同步完成。")
             }
@@ -103,7 +103,7 @@ open class SysTenantBiz : BaseCrudBiz<String, SysTenant, SysTenantDao>(), ISysTe
                 log.debug("更新id为${id}的租户的启用状态后，同步缓存...")
                 val sysTenant = dao.get(id)!!
                 val subSysDictCode = sysTenant.subSysDictCode
-                CacheKit.evict(CacheNames.SYS_TENANT, subSysDictCode) // 踢除缓存，缓存的粒度为子系统
+                CacheKit.evict(SysCacheNames.SYS_TENANT, subSysDictCode) // 踢除缓存，缓存的粒度为子系统
                 self.getTenantsFromCache(subSysDictCode) // 重新缓存
                 log.debug("缓存同步完成。")
             }
@@ -122,7 +122,7 @@ open class SysTenantBiz : BaseCrudBiz<String, SysTenant, SysTenantDao>(), ISysTe
             if (CacheKit.isCacheActive()) {
                 log.debug("删除id为${id}的租户后，同步从缓存中踢除...")
                 val subSysDictCode = sysTenant.subSysDictCode
-                CacheKit.evict(CacheNames.SYS_TENANT, subSysDictCode) // 踢除缓存，缓存的粒度为子系统
+                CacheKit.evict(SysCacheNames.SYS_TENANT, subSysDictCode) // 踢除缓存，缓存的粒度为子系统
                 self.getTenantsFromCache(subSysDictCode) // 重新缓存
                 log.debug("缓存同步完成。")
             }
@@ -140,7 +140,7 @@ open class SysTenantBiz : BaseCrudBiz<String, SysTenant, SysTenantDao>(), ISysTe
             log.debug("批量删除id为${ids}的租户后，同步从缓存中踢除...")
             val subSysDictCodes = dao.inSearchPropertyById(ids, SysTenant::subSysDictCode.name).toSet()
             subSysDictCodes.forEach {
-                CacheKit.evict(CacheNames.SYS_TENANT, it as String) // 踢除缓存，缓存的粒度为子系统
+                CacheKit.evict(SysCacheNames.SYS_TENANT, it as String) // 踢除缓存，缓存的粒度为子系统
                 self.getTenantsFromCache(it) // 重新缓存
             }
             log.debug("缓存同步完成。")

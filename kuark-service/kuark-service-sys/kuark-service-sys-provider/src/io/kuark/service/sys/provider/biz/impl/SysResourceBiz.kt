@@ -1,7 +1,6 @@
 package io.kuark.service.sys.provider.biz.impl
 
 import io.kuark.ability.cache.kit.CacheKit
-import io.kuark.ability.cache.support.CacheNames
 import io.kuark.ability.data.rdb.biz.BaseCrudBiz
 import io.kuark.ability.data.rdb.support.SqlWhereExpressionFactory
 import io.kuark.base.bean.BeanKit
@@ -14,6 +13,7 @@ import io.kuark.base.tree.TreeKit
 import io.kuark.service.sys.common.vo.resource.*
 import io.kuark.service.sys.provider.biz.ibiz.ISysDictItemBiz
 import io.kuark.service.sys.provider.biz.ibiz.ISysResourceBiz
+import io.kuark.service.sys.provider.cache.SysCacheNames
 import io.kuark.service.sys.provider.dao.SysResourceDao
 import io.kuark.service.sys.provider.model.po.SysResource
 import io.kuark.service.sys.provider.model.table.SysResources
@@ -35,7 +35,7 @@ import kotlin.reflect.KClass
  */
 @Service
 //region your codes 1
-@CacheConfig(cacheNames = [CacheNames.SYS_RESOURCE])
+@CacheConfig(cacheNames = [SysCacheNames.SYS_RESOURCE])
 open class SysResourceBiz : BaseCrudBiz<String, SysResource, SysResourceDao>(), ISysResourceBiz {
 //endregion your codes 1
 
@@ -98,7 +98,7 @@ open class SysResourceBiz : BaseCrudBiz<String, SysResource, SysResourceDao>(), 
                 val subSysDictCode = BeanKit.getProperty(any, SysResource::subSysDictCode.name) as String
                 val resourceTypeDictCode = BeanKit.getProperty(any, SysResource::resourceTypeDictCode.name) as String
                 val key = "${subSysDictCode}:${resourceTypeDictCode}"
-                CacheKit.evict(CacheNames.SYS_RESOURCE, key) // 踢除资源缓存
+                CacheKit.evict(SysCacheNames.SYS_RESOURCE, key) // 踢除资源缓存
                 self.getResourcesFromCache(subSysDictCode, resourceTypeDictCode) // 重新缓存
                 log.debug("缓存同步完成。")
             }
@@ -124,7 +124,7 @@ open class SysResourceBiz : BaseCrudBiz<String, SysResource, SysResourceDao>(), 
                     self.getResourcesFromCache(sysRes.subSysDictCode, sysRes.resourceTypeDictCode) // 重新缓存
                 } else {
                     val key = "${sysRes.subSysDictCode}:${sysRes.resourceTypeDictCode}"
-                    CacheKit.evict(CacheNames.SYS_RESOURCE, key) // 踢除资源缓存
+                    CacheKit.evict(SysCacheNames.SYS_RESOURCE, key) // 踢除资源缓存
                 }
                 log.debug("缓存同步完成。")
             }
@@ -279,7 +279,7 @@ open class SysResourceBiz : BaseCrudBiz<String, SysResource, SysResourceDao>(), 
 
         // 踢除缓存, 资源缓存的粒度到资源类型
         if (CacheKit.isCacheActive()) {
-            CacheKit.evict(CacheNames.SYS_RESOURCE, "${subSysDictCode}:${resourceTypeDictCode}")
+            CacheKit.evict(SysCacheNames.SYS_RESOURCE, "${subSysDictCode}:${resourceTypeDictCode}")
         }
 
         return true

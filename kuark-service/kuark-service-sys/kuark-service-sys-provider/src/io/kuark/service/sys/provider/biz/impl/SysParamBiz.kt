@@ -1,7 +1,6 @@
 package io.kuark.service.sys.provider.biz.impl
 
 import io.kuark.ability.cache.kit.CacheKit
-import io.kuark.ability.cache.support.CacheNames
 import io.kuark.ability.data.rdb.biz.BaseCrudBiz
 import io.kuark.ability.data.rdb.kit.RdbKit
 import io.kuark.ability.data.rdb.support.SqlWhereExpressionFactory
@@ -13,6 +12,7 @@ import io.kuark.service.sys.common.vo.param.SysParamDetail
 import io.kuark.service.sys.common.vo.param.SysParamRecord
 import io.kuark.service.sys.common.vo.param.SysParamSearchPayload
 import io.kuark.service.sys.provider.biz.ibiz.ISysParamBiz
+import io.kuark.service.sys.provider.cache.SysCacheNames
 import io.kuark.service.sys.provider.dao.SysParamDao
 import io.kuark.service.sys.provider.model.po.SysParam
 import io.kuark.service.sys.provider.model.table.SysParams
@@ -40,7 +40,7 @@ open class SysParamBiz : BaseCrudBiz<String, SysParam, SysParamDao>(), ISysParam
     @Autowired
     private lateinit var self: ISysParamBiz
 
-    @Cacheable(value = [CacheNames.SYS_PARAM], key = "#module.concat(':').concat(#name)", unless = "#result == null")
+    @Cacheable(value = [SysCacheNames.SYS_PARAM], key = "#module.concat(':').concat(#name)", unless = "#result == null")
     override fun getParamFromCache(module: String, name: String): SysParamDetail? {
         if (CacheKit.isCacheActive()) {
             log.debug("缓存中不存在模块为${module}且名称为${name}的参数，从数据库中加载...")
@@ -90,7 +90,7 @@ open class SysParamBiz : BaseCrudBiz<String, SysParam, SysParamDao>(), ISysParam
                 val module = BeanKit.getProperty(any, SysParam::module.name) as String
                 val paramName = BeanKit.getProperty(any, SysParam::paramName.name) as String
                 val key = "${module}:${paramName}"
-                CacheKit.evict(CacheNames.SYS_PARAM, key) // 踢除参数缓存
+                CacheKit.evict(SysCacheNames.SYS_PARAM, key) // 踢除参数缓存
                 self.getParamFromCache(module, paramName) // 重新缓存
                 log.debug("缓存同步完成。")
             }
@@ -116,7 +116,7 @@ open class SysParamBiz : BaseCrudBiz<String, SysParam, SysParamDao>(), ISysParam
                     self.getParamFromCache(sysParam.module!!, sysParam.paramName)
                 } else {
                     val key = "${sysParam.module}:${sysParam.paramName}"
-                    CacheKit.evict(CacheNames.SYS_PARAM, key) // 踢除参数缓存
+                    CacheKit.evict(SysCacheNames.SYS_PARAM, key) // 踢除参数缓存
                 }
                 log.debug("缓存同步完成。")
             }
@@ -135,7 +135,7 @@ open class SysParamBiz : BaseCrudBiz<String, SysParam, SysParamDao>(), ISysParam
             if (CacheKit.isCacheActive()) {
                 log.debug("删除id为${id}的参数后，同步从缓存中踢除...")
                 val key = "${param.module}:${param.paramName}"
-                CacheKit.evict(CacheNames.SYS_PARAM, key) // 踢除缓存
+                CacheKit.evict(SysCacheNames.SYS_PARAM, key) // 踢除缓存
                 log.debug("缓存同步完成。")
             }
         } else {
@@ -153,7 +153,7 @@ open class SysParamBiz : BaseCrudBiz<String, SysParam, SysParamDao>(), ISysParam
             val params = dao.inSearchById(ids)
             params.forEach {
                 val key = "${it.module}:${it.paramName}"
-                CacheKit.evict(CacheNames.SYS_PARAM, key) // 踢除缓存
+                CacheKit.evict(SysCacheNames.SYS_PARAM, key) // 踢除缓存
             }
             log.debug("缓存同步完成。")
         }

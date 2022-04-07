@@ -2,7 +2,10 @@ package io.kuark.ability.cache.context
 
 import io.kuark.ability.cache.core.DefaultKeysGenerator
 import io.kuark.ability.cache.core.MixCacheManager
+import io.kuark.ability.cache.support.EmptyCacheConfigProvider
+import io.kuark.ability.cache.support.ICacheConfigProvider
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.cache.CacheManager
 import org.springframework.cache.annotation.CachingConfigurer
@@ -33,6 +36,9 @@ open class MixCacheConfiguration : CachingConfigurer {
     override fun cacheManager(): CacheManager {
         return cacheManager
     }
+
+    @ConditionalOnMissingBean
+    fun cacheConfigProvider(): ICacheConfigProvider = EmptyCacheConfigProvider()
 
     @Bean
     override fun keyGenerator(): KeyGenerator = SimpleKeyGenerator()

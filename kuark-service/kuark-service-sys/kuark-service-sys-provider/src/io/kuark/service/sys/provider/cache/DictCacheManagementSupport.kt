@@ -2,7 +2,6 @@ package io.kuark.service.sys.provider.cache
 
 import io.kuark.ability.cache.kit.CacheKit
 import io.kuark.ability.cache.support.AbstractCacheManagementSupport
-import io.kuark.ability.cache.support.CacheNames
 import io.kuark.base.support.Consts
 import io.kuark.base.support.payload.ListSearchPayload
 import io.kuark.service.sys.common.vo.dict.SysDictDetail
@@ -17,7 +16,7 @@ class DictCacheManagementSupport : AbstractCacheManagementSupport<SysDictDetail>
     @Autowired
     private lateinit var sysDictBiz: ISysDictBiz
 
-    override fun cacheName(): String = CacheNames.SYS_DICT
+    override fun cacheName(): String = SysCacheNames.SYS_DICT
 
     override fun doReload(key: String): SysDictDetail? {
         return sysDictBiz.getDictFromCache(key)

@@ -1,8 +1,8 @@
 package io.kuark.ability.cache.core
 
-import io.kuark.ability.cache.support.CacheNameResolver
 import io.kuark.ability.cache.context.MixCacheConfiguration
 import io.kuark.ability.cache.enums.CacheStrategy
+import io.kuark.ability.cache.support.ICacheConfigProvider
 import io.kuark.base.log.LogFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
@@ -38,42 +38,42 @@ class MixCacheManager : AbstractTransactionSupportingCacheManager() {
     @Qualifier("remoteCacheManager")
     private lateinit var remoteCacheManager: CacheManager
     @Autowired
-    private lateinit var cacheNameResolver: CacheNameResolver
+    private lateinit var cacheConfigProvider: ICacheConfigProvider
 
     private val log = LogFactory.getLog(this::class)
 
     override fun loadCaches(): MutableCollection<out Cache> {
         val caches = mutableListOf<Cache>()
-        val strategy = try {
-            CacheStrategy.valueOf(strategyStr!!)
-        } catch (e: Exception) {
-            return caches
+
+        // 单节点本地缓存
+        val localCacheConfigs = cacheConfigProvider.getLocalCacheConfigs()
+        if (localCacheConfigs.isNotEmpty()) {
+            localCacheConfigs.forEach {
+                val localCache = localCacheManager.getCache(it.key)
+                caches.add(MixCache(CacheStrategy.SINGLE_LOCAL, localCache, null))
+            }
+
         }
-        val cacheNames = cacheNameResolver.resolve()
-        when (strategy) {
-            CacheStrategy.SINGLE_LOCAL -> {
-                log.info("缓存策略为【单节点本地缓存】")
-                cacheNames.forEach { name ->
-                    val localCache = localCacheManager.getCache(name)
-                    caches.add(MixCache(strategy, localCache, null))
-                }
-            }
-            CacheStrategy.REMOTE -> {
-                log.info("缓存策略为【远程缓存】")
-                cacheNames.forEach { name ->
-                    val remoteCache = remoteCacheManager.getCache(name)
-                    caches.add(MixCache(strategy, null, remoteCache))
-                }
-            }
-            CacheStrategy.LOCAL_REMOTE -> {
-                log.info("缓存策略为【本地-远程两级联动缓存】")
-                cacheNames.forEach { name ->
-                    val localCache = localCacheManager.getCache(name)
-                    val remoteCache = remoteCacheManager.getCache(name)
-                    caches.add(MixCache(strategy, localCache, remoteCache))
-                }
+
+        // 远程缓存
+        val remoteCacheConfigs = cacheConfigProvider.getRemoteCacheConfigs()
+        if (remoteCacheConfigs.isNotEmpty()) {
+            remoteCacheConfigs.forEach {
+                val remoteCache = remoteCacheManager.getCache(it.key)
+                caches.add(MixCache(CacheStrategy.REMOTE, null, remoteCache))
             }
         }
+
+        // 本地-远程两级联动缓存
+        val localRemoteCacheConfigs = cacheConfigProvider.getLocalRemoteCacheConfigs()
+        if (localRemoteCacheConfigs.isNotEmpty()) {
+            localRemoteCacheConfigs.forEach {
+                val localCache = localCacheManager.getCache(it.key)
+                val remoteCache = remoteCacheManager.getCache(it.key)
+                caches.add(MixCache(CacheStrategy.LOCAL_REMOTE, localCache, remoteCache))
+            }
+        }
+
         return caches
     }
 
@@ -84,5 +84,10 @@ class MixCacheManager : AbstractTransactionSupportingCacheManager() {
     }
 
     fun isCacheEnabled(): Boolean = cacheEnabled == true
+
+    override fun initializeCaches() {
+        super.initializeCaches()
+
+    }
 
 }

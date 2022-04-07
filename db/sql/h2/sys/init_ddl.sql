@@ -333,7 +333,7 @@ create table "sys_tenant"
 (
     "id"                CHAR(36)  default RANDOM_UUID() not null primary key,
     "sub_sys_dict_code" VARCHAR(32)                     not null,
-    "name"         VARCHAR(64)                     not null,
+    "name"              VARCHAR(64)                     not null,
     "remark"            VARCHAR(128),
     "active"            BOOLEAN   default TRUE          not null,
     "built_in"          BOOLEAN   default FALSE         not null,
@@ -379,3 +379,70 @@ on column "sys_tenant"."update_user" is '更新用户';
 comment
 on column "sys_tenant"."update_time" is '更新时间';
 
+
+
+create table "sys_cache"
+(
+    "id"                   CHAR(36)  default RANDOM_UUID() not null primary key,
+    "name"                 VARCHAR(64)                     not null,
+    "sub_sys_dict_code"    VARCHAR(32)                     not null,
+    "strategy_dict_code"   VARCHAR(16)                     not null,
+    "write_on_boot"        BOOLEAN   default FALSE         not null,
+    "write_in_time"     BOOLEAN   default FALSE         not null,
+    "management_bean_name" VARCHAR(64)                     not null,
+    "ttl"                  INT2,
+    "remark"               VARCHAR(128),
+    "built_in"             BOOLEAN   default FALSE         not null,
+    "create_user"          VARCHAR(36),
+    "create_time"          TIMESTAMP default now(),
+    "update_user"          VARCHAR(36),
+    "update_time"          TIMESTAMP
+);
+
+create
+unique index "uq_sys_cache" on "sys_cache" ("name");
+
+comment
+on table "sys_cache" is '缓存';
+
+comment
+on column "sys_cache"."id" is '主键';
+
+comment
+on column "sys_cache"."name" is '名称';
+
+comment
+on column "sys_cache"."sub_sys_dict_code" is '子系统代码';
+
+comment
+on column "sys_cache"."strategy_dict_code" is '缓存策略代码';
+
+comment
+on column "sys_cache"."write_on_boot" is '是否启动时写缓存';
+
+comment
+on column "sys_cache"."write_in_time" is '是否及时回写缓存';
+
+comment
+on column "sys_cache"."management_bean_name" is '缓存管理Bean的名称';
+
+comment
+on column "sys_cache"."ttl" is '缓存生存时间(秒)';
+
+comment
+on column "sys_cache"."remark" is '备注，或其国际化key';
+
+comment
+on column "sys_cache"."built_in" is '是否内置';
+
+comment
+on column "sys_cache"."create_user" is '创建用户';
+
+comment
+on column "sys_cache"."create_time" is '创建时间';
+
+comment
+on column "sys_cache"."update_user" is '更新用户';
+
+comment
+on column "sys_cache"."update_time" is '更新时间';

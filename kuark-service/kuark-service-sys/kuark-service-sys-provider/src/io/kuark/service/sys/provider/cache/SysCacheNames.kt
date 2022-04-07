@@ -1,6 +1,4 @@
-package io.kuark.ability.cache.support
-
-import org.springframework.stereotype.Component
+package io.kuark.service.sys.provider.cache
 
 /**
  * 缓存名称定义
@@ -8,11 +6,7 @@ import org.springframework.stereotype.Component
  * @author K
  * @since 1.0.0
  */
-@Component
-object CacheNames: ICacheNames {
-
-    /** 测试用 */
-    const val TEST = "test"
+object SysCacheNames {
 
     /** 字典项 */
     const val SYS_DICT = "sys_dict"
@@ -29,14 +23,9 @@ object CacheNames: ICacheNames {
     /** 租户 */
     const val SYS_TENANT = "sys_tenant"
 
-    /** 角色 */
-    const val RBAC_ROLE = "rbac_role"
+    /** 缓存 */
+    const val SYS_CACHE = "sys_cache"
 
-    /** 角色id */
-    const val RBAC_ROLE_ID = "rbac_role_id"
-
-    /** Session */
-    const val SESSION = "session"
 
 }
 

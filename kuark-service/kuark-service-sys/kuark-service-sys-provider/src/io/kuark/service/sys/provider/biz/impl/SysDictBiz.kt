@@ -1,7 +1,6 @@
 package io.kuark.service.sys.provider.biz.impl
 
 import io.kuark.ability.cache.kit.CacheKit
-import io.kuark.ability.cache.support.CacheNames
 import io.kuark.ability.data.rdb.biz.BaseCrudBiz
 import io.kuark.base.bean.BeanKit
 import io.kuark.base.lang.string.StringKit
@@ -11,6 +10,7 @@ import io.kuark.base.support.payload.ListSearchPayload
 import io.kuark.service.sys.common.vo.dict.*
 import io.kuark.service.sys.provider.biz.ibiz.ISysDictBiz
 import io.kuark.service.sys.provider.biz.ibiz.ISysDictItemBiz
+import io.kuark.service.sys.provider.cache.SysCacheNames
 import io.kuark.service.sys.provider.dao.SysDictDao
 import io.kuark.service.sys.provider.model.po.SysDict
 import io.kuark.service.sys.provider.model.table.SysDictItems
@@ -46,7 +46,7 @@ open class SysDictBiz : BaseCrudBiz<String, SysDict, SysDictDao>(), ISysDictBiz 
     private val log = LogFactory.getLog(this::class)
 
     @Cacheable(
-        cacheNames = [CacheNames.SYS_DICT],
+        cacheNames = [SysCacheNames.SYS_DICT],
         key = "#dictId",
         unless = "#result == null"
     )
@@ -193,7 +193,7 @@ open class SysDictBiz : BaseCrudBiz<String, SysDict, SysDictDao>(), ISysDictBiz 
                     // 同步缓存
                     if (CacheKit.isCacheActive()) {
                         log.debug("更新id为${sysDict.id}的字典后，同步缓存...")
-                        CacheKit.evict(CacheNames.SYS_DICT, sysDict.id!!) // 踢除缓存
+                        CacheKit.evict(SysCacheNames.SYS_DICT, sysDict.id!!) // 踢除缓存
                         self.getDictFromCache(sysDict.id!!) // 缓存
                         log.debug("缓存同步完成。")
                     }
@@ -221,7 +221,7 @@ open class SysDictBiz : BaseCrudBiz<String, SysDict, SysDictDao>(), ISysDictBiz 
                 // 同步缓存
                 if (CacheKit.isCacheActive()) {
                     log.debug("删除id为${id}的字典后，同步缓存...")
-                    CacheKit.evict(CacheNames.SYS_DICT, id) // 踢除缓存
+                    CacheKit.evict(SysCacheNames.SYS_DICT, id) // 踢除缓存
                     log.debug("缓存同步完成。")
                 }
             } else {

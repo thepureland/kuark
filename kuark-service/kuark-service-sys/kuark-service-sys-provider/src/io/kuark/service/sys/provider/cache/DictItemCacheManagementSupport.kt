@@ -2,7 +2,6 @@ package io.kuark.service.sys.provider.cache
 
 import io.kuark.ability.cache.kit.CacheKit
 import io.kuark.ability.cache.support.AbstractCacheManagementSupport
-import io.kuark.ability.cache.support.CacheNames
 import io.kuark.service.sys.common.vo.dict.SysDictItemRecord
 import io.kuark.service.sys.common.vo.dict.SysDictSearchPayload
 import io.kuark.service.sys.provider.biz.ibiz.ISysDictItemBiz
@@ -20,7 +19,7 @@ class DictItemCacheManagementSupport : AbstractCacheManagementSupport<List<SysDi
     @Autowired
     private lateinit var sysDictItemBiz: ISysDictItemBiz
 
-    override fun cacheName(): String = CacheNames.SYS_DICT_ITEM
+    override fun cacheName(): String = SysCacheNames.SYS_DICT_ITEM
 
     override fun doReload(key: String): List<SysDictItemRecord> {
         require(key.contains(":")) { "缓存${cacheName()}的key格式必须是 模块代码:字典类型代码" }

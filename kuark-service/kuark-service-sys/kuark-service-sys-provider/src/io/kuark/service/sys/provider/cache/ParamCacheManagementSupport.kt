@@ -2,7 +2,6 @@ package io.kuark.service.sys.provider.cache
 
 import io.kuark.ability.cache.kit.CacheKit
 import io.kuark.ability.cache.support.AbstractCacheManagementSupport
-import io.kuark.ability.cache.support.CacheNames
 import io.kuark.base.support.Consts
 import io.kuark.service.sys.common.vo.param.SysParamDetail
 import io.kuark.service.sys.common.vo.param.SysParamSearchPayload
@@ -17,7 +16,7 @@ class ParamCacheManagementSupport: AbstractCacheManagementSupport<SysParamDetail
     @Autowired
     private lateinit var sysParamBiz: ISysParamBiz
 
-    override fun cacheName(): String = CacheNames.SYS_PARAM
+    override fun cacheName(): String = SysCacheNames.SYS_PARAM
 
     override fun doReload(key: String): SysParamDetail? {
         require(key.contains(":")) { "缓存${cacheName()}的key格式必须是 模块代码:参数名称" }

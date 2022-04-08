@@ -170,7 +170,7 @@ open class SysDictBiz : BaseCrudBiz<String, SysDict, SysDictDao>(), ISysDictBiz 
                 }
                 val id = dao.insert(sysDict)
                 // 同步缓存
-                if (CacheKit.isCacheActive()) {
+                if (CacheKit.isCacheActive() && CacheKit.isWriteInTime(SysCacheNames.SYS_DICT)) {
                     log.debug("新增id为${id}的字典后，同步缓存...")
                     self.getDictFromCache(id)
                     log.debug("缓存同步完成。")
@@ -194,7 +194,9 @@ open class SysDictBiz : BaseCrudBiz<String, SysDict, SysDictDao>(), ISysDictBiz 
                     if (CacheKit.isCacheActive()) {
                         log.debug("更新id为${sysDict.id}的字典后，同步缓存...")
                         CacheKit.evict(SysCacheNames.SYS_DICT, sysDict.id!!) // 踢除缓存
-                        self.getDictFromCache(sysDict.id!!) // 缓存
+                        if (CacheKit.isWriteInTime(SysCacheNames.SYS_DICT)) {
+                            self.getDictFromCache(sysDict.id!!) // 缓存
+                        }
                         log.debug("缓存同步完成。")
                     }
                 } else {

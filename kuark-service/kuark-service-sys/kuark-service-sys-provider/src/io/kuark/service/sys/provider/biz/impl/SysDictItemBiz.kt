@@ -89,7 +89,9 @@ open class SysDictItemBiz : BaseCrudBiz<String, SysDictItem, SysDictItemDao>(), 
                 log.debug("新增id为${id}的字典项后，同步缓存...")
                 val dict = sysDictBiz.getDictFromCache(sysDictItem.dictId)!!
                 CacheKit.evict(SysCacheNames.SYS_DICT_ITEM, "${dict.module}:${dict.dictType}") // 踢除缓存
-                self.getItemsFromCache(dict.module!!, dict.dictType!!)
+                if (CacheKit.isWriteInTime(SysCacheNames.SYS_DICT_ITEM)) {
+                    self.getItemsFromCache(dict.module!!, dict.dictType!!)
+                }
                 log.debug("缓存同步完成。")
             }
             id
@@ -110,7 +112,9 @@ open class SysDictItemBiz : BaseCrudBiz<String, SysDictItem, SysDictItemDao>(), 
                     log.debug("更新id为${sysDictItem.id}的字典项后，同步缓存...")
                     val dict = sysDictBiz.getDictFromCache(sysDictItem.dictId)!!
                     CacheKit.evict(SysCacheNames.SYS_DICT_ITEM, "${dict.module}:${dict.dictType}") // 踢除缓存
-                    self.getItemsFromCache(dict.module!!, dict.dictType!!)
+                    if (CacheKit.isWriteInTime(SysCacheNames.SYS_DICT_ITEM)) {
+                        self.getItemsFromCache(dict.module!!, dict.dictType!!)
+                    }
                     log.debug("缓存同步完成。")
                 }
             } else {
@@ -141,7 +145,9 @@ open class SysDictItemBiz : BaseCrudBiz<String, SysDictItem, SysDictItemDao>(), 
                 val dictIds = dao.oneSearchProperty(SysDictItem::id.name, id, SysDictItem::dictId.name)
                 val dict = sysDictBiz.get(dictIds.first() as String)!!
                 CacheKit.evict(SysCacheNames.SYS_DICT_ITEM, "${dict.module}:${dict.dictType}") // 字典的缓存粒度为字典类型
-                self.getItemsFromCache(dict.module!!, dict.dictType) // 重新缓存
+                if (CacheKit.isWriteInTime(SysCacheNames.SYS_DICT_ITEM)) {
+                    self.getItemsFromCache(dict.module!!, dict.dictType) // 重新缓存
+                }
             }
         } else {
             log.error("删除id为${id}的字典项失败！")
@@ -163,7 +169,9 @@ open class SysDictItemBiz : BaseCrudBiz<String, SysDictItem, SysDictItemDao>(), 
                 val dictIds = dao.oneSearchProperty(SysDictItem::id.name, dictItemId, SysDictItem::dictId.name)
                 val dict = sysDictBiz.get(dictIds.first() as String)!!
                 CacheKit.evict(SysCacheNames.SYS_DICT_ITEM, "${dict.module}:${dict.dictType}") // 字典的缓存粒度为字典类型
-                self.getItemsFromCache(dict.module!!, dict.dictType) // 重新缓存
+                if (CacheKit.isWriteInTime(SysCacheNames.SYS_DICT_ITEM)) {
+                    self.getItemsFromCache(dict.module!!, dict.dictType) // 重新缓存
+                }
                 log.debug("缓存同步完成。")
             }
         } else {

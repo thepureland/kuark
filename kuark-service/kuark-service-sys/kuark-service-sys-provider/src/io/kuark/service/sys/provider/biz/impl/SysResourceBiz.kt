@@ -77,7 +77,7 @@ open class SysResourceBiz : BaseCrudBiz<String, SysResource, SysResourceDao>(), 
         val id = super.insert(any)
         log.debug("新增id为${id}的资源。")
         // 同步缓存
-        if (CacheKit.isCacheActive()) {
+        if (CacheKit.isCacheActive() && CacheKit.isWriteInTime(SysCacheNames.SYS_RESOURCE)) {
             log.debug("新增id为${id}的资源后，同步缓存...")
             val subSysDictCode = BeanKit.getProperty(any, SysResource::subSysDictCode.name) as String
             val resourceTypeDictCode = BeanKit.getProperty(any, SysResource::resourceTypeDictCode.name) as String
@@ -99,7 +99,9 @@ open class SysResourceBiz : BaseCrudBiz<String, SysResource, SysResourceDao>(), 
                 val resourceTypeDictCode = BeanKit.getProperty(any, SysResource::resourceTypeDictCode.name) as String
                 val key = "${subSysDictCode}:${resourceTypeDictCode}"
                 CacheKit.evict(SysCacheNames.SYS_RESOURCE, key) // 踢除资源缓存
-                self.getResourcesFromCache(subSysDictCode, resourceTypeDictCode) // 重新缓存
+                if (CacheKit.isWriteInTime(SysCacheNames.SYS_RESOURCE)) {
+                    self.getResourcesFromCache(subSysDictCode, resourceTypeDictCode) // 重新缓存
+                }
                 log.debug("缓存同步完成。")
             }
         } else {
@@ -121,7 +123,9 @@ open class SysResourceBiz : BaseCrudBiz<String, SysResource, SysResourceDao>(), 
                 log.debug("更新id为${id}的资源的启用状态后，同步缓存...")
                 val sysRes = dao.get(id)!!
                 if (active) {
-                    self.getResourcesFromCache(sysRes.subSysDictCode, sysRes.resourceTypeDictCode) // 重新缓存
+                    if (CacheKit.isWriteInTime(SysCacheNames.SYS_RESOURCE)) {
+                        self.getResourcesFromCache(sysRes.subSysDictCode, sysRes.resourceTypeDictCode) // 重新缓存
+                    }
                 } else {
                     val key = "${sysRes.subSysDictCode}:${sysRes.resourceTypeDictCode}"
                     CacheKit.evict(SysCacheNames.SYS_RESOURCE, key) // 踢除资源缓存

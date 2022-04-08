@@ -69,7 +69,7 @@ open class SysParamBiz : BaseCrudBiz<String, SysParam, SysParamDao>(), ISysParam
         val id = super.insert(any)
         log.debug("新增id为${id}的参数。")
         // 同步缓存
-        if (CacheKit.isCacheActive()) {
+        if (CacheKit.isCacheActive() && CacheKit.isWriteInTime(SysCacheNames.SYS_PARAM)) {
             log.debug("新增id为${id}的参数后，同步缓存...")
             val module = BeanKit.getProperty(any, SysParam::module.name) as String
             val paramName = BeanKit.getProperty(any, SysParam::paramName.name) as String
@@ -91,7 +91,9 @@ open class SysParamBiz : BaseCrudBiz<String, SysParam, SysParamDao>(), ISysParam
                 val paramName = BeanKit.getProperty(any, SysParam::paramName.name) as String
                 val key = "${module}:${paramName}"
                 CacheKit.evict(SysCacheNames.SYS_PARAM, key) // 踢除参数缓存
-                self.getParamFromCache(module, paramName) // 重新缓存
+                if (CacheKit.isWriteInTime(SysCacheNames.SYS_PARAM)) {
+                    self.getParamFromCache(module, paramName) // 重新缓存
+                }
                 log.debug("缓存同步完成。")
             }
         } else {
@@ -113,7 +115,9 @@ open class SysParamBiz : BaseCrudBiz<String, SysParam, SysParamDao>(), ISysParam
                 log.debug("更新id为${id}的参数的启用状态后，同步缓存...")
                 val sysParam = dao.get(id)!!
                 if (active) {
-                    self.getParamFromCache(sysParam.module!!, sysParam.paramName)
+                    if (CacheKit.isWriteInTime(SysCacheNames.SYS_PARAM)) {
+                        self.getParamFromCache(sysParam.module!!, sysParam.paramName)
+                    }
                 } else {
                     val key = "${sysParam.module}:${sysParam.paramName}"
                     CacheKit.evict(SysCacheNames.SYS_PARAM, key) // 踢除参数缓存

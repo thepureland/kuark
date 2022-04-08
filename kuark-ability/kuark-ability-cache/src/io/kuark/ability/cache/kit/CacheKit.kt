@@ -1,10 +1,15 @@
 package io.kuark.ability.cache.kit
 
 import io.kuark.ability.cache.core.MixCacheManager
+import io.kuark.ability.cache.support.CacheConfig
+import io.kuark.ability.cache.support.ICacheConfigProvider
 import io.kuark.base.log.LogFactory
 import io.kuark.context.kit.SpringKit
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.Cache
+import org.springframework.stereotype.Component
 import kotlin.reflect.KClass
+
 
 /**
  * 缓存工具类
@@ -12,9 +17,17 @@ import kotlin.reflect.KClass
  * @author K
  * @since 1.0.0
  */
+@Component
 object CacheKit {
 
     private val log = LogFactory.getLog(this::class)
+
+    @Autowired
+    private lateinit var cacheManager: MixCacheManager
+
+    @Autowired
+    private lateinit var cacheConfigProvider: ICacheConfigProvider
+
 
     /**
      * 是否开户缓存
@@ -24,7 +37,6 @@ object CacheKit {
      * @since 1.0.0
      */
     fun isCacheActive(): Boolean {
-        val cacheManager = SpringKit.getBean("cacheManager") as MixCacheManager
         return cacheManager.isCacheEnabled()
     }
 
@@ -38,10 +50,10 @@ object CacheKit {
      */
     fun getCache(name: String): Cache? {
 //        val cacheManager = SpringKit.getBean(MixCacheManager::class) //??? 在suspend方法中，会阻塞，原因不明
-        val cacheManager = SpringKit.getBean("cacheManager") as MixCacheManager
+//        val cacheManager = SpringKit.getBean("cacheManager") as MixCacheManager
         val cache = cacheManager.getCache(name)
         if (cache == null) {
-            log.warn("缓存【$name】不存在！")
+            log.error("缓存【$name】不存在！")
         }
         return cache
     }
@@ -120,6 +132,39 @@ object CacheKit {
      */
     fun clear(cacheName: String) {
         getCache(cacheName)!!.clear()
+    }
+
+    /**
+     * 是否在新增或更新后，立即回写缓存
+     *
+     * @param cacheName 缓存名称
+     * @return true: 立即回写缓存, 反之为false。缓存不存在也返回false
+     * @author K
+     * @since 1.0.0
+     */
+    fun isWriteInTime(cacheName: String): Boolean {
+        val cacheConfig = getCacheConfig(cacheName)
+        return if (cacheConfig == null) {
+            false
+        } else {
+            cacheConfig.writeInTime == true
+        }
+    }
+
+    /**
+     * 返回指定名称的缓存配置信息
+     *
+     * @param cacheName 缓存名称
+     * @return 缓存配置信息。找不到返回null
+     * @author K
+     * @since 1.0.0
+     */
+    fun getCacheConfig(cacheName: String): CacheConfig? {
+        val cacheConfig = cacheConfigProvider.getCacheConfig(cacheName)
+        if (cacheConfig == null) {
+            log.warn("缓存【$cacheName】不存在！")
+        }
+        return cacheConfig
     }
 
 }

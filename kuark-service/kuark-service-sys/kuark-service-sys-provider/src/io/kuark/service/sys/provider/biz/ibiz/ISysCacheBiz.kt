@@ -1,6 +1,7 @@
 package io.kuark.service.sys.provider.biz.ibiz
 
 import io.kuark.base.support.biz.IBaseCrudBiz
+import io.kuark.service.sys.common.vo.cache.SysCacheDetail
 import io.kuark.service.sys.provider.model.po.SysCache
 
 

@@ -5,10 +5,7 @@ import io.kuark.base.error.ObjectNotFoundException
 import io.kuark.base.support.Consts
 import io.kuark.service.sys.common.vo.dict.*
 import io.kuark.service.sys.provider.biz.ibiz.ISysDictBiz
-import io.kuark.service.sys.provider.biz.ibiz.ISysDictItemBiz
 import io.kuark.service.sys.provider.model.table.SysDicts
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.*
 import javax.validation.Valid
 
@@ -24,9 +21,6 @@ import javax.validation.Valid
 @CrossOrigin
 open class SysDictController :
     BaseReadOnlyController<String, ISysDictBiz, SysDictSearchPayload, SysDictRecord, SysDictDetail, SysDictPayload>() {
-
-    @Autowired
-    private lateinit var sysDictItemBiz: ISysDictItemBiz
 
     /**
      * 懒加载字典树

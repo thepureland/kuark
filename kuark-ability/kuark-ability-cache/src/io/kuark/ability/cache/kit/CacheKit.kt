@@ -5,7 +5,6 @@ import io.kuark.ability.cache.support.CacheConfig
 import io.kuark.ability.cache.support.ICacheConfigProvider
 import io.kuark.base.log.LogFactory
 import io.kuark.context.kit.SpringKit
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.Cache
 import org.springframework.stereotype.Component
 import kotlin.reflect.KClass
@@ -22,13 +21,6 @@ object CacheKit {
 
     private val log = LogFactory.getLog(this::class)
 
-    @Autowired
-    private lateinit var cacheManager: MixCacheManager
-
-    @Autowired
-    private lateinit var cacheConfigProvider: ICacheConfigProvider
-
-
     /**
      * 是否开户缓存
      *
@@ -37,6 +29,7 @@ object CacheKit {
      * @since 1.0.0
      */
     fun isCacheActive(): Boolean {
+        val cacheManager = SpringKit.getBean("cacheManager") as MixCacheManager
         return cacheManager.isCacheEnabled()
     }
 
@@ -50,7 +43,7 @@ object CacheKit {
      */
     fun getCache(name: String): Cache? {
 //        val cacheManager = SpringKit.getBean(MixCacheManager::class) //??? 在suspend方法中，会阻塞，原因不明
-//        val cacheManager = SpringKit.getBean("cacheManager") as MixCacheManager
+        val cacheManager = SpringKit.getBean("cacheManager") as MixCacheManager
         val cache = cacheManager.getCache(name)
         if (cache == null) {
             log.error("缓存【$name】不存在！")
@@ -160,6 +153,7 @@ object CacheKit {
      * @since 1.0.0
      */
     fun getCacheConfig(cacheName: String): CacheConfig? {
+        val cacheConfigProvider = SpringKit.getBean("cacheConfigProvider") as ICacheConfigProvider
         val cacheConfig = cacheConfigProvider.getCacheConfig(cacheName)
         if (cacheConfig == null) {
             log.warn("缓存【$cacheName】不存在！")

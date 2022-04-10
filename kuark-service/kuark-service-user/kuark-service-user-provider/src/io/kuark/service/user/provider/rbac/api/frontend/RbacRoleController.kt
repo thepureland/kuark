@@ -17,22 +17,8 @@ open class RbacRoleController :
     BaseCrudController<String, IRbacRoleBiz, RbacRoleSearchPayload, RbacRoleRecord, RbacRoleDetail, RbacRolePayload>() {
 
     @GetMapping("/updateActive")
-    fun updateActive(subSysDictCode: String, roleId: String, active: Boolean): Boolean {
-        return biz.updateActive(subSysDictCode, roleId, active)
-    }
-
-    /**
-     * 删除指定主键的记录
-     *
-     * @param subSysDictCode 子系统代码（为了踢除缓存）
-     * @param id 主键
-     * @return WebResult(是否删除成功)
-     * @author K
-     * @since 1.0.0
-     */
-    @DeleteMapping("/delete")
-    fun delete(subSysDictCode: String, id: String): Boolean {
-        return biz.delete(subSysDictCode, id)
+    fun updateActive(roleId: String, active: Boolean): Boolean {
+        return biz.updateActive(roleId, active)
     }
 
     @GetMapping("/getMenuPermissions")

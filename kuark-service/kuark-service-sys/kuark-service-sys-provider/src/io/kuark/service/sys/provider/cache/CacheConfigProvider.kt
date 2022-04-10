@@ -8,6 +8,7 @@ import io.kuark.base.support.payload.ListSearchPayload
 import io.kuark.service.sys.provider.biz.ibiz.ISysCacheBiz
 import org.springframework.beans.factory.InitializingBean
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.annotation.DependsOn
 import org.springframework.stereotype.Component
 
 
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Component
  * @since 1.0.0
  */
 @Component
+@DependsOn(value = ["dataSource","springKit"])
 open class CacheConfigProvider : ICacheConfigProvider, InitializingBean {
 
     @Autowired

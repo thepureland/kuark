@@ -48,7 +48,7 @@ class ResourceCacheManagementSupport: AbstractCacheManagementSupport<List<SysRes
         // 缓存资源
         val resMap = resources.groupBy { "${it.subSysDictCode}:${it.resourceTypeDictCode}" }
         resMap.forEach { (key, value) ->
-            CacheKit.putIfAbsent(cacheName(), key, value)
+            CacheKit.put(cacheName(), key, value)
             log.debug("缓存了key为${key}的${value.size}条资源。")
         }
     }

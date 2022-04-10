@@ -1,5 +1,6 @@
 package io.kuark.context.kit
 
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationContext
 import org.springframework.context.ApplicationContextAware
 import org.springframework.stereotype.Component
@@ -16,6 +17,7 @@ import kotlin.reflect.KClass
 @Component
 object SpringKit : ApplicationContextAware {
 
+    @Autowired
     private lateinit var applicationContext: ApplicationContext
 
     override fun setApplicationContext(applicationContext: ApplicationContext) {

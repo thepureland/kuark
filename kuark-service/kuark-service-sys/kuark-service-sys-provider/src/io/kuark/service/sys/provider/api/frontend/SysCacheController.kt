@@ -3,6 +3,7 @@ package io.kuark.service.sys.provider.api.frontend
 import io.kuark.service.sys.common.vo.cache.*
 import io.kuark.service.sys.provider.biz.ibiz.ISysCacheBiz
 import io.kuark.ability.web.springmvc.BaseCrudController
+import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.bind.annotation.RequestMapping
 
@@ -15,7 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping
  */
 @RestController
 //region your codes 1
-@RequestMapping("SysCache")
+@RequestMapping("/sys/cache")
+@CrossOrigin
 open class SysCacheController :
     BaseCrudController<String, ISysCacheBiz, SysCacheSearchPayload, SysCacheRecord, SysCacheDetail, SysCachePayload>() {
 //endregion your codes 1

@@ -2,7 +2,6 @@ package io.kuark.service.user.provider.rbac.cache
 
 import io.kuark.ability.cache.kit.CacheKit
 import io.kuark.ability.cache.support.AbstractCacheManagementSupport
-import io.kuark.ability.cache.support.CacheNames
 import io.kuark.base.support.Consts
 import io.kuark.service.user.common.rbac.vo.role.RbacRoleDetail
 import io.kuark.service.user.common.rbac.vo.role.RbacRoleSearchPayload
@@ -17,7 +16,7 @@ class RoleIdCacheManagementSupport: AbstractCacheManagementSupport<List<String>>
     @Autowired
     private lateinit var rbacRoleBiz: IRbacRoleBiz
 
-    override fun cacheName(): String = CacheNames.RBAC_ROLE_ID
+    override fun cacheName(): String = RbacCacheNames.RBAC_ROLE_ID
 
     override fun doReload(key: String): List<String> {
         require(key.contains(":")) { "缓存${cacheName()}的key格式必须是 子系统代码:租户id" }

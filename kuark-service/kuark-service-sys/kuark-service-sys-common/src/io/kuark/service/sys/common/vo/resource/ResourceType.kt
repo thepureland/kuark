@@ -4,8 +4,8 @@ import io.kuark.base.support.enums.IDictEnum
 
 enum class ResourceType(override val code: String, override val trans: String): IDictEnum {
 
-    MENU("menu", "菜单"),
-    ACTION("action", "请求"),
-    FUNCTION("function", "功能");
+    MENU("1", "菜单"),
+    FUNCTION("2", "功能"),
+    ACTION("3", "请求")
 
 }

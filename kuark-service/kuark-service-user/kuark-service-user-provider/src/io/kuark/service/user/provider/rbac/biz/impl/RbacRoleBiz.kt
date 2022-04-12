@@ -1,7 +1,5 @@
 package io.kuark.service.user.provider.rbac.biz.impl
 
-import io.kuark.ability.cache.core.BatchCacheable
-import io.kuark.ability.cache.kit.CacheKit
 import io.kuark.ability.data.rdb.biz.BaseCrudBiz
 import io.kuark.base.bean.BeanKit
 import io.kuark.base.error.ObjectNotFoundException
@@ -12,15 +10,15 @@ import io.kuark.base.query.Criterion
 import io.kuark.base.query.enums.Operator
 import io.kuark.base.support.Consts
 import io.kuark.service.sys.common.api.ISysResourceApi
+import io.kuark.service.sys.common.vo.dict.SysResourceCacheItem
 import io.kuark.service.sys.common.vo.resource.BaseMenuTreeNode
 import io.kuark.service.sys.common.vo.resource.ResourceType
-import io.kuark.service.sys.common.vo.resource.SysResourceDetail
-import io.kuark.service.user.common.rbac.vo.role.RbacRoleDetail
-import io.kuark.service.user.common.rbac.vo.role.RbacRoleSearchPayload
+import io.kuark.service.user.common.rbac.vo.role.RbacRoleCacheItem
 import io.kuark.service.user.common.user.vo.account.UserAccountRecord
 import io.kuark.service.user.common.user.vo.account.UserAccountSearchPayload
 import io.kuark.service.user.provider.rbac.biz.ibiz.IRbacRoleBiz
-import io.kuark.service.user.provider.rbac.cache.RbacCacheNames
+import io.kuark.service.user.provider.rbac.cache.RoleCacheManager
+import io.kuark.service.user.provider.rbac.cache.RoleIdCacheManager
 import io.kuark.service.user.provider.rbac.dao.RbacRoleDao
 import io.kuark.service.user.provider.rbac.dao.RbacRoleResourceDao
 import io.kuark.service.user.provider.rbac.dao.RbacRoleUserDao
@@ -32,9 +30,9 @@ import io.kuark.service.user.provider.rbac.model.table.RbacRoleUsers
 import io.kuark.service.user.provider.user.biz.ibiz.IUserAccountBiz
 import io.kuark.service.user.provider.user.model.po.UserAccount
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+
 
 /**
  * 角色服务
@@ -64,78 +62,28 @@ open class RbacRoleBiz : IRbacRoleBiz, BaseCrudBiz<String, RbacRole, RbacRoleDao
     private lateinit var userAccountBiz: IUserAccountBiz
 
     @Autowired
-    private lateinit var self: IRbacRoleBiz // 由于缓存注解的底层实现为AOP，本类间方法必须通过Bean调用，否则缓存操作不生效
+    private lateinit var roleCacheManager: RoleCacheManager
 
-    @Cacheable(
-        cacheNames = [RbacCacheNames.RBAC_ROLE],
-        key = "#roleId",
-        unless = "#result == null"
-    )
-    override fun getRoleFromCache(roleId: String): RbacRoleDetail? {
-        require(roleId.isNotBlank()) { log.error("从缓存中获取角色时必须指定角色id！") }
-        if (CacheKit.isCacheActive()) log.debug("缓存中不存在id为${roleId}的角色，从数据库中加载...")
-        var result = dao.get(roleId, RbacRoleDetail::class)
-        if (result == null) {
-            log.warn("数据库中不存在id为${roleId}的角色！")
-        } else {
-            log.debug("从数据库中加载id为${roleId}的角色成功。")
-            if (result.active == true) {
-                if (CacheKit.isCacheActive()) log.debug("缓存从数据库加载的角色。")
-            } else {
-                log.debug("从数据库中加载id为${roleId}的角色为未启用状态，返回null，且不缓存。")
-                result = null
-            }
-        }
-        return result
+    @Autowired
+    private lateinit var roleIdCacheManager: RoleIdCacheManager
+
+
+    override fun getRoleFromCache(roleId: String): RbacRoleCacheItem? {
+        return roleCacheManager.getRoleFromCache(roleId)
     }
 
-    @BatchCacheable(
-        cacheNames = [RbacCacheNames.RBAC_ROLE],
-        valueClass = RbacRoleDetail::class
-    )
-    override fun getRolesFromCache(roleIds: Collection<String>): Map<String, RbacRoleDetail> {
-        require(roleIds.isNotEmpty()) { log.error("批量从缓存中获取角色时，角色id集合不能为空！") }
-
-        // 加载所有可用的角色
-        val searchPayload = RbacRoleSearchPayload().apply {
-            active = true
-            pageNo = null
-            criterions = listOf(Criterion(RbacRole::id.name, Operator.IN, roleIds))
-            returnEntityClass = RbacRoleDetail::class
-        }
-
-        @Suppress(Consts.Suppress.UNCHECKED_CAST)
-        val roles = dao.search(searchPayload) as List<RbacRoleDetail>
-        log.debug("从数据库加载了${roles.size}条角色信息。")
-
-        return roles.associateBy { it.id!! }
+    override fun getRolesFromCache(roleIds: Collection<String>): Map<String, RbacRoleCacheItem> {
+        return roleCacheManager.getRolesFromCache(roleIds)
     }
 
-    @Cacheable(
-        cacheNames = [RbacCacheNames.RBAC_ROLE_ID],
-        key = "#subSysDictCode.concat(':').concat(#tenantId)",
-        unless = "#result == null || #result.size() == 0"
-    )
     override fun getRoleIdsFromCache(subSysDictCode: String, tenantId: String?): List<String> {
-        require(subSysDictCode.isNotBlank()) { log.error("从缓存中获取角色id时，必须指定子系统代码！") }
-        if (CacheKit.isCacheActive()) {
-            log.debug("缓存中不存在子系统为${subSysDictCode}且租户id为${tenantId}的角色id，从数据库中加载...")
-        }
-        val criteria = Criteria(RbacRole::subSysDictCode.name, Operator.EQ, subSysDictCode)
-        criteria.addAnd(RbacRole::active.name, Operator.EQ, true)
-        if (StringKit.isNotBlank(tenantId)) {
-            criteria.addAnd(RbacRole::tenantId.name, Operator.EQ, tenantId)
-        }
-        @Suppress(Consts.Suppress.UNCHECKED_CAST)
-        val roleIds = dao.searchProperty(criteria, RbacRole::id.name) as List<String>
-        log.debug("从数据库中加载到的角色id数量为${roleIds.size}。")
-        return roleIds
+        return roleIdCacheManager.getRoleIdsFromCache(subSysDictCode, tenantId)
     }
 
-    override fun getRolesFromCache(subSysDictCode: String, tenantId: String?): Map<String, RbacRoleDetail> {
-        val roleIds = self.getRoleIdsFromCache(subSysDictCode, tenantId)
+    override fun getRolesFromCache(subSysDictCode: String, tenantId: String?): Map<String, RbacRoleCacheItem> {
+        val roleIds = roleIdCacheManager.getRoleIdsFromCache(subSysDictCode, tenantId)
         return if (roleIds.isNotEmpty()) {
-            self.getRolesFromCache(roleIds)
+            roleCacheManager.getRolesFromCache(roleIds)
         } else {
             emptyMap()
         }
@@ -146,15 +94,8 @@ open class RbacRoleBiz : IRbacRoleBiz, BaseCrudBiz<String, RbacRole, RbacRoleDao
         val id = super.insert(any)
         log.debug("新增id为${id}的角色。")
         // 同步缓存
-        if (CacheKit.isCacheActive()) {
-            log.debug("新增id为${id}的角色后，同步缓存...")
-            val role = self.getRoleFromCache(id)!! // 缓存角色
-            CacheKit.evict(RbacCacheNames.RBAC_ROLE_ID, "${role.subSysDictCode}:${role.tenantId}") // 踢除角色id的缓存
-            if (CacheKit.isWriteInTime(RbacCacheNames.RBAC_ROLE_ID)) {
-                self.getRolesFromCache(role.subSysDictCode!!, role.tenantId)  // 缓存角色id
-            }
-            log.debug("缓存同步完成。")
-        }
+        roleCacheManager.syncOnInsert(id)
+        roleIdCacheManager.syncOnInsert(id)
         return id
     }
 
@@ -164,14 +105,7 @@ open class RbacRoleBiz : IRbacRoleBiz, BaseCrudBiz<String, RbacRole, RbacRoleDao
         val id = BeanKit.getProperty(any, RbacRole::id.name) as String
         if (success) {
             log.debug("更新id为${id}的角色。")
-            if (CacheKit.isCacheActive()) {
-                log.debug("更新id为${id}的角色后，同步缓存...")
-                CacheKit.evict(RbacCacheNames.RBAC_ROLE, id) // 踢除角色缓存
-                if (CacheKit.isWriteInTime(RbacCacheNames.RBAC_ROLE)) {
-                    self.getRoleFromCache(id) // 缓存角色
-                }
-                log.debug("缓存同步完成。")
-            }
+            roleCacheManager.syncOnUpdate(id) // 同步缓存
         } else {
             log.error("更新id为${id}的角色失败！")
         }
@@ -180,19 +114,13 @@ open class RbacRoleBiz : IRbacRoleBiz, BaseCrudBiz<String, RbacRole, RbacRoleDao
 
     @Transactional
     override fun deleteById(id: String): Boolean {
+        val role = roleCacheManager.getRoleFromCache(id)!!
         val success = super.deleteById(id)
         if (success) {
             log.debug("删除id为${id}的角色成功！")
-            if (CacheKit.isCacheActive()) {
-                log.debug("删除id为${id}的角色后，同步从缓存中踢除...")
-                val role = self.getRoleFromCache(id)!!
-                CacheKit.evict(RbacCacheNames.RBAC_ROLE, id) // 踢除缓存
-                CacheKit.evict(RbacCacheNames.RBAC_ROLE_ID, "${role.subSysDictCode}:${role.tenantId}") // 踢除角色id的缓存
-                if (CacheKit.isWriteInTime(RbacCacheNames.RBAC_ROLE_ID)) {
-                    self.getRolesFromCache(role.subSysDictCode!!, role.tenantId)  // 缓存角色id
-                }
-                log.debug("缓存同步完成。")
-            }
+            // 同步缓存
+            roleCacheManager.syncOnDelete(id)
+            roleIdCacheManager.syncOnDelete(role)
         } else {
             log.error("删除id为${id}的角色失败！")
         }
@@ -201,24 +129,12 @@ open class RbacRoleBiz : IRbacRoleBiz, BaseCrudBiz<String, RbacRole, RbacRoleDao
 
     @Transactional
     override fun batchDelete(ids: Collection<String>): Int {
-        val roleMap = self.getRolesFromCache(ids)
+        val roleMap = roleCacheManager.getRolesFromCache(ids)
         val count = super.batchDelete(ids)
         log.debug("批量删除角色，期望删除${ids.size}条，实际删除${count}条。")
-        if (CacheKit.isCacheActive()) {
-            log.debug("批量删除id为${ids}的角色后，同步从缓存中踢除...")
-            val keys = roleMap.map { "${it.value.subSysDictCode}:${it.value.tenantId}" }.toSet()
-            keys.forEach {
-                CacheKit.evict(RbacCacheNames.RBAC_ROLE_ID, it) // 踢除角色id缓存
-                if (CacheKit.isWriteInTime(RbacCacheNames.RBAC_ROLE_ID)) {
-                    val subSysAndTenantId = it.split(":")
-                    self.getRolesFromCache(subSysAndTenantId[0], subSysAndTenantId[1])  // 缓存角色id
-                }
-            }
-            ids.forEach {
-                CacheKit.evict(RbacCacheNames.RBAC_ROLE, it) // 踢除角色缓存
-            }
-            log.debug("缓存同步完成。")
-        }
+        // 同步缓存
+        roleCacheManager.synchOnBatchDelete(ids)
+        roleIdCacheManager.synchOnBatchDelete(ids, roleMap)
         return count
     }
 
@@ -231,16 +147,9 @@ open class RbacRoleBiz : IRbacRoleBiz, BaseCrudBiz<String, RbacRole, RbacRoleDao
         val success = dao.update(role)
         if (success) {
             log.debug("更新id为${roleId}的角色的启用状态为${active}。")
-            if (CacheKit.isCacheActive()) {
-                log.debug("更新id为${roleId}的角色的启用状态后，同步缓存...")
-                val r = self.getRoleFromCache(roleId)!!
-                if (!active) {
-                    CacheKit.evict(RbacCacheNames.RBAC_ROLE, roleId) // 踢除角色缓存
-                }
-                CacheKit.evict(RbacCacheNames.RBAC_ROLE_ID, "${r.subSysDictCode}:${r.tenantId}") // 踢除角色id的缓存
-                self.getRolesFromCache(r.subSysDictCode!!, r.tenantId)  // 缓存角色id
-                log.debug("缓存同步完成。")
-            }
+            // 同步缓存
+            roleCacheManager.syncOnUpdateActive(roleId, active)
+            roleIdCacheManager.syncOnUpdateActive(roleId)
         } else {
             log.error("更新id为${roleId}的角色的启用状态为${active}失败！")
         }
@@ -248,7 +157,7 @@ open class RbacRoleBiz : IRbacRoleBiz, BaseCrudBiz<String, RbacRole, RbacRoleDao
     }
 
     @Suppress(Consts.Suppress.UNCHECKED_CAST)
-    override fun getRolePermissions(roleId: String, subSysDictCode: String,resourceType: ResourceType): List<SysResourceDetail> {
+    override fun getRolePermissions(roleId: String, subSysDictCode: String,resourceType: ResourceType): List<SysResourceCacheItem> {
         val resourceIds = rbacRoleResourceDao.oneSearchProperty(
             RbacRoleResources.roleId.name, roleId, RbacRoleResources.resourceId.name
         ) as List<String>

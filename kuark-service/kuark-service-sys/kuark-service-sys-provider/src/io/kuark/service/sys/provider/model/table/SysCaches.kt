@@ -1,8 +1,11 @@
 package io.kuark.service.sys.provider.model.table
 
-import io.kuark.service.sys.provider.model.po.SysCache
-import org.ktorm.schema.*
 import io.kuark.ability.data.rdb.support.StringIdTable
+import io.kuark.service.sys.provider.model.po.SysCache
+import org.ktorm.schema.boolean
+import org.ktorm.schema.datetime
+import org.ktorm.schema.int
+import org.ktorm.schema.varchar
 
 
 /**
@@ -29,9 +32,6 @@ object SysCaches : StringIdTable<SysCache>("sys_cache") {
 
     /** 是否及时回写缓存 */
     var writeInTime = boolean("write_in_time").bindTo { it.writeInTime }
-
-    /** 缓存管理Bean的名称 */
-    var managementBeanName = varchar("management_bean_name").bindTo { it.managementBeanName }
 
     /** 缓存生存时间(秒) */
     var ttl = int("ttl").bindTo { it.ttl }

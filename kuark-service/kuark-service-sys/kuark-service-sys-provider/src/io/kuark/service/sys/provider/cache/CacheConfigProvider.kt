@@ -6,7 +6,6 @@ import io.kuark.ability.cache.support.ICacheConfigProvider
 import io.kuark.base.support.Consts
 import io.kuark.base.support.payload.ListSearchPayload
 import io.kuark.service.sys.provider.biz.ibiz.ISysCacheBiz
-import org.springframework.beans.factory.InitializingBean
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.DependsOn
 import org.springframework.stereotype.Component
@@ -20,20 +19,23 @@ import org.springframework.stereotype.Component
  */
 @Component
 @DependsOn(value = ["dataSource","springKit"])
-open class CacheConfigProvider : ICacheConfigProvider, InitializingBean {
+open class CacheConfigProvider : ICacheConfigProvider {
 
     @Autowired
     private lateinit var sysCacheBiz: ISysCacheBiz
 
-    private lateinit var cacheConfigs: List<CacheConfig>
+    private var cacheConfigs: List<CacheConfig>? = null
 
-    override fun afterPropertiesSet() {
-        val searchPayload = ListSearchPayload().apply {
-            returnEntityClass = CacheConfig::class
+    private fun getCacheConfigs(): List<CacheConfig> {
+        if (cacheConfigs == null) {
+            val searchPayload = ListSearchPayload().apply {
+                returnEntityClass = CacheConfig::class
+            }
+
+            @Suppress(Consts.Suppress.UNCHECKED_CAST)
+            cacheConfigs = sysCacheBiz.search(searchPayload) as List<CacheConfig>
         }
-
-        @Suppress(Consts.Suppress.UNCHECKED_CAST)
-        cacheConfigs = sysCacheBiz.search(searchPayload) as List<CacheConfig>
+        return cacheConfigs ?: emptyList()
     }
 
     override fun getCacheConfig(name: String): CacheConfig? {
@@ -41,19 +43,19 @@ open class CacheConfigProvider : ICacheConfigProvider, InitializingBean {
     }
 
     override fun getAllCacheConfigs(): Map<String, CacheConfig> {
-        return cacheConfigs.associateBy { it.name }
+        return getCacheConfigs().associateBy { it.name }
     }
 
     override fun getLocalCacheConfigs(): Map<String, CacheConfig> {
-        return cacheConfigs.filter { it.strategyDictCode == CacheStrategy.SINGLE_LOCAL.name }.associateBy { it.name }
+        return getCacheConfigs().filter { it.strategyDictCode == CacheStrategy.SINGLE_LOCAL.name }.associateBy { it.name }
     }
 
     override fun getRemoteCacheConfigs(): Map<String, CacheConfig> {
-        return cacheConfigs.filter { it.strategyDictCode == CacheStrategy.REMOTE.name }.associateBy { it.name }
+        return getCacheConfigs().filter { it.strategyDictCode == CacheStrategy.REMOTE.name }.associateBy { it.name }
     }
 
     override fun getLocalRemoteCacheConfigs(): Map<String, CacheConfig> {
-        return cacheConfigs.filter { it.strategyDictCode == CacheStrategy.LOCAL_REMOTE.name }.associateBy { it.name }
+        return getCacheConfigs().filter { it.strategyDictCode == CacheStrategy.LOCAL_REMOTE.name }.associateBy { it.name }
     }
 
 }

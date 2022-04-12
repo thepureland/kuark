@@ -1,9 +1,9 @@
 package io.kuark.service.sys.provider.dao
 
+import io.kuark.ability.data.rdb.support.BaseCrudDao
 import io.kuark.service.sys.provider.model.po.SysCache
 import io.kuark.service.sys.provider.model.table.SysCaches
 import org.springframework.stereotype.Repository
-import io.kuark.ability.data.rdb.support.BaseCrudDao
 
 
 /**

@@ -16,14 +16,14 @@ class CacheMessageListener(
     private val mixCacheManager: MixCacheManager
 ) : MessageListener {
 
-    private val logger = LogFactory.getLog(CacheMessageListener::class)
+    private val logger = LogFactory.getLog(this::class)
 
     override fun onMessage(message: Message, pattern: ByteArray?) {
         try {
-            println("收到清除本地缓存的通知")
+            logger.info("收到清除本地缓存的通知")
             val cacheMessage = redisTemplate.valueSerializer.deserialize(message.body) as CacheMessage
             mixCacheManager.clearLocal(cacheMessage.cacheName, cacheMessage.key)
-            println("清除本地缓存：${cacheMessage.cacheName}::${cacheMessage.key}")
+            logger.info("清除本地缓存：${cacheMessage.cacheName}::${cacheMessage.key}")
         } catch (e: Throwable) {
             e.printStackTrace()
             logger.error(e)

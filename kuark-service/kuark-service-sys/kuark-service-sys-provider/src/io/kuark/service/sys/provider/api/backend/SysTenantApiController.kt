@@ -1,11 +1,11 @@
 package io.kuark.service.sys.provider.api.backend
 
 import io.kuark.service.sys.common.api.ISysTenantApi
-import io.kuark.service.sys.common.vo.tenant.SysTenantRecord
+import io.kuark.service.sys.common.vo.dict.SysTenantCacheItem
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 
 
 /**
@@ -27,12 +27,12 @@ open class SysTenantApiController {
 
 
     @PostMapping("/getTenant")
-    fun getTenant(id: String): SysTenantRecord? {
+    fun getTenant(id: String): SysTenantCacheItem? {
         return sysTenantApi.getTenant(id)
     }
 
     @PostMapping("/getTenants")
-    fun getTenants(subSysDictCode: String): List<SysTenantRecord> {
+    fun getTenants(subSysDictCode: String): List<SysTenantCacheItem> {
         return sysTenantApi.getTenants(subSysDictCode)
     }
 

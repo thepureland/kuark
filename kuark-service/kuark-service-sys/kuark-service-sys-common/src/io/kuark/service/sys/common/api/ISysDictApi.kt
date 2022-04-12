@@ -1,6 +1,7 @@
 package io.kuark.service.sys.common.api
 
 import io.kuark.service.sys.common.vo.dict.DictModuleAndTypePayload
+import io.kuark.service.sys.common.vo.dict.SysDictItemCacheItem
 import io.kuark.service.sys.common.vo.dict.SysDictItemRecord
 
 
@@ -21,7 +22,7 @@ interface ISysDictApi {
      * @author K
      * @since 1.0.0
      */
-    fun getDictItems(payload: DictModuleAndTypePayload): List<SysDictItemRecord>
+    fun getDictItems(payload: DictModuleAndTypePayload): List<SysDictItemCacheItem>
 
     /**
      * 根据模块和字典类型，取得对应字典项的编码和名称(仅包括处于启用状态的)
@@ -43,7 +44,7 @@ interface ISysDictApi {
      * @author K
      * @since 1.0.0
      */
-    fun batchGetDictItems(payloads: List<DictModuleAndTypePayload>): Map<Pair<String, String>, List<SysDictItemRecord>>
+    fun batchGetDictItems(payloads: List<DictModuleAndTypePayload>): Map<Pair<String, String>, List<SysDictItemCacheItem>>
 
     /**
      * 根据模块和字典类型的载体列表，取得对应字典项的编码和名称(仅包括处于启用状态的)

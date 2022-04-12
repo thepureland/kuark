@@ -1,7 +1,7 @@
 package io.kuark.service.sys.provider.biz.ibiz
 
 import io.kuark.base.support.biz.IBaseCrudBiz
-import io.kuark.service.sys.common.vo.dict.SysDictItemRecord
+import io.kuark.service.sys.common.vo.dict.SysDictItemCacheItem
 import io.kuark.service.sys.common.vo.dict.SysDictPayload
 import io.kuark.service.sys.provider.model.po.SysDictItem
 
@@ -26,7 +26,7 @@ interface ISysDictItemBiz: IBaseCrudBiz<String, SysDictItem> {
      * @author K
      * @since 1.0.0
      */
-    fun getItemsFromCache(module: String, type: String): List<SysDictItemRecord>
+    fun getItemsFromCache(module: String, type: String): List<SysDictItemCacheItem>
 
     /**
      * 翻译字典项代码

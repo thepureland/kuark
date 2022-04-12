@@ -31,9 +31,6 @@ interface SysCache : IDbEntity<String, SysCache> {
     /** 是否及时回写缓存 */
     var writeInTime: Boolean
 
-    /** 缓存管理Bean的名称 */
-    var managementBeanName: String
-
     /** 缓存生存时间(秒) */
     var ttl: Int?
 

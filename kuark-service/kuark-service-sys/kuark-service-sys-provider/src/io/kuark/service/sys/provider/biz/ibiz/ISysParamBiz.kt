@@ -1,7 +1,7 @@
 package io.kuark.service.sys.provider.biz.ibiz
 
 import io.kuark.base.support.biz.IBaseCrudBiz
-import io.kuark.service.sys.common.vo.param.SysParamDetail
+import io.kuark.service.sys.common.vo.dict.SysParamCacheItem
 import io.kuark.service.sys.common.vo.param.SysParamRecord
 import io.kuark.service.sys.common.vo.param.SysParamSearchPayload
 import io.kuark.service.sys.provider.model.po.SysParam
@@ -27,7 +27,7 @@ interface ISysParamBiz: IBaseCrudBiz<String, SysParam> {
      * @author K
      * @since 1.0.0
      */
-    fun getParamFromCache(module: String, name: String): SysParamDetail?
+    fun getParamFromCache(module: String, name: String): SysParamCacheItem?
 
     /**
      * 分页查询

@@ -2,6 +2,7 @@ package io.kuark.service.sys.provider.api.frontend
 
 import io.kuark.ability.web.springmvc.BaseCrudController
 import io.kuark.service.sys.common.api.ISysParamApi
+import io.kuark.service.sys.common.vo.dict.SysParamCacheItem
 import io.kuark.service.sys.common.vo.param.SysParamDetail
 import io.kuark.service.sys.common.vo.param.SysParamPayload
 import io.kuark.service.sys.common.vo.param.SysParamRecord
@@ -37,7 +38,7 @@ open class SysParamController :
     fun getParam(
         @RequestParam("module") module: String,
         @RequestParam("paramName") paramName: String
-    ): SysParamDetail? {
+    ): SysParamCacheItem? {
         return paramApi.getParam(module, paramName)
     }
 

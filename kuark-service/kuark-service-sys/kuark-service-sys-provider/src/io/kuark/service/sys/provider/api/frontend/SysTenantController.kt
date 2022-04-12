@@ -1,11 +1,14 @@
 package io.kuark.service.sys.provider.api.frontend
 
-import io.kuark.service.sys.common.vo.tenant.*
-import io.kuark.service.sys.provider.biz.ibiz.ISysTenantBiz
 import io.kuark.ability.web.springmvc.BaseCrudController
+import io.kuark.service.sys.common.vo.tenant.SysTenantDetail
+import io.kuark.service.sys.common.vo.tenant.SysTenantPayload
+import io.kuark.service.sys.common.vo.tenant.SysTenantRecord
+import io.kuark.service.sys.common.vo.tenant.SysTenantSearchPayload
+import io.kuark.service.sys.provider.biz.ibiz.ISysTenantBiz
 import org.springframework.web.bind.annotation.CrossOrigin
-import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 
 
 /**

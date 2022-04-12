@@ -1,8 +1,8 @@
 package io.kuark.service.sys.provider.model.table
 
-import io.kuark.service.sys.provider.model.po.SysTenant
-import org.ktorm.schema.*
 import io.kuark.ability.data.rdb.support.MaintainableTable
+import io.kuark.service.sys.provider.model.po.SysTenant
+import org.ktorm.schema.varchar
 
 
 /**

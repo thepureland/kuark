@@ -1,11 +1,14 @@
 package io.kuark.service.sys.provider.api.frontend
 
-import io.kuark.service.sys.common.vo.cache.*
-import io.kuark.service.sys.provider.biz.ibiz.ISysCacheBiz
 import io.kuark.ability.web.springmvc.BaseCrudController
+import io.kuark.service.sys.common.vo.cache.SysCacheDetail
+import io.kuark.service.sys.common.vo.cache.SysCachePayload
+import io.kuark.service.sys.common.vo.cache.SysCacheRecord
+import io.kuark.service.sys.common.vo.cache.SysCacheSearchPayload
+import io.kuark.service.sys.provider.biz.ibiz.ISysCacheBiz
 import org.springframework.web.bind.annotation.CrossOrigin
-import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 
 
 /**

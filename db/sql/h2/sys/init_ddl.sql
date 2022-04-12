@@ -389,7 +389,6 @@ create table "sys_cache"
     "strategy_dict_code"   VARCHAR(16)                     not null,
     "write_on_boot"        BOOLEAN   default FALSE         not null,
     "write_in_time"     BOOLEAN   default FALSE         not null,
-    "management_bean_name" VARCHAR(64)                     not null,
     "ttl"                  INT2,
     "remark"               VARCHAR(128),
     "built_in"             BOOLEAN   default FALSE         not null,
@@ -422,9 +421,6 @@ on column "sys_cache"."write_on_boot" is '是否启动时写缓存';
 
 comment
 on column "sys_cache"."write_in_time" is '是否及时回写缓存';
-
-comment
-on column "sys_cache"."management_bean_name" is '缓存管理Bean的名称';
 
 comment
 on column "sys_cache"."ttl" is '缓存生存时间(秒)';

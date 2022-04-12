@@ -38,10 +38,6 @@ open class SysCachePayload : FormPayload<String>() {
     /** 是否及时回写缓存 */
     var writeInTime: Boolean? = null
 
-    /** 缓存管理Bean的名称 */
-    @get:NotBlank(message = "缓存管理Bean的名称不能为空！")
-    var managementBeanName: String? = null
-
     /** 缓存生存时间(秒) */
     @get:Positive(message = "TTL必须为正整数！")
     var ttl: Int? = null

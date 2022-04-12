@@ -5,6 +5,7 @@ import io.kuark.ability.cache.core.MixCache
 import io.kuark.ability.cache.core.MixCacheManager
 import io.kuark.ability.cache.support.ICacheConfigProvider
 import io.kuark.ability.data.redis.context.RedisConfiguration
+import io.kuark.base.log.LogFactory
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression
 import org.springframework.cache.CacheManager
@@ -29,8 +30,10 @@ import java.time.Duration
  */
 @Configuration
 @ConditionalOnBean(MixCacheConfiguration::class)
-@ConditionalOnExpression("'\${cache.config.strategy}'.equals('REMOTE') || '\${cache.config.strategy}'.equals('LOCAL_REMOTE')")
+//@ConditionalOnExpression("'\${cache.config.strategy}'.equals('REMOTE') || '\${cache.config.strategy}'.equals('LOCAL_REMOTE')")
 open class RemoteCacheConfiguration {
+
+    private val log = LogFactory.getLog(this::class)
 
     @Bean(name = ["remoteCacheManager"])
     open fun remoteCacheManager(
@@ -41,6 +44,7 @@ open class RemoteCacheConfiguration {
         val localRemoteCacheConfigs = cacheConfigProvider.getLocalRemoteCacheConfigs()
         val cacheConfigs = remoteCacheConfigs.plus(localRemoteCacheConfigs)
         val configMap = cacheConfigs.values.associate {
+            log.info("初始化远程缓存【${it.name}】...")
             val redisCacheConfiguration = RedisCacheConfiguration.defaultCacheConfig()
                 .disableCachingNullValues()             //如果是空值，不缓存
                 .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(RedisConfiguration.keySerializer()))
@@ -48,6 +52,7 @@ open class RemoteCacheConfiguration {
             if (it.ttl != null) {
                 redisCacheConfiguration.entryTtl(Duration.ofSeconds(it.ttl!!.toLong()))
             }
+            log.info("初始化远程缓存【${it.name}】成功！")
             it.name to redisCacheConfiguration
         }
 

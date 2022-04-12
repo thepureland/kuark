@@ -6,7 +6,6 @@ import io.kuark.base.support.Consts
 import io.kuark.service.sys.common.api.ISysDictApi
 import io.kuark.service.sys.common.vo.dict.*
 import io.kuark.service.sys.provider.biz.ibiz.ISysDictItemBiz
-import io.kuark.service.sys.provider.model.po.SysDictItem
 import io.kuark.service.sys.provider.model.table.SysDictItems
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
@@ -89,7 +88,7 @@ class SysDictItemController :
     fun getDictItems(
         @RequestParam("module") module: String,
         @RequestParam("dictType") dictType: String
-    ): List<SysDictItemRecord> {
+    ): List<SysDictItemCacheItem> {
         return sysDictApi.getDictItems(DictModuleAndTypePayload(module, dictType))
     }
 
@@ -121,7 +120,7 @@ class SysDictItemController :
      * @since 1.0.0
      */
     @PostMapping("/batchGetDictItems")
-    fun batchGetDictItems(@RequestBody payloads: List<DictModuleAndTypePayload>): Map<Pair<String, String>, List<SysDictItemRecord>> {
+    fun batchGetDictItems(@RequestBody payloads: List<DictModuleAndTypePayload>): Map<Pair<String, String>, List<SysDictItemCacheItem>> {
         return sysDictApi.batchGetDictItems(payloads)
     }
 

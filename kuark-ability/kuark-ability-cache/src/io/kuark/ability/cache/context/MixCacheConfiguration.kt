@@ -37,8 +37,9 @@ open class MixCacheConfiguration : CachingConfigurer {
         return cacheManager
     }
 
+    @Bean
     @ConditionalOnMissingBean
-    fun cacheConfigProvider(): ICacheConfigProvider = EmptyCacheConfigProvider()
+    open fun cacheConfigProvider(): ICacheConfigProvider = EmptyCacheConfigProvider()
 
     @Bean
     override fun keyGenerator(): KeyGenerator = SimpleKeyGenerator()

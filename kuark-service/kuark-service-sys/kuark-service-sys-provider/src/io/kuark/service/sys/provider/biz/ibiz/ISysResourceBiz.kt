@@ -1,6 +1,7 @@
 package io.kuark.service.sys.provider.biz.ibiz
 
 import io.kuark.base.support.biz.IBaseCrudBiz
+import io.kuark.service.sys.common.vo.dict.SysResourceCacheItem
 import io.kuark.service.sys.common.vo.resource.*
 import io.kuark.service.sys.provider.model.po.SysResource
 import kotlin.reflect.KClass
@@ -27,7 +28,7 @@ interface ISysResourceBiz : IBaseCrudBiz<String, SysResource> {
      * @author K
      * @since 1.0.0
      */
-    fun getResourcesFromCache(subSysDictCode: String, resourceTypeDictCode: String): List<SysResourceDetail>
+    fun getResourcesFromCache(subSysDictCode: String, resourceTypeDictCode: String): List<SysResourceCacheItem>
 
     fun getSimpleMenus(subSysDictCode: String): List<BaseMenuTreeNode>
 
@@ -65,13 +66,13 @@ interface ISysResourceBiz : IBaseCrudBiz<String, SysResource> {
      * @param subSysDictCode 子系统代码
      * @param resourceType 资源类型枚举
      * @param resourceIds 资源id可变数组
-     * @return List(资源详情)
+     * @return List(资源信息)
      * @author K
      * @since 1.0.0
      */
     fun getResources(
         subSysDictCode: String, resourceType: ResourceType, vararg resourceIds: String
-    ): List<SysResourceDetail>
+    ): List<SysResourceCacheItem>
 
     /**
      * 更新启用状态，并同步缓存

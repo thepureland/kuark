@@ -1,20 +1,16 @@
 package io.kuark.service.sys.provider.biz.impl
 
-import io.kuark.ability.cache.kit.CacheKit
 import io.kuark.ability.data.rdb.biz.BaseCrudBiz
 import io.kuark.base.lang.string.StringKit
 import io.kuark.base.log.LogFactory
-import io.kuark.service.sys.common.vo.dict.SysDictItemRecord
+import io.kuark.service.sys.common.vo.dict.SysDictItemCacheItem
 import io.kuark.service.sys.common.vo.dict.SysDictPayload
 import io.kuark.service.sys.provider.biz.ibiz.ISysDictBiz
 import io.kuark.service.sys.provider.biz.ibiz.ISysDictItemBiz
-import io.kuark.service.sys.provider.cache.SysCacheNames
-import io.kuark.service.sys.provider.dao.SysDictDao
+import io.kuark.service.sys.provider.cache.DictItemCacheManager
 import io.kuark.service.sys.provider.dao.SysDictItemDao
 import io.kuark.service.sys.provider.model.po.SysDictItem
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.cache.annotation.CacheConfig
-import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -26,7 +22,6 @@ import org.springframework.transaction.annotation.Transactional
  */
 @Service
 //region your codes 1
-@CacheConfig(cacheNames = [SysCacheNames.SYS_DICT_ITEM])
 open class SysDictItemBiz : BaseCrudBiz<String, SysDictItem, SysDictItemDao>(), ISysDictItemBiz {
 //endregion your codes 1
 
@@ -37,38 +32,17 @@ open class SysDictItemBiz : BaseCrudBiz<String, SysDictItem, SysDictItemDao>(), 
     private lateinit var sysDictBiz: ISysDictBiz
 
     @Autowired
-    private lateinit var sysDictDao: SysDictDao
-
-    @Autowired
-    private lateinit var self: ISysDictItemBiz // 由于缓存注解的底层实现为AOP，本类间方法必须通过Bean调用，否则缓存操作不生效
+    private lateinit var dictItemCacheManager: DictItemCacheManager
 
     private val log = LogFactory.getLog(this::class)
 
 
-    @Cacheable(key = "#module.concat(':').concat(#type)", unless = "#result == null || #result.isEmpty()")
-    override fun getItemsFromCache(module: String, type: String): List<SysDictItemRecord> {
-        // 查出对应的dict id
-        val dictId = sysDictBiz.getDictIdByModuleAndType(module, type)
-
-        return if (dictId == null) {
-            listOf()
-        } else {
-            // 查出dict id的所有字典项
-            val items = dao.searchByDictId(dictId)
-            items.map {
-                SysDictItemRecord(
-                    it.id!!,
-                    it.itemCode,
-                    it.itemName,
-                    it.parentId,
-                    it.seqNo
-                )
-            }
-        }
+    override fun getItemsFromCache(module: String, type: String): List<SysDictItemCacheItem> {
+        return dictItemCacheManager.getItemsFromCache(module, type)
     }
 
     override fun transDictCode(module: String, type: String, code: String): String? {
-        val items = self.getItemsFromCache(module, type)
+        val items = dictItemCacheManager.getItemsFromCache(module, type)
         return items.firstOrNull { it.itemCode == code }?.itemName
     }
 
@@ -84,16 +58,7 @@ open class SysDictItemBiz : BaseCrudBiz<String, SysDictItem, SysDictItemDao>(), 
                 remark = payload.remark
             }
             val id = dao.insert(sysDictItem)
-            // 同步缓存
-            if (CacheKit.isCacheActive()) {
-                log.debug("新增id为${id}的字典项后，同步缓存...")
-                val dict = sysDictBiz.getDictFromCache(sysDictItem.dictId)!!
-                CacheKit.evict(SysCacheNames.SYS_DICT_ITEM, "${dict.module}:${dict.dictType}") // 踢除缓存
-                if (CacheKit.isWriteInTime(SysCacheNames.SYS_DICT_ITEM)) {
-                    self.getItemsFromCache(dict.module!!, dict.dictType!!)
-                }
-                log.debug("缓存同步完成。")
-            }
+            dictItemCacheManager.syncOnInsert(sysDictItem) // 同步缓存
             id
         } else { // 更新
             val sysDictItem = SysDictItem {
@@ -107,16 +72,7 @@ open class SysDictItemBiz : BaseCrudBiz<String, SysDictItem, SysDictItemDao>(), 
             }
             val success = dao.update(sysDictItem)
             if (success) {
-                // 同步缓存
-                if (CacheKit.isCacheActive()) {
-                    log.debug("更新id为${sysDictItem.id}的字典项后，同步缓存...")
-                    val dict = sysDictBiz.getDictFromCache(sysDictItem.dictId)!!
-                    CacheKit.evict(SysCacheNames.SYS_DICT_ITEM, "${dict.module}:${dict.dictType}") // 踢除缓存
-                    if (CacheKit.isWriteInTime(SysCacheNames.SYS_DICT_ITEM)) {
-                        self.getItemsFromCache(dict.module!!, dict.dictType!!)
-                    }
-                    log.debug("缓存同步完成。")
-                }
+                dictItemCacheManager.syncOnUpdate(sysDictItem) // 同步缓存
             } else {
                 log.error("新增id为${sysDictItem.id}的字典项失败！")
             }
@@ -133,6 +89,7 @@ open class SysDictItemBiz : BaseCrudBiz<String, SysDictItem, SysDictItemDao>(), 
 
     @Transactional
     override fun cascadeDeleteChildren(id: String): Boolean {
+        val dictIds = dao.oneSearchProperty(SysDictItem::id.name, id, SysDictItem::dictId.name)
         val childItemIds = mutableListOf<String>()
         recursionFindAllChildId(id, childItemIds)
         if (childItemIds.isNotEmpty()) {
@@ -140,15 +97,7 @@ open class SysDictItemBiz : BaseCrudBiz<String, SysDictItem, SysDictItemDao>(), 
         }
         val success = dao.deleteById(id)
         if (success) {
-            // 同步缓存
-            if (CacheKit.isCacheActive()) {
-                val dictIds = dao.oneSearchProperty(SysDictItem::id.name, id, SysDictItem::dictId.name)
-                val dict = sysDictBiz.get(dictIds.first() as String)!!
-                CacheKit.evict(SysCacheNames.SYS_DICT_ITEM, "${dict.module}:${dict.dictType}") // 字典的缓存粒度为字典类型
-                if (CacheKit.isWriteInTime(SysCacheNames.SYS_DICT_ITEM)) {
-                    self.getItemsFromCache(dict.module!!, dict.dictType) // 重新缓存
-                }
-            }
+            dictItemCacheManager.syncOnDelete(id, dictIds.first() as String) // 同步缓存
         } else {
             log.error("删除id为${id}的字典项失败！")
         }
@@ -164,16 +113,7 @@ open class SysDictItemBiz : BaseCrudBiz<String, SysDictItem, SysDictItemDao>(), 
         val success = dao.update(dictItem)
         if (success) {
             log.debug("更新id为${dictItemId}的字典项的启用状态为${active}。")
-            if (CacheKit.isCacheActive()) {
-                log.debug("更新id为${dictItemId}的字典项的启用状态后，同步缓存...")
-                val dictIds = dao.oneSearchProperty(SysDictItem::id.name, dictItemId, SysDictItem::dictId.name)
-                val dict = sysDictBiz.get(dictIds.first() as String)!!
-                CacheKit.evict(SysCacheNames.SYS_DICT_ITEM, "${dict.module}:${dict.dictType}") // 字典的缓存粒度为字典类型
-                if (CacheKit.isWriteInTime(SysCacheNames.SYS_DICT_ITEM)) {
-                    self.getItemsFromCache(dict.module!!, dict.dictType) // 重新缓存
-                }
-                log.debug("缓存同步完成。")
-            }
+            dictItemCacheManager.syncOnUpdateActive(dictItemId)
         } else {
             log.error("更新id为${dictItemId}的字典项的启用状态为${active}失败！")
         }

@@ -81,10 +81,13 @@ open class SysDictDao : BaseCrudDao<String, SysDict, SysDicts>() {
             }
             query = query.orderBy(*orderExps.toTypedArray())
         }
-        val pageNo = searchPayload.pageNo ?: 1
-        val pageSize = searchPayload.pageSize ?: 10
-        return query.limit((pageNo - 1) * pageSize, pageSize)
-            .map { row ->
+        val pageNo = searchPayload.pageNo
+        if (pageNo != null) {
+            val pageSize = searchPayload.pageSize ?: 10
+            query = query.limit((pageNo - 1) * pageSize, pageSize)
+        }
+
+        return query.map { row ->
                 SysDictRecord().apply {
                     module = row[SysDicts.module]
                     dictId = row[SysDicts.id]

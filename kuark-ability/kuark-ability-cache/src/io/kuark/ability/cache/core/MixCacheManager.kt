@@ -2,8 +2,11 @@ package io.kuark.ability.cache.core
 
 import io.kuark.ability.cache.context.MixCacheConfiguration
 import io.kuark.ability.cache.enums.CacheStrategy
+import io.kuark.ability.cache.kit.CacheKit
+import io.kuark.ability.cache.support.AbstractCacheManager
 import io.kuark.ability.cache.support.ICacheConfigProvider
 import io.kuark.base.log.LogFactory
+import io.kuark.context.kit.SpringKit
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
@@ -11,6 +14,8 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.cache.Cache
 import org.springframework.cache.CacheManager
 import org.springframework.cache.transaction.AbstractTransactionSupportingCacheManager
+import org.springframework.context.ApplicationContext
+import org.springframework.context.ApplicationContextAware
 import org.springframework.context.annotation.Primary
 import org.springframework.stereotype.Component
 
@@ -23,10 +28,10 @@ import org.springframework.stereotype.Component
 @Primary
 @Component("cacheManager")
 @ConditionalOnBean(MixCacheConfiguration::class)
-class MixCacheManager : AbstractTransactionSupportingCacheManager() {
+class MixCacheManager : AbstractTransactionSupportingCacheManager(), ApplicationContextAware {
 
-    @Value("\${cache.config.strategy}")
-    private var strategyStr: String? = null
+//    @Value("\${cache.config.strategy}")
+//    private var strategyStr: String? = null
 
     @Value("\${cache.config.enabled}")
     private var cacheEnabled: Boolean? = null
@@ -39,6 +44,8 @@ class MixCacheManager : AbstractTransactionSupportingCacheManager() {
     private lateinit var remoteCacheManager: CacheManager
     @Autowired
     private lateinit var cacheConfigProvider: ICacheConfigProvider
+
+    private var applicationContext: ApplicationContext? = null
 
     private val log = LogFactory.getLog(this::class)
 
@@ -88,6 +95,18 @@ class MixCacheManager : AbstractTransactionSupportingCacheManager() {
     override fun initializeCaches() {
         super.initializeCaches()
 
+        // 加载所有需要在启动时加载的缓存数据
+        val beanMap = applicationContext!!.getBeansOfType(AbstractCacheManager::class.java)
+        beanMap.values.forEach {
+            val cacheConfig = CacheKit.getCacheConfig(it.cacheName())
+            if (cacheConfig != null && cacheConfig.writeOnBoot == true) {
+                it.reloadAll(false)
+            }
+        }
+    }
+
+    override fun setApplicationContext(applicationContext: ApplicationContext) {
+        this.applicationContext = applicationContext
     }
 
 }

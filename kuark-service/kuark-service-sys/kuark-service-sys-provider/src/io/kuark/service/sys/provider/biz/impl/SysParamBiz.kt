@@ -1,24 +1,20 @@
 package io.kuark.service.sys.provider.biz.impl
 
-import io.kuark.ability.cache.kit.CacheKit
 import io.kuark.ability.data.rdb.biz.BaseCrudBiz
-import io.kuark.ability.data.rdb.kit.RdbKit
 import io.kuark.ability.data.rdb.support.SqlWhereExpressionFactory
 import io.kuark.base.bean.BeanKit
 import io.kuark.base.log.LogFactory
 import io.kuark.base.query.enums.Operator
 import io.kuark.base.support.Consts
-import io.kuark.service.sys.common.vo.param.SysParamDetail
+import io.kuark.service.sys.common.vo.dict.SysParamCacheItem
 import io.kuark.service.sys.common.vo.param.SysParamRecord
 import io.kuark.service.sys.common.vo.param.SysParamSearchPayload
 import io.kuark.service.sys.provider.biz.ibiz.ISysParamBiz
-import io.kuark.service.sys.provider.cache.SysCacheNames
+import io.kuark.service.sys.provider.cache.ParamCacheManager
 import io.kuark.service.sys.provider.dao.SysParamDao
 import io.kuark.service.sys.provider.model.po.SysParam
 import io.kuark.service.sys.provider.model.table.SysParams
-import org.ktorm.dsl.*
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -38,44 +34,17 @@ open class SysParamBiz : BaseCrudBiz<String, SysParam, SysParamDao>(), ISysParam
     private val log = LogFactory.getLog(this::class)
 
     @Autowired
-    private lateinit var self: ISysParamBiz
+    private lateinit var paramCacheManager: ParamCacheManager
 
-    @Cacheable(value = [SysCacheNames.SYS_PARAM], key = "#module.concat(':').concat(#name)", unless = "#result == null")
-    override fun getParamFromCache(module: String, name: String): SysParamDetail? {
-        if (CacheKit.isCacheActive()) {
-            log.debug("缓存中不存在模块为${module}且名称为${name}的参数，从数据库中加载...")
-        }
-        val paramList = RdbKit.getDatabase().from(SysParams)
-            .select(SysParams.columns)
-            .whereWithConditions {
-                it += (SysParams.paramName eq name) and (SysParams.active eq true)
-                if (module.isNotEmpty()) {
-                    it += SysParams.module eq module
-                }
-            }
-            .map { row ->
-                val entity = SysParams.createEntity(row)
-                BeanKit.copyProperties(entity, SysParamDetail())
-            }
-            .toList()
-        return if (paramList.isEmpty()) {
-            log.debug("数据库中不存在模块为${module}且名称为${name}的参数！")
-            null
-        } else paramList.first()
+    override fun getParamFromCache(module: String, name: String): SysParamCacheItem? {
+        return paramCacheManager.getParamFromCache(module, name)
     }
 
     @Transactional
     override fun insert(any: Any): String {
         val id = super.insert(any)
         log.debug("新增id为${id}的参数。")
-        // 同步缓存
-        if (CacheKit.isCacheActive() && CacheKit.isWriteInTime(SysCacheNames.SYS_PARAM)) {
-            log.debug("新增id为${id}的参数后，同步缓存...")
-            val module = BeanKit.getProperty(any, SysParam::module.name) as String
-            val paramName = BeanKit.getProperty(any, SysParam::paramName.name) as String
-            self.getParamFromCache(module, paramName) // 缓存
-            log.debug("缓存同步完成。")
-        }
+        paramCacheManager.syncOnInsert(any, id) // 同步缓存
         return id
     }
 
@@ -85,17 +54,7 @@ open class SysParamBiz : BaseCrudBiz<String, SysParam, SysParamDao>(), ISysParam
         val id = BeanKit.getProperty(any, SysParam::id.name) as String
         if (success) {
             log.debug("更新id为${id}的参数。")
-            if (CacheKit.isCacheActive()) {
-                log.debug("更新id为${id}的参数后，同步缓存...")
-                val module = BeanKit.getProperty(any, SysParam::module.name) as String
-                val paramName = BeanKit.getProperty(any, SysParam::paramName.name) as String
-                val key = "${module}:${paramName}"
-                CacheKit.evict(SysCacheNames.SYS_PARAM, key) // 踢除参数缓存
-                if (CacheKit.isWriteInTime(SysCacheNames.SYS_PARAM)) {
-                    self.getParamFromCache(module, paramName) // 重新缓存
-                }
-                log.debug("缓存同步完成。")
-            }
+            paramCacheManager.syncOnUpdate(any, id)
         } else {
             log.error("更新id为${id}的参数失败！")
         }
@@ -111,19 +70,7 @@ open class SysParamBiz : BaseCrudBiz<String, SysParam, SysParamDao>(), ISysParam
         val success = dao.update(param)
         if (success) {
             log.debug("更新id为${id}的参数的启用状态为${active}。")
-            if (CacheKit.isCacheActive()) {
-                log.debug("更新id为${id}的参数的启用状态后，同步缓存...")
-                val sysParam = dao.get(id)!!
-                if (active) {
-                    if (CacheKit.isWriteInTime(SysCacheNames.SYS_PARAM)) {
-                        self.getParamFromCache(sysParam.module!!, sysParam.paramName)
-                    }
-                } else {
-                    val key = "${sysParam.module}:${sysParam.paramName}"
-                    CacheKit.evict(SysCacheNames.SYS_PARAM, key) // 踢除参数缓存
-                }
-                log.debug("缓存同步完成。")
-            }
+            paramCacheManager.syncOnUpdateActive(id, active)
         } else {
             log.error("更新id为${id}的参数的启用状态为${active}失败！")
         }
@@ -136,12 +83,7 @@ open class SysParamBiz : BaseCrudBiz<String, SysParam, SysParamDao>(), ISysParam
         val success = super.deleteById(id)
         if (success) {
             log.debug("删除id为${id}的参数成功！")
-            if (CacheKit.isCacheActive()) {
-                log.debug("删除id为${id}的参数后，同步从缓存中踢除...")
-                val key = "${param.module}:${param.paramName}"
-                CacheKit.evict(SysCacheNames.SYS_PARAM, key) // 踢除缓存
-                log.debug("缓存同步完成。")
-            }
+            paramCacheManager.syncOnDelete(param)
         } else {
             log.error("删除id为${id}的参数失败！")
         }
@@ -150,17 +92,10 @@ open class SysParamBiz : BaseCrudBiz<String, SysParam, SysParamDao>(), ISysParam
 
     @Transactional
     override fun batchDelete(ids: Collection<String>): Int {
+        val params = dao.inSearchById(ids)
         val count = super.batchDelete(ids)
         log.debug("批量删除参数，期望删除${ids.size}条，实际删除${count}条。")
-        if (CacheKit.isCacheActive()) {
-            log.debug("批量删除id为${ids}的参数后，同步从缓存中踢除...")
-            val params = dao.inSearchById(ids)
-            params.forEach {
-                val key = "${it.module}:${it.paramName}"
-                CacheKit.evict(SysCacheNames.SYS_PARAM, key) // 踢除缓存
-            }
-            log.debug("缓存同步完成。")
-        }
+        paramCacheManager.synchOnBatchDelete(ids, params)
         return count
     }
 

@@ -3,16 +3,16 @@ package io.kuark.ability.cache.support
 import io.kuark.ability.cache.kit.CacheKit
 import io.kuark.base.log.LogFactory
 import io.kuark.base.support.Consts
-import org.springframework.beans.factory.InitializingBean
 
 
 /**
- * 缓存管理支持抽象类
+ * 缓存管理器抽象类
  *
+ * @param T 值类型
  * @author K
  * @since 1.0.0
  */
-abstract class AbstractCacheManagementSupport<T> : InitializingBean {
+abstract class AbstractCacheManager<T> {
 
     protected val log = LogFactory.getLog(this::class)
 
@@ -34,7 +34,7 @@ abstract class AbstractCacheManagementSupport<T> : InitializingBean {
      * @since 1.0.0
      */
     fun isExists(key: String): Boolean {
-        return value(key) == null
+        return value(key) != null
     }
 
     /**
@@ -109,12 +109,5 @@ abstract class AbstractCacheManagementSupport<T> : InitializingBean {
      * @since 1.0.0
      */
     abstract fun reloadAll(clear: Boolean)
-
-    override fun afterPropertiesSet() {
-        val cacheConfig = CacheKit.getCacheConfig(cacheName())
-        if (cacheConfig != null && cacheConfig.writeOnBoot == true) {
-            reloadAll(false)
-        }
-    }
 
 }

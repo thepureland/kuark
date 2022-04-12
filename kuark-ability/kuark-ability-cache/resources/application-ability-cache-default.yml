@@ -6,7 +6,6 @@ logging:
 cache:
   config:
     enabled: true
-    strategy: LOCAL_REMOTE # SINGLE_LOCAL，REMOTE，LOCAL_REMOTE三选一
 
 spring:
   cache:

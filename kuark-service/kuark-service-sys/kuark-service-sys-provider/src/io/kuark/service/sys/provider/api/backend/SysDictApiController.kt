@@ -2,7 +2,7 @@ package io.kuark.service.sys.provider.api.backend
 
 import io.kuark.service.sys.common.api.ISysDictApi
 import io.kuark.service.sys.common.vo.dict.DictModuleAndTypePayload
-import io.kuark.service.sys.common.vo.dict.SysDictItemRecord
+import io.kuark.service.sys.common.vo.dict.SysDictItemCacheItem
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
@@ -17,7 +17,7 @@ class SysDictApiController {
     private lateinit var sysDictApi: ISysDictApi
 
     @GetMapping("/getDictItems")
-    fun getDictItems(payload: DictModuleAndTypePayload): List<SysDictItemRecord> {
+    fun getDictItems(payload: DictModuleAndTypePayload): List<SysDictItemCacheItem> {
         return sysDictApi.getDictItems(payload)
     }
 
@@ -27,7 +27,7 @@ class SysDictApiController {
     }
 
     @PostMapping("/batchGetDictItems")
-    fun batchGetDictItems(payloads: List<DictModuleAndTypePayload>): Map<Pair<String, String>, List<SysDictItemRecord>> {
+    fun batchGetDictItems(payloads: List<DictModuleAndTypePayload>): Map<Pair<String, String>, List<SysDictItemCacheItem>> {
         return sysDictApi.batchGetDictItems(payloads)
     }
 

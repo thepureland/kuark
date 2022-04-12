@@ -1,11 +1,9 @@
 package io.kuark.ability.cache.core
 
-import io.kuark.ability.cache.support.CacheNames
 import io.kuark.ability.cache.enums.CacheStrategy
 import io.kuark.test.common.SpringTest
 import io.kuark.test.common.TestSpringBootContextLoader
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.cache.CacheManager
@@ -25,24 +23,24 @@ internal class LocalCacheTest : SpringTest() {
     @Autowired
     private lateinit var cacheTestService: CacheTestService
 
-    @Autowired(required = false)
+    @Autowired
     @Qualifier("localCacheManager")
     private lateinit var localCacheManager: CacheManager
 
-    @Autowired(required = false)
+    @Autowired
     @Qualifier("remoteCacheManager")
     private lateinit var remoteCacheManager: CacheManager
 
-    @Autowired(required = false)
+    @Autowired
     private lateinit var mixCacheManager: MixCacheManager
+
+    private val CACHE_NAME = "test"
 
     @Test
     fun testLocalCache() {
-        assertThrows<UninitializedPropertyAccessException> { remoteCacheManager }
-
-        val localCache = localCacheManager.getCache(CacheNames.TEST)
+        val localCache = localCacheManager.getCache(CACHE_NAME)
         assert(localCache != null)
-        val mixCache = mixCacheManager.getCache(CacheNames.TEST)
+        val mixCache = mixCacheManager.getCache(CACHE_NAME)
         assert(mixCache != null)
 
         val latch = CountDownLatch(1)

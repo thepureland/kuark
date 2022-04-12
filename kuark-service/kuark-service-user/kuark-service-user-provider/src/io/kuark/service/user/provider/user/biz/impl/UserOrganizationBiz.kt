@@ -9,6 +9,7 @@ import io.kuark.base.query.sort.Direction
 import io.kuark.base.support.Consts
 import io.kuark.base.tree.TreeKit
 import io.kuark.service.sys.common.api.ISysTenantApi
+import io.kuark.service.sys.common.vo.dict.SysTenantCacheItem
 import io.kuark.service.sys.common.vo.tenant.SysTenantRecord
 import io.kuark.service.user.common.user.vo.organization.BaseOrganizationTreeNode
 import io.kuark.service.user.common.user.vo.organization.OrganizationTreeNode
@@ -88,7 +89,7 @@ open class UserOrganizationBiz : BaseCrudBiz<String, UserOrganization, UserOrgan
             throw IllegalArgumentException("子系统未指定！")
         }
 
-        var tenants: List<SysTenantRecord>? = null
+        var tenants: List<SysTenantCacheItem>? = null
         val tenantIds = if (StringKit.isBlank(tenantId)) {  // 加载租户
             tenants = sysTenantApi.getTenants(subSysDictCode)
             tenants.map { it.id }

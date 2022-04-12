@@ -1,7 +1,6 @@
 package io.kuark.service.sys.common.api
 
-import io.kuark.service.sys.common.vo.param.SysParamDetail
-import io.kuark.service.sys.common.vo.param.SysParamRecord
+import io.kuark.service.sys.common.vo.dict.SysParamCacheItem
 
 
 /**
@@ -21,6 +20,6 @@ interface ISysParamApi {
      * @author K
      * @since 1.0.0
      */
-    fun getParam(module: String, paramName: String): SysParamDetail?
+    fun getParam(module: String, paramName: String): SysParamCacheItem?
 
 }

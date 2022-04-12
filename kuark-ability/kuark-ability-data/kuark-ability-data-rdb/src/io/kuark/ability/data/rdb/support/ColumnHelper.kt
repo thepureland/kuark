@@ -18,7 +18,7 @@ object ColumnHelper {
      *
      * @param table ktorm表对象
      * @param propertyNames 属性名可变数组
-     * @return 列对象数组
+     * @return Map(属性名，列对象)
      */
     fun columnOf(table: BaseTable<*>, vararg propertyNames: String): Map<String, Column<Any>> { //TODO 是否ktorm能从列绑定关系直接取?
         if (propertyNames.isEmpty()) return emptyMap()

@@ -1,6 +1,5 @@
 package io.kuark.service.sys.provider.biz.impl
 
-import io.kuark.ability.cache.kit.CacheKit
 import io.kuark.ability.data.rdb.biz.BaseCrudBiz
 import io.kuark.base.bean.BeanKit
 import io.kuark.base.lang.string.StringKit
@@ -10,7 +9,7 @@ import io.kuark.base.support.payload.ListSearchPayload
 import io.kuark.service.sys.common.vo.dict.*
 import io.kuark.service.sys.provider.biz.ibiz.ISysDictBiz
 import io.kuark.service.sys.provider.biz.ibiz.ISysDictItemBiz
-import io.kuark.service.sys.provider.cache.SysCacheNames
+import io.kuark.service.sys.provider.cache.DictCacheManager
 import io.kuark.service.sys.provider.dao.SysDictDao
 import io.kuark.service.sys.provider.model.po.SysDict
 import io.kuark.service.sys.provider.model.table.SysDictItems
@@ -20,7 +19,6 @@ import org.ktorm.dsl.eq
 import org.ktorm.dsl.map
 import org.ktorm.dsl.orderBy
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -43,15 +41,13 @@ open class SysDictBiz : BaseCrudBiz<String, SysDict, SysDictDao>(), ISysDictBiz 
     @Autowired
     private lateinit var self: ISysDictBiz
 
+    @Autowired
+    private lateinit var dictCacheManager: DictCacheManager
+
     private val log = LogFactory.getLog(this::class)
 
-    @Cacheable(
-        cacheNames = [SysCacheNames.SYS_DICT],
-        key = "#dictId",
-        unless = "#result == null"
-    )
-    override fun getDictFromCache(dictId: String): SysDictDetail? {
-        return dao.get(dictId, SysDictDetail::class)
+    override fun getDictFromCache(dictId: String): SysDictCacheItem? {
+        return dictCacheManager.getDictFromCache(dictId)
     }
 
     override fun getDictIdByModuleAndType(module: String, type: String): String? {
@@ -169,12 +165,7 @@ open class SysDictBiz : BaseCrudBiz<String, SysDict, SysDictDao>(), ISysDictBiz 
                     remark = payload.remark
                 }
                 val id = dao.insert(sysDict)
-                // 同步缓存
-                if (CacheKit.isCacheActive() && CacheKit.isWriteInTime(SysCacheNames.SYS_DICT)) {
-                    log.debug("新增id为${id}的字典后，同步缓存...")
-                    self.getDictFromCache(id)
-                    log.debug("缓存同步完成。")
-                }
+                dictCacheManager.syncOnInsert(id) // 同步缓存
                 id
             } else { // 添加RegDictItem
                 sysDictItemBiz.saveOrUpdate(payload)
@@ -190,15 +181,7 @@ open class SysDictBiz : BaseCrudBiz<String, SysDict, SysDictDao>(), ISysDictBiz 
                 }
                 val success = dao.update(sysDict)
                 if (success) {
-                    // 同步缓存
-                    if (CacheKit.isCacheActive()) {
-                        log.debug("更新id为${sysDict.id}的字典后，同步缓存...")
-                        CacheKit.evict(SysCacheNames.SYS_DICT, sysDict.id!!) // 踢除缓存
-                        if (CacheKit.isWriteInTime(SysCacheNames.SYS_DICT)) {
-                            self.getDictFromCache(sysDict.id!!) // 缓存
-                        }
-                        log.debug("缓存同步完成。")
-                    }
+                    dictCacheManager.syncOnUpdate(sysDict.id!!) // 同步缓存
                 } else {
                     log.error("删除id为${sysDict.id}的字典失败！")
                 }
@@ -220,12 +203,7 @@ open class SysDictBiz : BaseCrudBiz<String, SysDict, SysDictDao>(), ISysDictBiz 
             }
             val success = dao.deleteById(id)
             if (success) {
-                // 同步缓存
-                if (CacheKit.isCacheActive()) {
-                    log.debug("删除id为${id}的字典后，同步缓存...")
-                    CacheKit.evict(SysCacheNames.SYS_DICT, id) // 踢除缓存
-                    log.debug("缓存同步完成。")
-                }
+                dictCacheManager.syncOnDelete(id) // 同步缓存
             } else {
                 log.error("删除id为${id}的字典失败！")
             }

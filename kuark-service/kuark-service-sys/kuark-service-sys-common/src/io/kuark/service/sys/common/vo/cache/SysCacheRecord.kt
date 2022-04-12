@@ -30,9 +30,6 @@ open class SysCacheRecord : IdJsonResult<String>() {
     /** 是否及时回写缓存 */
     var writeInTime: Boolean? = null
 
-    /** 缓存管理Bean的名称 */
-    var managementBeanName: String? = null
-
     /** 缓存生存时间(秒) */
     var ttl: Int? = null
 

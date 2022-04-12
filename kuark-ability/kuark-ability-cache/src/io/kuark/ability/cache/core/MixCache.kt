@@ -1,10 +1,10 @@
 package io.kuark.ability.cache.core
 
 import io.kuark.ability.cache.enums.CacheStrategy
+import io.kuark.base.log.LogFactory
 import io.kuark.context.kit.SpringKit
 import org.springframework.cache.Cache
 import org.springframework.data.redis.core.RedisTemplate
-import org.springframework.lang.Nullable
 import java.util.concurrent.Callable
 
 /**
@@ -23,12 +23,15 @@ class MixCache(
         const val MSG_CHANNEL = "cache:local-remote:channel"
     }
 
+    private val log = LogFactory.getLog(this::class)
+
     override fun clear() {
         when (strategy) {
             CacheStrategy.SINGLE_LOCAL -> localCache?.clear()
             CacheStrategy.REMOTE -> remoteCache?.clear()
             CacheStrategy.LOCAL_REMOTE -> {
                 remoteCache?.clear()
+                log.debug("clear远程缓存${name}。")
                 pushMsg(name, null)
             }
         }
@@ -40,6 +43,7 @@ class MixCache(
             CacheStrategy.REMOTE -> remoteCache?.put(key, value)
             CacheStrategy.LOCAL_REMOTE -> {
                 remoteCache?.put(key, value)
+                log.debug("put远程缓存${name}。key为$key")
                 pushMsg(name, key) //TODO 异步?
 //                localCache?.put(key, value)
             }
@@ -52,6 +56,7 @@ class MixCache(
             CacheStrategy.REMOTE -> remoteCache?.putIfAbsent(key, value)
             CacheStrategy.LOCAL_REMOTE -> {
                 remoteCache?.putIfAbsent(key, value)
+                log.debug("putIfAbsent远程缓存${name}。key为$key")
                 pushMsg(name, key) //TODO 异步?
 //                localCache?.putIfAbsent(key, value)
             }
@@ -115,6 +120,7 @@ class MixCache(
             CacheStrategy.REMOTE -> remoteCache?.evict(key)
             CacheStrategy.LOCAL_REMOTE -> {
                 remoteCache?.evict(key)
+                log.debug("evict远程缓存${name}。key为$key")
                 pushMsg(name, key)
             }
         }
@@ -124,6 +130,7 @@ class MixCache(
         val redisTemplate = SpringKit.getBean(RedisTemplate::class)
         val msg = CacheMessage(name, key)
         redisTemplate.convertAndSend(MSG_CHANNEL, msg)
+        log.info("推送消息给一级缓存, name为${name}, key为${key}")
     }
 
     fun clearLocal(key: Any?) {

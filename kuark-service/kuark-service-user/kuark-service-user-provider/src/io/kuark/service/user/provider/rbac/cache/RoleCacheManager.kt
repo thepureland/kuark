@@ -1,0 +1,164 @@
+package io.kuark.service.user.provider.rbac.cache
+
+import io.kuark.ability.cache.core.BatchCacheable
+import io.kuark.ability.cache.kit.CacheKit
+import io.kuark.ability.cache.support.AbstractCacheManager
+import io.kuark.base.query.Criterion
+import io.kuark.base.query.enums.Operator
+import io.kuark.base.support.Consts
+import io.kuark.service.user.common.rbac.vo.role.RbacRoleCacheItem
+import io.kuark.service.user.common.rbac.vo.role.RbacRoleDetail
+import io.kuark.service.user.common.rbac.vo.role.RbacRoleSearchPayload
+import io.kuark.service.user.provider.rbac.biz.ibiz.IRbacRoleBiz
+import io.kuark.service.user.provider.rbac.dao.RbacRoleDao
+import io.kuark.service.user.provider.rbac.model.po.RbacRole
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.cache.annotation.Cacheable
+import org.springframework.stereotype.Component
+
+
+@Component
+open class RoleCacheManager: AbstractCacheManager<RbacRoleCacheItem>() {
+
+    @Autowired
+    private lateinit var rbacRoleDao: RbacRoleDao
+
+    @Autowired
+    private lateinit var self: RoleCacheManager
+
+    companion object {
+        private const val RBAC_ROLE_BY_ID = "rbac_role_by_id"
+    }
+
+
+    override fun cacheName(): String = RBAC_ROLE_BY_ID
+
+    override fun doReload(key: String): RbacRoleCacheItem? = self.getRoleFromCache(key)
+
+    override fun reloadAll(clear: Boolean) {
+        if (!CacheKit.isCacheActive()) {
+            log.info("缓存未开启，不加载和缓存所有启用状态的角色！")
+            return
+        }
+
+        // 加载所有可用的角色
+        val searchPayload = RbacRoleSearchPayload().apply {
+            active = true
+            returnEntityClass = RbacRoleCacheItem::class
+        }
+
+        @Suppress(Consts.Suppress.UNCHECKED_CAST)
+        val roles = rbacRoleDao.search(searchPayload) as List<RbacRoleCacheItem>
+        log.info("从数据库加载了${roles.size}条角色信息。")
+
+        // 清除缓存
+        if (clear && CacheKit.isCacheActive()) {
+            clear()
+        }
+
+        // 缓存角色
+        roles.forEach {
+            CacheKit.putIfAbsent(cacheName(), it.id!!, it)
+        }
+        log.info("缓存了${roles.size}条角色信息。")
+    }
+
+    @Cacheable(
+        cacheNames = [RBAC_ROLE_BY_ID],
+        key = "#roleId",
+        unless = "#result == null"
+    )
+    open fun getRoleFromCache(roleId: String): RbacRoleCacheItem? {
+        require(roleId.isNotBlank()) { log.error("从缓存中获取角色时必须指定角色id！") }
+        if (CacheKit.isCacheActive()) log.debug("缓存中不存在id为${roleId}的角色，从数据库中加载...")
+        var result = rbacRoleDao.get(roleId, RbacRoleCacheItem::class)
+        if (result == null) {
+            log.warn("数据库中不存在id为${roleId}的角色！")
+        } else {
+            log.debug("从数据库中加载id为${roleId}的角色成功。")
+            if (result.active == true) {
+                if (CacheKit.isCacheActive()) log.debug("缓存从数据库加载的角色。")
+            } else {
+                log.debug("从数据库中加载id为${roleId}的角色为未启用状态，返回null，且不缓存。")
+                result = null
+            }
+        }
+        return result
+    }
+
+    @BatchCacheable(
+        cacheNames = [RBAC_ROLE_BY_ID],
+        valueClass = RbacRoleCacheItem::class
+    )
+    open fun getRolesFromCache(roleIds: Collection<String>): Map<String, RbacRoleCacheItem> {
+        require(roleIds.isNotEmpty()) { log.error("批量从缓存中获取角色时，角色id集合不能为空！") }
+
+        // 加载所有可用的角色
+        val searchPayload = RbacRoleSearchPayload().apply {
+            active = true
+            pageNo = null
+            criterions = listOf(Criterion(RbacRole::id.name, Operator.IN, roleIds))
+            returnEntityClass = RbacRoleCacheItem::class
+        }
+
+        @Suppress(Consts.Suppress.UNCHECKED_CAST)
+        val roles = rbacRoleDao.search(searchPayload) as List<RbacRoleCacheItem>
+        log.debug("从数据库加载了${roles.size}条角色信息。")
+
+        return roles.associateBy { it.id!! }
+    }
+
+    fun syncOnInsert(id: String) {
+        if (CacheKit.isCacheActive()) {
+            log.debug("新增id为${id}的角色后，同步${cacheName()}缓存...")
+            if (CacheKit.isWriteInTime(cacheName())) {
+                self.getRoleFromCache(id)  // 缓存角色
+            }
+            log.debug("${cacheName()}缓存同步完成。")
+        }
+    }
+
+    fun syncOnUpdate(id: String) {
+        if (CacheKit.isCacheActive()) {
+            log.debug("更新id为${id}的角色后，同步${cacheName()}缓存...")
+            CacheKit.evict(cacheName(), id) // 踢除角色缓存
+            if (CacheKit.isWriteInTime(cacheName())) {
+                self.getRoleFromCache(id) // 缓存角色
+            }
+            log.debug("${cacheName()}缓存同步完成。")
+        }
+    }
+
+    fun syncOnUpdateActive(id: String, active: Boolean) {
+        if (CacheKit.isCacheActive()) {
+            log.debug("更新id为${id}的角色的启用状态后，同步${cacheName()}缓存...")
+            if (active) {
+                if (CacheKit.isWriteInTime(cacheName())) {
+                    self.getRoleFromCache(id) // 缓存角色
+                }
+            } else {
+                CacheKit.evict(cacheName(), id) // 踢除角色缓存
+            }
+            log.debug("${cacheName()}缓存同步完成。")
+        }
+    }
+
+    fun syncOnDelete(id: String) {
+        if (CacheKit.isCacheActive()) {
+            log.debug("删除id为${id}的角色后，同步从${cacheName()}缓存中踢除...")
+            CacheKit.evict(cacheName(), id) // 踢除缓存
+            log.debug("${cacheName()}缓存同步完成。")
+        }
+    }
+
+    fun synchOnBatchDelete(ids: Collection<String>) {
+        if (CacheKit.isCacheActive()) {
+            log.debug("批量删除id为${ids}的角色后，同步从${cacheName()}缓存中踢除...")
+            ids.forEach {
+                CacheKit.evict(cacheName(), it) // 踢除角色缓存
+            }
+            log.debug("${cacheName()}缓存同步完成。")
+        }
+    }
+
+}

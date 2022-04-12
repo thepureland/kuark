@@ -1,6 +1,5 @@
 package io.kuark.ability.cache.core
 
-import io.kuark.ability.cache.support.CacheNames
 import io.kuark.base.log.LogFactory
 import io.kuark.test.common.SpringTest
 import org.junit.jupiter.api.Test
@@ -56,7 +55,7 @@ internal class BatchCacheableTest : SpringTest() {
     }
 
     @Service
-    @CacheConfig(cacheNames = [CacheNames.TEST])
+    @CacheConfig(cacheNames = ["test"])
     open class TestCacheService {
 
         private val log = LogFactory.getLog(this::class)
@@ -70,7 +69,7 @@ internal class BatchCacheableTest : SpringTest() {
             TestCacheObject("1", 4, "6", null, 7)
         )
 
-        @Cacheable(key = "#module.concat(':').concat(#age).concat(':').concat(#name).concat(':').concat(#type)")
+        @Cacheable(key = "#module.concat('::').concat(#age).concat('::').concat(#name).concat('::').concat(#type)")
         open fun load(module: String, age: Int, name: String, active: Boolean, type: Int): List<TestCacheObject> {
             log.debug("单条加载数据，参数：$module, $age, $name, $type")
             Thread.sleep(1000) // 模拟耗时的io操作
@@ -97,7 +96,7 @@ internal class BatchCacheableTest : SpringTest() {
             list.forEach {
                 val another = it.copy()
                 another.time = now
-                result["${it.module}:${it.age}:${it.name}:${it.type}"] = listOf(another)
+                result["${it.module}::${it.age}::${it.name}::${it.type}"] = listOf(another)
             }
             return result
         }

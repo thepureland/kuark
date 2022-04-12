@@ -16,7 +16,7 @@ interface ISysDictBiz : IBaseCrudBiz<String, SysDict> {
 
     //region your codes 2
 
-    fun getDictFromCache(dictId: String): SysDictDetail?
+    fun getDictFromCache(dictId: String): SysDictCacheItem?
 
     /**
      * 返回模块和字典类型对应的字典id

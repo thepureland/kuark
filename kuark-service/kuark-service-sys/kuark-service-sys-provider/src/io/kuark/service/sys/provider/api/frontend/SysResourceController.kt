@@ -2,11 +2,10 @@ package io.kuark.service.sys.provider.api.frontend
 
 import io.kuark.ability.web.springmvc.BaseCrudController
 import io.kuark.base.error.ObjectNotFoundException
-import io.kuark.context.core.KuarkContext
-import io.kuark.context.core.KuarkContextHolder
 import io.kuark.service.sys.common.api.ISysDictApi
 import io.kuark.service.sys.common.api.ISysResourceApi
 import io.kuark.service.sys.common.vo.dict.DictModuleAndTypePayload
+import io.kuark.service.sys.common.vo.dict.SysResourceCacheItem
 import io.kuark.service.sys.common.vo.resource.*
 import io.kuark.service.sys.provider.biz.ibiz.ISysResourceBiz
 import io.kuark.service.sys.provider.model.po.SysResource
@@ -74,12 +73,16 @@ open class SysResourceController :
     }
 
     @GetMapping("/getResources")
-    fun getResources(subSysDictCode: String, resourceType: ResourceType): List<SysResourceDetail> {
+    fun getResources(subSysDictCode: String, resourceType: ResourceType): List<SysResourceCacheItem> {
         return resourceApi.getResources(subSysDictCode, resourceType)
     }
 
     @GetMapping("/getResourcesByIds")
-    fun getResourcesByIds(subSysDictCode: String, resourceType: ResourceType, vararg resourceIds: String): List<SysResourceDetail> {
+    fun getResourcesByIds(
+        subSysDictCode: String,
+        resourceType: ResourceType,
+        vararg resourceIds: String
+    ): List<SysResourceCacheItem> {
         return resourceApi.getResources(subSysDictCode, resourceType, *resourceIds)
     }
 

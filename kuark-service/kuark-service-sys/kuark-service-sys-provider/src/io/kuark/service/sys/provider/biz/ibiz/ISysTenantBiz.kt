@@ -1,8 +1,7 @@
 package io.kuark.service.sys.provider.biz.ibiz
 
 import io.kuark.base.support.biz.IBaseCrudBiz
-import io.kuark.service.sys.common.vo.param.SysParamDetail
-import io.kuark.service.sys.common.vo.tenant.SysTenantDetail
+import io.kuark.service.sys.common.vo.dict.SysTenantCacheItem
 import io.kuark.service.sys.common.vo.tenant.SysTenantRecord
 import io.kuark.service.sys.provider.model.po.SysTenant
 
@@ -20,14 +19,25 @@ interface ISysTenantBiz : IBaseCrudBiz<String, SysTenant> {
     //region your codes 2
 
     /**
-     * 根据子系统代码，取得对应租户信息(仅包括处于启用状态的)，并将结果缓存，查不到不缓存
+     * 根据id取得对应租户信息，并将结果缓存，查不到不缓存
      *
-     * @param subSysDictCode 子系统代码
-     * @return List(租户详情)
+     * @param id 主键
+     * @return 租户信息
      * @author K
      * @since 1.0.0
      */
-    fun getTenantsFromCache(subSysDictCode: String): List<SysTenantDetail>
+    fun getTenantFromCache(id: String): SysTenantCacheItem?
+
+
+    /**
+     * 根据子系统代码，取得对应租户信息(仅包括处于启用状态的)，并将结果缓存，查不到不缓存
+     *
+     * @param subSysDictCode 子系统代码
+     * @return List(租户信息)
+     * @author K
+     * @since 1.0.0
+     */
+    fun getTenantsFromCache(subSysDictCode: String): List<SysTenantCacheItem>
 
     /**
      * 返回所有启用的租户

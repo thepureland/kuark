@@ -1,10 +1,12 @@
 package io.kuark.service.user.provider.rbac.biz.ibiz
 
 import io.kuark.base.support.biz.IBaseCrudBiz
+import io.kuark.service.sys.common.vo.dict.SysResourceCacheItem
 import io.kuark.service.sys.common.vo.resource.BaseMenuTreeNode
 import io.kuark.service.sys.common.vo.resource.ResourceType
 import io.kuark.service.sys.common.vo.resource.SysResourceDetail
 import io.kuark.service.sys.common.vo.resource.SysResourceRecord
+import io.kuark.service.user.common.rbac.vo.role.RbacRoleCacheItem
 import io.kuark.service.user.common.rbac.vo.role.RbacRoleDetail
 import io.kuark.service.user.common.user.vo.account.UserAccountRecord
 import io.kuark.service.user.common.user.vo.account.UserAccountSearchPayload
@@ -28,22 +30,22 @@ interface IRbacRoleBiz : IBaseCrudBiz<String, RbacRole> {
      * 如果缓存未开启，只加载不缓存。
      *
      * @param roleId 角色id
-     * @return 角色详细信息，找不到返回null
+     * @return 角色信息，找不到返回null
      * @author K
      * @since 1.0.0
      */
-    fun getRoleFromCache(roleId: String): RbacRoleDetail?
+    fun getRoleFromCache(roleId: String): RbacRoleCacheItem?
 
     /**
      * 批量从缓存中返回指定id集合的角色(启用的)，如果不存在，从数据库加载，并缓存。
      * 如果缓存未开启，只加载不缓存。
      *
      * @param roleIds 角色id集合，不能为空
-     * @return Map(角色id，角色详细信息)
+     * @return Map(角色id，角色信息)
      * @author K
      * @since 1.0.0
      */
-    fun getRolesFromCache(roleIds: Collection<String>): Map<String, RbacRoleDetail>
+    fun getRolesFromCache(roleIds: Collection<String>): Map<String, RbacRoleCacheItem>
 
     /**
      * 从缓存中返回指定子系统和租户的角色id(启用的)，如果不存在，从数据库加载，并缓存。
@@ -63,11 +65,11 @@ interface IRbacRoleBiz : IBaseCrudBiz<String, RbacRole> {
      *
      * @param subSysDictCode 子系统代码，不能为空
      * @param tenantId 租户id，为null时表示该子系统非多租户，将返回该子系统的所有角色。当子系统为多租户时，务必要传该参数！
-     * @return Map(角色id，角色详细信息)，找不到时返回空Map且不缓存
+     * @return Map(角色id，角色信息)，找不到时返回空Map且不缓存
      * @author K
      * @since 1.0.0
      */
-    fun getRolesFromCache(subSysDictCode: String, tenantId: String?): Map<String, RbacRoleDetail>
+    fun getRolesFromCache(subSysDictCode: String, tenantId: String?): Map<String, RbacRoleCacheItem>
 
     /**
      * 更新启用状态，并同步缓存
@@ -90,7 +92,7 @@ interface IRbacRoleBiz : IBaseCrudBiz<String, RbacRole> {
      * @author K
      * @since 1.0.0
      */
-    fun getRolePermissions(roleId: String, subSysDictCode: String, resourceType: ResourceType): List<SysResourceDetail>
+    fun getRolePermissions(roleId: String, subSysDictCode: String, resourceType: ResourceType): List<SysResourceCacheItem>
 
     /**
      * 设置角色可操作的资源

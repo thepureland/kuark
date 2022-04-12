@@ -14,4 +14,15 @@
     <logger name="org.springframework.jdbc.support.JdbcTransactionManager" level="INFO"/>
     <logger name="org.apache.ibatis.transaction.managed.ManagedTransaction" level="INFO"/>
     <logger name="com.zaxxer.hikari.pool.HikariPool" level="INFO"/>
+    <logger name="org.apache.commons.beanutils.converters" level="INFO"/>
+    <logger name="io.lettuce.core.protocol" level="INFO"/>
+    <logger name="org.springframework.data.convert" level="INFO"/>
+    <logger name="org.springframework.context.annotation.ClassPathBeanDefinitionScanner" level="INFO"/>
+    <logger name="org.springframework.boot.autoconfigure.logging.ConditionEvaluationReportLoggingListener" level="INFO"/>
+    <logger name="org.springframework.beans.factory.support.DefaultListableBeanFactory" level="INFO"/>
+    <logger name="org.springframework.aop.framework.CglibAopProxy" level="INFO"/>
+    <logger name="org.springframework.security.access.prepost.PrePostAnnotationSecurityMetadataSource" level="INFO"/>
+    <logger name="org.springframework.security.access.method.DelegatingMethodSecurityMetadataSource" level="INFO"/>
+    <logger name="org.springframework.core.env.PropertySourcesPropertyResolver" level="INFO"/>
+
 </configuration>

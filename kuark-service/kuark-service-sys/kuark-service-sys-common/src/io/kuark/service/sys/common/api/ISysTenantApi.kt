@@ -1,6 +1,6 @@
 package io.kuark.service.sys.common.api
 
-import io.kuark.service.sys.common.vo.tenant.SysTenantRecord
+import io.kuark.service.sys.common.vo.dict.SysTenantCacheItem
 
 
 /**
@@ -23,7 +23,7 @@ interface ISysTenantApi {
      * @author K
      * @since 1.0.0
      */
-    fun getTenant(id: String): SysTenantRecord?
+    fun getTenant(id: String): SysTenantCacheItem?
 
     /**
      * 返回指定子系统的所有租户(仅启用的)
@@ -33,7 +33,7 @@ interface ISysTenantApi {
      * @author K
      * @since 1.0.0
      */
-    fun getTenants(subSysDictCode: String): List<SysTenantRecord>
+    fun getTenants(subSysDictCode: String): List<SysTenantCacheItem>
 
     //endregion your codes 2
 

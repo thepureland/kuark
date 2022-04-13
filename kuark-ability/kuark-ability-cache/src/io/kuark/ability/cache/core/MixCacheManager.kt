@@ -2,11 +2,8 @@ package io.kuark.ability.cache.core
 
 import io.kuark.ability.cache.context.MixCacheConfiguration
 import io.kuark.ability.cache.enums.CacheStrategy
-import io.kuark.ability.cache.kit.CacheKit
-import io.kuark.ability.cache.support.AbstractCacheManager
 import io.kuark.ability.cache.support.ICacheConfigProvider
 import io.kuark.base.log.LogFactory
-import io.kuark.context.kit.SpringKit
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
@@ -91,19 +88,6 @@ class MixCacheManager : AbstractTransactionSupportingCacheManager(), Application
     }
 
     fun isCacheEnabled(): Boolean = cacheEnabled == true
-
-    override fun initializeCaches() {
-        super.initializeCaches()
-
-        // 加载所有需要在启动时加载的缓存数据
-        val beanMap = applicationContext!!.getBeansOfType(AbstractCacheManager::class.java)
-        beanMap.values.forEach {
-            val cacheConfig = CacheKit.getCacheConfig(it.cacheName())
-            if (cacheConfig != null && cacheConfig.writeOnBoot == true) {
-                it.reloadAll(false)
-            }
-        }
-    }
 
     override fun setApplicationContext(applicationContext: ApplicationContext) {
         this.applicationContext = applicationContext

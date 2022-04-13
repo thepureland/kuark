@@ -2,6 +2,7 @@ package io.kuark.service.sys.provider.cache
 
 import io.kuark.ability.cache.kit.CacheKit
 import io.kuark.ability.cache.support.AbstractCacheManager
+import io.kuark.base.log.LogFactory
 import io.kuark.service.sys.common.vo.dict.SysDictItemCacheItem
 import io.kuark.service.sys.common.vo.dict.SysDictSearchPayload
 import io.kuark.service.sys.provider.biz.ibiz.ISysDictBiz
@@ -27,6 +28,8 @@ open class DictItemCacheManager : AbstractCacheManager<List<SysDictItemCacheItem
 
     @Autowired
     private lateinit var self: DictItemCacheManager
+
+    private val log = LogFactory.getLog(this::class)
 
     companion object {
         private const val SYS_DICT_ITEM_BY_MODULE_AND_DICT_TYPE = "sys_dict_item_by_module_and_dict_type"

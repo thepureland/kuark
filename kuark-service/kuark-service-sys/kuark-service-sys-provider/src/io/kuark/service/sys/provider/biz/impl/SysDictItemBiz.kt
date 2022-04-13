@@ -5,7 +5,6 @@ import io.kuark.base.lang.string.StringKit
 import io.kuark.base.log.LogFactory
 import io.kuark.service.sys.common.vo.dict.SysDictItemCacheItem
 import io.kuark.service.sys.common.vo.dict.SysDictPayload
-import io.kuark.service.sys.provider.biz.ibiz.ISysDictBiz
 import io.kuark.service.sys.provider.biz.ibiz.ISysDictItemBiz
 import io.kuark.service.sys.provider.cache.DictItemCacheManager
 import io.kuark.service.sys.provider.dao.SysDictItemDao
@@ -27,9 +26,6 @@ open class SysDictItemBiz : BaseCrudBiz<String, SysDictItem, SysDictItemDao>(), 
 
 
     //region yur codes 2
-
-    @Autowired
-    private lateinit var sysDictBiz: ISysDictBiz
 
     @Autowired
     private lateinit var dictItemCacheManager: DictItemCacheManager

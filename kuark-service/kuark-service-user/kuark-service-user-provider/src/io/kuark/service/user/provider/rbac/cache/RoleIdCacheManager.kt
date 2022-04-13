@@ -3,6 +3,7 @@ package io.kuark.service.user.provider.rbac.cache
 import io.kuark.ability.cache.kit.CacheKit
 import io.kuark.ability.cache.support.AbstractCacheManager
 import io.kuark.base.lang.string.StringKit
+import io.kuark.base.log.LogFactory
 import io.kuark.base.query.Criteria
 import io.kuark.base.query.enums.Operator
 import io.kuark.base.support.Consts
@@ -28,6 +29,8 @@ open class RoleIdCacheManager : AbstractCacheManager<List<String>>() {
 
     @Autowired
     private lateinit var roleCacheManager: RoleCacheManager
+
+    private val log = LogFactory.getLog(this::class)
 
     companion object {
         private const val RBAC_ROLE_ID_BY_SUB_SYS_AND_TENANT_ID = "rbac_role_id_by_sub_sys_and_tenant_id"

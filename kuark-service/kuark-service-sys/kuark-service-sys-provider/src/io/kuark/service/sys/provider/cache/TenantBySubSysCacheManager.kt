@@ -3,6 +3,7 @@ package io.kuark.service.sys.provider.cache
 import io.kuark.ability.cache.kit.CacheKit
 import io.kuark.ability.cache.support.AbstractCacheManager
 import io.kuark.base.bean.BeanKit
+import io.kuark.base.log.LogFactory
 import io.kuark.base.support.Consts
 import io.kuark.service.sys.common.vo.dict.SysTenantCacheItem
 import io.kuark.service.sys.common.vo.tenant.SysTenantSearchPayload
@@ -28,6 +29,8 @@ open class TenantBySubSysCacheManager: AbstractCacheManager<List<SysTenantCacheI
 
     @Autowired
     private lateinit var tenantByIdCacheManager : TenantByIdCacheManager
+
+    private val log = LogFactory.getLog(this::class)
 
 
     override fun cacheName(): String = SYS_TENANT_BY_SUB_SYS

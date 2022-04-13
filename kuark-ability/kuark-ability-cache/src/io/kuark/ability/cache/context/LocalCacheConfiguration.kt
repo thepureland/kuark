@@ -5,7 +5,6 @@ import io.kuark.ability.cache.support.ICacheConfigProvider
 import io.kuark.base.log.LogFactory
 import org.springframework.boot.SpringBootConfiguration
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
-import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression
 import org.springframework.cache.CacheManager
 import org.springframework.cache.caffeine.CaffeineCache
 import org.springframework.cache.support.SimpleCacheManager

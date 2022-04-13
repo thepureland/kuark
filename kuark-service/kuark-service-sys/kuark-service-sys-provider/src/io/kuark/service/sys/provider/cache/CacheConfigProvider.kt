@@ -5,7 +5,7 @@ import io.kuark.ability.cache.support.CacheConfig
 import io.kuark.ability.cache.support.ICacheConfigProvider
 import io.kuark.base.support.Consts
 import io.kuark.base.support.payload.ListSearchPayload
-import io.kuark.service.sys.provider.biz.ibiz.ISysCacheBiz
+import io.kuark.service.sys.provider.dao.SysCacheDao
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.DependsOn
 import org.springframework.stereotype.Component
@@ -18,11 +18,11 @@ import org.springframework.stereotype.Component
  * @since 1.0.0
  */
 @Component
-@DependsOn(value = ["dataSource","springKit"])
+@DependsOn(value = ["dataSource", "springKit"])
 open class CacheConfigProvider : ICacheConfigProvider {
 
     @Autowired
-    private lateinit var sysCacheBiz: ISysCacheBiz
+    private lateinit var sysCacheDao: SysCacheDao // 用ISysCacheBiz会级联引起CacheConfigCacheManager Bean的注册早于@Cacheable的扫描，造成该缓存失效！！！
 
     private var cacheConfigs: List<CacheConfig>? = null
 
@@ -33,7 +33,7 @@ open class CacheConfigProvider : ICacheConfigProvider {
             }
 
             @Suppress(Consts.Suppress.UNCHECKED_CAST)
-            cacheConfigs = sysCacheBiz.search(searchPayload) as List<CacheConfig>
+            cacheConfigs = sysCacheDao.search(searchPayload) as List<CacheConfig>
         }
         return cacheConfigs ?: emptyList()
     }
@@ -47,7 +47,8 @@ open class CacheConfigProvider : ICacheConfigProvider {
     }
 
     override fun getLocalCacheConfigs(): Map<String, CacheConfig> {
-        return getCacheConfigs().filter { it.strategyDictCode == CacheStrategy.SINGLE_LOCAL.name }.associateBy { it.name }
+        return getCacheConfigs().filter { it.strategyDictCode == CacheStrategy.SINGLE_LOCAL.name }
+            .associateBy { it.name }
     }
 
     override fun getRemoteCacheConfigs(): Map<String, CacheConfig> {
@@ -55,7 +56,8 @@ open class CacheConfigProvider : ICacheConfigProvider {
     }
 
     override fun getLocalRemoteCacheConfigs(): Map<String, CacheConfig> {
-        return getCacheConfigs().filter { it.strategyDictCode == CacheStrategy.LOCAL_REMOTE.name }.associateBy { it.name }
+        return getCacheConfigs().filter { it.strategyDictCode == CacheStrategy.LOCAL_REMOTE.name }
+            .associateBy { it.name }
     }
 
 }

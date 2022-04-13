@@ -3,6 +3,7 @@ package io.kuark.service.sys.provider.cache
 import io.kuark.ability.cache.kit.CacheKit
 import io.kuark.ability.cache.support.AbstractCacheManager
 import io.kuark.base.bean.BeanKit
+import io.kuark.base.log.LogFactory
 import io.kuark.base.support.Consts
 import io.kuark.base.support.payload.ListSearchPayload
 import io.kuark.service.sys.common.vo.cache.SysCacheCacheItem
@@ -19,6 +20,8 @@ open class CacheConfigCacheManager : AbstractCacheManager<SysCacheCacheItem>() {
 
     @Autowired
     private lateinit var sysCacheDao: SysCacheDao
+
+    private val log = LogFactory.getLog(this::class)
 
     @Autowired
     private lateinit var self: CacheConfigCacheManager

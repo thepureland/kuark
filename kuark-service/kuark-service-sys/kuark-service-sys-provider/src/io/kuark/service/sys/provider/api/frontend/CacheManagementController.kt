@@ -4,6 +4,8 @@ import io.kuark.ability.cache.support.AbstractCacheManager
 import io.kuark.base.lang.GenericKit
 import io.kuark.base.log.LogFactory
 import io.kuark.context.kit.SpringKit
+import io.kuark.service.sys.provider.biz.ibiz.ISysCacheBiz
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
@@ -18,6 +20,9 @@ class CacheManagementController {
     private val cacheMgmtMap = mutableMapOf<String, AbstractCacheManager<*>>()
 
     private val log = LogFactory.getLog(this::class)
+
+    @Autowired
+    private lateinit var sysCacheBiz: ISysCacheBiz
 
     @GetMapping("/reload")
     fun reload(cacheName: String, key: String): String {
@@ -45,6 +50,7 @@ class CacheManagementController {
 
     @GetMapping("/isExists")
     fun isExists(cacheName: String, key: String): String {
+//        val cacheFromCache = sysCacheBiz.getCacheFromCache("sys_cache_by_name")
         val exists = getCacheMgmtBean(cacheName).isExists(key)
         return if (exists) "缓存Key: ${key}存在！" else "缓存Key: ${key}不存在！"
     }

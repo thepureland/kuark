@@ -39,9 +39,6 @@ open class SysDictBiz : BaseCrudBiz<String, SysDict, SysDictDao>(), ISysDictBiz 
     private lateinit var sysDictItemBiz: ISysDictItemBiz
 
     @Autowired
-    private lateinit var self: ISysDictBiz
-
-    @Autowired
     private lateinit var dictCacheManager: DictCacheManager
 
     private val log = LogFactory.getLog(this::class)

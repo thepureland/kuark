@@ -14,7 +14,9 @@ import io.kuark.base.support.Consts
  */
 abstract class AbstractCacheManager<T> {
 
-    protected val log = LogFactory.getLog(this::class)
+    companion object {
+        private val log = LogFactory.getLog(this::class)
+    }
 
     /**
      * 返回缓存名称

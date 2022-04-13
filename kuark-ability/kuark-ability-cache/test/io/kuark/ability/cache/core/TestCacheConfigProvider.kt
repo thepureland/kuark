@@ -3,9 +3,11 @@ package io.kuark.ability.cache.core
 import io.kuark.ability.cache.enums.CacheStrategy
 import io.kuark.ability.cache.support.CacheConfig
 import io.kuark.ability.cache.support.ICacheConfigProvider
+import org.springframework.context.annotation.DependsOn
 import org.springframework.stereotype.Component
 
 @Component
+@DependsOn(value = ["dataSource","springKit"])
 class TestCacheConfigProvider: ICacheConfigProvider {
 
     private val CACHE_NAME = "test"

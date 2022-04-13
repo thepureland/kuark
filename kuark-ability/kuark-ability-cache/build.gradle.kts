@@ -5,5 +5,7 @@ dependencies {
     api("org.springframework.boot:spring-boot-starter-cache")
 //    api("com.alibaba:fastjson")
 
+    api(project(":kuark-ability:kuark-ability-data:kuark-ability-data-rdb"))
+
     testImplementation(project(":kuark-test:kuark-test-common"))
 }

@@ -4,6 +4,7 @@ import io.kuark.ability.cache.kit.CacheKit
 import io.kuark.ability.cache.support.AbstractCacheManager
 import io.kuark.ability.data.rdb.kit.RdbKit
 import io.kuark.base.bean.BeanKit
+import io.kuark.base.log.LogFactory
 import io.kuark.base.support.Consts
 import io.kuark.service.sys.common.vo.dict.SysParamCacheItem
 import io.kuark.service.sys.common.vo.param.SysParamSearchPayload
@@ -24,6 +25,8 @@ open class ParamCacheManager : AbstractCacheManager<SysParamCacheItem>() {
 
     @Autowired
     private lateinit var self: ParamCacheManager
+
+    private val log = LogFactory.getLog(this::class)
 
     companion object {
         private const val SYS_PARAM_BY_MODULE_AND_NAME = "sys_param_by_module_and_name"

@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import io.kuark.demo.tools.codegen.fx.ui.SortComboBoxTableCellFactory?>
 <?import io.kuark.ability.ui.jfx.controls.table.cell.factory.*?>
 <?import javafx.scene.control.cell.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0"
             prefWidth="1024.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="io.kuark.demo.tools.codegen.fx.controller.ColumnsController">
+            fx:controller="org.kuark.demo.tools.codegen.fx.controller.ColumnsController">
     <children>
         <TableView fx:id="columnTable" editable="true" layoutX="14.0" layoutY="46.0" prefHeight="339.0"
                    prefWidth="573.0" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="14.0"

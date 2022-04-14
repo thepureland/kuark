@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.*?>
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0"
             prefWidth="1024.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="io.kuark.demo.tools.codegen.fx.controller.FilesController">
+            fx:controller="org.kuark.demo.tools.codegen.fx.controller.FilesController">
     <children>
         <TableView fx:id="fileTable" editable="true" layoutX="12.0" layoutY="13.0" prefHeight="721.0" prefWidth="996.0"
                    AnchorPane.bottomAnchor="33.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0"

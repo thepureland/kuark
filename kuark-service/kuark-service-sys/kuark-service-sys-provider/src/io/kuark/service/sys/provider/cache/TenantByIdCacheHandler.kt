@@ -1,7 +1,7 @@
 package io.kuark.service.sys.provider.cache
 
 import io.kuark.ability.cache.kit.CacheKit
-import io.kuark.ability.cache.support.AbstractCacheManager
+import io.kuark.ability.cache.support.AbstractCacheHandler
 import io.kuark.base.log.LogFactory
 import io.kuark.base.support.Consts
 import io.kuark.service.sys.common.vo.dict.SysTenantCacheItem
@@ -13,19 +13,18 @@ import org.springframework.stereotype.Component
 
 
 @Component
-open class TenantByIdCacheManager : AbstractCacheManager<SysTenantCacheItem>() {
+open class TenantByIdCacheHandler : AbstractCacheHandler<SysTenantCacheItem>() {
 
     @Autowired
     private lateinit var dao: SysTenantDao
 
     companion object {
         private const val SYS_TENANT_BY_ID = "sys_tenant_by_id"
+        private val log = LogFactory.getLog(TenantByIdCacheHandler::class)
     }
 
-    private val log = LogFactory.getLog(this::class)
-
     @Autowired
-    private lateinit var self: TenantByIdCacheManager
+    private lateinit var self: TenantByIdCacheHandler
 
     override fun cacheName(): String = SYS_TENANT_BY_ID
 

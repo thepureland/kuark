@@ -43,7 +43,7 @@ class MixCache(
             CacheStrategy.REMOTE -> remoteCache?.put(key, value)
             CacheStrategy.LOCAL_REMOTE -> {
                 remoteCache?.put(key, value)
-                log.debug("put远程缓存${name}。key为$key")
+//                log.debug("put远程缓存${name}。key为$key")
                 pushMsg(name, key) //TODO 异步?
 //                localCache?.put(key, value)
             }
@@ -56,7 +56,7 @@ class MixCache(
             CacheStrategy.REMOTE -> remoteCache?.putIfAbsent(key, value)
             CacheStrategy.LOCAL_REMOTE -> {
                 remoteCache?.putIfAbsent(key, value)
-                log.debug("putIfAbsent远程缓存${name}。key为$key")
+//                log.debug("putIfAbsent远程缓存${name}。key为$key")
                 pushMsg(name, key) //TODO 异步?
 //                localCache?.putIfAbsent(key, value)
             }
@@ -130,7 +130,7 @@ class MixCache(
         val redisTemplate = SpringKit.getBean(RedisTemplate::class)
         val msg = CacheMessage(name, key)
         redisTemplate.convertAndSend(MSG_CHANNEL, msg)
-        log.info("推送消息给一级缓存, name为${name}, key为${key}")
+//        log.info("推送消息给一级缓存, name为${name}, key为${key}")
     }
 
     fun clearLocal(key: Any?) {

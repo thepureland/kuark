@@ -45,12 +45,12 @@ open class RemoteCacheConfiguration {
         val cacheConfigs = remoteCacheConfigs.plus(localRemoteCacheConfigs)
         val configMap = cacheConfigs.values.associate {
             log.info("初始化远程缓存【${it.name}】...")
-            val redisCacheConfiguration = RedisCacheConfiguration.defaultCacheConfig()
+            var redisCacheConfiguration = RedisCacheConfiguration.defaultCacheConfig()
                 .disableCachingNullValues()             //如果是空值，不缓存
                 .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(RedisConfiguration.keySerializer()))
 //              .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer((RedisConfiguration.valueSerializer())))
             if (it.ttl != null) {
-                redisCacheConfiguration.entryTtl(Duration.ofSeconds(it.ttl!!.toLong()))
+                redisCacheConfiguration = redisCacheConfiguration.entryTtl(Duration.ofSeconds(it.ttl!!.toLong()))
             }
             log.info("初始化远程缓存【${it.name}】成功！")
             it.name to redisCacheConfiguration

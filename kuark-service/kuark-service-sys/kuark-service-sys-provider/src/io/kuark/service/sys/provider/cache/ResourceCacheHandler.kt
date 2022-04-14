@@ -1,7 +1,7 @@
 package io.kuark.service.sys.provider.cache
 
 import io.kuark.ability.cache.kit.CacheKit
-import io.kuark.ability.cache.support.AbstractCacheManager
+import io.kuark.ability.cache.support.AbstractCacheHandler
 import io.kuark.base.bean.BeanKit
 import io.kuark.base.log.LogFactory
 import io.kuark.base.support.Consts
@@ -15,18 +15,17 @@ import org.springframework.stereotype.Component
 
 
 @Component
-open class ResourceCacheManager: AbstractCacheManager<List<SysResourceCacheItem>>() {
+open class ResourceCacheHandler: AbstractCacheHandler<List<SysResourceCacheItem>>() {
 
     @Autowired
     private lateinit var sysResourceDao: SysResourceDao
 
     @Autowired
-    private lateinit var self:  ResourceCacheManager
-
-    private val log = LogFactory.getLog(this::class)
+    private lateinit var self:  ResourceCacheHandler
 
     companion object {
         private const val SYS_RESOURCE_BY_SUB_SYS_AND_RES_TYPE = "sys_resource_by_sub_sys_and_res_type"
+        private val log = LogFactory.getLog(ResourceCacheHandler::class)
     }
 
     override fun cacheName(): String = SYS_RESOURCE_BY_SUB_SYS_AND_RES_TYPE

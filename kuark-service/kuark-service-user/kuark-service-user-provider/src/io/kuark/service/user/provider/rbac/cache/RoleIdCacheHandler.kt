@@ -1,7 +1,7 @@
 package io.kuark.service.user.provider.rbac.cache
 
 import io.kuark.ability.cache.kit.CacheKit
-import io.kuark.ability.cache.support.AbstractCacheManager
+import io.kuark.ability.cache.support.AbstractCacheHandler
 import io.kuark.base.lang.string.StringKit
 import io.kuark.base.log.LogFactory
 import io.kuark.base.query.Criteria
@@ -10,7 +10,6 @@ import io.kuark.base.support.Consts
 import io.kuark.service.user.common.rbac.vo.role.RbacRoleCacheItem
 import io.kuark.service.user.common.rbac.vo.role.RbacRoleRecord
 import io.kuark.service.user.common.rbac.vo.role.RbacRoleSearchPayload
-import io.kuark.service.user.provider.rbac.biz.ibiz.IRbacRoleBiz
 import io.kuark.service.user.provider.rbac.dao.RbacRoleDao
 import io.kuark.service.user.provider.rbac.model.po.RbacRole
 import org.springframework.beans.factory.annotation.Autowired
@@ -19,21 +18,20 @@ import org.springframework.stereotype.Component
 
 
 @Component
-open class RoleIdCacheManager : AbstractCacheManager<List<String>>() {
+open class RoleIdCacheHandler : AbstractCacheHandler<List<String>>() {
 
     @Autowired
     private lateinit var rbacRoleDao: RbacRoleDao
 
     @Autowired
-    private lateinit var self: RoleIdCacheManager
+    private lateinit var self: RoleIdCacheHandler
 
     @Autowired
-    private lateinit var roleCacheManager: RoleCacheManager
-
-    private val log = LogFactory.getLog(this::class)
+    private lateinit var roleCacheManager: RoleCacheHandler
 
     companion object {
         private const val RBAC_ROLE_ID_BY_SUB_SYS_AND_TENANT_ID = "rbac_role_id_by_sub_sys_and_tenant_id"
+        private val log = LogFactory.getLog(RoleIdCacheHandler::class)
     }
 
     override fun cacheName(): String = RBAC_ROLE_ID_BY_SUB_SYS_AND_TENANT_ID

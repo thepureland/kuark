@@ -1,7 +1,7 @@
 package io.kuark.service.sys.provider.cache
 
 import io.kuark.ability.cache.kit.CacheKit
-import io.kuark.ability.cache.support.AbstractCacheManager
+import io.kuark.ability.cache.support.AbstractCacheHandler
 import io.kuark.ability.data.rdb.kit.RdbKit
 import io.kuark.base.bean.BeanKit
 import io.kuark.base.log.LogFactory
@@ -18,18 +18,17 @@ import org.springframework.stereotype.Component
 
 
 @Component
-open class ParamCacheManager : AbstractCacheManager<SysParamCacheItem>() {
+open class ParamCacheHandler : AbstractCacheHandler<SysParamCacheItem>() {
 
     @Autowired
     private lateinit var sysParamDao: SysParamDao
 
     @Autowired
-    private lateinit var self: ParamCacheManager
-
-    private val log = LogFactory.getLog(this::class)
+    private lateinit var self: ParamCacheHandler
 
     companion object {
         private const val SYS_PARAM_BY_MODULE_AND_NAME = "sys_param_by_module_and_name"
+        private val log = LogFactory.getLog(ParamCacheHandler::class)
     }
 
     override fun cacheName(): String = SYS_PARAM_BY_MODULE_AND_NAME

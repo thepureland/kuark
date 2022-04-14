@@ -1,7 +1,7 @@
 package io.kuark.service.sys.provider.cache
 
 import io.kuark.ability.cache.kit.CacheKit
-import io.kuark.ability.cache.support.AbstractCacheManager
+import io.kuark.ability.cache.support.AbstractCacheHandler
 import io.kuark.base.log.LogFactory
 import io.kuark.base.support.Consts
 import io.kuark.base.support.payload.ListSearchPayload
@@ -13,18 +13,17 @@ import org.springframework.stereotype.Component
 
 
 @Component
-open class DictCacheManager : AbstractCacheManager<SysDictCacheItem>() {
+open class DictCacheHandler : AbstractCacheHandler<SysDictCacheItem>() {
 
     @Autowired
     private lateinit var sysDictDao: SysDictDao
 
     @Autowired
-    private lateinit var self: DictCacheManager
-
-    private val log = LogFactory.getLog(this::class)
+    private lateinit var self: DictCacheHandler
 
     companion object {
         private const val SYS_DICT_BY_ID = "sys_dict_by_id"
+        private val log = LogFactory.getLog(DictCacheHandler::class)
     }
 
     override fun cacheName(): String = SYS_DICT_BY_ID

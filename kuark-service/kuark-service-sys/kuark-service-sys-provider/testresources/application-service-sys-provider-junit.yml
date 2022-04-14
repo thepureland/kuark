@@ -29,7 +29,6 @@ spring:
 cache:
   config:
     enabled: true
-    strategy: SINGLE_LOCAL
 
 web:
   ktor:

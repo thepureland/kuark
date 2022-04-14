@@ -8,8 +8,8 @@ import io.kuark.service.sys.common.vo.dict.SysTenantCacheItem
 import io.kuark.service.sys.common.vo.tenant.SysTenantRecord
 import io.kuark.service.sys.common.vo.tenant.SysTenantSearchPayload
 import io.kuark.service.sys.provider.biz.ibiz.ISysTenantBiz
-import io.kuark.service.sys.provider.cache.TenantByIdCacheManager
-import io.kuark.service.sys.provider.cache.TenantBySubSysCacheManager
+import io.kuark.service.sys.provider.cache.TenantByIdCacheHandler
+import io.kuark.service.sys.provider.cache.TenantBySubSysCacheHandler
 import io.kuark.service.sys.provider.dao.SysTenantDao
 import io.kuark.service.sys.provider.model.po.SysParam
 import io.kuark.service.sys.provider.model.po.SysTenant
@@ -34,17 +34,17 @@ open class SysTenantBiz : BaseCrudBiz<String, SysTenant, SysTenantDao>(), ISysTe
     private val log = LogFactory.getLog(this::class)
 
     @Autowired
-    private lateinit var tenantByIdCacheManager: TenantByIdCacheManager
+    private lateinit var tenantByIdCacheHandler: TenantByIdCacheHandler
 
     @Autowired
-    private lateinit var tenantBySubSysCacheManager: TenantBySubSysCacheManager
+    private lateinit var tenantBySubSysCacheHandler: TenantBySubSysCacheHandler
 
     override fun getTenantFromCache(id: String): SysTenantCacheItem? {
-        return tenantByIdCacheManager.getTenantFromCache(id)
+        return tenantByIdCacheHandler.getTenantFromCache(id)
     }
 
     override fun getTenantsFromCache(subSysDictCode: String): List<SysTenantCacheItem> {
-        return tenantBySubSysCacheManager.getTenantsFromCache(subSysDictCode)
+        return tenantBySubSysCacheHandler.getTenantsFromCache(subSysDictCode)
     }
 
     @Transactional
@@ -52,8 +52,8 @@ open class SysTenantBiz : BaseCrudBiz<String, SysTenant, SysTenantDao>(), ISysTe
         val id = super.insert(any)
         log.debug("新增id为${id}的租户。")
         // 同步缓存
-        tenantByIdCacheManager.syncOnInsert(id)
-        tenantBySubSysCacheManager.syncOnInsert(any, id)
+        tenantByIdCacheHandler.syncOnInsert(id)
+        tenantBySubSysCacheHandler.syncOnInsert(any, id)
         return id
     }
 
@@ -63,8 +63,8 @@ open class SysTenantBiz : BaseCrudBiz<String, SysTenant, SysTenantDao>(), ISysTe
         val id = BeanKit.getProperty(any, SysTenant::id.name) as String
         if (success) {
             // 同步缓存
-            tenantByIdCacheManager.syncOnUpdate(id)
-            tenantBySubSysCacheManager.syncOnUpdate(any, id)
+            tenantByIdCacheHandler.syncOnUpdate(id)
+            tenantBySubSysCacheHandler.syncOnUpdate(any, id)
         } else {
             log.error("更新id为${id}的租户失败！")
         }
@@ -80,8 +80,8 @@ open class SysTenantBiz : BaseCrudBiz<String, SysTenant, SysTenantDao>(), ISysTe
         val success = dao.update(param)
         if (success) {
             // 同步缓存
-            tenantByIdCacheManager.syncOnUpdate(id)
-            tenantBySubSysCacheManager.syncOnUpdate(null, id)
+            tenantByIdCacheHandler.syncOnUpdate(id)
+            tenantBySubSysCacheHandler.syncOnUpdate(null, id)
         } else {
             log.error("更新id为${id}的租户的启用状态为${active}失败！")
         }
@@ -90,12 +90,12 @@ open class SysTenantBiz : BaseCrudBiz<String, SysTenant, SysTenantDao>(), ISysTe
 
     @Transactional
     override fun deleteById(id: String): Boolean {
-        val sysTenant = tenantByIdCacheManager.getTenantFromCache(id)!!
+        val sysTenant = tenantByIdCacheHandler.getTenantFromCache(id)!!
         val success = super.deleteById(id)
         if (success) {
             // 同步缓存
-            tenantByIdCacheManager.syncOnDelete(id)
-            tenantBySubSysCacheManager.syncOnDelete(sysTenant)
+            tenantByIdCacheHandler.syncOnDelete(id)
+            tenantBySubSysCacheHandler.syncOnDelete(sysTenant)
         } else {
             log.error("删除id为${id}的租户失败！")
         }
@@ -109,8 +109,8 @@ open class SysTenantBiz : BaseCrudBiz<String, SysTenant, SysTenantDao>(), ISysTe
         val count = super.batchDelete(ids)
         log.debug("批量删除租户，期望删除${ids.size}条，实际删除${count}条。")
         // 同步缓存
-        tenantByIdCacheManager.synchOnBatchDelete(ids)
-        tenantBySubSysCacheManager.synchOnBatchDelete(ids, subSysDictCodes)
+        tenantByIdCacheHandler.synchOnBatchDelete(ids)
+        tenantBySubSysCacheHandler.synchOnBatchDelete(ids, subSysDictCodes)
         return count
     }
 

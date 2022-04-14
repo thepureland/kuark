@@ -6,16 +6,16 @@ import io.kuark.base.support.Consts
 
 
 /**
- * 缓存管理器抽象类
+ * 缓存处理器抽象类
  *
  * @param T 值类型
  * @author K
  * @since 1.0.0
  */
-abstract class AbstractCacheManager<T> {
+abstract class AbstractCacheHandler<T> {
 
     companion object {
-        private val log = LogFactory.getLog(this::class)
+        private val log = LogFactory.getLog(AbstractCacheHandler::class)
     }
 
     /**

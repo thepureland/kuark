@@ -10,7 +10,7 @@ import io.kuark.service.sys.common.vo.dict.SysParamCacheItem
 import io.kuark.service.sys.common.vo.param.SysParamRecord
 import io.kuark.service.sys.common.vo.param.SysParamSearchPayload
 import io.kuark.service.sys.provider.biz.ibiz.ISysParamBiz
-import io.kuark.service.sys.provider.cache.ParamCacheManager
+import io.kuark.service.sys.provider.cache.ParamCacheHandler
 import io.kuark.service.sys.provider.dao.SysParamDao
 import io.kuark.service.sys.provider.model.po.SysParam
 import io.kuark.service.sys.provider.model.table.SysParams
@@ -34,17 +34,17 @@ open class SysParamBiz : BaseCrudBiz<String, SysParam, SysParamDao>(), ISysParam
     private val log = LogFactory.getLog(this::class)
 
     @Autowired
-    private lateinit var paramCacheManager: ParamCacheManager
+    private lateinit var paramCacheHandler: ParamCacheHandler
 
     override fun getParamFromCache(module: String, name: String): SysParamCacheItem? {
-        return paramCacheManager.getParamFromCache(module, name)
+        return paramCacheHandler.getParamFromCache(module, name)
     }
 
     @Transactional
     override fun insert(any: Any): String {
         val id = super.insert(any)
         log.debug("新增id为${id}的参数。")
-        paramCacheManager.syncOnInsert(any, id) // 同步缓存
+        paramCacheHandler.syncOnInsert(any, id) // 同步缓存
         return id
     }
 
@@ -54,7 +54,7 @@ open class SysParamBiz : BaseCrudBiz<String, SysParam, SysParamDao>(), ISysParam
         val id = BeanKit.getProperty(any, SysParam::id.name) as String
         if (success) {
             log.debug("更新id为${id}的参数。")
-            paramCacheManager.syncOnUpdate(any, id)
+            paramCacheHandler.syncOnUpdate(any, id)
         } else {
             log.error("更新id为${id}的参数失败！")
         }
@@ -70,7 +70,7 @@ open class SysParamBiz : BaseCrudBiz<String, SysParam, SysParamDao>(), ISysParam
         val success = dao.update(param)
         if (success) {
             log.debug("更新id为${id}的参数的启用状态为${active}。")
-            paramCacheManager.syncOnUpdateActive(id, active)
+            paramCacheHandler.syncOnUpdateActive(id, active)
         } else {
             log.error("更新id为${id}的参数的启用状态为${active}失败！")
         }
@@ -83,7 +83,7 @@ open class SysParamBiz : BaseCrudBiz<String, SysParam, SysParamDao>(), ISysParam
         val success = super.deleteById(id)
         if (success) {
             log.debug("删除id为${id}的参数成功！")
-            paramCacheManager.syncOnDelete(param)
+            paramCacheHandler.syncOnDelete(param)
         } else {
             log.error("删除id为${id}的参数失败！")
         }
@@ -95,7 +95,7 @@ open class SysParamBiz : BaseCrudBiz<String, SysParam, SysParamDao>(), ISysParam
         val params = dao.inSearchById(ids)
         val count = super.batchDelete(ids)
         log.debug("批量删除参数，期望删除${ids.size}条，实际删除${count}条。")
-        paramCacheManager.synchOnBatchDelete(ids, params)
+        paramCacheHandler.synchOnBatchDelete(ids, params)
         return count
     }
 

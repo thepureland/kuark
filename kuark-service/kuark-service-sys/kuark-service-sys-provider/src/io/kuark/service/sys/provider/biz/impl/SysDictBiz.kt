@@ -9,7 +9,7 @@ import io.kuark.base.support.payload.ListSearchPayload
 import io.kuark.service.sys.common.vo.dict.*
 import io.kuark.service.sys.provider.biz.ibiz.ISysDictBiz
 import io.kuark.service.sys.provider.biz.ibiz.ISysDictItemBiz
-import io.kuark.service.sys.provider.cache.DictCacheManager
+import io.kuark.service.sys.provider.cache.DictCacheHandler
 import io.kuark.service.sys.provider.dao.SysDictDao
 import io.kuark.service.sys.provider.model.po.SysDict
 import io.kuark.service.sys.provider.model.table.SysDictItems
@@ -39,12 +39,12 @@ open class SysDictBiz : BaseCrudBiz<String, SysDict, SysDictDao>(), ISysDictBiz 
     private lateinit var sysDictItemBiz: ISysDictItemBiz
 
     @Autowired
-    private lateinit var dictCacheManager: DictCacheManager
+    private lateinit var dictCacheHandler: DictCacheHandler
 
     private val log = LogFactory.getLog(this::class)
 
     override fun getDictFromCache(dictId: String): SysDictCacheItem? {
-        return dictCacheManager.getDictFromCache(dictId)
+        return dictCacheHandler.getDictFromCache(dictId)
     }
 
     override fun getDictIdByModuleAndType(module: String, type: String): String? {
@@ -162,7 +162,7 @@ open class SysDictBiz : BaseCrudBiz<String, SysDict, SysDictDao>(), ISysDictBiz 
                     remark = payload.remark
                 }
                 val id = dao.insert(sysDict)
-                dictCacheManager.syncOnInsert(id) // 同步缓存
+                dictCacheHandler.syncOnInsert(id) // 同步缓存
                 id
             } else { // 添加RegDictItem
                 sysDictItemBiz.saveOrUpdate(payload)
@@ -178,7 +178,7 @@ open class SysDictBiz : BaseCrudBiz<String, SysDict, SysDictDao>(), ISysDictBiz 
                 }
                 val success = dao.update(sysDict)
                 if (success) {
-                    dictCacheManager.syncOnUpdate(sysDict.id!!) // 同步缓存
+                    dictCacheHandler.syncOnUpdate(sysDict.id!!) // 同步缓存
                 } else {
                     log.error("删除id为${sysDict.id}的字典失败！")
                 }
@@ -200,7 +200,7 @@ open class SysDictBiz : BaseCrudBiz<String, SysDict, SysDictDao>(), ISysDictBiz 
             }
             val success = dao.deleteById(id)
             if (success) {
-                dictCacheManager.syncOnDelete(id) // 同步缓存
+                dictCacheHandler.syncOnDelete(id) // 同步缓存
             } else {
                 log.error("删除id为${id}的字典失败！")
             }

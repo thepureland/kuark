@@ -5,7 +5,7 @@ import io.kuark.base.bean.BeanKit
 import io.kuark.base.log.LogFactory
 import io.kuark.service.sys.common.vo.cache.SysCacheCacheItem
 import io.kuark.service.sys.provider.biz.ibiz.ISysCacheBiz
-import io.kuark.service.sys.provider.cache.CacheConfigCacheManager
+import io.kuark.service.sys.provider.cache.CacheConfigCacheHandler
 import io.kuark.service.sys.provider.dao.SysCacheDao
 import io.kuark.service.sys.provider.model.po.SysCache
 import org.springframework.beans.factory.annotation.Autowired
@@ -29,17 +29,17 @@ open class SysCacheBiz : BaseCrudBiz<String, SysCache, SysCacheDao>(), ISysCache
     private val log = LogFactory.getLog(this::class)
 
     @Autowired
-    private lateinit var cacheConfigCacheManager: CacheConfigCacheManager
+    private lateinit var cacheConfigCacheHandler: CacheConfigCacheHandler
 
     override fun getCacheFromCache(name: String): SysCacheCacheItem? {
-        return cacheConfigCacheManager.getCacheFromCache(name)
+        return cacheConfigCacheHandler.getCacheFromCache(name)
     }
 
     @Transactional
     override fun insert(any: Any): String {
         val id = super.insert(any)
         log.debug("新增id为${id}的缓存配置。")
-        cacheConfigCacheManager.syncOnInsert(any, id) // 同步缓存
+        cacheConfigCacheHandler.syncOnInsert(any, id) // 同步缓存
         return id
     }
 
@@ -49,7 +49,7 @@ open class SysCacheBiz : BaseCrudBiz<String, SysCache, SysCacheDao>(), ISysCache
         val id = BeanKit.getProperty(any, SysCache::id.name) as String
         if (success) {
             log.debug("更新id为${id}的缓存配置。")
-            cacheConfigCacheManager.syncOnUpdate(any, id)
+            cacheConfigCacheHandler.syncOnUpdate(any, id)
         } else {
             log.error("更新id为${id}的缓存配置失败！")
         }
@@ -62,7 +62,7 @@ open class SysCacheBiz : BaseCrudBiz<String, SysCache, SysCacheDao>(), ISysCache
         val success = super.deleteById(id)
         if (success) {
             log.debug("删除id为${id}的缓存配置成功！")
-            cacheConfigCacheManager.syncOnDelete(id, sysCache.name)
+            cacheConfigCacheHandler.syncOnDelete(id, sysCache.name)
         } else {
             log.error("删除id为${id}的缓存配置失败！")
         }
@@ -74,7 +74,7 @@ open class SysCacheBiz : BaseCrudBiz<String, SysCache, SysCacheDao>(), ISysCache
         val sysCaches = dao.inSearchById(ids)
         val count = super.batchDelete(ids)
         log.debug("批量删除缓存配置，期望删除${ids.size}条，实际删除${count}条。")
-        cacheConfigCacheManager.synchOnBatchDelete(ids, sysCaches)
+        cacheConfigCacheHandler.synchOnBatchDelete(ids, sysCaches)
         return count
     }
 

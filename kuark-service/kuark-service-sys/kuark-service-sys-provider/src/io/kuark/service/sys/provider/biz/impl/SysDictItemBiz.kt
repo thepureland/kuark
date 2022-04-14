@@ -6,7 +6,7 @@ import io.kuark.base.log.LogFactory
 import io.kuark.service.sys.common.vo.dict.SysDictItemCacheItem
 import io.kuark.service.sys.common.vo.dict.SysDictPayload
 import io.kuark.service.sys.provider.biz.ibiz.ISysDictItemBiz
-import io.kuark.service.sys.provider.cache.DictItemCacheManager
+import io.kuark.service.sys.provider.cache.DictItemCacheHandler
 import io.kuark.service.sys.provider.dao.SysDictItemDao
 import io.kuark.service.sys.provider.model.po.SysDictItem
 import org.springframework.beans.factory.annotation.Autowired
@@ -28,17 +28,17 @@ open class SysDictItemBiz : BaseCrudBiz<String, SysDictItem, SysDictItemDao>(), 
     //region yur codes 2
 
     @Autowired
-    private lateinit var dictItemCacheManager: DictItemCacheManager
+    private lateinit var dictItemCacheHandler: DictItemCacheHandler
 
     private val log = LogFactory.getLog(this::class)
 
 
     override fun getItemsFromCache(module: String, type: String): List<SysDictItemCacheItem> {
-        return dictItemCacheManager.getItemsFromCache(module, type)
+        return dictItemCacheHandler.getItemsFromCache(module, type)
     }
 
     override fun transDictCode(module: String, type: String, code: String): String? {
-        val items = dictItemCacheManager.getItemsFromCache(module, type)
+        val items = dictItemCacheHandler.getItemsFromCache(module, type)
         return items.firstOrNull { it.itemCode == code }?.itemName
     }
 
@@ -54,7 +54,7 @@ open class SysDictItemBiz : BaseCrudBiz<String, SysDictItem, SysDictItemDao>(), 
                 remark = payload.remark
             }
             val id = dao.insert(sysDictItem)
-            dictItemCacheManager.syncOnInsert(sysDictItem) // 同步缓存
+            dictItemCacheHandler.syncOnInsert(sysDictItem) // 同步缓存
             id
         } else { // 更新
             val sysDictItem = SysDictItem {
@@ -68,7 +68,7 @@ open class SysDictItemBiz : BaseCrudBiz<String, SysDictItem, SysDictItemDao>(), 
             }
             val success = dao.update(sysDictItem)
             if (success) {
-                dictItemCacheManager.syncOnUpdate(sysDictItem) // 同步缓存
+                dictItemCacheHandler.syncOnUpdate(sysDictItem) // 同步缓存
             } else {
                 log.error("新增id为${sysDictItem.id}的字典项失败！")
             }
@@ -93,7 +93,7 @@ open class SysDictItemBiz : BaseCrudBiz<String, SysDictItem, SysDictItemDao>(), 
         }
         val success = dao.deleteById(id)
         if (success) {
-            dictItemCacheManager.syncOnDelete(id, dictIds.first() as String) // 同步缓存
+            dictItemCacheHandler.syncOnDelete(id, dictIds.first() as String) // 同步缓存
         } else {
             log.error("删除id为${id}的字典项失败！")
         }
@@ -109,7 +109,7 @@ open class SysDictItemBiz : BaseCrudBiz<String, SysDictItem, SysDictItemDao>(), 
         val success = dao.update(dictItem)
         if (success) {
             log.debug("更新id为${dictItemId}的字典项的启用状态为${active}。")
-            dictItemCacheManager.syncOnUpdateActive(dictItemId)
+            dictItemCacheHandler.syncOnUpdateActive(dictItemId)
         } else {
             log.error("更新id为${dictItemId}的字典项的启用状态为${active}失败！")
         }

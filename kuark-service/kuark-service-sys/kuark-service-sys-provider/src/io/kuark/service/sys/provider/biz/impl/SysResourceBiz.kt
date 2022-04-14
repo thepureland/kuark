@@ -14,7 +14,7 @@ import io.kuark.service.sys.common.vo.dict.SysResourceCacheItem
 import io.kuark.service.sys.common.vo.resource.*
 import io.kuark.service.sys.provider.biz.ibiz.ISysDictItemBiz
 import io.kuark.service.sys.provider.biz.ibiz.ISysResourceBiz
-import io.kuark.service.sys.provider.cache.ResourceCacheManager
+import io.kuark.service.sys.provider.cache.ResourceCacheHandler
 import io.kuark.service.sys.provider.dao.SysResourceDao
 import io.kuark.service.sys.provider.model.po.SysResource
 import io.kuark.service.sys.provider.model.table.SysResources
@@ -45,17 +45,17 @@ open class SysResourceBiz : BaseCrudBiz<String, SysResource, SysResourceDao>(), 
     private lateinit var dictItemBiz: ISysDictItemBiz
 
     @Autowired
-    private lateinit var resourceCacheManager: ResourceCacheManager
+    private lateinit var resourceCacheHandler: ResourceCacheHandler
 
     override fun getResourcesFromCache(subSysDictCode: String, resourceTypeDictCode: String): List<SysResourceCacheItem> {
-        return resourceCacheManager.getResourcesFromCache(subSysDictCode, resourceTypeDictCode)
+        return resourceCacheHandler.getResourcesFromCache(subSysDictCode, resourceTypeDictCode)
     }
 
     @Transactional
     override fun insert(any: Any): String {
         val id = super.insert(any)
         log.debug("新增id为${id}的资源。")
-        resourceCacheManager.syncOnInsert(any, id) // 同步缓存
+        resourceCacheHandler.syncOnInsert(any, id) // 同步缓存
         return id
     }
 
@@ -64,7 +64,7 @@ open class SysResourceBiz : BaseCrudBiz<String, SysResource, SysResourceDao>(), 
         val success = super.update(any)
         val id = BeanKit.getProperty(any, SysResource::id.name) as String
         if (success) {
-            resourceCacheManager.syncOnUpdate(any, id) // 同步缓存
+            resourceCacheHandler.syncOnUpdate(any, id) // 同步缓存
         } else {
             log.error("更新id为${id}的资源失败！")
         }
@@ -80,7 +80,7 @@ open class SysResourceBiz : BaseCrudBiz<String, SysResource, SysResourceDao>(), 
         val success = dao.update(res)
         if (success) {
             log.debug("更新id为${id}的资源的启用状态为${active}。")
-            resourceCacheManager.syncOnUpdateActive(id, active)
+            resourceCacheHandler.syncOnUpdateActive(id, active)
         } else {
             log.error("更新id为${id}的资源的启用状态为${active}失败！")
         }
@@ -88,7 +88,7 @@ open class SysResourceBiz : BaseCrudBiz<String, SysResource, SysResourceDao>(), 
     }
 
     override fun getSimpleMenus(subSysDictCode: String): List<BaseMenuTreeNode> {
-        val origMenus = resourceCacheManager.getResourcesFromCache(subSysDictCode, ResourceType.MENU.code)
+        val origMenus = resourceCacheHandler.getResourcesFromCache(subSysDictCode, ResourceType.MENU.code)
         val menus = origMenus.map {
             BaseMenuTreeNode().apply {
                 title = it.name
@@ -101,7 +101,7 @@ open class SysResourceBiz : BaseCrudBiz<String, SysResource, SysResourceDao>(), 
     }
 
     override fun getMenus(subSysDictCode: String): List<MenuTreeNode> {
-        val origMenus = resourceCacheManager.getResourcesFromCache(subSysDictCode, ResourceType.MENU.code)
+        val origMenus = resourceCacheHandler.getResourcesFromCache(subSysDictCode, ResourceType.MENU.code)
         val menus = origMenus.map {
             MenuTreeNode().apply {
                 title = it.name
@@ -231,7 +231,7 @@ open class SysResourceBiz : BaseCrudBiz<String, SysResource, SysResourceDao>(), 
         }
 
         // 同步缓存
-        resourceCacheManager.syncOnDelete(id, subSysDictCode!!, resourceTypeDictCode!!)
+        resourceCacheHandler.syncOnDelete(id, subSysDictCode!!, resourceTypeDictCode!!)
 
         return true
     }
@@ -239,7 +239,7 @@ open class SysResourceBiz : BaseCrudBiz<String, SysResource, SysResourceDao>(), 
     override fun getResources(
         subSysDictCode: String, resourceType: ResourceType, vararg resourceIds: String
     ): List<SysResourceCacheItem> {
-        val resources = resourceCacheManager.getResourcesFromCache(subSysDictCode, resourceType.code)
+        val resources = resourceCacheHandler.getResourcesFromCache(subSysDictCode, resourceType.code)
         return resources.filter { it.id in resourceIds }
     }
 

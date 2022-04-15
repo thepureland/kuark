@@ -5,6 +5,7 @@ import io.kuark.ability.cache.support.AbstractCacheHandler
 import io.kuark.base.bean.BeanKit
 import io.kuark.base.log.LogFactory
 import io.kuark.base.support.Consts
+import io.kuark.context.kit.SpringKit
 import io.kuark.service.sys.common.vo.dict.SysTenantCacheItem
 import io.kuark.service.sys.common.vo.tenant.SysTenantSearchPayload
 import io.kuark.service.sys.provider.dao.SysTenantDao
@@ -26,18 +27,15 @@ open class TenantBySubSysCacheHandler: AbstractCacheHandler<List<SysTenantCacheI
     }
 
     @Autowired
-    private lateinit var self: TenantBySubSysCacheHandler
-
-    @Autowired
     private lateinit var tenantByIdCacheManager : TenantByIdCacheHandler
 
 
     override fun cacheName(): String = SYS_TENANT_BY_SUB_SYS
 
-    override fun doReload(key: String): List<SysTenantCacheItem> = self.getTenantsFromCache(key)
+    override fun doReload(key: String): List<SysTenantCacheItem> = getSelf().getTenantsFromCache(key)
 
     override fun reloadAll(clear: Boolean) {
-        if (!CacheKit.isCacheActive()) {
+        if (!CacheKit.isCacheActive(cacheName())) {
             log.info("缓存未开启，不加载和缓存所有启用状态的租户！")
             return
         }
@@ -71,7 +69,7 @@ open class TenantBySubSysCacheHandler: AbstractCacheHandler<List<SysTenantCacheI
         unless = "#result == null || #result.isEmpty()"
     )
     open fun getTenantsFromCache(subSysDictCode: String): List<SysTenantCacheItem> {
-        if (CacheKit.isCacheActive()) {
+        if (CacheKit.isCacheActive(cacheName())) {
             log.debug("缓存中不存在子系统为${subSysDictCode}的租户，从数据库中加载...")
         }
         val searchPayload = SysTenantSearchPayload().apply {
@@ -87,17 +85,17 @@ open class TenantBySubSysCacheHandler: AbstractCacheHandler<List<SysTenantCacheI
     }
 
     fun syncOnInsert(any: Any, id: String) {
-        if (CacheKit.isCacheActive() && CacheKit.isWriteInTime(cacheName())) {
+        if (CacheKit.isCacheActive(cacheName()) && CacheKit.isWriteInTime(cacheName())) {
             log.debug("新增id为${id}的租户后，同步${cacheName()}缓存...")
             val subSysDictCode = BeanKit.getProperty(any, SysTenant::subSysDictCode.name) as String
             CacheKit.evict(cacheName(), subSysDictCode) // 踢除缓存，因为缓存的粒度为子系统
-            self.getTenantsFromCache(subSysDictCode) // 重新缓存
+            getSelf().getTenantsFromCache(subSysDictCode) // 重新缓存
             log.debug("${cacheName()}缓存同步完成。")
         }
     }
 
     fun syncOnUpdate(any: Any?, id: String) {
-        if (CacheKit.isCacheActive()) {
+        if (CacheKit.isCacheActive(cacheName())) {
             log.debug("更新id为${id}的租户后，同步${cacheName()}缓存...")
             val subSysDictCode = if (any == null) {
                 tenantByIdCacheManager.getTenantFromCache(id)!!.subSysDictCode!!
@@ -106,35 +104,39 @@ open class TenantBySubSysCacheHandler: AbstractCacheHandler<List<SysTenantCacheI
             }
             CacheKit.evict(cacheName(), subSysDictCode) // 踢除缓存，因为缓存的粒度为子系统
             if (CacheKit.isWriteInTime(cacheName())) {
-                self.getTenantsFromCache(subSysDictCode) // 重新缓存
+                getSelf().getTenantsFromCache(subSysDictCode) // 重新缓存
             }
             log.debug("${cacheName()}缓存同步完成。")
         }
     }
 
     fun syncOnDelete(sysTenant: SysTenantCacheItem) {
-        if (CacheKit.isCacheActive()) {
+        if (CacheKit.isCacheActive(cacheName())) {
             log.debug("删除id为${sysTenant.id}的租户后，同步从${cacheName()}缓存中踢除...")
             val subSysDictCode = sysTenant.subSysDictCode!!
             CacheKit.evict(cacheName(), subSysDictCode) // 踢除缓存，缓存的粒度为子系统
             if (CacheKit.isWriteInTime(cacheName())) {
-                self.getTenantsFromCache(subSysDictCode) // 重新缓存
+                getSelf().getTenantsFromCache(subSysDictCode) // 重新缓存
             }
             log.debug("${cacheName()}缓存同步完成。")
         }
     }
 
     fun synchOnBatchDelete(ids: Collection<String>, subSysDictCodes: Set<String>) {
-        if (CacheKit.isCacheActive()) {
+        if (CacheKit.isCacheActive(cacheName())) {
             log.debug("批量删除id为${ids}的租户后，同步从${cacheName()}缓存中踢除...")
             subSysDictCodes.forEach {
                 CacheKit.evict(cacheName(), it) // 踢除缓存，缓存的粒度为子系统
                 if (CacheKit.isWriteInTime(cacheName())) {
-                    self.getTenantsFromCache(it) // 重新缓存
+                    getSelf().getTenantsFromCache(it) // 重新缓存
                 }
             }
             log.debug("${cacheName()}缓存同步完成。")
         }
+    }
+
+    fun getSelf(): TenantBySubSysCacheHandler {
+        return SpringKit.getBean(TenantBySubSysCacheHandler::class)
     }
 
 }

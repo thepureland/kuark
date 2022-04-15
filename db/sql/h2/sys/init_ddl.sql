@@ -383,19 +383,20 @@ on column "sys_tenant"."update_time" is '更新时间';
 
 create table "sys_cache"
 (
-    "id"                   CHAR(36)  default RANDOM_UUID() not null primary key,
-    "name"                 VARCHAR(64)                     not null,
-    "sub_sys_dict_code"    VARCHAR(32)                     not null,
-    "strategy_dict_code"   VARCHAR(16)                     not null,
-    "write_on_boot"        BOOLEAN   default FALSE         not null,
-    "write_in_time"     BOOLEAN   default FALSE         not null,
-    "ttl"                  INT2,
-    "remark"               VARCHAR(128),
-    "built_in"             BOOLEAN   default FALSE         not null,
-    "create_user"          VARCHAR(36),
-    "create_time"          TIMESTAMP default now(),
-    "update_user"          VARCHAR(36),
-    "update_time"          TIMESTAMP
+    "id"                 CHAR(36)  default RANDOM_UUID() not null primary key,
+    "name"               VARCHAR(64)                     not null,
+    "sub_sys_dict_code"  VARCHAR(32)                     not null,
+    "strategy_dict_code" VARCHAR(16)                     not null,
+    "write_on_boot"      BOOLEAN   default FALSE         not null,
+    "write_in_time"      BOOLEAN   default FALSE         not null,
+    "ttl"                INT2,
+    "remark"             VARCHAR(128),
+    "active"             BOOLEAN   default TRUE          not null,
+    "built_in"           BOOLEAN   default FALSE         not null,
+    "create_user"        VARCHAR(36),
+    "create_time"        TIMESTAMP default now(),
+    "update_user"        VARCHAR(36),
+    "update_time"        TIMESTAMP
 );
 
 create
@@ -427,6 +428,9 @@ on column "sys_cache"."ttl" is '缓存生存时间(秒)';
 
 comment
 on column "sys_cache"."remark" is '备注，或其国际化key';
+
+comment
+on column "sys_cache"."active" is '是否启用';
 
 comment
 on column "sys_cache"."built_in" is '是否内置';

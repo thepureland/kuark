@@ -24,4 +24,7 @@ class CacheConfig {
     /** 缓存生存时间(秒) */
     var ttl: Int? = null
 
+    /** 是否启用 */
+    var active: Boolean? = null
+
 }

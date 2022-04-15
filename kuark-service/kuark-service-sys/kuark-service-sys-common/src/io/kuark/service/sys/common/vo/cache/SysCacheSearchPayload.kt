@@ -24,6 +24,9 @@ open class SysCacheSearchPayload : ListSearchPayload() {
     /** 子系统代码 */
     var subSysDictCode: String? = null
 
+    /** 是否启用 */
+    var active: Boolean? = null
+
     //endregion your codes 2
 
 }

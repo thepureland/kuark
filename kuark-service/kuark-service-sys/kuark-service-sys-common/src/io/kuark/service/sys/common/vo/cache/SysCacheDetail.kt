@@ -37,6 +37,9 @@ open class SysCacheDetail : IdJsonResult<String>() {
     /** 备注，或其国际化key */
     var remark: String? = null
 
+    /** 是否启用 */
+    var active: Boolean? = null
+
     /** 是否内置 */
     var builtIn: Boolean? = null
 

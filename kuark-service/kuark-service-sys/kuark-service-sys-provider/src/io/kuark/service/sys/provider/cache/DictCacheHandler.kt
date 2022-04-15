@@ -5,6 +5,7 @@ import io.kuark.ability.cache.support.AbstractCacheHandler
 import io.kuark.base.log.LogFactory
 import io.kuark.base.support.Consts
 import io.kuark.base.support.payload.ListSearchPayload
+import io.kuark.context.kit.SpringKit
 import io.kuark.service.sys.common.vo.dict.SysDictCacheItem
 import io.kuark.service.sys.provider.dao.SysDictDao
 import org.springframework.beans.factory.annotation.Autowired
@@ -18,9 +19,6 @@ open class DictCacheHandler : AbstractCacheHandler<SysDictCacheItem>() {
     @Autowired
     private lateinit var sysDictDao: SysDictDao
 
-    @Autowired
-    private lateinit var self: DictCacheHandler
-
     companion object {
         private const val SYS_DICT_BY_ID = "sys_dict_by_id"
         private val log = LogFactory.getLog(DictCacheHandler::class)
@@ -29,11 +27,11 @@ open class DictCacheHandler : AbstractCacheHandler<SysDictCacheItem>() {
     override fun cacheName(): String = SYS_DICT_BY_ID
 
     override fun doReload(key: String): SysDictCacheItem? {
-        return self.getDictFromCache(key)
+        return getSelf().getDictFromCache(key)
     }
 
     override fun reloadAll(clear: Boolean) {
-        if (!CacheKit.isCacheActive()) {
+        if (!CacheKit.isCacheActive(cacheName())) {
             log.info("缓存未开启，不加载和缓存所有字典(主表)信息！")
             return
         }
@@ -65,7 +63,7 @@ open class DictCacheHandler : AbstractCacheHandler<SysDictCacheItem>() {
         unless = "#result == null"
     )
     open fun getDictFromCache(dictId: String): SysDictCacheItem? {
-        if (CacheKit.isCacheActive()) {
+        if (CacheKit.isCacheActive(cacheName())) {
             log.debug("缓存中不存在id为${dictId}的字典，从数据库中加载...")
         }
         val result = sysDictDao.get(dictId, SysDictCacheItem::class)
@@ -78,30 +76,34 @@ open class DictCacheHandler : AbstractCacheHandler<SysDictCacheItem>() {
     }
 
     fun syncOnInsert(id: String) {
-        if (CacheKit.isCacheActive() && CacheKit.isWriteInTime(cacheName())) {
+        if (CacheKit.isCacheActive(cacheName()) && CacheKit.isWriteInTime(cacheName())) {
             log.debug("新增id为${id}的字典后，同步${cacheName()}缓存...")
-            self.getDictFromCache(id)
+            getSelf().getDictFromCache(id)
             log.debug("${cacheName()}缓存同步完成。")
         }
     }
 
     fun syncOnUpdate(id: String) {
-        if (CacheKit.isCacheActive()) {
+        if (CacheKit.isCacheActive(cacheName())) {
             log.debug("更新id为${id}的字典后，同步${cacheName()}缓存...")
             CacheKit.evict(cacheName(), id) // 踢除缓存
             if (CacheKit.isWriteInTime(cacheName())) {
-                self.getDictFromCache(id) // 缓存
+                getSelf().getDictFromCache(id) // 缓存
             }
             log.debug("${cacheName()}缓存同步完成。")
         }
     }
 
     fun syncOnDelete(id: String) {
-        if (CacheKit.isCacheActive()) {
+        if (CacheKit.isCacheActive(cacheName())) {
             log.debug("删除id为${id}的字典后，同步${cacheName()}缓存...")
             CacheKit.evict(cacheName(), id) // 踢除缓存
             log.debug("${cacheName()}缓存同步完成。")
         }
+    }
+
+    fun getSelf(): DictCacheHandler {
+        return SpringKit.getBean(DictCacheHandler::class)
     }
 
 }

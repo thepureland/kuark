@@ -7,6 +7,7 @@ import io.kuark.base.log.LogFactory
 import io.kuark.base.query.Criteria
 import io.kuark.base.query.enums.Operator
 import io.kuark.base.support.Consts
+import io.kuark.context.kit.SpringKit
 import io.kuark.service.user.common.rbac.vo.role.RbacRoleCacheItem
 import io.kuark.service.user.common.rbac.vo.role.RbacRoleRecord
 import io.kuark.service.user.common.rbac.vo.role.RbacRoleSearchPayload
@@ -24,9 +25,6 @@ open class RoleIdCacheHandler : AbstractCacheHandler<List<String>>() {
     private lateinit var rbacRoleDao: RbacRoleDao
 
     @Autowired
-    private lateinit var self: RoleIdCacheHandler
-
-    @Autowired
     private lateinit var roleCacheManager: RoleCacheHandler
 
     companion object {
@@ -39,11 +37,11 @@ open class RoleIdCacheHandler : AbstractCacheHandler<List<String>>() {
     override fun doReload(key: String): List<String> {
         require(key.contains(":")) { "缓存${cacheName()}的key格式必须是 子系统代码::租户id" }
         val subSysAndTenantId = key.split(":")
-        return self.getRoleIdsFromCache(subSysAndTenantId[0], subSysAndTenantId[1])
+        return getSelf().getRoleIdsFromCache(subSysAndTenantId[0], subSysAndTenantId[1])
     }
 
     override fun reloadAll(clear: Boolean) {
-        if (!CacheKit.isCacheActive()) {
+        if (!CacheKit.isCacheActive(cacheName())) {
             log.info("缓存未开启，不加载和缓存所有启用状态的角色id！")
             return
         }
@@ -87,7 +85,7 @@ open class RoleIdCacheHandler : AbstractCacheHandler<List<String>>() {
     )
     open fun getRoleIdsFromCache(subSysDictCode: String, tenantId: String?): List<String> {
         require(subSysDictCode.isNotBlank()) { log.error("从缓存中获取角色id时，必须指定子系统代码！") }
-        if (CacheKit.isCacheActive()) {
+        if (CacheKit.isCacheActive(cacheName())) {
             log.debug("缓存中不存在子系统为${subSysDictCode}且租户id为${tenantId}的角色id，从数据库中加载...")
         }
         val criteria = Criteria(RbacRole::subSysDictCode.name, Operator.EQ, subSysDictCode)
@@ -102,51 +100,55 @@ open class RoleIdCacheHandler : AbstractCacheHandler<List<String>>() {
     }
 
     fun syncOnInsert(id: String) {
-        if (CacheKit.isCacheActive()) {
+        if (CacheKit.isCacheActive(cacheName())) {
             log.debug("新增id为${id}的角色后，同步${cacheName()}缓存...")
             val role = roleCacheManager.getRoleFromCache(id)!! // 缓存角色
             CacheKit.evict(cacheName(), "${role.subSysDictCode}::${role.tenantId}") // 踢除角色id的缓存
             if (CacheKit.isWriteInTime(cacheName())) {
-                self.getRoleIdsFromCache(role.subSysDictCode!!, role.tenantId)  // 缓存角色id
+                getSelf().getRoleIdsFromCache(role.subSysDictCode!!, role.tenantId)  // 缓存角色id
             }
             log.debug("${cacheName()}缓存同步完成。")
         }
     }
 
     fun syncOnUpdateActive(id: String) {
-        if (CacheKit.isCacheActive()) {
+        if (CacheKit.isCacheActive(cacheName())) {
             log.debug("更新id为${id}的角色的启用状态后，同步${cacheName()}缓存...")
             val r = roleCacheManager.getRoleFromCache(id)!!
             CacheKit.evict(cacheName(), "${r.subSysDictCode}::${r.tenantId}") // 踢除角色id的缓存
-            self.getRoleIdsFromCache(r.subSysDictCode!!, r.tenantId)  // 缓存角色id
+            getSelf().getRoleIdsFromCache(r.subSysDictCode!!, r.tenantId)  // 缓存角色id
             log.debug("${cacheName()}缓存同步完成。")
         }
     }
 
     fun syncOnDelete(role: RbacRoleCacheItem) {
-        if (CacheKit.isCacheActive()) {
+        if (CacheKit.isCacheActive(cacheName())) {
             log.debug("删除id为${role.id}的角色后，同步从${cacheName()}缓存中踢除...")
             CacheKit.evict(cacheName(), "${role.subSysDictCode}::${role.tenantId}") // 踢除角色id的缓存
             if (CacheKit.isWriteInTime(cacheName())) {
-                self.getRoleIdsFromCache(role.subSysDictCode!!, role.tenantId)  // 缓存角色id
+                getSelf().getRoleIdsFromCache(role.subSysDictCode!!, role.tenantId)  // 缓存角色id
             }
             log.debug("${cacheName()}缓存同步完成。")
         }
     }
 
     fun synchOnBatchDelete(ids: Collection<String>, roleMap: Map<String, RbacRoleCacheItem>) {
-        if (CacheKit.isCacheActive()) {
+        if (CacheKit.isCacheActive(cacheName())) {
             log.debug("批量删除id为${ids}的角色后，同步从${cacheName()}缓存中踢除...")
             val keys = roleMap.map { "${it.value.subSysDictCode}::${it.value.tenantId}" }.toSet()
             keys.forEach {
                 CacheKit.evict(cacheName(), it) // 踢除角色id缓存
                 if (CacheKit.isWriteInTime(cacheName())) {
                     val subSysAndTenantId = it.split(":")
-                    self.getRoleIdsFromCache(subSysAndTenantId[0], subSysAndTenantId[1])  // 缓存角色id
+                    getSelf().getRoleIdsFromCache(subSysAndTenantId[0], subSysAndTenantId[1])  // 缓存角色id
                 }
             }
             log.debug("${cacheName()}缓存同步完成。")
         }
+    }
+
+    fun getSelf(): RoleIdCacheHandler {
+        return SpringKit.getBean(RoleIdCacheHandler::class)
     }
 
 }

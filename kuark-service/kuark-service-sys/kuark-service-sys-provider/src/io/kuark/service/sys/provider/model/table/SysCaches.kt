@@ -39,6 +39,9 @@ object SysCaches : StringIdTable<SysCache>("sys_cache") {
     /** 备注，或其国际化key */
     var remark = varchar("remark").bindTo { it.remark }
 
+    /** 是否启用 */
+    var active = boolean("active").bindTo { it.active }
+
     /** 是否内置 */
     var builtIn = boolean("built_in").bindTo { it.builtIn }
 

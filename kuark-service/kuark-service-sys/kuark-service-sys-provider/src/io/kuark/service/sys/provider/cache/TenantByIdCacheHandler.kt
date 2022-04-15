@@ -4,6 +4,7 @@ import io.kuark.ability.cache.kit.CacheKit
 import io.kuark.ability.cache.support.AbstractCacheHandler
 import io.kuark.base.log.LogFactory
 import io.kuark.base.support.Consts
+import io.kuark.context.kit.SpringKit
 import io.kuark.service.sys.common.vo.dict.SysTenantCacheItem
 import io.kuark.service.sys.common.vo.tenant.SysTenantSearchPayload
 import io.kuark.service.sys.provider.dao.SysTenantDao
@@ -23,17 +24,14 @@ open class TenantByIdCacheHandler : AbstractCacheHandler<SysTenantCacheItem>() {
         private val log = LogFactory.getLog(TenantByIdCacheHandler::class)
     }
 
-    @Autowired
-    private lateinit var self: TenantByIdCacheHandler
-
     override fun cacheName(): String = SYS_TENANT_BY_ID
 
     override fun doReload(key: String): SysTenantCacheItem? {
-        return self.getTenantFromCache(key)
+        return getSelf().getTenantFromCache(key)
     }
 
     override fun reloadAll(clear: Boolean) {
-        if (!CacheKit.isCacheActive()) {
+        if (!CacheKit.isCacheActive(cacheName())) {
             log.info("缓存未开启，不加载和缓存所有租户！")
             return
         }
@@ -65,7 +63,7 @@ open class TenantByIdCacheHandler : AbstractCacheHandler<SysTenantCacheItem>() {
         unless = "#result == null"
     )
     open fun getTenantFromCache(id: String): SysTenantCacheItem? {
-        if (CacheKit.isCacheActive()) {
+        if (CacheKit.isCacheActive(cacheName())) {
             log.debug("缓存中不存在id为${id}的租户，从数据库中加载...")
         }
         val result = dao.get(id, SysTenantCacheItem::class)
@@ -78,28 +76,28 @@ open class TenantByIdCacheHandler : AbstractCacheHandler<SysTenantCacheItem>() {
     }
 
     fun syncOnInsert(id: String) {
-        if (CacheKit.isCacheActive() && CacheKit.isWriteInTime(cacheName())) {
+        if (CacheKit.isCacheActive(cacheName()) && CacheKit.isWriteInTime(cacheName())) {
             if (CacheKit.isWriteInTime(cacheName())) {
                 log.debug("新增id为${id}的租户后，同步${cacheName()}缓存...")
-                self.getTenantFromCache(id)
+                getSelf().getTenantFromCache(id)
                 log.debug("${cacheName()}缓存同步完成。")
             }
         }
     }
 
     fun syncOnUpdate(id: String) {
-        if (CacheKit.isCacheActive()) {
+        if (CacheKit.isCacheActive(cacheName())) {
             log.debug("更新id为${id}的租户后，同步${cacheName()}缓存...")
             CacheKit.evict(cacheName(), id)
             if (CacheKit.isWriteInTime(cacheName())) {
-                self.getTenantFromCache(id)
+                getSelf().getTenantFromCache(id)
             }
             log.debug("${cacheName()}缓存同步完成.")
         }
     }
 
     fun syncOnDelete(id: String) {
-        if (CacheKit.isCacheActive()) {
+        if (CacheKit.isCacheActive(cacheName())) {
             log.debug("删除id为${id}的租户后，同步从${cacheName()}缓存中踢除...")
             CacheKit.evict(cacheName(), id)
             log.debug("${cacheName()}缓存同步完成。")
@@ -107,11 +105,15 @@ open class TenantByIdCacheHandler : AbstractCacheHandler<SysTenantCacheItem>() {
     }
 
     fun synchOnBatchDelete(ids: Collection<String>) {
-        if (CacheKit.isCacheActive()) {
+        if (CacheKit.isCacheActive(cacheName())) {
             log.debug("批量删除id为${ids}的租户后，同步从${cacheName()}缓存中踢除...")
             ids.forEach { CacheKit.evict(cacheName(), it) }
             log.debug("${cacheName()}缓存同步完成。")
         }
+    }
+
+    fun getSelf(): TenantByIdCacheHandler {
+        return SpringKit.getBean(TenantByIdCacheHandler::class)
     }
 
 }

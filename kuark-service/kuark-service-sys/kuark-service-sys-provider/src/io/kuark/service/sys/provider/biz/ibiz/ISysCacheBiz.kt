@@ -27,6 +27,17 @@ interface ISysCacheBiz : IBaseCrudBiz<String, SysCache> {
      */
     fun getCacheFromCache(name: String): SysCacheCacheItem?
 
+    /**
+     * 更新启用状态，并同步缓存
+     *
+     * @param id 主键
+     * @param active 是否启用
+     * @return 是否更新成功
+     * @author K
+     * @since 1.0.0
+     */
+    fun updateActive(id: String, active: Boolean): Boolean
+
     //endregion your codes 2
 
 }

@@ -1,8 +1,7 @@
 package io.kuark.service.sys.provider.model.po
 
 import io.kuark.ability.data.rdb.support.DbEntityFactory
-import io.kuark.ability.data.rdb.support.IDbEntity
-import java.time.LocalDateTime
+import io.kuark.ability.data.rdb.support.IMaintainableDbEntity
 
 /**
  * 缓存数据库实体
@@ -11,7 +10,7 @@ import java.time.LocalDateTime
  * @since 1.0.0
  */
 //region your codes 1
-interface SysCache : IDbEntity<String, SysCache> {
+interface SysCache : IMaintainableDbEntity<String, SysCache> {
 //endregion your codes 1
 
     companion object : DbEntityFactory<SysCache>()
@@ -33,24 +32,6 @@ interface SysCache : IDbEntity<String, SysCache> {
 
     /** 缓存生存时间(秒) */
     var ttl: Int?
-
-    /** 备注，或其国际化key */
-    var remark: String?
-
-    /** 是否内置 */
-    var builtIn: Boolean
-
-    /** 创建用户 */
-    var createUser: String?
-
-    /** 创建时间 */
-    var createTime: LocalDateTime?
-
-    /** 更新用户 */
-    var updateUser: String?
-
-    /** 更新时间 */
-    var updateTime: LocalDateTime?
 
 
     //region your codes 2

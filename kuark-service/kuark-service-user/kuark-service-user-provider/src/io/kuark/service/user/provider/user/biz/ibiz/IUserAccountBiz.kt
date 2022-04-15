@@ -23,7 +23,7 @@ interface IUserAccountBiz: IBaseCrudBiz<String, UserAccount> {
 
     fun getByUsername(username: String): UserAccount?
 
-    fun getPermissions(userId: String): Set<String>
+    fun getMenuPermissions(userId: String): Set<String>
 
     fun getAccounts(subSysDictCode: String, tenantId: String?): List<UserAccountRecord>
 

@@ -22,15 +22,21 @@ object CacheKit {
     private val log = LogFactory.getLog(this::class)
 
     /**
-     * 是否开户缓存
+     * 是否开启缓存。必须是全局开关和指定的缓存开关都开启，才算开启
      *
-     * @return true: 开启缓存，false：关闭缓存
+     * @param cacheName 缓存名称
+     * @return true: 开启缓存，false：未开启缓存
      * @author K
      * @since 1.0.0
      */
-    fun isCacheActive(): Boolean {
+    fun isCacheActive(cacheName: String): Boolean {
         val cacheManager = SpringKit.getBean("cacheManager") as MixCacheManager
-        return cacheManager.isCacheEnabled()
+        val globalCacheEnabled = cacheManager.isCacheEnabled()
+        return if (globalCacheEnabled) {
+            val cacheConfigProvider = SpringKit.getBean("cacheConfigProvider") as ICacheConfigProvider
+            val cacheConfig = cacheConfigProvider.getCacheConfig(cacheName)
+            cacheConfig?.active == true
+        } else false
     }
 
     /**

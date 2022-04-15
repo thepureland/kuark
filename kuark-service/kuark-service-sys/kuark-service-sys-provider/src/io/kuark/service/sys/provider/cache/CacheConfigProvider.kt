@@ -5,6 +5,7 @@ import io.kuark.ability.cache.support.CacheConfig
 import io.kuark.ability.cache.support.ICacheConfigProvider
 import io.kuark.base.support.Consts
 import io.kuark.base.support.payload.ListSearchPayload
+import io.kuark.service.sys.common.vo.cache.SysCacheSearchPayload
 import io.kuark.service.sys.provider.dao.SysCacheDao
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.DependsOn
@@ -28,8 +29,9 @@ open class CacheConfigProvider : ICacheConfigProvider {
 
     private fun getCacheConfigs(): List<CacheConfig> {
         if (cacheConfigs == null) {
-            val searchPayload = ListSearchPayload().apply {
+            val searchPayload = SysCacheSearchPayload().apply {
                 returnEntityClass = CacheConfig::class
+                active = true
             }
 
             @Suppress(Consts.Suppress.UNCHECKED_CAST)

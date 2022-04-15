@@ -34,7 +34,7 @@ open class CacheConfigCacheHandler : AbstractCacheHandler<SysCacheCacheItem>() {
     }
 
     override fun reloadAll(clear: Boolean) {
-        if (!CacheKit.isCacheActive()) {
+        if (!CacheKit.isCacheActive(cacheName())) {
             log.info("缓存未开启，不加载和缓存所有缓存配置信息！")
             return
         }
@@ -66,7 +66,7 @@ open class CacheConfigCacheHandler : AbstractCacheHandler<SysCacheCacheItem>() {
         unless = "#result == null"
     )
     open fun getCacheFromCache(name: String): SysCacheCacheItem? {
-        if (CacheKit.isCacheActive()) {
+        if (CacheKit.isCacheActive(cacheName())) {
             log.debug("缓存中不存在名称为${name}的缓存配置信息，从数据库中加载...")
         }
         val searchPayload = SysCacheSearchPayload().apply {
@@ -85,7 +85,7 @@ open class CacheConfigCacheHandler : AbstractCacheHandler<SysCacheCacheItem>() {
     }
 
     fun syncOnInsert(any: Any, id: String) {
-        if (CacheKit.isCacheActive()) {
+        if (CacheKit.isCacheActive(cacheName())) {
             log.debug("新增id为${id}的缓存配置后，同步${cacheName()}缓存...")
             val name = BeanKit.getProperty(any, SysCache::name.name) as String
             getSelf().getCacheFromCache(name) // 缓存
@@ -94,9 +94,12 @@ open class CacheConfigCacheHandler : AbstractCacheHandler<SysCacheCacheItem>() {
     }
 
     fun syncOnUpdate(any: Any, id: String) {
-        if (CacheKit.isCacheActive()) {
+        if (CacheKit.isCacheActive(cacheName())) {
             log.debug("更新id为${id}的缓存配置后，同步${cacheName()}缓存...")
-            val name = BeanKit.getProperty(any, SysCache::name.name) as String
+            var name = BeanKit.getProperty(any, SysCache::name.name) as String
+            if (name == null) {
+                name = sysCacheDao.get(id)!!.name
+            }
             CacheKit.evict(cacheName(), name) // 踢除缓存配置缓存
             getSelf().getCacheFromCache(name) // 重新缓存
             log.debug("${cacheName()}缓存同步完成。")
@@ -104,7 +107,7 @@ open class CacheConfigCacheHandler : AbstractCacheHandler<SysCacheCacheItem>() {
     }
 
     fun syncOnDelete(id: String, name: String) {
-        if (CacheKit.isCacheActive()) {
+        if (CacheKit.isCacheActive(cacheName())) {
             log.debug("删除id为${id}的缓存配置后，同步从${cacheName()}缓存中踢除...")
             CacheKit.evict(cacheName(), name) // 踢除缓存
             log.debug("${cacheName()}缓存同步完成。")
@@ -112,7 +115,7 @@ open class CacheConfigCacheHandler : AbstractCacheHandler<SysCacheCacheItem>() {
     }
 
     fun synchOnBatchDelete(ids: Collection<String>, sysCaches: List<SysCache>) {
-        if (CacheKit.isCacheActive()) {
+        if (CacheKit.isCacheActive(cacheName())) {
             log.debug("批量删除id为${ids}的缓存配置后，同步从${cacheName()}缓存中踢除...")
             sysCaches.forEach {
                 CacheKit.evict(cacheName(), it.name) // 踢除缓存

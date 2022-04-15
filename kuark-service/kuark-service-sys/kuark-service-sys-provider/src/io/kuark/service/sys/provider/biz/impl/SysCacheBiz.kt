@@ -57,6 +57,22 @@ open class SysCacheBiz : BaseCrudBiz<String, SysCache, SysCacheDao>(), ISysCache
     }
 
     @Transactional
+    override fun updateActive(id: String, active: Boolean): Boolean {
+        val cache = SysCache {
+            this.id = id
+            this.active = active
+        }
+        val success = dao.update(cache)
+        if (success) {
+            // 同步缓存
+            cacheConfigCacheHandler.syncOnUpdate(cache, id)
+        } else {
+            log.error("更新id为${id}的缓存配置的启用状态为${active}失败！")
+        }
+        return success
+    }
+
+    @Transactional
     override fun deleteById(id: String): Boolean {
         val sysCache = dao.get(id)!!
         val success = super.deleteById(id)

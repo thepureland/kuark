@@ -36,6 +36,9 @@ open class SysCacheRecord : IdJsonResult<String>() {
     /** 备注，或其国际化key */
     var remark: String? = null
 
+    /** 是否启用 */
+    var active: Boolean? = null
+
     //endregion your codes 2
 
 }

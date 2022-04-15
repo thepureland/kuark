@@ -7,6 +7,7 @@ import io.kuark.base.log.LogFactory
 import io.kuark.base.query.Criterion
 import io.kuark.base.query.enums.Operator
 import io.kuark.base.support.Consts
+import io.kuark.context.kit.SpringKit
 import io.kuark.service.user.common.rbac.vo.role.RbacRoleCacheItem
 import io.kuark.service.user.common.rbac.vo.role.RbacRoleSearchPayload
 import io.kuark.service.user.provider.rbac.dao.RbacRoleDao
@@ -22,9 +23,6 @@ open class RoleCacheHandler: AbstractCacheHandler<RbacRoleCacheItem>() {
     @Autowired
     private lateinit var rbacRoleDao: RbacRoleDao
 
-    @Autowired
-    private lateinit var self: RoleCacheHandler
-
     companion object {
         private const val RBAC_ROLE_BY_ID = "rbac_role_by_id"
         private val log = LogFactory.getLog(RoleCacheHandler::class)
@@ -33,10 +31,10 @@ open class RoleCacheHandler: AbstractCacheHandler<RbacRoleCacheItem>() {
 
     override fun cacheName(): String = RBAC_ROLE_BY_ID
 
-    override fun doReload(key: String): RbacRoleCacheItem? = self.getRoleFromCache(key)
+    override fun doReload(key: String): RbacRoleCacheItem? = getSelf().getRoleFromCache(key)
 
     override fun reloadAll(clear: Boolean) {
-        if (!CacheKit.isCacheActive()) {
+        if (!CacheKit.isCacheActive(cacheName())) {
             log.info("缓存未开启，不加载和缓存所有启用状态的角色！")
             return
         }
@@ -52,7 +50,7 @@ open class RoleCacheHandler: AbstractCacheHandler<RbacRoleCacheItem>() {
         log.info("从数据库加载了${roles.size}条角色信息。")
 
         // 清除缓存
-        if (clear && CacheKit.isCacheActive()) {
+        if (clear && CacheKit.isCacheActive(cacheName())) {
             clear()
         }
 
@@ -70,14 +68,14 @@ open class RoleCacheHandler: AbstractCacheHandler<RbacRoleCacheItem>() {
     )
     open fun getRoleFromCache(roleId: String): RbacRoleCacheItem? {
         require(roleId.isNotBlank()) { log.error("从缓存中获取角色时必须指定角色id！") }
-        if (CacheKit.isCacheActive()) log.debug("缓存中不存在id为${roleId}的角色，从数据库中加载...")
+        if (CacheKit.isCacheActive(cacheName())) log.debug("缓存中不存在id为${roleId}的角色，从数据库中加载...")
         var result = rbacRoleDao.get(roleId, RbacRoleCacheItem::class)
         if (result == null) {
             log.warn("数据库中不存在id为${roleId}的角色！")
         } else {
             log.debug("从数据库中加载id为${roleId}的角色成功。")
             if (result.active == true) {
-                if (CacheKit.isCacheActive()) log.debug("缓存从数据库加载的角色。")
+                if (CacheKit.isCacheActive(cacheName())) log.debug("缓存从数据库加载的角色。")
             } else {
                 log.debug("从数据库中加载id为${roleId}的角色为未启用状态，返回null，且不缓存。")
                 result = null
@@ -109,32 +107,32 @@ open class RoleCacheHandler: AbstractCacheHandler<RbacRoleCacheItem>() {
     }
 
     fun syncOnInsert(id: String) {
-        if (CacheKit.isCacheActive()) {
+        if (CacheKit.isCacheActive(cacheName())) {
             log.debug("新增id为${id}的角色后，同步${cacheName()}缓存...")
             if (CacheKit.isWriteInTime(cacheName())) {
-                self.getRoleFromCache(id)  // 缓存角色
+                getSelf().getRoleFromCache(id)  // 缓存角色
             }
             log.debug("${cacheName()}缓存同步完成。")
         }
     }
 
     fun syncOnUpdate(id: String) {
-        if (CacheKit.isCacheActive()) {
+        if (CacheKit.isCacheActive(cacheName())) {
             log.debug("更新id为${id}的角色后，同步${cacheName()}缓存...")
             CacheKit.evict(cacheName(), id) // 踢除角色缓存
             if (CacheKit.isWriteInTime(cacheName())) {
-                self.getRoleFromCache(id) // 缓存角色
+                getSelf().getRoleFromCache(id) // 缓存角色
             }
             log.debug("${cacheName()}缓存同步完成。")
         }
     }
 
     fun syncOnUpdateActive(id: String, active: Boolean) {
-        if (CacheKit.isCacheActive()) {
+        if (CacheKit.isCacheActive(cacheName())) {
             log.debug("更新id为${id}的角色的启用状态后，同步${cacheName()}缓存...")
             if (active) {
                 if (CacheKit.isWriteInTime(cacheName())) {
-                    self.getRoleFromCache(id) // 缓存角色
+                    getSelf().getRoleFromCache(id) // 缓存角色
                 }
             } else {
                 CacheKit.evict(cacheName(), id) // 踢除角色缓存
@@ -144,7 +142,7 @@ open class RoleCacheHandler: AbstractCacheHandler<RbacRoleCacheItem>() {
     }
 
     fun syncOnDelete(id: String) {
-        if (CacheKit.isCacheActive()) {
+        if (CacheKit.isCacheActive(cacheName())) {
             log.debug("删除id为${id}的角色后，同步从${cacheName()}缓存中踢除...")
             CacheKit.evict(cacheName(), id) // 踢除缓存
             log.debug("${cacheName()}缓存同步完成。")
@@ -152,13 +150,17 @@ open class RoleCacheHandler: AbstractCacheHandler<RbacRoleCacheItem>() {
     }
 
     fun synchOnBatchDelete(ids: Collection<String>) {
-        if (CacheKit.isCacheActive()) {
+        if (CacheKit.isCacheActive(cacheName())) {
             log.debug("批量删除id为${ids}的角色后，同步从${cacheName()}缓存中踢除...")
             ids.forEach {
                 CacheKit.evict(cacheName(), it) // 踢除角色缓存
             }
             log.debug("${cacheName()}缓存同步完成。")
         }
+    }
+
+    fun getSelf(): RoleCacheHandler {
+        return SpringKit.getBean(RoleCacheHandler::class)
     }
 
 }

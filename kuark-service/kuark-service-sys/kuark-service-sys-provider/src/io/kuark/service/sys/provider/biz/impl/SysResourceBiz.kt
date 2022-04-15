@@ -200,17 +200,13 @@ open class SysResourceBiz : BaseCrudBiz<String, SysResource, SysResourceDao>(), 
     @Transactional
     override fun cascadeDeleteChildren(id: String): Boolean {
         // 找出组成缓存key的子系统代码和资源类型代码
-        var subSysDictCode: String? = null
-        var resourceTypeDictCode: String? = null
-        if (CacheKit.isCacheActive()) {
-            val resource = dao.get(id)
-            if (resource == null) {
-                log.error("找不到主键为${id}的资源记录！")
-                return false
-            }
-            subSysDictCode = resource.subSysDictCode
-            resourceTypeDictCode = resource.resourceTypeDictCode
+        val resource = dao.get(id)
+        if (resource == null) {
+            log.error("找不到主键为${id}的资源记录！")
+            return false
         }
+        val subSysDictCode = resource.subSysDictCode
+        val resourceTypeDictCode = resource.resourceTypeDictCode
 
         // 级联删除所有孩子记录
         val childItemIds = mutableListOf<String>()
@@ -231,7 +227,7 @@ open class SysResourceBiz : BaseCrudBiz<String, SysResource, SysResourceDao>(), 
         }
 
         // 同步缓存
-        resourceCacheHandler.syncOnDelete(id, subSysDictCode!!, resourceTypeDictCode!!)
+        resourceCacheHandler.syncOnDelete(id, subSysDictCode, resourceTypeDictCode)
 
         return true
     }

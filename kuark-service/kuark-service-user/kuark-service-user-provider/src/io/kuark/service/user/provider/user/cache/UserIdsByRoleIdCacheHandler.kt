@@ -4,9 +4,7 @@ import io.kuark.ability.cache.kit.CacheKit
 import io.kuark.ability.cache.support.AbstractCacheHandler
 import io.kuark.base.log.LogFactory
 import io.kuark.base.support.Consts
-import io.kuark.base.support.payload.ListSearchPayload
 import io.kuark.context.kit.SpringKit
-import io.kuark.service.sys.common.vo.cache.SysCacheCacheItem
 import io.kuark.service.user.provider.rbac.dao.RbacRoleUserDao
 import io.kuark.service.user.provider.rbac.model.po.RbacRoleUser
 import org.springframework.beans.factory.annotation.Autowired
@@ -21,12 +19,12 @@ open class UserIdsByRoleIdCacheHandler : AbstractCacheHandler<List<String>>() {
     private lateinit var rbacRoleUserDao: RbacRoleUserDao
 
     companion object {
-        private const val USER_IDS_BY_ROLE_ID = "user_ids_by_role_id"
+        private const val CACHE_NAME = "user_ids_by_role_id"
         private val log = LogFactory.getLog(UserIdsByRoleIdCacheHandler::class)
     }
 
 
-    override fun cacheName(): String = USER_IDS_BY_ROLE_ID
+    override fun cacheName(): String = CACHE_NAME
 
     override fun doReload(key: String): List<String> {
         return getSelf().getUserIdsByRoleId(key)
@@ -60,7 +58,7 @@ open class UserIdsByRoleIdCacheHandler : AbstractCacheHandler<List<String>>() {
     }
 
     @Cacheable(
-        cacheNames = [USER_IDS_BY_ROLE_ID],
+        cacheNames = [CACHE_NAME],
         key = "#roleId",
         unless = "#result == null || #result.size() == 0"
     )

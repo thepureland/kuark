@@ -20,18 +20,18 @@ open class TenantByIdCacheHandler : AbstractCacheHandler<SysTenantCacheItem>() {
     private lateinit var dao: SysTenantDao
 
     companion object {
-        private const val SYS_TENANT_BY_ID = "sys_tenant_by_id"
+        private const val CACHE_NAME = "sys_tenant_by_id"
         private val log = LogFactory.getLog(TenantByIdCacheHandler::class)
     }
 
-    override fun cacheName(): String = SYS_TENANT_BY_ID
+    override fun cacheName(): String = CACHE_NAME
 
     override fun doReload(key: String): SysTenantCacheItem? {
         return getSelf().getTenantFromCache(key)
     }
 
     override fun reloadAll(clear: Boolean) {
-        if (!CacheKit.isCacheActive(cacheName())) {
+        if (!CacheKit.isCacheActive(CACHE_NAME)) {
             log.info("缓存未开启，不加载和缓存所有租户！")
             return
         }
@@ -52,18 +52,18 @@ open class TenantByIdCacheHandler : AbstractCacheHandler<SysTenantCacheItem>() {
 
         // 缓存租户
         tenants.forEach {
-            CacheKit.putIfAbsent(cacheName(), it.id!!, it)
+            CacheKit.putIfAbsent(CACHE_NAME, it.id!!, it)
         }
         log.debug("缓存了${tenants.size}条租户信息。")
     }
 
     @Cacheable(
-        cacheNames = [SYS_TENANT_BY_ID],
+        cacheNames = [CACHE_NAME],
         key = "#id",
         unless = "#result == null"
     )
     open fun getTenantFromCache(id: String): SysTenantCacheItem? {
-        if (CacheKit.isCacheActive(cacheName())) {
+        if (CacheKit.isCacheActive(CACHE_NAME)) {
             log.debug("缓存中不存在id为${id}的租户，从数据库中加载...")
         }
         val result = dao.get(id, SysTenantCacheItem::class)
@@ -76,39 +76,39 @@ open class TenantByIdCacheHandler : AbstractCacheHandler<SysTenantCacheItem>() {
     }
 
     fun syncOnInsert(id: String) {
-        if (CacheKit.isCacheActive(cacheName()) && CacheKit.isWriteInTime(cacheName())) {
-            if (CacheKit.isWriteInTime(cacheName())) {
-                log.debug("新增id为${id}的租户后，同步${cacheName()}缓存...")
+        if (CacheKit.isCacheActive(CACHE_NAME) && CacheKit.isWriteInTime(CACHE_NAME)) {
+            if (CacheKit.isWriteInTime(CACHE_NAME)) {
+                log.debug("新增id为${id}的租户后，同步${CACHE_NAME}缓存...")
                 getSelf().getTenantFromCache(id)
-                log.debug("${cacheName()}缓存同步完成。")
+                log.debug("${CACHE_NAME}缓存同步完成。")
             }
         }
     }
 
     fun syncOnUpdate(id: String) {
-        if (CacheKit.isCacheActive(cacheName())) {
-            log.debug("更新id为${id}的租户后，同步${cacheName()}缓存...")
-            CacheKit.evict(cacheName(), id)
-            if (CacheKit.isWriteInTime(cacheName())) {
+        if (CacheKit.isCacheActive(CACHE_NAME)) {
+            log.debug("更新id为${id}的租户后，同步${CACHE_NAME}缓存...")
+            CacheKit.evict(CACHE_NAME, id)
+            if (CacheKit.isWriteInTime(CACHE_NAME)) {
                 getSelf().getTenantFromCache(id)
             }
-            log.debug("${cacheName()}缓存同步完成.")
+            log.debug("${CACHE_NAME}缓存同步完成.")
         }
     }
 
     fun syncOnDelete(id: String) {
-        if (CacheKit.isCacheActive(cacheName())) {
-            log.debug("删除id为${id}的租户后，同步从${cacheName()}缓存中踢除...")
-            CacheKit.evict(cacheName(), id)
-            log.debug("${cacheName()}缓存同步完成。")
+        if (CacheKit.isCacheActive(CACHE_NAME)) {
+            log.debug("删除id为${id}的租户后，同步从${CACHE_NAME}缓存中踢除...")
+            CacheKit.evict(CACHE_NAME, id)
+            log.debug("${CACHE_NAME}缓存同步完成。")
         }
     }
 
     fun synchOnBatchDelete(ids: Collection<String>) {
-        if (CacheKit.isCacheActive(cacheName())) {
-            log.debug("批量删除id为${ids}的租户后，同步从${cacheName()}缓存中踢除...")
-            ids.forEach { CacheKit.evict(cacheName(), it) }
-            log.debug("${cacheName()}缓存同步完成。")
+        if (CacheKit.isCacheActive(CACHE_NAME)) {
+            log.debug("批量删除id为${ids}的租户后，同步从${CACHE_NAME}缓存中踢除...")
+            ids.forEach { CacheKit.evict(CACHE_NAME, it) }
+            log.debug("${CACHE_NAME}缓存同步完成。")
         }
     }
 

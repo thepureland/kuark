@@ -25,20 +25,20 @@ open class ParamCacheHandler : AbstractCacheHandler<SysParamCacheItem>() {
     private lateinit var sysParamDao: SysParamDao
 
     companion object {
-        private const val SYS_PARAM_BY_MODULE_AND_NAME = "sys_param_by_module_and_name"
+        private const val CACHE_NAME = "sys_param_by_module_and_name"
         private val log = LogFactory.getLog(ParamCacheHandler::class)
     }
 
-    override fun cacheName(): String = SYS_PARAM_BY_MODULE_AND_NAME
+    override fun cacheName(): String = CACHE_NAME
 
     override fun doReload(key: String): SysParamCacheItem? {
-        require(key.contains(":")) { "缓存${cacheName()}的key格式必须是 模块代码::参数名称" }
+        require(key.contains(":")) { "缓存${CACHE_NAME}的key格式必须是 模块代码::参数名称" }
         val moduleAndParamName = key.split(":")
         return getSelf().getParamFromCache(moduleAndParamName[0], moduleAndParamName[1])
     }
 
     override fun reloadAll(clear: Boolean) {
-        if (!CacheKit.isCacheActive(cacheName())) {
+        if (!CacheKit.isCacheActive(CACHE_NAME)) {
             log.info("缓存未开启，不加载和缓存所有启用状态的参数！")
             return
         }
@@ -61,18 +61,18 @@ open class ParamCacheHandler : AbstractCacheHandler<SysParamCacheItem>() {
         // 缓存参数
         params.forEach {
             val key = "${it.module}::${it.paramName}"
-            CacheKit.putIfAbsent(cacheName(), key, it)
+            CacheKit.putIfAbsent(CACHE_NAME, key, it)
         }
         log.debug("缓存了${params.size}条参数信息。")
     }
 
     @Cacheable(
-        value = [SYS_PARAM_BY_MODULE_AND_NAME],
+        value = [CACHE_NAME],
         key = "#module.concat('::').concat(#name)",
         unless = "#result == null"
     )
     open fun getParamFromCache(module: String, name: String): SysParamCacheItem? {
-        if (CacheKit.isCacheActive(cacheName())) {
+        if (CacheKit.isCacheActive(CACHE_NAME)) {
             log.debug("缓存中不存在模块为${module}且名称为${name}的参数，从数据库中加载...")
         }
         val paramList = RdbKit.getDatabase().from(SysParams)
@@ -98,62 +98,62 @@ open class ParamCacheHandler : AbstractCacheHandler<SysParamCacheItem>() {
     }
 
     fun syncOnInsert(any: Any, id: String) {
-        if (CacheKit.isCacheActive(cacheName()) && CacheKit.isWriteInTime(cacheName())) {
-            log.debug("新增id为${id}的参数后，同步${cacheName()}缓存...")
+        if (CacheKit.isCacheActive(CACHE_NAME) && CacheKit.isWriteInTime(CACHE_NAME)) {
+            log.debug("新增id为${id}的参数后，同步${CACHE_NAME}缓存...")
             val module = BeanKit.getProperty(any, SysParam::module.name) as String
             val paramName = BeanKit.getProperty(any, SysParam::paramName.name) as String
             getSelf().getParamFromCache(module, paramName) // 缓存
-            log.debug("${cacheName()}缓存同步完成。")
+            log.debug("${CACHE_NAME}缓存同步完成。")
         }
     }
 
     fun syncOnUpdate(any: Any, id: String) {
-        if (CacheKit.isCacheActive(cacheName())) {
-            log.debug("更新id为${id}的参数后，同步${cacheName()}缓存...")
+        if (CacheKit.isCacheActive(CACHE_NAME)) {
+            log.debug("更新id为${id}的参数后，同步${CACHE_NAME}缓存...")
             val module = BeanKit.getProperty(any, SysParam::module.name) as String
             val paramName = BeanKit.getProperty(any, SysParam::paramName.name) as String
             val key = "${module}::${paramName}"
-            CacheKit.evict(cacheName(), key) // 踢除参数缓存
-            if (CacheKit.isWriteInTime(cacheName())) {
+            CacheKit.evict(CACHE_NAME, key) // 踢除参数缓存
+            if (CacheKit.isWriteInTime(CACHE_NAME)) {
                 getSelf().getParamFromCache(module, paramName) // 重新缓存
             }
-            log.debug("${cacheName()}缓存同步完成。")
+            log.debug("${CACHE_NAME}缓存同步完成。")
         }
     }
 
     fun syncOnUpdateActive(id: String, active: Boolean) {
-        if (CacheKit.isCacheActive(cacheName())) {
+        if (CacheKit.isCacheActive(CACHE_NAME)) {
             log.debug("更新id为${id}的参数的启用状态后，同步缓存...")
             val sysParam = sysParamDao.get(id)!!
             if (active) {
-                if (CacheKit.isWriteInTime(cacheName())) {
+                if (CacheKit.isWriteInTime(CACHE_NAME)) {
                     getSelf().getParamFromCache(sysParam.module!!, sysParam.paramName)
                 }
             } else {
                 val key = "${sysParam.module}::${sysParam.paramName}"
-                CacheKit.evict(cacheName(), key) // 踢除参数缓存
+                CacheKit.evict(CACHE_NAME, key) // 踢除参数缓存
             }
             log.debug("缓存同步完成。")
         }
     }
 
     fun syncOnDelete(param: SysParam) {
-        if (CacheKit.isCacheActive(cacheName())) {
-            log.debug("删除id为${param.id}的参数后，同步从${cacheName()}缓存中踢除...")
+        if (CacheKit.isCacheActive(CACHE_NAME)) {
+            log.debug("删除id为${param.id}的参数后，同步从${CACHE_NAME}缓存中踢除...")
             val key = "${param.module}::${param.paramName}"
-            CacheKit.evict(cacheName(), key) // 踢除缓存
-            log.debug("${cacheName()}缓存同步完成。")
+            CacheKit.evict(CACHE_NAME, key) // 踢除缓存
+            log.debug("${CACHE_NAME}缓存同步完成。")
         }
     }
 
     fun synchOnBatchDelete(ids: Collection<String>, params: List<SysParam>) {
-        if (CacheKit.isCacheActive(cacheName())) {
-            log.debug("批量删除id为${ids}的参数后，同步从${cacheName()}缓存中踢除...")
+        if (CacheKit.isCacheActive(CACHE_NAME)) {
+            log.debug("批量删除id为${ids}的参数后，同步从${CACHE_NAME}缓存中踢除...")
             params.forEach {
                 val key = "${it.module}::${it.paramName}"
-                CacheKit.evict(cacheName(), key) // 踢除缓存
+                CacheKit.evict(CACHE_NAME, key) // 踢除缓存
             }
-            log.debug("${cacheName()}缓存同步完成。")
+            log.debug("${CACHE_NAME}缓存同步完成。")
         }
     }
 

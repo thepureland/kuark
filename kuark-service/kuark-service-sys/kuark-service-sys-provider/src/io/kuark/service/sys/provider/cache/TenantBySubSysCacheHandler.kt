@@ -22,7 +22,7 @@ open class TenantBySubSysCacheHandler: AbstractCacheHandler<List<SysTenantCacheI
     private lateinit var dao: SysTenantDao
 
     companion object {
-        private const val SYS_TENANT_BY_SUB_SYS = "sys_tenant_by_sub_sys"
+        private const val CACHE_NAME = "sys_tenant_by_sub_sys"
         private val log = LogFactory.getLog(TenantBySubSysCacheHandler::class)
     }
 
@@ -30,12 +30,12 @@ open class TenantBySubSysCacheHandler: AbstractCacheHandler<List<SysTenantCacheI
     private lateinit var tenantByIdCacheManager : TenantByIdCacheHandler
 
 
-    override fun cacheName(): String = SYS_TENANT_BY_SUB_SYS
+    override fun cacheName(): String = CACHE_NAME
 
     override fun doReload(key: String): List<SysTenantCacheItem> = getSelf().getTenantsFromCache(key)
 
     override fun reloadAll(clear: Boolean) {
-        if (!CacheKit.isCacheActive(cacheName())) {
+        if (!CacheKit.isCacheActive(CACHE_NAME)) {
             log.info("缓存未开启，不加载和缓存所有启用状态的租户！")
             return
         }
@@ -58,18 +58,18 @@ open class TenantBySubSysCacheHandler: AbstractCacheHandler<List<SysTenantCacheI
         // 缓存租户
         val tenantMap = tenants.groupBy { it.subSysDictCode!! }
         tenantMap.forEach { (key, value) ->
-            CacheKit.putIfAbsent(cacheName(), key, value)
+            CacheKit.putIfAbsent(CACHE_NAME, key, value)
             log.debug("缓存了子系统${key}的${tenants.size}条租户信息。")
         }
     }
 
     @Cacheable(
-        cacheNames = [SYS_TENANT_BY_SUB_SYS],
+        cacheNames = [CACHE_NAME],
         key = "#subSysDictCode",
         unless = "#result == null || #result.isEmpty()"
     )
     open fun getTenantsFromCache(subSysDictCode: String): List<SysTenantCacheItem> {
-        if (CacheKit.isCacheActive(cacheName())) {
+        if (CacheKit.isCacheActive(CACHE_NAME)) {
             log.debug("缓存中不存在子系统为${subSysDictCode}的租户，从数据库中加载...")
         }
         val searchPayload = SysTenantSearchPayload().apply {
@@ -85,53 +85,53 @@ open class TenantBySubSysCacheHandler: AbstractCacheHandler<List<SysTenantCacheI
     }
 
     fun syncOnInsert(any: Any, id: String) {
-        if (CacheKit.isCacheActive(cacheName()) && CacheKit.isWriteInTime(cacheName())) {
-            log.debug("新增id为${id}的租户后，同步${cacheName()}缓存...")
+        if (CacheKit.isCacheActive(CACHE_NAME) && CacheKit.isWriteInTime(CACHE_NAME)) {
+            log.debug("新增id为${id}的租户后，同步${CACHE_NAME}缓存...")
             val subSysDictCode = BeanKit.getProperty(any, SysTenant::subSysDictCode.name) as String
-            CacheKit.evict(cacheName(), subSysDictCode) // 踢除缓存，因为缓存的粒度为子系统
+            CacheKit.evict(CACHE_NAME, subSysDictCode) // 踢除缓存，因为缓存的粒度为子系统
             getSelf().getTenantsFromCache(subSysDictCode) // 重新缓存
-            log.debug("${cacheName()}缓存同步完成。")
+            log.debug("${CACHE_NAME}缓存同步完成。")
         }
     }
 
     fun syncOnUpdate(any: Any?, id: String) {
-        if (CacheKit.isCacheActive(cacheName())) {
-            log.debug("更新id为${id}的租户后，同步${cacheName()}缓存...")
+        if (CacheKit.isCacheActive(CACHE_NAME)) {
+            log.debug("更新id为${id}的租户后，同步${CACHE_NAME}缓存...")
             val subSysDictCode = if (any == null) {
                 tenantByIdCacheManager.getTenantFromCache(id)!!.subSysDictCode!!
             } else {
                 BeanKit.getProperty(any, SysTenant::subSysDictCode.name) as String
             }
-            CacheKit.evict(cacheName(), subSysDictCode) // 踢除缓存，因为缓存的粒度为子系统
-            if (CacheKit.isWriteInTime(cacheName())) {
+            CacheKit.evict(CACHE_NAME, subSysDictCode) // 踢除缓存，因为缓存的粒度为子系统
+            if (CacheKit.isWriteInTime(CACHE_NAME)) {
                 getSelf().getTenantsFromCache(subSysDictCode) // 重新缓存
             }
-            log.debug("${cacheName()}缓存同步完成。")
+            log.debug("${CACHE_NAME}缓存同步完成。")
         }
     }
 
     fun syncOnDelete(sysTenant: SysTenantCacheItem) {
-        if (CacheKit.isCacheActive(cacheName())) {
-            log.debug("删除id为${sysTenant.id}的租户后，同步从${cacheName()}缓存中踢除...")
+        if (CacheKit.isCacheActive(CACHE_NAME)) {
+            log.debug("删除id为${sysTenant.id}的租户后，同步从${CACHE_NAME}缓存中踢除...")
             val subSysDictCode = sysTenant.subSysDictCode!!
-            CacheKit.evict(cacheName(), subSysDictCode) // 踢除缓存，缓存的粒度为子系统
-            if (CacheKit.isWriteInTime(cacheName())) {
+            CacheKit.evict(CACHE_NAME, subSysDictCode) // 踢除缓存，缓存的粒度为子系统
+            if (CacheKit.isWriteInTime(CACHE_NAME)) {
                 getSelf().getTenantsFromCache(subSysDictCode) // 重新缓存
             }
-            log.debug("${cacheName()}缓存同步完成。")
+            log.debug("${CACHE_NAME}缓存同步完成。")
         }
     }
 
     fun synchOnBatchDelete(ids: Collection<String>, subSysDictCodes: Set<String>) {
-        if (CacheKit.isCacheActive(cacheName())) {
-            log.debug("批量删除id为${ids}的租户后，同步从${cacheName()}缓存中踢除...")
+        if (CacheKit.isCacheActive(CACHE_NAME)) {
+            log.debug("批量删除id为${ids}的租户后，同步从${CACHE_NAME}缓存中踢除...")
             subSysDictCodes.forEach {
-                CacheKit.evict(cacheName(), it) // 踢除缓存，缓存的粒度为子系统
-                if (CacheKit.isWriteInTime(cacheName())) {
+                CacheKit.evict(CACHE_NAME, it) // 踢除缓存，缓存的粒度为子系统
+                if (CacheKit.isWriteInTime(CACHE_NAME)) {
                     getSelf().getTenantsFromCache(it) // 重新缓存
                 }
             }
-            log.debug("${cacheName()}缓存同步完成。")
+            log.debug("${CACHE_NAME}缓存同步完成。")
         }
     }
 

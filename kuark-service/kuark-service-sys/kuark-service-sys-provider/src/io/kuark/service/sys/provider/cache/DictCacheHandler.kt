@@ -20,18 +20,18 @@ open class DictCacheHandler : AbstractCacheHandler<SysDictCacheItem>() {
     private lateinit var sysDictDao: SysDictDao
 
     companion object {
-        private const val SYS_DICT_BY_ID = "sys_dict_by_id"
+        private const val CACHE_NAME = "sys_dict_by_id"
         private val log = LogFactory.getLog(DictCacheHandler::class)
     }
 
-    override fun cacheName(): String = SYS_DICT_BY_ID
+    override fun cacheName(): String = CACHE_NAME
 
     override fun doReload(key: String): SysDictCacheItem? {
         return getSelf().getDictFromCache(key)
     }
 
     override fun reloadAll(clear: Boolean) {
-        if (!CacheKit.isCacheActive(cacheName())) {
+        if (!CacheKit.isCacheActive(CACHE_NAME)) {
             log.info("缓存未开启，不加载和缓存所有字典(主表)信息！")
             return
         }
@@ -52,18 +52,18 @@ open class DictCacheHandler : AbstractCacheHandler<SysDictCacheItem>() {
 
         // 缓存字典(主表)信息
         dicts.forEach {
-            CacheKit.putIfAbsent(cacheName(), it.id!!, it)
+            CacheKit.putIfAbsent(CACHE_NAME, it.id!!, it)
         }
         log.debug("缓存了${dicts.size}条字典(主表)信息。")
     }
 
     @Cacheable(
-        cacheNames = [SYS_DICT_BY_ID],
+        cacheNames = [CACHE_NAME],
         key = "#dictId",
         unless = "#result == null"
     )
     open fun getDictFromCache(dictId: String): SysDictCacheItem? {
-        if (CacheKit.isCacheActive(cacheName())) {
+        if (CacheKit.isCacheActive(CACHE_NAME)) {
             log.debug("缓存中不存在id为${dictId}的字典，从数据库中加载...")
         }
         val result = sysDictDao.get(dictId, SysDictCacheItem::class)
@@ -76,29 +76,29 @@ open class DictCacheHandler : AbstractCacheHandler<SysDictCacheItem>() {
     }
 
     fun syncOnInsert(id: String) {
-        if (CacheKit.isCacheActive(cacheName()) && CacheKit.isWriteInTime(cacheName())) {
-            log.debug("新增id为${id}的字典后，同步${cacheName()}缓存...")
+        if (CacheKit.isCacheActive(CACHE_NAME) && CacheKit.isWriteInTime(CACHE_NAME)) {
+            log.debug("新增id为${id}的字典后，同步${CACHE_NAME}缓存...")
             getSelf().getDictFromCache(id)
-            log.debug("${cacheName()}缓存同步完成。")
+            log.debug("${CACHE_NAME}缓存同步完成。")
         }
     }
 
     fun syncOnUpdate(id: String) {
-        if (CacheKit.isCacheActive(cacheName())) {
-            log.debug("更新id为${id}的字典后，同步${cacheName()}缓存...")
-            CacheKit.evict(cacheName(), id) // 踢除缓存
-            if (CacheKit.isWriteInTime(cacheName())) {
+        if (CacheKit.isCacheActive(CACHE_NAME)) {
+            log.debug("更新id为${id}的字典后，同步${CACHE_NAME}缓存...")
+            CacheKit.evict(CACHE_NAME, id) // 踢除缓存
+            if (CacheKit.isWriteInTime(CACHE_NAME)) {
                 getSelf().getDictFromCache(id) // 缓存
             }
-            log.debug("${cacheName()}缓存同步完成。")
+            log.debug("${CACHE_NAME}缓存同步完成。")
         }
     }
 
     fun syncOnDelete(id: String) {
-        if (CacheKit.isCacheActive(cacheName())) {
-            log.debug("删除id为${id}的字典后，同步${cacheName()}缓存...")
-            CacheKit.evict(cacheName(), id) // 踢除缓存
-            log.debug("${cacheName()}缓存同步完成。")
+        if (CacheKit.isCacheActive(CACHE_NAME)) {
+            log.debug("删除id为${id}的字典后，同步${CACHE_NAME}缓存...")
+            CacheKit.evict(CACHE_NAME, id) // 踢除缓存
+            log.debug("${CACHE_NAME}缓存同步完成。")
         }
     }
 

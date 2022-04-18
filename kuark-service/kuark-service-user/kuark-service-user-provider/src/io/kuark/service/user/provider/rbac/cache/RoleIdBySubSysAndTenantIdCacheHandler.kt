@@ -19,17 +19,17 @@ import org.springframework.stereotype.Component
 
 
 @Component
-open class RoleIdCacheHandler : AbstractCacheHandler<List<String>>() {
+open class RoleIdBySubSysAndTenantIdCacheHandler : AbstractCacheHandler<List<String>>() {
 
     @Autowired
     private lateinit var rbacRoleDao: RbacRoleDao
 
     @Autowired
-    private lateinit var roleCacheManager: RoleCacheHandler
+    private lateinit var roleCacheManager: RoleByIdCacheHandler
 
     companion object {
         private const val CACHE_NAME = "rbac_role_id_by_sub_sys_and_tenant_id"
-        private val log = LogFactory.getLog(RoleIdCacheHandler::class)
+        private val log = LogFactory.getLog(RoleIdBySubSysAndTenantIdCacheHandler::class)
     }
 
     override fun cacheName(): String = CACHE_NAME
@@ -132,7 +132,7 @@ open class RoleIdCacheHandler : AbstractCacheHandler<List<String>>() {
         }
     }
 
-    fun synchOnBatchDelete(ids: Collection<String>, roleMap: Map<String, RbacRoleCacheItem>) {
+    fun syncOnBatchDelete(ids: Collection<String>, roleMap: Map<String, RbacRoleCacheItem>) {
         if (CacheKit.isCacheActive(CACHE_NAME)) {
             log.debug("批量删除id为${ids}的角色后，同步从${CACHE_NAME}缓存中踢除...")
             val keys = roleMap.map { "${it.value.subSysDictCode}::${it.value.tenantId}" }.toSet()
@@ -147,8 +147,8 @@ open class RoleIdCacheHandler : AbstractCacheHandler<List<String>>() {
         }
     }
 
-    fun getSelf(): RoleIdCacheHandler {
-        return SpringKit.getBean(RoleIdCacheHandler::class)
+    fun getSelf(): RoleIdBySubSysAndTenantIdCacheHandler {
+        return SpringKit.getBean(RoleIdBySubSysAndTenantIdCacheHandler::class)
     }
 
 }

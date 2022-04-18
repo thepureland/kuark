@@ -16,14 +16,14 @@ import org.springframework.stereotype.Component
 
 
 @Component
-open class ResourceCacheHandler: AbstractCacheHandler<List<SysResourceCacheItem>>() {
+open class ResourceBySubSysAndTypeCacheHandler: AbstractCacheHandler<List<SysResourceCacheItem>>() {
 
     @Autowired
     private lateinit var sysResourceDao: SysResourceDao
 
     companion object {
-        private const val CACHE_NAME = "sys_resource_by_sub_sys_and_res_type"
-        private val log = LogFactory.getLog(ResourceCacheHandler::class)
+        private const val CACHE_NAME = "sys_resources_by_sub_sys_and_type"
+        private val log = LogFactory.getLog(ResourceBySubSysAndTypeCacheHandler::class)
     }
 
     override fun cacheName(): String = CACHE_NAME
@@ -136,8 +136,8 @@ open class ResourceCacheHandler: AbstractCacheHandler<List<SysResourceCacheItem>
         }
     }
 
-    fun getSelf(): ResourceCacheHandler {
-        return SpringKit.getBean(ResourceCacheHandler::class)
+    fun getSelf(): ResourceBySubSysAndTypeCacheHandler {
+        return SpringKit.getBean(ResourceBySubSysAndTypeCacheHandler::class)
     }
 
 }

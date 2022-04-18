@@ -19,14 +19,14 @@ import org.springframework.stereotype.Component
 
 
 @Component
-open class ParamCacheHandler : AbstractCacheHandler<SysParamCacheItem>() {
+open class ParamByModuleAndNameCacheHandler : AbstractCacheHandler<SysParamCacheItem>() {
 
     @Autowired
     private lateinit var sysParamDao: SysParamDao
 
     companion object {
         private const val CACHE_NAME = "sys_param_by_module_and_name"
-        private val log = LogFactory.getLog(ParamCacheHandler::class)
+        private val log = LogFactory.getLog(ParamByModuleAndNameCacheHandler::class)
     }
 
     override fun cacheName(): String = CACHE_NAME
@@ -157,8 +157,8 @@ open class ParamCacheHandler : AbstractCacheHandler<SysParamCacheItem>() {
         }
     }
 
-    fun getSelf(): ParamCacheHandler {
-        return SpringKit.getBean(ParamCacheHandler::class)
+    fun getSelf(): ParamByModuleAndNameCacheHandler {
+        return SpringKit.getBean(ParamByModuleAndNameCacheHandler::class)
     }
 
 }

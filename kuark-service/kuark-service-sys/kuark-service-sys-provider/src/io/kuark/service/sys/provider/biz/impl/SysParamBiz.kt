@@ -10,7 +10,7 @@ import io.kuark.service.sys.common.vo.dict.SysParamCacheItem
 import io.kuark.service.sys.common.vo.param.SysParamRecord
 import io.kuark.service.sys.common.vo.param.SysParamSearchPayload
 import io.kuark.service.sys.provider.biz.ibiz.ISysParamBiz
-import io.kuark.service.sys.provider.cache.ParamCacheHandler
+import io.kuark.service.sys.provider.cache.ParamByModuleAndNameCacheHandler
 import io.kuark.service.sys.provider.dao.SysParamDao
 import io.kuark.service.sys.provider.model.po.SysParam
 import io.kuark.service.sys.provider.model.table.SysParams
@@ -34,7 +34,7 @@ open class SysParamBiz : BaseCrudBiz<String, SysParam, SysParamDao>(), ISysParam
     private val log = LogFactory.getLog(this::class)
 
     @Autowired
-    private lateinit var paramCacheHandler: ParamCacheHandler
+    private lateinit var paramCacheHandler: ParamByModuleAndNameCacheHandler
 
     override fun getParamFromCache(module: String, name: String): SysParamCacheItem? {
         return paramCacheHandler.getParamFromCache(module, name)

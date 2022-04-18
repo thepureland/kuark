@@ -50,9 +50,6 @@ open class UserAccountDetail : IdJsonResult<String>() {
     /** 动态验证码的密钥 */
     var dynamicAuthKey: String? = null
 
-    /** 二级密码 */
-    var secondPassword: String? = null
-
     /** 租户id */
     var tenantId: String? = null
 

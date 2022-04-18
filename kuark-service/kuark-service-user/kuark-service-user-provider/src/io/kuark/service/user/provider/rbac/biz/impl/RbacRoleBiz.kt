@@ -14,11 +14,12 @@ import io.kuark.service.sys.common.vo.dict.SysResourceCacheItem
 import io.kuark.service.sys.common.vo.resource.BaseMenuTreeNode
 import io.kuark.service.sys.common.vo.resource.ResourceType
 import io.kuark.service.user.common.rbac.vo.role.RbacRoleCacheItem
+import io.kuark.service.user.common.user.vo.account.UserAccountCacheItem
 import io.kuark.service.user.common.user.vo.account.UserAccountRecord
 import io.kuark.service.user.common.user.vo.account.UserAccountSearchPayload
 import io.kuark.service.user.provider.rbac.biz.ibiz.IRbacRoleBiz
-import io.kuark.service.user.provider.rbac.cache.RoleCacheHandler
-import io.kuark.service.user.provider.rbac.cache.RoleIdCacheHandler
+import io.kuark.service.user.provider.rbac.cache.RoleByIdCacheHandler
+import io.kuark.service.user.provider.rbac.cache.RoleIdBySubSysAndTenantIdCacheHandler
 import io.kuark.service.user.provider.rbac.dao.RbacRoleDao
 import io.kuark.service.user.provider.rbac.dao.RbacRoleResourceDao
 import io.kuark.service.user.provider.rbac.dao.RbacRoleUserDao
@@ -28,6 +29,9 @@ import io.kuark.service.user.provider.rbac.model.po.RbacRoleUser
 import io.kuark.service.user.provider.rbac.model.table.RbacRoleResources
 import io.kuark.service.user.provider.rbac.model.table.RbacRoleUsers
 import io.kuark.service.user.provider.user.biz.ibiz.IUserAccountBiz
+import io.kuark.service.user.provider.rbac.cache.ResourceIdsByRoleIdCacheHandler
+import io.kuark.service.user.provider.rbac.cache.UserIdsByRoleIdCacheHandler
+import io.kuark.service.user.provider.user.cache.UserByIdCacheHandler
 import io.kuark.service.user.provider.user.model.po.UserAccount
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -62,10 +66,19 @@ open class RbacRoleBiz : IRbacRoleBiz, BaseCrudBiz<String, RbacRole, RbacRoleDao
     private lateinit var userAccountBiz: IUserAccountBiz
 
     @Autowired
-    private lateinit var roleCacheHandler: RoleCacheHandler
+    private lateinit var roleCacheHandler: RoleByIdCacheHandler
 
     @Autowired
-    private lateinit var roleIdCacheHandler: RoleIdCacheHandler
+    private lateinit var roleIdCacheHandler: RoleIdBySubSysAndTenantIdCacheHandler
+
+    @Autowired
+    private lateinit var userIdByRoleIdCacheHandler: UserIdsByRoleIdCacheHandler
+
+    @Autowired
+    private lateinit var resourceIdsByRoleIdCacheHandler: ResourceIdsByRoleIdCacheHandler
+
+    @Autowired
+    private lateinit var userByIdCacheHandler: UserByIdCacheHandler
 
 
     override fun getRoleFromCache(roleId: String): RbacRoleCacheItem? {
@@ -121,6 +134,8 @@ open class RbacRoleBiz : IRbacRoleBiz, BaseCrudBiz<String, RbacRole, RbacRoleDao
             // 同步缓存
             roleCacheHandler.syncOnDelete(id)
             roleIdCacheHandler.syncOnDelete(role)
+            userIdByRoleIdCacheHandler.syncOnDelete(id)
+            resourceIdsByRoleIdCacheHandler.syncOnDelete(id)
         } else {
             log.error("删除id为${id}的角色失败！")
         }
@@ -133,8 +148,10 @@ open class RbacRoleBiz : IRbacRoleBiz, BaseCrudBiz<String, RbacRole, RbacRoleDao
         val count = super.batchDelete(ids)
         log.debug("批量删除角色，期望删除${ids.size}条，实际删除${count}条。")
         // 同步缓存
-        roleCacheHandler.synchOnBatchDelete(ids)
-        roleIdCacheHandler.synchOnBatchDelete(ids, roleMap)
+        roleCacheHandler.syncOnBatchDelete(ids)
+        roleIdCacheHandler.syncOnBatchDelete(ids, roleMap)
+        userIdByRoleIdCacheHandler.syncOnBatchDelete(ids)
+        resourceIdsByRoleIdCacheHandler.syncOnBatchDelete(ids)
         return count
     }
 
@@ -156,11 +173,8 @@ open class RbacRoleBiz : IRbacRoleBiz, BaseCrudBiz<String, RbacRole, RbacRoleDao
         return success
     }
 
-    @Suppress(Consts.Suppress.UNCHECKED_CAST)
     override fun getRolePermissions(roleId: String, subSysDictCode: String,resourceType: ResourceType): List<SysResourceCacheItem> {
-        val resourceIds = rbacRoleResourceDao.oneSearchProperty(
-            RbacRoleResources.roleId.name, roleId, RbacRoleResources.resourceId.name
-        ) as List<String>
+        val resourceIds = resourceIdsByRoleIdCacheHandler.getResourceIdsByRoleId(roleId)
         if (resourceIds.isNotEmpty()) {
             return resourceApi.getResources(subSysDictCode, resourceType, *resourceIds.toTypedArray())
         }
@@ -175,6 +189,7 @@ open class RbacRoleBiz : IRbacRoleBiz, BaseCrudBiz<String, RbacRole, RbacRoleDao
             val roleResources = resourceIds.map { RbacRoleResource { this.roleId = roleId; resourceId = it } }
             success = rbacRoleResourceDao.batchInsert(roleResources) == resourceIds.size
         }
+        resourceIdsByRoleIdCacheHandler.syncOnUpdate(roleId, resourceIds)
         return success
     }
 
@@ -185,36 +200,33 @@ open class RbacRoleBiz : IRbacRoleBiz, BaseCrudBiz<String, RbacRole, RbacRoleDao
             val roleUsers = userIds.map { RbacRoleUser { this.roleId = roleId; userId = it } }
             success = rbacRoleUserDao.batchInsert(roleUsers) == userIds.size
         }
+        userIdByRoleIdCacheHandler.syncOnUpdate(roleId, userIds)
         return success
     }
 
-    @Suppress(Consts.Suppress.UNCHECKED_CAST)
     override fun getAssignedUsers(roleId: String): Set<String> {
-        val userIds = rbacRoleUserDao.oneSearchProperty(RbacRoleUser::roleId.name, roleId, RbacRoleUser::userId.name)
-        return userIds.toSet() as Set<String>
+        val userIds = userIdByRoleIdCacheHandler.getUserIdsByRoleId(roleId)
+        return userIds.toSet()
     }
 
     override fun getCandidateUsers(subSysDictCode: String, tenantId: String?): LinkedHashMap<String, String> {
-        val accounts = userAccountBiz.getAccounts(subSysDictCode, tenantId)
+        val accounts = userAccountBiz.getAccounts(subSysDictCode, tenantId)  //TODO from cache
         val map = linkedMapOf<String, String>()
         accounts.forEach { map[it.id!!] = it.username!! }
         return map
     }
 
-    @Suppress(Consts.Suppress.UNCHECKED_CAST)
     override fun getMenuPermissions(roleId: String): Pair<List<BaseMenuTreeNode>, List<String>> {
         val role = dao.get(roleId) ?: throw ObjectNotFoundException("找不到id为${roleId}的角色信息")
         val simpleMenus = resourceApi.getSimpleMenus(role.subSysDictCode ?: "")
-        val resourceIds = rbacRoleResourceDao.oneSearchProperty(
-            RbacRoleResources.roleId.name, roleId, RbacRoleResources.resourceId.name
-        ) as List<String>
+        val resourceIds = resourceIdsByRoleIdCacheHandler.getResourceIdsByRoleId(roleId)
         return Pair(simpleMenus, resourceIds)
     }
 
     @Suppress(Consts.Suppress.UNCHECKED_CAST)
     override fun searchAssignedUsers(
         searchPayload: UserAccountSearchPayload, userIds: List<String>?
-    ): List<UserAccountRecord> {
+    ): List<UserAccountCacheItem> {
         var ids = userIds
         if (ids == null) {
             val roleId = searchPayload._roleId
@@ -222,9 +234,7 @@ open class RbacRoleBiz : IRbacRoleBiz, BaseCrudBiz<String, RbacRole, RbacRoleDao
             ids = getAssignedUsers(roleId!!).toList()
         }
         return if (ids.isNotEmpty()) {
-            searchPayload.criterions = listOf(Criterion(UserAccount::id.name, Operator.IN, ids))
-            searchPayload._roleId = null
-            userAccountBiz.search(searchPayload) as List<UserAccountRecord>
+            userByIdCacheHandler.getUsersByIds(ids)
         } else emptyList()
     }
 

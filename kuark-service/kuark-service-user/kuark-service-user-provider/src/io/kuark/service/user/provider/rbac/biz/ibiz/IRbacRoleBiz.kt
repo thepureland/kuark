@@ -8,6 +8,7 @@ import io.kuark.service.sys.common.vo.resource.SysResourceDetail
 import io.kuark.service.sys.common.vo.resource.SysResourceRecord
 import io.kuark.service.user.common.rbac.vo.role.RbacRoleCacheItem
 import io.kuark.service.user.common.rbac.vo.role.RbacRoleDetail
+import io.kuark.service.user.common.user.vo.account.UserAccountCacheItem
 import io.kuark.service.user.common.user.vo.account.UserAccountRecord
 import io.kuark.service.user.common.user.vo.account.UserAccountSearchPayload
 import io.kuark.service.user.provider.rbac.model.po.RbacRole
@@ -152,12 +153,12 @@ interface IRbacRoleBiz : IBaseCrudBiz<String, RbacRole> {
      *
      * @param searchPayload 查询载体
      * @param userIds 用户id列表，为null将会根据_roleId去查询
-     * @return List(UserAccountRecord)
+     * @return List(UserAccountCacheItem)
      * @throws IllegalArgumentException 用户id列表且searchPayload._roleId为空时
      * @author K
      * @since 1.0.0
      */
-    fun searchAssignedUsers(searchPayload: UserAccountSearchPayload, userIds: List<String>?): List<UserAccountRecord>
+    fun searchAssignedUsers(searchPayload: UserAccountSearchPayload, userIds: List<String>?): List<UserAccountCacheItem>
 
     //endregion your codes 2
 

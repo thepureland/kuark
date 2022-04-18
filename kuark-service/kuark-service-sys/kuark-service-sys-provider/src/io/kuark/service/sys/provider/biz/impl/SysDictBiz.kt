@@ -9,7 +9,7 @@ import io.kuark.base.support.payload.ListSearchPayload
 import io.kuark.service.sys.common.vo.dict.*
 import io.kuark.service.sys.provider.biz.ibiz.ISysDictBiz
 import io.kuark.service.sys.provider.biz.ibiz.ISysDictItemBiz
-import io.kuark.service.sys.provider.cache.DictCacheHandler
+import io.kuark.service.sys.provider.cache.DictByIdCacheHandler
 import io.kuark.service.sys.provider.dao.SysDictDao
 import io.kuark.service.sys.provider.model.po.SysDict
 import io.kuark.service.sys.provider.model.table.SysDictItems
@@ -39,7 +39,7 @@ open class SysDictBiz : BaseCrudBiz<String, SysDict, SysDictDao>(), ISysDictBiz 
     private lateinit var sysDictItemBiz: ISysDictItemBiz
 
     @Autowired
-    private lateinit var dictCacheHandler: DictCacheHandler
+    private lateinit var dictCacheHandler: DictByIdCacheHandler
 
     private val log = LogFactory.getLog(this::class)
 

@@ -18,14 +18,14 @@ import org.springframework.stereotype.Component
 
 
 @Component
-open class RoleCacheHandler: AbstractCacheHandler<RbacRoleCacheItem>() {
+open class RoleByIdCacheHandler: AbstractCacheHandler<RbacRoleCacheItem>() {
 
     @Autowired
     private lateinit var rbacRoleDao: RbacRoleDao
 
     companion object {
         private const val CACHE_NAME = "rbac_role_by_id"
-        private val log = LogFactory.getLog(RoleCacheHandler::class)
+        private val log = LogFactory.getLog(RoleByIdCacheHandler::class)
     }
 
 
@@ -149,7 +149,7 @@ open class RoleCacheHandler: AbstractCacheHandler<RbacRoleCacheItem>() {
         }
     }
 
-    fun synchOnBatchDelete(ids: Collection<String>) {
+    fun syncOnBatchDelete(ids: Collection<String>) {
         if (CacheKit.isCacheActive(CACHE_NAME)) {
             log.debug("批量删除id为${ids}的角色后，同步从${CACHE_NAME}缓存中踢除...")
             ids.forEach {
@@ -159,8 +159,8 @@ open class RoleCacheHandler: AbstractCacheHandler<RbacRoleCacheItem>() {
         }
     }
 
-    fun getSelf(): RoleCacheHandler {
-        return SpringKit.getBean(RoleCacheHandler::class)
+    fun getSelf(): RoleByIdCacheHandler {
+        return SpringKit.getBean(RoleByIdCacheHandler::class)
     }
 
 }

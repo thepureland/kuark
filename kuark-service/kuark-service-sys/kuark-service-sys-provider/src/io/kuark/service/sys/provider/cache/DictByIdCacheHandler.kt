@@ -14,14 +14,14 @@ import org.springframework.stereotype.Component
 
 
 @Component
-open class DictCacheHandler : AbstractCacheHandler<SysDictCacheItem>() {
+open class DictByIdCacheHandler : AbstractCacheHandler<SysDictCacheItem>() {
 
     @Autowired
     private lateinit var sysDictDao: SysDictDao
 
     companion object {
         private const val CACHE_NAME = "sys_dict_by_id"
-        private val log = LogFactory.getLog(DictCacheHandler::class)
+        private val log = LogFactory.getLog(DictByIdCacheHandler::class)
     }
 
     override fun cacheName(): String = CACHE_NAME
@@ -102,8 +102,8 @@ open class DictCacheHandler : AbstractCacheHandler<SysDictCacheItem>() {
         }
     }
 
-    fun getSelf(): DictCacheHandler {
-        return SpringKit.getBean(DictCacheHandler::class)
+    fun getSelf(): DictByIdCacheHandler {
+        return SpringKit.getBean(DictByIdCacheHandler::class)
     }
 
 }

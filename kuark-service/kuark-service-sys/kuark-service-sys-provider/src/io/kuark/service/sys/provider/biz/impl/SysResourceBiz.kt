@@ -1,6 +1,5 @@
 package io.kuark.service.sys.provider.biz.impl
 
-import io.kuark.ability.cache.kit.CacheKit
 import io.kuark.ability.data.rdb.biz.BaseCrudBiz
 import io.kuark.ability.data.rdb.support.SqlWhereExpressionFactory
 import io.kuark.base.bean.BeanKit
@@ -14,7 +13,7 @@ import io.kuark.service.sys.common.vo.dict.SysResourceCacheItem
 import io.kuark.service.sys.common.vo.resource.*
 import io.kuark.service.sys.provider.biz.ibiz.ISysDictItemBiz
 import io.kuark.service.sys.provider.biz.ibiz.ISysResourceBiz
-import io.kuark.service.sys.provider.cache.ResourceCacheHandler
+import io.kuark.service.sys.provider.cache.ResourceBySubSysAndTypeCacheHandler
 import io.kuark.service.sys.provider.dao.SysResourceDao
 import io.kuark.service.sys.provider.model.po.SysResource
 import io.kuark.service.sys.provider.model.table.SysResources
@@ -45,7 +44,7 @@ open class SysResourceBiz : BaseCrudBiz<String, SysResource, SysResourceDao>(), 
     private lateinit var dictItemBiz: ISysDictItemBiz
 
     @Autowired
-    private lateinit var resourceCacheHandler: ResourceCacheHandler
+    private lateinit var resourceCacheHandler: ResourceBySubSysAndTypeCacheHandler
 
     override fun getResourcesFromCache(subSysDictCode: String, resourceTypeDictCode: String): List<SysResourceCacheItem> {
         return resourceCacheHandler.getResourcesFromCache(subSysDictCode, resourceTypeDictCode)

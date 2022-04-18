@@ -9,7 +9,7 @@ import io.kuark.service.sys.common.vo.tenant.SysTenantRecord
 import io.kuark.service.sys.common.vo.tenant.SysTenantSearchPayload
 import io.kuark.service.sys.provider.biz.ibiz.ISysTenantBiz
 import io.kuark.service.sys.provider.cache.TenantByIdCacheHandler
-import io.kuark.service.sys.provider.cache.TenantBySubSysCacheHandler
+import io.kuark.service.sys.provider.cache.TenantsBySubSysCacheHandler
 import io.kuark.service.sys.provider.dao.SysTenantDao
 import io.kuark.service.sys.provider.model.po.SysParam
 import io.kuark.service.sys.provider.model.po.SysTenant
@@ -37,7 +37,7 @@ open class SysTenantBiz : BaseCrudBiz<String, SysTenant, SysTenantDao>(), ISysTe
     private lateinit var tenantByIdCacheHandler: TenantByIdCacheHandler
 
     @Autowired
-    private lateinit var tenantBySubSysCacheHandler: TenantBySubSysCacheHandler
+    private lateinit var tenantBySubSysCacheHandler: TenantsBySubSysCacheHandler
 
     override fun getTenantFromCache(id: String): SysTenantCacheItem? {
         return tenantByIdCacheHandler.getTenantFromCache(id)

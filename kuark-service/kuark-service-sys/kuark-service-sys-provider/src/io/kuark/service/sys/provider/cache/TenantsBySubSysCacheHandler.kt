@@ -16,14 +16,14 @@ import org.springframework.stereotype.Component
 
 
 @Component
-open class TenantBySubSysCacheHandler: AbstractCacheHandler<List<SysTenantCacheItem>>() {
+open class TenantsBySubSysCacheHandler: AbstractCacheHandler<List<SysTenantCacheItem>>() {
 
     @Autowired
     private lateinit var dao: SysTenantDao
 
     companion object {
-        private const val CACHE_NAME = "sys_tenant_by_sub_sys"
-        private val log = LogFactory.getLog(TenantBySubSysCacheHandler::class)
+        private const val CACHE_NAME = "sys_tenants_by_sub_sys"
+        private val log = LogFactory.getLog(TenantsBySubSysCacheHandler::class)
     }
 
     @Autowired
@@ -135,8 +135,8 @@ open class TenantBySubSysCacheHandler: AbstractCacheHandler<List<SysTenantCacheI
         }
     }
 
-    fun getSelf(): TenantBySubSysCacheHandler {
-        return SpringKit.getBean(TenantBySubSysCacheHandler::class)
+    fun getSelf(): TenantsBySubSysCacheHandler {
+        return SpringKit.getBean(TenantsBySubSysCacheHandler::class)
     }
 
 }

@@ -5,7 +5,7 @@ import io.kuark.base.bean.BeanKit
 import io.kuark.base.log.LogFactory
 import io.kuark.service.sys.common.vo.cache.SysCacheCacheItem
 import io.kuark.service.sys.provider.biz.ibiz.ISysCacheBiz
-import io.kuark.service.sys.provider.cache.CacheConfigCacheHandler
+import io.kuark.service.sys.provider.cache.CacheByNameCacheHandler
 import io.kuark.service.sys.provider.dao.SysCacheDao
 import io.kuark.service.sys.provider.model.po.SysCache
 import org.springframework.beans.factory.annotation.Autowired
@@ -29,7 +29,7 @@ open class SysCacheBiz : BaseCrudBiz<String, SysCache, SysCacheDao>(), ISysCache
     private val log = LogFactory.getLog(this::class)
 
     @Autowired
-    private lateinit var cacheConfigCacheHandler: CacheConfigCacheHandler
+    private lateinit var cacheConfigCacheHandler: CacheByNameCacheHandler
 
     override fun getCacheFromCache(name: String): SysCacheCacheItem? {
         return cacheConfigCacheHandler.getCacheFromCache(name)

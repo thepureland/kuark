@@ -17,14 +17,14 @@ import org.springframework.stereotype.Component
 
 
 @Component
-open class CacheConfigCacheHandler : AbstractCacheHandler<SysCacheCacheItem>() {
+open class CacheByNameCacheHandler : AbstractCacheHandler<SysCacheCacheItem>() {
 
     @Autowired
     private lateinit var sysCacheDao: SysCacheDao
 
     companion object {
         private const val CACHE_NAME = "sys_cache_by_name"
-        private val log = LogFactory.getLog(CacheConfigCacheHandler::class)
+        private val log = LogFactory.getLog(CacheByNameCacheHandler::class)
     }
 
     override fun cacheName(): String = CACHE_NAME
@@ -124,8 +124,8 @@ open class CacheConfigCacheHandler : AbstractCacheHandler<SysCacheCacheItem>() {
         }
     }
 
-    fun getSelf(): CacheConfigCacheHandler {
-        return SpringKit.getBean(CacheConfigCacheHandler::class)
+    fun getSelf(): CacheByNameCacheHandler {
+        return SpringKit.getBean(CacheByNameCacheHandler::class)
     }
 
 }

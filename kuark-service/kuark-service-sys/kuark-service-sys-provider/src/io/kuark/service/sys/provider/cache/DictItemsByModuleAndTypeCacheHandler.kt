@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component
 
 
 @Component
-open class DictItemCacheHandler : AbstractCacheHandler<List<SysDictItemCacheItem>>() {
+open class DictItemsByModuleAndTypeCacheHandler : AbstractCacheHandler<List<SysDictItemCacheItem>>() {
 
     @Autowired
     private lateinit var sysDictDao: SysDictDao
@@ -28,8 +28,8 @@ open class DictItemCacheHandler : AbstractCacheHandler<List<SysDictItemCacheItem
     private lateinit var sysDictItemDao: SysDictItemDao
 
     companion object {
-        private const val CACHE_NAME = "sys_dict_item_by_module_and_dict_type"
-        private val log = LogFactory.getLog(DictItemCacheHandler::class)
+        private const val CACHE_NAME = "sys_dict_items_by_module_and_type"
+        private val log = LogFactory.getLog(DictItemsByModuleAndTypeCacheHandler::class)
     }
 
     override fun cacheName(): String = CACHE_NAME
@@ -148,8 +148,8 @@ open class DictItemCacheHandler : AbstractCacheHandler<List<SysDictItemCacheItem
         }
     }
 
-    fun getSelf(): DictItemCacheHandler {
-        return SpringKit.getBean(DictItemCacheHandler::class)
+    fun getSelf(): DictItemsByModuleAndTypeCacheHandler {
+        return SpringKit.getBean(DictItemsByModuleAndTypeCacheHandler::class)
     }
 
 }

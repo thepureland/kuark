@@ -1,5 +1,6 @@
 package io.kuark.service.user.common.rbac.vo.role
 
+import io.kuark.base.support.IIdEntity
 import java.io.Serializable
 
 
@@ -9,7 +10,7 @@ import java.io.Serializable
  * @author K
  * @since 1.0.0
  */
-class RbacRoleCacheItem: Serializable {
+class RbacRoleCacheItem: IIdEntity<String>, Serializable {
 
     companion object {
         private const val serialVersionUID = 7891923881657037158L
@@ -17,7 +18,7 @@ class RbacRoleCacheItem: Serializable {
 
 
     /** 主键 */
-    var id: String? = null
+    override var id: String? = null
 
     /** 角色编码 */
     var roleCode: String? = null

@@ -1,11 +1,12 @@
 package io.kuark.service.user.common.user.vo.account
 
+import io.kuark.base.support.IIdEntity
 import java.io.Serializable
 
-class UserAccountCacheItem: Serializable {
+class UserAccountCacheItem: IIdEntity<String>, Serializable {
 
     /** 主键 */
-    var id: String? = null
+    override var id: String? = null
 
     /** 用户名 */
     var username: String? = null

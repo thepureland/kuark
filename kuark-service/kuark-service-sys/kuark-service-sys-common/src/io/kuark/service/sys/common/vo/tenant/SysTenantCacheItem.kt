@@ -1,5 +1,6 @@
 package io.kuark.service.sys.common.vo.dict
 
+import io.kuark.base.support.IIdEntity
 import java.io.Serializable
 
 
@@ -9,14 +10,14 @@ import java.io.Serializable
  * @author K
  * @since 1.0.0
  */
-class SysTenantCacheItem: Serializable {
+class SysTenantCacheItem: IIdEntity<String>, Serializable {
 
     companion object {
         private const val serialVersionUID = 3292934385656787739L
     }
 
     /** 主键 */
-    var id: String? = null
+    override var id: String? = null
 
     /** 子系统代码 */
     var subSysDictCode: String? = null

@@ -6,7 +6,6 @@ import io.kuark.base.error.ObjectNotFoundException
 import io.kuark.base.lang.string.StringKit
 import io.kuark.base.log.LogFactory
 import io.kuark.base.query.Criteria
-import io.kuark.base.query.Criterion
 import io.kuark.base.query.enums.Operator
 import io.kuark.base.support.Consts
 import io.kuark.service.sys.common.api.ISysResourceApi
@@ -15,7 +14,6 @@ import io.kuark.service.sys.common.vo.resource.BaseMenuTreeNode
 import io.kuark.service.sys.common.vo.resource.ResourceType
 import io.kuark.service.user.common.rbac.vo.role.RbacRoleCacheItem
 import io.kuark.service.user.common.user.vo.account.UserAccountCacheItem
-import io.kuark.service.user.common.user.vo.account.UserAccountRecord
 import io.kuark.service.user.common.user.vo.account.UserAccountSearchPayload
 import io.kuark.service.user.provider.rbac.biz.ibiz.IRbacRoleBiz
 import io.kuark.service.user.provider.rbac.cache.RoleByIdCacheHandler
@@ -32,7 +30,6 @@ import io.kuark.service.user.provider.user.biz.ibiz.IUserAccountBiz
 import io.kuark.service.user.provider.rbac.cache.ResourceIdsByRoleIdCacheHandler
 import io.kuark.service.user.provider.rbac.cache.UserIdsByRoleIdCacheHandler
 import io.kuark.service.user.provider.user.cache.UserByIdCacheHandler
-import io.kuark.service.user.provider.user.model.po.UserAccount
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -82,11 +79,11 @@ open class RbacRoleBiz : IRbacRoleBiz, BaseCrudBiz<String, RbacRole, RbacRoleDao
 
 
     override fun getRoleFromCache(roleId: String): RbacRoleCacheItem? {
-        return roleCacheHandler.getRoleFromCache(roleId)
+        return roleCacheHandler.getRoleById(roleId)
     }
 
     override fun getRolesFromCache(roleIds: Collection<String>): Map<String, RbacRoleCacheItem> {
-        return roleCacheHandler.getRolesFromCache(roleIds)
+        return roleCacheHandler.getRolesByIds(roleIds)
     }
 
     override fun getRoleIdsFromCache(subSysDictCode: String, tenantId: String?): List<String> {
@@ -96,7 +93,7 @@ open class RbacRoleBiz : IRbacRoleBiz, BaseCrudBiz<String, RbacRole, RbacRoleDao
     override fun getRolesFromCache(subSysDictCode: String, tenantId: String?): Map<String, RbacRoleCacheItem> {
         val roleIds = roleIdCacheHandler.getRoleIdsFromCache(subSysDictCode, tenantId)
         return if (roleIds.isNotEmpty()) {
-            roleCacheHandler.getRolesFromCache(roleIds)
+            roleCacheHandler.getRolesByIds(roleIds)
         } else {
             emptyMap()
         }
@@ -127,7 +124,7 @@ open class RbacRoleBiz : IRbacRoleBiz, BaseCrudBiz<String, RbacRole, RbacRoleDao
 
     @Transactional
     override fun deleteById(id: String): Boolean {
-        val role = roleCacheHandler.getRoleFromCache(id)!!
+        val role = roleCacheHandler.getRoleById(id)!!
         val success = super.deleteById(id)
         if (success) {
             log.debug("删除id为${id}的角色成功！")
@@ -144,7 +141,7 @@ open class RbacRoleBiz : IRbacRoleBiz, BaseCrudBiz<String, RbacRole, RbacRoleDao
 
     @Transactional
     override fun batchDelete(ids: Collection<String>): Int {
-        val roleMap = roleCacheHandler.getRolesFromCache(ids)
+        val roleMap = roleCacheHandler.getRolesByIds(ids)
         val count = super.batchDelete(ids)
         log.debug("批量删除角色，期望删除${ids.size}条，实际删除${count}条。")
         // 同步缓存
@@ -234,7 +231,7 @@ open class RbacRoleBiz : IRbacRoleBiz, BaseCrudBiz<String, RbacRole, RbacRoleDao
             ids = getAssignedUsers(roleId!!).toList()
         }
         return if (ids.isNotEmpty()) {
-            userByIdCacheHandler.getUsersByIds(ids)
+            userByIdCacheHandler.getUsersByIds(ids).values.toList()
         } else emptyList()
     }
 

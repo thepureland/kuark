@@ -10,6 +10,7 @@ import io.kuark.base.query.enums.Operator
 import io.kuark.base.query.sort.Order
 import io.kuark.base.support.Consts
 import io.kuark.base.support.GroupExecutor
+import io.kuark.base.support.dao.IBaseReadOnlyDao
 import io.kuark.base.support.logic.AndOr
 import io.kuark.base.support.payload.ListSearchPayload
 import io.kuark.base.support.payload.SearchPayload
@@ -34,7 +35,7 @@ import kotlin.reflect.full.memberProperties
  * @author K
  * @since 1.0.0
  */
-open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
+open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> : IBaseReadOnlyDao<PK, E> {
 
     /** 数据库表-实体关联对象 */
     private var table: T? = null
@@ -121,27 +122,11 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
 
     //region Search
 
-    /**
-     * 查询指定主键值的实体
-     *
-     * @param id 主键值，类型必须为以下之一：String、Int、Long
-     * @return 实体，找不到返回null
-     * @author K
-     * @since 1.0.0
-     */
-    open fun get(id: PK): E? {
+    override fun get(id: PK): E? {
         return entitySequence().firstOrNull { getPkColumn() eq id }
     }
 
-    /**
-     * 查询指定主键值的实体，可以指定返回的对象类型
-     *
-     * @param id 主键值，类型必须为以下之一：String、Int、Long
-     * @return 结果对象，找不到返回null
-     * @author K
-     * @since 1.0.0
-     */
-    open fun <R : Any> get(id: PK, returnType: KClass<R>): R? {
+    override fun <R : Any> get(id: PK, returnType: KClass<R>): R? {
         val query = querySource()
             .select()
             .where { getPkColumn().eq(id) }
@@ -156,16 +141,7 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
         return null
     }
 
-    /**
-     * 批量查询指定主键值的实体
-     *
-     * @param ids 主键值可变参数，元素类型必须为以下之一：String、Int、Long，为空时返回空列表
-     * @param countOfEachBatch 每批大小，缺省为1000
-     * @return 实体列表，ids为空时返回空列表
-     * @author K
-     * @since 1.0.0
-     */
-    open fun getByIds(vararg ids: PK, countOfEachBatch: Int = 1000): List<E> {
+    override fun getByIds(vararg ids: PK, countOfEachBatch: Int): List<E> {
         if (ids.isEmpty()) return listOf()
         val results = mutableListOf<E>()
         GroupExecutor(listOf(ids), countOfEachBatch) {
@@ -179,48 +155,22 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
 
 
     //region oneSearch
-    /**
-     * 根据单个属性查询
-     *
-     * @param property 属性名
-     * @param value    属性值
-     * @param orders   排序规则
-     * @return 指定类名对象的结果列表
-     * @author K
-     * @since 1.0.0
-     */
-    open fun oneSearch(property: String, value: Any?, vararg orders: Order): List<E> {
+
+    override fun oneSearch(property: String, value: Any?, vararg orders: Order): List<E> {
         return doSearchEntity(mapOf(property to value), null, null, *orders)
     }
 
-    /**
-     * 根据单个属性查询，只返回指定的单个属性的列表
-     *
-     * @param property       属性名
-     * @param value          属性值
-     * @param returnProperty 返回的属性名
-     * @param orders         排序规则
-     * @return List(属性值)
-     * @author K
-     * @since 1.0.0
-     */
-    open fun oneSearchProperty(property: String, value: Any?, returnProperty: String, vararg orders: Order): List<*> {
+    override fun oneSearchProperty(
+        property: String,
+        value: Any?,
+        returnProperty: String,
+        vararg orders: Order
+    ): List<*> {
         val results = doSearchProperties(mapOf(property to value), null, listOf(returnProperty), null, *orders)
         return results.flatMap { it.values }
     }
 
-    /**
-     * 根据单个属性查询，只返回指定属性的列表
-     *
-     * @param property         属性名
-     * @param value            属性值
-     * @param returnProperties 返回的属性名称集合
-     * @param orders           排序规则
-     * @return List(Map(属性名, 属性值)), 一个Map封装一个记录
-     * @author K
-     * @since 1.0.0
-     */
-    open fun oneSearchProperties(
+    override fun oneSearchProperties(
         property: String, value: Any?, returnProperties: Collection<String>, vararg orders: Order
     ): List<Map<String, *>> {
         return doSearchProperties(mapOf(property to value), null, returnProperties, null, *orders)
@@ -230,42 +180,17 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
 
 
     //region allSearch
-    /**
-     * 查询所有结果
-     *
-     * @param orders 排序规则
-     * @return 实体对象列表
-     * @author K
-     * @since 1.0.0
-     */
-    open fun allSearch(vararg orders: Order): List<E> {
+
+    override fun allSearch(vararg orders: Order): List<E> {
         return entitySequence().toList()
     }
 
-    /**
-     * 查询所有结果，只返回指定的单个属性的列表
-     *
-     * @param returnProperty 属性名
-     * @param orders         排序规则
-     * @return List(属性值)
-     * @author K
-     * @since 1.0.0
-     */
-    open fun allSearchProperty(returnProperty: String, vararg orders: Order): List<*> {
+    override fun allSearchProperty(returnProperty: String, vararg orders: Order): List<*> {
         val results = doSearchProperties(null, null, listOf(returnProperty), null, *orders)
         return results.flatMap { it.values }
     }
 
-    /**
-     * 查询所有结果，只返回指定属性的列表
-     *
-     * @param returnProperties 属性名称集合
-     * @param orders           排序规则
-     * @return List(Map(属性名, 属性值))
-     * @author K
-     * @since 1.0.0
-     */
-    open fun allSearchProperties(returnProperties: Collection<String>, vararg orders: Order): List<Map<String, *>> {
+    override fun allSearchProperties(returnProperties: Collection<String>, vararg orders: Order): List<Map<String, *>> {
         return doSearchProperties(null, null, returnProperties, null, *orders)
     }
 
@@ -273,6 +198,10 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
 
 
     //region andSearch
+
+    override fun andSearch(properties: Map<String, *>, vararg orders: Order): List<E> {
+        return doSearchEntity(properties, AndOr.AND, null, *orders)
+    }
 
     /**
      * 根据多个属性进行and条件查询，返回实体类对象的列表
@@ -290,6 +219,13 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
         whereConditionFactory: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)? = null
     ): List<E> {
         return doSearchEntity(properties, AndOr.AND, whereConditionFactory, *orders)
+    }
+
+    override fun andSearchProperty(
+        properties: Map<String, *>, returnProperty: String, vararg orders: Order
+    ): List<*> {
+        val results = doSearchProperties(properties, AndOr.AND, listOf(returnProperty), null, *orders)
+        return results.flatMap { it.values }
     }
 
     /**
@@ -311,6 +247,14 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
     ): List<*> {
         val results = doSearchProperties(properties, AndOr.AND, listOf(returnProperty), whereConditionFactory, *orders)
         return results.flatMap { it.values }
+    }
+
+    override fun andSearchProperties(
+        properties: Map<String, *>,
+        returnProperties: Collection<String>,
+        vararg orders: Order
+    ): List<Map<String, *>> {
+        return doSearchProperties(properties, AndOr.AND, returnProperties, null, *orders)
     }
 
     /**
@@ -337,6 +281,11 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
 
 
     //region orSearch
+
+    override fun orSearch(properties: Map<String, *>, vararg orders: Order): List<E> {
+        return doSearchEntity(properties, AndOr.OR, null, *orders)
+    }
+
     /**
      * 根据多个属性进行or条件查询，返回实体类对象的列表
      *
@@ -353,6 +302,15 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
         whereConditionFactory: ((Column<Any>, Any?) -> ColumnDeclaring<Boolean>?)? = null
     ): List<E> {
         return doSearchEntity(properties, AndOr.OR, whereConditionFactory, *orders)
+    }
+
+    override fun orSearchProperty(
+        properties: Map<String, *>,
+        returnProperty: String,
+        vararg orders: Order,
+    ): List<*> {
+        val results = doSearchProperties(properties, AndOr.OR, listOf(returnProperty), null, *orders)
+        return results.flatMap { it.values }
     }
 
     /**
@@ -374,6 +332,14 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
     ): List<*> {
         val results = doSearchProperties(properties, AndOr.OR, listOf(returnProperty), whereConditionFactory, *orders)
         return results.flatMap { it.values }
+    }
+
+    override fun orSearchProperties(
+        properties: Map<String, *>,
+        returnProperties: Collection<String>,
+        vararg orders: Order
+    ): List<Map<String, *>> {
+        return doSearchProperties(properties, AndOr.OR, returnProperties, null, *orders)
     }
 
     /**
@@ -400,98 +366,37 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
 
 
     //region inSearch
-    /**
-     * in查询，返回实体类对象列表
-     *
-     * @param property 属性名
-     * @param values   in条件值集合
-     * @param orders   排序规则
-     * @return 指定类名对象的结果列表
-     * @author K
-     * @since 1.0.0
-     */
-    open fun inSearch(property: String, values: Collection<*>, vararg orders: Order): List<E> {
+
+    override fun inSearch(property: String, values: Collection<*>, vararg orders: Order): List<E> {
         val column = ColumnHelper.columnOf(table(), property)[property]!!
         var entitySequence = entitySequence().filter { column.inCollection(values) }
         entitySequence = entitySequence.sorted { sortOf(*orders) }
         return entitySequence.toList()
     }
 
-    /**
-     * in查询，只返回指定的单个属性的值
-     *
-     * @param property       属性名
-     * @param values         in条件值集合
-     * @param returnProperty 要返回的属性名
-     * @param orders         排序规则
-     * @return 指定属性的值列表
-     * @author K
-     * @since 1.0.0
-     */
-    open fun inSearchProperty(
+    override fun inSearchProperty(
         property: String, values: Collection<*>, returnProperty: String, vararg orders: Order
     ): List<*> {
         val results = doInSearchProperties(property, values, listOf(returnProperty), *orders)
         return results.flatMap { it.values }
     }
 
-    /**
-     * in查询，只返回指定属性的值
-     *
-     * @param property         属性名
-     * @param values           in条件值集合
-     * @param returnProperties 要返回的属性名集合
-     * @param orders           排序规则
-     * @return List(Map(指定的属性名，属性值))
-     * @author K
-     * @since 1.0.0
-     */
-    open fun inSearchProperties(
+    override fun inSearchProperties(
         property: String, values: Collection<*>, returnProperties: Collection<String>, vararg orders: Order
     ): List<Map<String, *>> {
         return doInSearchProperties(property, values, returnProperties, *orders)
     }
 
-    /**
-     * 主键in查询，返回实体类对象列表
-     *
-     * @param values 主键值集合
-     * @param orders 排序规则
-     * @param orders 排序规则
-     * @return 实体对象列表
-     * @author K
-     * @since 1.0.0
-     */
-    open fun inSearchById(values: Collection<PK>, vararg orders: Order): List<E> {
+    override fun inSearchById(values: Collection<PK>, vararg orders: Order): List<E> {
         return inSearch(IDbEntity<PK, E>::id.name, values, *orders)
     }
 
-    /**
-     * 主键in查询，只返回指定的单个属性的值
-     *
-     * @param values         主键值集合
-     * @param returnProperty 要返回的属性名
-     * @param orders         排序规则
-     * @return 指定属性的值列表
-     * @author K
-     * @since 1.0.0
-     */
-    open fun inSearchPropertyById(values: Collection<PK>, returnProperty: String, vararg orders: Order): List<*> {
+    override fun inSearchPropertyById(values: Collection<PK>, returnProperty: String, vararg orders: Order): List<*> {
         val results = doInSearchProperties(IDbEntity<PK, E>::id.name, values, listOf(returnProperty), *orders)
         return results.flatMap { it.values }
     }
 
-    /**
-     * 主键in查询，只返回指定属性的值
-     *
-     * @param values           主键值集合
-     * @param returnProperties 要返回的属性名集合
-     * @param orders           排序规则
-     * @return List(Map(指定的属性名, 属性值))
-     * @author K
-     * @since 1.0.0
-     */
-    open fun inSearchPropertiesById(
+    override fun inSearchPropertiesById(
         values: Collection<PK>, returnProperties: Collection<String>, vararg orders: Order
     ): List<Map<String, *>> {
         return doInSearchProperties(IDbEntity<PK, E>::id.name, values, returnProperties, *orders)
@@ -501,45 +406,17 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
 
 
     //region search Criteria
-    /**
-     * 复杂条件查询
-     *
-     * @param criteria 查询条件
-     * @param orders   排序规则
-     * @return 实体对象列表
-     * @author K
-     * @since 1.0.0
-     */
-    open fun search(criteria: Criteria, vararg orders: Order): List<E> {
+
+    override fun search(criteria: Criteria, vararg orders: Order): List<E> {
         return searchEntityCriteria(criteria, 0, 0, *orders)
     }
 
-    /**
-     * 复杂条件查询，只返回指定单个属性的值
-     *
-     * @param criteria       查询条件
-     * @param returnProperty 要返回的属性名
-     * @param orders         排序规则
-     * @return 指定属性的值列表
-     * @author K
-     * @since 1.0.0
-     */
-    open fun searchProperty(criteria: Criteria, returnProperty: String, vararg orders: Order): List<*> {
+    override fun searchProperty(criteria: Criteria, returnProperty: String, vararg orders: Order): List<*> {
         val results = searchPropertiesCriteria(criteria, listOf(returnProperty), 0, 0, *orders)
         return results.flatMap { it.values }
     }
 
-    /**
-     * 复杂条件，只返回指定多个属性的值
-     *
-     * @param criteria         查询条件
-     * @param returnProperties 要返回的属性名集合
-     * @param orders           排序规则
-     * @return List(Map(指定的属性名 属性值))
-     * @author K
-     * @since 1.0.0
-     */
-    open fun searchProperties(
+    override fun searchProperties(
         criteria: Criteria, returnProperties: Collection<String>, vararg orders: Order
     ): List<Map<String, Any?>> {
         return searchPropertiesCriteria(criteria, returnProperties, 0, 0, *orders)
@@ -549,51 +426,19 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
 
 
     //region pagingSearch
-    /**
-     * 分页查询，返回对象列表
-     *
-     * @param criteria 查询条件
-     * @param pageNo   当前页码(从1开始)
-     * @param pageSize 每页条数
-     * @param orders   排序规则
-     * @return 实体对象列表
-     * @author K
-     * @since 1.0.0
-     */
-    open fun pagingSearch(criteria: Criteria, pageNo: Int, pageSize: Int, vararg orders: Order): List<E> {
+
+    override fun pagingSearch(criteria: Criteria, pageNo: Int, pageSize: Int, vararg orders: Order): List<E> {
         return searchEntityCriteria(criteria, pageNo, pageSize, *orders)
     }
 
-    /**
-     * 分页查询，返回对象列表,返回只包含指定属性
-     *
-     * @param criteria 查询条件
-     * @param pageNo   当前页码(从1开始)
-     * @param pageSize 每页条数
-     * @param orders   排序规则
-     * @return 实体对象列表
-     * @author K
-     * @since 1.0.0
-     */
-    open fun pagingReturnProperty(
+    override fun pagingReturnProperty(
         criteria: Criteria, returnProperty: String, pageNo: Int, pageSize: Int, vararg orders: Order
     ): List<*> {
         val results = searchPropertiesCriteria(criteria, listOf(returnProperty), pageNo, pageSize, *orders)
         return results.flatMap { it.values }
     }
 
-    /**
-     * 分页查询，返回对象列表,返回只包含指定属性
-     *
-     * @param criteria 查询条件
-     * @param pageNo   当前页码(从1开始)
-     * @param pageSize 每页条数
-     * @param orders   排序规则
-     * @return 实体对象列表
-     * @author K
-     * @since 1.0.0
-     */
-    open fun pagingReturnProperties(
+    override fun pagingReturnProperties(
         criteria: Criteria, returnProperties: Collection<String>, pageNo: Int, pageSize: Int, vararg orders: Order
     ): List<Map<String, *>> {
         return searchPropertiesCriteria(criteria, returnProperties, pageNo, pageSize, *orders)
@@ -603,6 +448,10 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
 
 
     //region payload search
+
+    override fun search(listSearchPayload: ListSearchPayload?): List<*> {
+        return search(listSearchPayload, null)
+    }
 
     /**
      * 根据查询载体对象查询(包括分页), 具体规则见 @see SearchPayload
@@ -677,15 +526,7 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
 
     //region aggregate
 
-    /**
-     * 计算记录数
-     *
-     * @param criteria 查询条件，为null将计算所有记录
-     * @return 记录数
-     * @author K
-     * @since 1.0.0
-     */
-    open fun count(criteria: Criteria? = null): Int {
+    override fun count(criteria: Criteria?): Int {
         return if (criteria == null) {
             entitySequence().count()
         } else {
@@ -693,6 +534,10 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
                 .filter { CriteriaConverter.convert(criteria, table()) }
                 .aggregateColumns { count(getPkColumn()) }!!
         }
+    }
+
+    override fun count(searchPayload: SearchPayload?): Int {
+        return count(searchPayload, null)
     }
 
     /**
@@ -712,17 +557,8 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
         return query.totalRecords
     }
 
-    /**
-     * 求和. 对满足条件的记录根据指定属性进行求和
-     *
-     * @param property 待求和的属性
-     * @param criteria 查询条件，为null将计算所有记录
-     * @return 和
-     * @author K
-     * @since 1.0.0
-     */
     @Suppress(Consts.Suppress.UNCHECKED_CAST)
-    open fun sum(property: String, criteria: Criteria? = null): Number {
+    override fun sum(property: String, criteria: Criteria?): Number {
         var entitySequence = entitySequence()
         if (criteria != null) {
             entitySequence = entitySequence.filter { CriteriaConverter.convert(criteria, table()) }
@@ -732,17 +568,8 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
         } as Number
     }
 
-    /**
-     * 求平均值. 对满足条件的记录根据指定属性进行求平均值
-     *
-     * @param property 待求平均值的属性
-     * @param criteria 查询条件，为null将计算所有记录
-     * @return 平均值
-     * @author K
-     * @since 1.0.0
-     */
     @Suppress(Consts.Suppress.UNCHECKED_CAST)
-    open fun avg(property: String, criteria: Criteria? = null): Number {
+    override fun avg(property: String, criteria: Criteria?): Number {
         var entitySequence = entitySequence()
         if (criteria != null) {
             entitySequence = entitySequence.filter { CriteriaConverter.convert(criteria, table()) }
@@ -752,17 +579,8 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
         } as Number
     }
 
-    /**
-     * 求最大值. 对满足条件的记录根据指定属性进行求最大值
-     *
-     * @param property 待求最大值的属性
-     * @param criteria 查询条件，为null将计算所有记录
-     * @return 最大值
-     * @author K
-     * @since 1.0.0
-     */
     @Suppress(Consts.Suppress.UNCHECKED_CAST)
-    open fun max(property: String, criteria: Criteria? = null): Any? {
+    override fun max(property: String, criteria: Criteria?): Any? {
         var entitySequence = entitySequence()
         if (criteria != null) {
             entitySequence = entitySequence.filter { CriteriaConverter.convert(criteria, table()) }
@@ -772,17 +590,8 @@ open class BaseReadOnlyDao<PK : Any, E : IDbEntity<PK, E>, T : Table<E>> {
         }
     }
 
-    /**
-     * 求最小值. 对满足条件的记录根据指定属性进行求最小值
-     *
-     * @param property 待求最小值的属性
-     * @param criteria 查询条件，为null将计算所有记录
-     * @return 最小值
-     * @author K
-     * @since 1.0.0
-     */
     @Suppress(Consts.Suppress.UNCHECKED_CAST)
-    open fun min(property: String, criteria: Criteria? = null): Any? {
+    override fun min(property: String, criteria: Criteria?): Any? {
         var entitySequence = entitySequence()
         if (criteria != null) {
             entitySequence = entitySequence.filter { CriteriaConverter.convert(criteria, table()) }

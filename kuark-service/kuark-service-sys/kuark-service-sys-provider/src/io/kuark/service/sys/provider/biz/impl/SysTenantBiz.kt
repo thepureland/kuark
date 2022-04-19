@@ -40,7 +40,7 @@ open class SysTenantBiz : BaseCrudBiz<String, SysTenant, SysTenantDao>(), ISysTe
     private lateinit var tenantBySubSysCacheHandler: TenantsBySubSysCacheHandler
 
     override fun getTenantFromCache(id: String): SysTenantCacheItem? {
-        return tenantByIdCacheHandler.getTenantFromCache(id)
+        return tenantByIdCacheHandler.getTenantById(id)
     }
 
     override fun getTenantsFromCache(subSysDictCode: String): List<SysTenantCacheItem> {
@@ -90,7 +90,7 @@ open class SysTenantBiz : BaseCrudBiz<String, SysTenant, SysTenantDao>(), ISysTe
 
     @Transactional
     override fun deleteById(id: String): Boolean {
-        val sysTenant = tenantByIdCacheHandler.getTenantFromCache(id)!!
+        val sysTenant = tenantByIdCacheHandler.getTenantById(id)!!
         val success = super.deleteById(id)
         if (success) {
             // 同步缓存
@@ -109,7 +109,7 @@ open class SysTenantBiz : BaseCrudBiz<String, SysTenant, SysTenantDao>(), ISysTe
         val count = super.batchDelete(ids)
         log.debug("批量删除租户，期望删除${ids.size}条，实际删除${count}条。")
         // 同步缓存
-        tenantByIdCacheHandler.synchOnBatchDelete(ids)
+        tenantByIdCacheHandler.syncOnBatchDelete(ids)
         tenantBySubSysCacheHandler.synchOnBatchDelete(ids, subSysDictCodes)
         return count
     }

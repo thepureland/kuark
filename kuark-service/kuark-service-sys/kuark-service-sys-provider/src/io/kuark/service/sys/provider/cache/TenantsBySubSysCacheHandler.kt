@@ -98,7 +98,7 @@ open class TenantsBySubSysCacheHandler: AbstractCacheHandler<List<SysTenantCache
         if (CacheKit.isCacheActive(CACHE_NAME)) {
             log.debug("更新id为${id}的租户后，同步${CACHE_NAME}缓存...")
             val subSysDictCode = if (any == null) {
-                tenantByIdCacheManager.getTenantFromCache(id)!!.subSysDictCode!!
+                tenantByIdCacheManager.getTenantById(id)!!.subSysDictCode!!
             } else {
                 BeanKit.getProperty(any, SysTenant::subSysDictCode.name) as String
             }

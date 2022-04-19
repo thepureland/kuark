@@ -44,7 +44,7 @@ open class SysDictBiz : BaseCrudBiz<String, SysDict, SysDictDao>(), ISysDictBiz 
     private val log = LogFactory.getLog(this::class)
 
     override fun getDictFromCache(dictId: String): SysDictCacheItem? {
-        return dictCacheHandler.getDictFromCache(dictId)
+        return dictCacheHandler.getDictById(dictId)
     }
 
     override fun getDictIdByModuleAndType(module: String, type: String): String? {

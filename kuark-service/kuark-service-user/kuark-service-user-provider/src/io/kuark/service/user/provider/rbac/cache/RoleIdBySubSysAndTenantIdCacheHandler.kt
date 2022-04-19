@@ -102,7 +102,7 @@ open class RoleIdBySubSysAndTenantIdCacheHandler : AbstractCacheHandler<List<Str
     fun syncOnInsert(id: String) {
         if (CacheKit.isCacheActive(CACHE_NAME)) {
             log.debug("新增id为${id}的角色后，同步${CACHE_NAME}缓存...")
-            val role = roleCacheManager.getRoleFromCache(id)!! // 缓存角色
+            val role = roleCacheManager.getRoleById(id)!! // 缓存角色
             CacheKit.evict(CACHE_NAME, "${role.subSysDictCode}::${role.tenantId}") // 踢除角色id的缓存
             if (CacheKit.isWriteInTime(CACHE_NAME)) {
                 getSelf().getRoleIdsFromCache(role.subSysDictCode!!, role.tenantId)  // 缓存角色id
@@ -114,7 +114,7 @@ open class RoleIdBySubSysAndTenantIdCacheHandler : AbstractCacheHandler<List<Str
     fun syncOnUpdateActive(id: String) {
         if (CacheKit.isCacheActive(CACHE_NAME)) {
             log.debug("更新id为${id}的角色的启用状态后，同步${CACHE_NAME}缓存...")
-            val r = roleCacheManager.getRoleFromCache(id)!!
+            val r = roleCacheManager.getRoleById(id)!!
             CacheKit.evict(CACHE_NAME, "${r.subSysDictCode}::${r.tenantId}") // 踢除角色id的缓存
             getSelf().getRoleIdsFromCache(r.subSysDictCode!!, r.tenantId)  // 缓存角色id
             log.debug("${CACHE_NAME}缓存同步完成。")

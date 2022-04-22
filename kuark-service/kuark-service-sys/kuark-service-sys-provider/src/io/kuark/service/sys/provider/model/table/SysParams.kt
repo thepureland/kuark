@@ -1,7 +1,7 @@
 package io.kuark.service.sys.provider.model.table
 
 import io.kuark.ability.data.rdb.support.MaintainableTable
-import io.kuark.service.sys.provider.model.po.SysParam
+import io.kuark.service.sys.provider.model.po.SysDataSource
 import org.ktorm.schema.int
 import org.ktorm.schema.varchar
 
@@ -12,7 +12,7 @@ import org.ktorm.schema.varchar
  * @since 1.0.0
  */
 //region your codes 1
-object SysParams: MaintainableTable<SysParam>("sys_param") {
+object SysParams: MaintainableTable<SysDataSource>("sys_param") {
 //endregion your codes 1
 
     /** 模块 */

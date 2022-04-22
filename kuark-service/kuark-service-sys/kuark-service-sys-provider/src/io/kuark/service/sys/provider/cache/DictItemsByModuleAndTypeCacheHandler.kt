@@ -52,6 +52,12 @@ open class DictItemsByModuleAndTypeCacheHandler : AbstractCacheHandler<List<SysD
         }
         val results = sysDictDao.pagingSearch(payload)
 
+        // 清除缓存
+        if (clear) {
+            clear()
+        }
+
+        // 缓存数据
         val dictMap = results.groupBy {
             "${it.module}::${it.dictType}"
         }

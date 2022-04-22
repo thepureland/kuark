@@ -11,7 +11,7 @@ import io.kuark.service.sys.provider.biz.ibiz.ISysTenantBiz
 import io.kuark.service.sys.provider.cache.TenantByIdCacheHandler
 import io.kuark.service.sys.provider.cache.TenantsBySubSysCacheHandler
 import io.kuark.service.sys.provider.dao.SysTenantDao
-import io.kuark.service.sys.provider.model.po.SysParam
+import io.kuark.service.sys.provider.model.po.SysDataSource
 import io.kuark.service.sys.provider.model.po.SysTenant
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -77,7 +77,7 @@ open class SysTenantBiz : BaseCrudBiz<String, SysTenant, SysTenantDao>(), ISysTe
 
     @Transactional
     override fun updateActive(id: String, active: Boolean): Boolean {
-        val param = SysParam {
+        val param = SysDataSource {
             this.id = id
             this.active = active
         }

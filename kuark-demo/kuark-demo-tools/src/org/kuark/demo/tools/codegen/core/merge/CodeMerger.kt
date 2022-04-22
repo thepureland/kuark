@@ -57,7 +57,7 @@ class CodeMerger(private val file: File) {
     }
 
     private fun handleImport() {
-        if (file.name.endsWith(".java")) {
+        if (file.name.endsWith(".kt")) {
             val oldImports = ImportStmtRetriever(oldFileContent).retrieveImports()
             val newImports = ImportStmtRetriever(newFileContent).retrieveImports()
             val commonImports = oldImports.intersect(newImports) // 交集
@@ -66,37 +66,10 @@ class CodeMerger(private val file: File) {
             for (importStmt in customImport) {
                 imports.append(importStmt).append("\n")
             }
-            imports.append("\n")
             val index = newFileContent!!.indexOf("import")
             val sb = StringBuilder(newFileContent)
             sb.insert(index, imports)
             newFileContent = sb.toString()
-        }
-    }
-
-    companion object {
-        @JvmStatic
-        fun main(args: Array<String>) {
-            val codes = "public void test() {" +
-                    "<!--//region your codes 7-->" +
-                    "\${root}" +
-                    "<!--//endregion your codes 7-->" +
-                    "}" +
-                    "public void test() {" +
-                    "<!--//region your codes 2-->" +
-                    "<!--//endregion your codes 2-->" +
-                    "}"
-            val value = "\${codes}"
-            val s1 = Matcher.quoteReplacement(value)
-            val s = codes.replaceFirst(
-                "(?<=(<!--)?//region your codes (\\d)(-->)?)[\\s\\S]*?(?=(<!--)?//endregion your codes \\d(-->)?)".toRegex(),
-                """
-
-     $s1
-
-     """.trimIndent()
-            )
-            println(s)
         }
     }
 

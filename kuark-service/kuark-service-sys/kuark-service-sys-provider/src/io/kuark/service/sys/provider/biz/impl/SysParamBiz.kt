@@ -12,7 +12,7 @@ import io.kuark.service.sys.common.vo.param.SysParamSearchPayload
 import io.kuark.service.sys.provider.biz.ibiz.ISysParamBiz
 import io.kuark.service.sys.provider.cache.ParamByModuleAndNameCacheHandler
 import io.kuark.service.sys.provider.dao.SysParamDao
-import io.kuark.service.sys.provider.model.po.SysParam
+import io.kuark.service.sys.provider.model.po.SysDataSource
 import io.kuark.service.sys.provider.model.table.SysParams
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -26,7 +26,7 @@ import org.springframework.transaction.annotation.Transactional
  */
 @Service
 //region your codes 1
-open class SysParamBiz : BaseCrudBiz<String, SysParam, SysParamDao>(), ISysParamBiz {
+open class SysParamBiz : BaseCrudBiz<String, SysDataSource, SysParamDao>(), ISysParamBiz {
 //endregion your codes 1
 
     //region your codes 2
@@ -51,7 +51,7 @@ open class SysParamBiz : BaseCrudBiz<String, SysParam, SysParamDao>(), ISysParam
     @Transactional
     override fun update(any: Any): Boolean {
         val success = super.update(any)
-        val id = BeanKit.getProperty(any, SysParam::id.name) as String
+        val id = BeanKit.getProperty(any, SysDataSource::id.name) as String
         if (success) {
             log.debug("更新id为${id}的参数。")
             paramCacheHandler.syncOnUpdate(any, id)
@@ -63,7 +63,7 @@ open class SysParamBiz : BaseCrudBiz<String, SysParam, SysParamDao>(), ISysParam
 
     @Transactional
     override fun updateActive(id: String, active: Boolean): Boolean {
-        val param = SysParam {
+        val param = SysDataSource {
             this.id = id
             this.active = active
         }

@@ -30,7 +30,7 @@ open class ResourceBySubSysAndTypeCacheHandler: AbstractCacheHandler<List<SysRes
 
     override fun doReload(key: String): List<SysResourceCacheItem> {
         require(key.contains(":")) { "缓存${CACHE_NAME}的key格式必须是 子系统代码::资源类型代码" }
-        val subSysAndResType = key.split(":")
+        val subSysAndResType = key.split("::")
         return getSelf().getResourcesFromCache(subSysAndResType[0], subSysAndResType[1])
     }
 

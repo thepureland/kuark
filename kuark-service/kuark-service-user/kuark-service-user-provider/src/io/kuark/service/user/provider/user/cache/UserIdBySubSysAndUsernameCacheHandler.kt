@@ -28,7 +28,7 @@ open class UserIdBySubSysAndUsernameCacheHandler : AbstractCacheHandler<String>(
 
     override fun doReload(key: String): String? {
         require(key.contains(":")) { "缓存${CACHE_NAME}的key格式必须是 子系统代码::用户名" }
-        val subSysAndUsername = key.split(":")
+        val subSysAndUsername = key.split("::")
         return getSelf().getUserId(subSysAndUsername[0], subSysAndUsername[1])
     }
 

@@ -18,6 +18,12 @@ interface SysDataSource: IMaintainableDbEntity<String, SysDataSource> {
     /** 名称，或其国际化key */
     var name: String
 
+    /** 子系统代码 */
+    var subSysDictCode: String
+
+    /** 租户id */
+    var tenantId: String?
+
     /** url */
     var url: String
 

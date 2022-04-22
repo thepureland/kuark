@@ -36,7 +36,7 @@ open class RoleIdBySubSysAndTenantIdCacheHandler : AbstractCacheHandler<List<Str
 
     override fun doReload(key: String): List<String> {
         require(key.contains(":")) { "缓存${CACHE_NAME}的key格式必须是 子系统代码::租户id" }
-        val subSysAndTenantId = key.split(":")
+        val subSysAndTenantId = key.split("::")
         return getSelf().getRoleIdsFromCache(subSysAndTenantId[0], subSysAndTenantId[1])
     }
 

@@ -20,33 +20,4 @@ class CustomCodesRetriever(private val fileContent: String) {
         return map
     }
 
-    companion object {
-        @JvmStatic
-        fun main(args: Array<String>) {
-            val codes = """public void test() {//region your codes 7-->
-  System.out.println(1);<!--//endregion your codes 7-->}public void test() {//region your codes 2
-System.out.println(2);System.out.println(20);//endregion your codes 2}"""
-            var p =
-                Pattern.compile("(?<=(<!--)?//region your codes (\\d)(-->)?\\n)[\\s\\S]*?(?=(<!--)?//endregion your codes \\d(-->)?)")
-            var m = p.matcher(codes)
-            while (m.find()) {
-                println(m.group(0))
-                println(m.group(2))
-            }
-
-//        String imports =
-//                "import java.util.HashMap;\n" +
-//                        "import java.util.List;\n" +
-//                        "import java.util.Map;\n" +
-//                        "import java.util.regex.Matcher;\n" +
-//                        "import java.util.regex.Pattern;\n";
-            val imports = "kkjk"
-            p = Pattern.compile("import .+?;")
-            m = p.matcher(imports)
-            while (m.find()) {
-                println(m.group(0))
-            }
-        }
-    }
-
 }

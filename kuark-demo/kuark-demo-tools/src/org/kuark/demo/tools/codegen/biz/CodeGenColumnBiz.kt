@@ -66,6 +66,7 @@ object CodeGenColumnBiz {
                     listItem = column.getListItem()
                     editItem = column.getEditItem()
                     detailItem = column.getDetailItem()
+                    cacheItem = column.getCacheItem()
                 }
             )
         }

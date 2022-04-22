@@ -9,7 +9,7 @@ import io.kuark.service.sys.common.vo.param.SysParamRecord
 import io.kuark.service.sys.common.vo.param.SysParamSearchPayload
 import io.kuark.service.sys.provider.biz.ibiz.ISysDictItemBiz
 import io.kuark.service.sys.provider.biz.ibiz.ISysParamBiz
-import io.kuark.service.sys.provider.model.po.SysParam
+import io.kuark.service.sys.provider.model.po.SysDataSource
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 
@@ -27,7 +27,7 @@ open class SysParamController :
 
     @GetMapping("/updateActive")
     fun updateActive(id: String, active: Boolean): Boolean {
-        val param = SysParam {
+        val param = SysDataSource {
             this.id = id
             this.active = active
         }

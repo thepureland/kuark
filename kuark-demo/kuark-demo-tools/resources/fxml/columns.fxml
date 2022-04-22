@@ -65,6 +65,14 @@
                         <CheckBox fx:id="detailCheckBox" onAction="#selectDetailItems"/>
                     </graphic>
                 </TableColumn>
+                <TableColumn minWidth="0.0" prefWidth="60.0" text="缓存项">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="cacheItem"/>
+                    </cellValueFactory>
+                    <cellFactory>
+                        <CheckBoxTableCellFactory/>
+                    </cellFactory>
+                </TableColumn>
             </columns>
         </TableView>
         <ComboBox fx:id="tableComboBox" editable="true" layoutX="76.0" layoutY="16.0" prefHeight="25.0"

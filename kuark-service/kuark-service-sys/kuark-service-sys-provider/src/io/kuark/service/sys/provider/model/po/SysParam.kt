@@ -10,10 +10,10 @@ import io.kuark.ability.data.rdb.support.IMaintainableDbEntity
  * @since 1.0.0
  */
 //region your codes 1
-interface SysParam: IMaintainableDbEntity<String, SysParam> {
+interface SysParam: IMaintainableDbEntity<String, SysDataSource> {
 //endregion your codes 1
 
-    companion object : DbEntityFactory<SysParam>()
+    companion object : DbEntityFactory<SysDataSource>()
 
     /** 模块 */
     var module: String?

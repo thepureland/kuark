@@ -36,6 +36,9 @@ interface CodeGenColumn : IDbEntity<String, CodeGenColumn> {
     /** 是否详情项 */
     var detailItem: Boolean
 
+    /** 是否缓存项 */
+    var cacheItem: Boolean
+
 
     //region your codes 2
 

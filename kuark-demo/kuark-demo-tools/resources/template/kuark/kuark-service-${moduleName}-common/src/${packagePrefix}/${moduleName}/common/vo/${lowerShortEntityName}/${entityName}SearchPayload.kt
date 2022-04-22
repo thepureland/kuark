@@ -38,6 +38,8 @@ open class ${entityName}SearchPayload : ListSearchPayload() {
 
     //region your codes 2
 
+    //endregion your codes 2
+
     override var returnEntityClass: KClass<*>? = ${entityName}Record::class
 
     <#list searchItemColumns as column>
@@ -45,6 +47,4 @@ open class ${entityName}SearchPayload : ListSearchPayload() {
     var ${column.columnHumpName}: ${column.kotlinTypeName}? = null
 
     </#list>
-    //endregion your codes 2
-
 }

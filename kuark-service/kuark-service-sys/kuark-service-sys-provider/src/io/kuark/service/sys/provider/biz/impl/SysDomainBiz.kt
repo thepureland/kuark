@@ -1,5 +1,8 @@
 package io.kuark.service.sys.provider.biz.impl
 
+import io.kuark.service.sys.provider.biz.ibiz.ISysDomainBiz
+import io.kuark.service.sys.provider.model.po.SysDomain
+import io.kuark.service.sys.provider.dao.SysDomainDao
 import io.kuark.ability.data.rdb.biz.BaseCrudBiz
 import io.kuark.base.bean.BeanKit
 import io.kuark.base.log.LogFactory
@@ -9,11 +12,8 @@ import io.kuark.service.sys.common.api.ISysTenantApi
 import io.kuark.service.sys.common.vo.domain.SysDomainCacheItem
 import io.kuark.service.sys.common.vo.domain.SysDomainDetail
 import io.kuark.service.sys.common.vo.domain.SysDomainRecord
-import io.kuark.service.sys.provider.biz.ibiz.ISysDomainBiz
 import io.kuark.service.sys.provider.cache.DomainByNameCacheHandler
-import io.kuark.service.sys.provider.dao.SysDomainDao
-import io.kuark.service.sys.provider.model.po.SysDomain
-import io.kuark.service.sys.provider.model.po.SysParam
+import io.kuark.service.sys.provider.model.po.SysDataSource
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -94,7 +94,7 @@ open class SysDomainBiz : BaseCrudBiz<String, SysDomain, SysDomainDao>(), ISysDo
 
     @Transactional
     override fun updateActive(id: String, active: Boolean): Boolean {
-        val param = SysParam {
+        val param = SysDomain {
             this.id = id
             this.active = active
         }

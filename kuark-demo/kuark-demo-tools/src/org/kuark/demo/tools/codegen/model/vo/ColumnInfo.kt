@@ -13,11 +13,12 @@ class ColumnInfo {
 
     private var name: String? = null
     private var origComment: String? = null
-    private val customComment: StringProperty = SimpleStringProperty()
-    private val searchItem: BooleanProperty = SimpleBooleanProperty()
-    private val listItem: BooleanProperty = SimpleBooleanProperty()
-    private val editItem: BooleanProperty = SimpleBooleanProperty()
-    private val detailItem: BooleanProperty = SimpleBooleanProperty()
+    private val customComment = SimpleStringProperty()
+    private val searchItem = SimpleBooleanProperty()
+    private val listItem = SimpleBooleanProperty()
+    private val editItem = SimpleBooleanProperty()
+    private val detailItem = SimpleBooleanProperty()
+    private val cacheItem = SimpleBooleanProperty()
 
     fun getName(): String? = name
 
@@ -48,6 +49,12 @@ class ColumnInfo {
     fun detailItemProperty(): BooleanProperty = detailItem
 
     fun setDetailItem(detailItem: Boolean) = this.detailItem.set(detailItem)
+
+    fun getCacheItem(): Boolean = cacheItem.get()
+
+    fun cacheItemProperty(): BooleanProperty = cacheItem
+
+    fun setCacheItem(cacheItem: Boolean) = this.cacheItem.set(cacheItem)
 
     fun getCustomComment(): String? = customComment.get()
 

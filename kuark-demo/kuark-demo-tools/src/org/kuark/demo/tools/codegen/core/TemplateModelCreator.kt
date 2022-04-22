@@ -4,9 +4,7 @@ import io.kuark.ability.data.rdb.metadata.Column
 import io.kuark.ability.data.rdb.metadata.RdbMetadataKit
 import io.kuark.ability.data.rdb.support.*
 import io.kuark.base.bean.BeanKit
-import io.kuark.base.lang.string.capitalizeString
-import io.kuark.base.lang.string.humpToUnderscore
-import io.kuark.base.lang.string.underscoreToHump
+import io.kuark.base.lang.string.*
 import io.kuark.base.support.Consts
 import org.kuark.demo.tools.codegen.model.vo.Config
 import java.util.*
@@ -52,6 +50,9 @@ open class TemplateModelCreator {
         // 详情项
         val detailItemColumns = mutableListOf<Column>()
         templateModel["detailItemColumns"] = detailItemColumns
+        // 缓存项
+        val cacheItemColumns = mutableListOf<Column>()
+        templateModel["cacheItemColumns"] = cacheItemColumns
 
         for (origColumn in origColumns) {
             val columnName = origColumn.name.lowercase(Locale.getDefault())
@@ -71,6 +72,9 @@ open class TemplateModelCreator {
                 }
                 if (columnInfo.getDetailItem()) {
                     detailItemColumns.add(origColumn)
+                }
+                if (columnInfo.getCacheItem()) {
+                    cacheItemColumns.add(origColumn)
                 }
             }
         }
@@ -104,16 +108,17 @@ open class TemplateModelCreator {
                     templateModel["columns"] = origColumns.filter { !maintainColumns.contains(it.name) }
                 } else {
                     daoSuperClass = StringIdTable::class.simpleName!!
-                    templateModel["columns"] = origColumns.filter { it.name != IDbEntity<*,*>::id.name } // 过滤掉父类中已有的id列
+                    templateModel["columns"] =
+                        origColumns.filter { it.name != IDbEntity<*, *>::id.name } // 过滤掉父类中已有的id列
                 }
             }
             Int::class -> {
                 daoSuperClass = IntIdTable::class.simpleName!!
-                templateModel["columns"] = origColumns.filter { it.name != IDbEntity<*,*>::id.name } // 过滤掉父类中已有的id列
+                templateModel["columns"] = origColumns.filter { it.name != IDbEntity<*, *>::id.name } // 过滤掉父类中已有的id列
             }
             Long::class -> {
                 daoSuperClass = LongIdTable::class.simpleName!!
-                templateModel["columns"] = origColumns.filter { it.name != IDbEntity<*,*>::id.name } // 过滤掉父类中已有的id列
+                templateModel["columns"] = origColumns.filter { it.name != IDbEntity<*, *>::id.name } // 过滤掉父类中已有的id列
             }
             else -> daoSuperClass = "Table"
         }
@@ -123,7 +128,7 @@ open class TemplateModelCreator {
 
     @Suppress(Consts.Suppress.UNCHECKED_CAST)
     open fun initOtherParameters(templateModel: MutableMap<String, Any?>, origColumns: Collection<Column>) {
-        // 为了PO模板中，非kotlin类型的import
+        // 为了模板中，非kotlin类型的import
         val kotlinTypeMap = mapOf(
             "containsLocalDateTimeColumn" to java.time.LocalDateTime::class,
             "containsLocalDateColumn" to java.time.LocalDate::class,
@@ -143,22 +148,33 @@ open class TemplateModelCreator {
         // 查询载体类中
         val searchItemColumns = templateModel["searchItemColumns"] as List<Column>
         for ((key, value) in kotlinTypeMap)
-            templateModel[key+"InSearchItems"] = searchItemColumns.any { it.kotlinType == value }
+            templateModel[key + "InSearchItems"] = searchItemColumns.any { it.kotlinType == value }
 
         // 列表记录类中
         val listItemColumns = templateModel["listItemColumns"] as List<Column>
         for ((key, value) in kotlinTypeMap)
-            templateModel[key+"InListItems"] = listItemColumns.any { it.kotlinType == value }
+            templateModel[key + "InListItems"] = listItemColumns.any { it.kotlinType == value }
 
         // 编辑载体类中
         val editItemColumns = templateModel["editItemColumns"] as List<Column>
         for ((key, value) in kotlinTypeMap)
-            templateModel[key+"InEditItems"] = editItemColumns.any { it.kotlinType == value }
+            templateModel[key + "InEditItems"] = editItemColumns.any { it.kotlinType == value }
 
-        // 详情编辑类中
-        val detailItemColumns =  templateModel["detailItemColumns"] as List<Column>
+        // 详情类中
+        val detailItemColumns = templateModel["detailItemColumns"] as List<Column>
         for ((key, value) in kotlinTypeMap)
-            templateModel[key+"InDetailItems"] = detailItemColumns.any { it.kotlinType == value }
+            templateModel[key + "InDetailItems"] = detailItemColumns.any { it.kotlinType == value }
+
+        // 缓存项类中
+        val cacheItemColumns = templateModel["cacheItemColumns"] as List<Column>
+        for ((key, value) in kotlinTypeMap)
+            templateModel[key + "InCacheItems"] = cacheItemColumns.any { it.kotlinType == value }
+
+        // 缓存项中是否包含id
+        templateModel["containsIdColumnInCacheItems"] = cacheItemColumns.any { it.name.equals("id", true) }
+
+        // serialVersionUID
+        templateModel["serialVersionUID"] = RandomStringKit.randomLong() + "L"
     }
 
 }

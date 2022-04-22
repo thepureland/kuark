@@ -38,7 +38,8 @@ CREATE TABLE "code_gen_column" (
   "search_item" bool NOT NULL DEFAULT false,
   "list_item" bool NOT NULL DEFAULT false,
   "edit_item" bool NOT NULL DEFAULT false,
-  "detail_item" bool NOT NULL DEFAULT false
+  "detail_item" bool NOT NULL DEFAULT false,
+  "cache_item" bool NOT NULL DEFAULT false
 );
 COMMENT ON TABLE "code_gen_column" IS '代码生成-列信息';
 COMMENT ON COLUMN "code_gen_column"."id" IS '主键';
@@ -49,3 +50,4 @@ COMMENT ON COLUMN "code_gen_column"."search_item" IS '是否查询项';
 COMMENT ON COLUMN "code_gen_column"."list_item" IS '是否列表项';
 COMMENT ON COLUMN "code_gen_column"."edit_item" IS '是否编辑项';
 COMMENT ON COLUMN "code_gen_column"."detail_item" IS '是否详情项';
+COMMENT ON COLUMN "code_gen_column"."cache_item" IS '是否缓存项';

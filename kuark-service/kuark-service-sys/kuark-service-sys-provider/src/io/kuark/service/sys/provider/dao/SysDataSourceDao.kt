@@ -1,9 +1,10 @@
 package io.kuark.service.sys.provider.dao
 
-import io.kuark.ability.data.rdb.support.BaseCrudDao
 import io.kuark.service.sys.provider.model.po.SysDataSource
 import io.kuark.service.sys.provider.model.table.SysDataSources
 import org.springframework.stereotype.Repository
+import io.kuark.ability.data.rdb.support.BaseCrudDao
+
 
 /**
  * 数据源数据访问对象

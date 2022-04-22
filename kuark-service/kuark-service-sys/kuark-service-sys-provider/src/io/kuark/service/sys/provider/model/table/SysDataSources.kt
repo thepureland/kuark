@@ -1,9 +1,9 @@
 package io.kuark.service.sys.provider.model.table
 
-import io.kuark.ability.data.rdb.support.MaintainableTable
 import io.kuark.service.sys.provider.model.po.SysDataSource
-import org.ktorm.schema.int
-import org.ktorm.schema.varchar
+import org.ktorm.schema.*
+import io.kuark.ability.data.rdb.support.MaintainableTable
+
 
 /**
  * 数据源数据库表-实体关联对象
@@ -17,6 +17,12 @@ object SysDataSources: MaintainableTable<SysDataSource>("sys_data_source") {
 
     /** 名称，或其国际化key */
     var name = varchar("name").bindTo { it.name }
+
+    /** 子系统代码 */
+    var subSysDictCode = varchar("sub_sys_dict_code").bindTo { it.subSysDictCode }
+
+    /** 租户id */
+    var tenantId = varchar("tenant_id").bindTo { it.tenantId }
 
     /** url */
     var url = varchar("url").bindTo { it.url }

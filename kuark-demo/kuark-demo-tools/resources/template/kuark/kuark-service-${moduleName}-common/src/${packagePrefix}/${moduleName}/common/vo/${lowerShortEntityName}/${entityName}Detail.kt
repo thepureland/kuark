@@ -37,6 +37,9 @@ open class ${entityName}Detail : IdJsonResult<${pkColumn.kotlinTypeName}>() {
 
     //region your codes 2
 
+    //endregion your codes 2
+
+
     <#list detailItemColumns as column>
     <#if column.name != pkColumn.name>
     /** ${column.comment!""} */
@@ -44,6 +47,4 @@ open class ${entityName}Detail : IdJsonResult<${pkColumn.kotlinTypeName}>() {
 
     </#if>
     </#list>
-    //endregion your codes 2
-
 }

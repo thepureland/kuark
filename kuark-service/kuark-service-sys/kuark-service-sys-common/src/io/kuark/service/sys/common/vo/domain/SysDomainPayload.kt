@@ -1,8 +1,8 @@
 package io.kuark.service.sys.common.vo.domain
 
 import io.kuark.base.bean.validation.constraint.annotaions.DictCode
-import io.kuark.base.support.payload.FormPayload
 import javax.validation.constraints.NotBlank
+import io.kuark.base.support.payload.FormPayload
 
 
 /**

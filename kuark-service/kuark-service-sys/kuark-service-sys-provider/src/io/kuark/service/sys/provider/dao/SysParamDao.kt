@@ -1,7 +1,7 @@
 package io.kuark.service.sys.provider.dao
 
 import io.kuark.ability.data.rdb.support.BaseCrudDao
-import io.kuark.service.sys.provider.model.po.SysParam
+import io.kuark.service.sys.provider.model.po.SysDataSource
 import io.kuark.service.sys.provider.model.table.SysParams
 import org.springframework.stereotype.Repository
 
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository
  */
 @Repository
 //region your codes 1
-open class SysParamDao : BaseCrudDao<String, SysParam, SysParams>() {
+open class SysParamDao : BaseCrudDao<String, SysDataSource, SysParams>() {
 //endregion your codes 1
 
     //region your codes 2

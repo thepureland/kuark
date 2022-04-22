@@ -36,6 +36,9 @@ object CodeGenColumns : StringIdTable<CodeGenColumn>("code_gen_column") {
     /** 是否详情项 */
     var detailItem = boolean("detail_item").bindTo { it.detailItem }
 
+    /** 是否缓存项 */
+    var cacheItem = boolean("cache_item").bindTo { it.cacheItem }
+
     //region your codes 2
 
     //endregion your codes 2

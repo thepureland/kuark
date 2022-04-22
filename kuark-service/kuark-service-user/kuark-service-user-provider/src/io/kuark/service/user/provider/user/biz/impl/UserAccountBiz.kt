@@ -3,17 +3,24 @@ package io.kuark.service.user.provider.user.biz.impl
 import io.kuark.ability.data.rdb.biz.BaseCrudBiz
 import io.kuark.base.query.sort.Order
 import io.kuark.base.support.Consts
+import io.kuark.service.sys.common.api.ISysTenantApi
+import io.kuark.service.user.common.rbac.vo.role.RbacRoleDetail
+import io.kuark.service.user.common.user.vo.account.UserAccountCacheItem
+import io.kuark.service.user.common.user.vo.account.UserAccountDetail
 import io.kuark.service.user.common.user.vo.account.UserAccountRecord
 import io.kuark.service.user.common.user.vo.account.UserAccountSearchPayload
 import io.kuark.service.user.provider.rbac.biz.ibiz.IRbacRoleBiz
 import io.kuark.service.user.provider.rbac.dao.RbacRoleUserDao
 import io.kuark.service.user.provider.rbac.model.po.RbacRoleUser
 import io.kuark.service.user.provider.user.biz.ibiz.IUserAccountBiz
+import io.kuark.service.user.provider.user.cache.UserByIdCacheHandler
+import io.kuark.service.user.provider.user.cache.UserIdBySubSysAndUsernameCacheHandler
 import io.kuark.service.user.provider.user.dao.UserAccountDao
 import io.kuark.service.user.provider.user.model.po.UserAccount
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import kotlin.reflect.KClass
 
 /**
  * 用户账号业务
@@ -35,12 +42,37 @@ open class UserAccountBiz : BaseCrudBiz<String, UserAccount, UserAccountDao>(), 
     @Autowired
     private lateinit var rbacRoleBiz: IRbacRoleBiz
 
-    override fun isUsernameExists(username: String): Boolean = dao.isUsernameExists(username)
+    @Autowired
+    protected lateinit var userByIdCacheHandler: UserByIdCacheHandler
+
+    @Autowired
+    protected lateinit var userIdByUsernameCacheHandler: UserIdBySubSysAndUsernameCacheHandler
+
+
+    @Autowired
+    private lateinit var sysTenantApi: ISysTenantApi
+
+    override fun <R : Any> get(id: String, returnType: KClass<R>): R? {
+        val result = super.get(id, returnType)
+        if (returnType == UserAccountDetail::class) {
+            val tenantId = (result as UserAccountDetail).tenantId
+            result.tenantName = sysTenantApi.getTenant(tenantId!!)?.name
+        }
+        return result
+    }
+
+    override fun isUsernameExists(subSysDictCode: String, username: String): Boolean {
+        val userId = userIdByUsernameCacheHandler.getUserId(subSysDictCode, username)
+        return userId != null
+    }
 
     @Transactional
     override fun register(userAccount: UserAccount): Boolean = dao.register(userAccount)
 
-    override fun getByUsername(username: String): UserAccount? = dao.getByUsername(username)
+    override fun getByUsername(subSysDictCode: String, username: String): UserAccountCacheItem? {
+        val userId = userIdByUsernameCacheHandler.getUserId(subSysDictCode, username) ?: return null
+        return userByIdCacheHandler.getUserById(userId)
+    }
 
     override fun getMenuPermissions(userId: String): Set<String> {
         // 得到用户隶属的用户组

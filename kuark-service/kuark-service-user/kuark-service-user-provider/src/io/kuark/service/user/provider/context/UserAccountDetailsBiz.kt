@@ -1,8 +1,10 @@
 package io.kuark.service.user.provider.context
 
+import io.kuark.context.core.KuarkContextHolder
 import io.kuark.service.user.provider.user.biz.ibiz.IUserAccountBiz
 import io.kuark.service.user.provider.user.biz.ibiz.IUserAccountThirdBiz
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 import javax.security.auth.login.AccountException
@@ -22,8 +24,10 @@ open class UserAccountDetailsBiz: UserDetailsService {
     private lateinit var userAccountThirdBiz: IUserAccountThirdBiz
 
     override fun loadUserByUsername(username: String): UserDetails {
-        val userAccount = userAccountBiz.getByUsername(username) ?: throw AccountException("用户名或密码不正确！")
-        return UserAccountDetails(userAccount)
+        val subSysCode = KuarkContextHolder.get().subSysCode!!  //TODO
+        val userAccount = userAccountBiz.getByUsername(subSysCode, username) ?: throw AccountException("用户名或密码不正确！")
+        val roles = emptyList<SimpleGrantedAuthority>() //TODO
+        return UserAccountDetails(userAccount, roles)
     }
 
 }

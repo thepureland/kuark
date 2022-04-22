@@ -10,9 +10,9 @@ import io.kuark.base.support.Consts
 import io.kuark.base.tree.TreeKit
 import io.kuark.service.sys.common.api.ISysTenantApi
 import io.kuark.service.sys.common.vo.dict.SysTenantCacheItem
-import io.kuark.service.sys.common.vo.tenant.SysTenantRecord
 import io.kuark.service.user.common.user.vo.organization.BaseOrganizationTreeNode
 import io.kuark.service.user.common.user.vo.organization.OrganizationTreeNode
+import io.kuark.service.user.common.user.vo.organization.UserOrganizationDetail
 import io.kuark.service.user.common.user.vo.organization.UserOrganizationSearchPayload
 import io.kuark.service.user.provider.user.biz.ibiz.IUserOrganizationBiz
 import io.kuark.service.user.provider.user.dao.UserOrganizationDao
@@ -21,6 +21,7 @@ import io.kuark.service.user.provider.user.model.table.UserOrganizations
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import kotlin.reflect.KClass
 
 /**
  * 组织机构业务
@@ -37,6 +38,15 @@ open class UserOrganizationBiz : BaseCrudBiz<String, UserOrganization, UserOrgan
 
     @Autowired
     private lateinit var sysTenantApi: ISysTenantApi
+
+    override fun <R : Any> get(id: String, returnType: KClass<R>): R? {
+        val result = super.get(id, returnType)
+        if (returnType == UserOrganizationDetail::class) {
+            val tenantId = (result as UserOrganizationDetail).tenantId
+            result.tenantName = sysTenantApi.getTenant(tenantId!!)?.name
+        }
+        return result
+    }
 
     @Suppress(Consts.Suppress.UNCHECKED_CAST)
     override fun searchTree(searchPayload: UserOrganizationSearchPayload): List<OrganizationTreeNode> {

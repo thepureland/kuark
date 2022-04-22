@@ -39,7 +39,7 @@ class ThirdPatyLoginBiz : IThirdPatyLoginBiz {
     override fun login(type: String, code: String, state: String) {
         val authBiz = thirdPartyAuthBizFactory.getAuthBiz(type)
         val context = KuarkContextHolder.get()
-        val subSysCode = context.subSysCode
+        val subSysCode = context.subSysCode!!
         val tenantId = context.tenantId
 
         // 获取第三方token
@@ -57,7 +57,7 @@ class ThirdPatyLoginBiz : IThirdPatyLoginBiz {
             var loginAccount = thirdPartyUser.loginAccount()
 
             // 确保用户名惟一
-            while (userAccountBiz.isUsernameExists(loginAccount)) {
+            while (userAccountBiz.isUsernameExists(subSysCode, loginAccount)) {
                 loginAccount += RandomStringKit.randomNumeric(3)
             }
 

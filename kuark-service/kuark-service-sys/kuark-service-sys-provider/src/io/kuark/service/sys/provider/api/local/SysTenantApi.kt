@@ -24,11 +24,15 @@ open class SysTenantApi : ISysTenantApi {
     private lateinit var sysTenantBiz: ISysTenantBiz
 
     override fun getTenant(id: String): SysTenantCacheItem? {
-        return sysTenantBiz.getTenantFromCache(id)
+        return sysTenantBiz.getTenant(id)
+    }
+
+    override fun getTenants(ids: Collection<String>): Map<String, SysTenantCacheItem> {
+        return sysTenantBiz.getTenants(ids)
     }
 
     override fun getTenants(subSysDictCode: String): List<SysTenantCacheItem> {
-        return sysTenantBiz.getTenantsFromCache(subSysDictCode)
+        return sysTenantBiz.getTenants(subSysDictCode)
     }
 
     //endregion your codes 2

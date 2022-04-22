@@ -26,7 +26,17 @@ interface ISysTenantBiz : IBaseCrudBiz<String, SysTenant> {
      * @author K
      * @since 1.0.0
      */
-    fun getTenantFromCache(id: String): SysTenantCacheItem?
+    fun getTenant(id: String): SysTenantCacheItem?
+
+    /**
+     * 根据id集合取得对应租户信息，并将结果缓存，查不到不缓存
+     *
+     * @param ids 租户id集合
+     * @return Map(租户id, SysTenantCacheItem)
+     * @author K
+     * @since 1.0.0
+     */
+    fun getTenants(ids: Collection<String>): Map<String, SysTenantCacheItem>
 
 
     /**
@@ -37,7 +47,7 @@ interface ISysTenantBiz : IBaseCrudBiz<String, SysTenant> {
      * @author K
      * @since 1.0.0
      */
-    fun getTenantsFromCache(subSysDictCode: String): List<SysTenantCacheItem>
+    fun getTenants(subSysDictCode: String): List<SysTenantCacheItem>
 
     /**
      * 返回所有启用的租户

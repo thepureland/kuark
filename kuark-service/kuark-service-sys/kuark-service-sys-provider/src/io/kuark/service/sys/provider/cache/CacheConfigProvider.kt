@@ -4,7 +4,6 @@ import io.kuark.ability.cache.enums.CacheStrategy
 import io.kuark.ability.cache.support.CacheConfig
 import io.kuark.ability.cache.support.ICacheConfigProvider
 import io.kuark.base.support.Consts
-import io.kuark.base.support.payload.ListSearchPayload
 import io.kuark.service.sys.common.vo.cache.SysCacheSearchPayload
 import io.kuark.service.sys.provider.dao.SysCacheDao
 import org.springframework.beans.factory.annotation.Autowired
@@ -49,16 +48,20 @@ open class CacheConfigProvider : ICacheConfigProvider {
     }
 
     override fun getLocalCacheConfigs(): Map<String, CacheConfig> {
-        return getCacheConfigs().filter { it.strategyDictCode == CacheStrategy.SINGLE_LOCAL.name }
+        return getCacheConfigs()
+            .filter { it.strategyDictCode == CacheStrategy.SINGLE_LOCAL.name }
             .associateBy { it.name }
     }
 
     override fun getRemoteCacheConfigs(): Map<String, CacheConfig> {
-        return getCacheConfigs().filter { it.strategyDictCode == CacheStrategy.REMOTE.name }.associateBy { it.name }
+        return getCacheConfigs()
+            .filter { it.strategyDictCode == CacheStrategy.REMOTE.name }
+            .associateBy { it.name }
     }
 
     override fun getLocalRemoteCacheConfigs(): Map<String, CacheConfig> {
-        return getCacheConfigs().filter { it.strategyDictCode == CacheStrategy.LOCAL_REMOTE.name }
+        return getCacheConfigs()
+            .filter { it.strategyDictCode == CacheStrategy.LOCAL_REMOTE.name }
             .associateBy { it.name }
     }
 

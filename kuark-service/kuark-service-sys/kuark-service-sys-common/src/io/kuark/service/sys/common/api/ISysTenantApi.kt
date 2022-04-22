@@ -26,6 +26,16 @@ interface ISysTenantApi {
     fun getTenant(id: String): SysTenantCacheItem?
 
     /**
+     * 根据id集合取得对应租户信息，并将结果缓存，查不到不缓存
+     *
+     * @param ids 租户id集合
+     * @return Map(租户id, SysTenantCacheItem)
+     * @author K
+     * @since 1.0.0
+     */
+    fun getTenants(ids: Collection<String>): Map<String, SysTenantCacheItem>
+
+    /**
      * 返回指定子系统的所有租户(仅启用的)
      *
      * @param subSysDictCode 子系统代码

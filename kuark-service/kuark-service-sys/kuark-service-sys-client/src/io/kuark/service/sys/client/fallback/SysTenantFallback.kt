@@ -1,6 +1,7 @@
 package io.kuark.service.sys.client.fallback
 
 import io.kuark.service.sys.client.proxy.ISysTenantProxy
+import io.kuark.service.sys.common.vo.dict.SysTenantCacheItem
 import io.kuark.service.sys.common.vo.tenant.SysTenantRecord
 import org.springframework.stereotype.Component
 
@@ -18,11 +19,15 @@ interface SysTenantFallback : ISysTenantProxy {
 
     //region your codes 2
 
-    override fun getTenant(id: String): SysTenantRecord? {
+    override fun getTenant(id: String): SysTenantCacheItem? {
         TODO("Not yet implemented")
     }
 
-    override fun getTenants(subSysDictCode: String): List<SysTenantRecord> {
+    override fun getTenants(ids: Collection<String>): Map<String, SysTenantCacheItem> {
+        TODO("Not yet implemented")
+    }
+
+    override fun getTenants(subSysDictCode: String): List<SysTenantCacheItem> {
         TODO("Not yet implemented")
     }
 

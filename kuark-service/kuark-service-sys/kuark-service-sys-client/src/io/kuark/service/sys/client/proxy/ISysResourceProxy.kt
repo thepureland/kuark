@@ -2,6 +2,7 @@ package io.kuark.service.sys.client.proxy
 
 import io.kuark.service.sys.client.fallback.SysResourceFallback
 import io.kuark.service.sys.common.api.ISysResourceApi
+import io.kuark.service.sys.common.vo.dict.SysResourceCacheItem
 import io.kuark.service.sys.common.vo.resource.BaseMenuTreeNode
 import io.kuark.service.sys.common.vo.resource.ResourceType
 import io.kuark.service.sys.common.vo.resource.SysResourceDetail
@@ -14,12 +15,12 @@ import org.springframework.web.bind.annotation.GetMapping
 interface ISysResourceProxy : ISysResourceApi {
 
     @GetMapping("/sys/resource/getResources")
-    override fun getResources(subSysDictCode: String, resourceType: ResourceType): List<SysResourceDetail>
+    override fun getResources(subSysDictCode: String, resourceType: ResourceType): List<SysResourceCacheItem>
 
     @GetMapping("/sys/resource/getResourcesByIds")
     override fun getResources(
         subSysDictCode: String, resourceType: ResourceType, vararg resourceIds: String
-    ): List<SysResourceDetail>
+    ): List<SysResourceCacheItem>
 
     @GetMapping("/sys/resource/getSimpleMenus")
     override fun getSimpleMenus(subSysDictCode: String): List<BaseMenuTreeNode>

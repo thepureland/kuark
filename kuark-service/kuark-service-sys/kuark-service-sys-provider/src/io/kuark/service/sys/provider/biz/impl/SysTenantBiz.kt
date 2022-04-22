@@ -39,11 +39,15 @@ open class SysTenantBiz : BaseCrudBiz<String, SysTenant, SysTenantDao>(), ISysTe
     @Autowired
     private lateinit var tenantBySubSysCacheHandler: TenantsBySubSysCacheHandler
 
-    override fun getTenantFromCache(id: String): SysTenantCacheItem? {
+    override fun getTenant(id: String): SysTenantCacheItem? {
         return tenantByIdCacheHandler.getTenantById(id)
     }
 
-    override fun getTenantsFromCache(subSysDictCode: String): List<SysTenantCacheItem> {
+    override fun getTenants(ids: Collection<String>): Map<String, SysTenantCacheItem> {
+        return tenantByIdCacheHandler.getTenantsByIds(ids)
+    }
+
+    override fun getTenants(subSysDictCode: String): List<SysTenantCacheItem> {
         return tenantBySubSysCacheHandler.getTenantsFromCache(subSysDictCode)
     }
 

@@ -258,23 +258,25 @@ unique index "uq_sys_resource__name_sub_sys"  on "sys_resource" ("name", "sub_sy
 
 create table "sys_data_source"
 (
-    "id"           VARCHAR(36) default RANDOM_UUID() not null
+    "id"                VARCHAR(36) default RANDOM_UUID() not null
         primary key,
-    "name"         VARCHAR(32)                       not null,
-    "url"          VARCHAR(256)                      not null,
-    "username"     VARCHAR(32)                       not null,
-    "password"     VARCHAR(128)                      not null,
-    "initial_size" INT2,
-    "max_active"   INT2,
-    "min_idle"     INT2,
-    "max_wait"     INT2,
-    "remark"       VARCHAR(128),
-    "active"       BOOLEAN     default TRUE          not null,
-    "built_in"     BOOLEAN     default FALSE         not null,
-    "create_user"  VARCHAR(36),
-    "create_time"  TIMESTAMP   default now()         not null,
-    "update_user"  VARCHAR(36),
-    "update_time"  TIMESTAMP
+    "name"              VARCHAR(32)                       not null,
+    "sub_sys_dict_code" VARCHAR(32)                       not null,
+    "tenant_id"         VARCHAR(36),
+    "url"               VARCHAR(256)                      not null,
+    "username"          VARCHAR(32)                       not null,
+    "password"          VARCHAR(128)                      not null,
+    "initial_size"      INT2,
+    "max_active"        INT2,
+    "min_idle"          INT2,
+    "max_wait"          INT2,
+    "remark"            VARCHAR(128),
+    "active"            BOOLEAN     default TRUE          not null,
+    "built_in"          BOOLEAN     default FALSE         not null,
+    "create_user"       VARCHAR(36),
+    "create_time"       TIMESTAMP   default now()         not null,
+    "update_user"       VARCHAR(36),
+    "update_time"       TIMESTAMP
 );
 
 comment
@@ -285,6 +287,12 @@ on column "sys_data_source"."id" is '主键';
 
 comment
 on column "sys_data_source"."name" is '名称，或其国际化key';
+
+comment
+on column "sys_data_source"."sub_sys_dict_code" is '子系统代码';
+
+comment
+on column "sys_data_source"."tenant_id" is '租户id';
 
 comment
 on column "sys_data_source"."url" is 'url';
@@ -446,3 +454,59 @@ on column "sys_cache"."update_user" is '更新用户';
 
 comment
 on column "sys_cache"."update_time" is '更新时间';
+
+
+
+create table "sys_domain"
+(
+    "id"                VARCHAR(36) default RANDOM_UUID() not null primary key,
+    "domain"            VARCHAR(64)                       not null,
+    "sub_sys_dict_code" VARCHAR(32)                       not null,
+    "tenant_id"         VARCHAR(36),
+    "remark"            VARCHAR(128),
+    "active"            BOOLEAN     default TRUE          not null,
+    "built_in"          BOOLEAN     default FALSE         not null,
+    "create_user"       VARCHAR(36),
+    "create_time"       TIMESTAMP   default now()         not null,
+    "update_user"       VARCHAR(36),
+    "update_time"       TIMESTAMP
+);
+
+create
+unique index "uq_sys_domain" on "sys_domain" ("domain");
+
+comment
+on table "sys_domain" is '域名';
+
+comment
+on column "sys_domain"."id" is '主键';
+
+comment
+on column "sys_domain"."domain" is '域名';
+
+comment
+on column "sys_domain"."sub_sys_dict_code" is '子系统代码';
+
+comment
+on column "sys_domain"."tenant_id" is '租户id';
+
+comment
+on column "sys_domain"."remark" is '备注，或其国际化key';
+
+comment
+on column "sys_domain"."active" is '是否启用';
+
+comment
+on column "sys_domain"."built_in" is '是否内置';
+
+comment
+on column "sys_domain"."create_user" is '创建用户';
+
+comment
+on column "sys_domain"."create_time" is '创建时间';
+
+comment
+on column "sys_domain"."update_user" is '更新用户';
+
+comment
+on column "sys_domain"."update_time" is '更新时间';

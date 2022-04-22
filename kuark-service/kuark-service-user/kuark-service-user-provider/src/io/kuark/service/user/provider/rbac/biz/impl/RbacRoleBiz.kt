@@ -9,10 +9,13 @@ import io.kuark.base.query.Criteria
 import io.kuark.base.query.enums.Operator
 import io.kuark.base.support.Consts
 import io.kuark.service.sys.common.api.ISysResourceApi
+import io.kuark.service.sys.common.api.ISysTenantApi
 import io.kuark.service.sys.common.vo.dict.SysResourceCacheItem
+import io.kuark.service.sys.common.vo.domain.SysDomainDetail
 import io.kuark.service.sys.common.vo.resource.BaseMenuTreeNode
 import io.kuark.service.sys.common.vo.resource.ResourceType
 import io.kuark.service.user.common.rbac.vo.role.RbacRoleCacheItem
+import io.kuark.service.user.common.rbac.vo.role.RbacRoleDetail
 import io.kuark.service.user.common.user.vo.account.UserAccountCacheItem
 import io.kuark.service.user.common.user.vo.account.UserAccountSearchPayload
 import io.kuark.service.user.provider.rbac.biz.ibiz.IRbacRoleBiz
@@ -33,6 +36,7 @@ import io.kuark.service.user.provider.user.cache.UserByIdCacheHandler
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import kotlin.reflect.KClass
 
 
 /**
@@ -77,6 +81,18 @@ open class RbacRoleBiz : IRbacRoleBiz, BaseCrudBiz<String, RbacRole, RbacRoleDao
     @Autowired
     private lateinit var userByIdCacheHandler: UserByIdCacheHandler
 
+
+    @Autowired
+    private lateinit var sysTenantApi: ISysTenantApi
+
+    override fun <R : Any> get(id: String, returnType: KClass<R>): R? {
+        val result = super.get(id, returnType)
+        if (returnType == RbacRoleDetail::class) {
+            val tenantId = (result as RbacRoleDetail).tenantId
+            result.tenantName = sysTenantApi.getTenant(tenantId!!)?.name
+        }
+        return result
+    }
 
     override fun getRoleFromCache(roleId: String): RbacRoleCacheItem? {
         return roleCacheHandler.getRoleById(roleId)

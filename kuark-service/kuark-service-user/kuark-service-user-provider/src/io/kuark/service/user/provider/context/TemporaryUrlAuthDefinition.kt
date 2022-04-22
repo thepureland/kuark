@@ -6,7 +6,7 @@ package io.kuark.service.user.provider.context
  * @author K
  * @since 1.0.0
  */
-open class TemporaryUrlAuthDefinition : io.kuark.service.user.provider.context.IUrlAuthDefinition {
+open class TemporaryUrlAuthDefinition : IUrlAuthDefinition {
 
     override fun getLoginUrl(): String = "/login"
 

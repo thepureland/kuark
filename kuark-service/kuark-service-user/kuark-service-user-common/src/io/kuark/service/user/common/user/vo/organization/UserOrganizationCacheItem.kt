@@ -4,6 +4,10 @@ import java.io.Serializable
 
 class UserOrganizationCacheItem: Serializable {
 
+    companion object {
+        private const val serialVersionUID = 4090323185007037711L
+    }
+
     /** 主键 */
     var id: String? = null
 

@@ -5,11 +5,18 @@ import java.io.Serializable
 
 class UserAccountCacheItem: IIdEntity<String>, Serializable {
 
+    companion object {
+        private const val serialVersionUID = 5090913885757034710L
+    }
+
     /** 主键 */
     override var id: String? = null
 
     /** 用户名 */
     var username: String? = null
+
+    /** 密码 */
+    var password: String? = null
 
     /** 子系统代码 */
     var subSysDictCode: String? = null

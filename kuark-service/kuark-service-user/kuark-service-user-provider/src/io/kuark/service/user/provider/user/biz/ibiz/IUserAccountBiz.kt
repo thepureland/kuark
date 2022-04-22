@@ -1,6 +1,7 @@
 package io.kuark.service.user.provider.user.biz.ibiz
 
 import io.kuark.base.support.biz.IBaseCrudBiz
+import io.kuark.service.user.common.user.vo.account.UserAccountCacheItem
 import io.kuark.service.user.common.user.vo.account.UserAccountRecord
 import io.kuark.service.user.provider.user.model.po.UserAccount
 
@@ -17,11 +18,11 @@ interface IUserAccountBiz: IBaseCrudBiz<String, UserAccount> {
 
     //region your codes 2
 
-    fun isUsernameExists(username: String): Boolean
+    fun isUsernameExists(subSysDictCode: String, username: String): Boolean
 
     fun register(userAccount: UserAccount): Boolean
 
-    fun getByUsername(username: String): UserAccount?
+    fun getByUsername(subSysDictCode: String, username: String): UserAccountCacheItem?
 
     fun getMenuPermissions(userId: String): Set<String>
 

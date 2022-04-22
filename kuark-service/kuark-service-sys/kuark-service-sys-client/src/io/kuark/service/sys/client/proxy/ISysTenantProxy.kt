@@ -2,6 +2,7 @@ package io.kuark.service.sys.client.proxy
 
 import io.kuark.service.sys.common.api.ISysTenantApi
 import io.kuark.service.sys.client.fallback.SysTenantFallback
+import io.kuark.service.sys.common.vo.dict.SysTenantCacheItem
 import io.kuark.service.sys.common.vo.tenant.SysTenantRecord
 import org.springframework.cloud.openfeign.FeignClient
 import org.springframework.web.bind.annotation.PostMapping
@@ -21,10 +22,13 @@ interface ISysTenantProxy : ISysTenantApi {
     //region your codes 2
 
     @PostMapping("/sys/tenant/api/getTenant")
-    override fun getTenant(id: String): SysTenantRecord?
+    override fun getTenant(id: String): SysTenantCacheItem?
+
+    @PostMapping("/sys/tenant/api/getTenantsByIds")
+    override fun getTenants(ids: Collection<String>): Map<String, SysTenantCacheItem>
 
     @PostMapping("/sys/tenant/api/getTenants")
-    override fun getTenants(subSysDictCode: String): List<SysTenantRecord>
+    override fun getTenants(subSysDictCode: String): List<SysTenantCacheItem>
 
     //endregion your codes 2
 

@@ -53,6 +53,9 @@ open class UserAccountDetail : IdJsonResult<String>() {
     /** 租户id */
     var tenantId: String? = null
 
+    /** 租户名称 */
+    var tenantName: String? = null
+
     /** 记录创建时间 */
     var createTime: LocalDateTime? = null
 

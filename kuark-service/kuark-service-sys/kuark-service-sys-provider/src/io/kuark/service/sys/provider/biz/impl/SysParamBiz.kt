@@ -13,6 +13,7 @@ import io.kuark.service.sys.provider.biz.ibiz.ISysParamBiz
 import io.kuark.service.sys.provider.cache.ParamByModuleAndNameCacheHandler
 import io.kuark.service.sys.provider.dao.SysParamDao
 import io.kuark.service.sys.provider.model.po.SysDataSource
+import io.kuark.service.sys.provider.model.po.SysParam
 import io.kuark.service.sys.provider.model.table.SysParams
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -26,7 +27,7 @@ import org.springframework.transaction.annotation.Transactional
  */
 @Service
 //region your codes 1
-open class SysParamBiz : BaseCrudBiz<String, SysDataSource, SysParamDao>(), ISysParamBiz {
+open class SysParamBiz : BaseCrudBiz<String, SysParam, SysParamDao>(), ISysParamBiz {
 //endregion your codes 1
 
     //region your codes 2

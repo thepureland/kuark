@@ -22,7 +22,7 @@ class UserOrganizationController :
     //region your codes 2
 
     @GetMapping("/get")
-    override fun get(id: String): UserOrganizationRecord {
+    override fun get(id: String): UserOrganizationPayload {
         val record = super.get(id)
         record.parentIds = biz.fetchAllParentIds(id)
         return record

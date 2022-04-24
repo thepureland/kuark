@@ -2,9 +2,9 @@ package io.kuark.service.sys.provider.cache
 
 import io.kuark.ability.cache.core.BatchCacheable
 import io.kuark.ability.cache.support.AbstractByIdCacheHandler
-import io.kuark.context.kit.SpringKit
 import io.kuark.service.sys.common.vo.dict.SysDictCacheItem
 import io.kuark.service.sys.provider.dao.SysDictDao
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Component
 
@@ -12,6 +12,9 @@ import org.springframework.stereotype.Component
 @Component
 open class DictByIdCacheHandler : AbstractByIdCacheHandler<String, SysDictCacheItem, SysDictDao>() {
 
+    @Autowired
+    private lateinit var self: DictByIdCacheHandler
+    
     companion object {
         private const val CACHE_NAME = "sys_dict_by_id"
     }
@@ -19,7 +22,7 @@ open class DictByIdCacheHandler : AbstractByIdCacheHandler<String, SysDictCacheI
     override fun cacheName(): String = CACHE_NAME
 
     override fun doReload(key: String): SysDictCacheItem? {
-        return getSelf().getDictById(key)
+        return self.getDictById(key)
     }
 
     @Cacheable(
@@ -37,10 +40,6 @@ open class DictByIdCacheHandler : AbstractByIdCacheHandler<String, SysDictCacheI
     )
     open fun getDictsByIds(ids: Collection<String>): Map<String, SysDictCacheItem> {
         return getByIds(ids)
-    }
-
-    fun getSelf(): DictByIdCacheHandler {
-        return SpringKit.getBean(DictByIdCacheHandler::class)
     }
 
     override fun itemDesc() = "字典"

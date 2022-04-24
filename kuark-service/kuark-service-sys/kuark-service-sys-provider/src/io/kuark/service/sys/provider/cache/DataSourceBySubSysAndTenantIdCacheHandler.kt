@@ -5,7 +5,6 @@ import io.kuark.ability.cache.support.AbstractCacheHandler
 import io.kuark.base.bean.BeanKit
 import io.kuark.base.log.LogFactory
 import io.kuark.base.support.Consts
-import io.kuark.context.kit.SpringKit
 import io.kuark.service.sys.common.vo.datasource.SysDataSourceCacheItem
 import io.kuark.service.sys.common.vo.datasource.SysDataSourceSearchPayload
 import io.kuark.service.sys.provider.dao.SysDataSourceDao
@@ -21,9 +20,13 @@ open class DataSourceBySubSysAndTenantIdCacheHandler : AbstractCacheHandler<SysD
     @Autowired
     private lateinit var sysDataSourceDao: SysDataSourceDao
 
+    @Autowired
+    private lateinit var self: DataSourceBySubSysAndTenantIdCacheHandler
+
+    private val log = LogFactory.getLog(DataSourceBySubSysAndTenantIdCacheHandler::class)
+
     companion object {
         private const val CACHE_NAME = "sys_data_source_by_sub_sys_and_tenant_id"
-        private val log = LogFactory.getLog(DataSourceBySubSysAndTenantIdCacheHandler::class)
     }
 
     override fun cacheName() = CACHE_NAME
@@ -31,7 +34,7 @@ open class DataSourceBySubSysAndTenantIdCacheHandler : AbstractCacheHandler<SysD
     override fun doReload(key: String): SysDataSourceCacheItem? {
         require(key.contains(":")) { "缓存${CACHE_NAME}的key格式必须是 子系统代码::租户id" }
         val subSysAndTenantId = key.split("::")
-        return getSelf().getDataSource(subSysAndTenantId[0], subSysAndTenantId[1])
+        return self.getDataSource(subSysAndTenantId[0], subSysAndTenantId[1])
     }
 
     override fun reloadAll(clear: Boolean) {
@@ -95,17 +98,17 @@ open class DataSourceBySubSysAndTenantIdCacheHandler : AbstractCacheHandler<SysD
         }
     }
 
-    fun syncOnInsert(any: Any, id: String) {
+    open fun syncOnInsert(any: Any, id: String) {
         if (CacheKit.isCacheActive(CACHE_NAME) && CacheKit.isWriteInTime(CACHE_NAME)) {
             log.debug("新增id为${id}的数据源后，同步${CACHE_NAME}缓存...")
             val subSysDictCode = BeanKit.getProperty(any, SysDataSource::subSysDictCode.name) as String
             val tenantId = BeanKit.getProperty(any, SysDataSource::tenantId.name) as String?
-            getSelf().getDataSource(subSysDictCode, tenantId) // 缓存
+            self.getDataSource(subSysDictCode, tenantId) // 缓存
             log.debug("${CACHE_NAME}缓存同步完成。")
         }
     }
 
-    fun syncOnUpdate(any: Any, id: String) {
+    open fun syncOnUpdate(any: Any, id: String) {
         if (CacheKit.isCacheActive(CACHE_NAME)) {
             log.debug("更新id为${id}的数据源后，同步${CACHE_NAME}缓存...")
             val subSysDictCode = BeanKit.getProperty(any, SysDataSource::subSysDictCode.name) as String
@@ -113,19 +116,19 @@ open class DataSourceBySubSysAndTenantIdCacheHandler : AbstractCacheHandler<SysD
             val key = "${subSysDictCode}::${tenantId}"
             CacheKit.evict(CACHE_NAME, key) // 踢除数据源缓存
             if (CacheKit.isWriteInTime(CACHE_NAME)) {
-                getSelf().getDataSource(subSysDictCode, tenantId) // 重新缓存
+                self.getDataSource(subSysDictCode, tenantId) // 重新缓存
             }
             log.debug("${CACHE_NAME}缓存同步完成。")
         }
     }
 
-    fun syncOnUpdateActive(id: String, active: Boolean) {
+    open fun syncOnUpdateActive(id: String, active: Boolean) {
         if (CacheKit.isCacheActive(CACHE_NAME)) {
             log.debug("更新id为${id}的数据源的启用状态后，同步${CACHE_NAME}缓存...")
             val dataSource = sysDataSourceDao.get(id)!!
             if (active) {
                 if (CacheKit.isWriteInTime(CACHE_NAME)) {
-                    getSelf().getDataSource(dataSource.subSysDictCode, dataSource.tenantId) // 重新缓存
+                    self.getDataSource(dataSource.subSysDictCode, dataSource.tenantId) // 重新缓存
                 }
             } else {
                 val key = "${dataSource.subSysDictCode}::${dataSource.tenantId}"
@@ -135,17 +138,13 @@ open class DataSourceBySubSysAndTenantIdCacheHandler : AbstractCacheHandler<SysD
         }
     }
 
-    fun syncOnDelete(id: String, subSysDictCode: String, tenantId: String?) {
+    open fun syncOnDelete(id: String, subSysDictCode: String, tenantId: String?) {
         if (CacheKit.isCacheActive(CACHE_NAME)) {
             log.debug("删除id为${id}的数据源后，同步从${CACHE_NAME}缓存中踢除...")
             val key = "${subSysDictCode}::${tenantId}"
             CacheKit.evict(CACHE_NAME, key) // 踢除缓存, 数据源缓存的粒度到数据源类型
             log.debug("${CACHE_NAME}缓存同步完成。")
         }
-    }
-
-    fun getSelf(): DataSourceBySubSysAndTenantIdCacheHandler {
-        return SpringKit.getBean(DataSourceBySubSysAndTenantIdCacheHandler::class)
     }
 
 }

@@ -112,15 +112,19 @@ class DefaultKeysGenerator : IKeysGenerator {
             val parts = mutableListOf<Any>()
             when (it) {
                 is Collection<*> -> {
-                    val groupCount = totalCount / it.size
-                    for (group in 0 until groupCount) {
-                        parts.addAll(it as Collection<Any>)
+                    if (it.size != 0) {
+                        val groupCount = totalCount / it.size
+                        for (group in 0 until groupCount) {
+                            parts.addAll(it as Collection<Any>)
+                        }
                     }
                 }
                 is Array<*> -> {
-                    val groupCount = totalCount / it.size
-                    for (group in 0 until groupCount) {
-                        parts.addAll(it as Array<Any>)
+                    if (it.size != 0) {
+                        val groupCount = totalCount / it.size
+                        for (group in 0 until groupCount) {
+                            parts.addAll(it as Array<Any>)
+                        }
                     }
                 }
                 else -> {

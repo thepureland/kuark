@@ -6,11 +6,10 @@ import io.kuark.ability.data.rdb.kit.RdbKit
 import io.kuark.base.bean.BeanKit
 import io.kuark.base.log.LogFactory
 import io.kuark.base.support.Consts
-import io.kuark.context.kit.SpringKit
 import io.kuark.service.sys.common.vo.dict.SysParamCacheItem
 import io.kuark.service.sys.common.vo.param.SysParamSearchPayload
 import io.kuark.service.sys.provider.dao.SysParamDao
-import io.kuark.service.sys.provider.model.po.SysDataSource
+import io.kuark.service.sys.provider.model.po.SysParam
 import io.kuark.service.sys.provider.model.table.SysParams
 import org.ktorm.dsl.*
 import org.springframework.beans.factory.annotation.Autowired
@@ -24,9 +23,13 @@ open class ParamByModuleAndNameCacheHandler : AbstractCacheHandler<SysParamCache
     @Autowired
     private lateinit var sysParamDao: SysParamDao
 
+    @Autowired
+    private lateinit var self: ParamByModuleAndNameCacheHandler
+
+    private val log = LogFactory.getLog(ParamByModuleAndNameCacheHandler::class)
+    
     companion object {
         private const val CACHE_NAME = "sys_param_by_module_and_name"
-        private val log = LogFactory.getLog(ParamByModuleAndNameCacheHandler::class)
     }
 
     override fun cacheName(): String = CACHE_NAME
@@ -34,7 +37,7 @@ open class ParamByModuleAndNameCacheHandler : AbstractCacheHandler<SysParamCache
     override fun doReload(key: String): SysParamCacheItem? {
         require(key.contains(":")) { "缓存${CACHE_NAME}的key格式必须是 模块代码::参数名称" }
         val moduleAndParamName = key.split("::")
-        return getSelf().getParamFromCache(moduleAndParamName[0], moduleAndParamName[1])
+        return self.getParamFromCache(moduleAndParamName[0], moduleAndParamName[1])
     }
 
     override fun reloadAll(clear: Boolean) {
@@ -97,37 +100,37 @@ open class ParamByModuleAndNameCacheHandler : AbstractCacheHandler<SysParamCache
         }
     }
 
-    fun syncOnInsert(any: Any, id: String) {
+    open fun syncOnInsert(any: Any, id: String) {
         if (CacheKit.isCacheActive(CACHE_NAME) && CacheKit.isWriteInTime(CACHE_NAME)) {
             log.debug("新增id为${id}的参数后，同步${CACHE_NAME}缓存...")
-            val module = BeanKit.getProperty(any, SysDataSource::module.name) as String
-            val paramName = BeanKit.getProperty(any, SysDataSource::paramName.name) as String
-            getSelf().getParamFromCache(module, paramName) // 缓存
+            val module = BeanKit.getProperty(any, SysParam::module.name) as String
+            val paramName = BeanKit.getProperty(any, SysParam::paramName.name) as String
+            self.getParamFromCache(module, paramName) // 缓存
             log.debug("${CACHE_NAME}缓存同步完成。")
         }
     }
 
-    fun syncOnUpdate(any: Any, id: String) {
+    open fun syncOnUpdate(any: Any, id: String) {
         if (CacheKit.isCacheActive(CACHE_NAME)) {
             log.debug("更新id为${id}的参数后，同步${CACHE_NAME}缓存...")
-            val module = BeanKit.getProperty(any, SysDataSource::module.name) as String
-            val paramName = BeanKit.getProperty(any, SysDataSource::paramName.name) as String
+            val module = BeanKit.getProperty(any, SysParam::module.name) as String
+            val paramName = BeanKit.getProperty(any, SysParam::paramName.name) as String
             val key = "${module}::${paramName}"
             CacheKit.evict(CACHE_NAME, key) // 踢除参数缓存
             if (CacheKit.isWriteInTime(CACHE_NAME)) {
-                getSelf().getParamFromCache(module, paramName) // 重新缓存
+                self.getParamFromCache(module, paramName) // 重新缓存
             }
             log.debug("${CACHE_NAME}缓存同步完成。")
         }
     }
 
-    fun syncOnUpdateActive(id: String, active: Boolean) {
+    open fun syncOnUpdateActive(id: String, active: Boolean) {
         if (CacheKit.isCacheActive(CACHE_NAME)) {
             log.debug("更新id为${id}的参数的启用状态后，同步缓存...")
             val sysParam = sysParamDao.get(id)!!
             if (active) {
                 if (CacheKit.isWriteInTime(CACHE_NAME)) {
-                    getSelf().getParamFromCache(sysParam.module!!, sysParam.paramName)
+                    self.getParamFromCache(sysParam.module!!, sysParam.paramName)
                 }
             } else {
                 val key = "${sysParam.module}::${sysParam.paramName}"
@@ -137,7 +140,7 @@ open class ParamByModuleAndNameCacheHandler : AbstractCacheHandler<SysParamCache
         }
     }
 
-    fun syncOnDelete(param: SysDataSource) {
+    open fun syncOnDelete(param: SysParam) {
         if (CacheKit.isCacheActive(CACHE_NAME)) {
             log.debug("删除id为${param.id}的参数后，同步从${CACHE_NAME}缓存中踢除...")
             val key = "${param.module}::${param.paramName}"
@@ -146,7 +149,7 @@ open class ParamByModuleAndNameCacheHandler : AbstractCacheHandler<SysParamCache
         }
     }
 
-    fun synchOnBatchDelete(ids: Collection<String>, params: List<SysDataSource>) {
+    open fun synchOnBatchDelete(ids: Collection<String>, params: List<SysParam>) {
         if (CacheKit.isCacheActive(CACHE_NAME)) {
             log.debug("批量删除id为${ids}的参数后，同步从${CACHE_NAME}缓存中踢除...")
             params.forEach {
@@ -155,10 +158,6 @@ open class ParamByModuleAndNameCacheHandler : AbstractCacheHandler<SysParamCache
             }
             log.debug("${CACHE_NAME}缓存同步完成。")
         }
-    }
-
-    fun getSelf(): ParamByModuleAndNameCacheHandler {
-        return SpringKit.getBean(ParamByModuleAndNameCacheHandler::class)
     }
 
 }

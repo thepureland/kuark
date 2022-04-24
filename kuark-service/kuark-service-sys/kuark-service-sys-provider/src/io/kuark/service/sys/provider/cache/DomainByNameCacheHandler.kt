@@ -5,7 +5,6 @@ import io.kuark.ability.cache.support.AbstractCacheHandler
 import io.kuark.base.bean.BeanKit
 import io.kuark.base.log.LogFactory
 import io.kuark.base.support.Consts
-import io.kuark.context.kit.SpringKit
 import io.kuark.service.sys.common.vo.domain.SysDomainCacheItem
 import io.kuark.service.sys.common.vo.domain.SysDomainSearchPayload
 import io.kuark.service.sys.provider.dao.SysDomainDao
@@ -21,15 +20,19 @@ open class DomainByNameCacheHandler : AbstractCacheHandler<SysDomainCacheItem>()
     @Autowired
     private lateinit var dao: SysDomainDao
 
+    @Autowired
+    private lateinit var self: DomainByNameCacheHandler
+
+    private val log = LogFactory.getLog(DomainByNameCacheHandler::class)
+
     companion object {
         private const val CACHE_NAME = "sys_domain_by_name"
-        private val log = LogFactory.getLog(DomainByNameCacheHandler::class)
     }
 
     override fun cacheName() = CACHE_NAME
 
     override fun doReload(key: String): SysDomainCacheItem? {
-        return getSelf().getDomain(key)
+        return self.getDomain(key)
     }
 
     override fun reloadAll(clear: Boolean) {
@@ -85,17 +88,17 @@ open class DomainByNameCacheHandler : AbstractCacheHandler<SysDomainCacheItem>()
         }
     }
 
-    fun syncOnInsert(any: Any, id: String) {
+    open fun syncOnInsert(any: Any, id: String) {
         if (CacheKit.isCacheActive(CACHE_NAME) && CacheKit.isWriteInTime(CACHE_NAME)) {
             log.debug("新增id为${id}的域名后，同步${CACHE_NAME}缓存...")
             val domain = BeanKit.getProperty(any, SysDomain::domain.name) as String
             CacheKit.evict(CACHE_NAME, domain) // 踢除缓存
-            getSelf().getDomain(domain) // 重新缓存
+            self.getDomain(domain) // 重新缓存
             log.debug("${CACHE_NAME}缓存同步完成。")
         }
     }
 
-    fun syncOnUpdate(any: Any?, id: String) {
+    open fun syncOnUpdate(any: Any?, id: String) {
         if (CacheKit.isCacheActive(CACHE_NAME)) {
             log.debug("更新id为${id}的域名后，同步${CACHE_NAME}缓存...")
             val domain = if (any == null) {
@@ -105,13 +108,13 @@ open class DomainByNameCacheHandler : AbstractCacheHandler<SysDomainCacheItem>()
             }
             CacheKit.evict(CACHE_NAME, domain) // 踢除缓存
             if (CacheKit.isWriteInTime(CACHE_NAME)) {
-                getSelf().getDomain(domain) // 重新缓存
+                self.getDomain(domain) // 重新缓存
             }
             log.debug("${CACHE_NAME}缓存同步完成。")
         }
     }
 
-    fun syncOnDelete(sysDomain: SysDomain, id: String) {
+    open fun syncOnDelete(sysDomain: SysDomain, id: String) {
         if (CacheKit.isCacheActive(CACHE_NAME)) {
             log.debug("删除id为${id}的域名后，同步从${CACHE_NAME}缓存中踢除...")
             CacheKit.evict(CACHE_NAME, sysDomain.domain) // 踢除缓存
@@ -119,7 +122,7 @@ open class DomainByNameCacheHandler : AbstractCacheHandler<SysDomainCacheItem>()
         }
     }
 
-    fun syncOnBatchDelete(ids: Collection<String>, domainNames: Set<String>) {
+    open fun syncOnBatchDelete(ids: Collection<String>, domainNames: Set<String>) {
         if (CacheKit.isCacheActive(CACHE_NAME)) {
             log.debug("批量删除id为${ids}的域名后，同步从${CACHE_NAME}缓存中踢除...")
             domainNames.forEach {
@@ -128,10 +131,5 @@ open class DomainByNameCacheHandler : AbstractCacheHandler<SysDomainCacheItem>()
             log.debug("${CACHE_NAME}缓存同步完成。")
         }
     }
-
-    fun getSelf(): DomainByNameCacheHandler {
-        return SpringKit.getBean(DomainByNameCacheHandler::class)
-    }
-
 
 }

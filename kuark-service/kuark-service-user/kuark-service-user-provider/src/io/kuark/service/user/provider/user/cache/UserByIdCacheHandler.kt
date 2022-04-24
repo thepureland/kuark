@@ -2,15 +2,18 @@ package io.kuark.service.user.provider.user.cache
 
 import io.kuark.ability.cache.core.BatchCacheable
 import io.kuark.ability.cache.support.AbstractByIdCacheHandler
-import io.kuark.context.kit.SpringKit
 import io.kuark.service.user.common.user.vo.account.UserAccountCacheItem
 import io.kuark.service.user.provider.user.dao.UserAccountDao
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Component
 
 
 @Component
 open class UserByIdCacheHandler : AbstractByIdCacheHandler<String, UserAccountCacheItem, UserAccountDao>() {
+
+    @Autowired
+    private lateinit var self: UserByIdCacheHandler
 
     companion object {
         private const val CACHE_NAME = "user_by_id"
@@ -19,7 +22,7 @@ open class UserByIdCacheHandler : AbstractByIdCacheHandler<String, UserAccountCa
     override fun cacheName() = CACHE_NAME
 
     override fun doReload(key: String): UserAccountCacheItem? {
-        return getSelf().getUserById(key)
+        return self.getUserById(key)
     }
 
     @Cacheable(
@@ -37,10 +40,6 @@ open class UserByIdCacheHandler : AbstractByIdCacheHandler<String, UserAccountCa
     )
     open fun getUsersByIds(ids: Collection<String>): Map<String, UserAccountCacheItem> {
         return getByIds(ids)
-    }
-
-    private fun getSelf(): UserByIdCacheHandler {
-        return SpringKit.getBean(UserByIdCacheHandler::class)
     }
 
     override fun itemDesc() = "用户"

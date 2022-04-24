@@ -3,7 +3,6 @@ package io.kuark.service.sys.provider.cache
 import io.kuark.ability.cache.kit.CacheKit
 import io.kuark.ability.cache.support.AbstractCacheHandler
 import io.kuark.base.log.LogFactory
-import io.kuark.context.kit.SpringKit
 import io.kuark.service.sys.common.vo.dict.SysDictItemCacheItem
 import io.kuark.service.sys.common.vo.dict.SysDictSearchPayload
 import io.kuark.service.sys.provider.biz.ibiz.ISysDictBiz
@@ -26,10 +25,14 @@ open class DictItemsByModuleAndTypeCacheHandler : AbstractCacheHandler<List<SysD
 
     @Autowired
     private lateinit var sysDictItemDao: SysDictItemDao
+    
+    @Autowired
+    private lateinit var self: DictItemsByModuleAndTypeCacheHandler
+
+    private val log = LogFactory.getLog(DictItemsByModuleAndTypeCacheHandler::class)
 
     companion object {
         private const val CACHE_NAME = "sys_dict_items_by_module_and_type"
-        private val log = LogFactory.getLog(DictItemsByModuleAndTypeCacheHandler::class)
     }
 
     override fun cacheName(): String = CACHE_NAME
@@ -37,7 +40,7 @@ open class DictItemsByModuleAndTypeCacheHandler : AbstractCacheHandler<List<SysD
     override fun doReload(key: String): List<SysDictItemCacheItem> {
         require(key.contains(":")) { "缓存${CACHE_NAME}的key格式必须是 模块代码::字典类型代码" }
         val moduleAndDictType = key.split(":")
-        return getSelf().getItemsFromCache(moduleAndDictType[0], moduleAndDictType[1])
+        return self.getItemsFromCache(moduleAndDictType[0], moduleAndDictType[1])
     }
 
     override fun reloadAll(clear: Boolean) {
@@ -105,57 +108,53 @@ open class DictItemsByModuleAndTypeCacheHandler : AbstractCacheHandler<List<SysD
         }
     }
 
-    fun syncOnInsert(sysDictItem: SysDictItem) {
+    open fun syncOnInsert(sysDictItem: SysDictItem) {
         if (CacheKit.isCacheActive(CACHE_NAME)) {
             log.debug("新增id为${sysDictItem.id}的字典项后，同步${CACHE_NAME}缓存...")
             val dict = sysDictBiz.getDictFromCache(sysDictItem.dictId)!!
             CacheKit.evict(CACHE_NAME, "${dict.module}::${dict.dictType}") // 踢除缓存
             if (CacheKit.isWriteInTime(CACHE_NAME)) {
-                getSelf().getItemsFromCache(dict.module!!, dict.dictType!!)
+                self.getItemsFromCache(dict.module!!, dict.dictType!!)
             }
             log.debug("${CACHE_NAME}缓存同步完成。")
         }
     }
 
-    fun syncOnUpdate(sysDictItem: SysDictItem) {
+    open fun syncOnUpdate(sysDictItem: SysDictItem) {
         if (CacheKit.isCacheActive(CACHE_NAME)) {
             log.debug("更新id为${sysDictItem.id}的字典项后，同步${CACHE_NAME}缓存...")
             val dict = sysDictBiz.getDictFromCache(sysDictItem.dictId)!!
             CacheKit.evict(CACHE_NAME, "${dict.module}::${dict.dictType}") // 踢除缓存
             if (CacheKit.isWriteInTime(CACHE_NAME)) {
-                getSelf().getItemsFromCache(dict.module!!, dict.dictType!!)
+                self.getItemsFromCache(dict.module!!, dict.dictType!!)
             }
             log.debug("${CACHE_NAME}缓存同步完成。")
         }
     }
 
-    fun syncOnUpdateActive(dictItemId: String) {
+    open fun syncOnUpdateActive(dictItemId: String) {
         if (CacheKit.isCacheActive(CACHE_NAME)) {
             log.debug("更新id为${dictItemId}的字典项的启用状态后，同步${CACHE_NAME}缓存...")
             val dictIds = sysDictItemDao.oneSearchProperty(SysDictItem::id.name, dictItemId, SysDictItem::dictId.name)
             val dict = sysDictBiz.get(dictIds.first() as String)!!
             CacheKit.evict(CACHE_NAME, "${dict.module}::${dict.dictType}") // 字典的缓存粒度为字典类型
             if (CacheKit.isWriteInTime(CACHE_NAME)) {
-                getSelf().getItemsFromCache(dict.module!!, dict.dictType) // 重新缓存
+                self.getItemsFromCache(dict.module!!, dict.dictType) // 重新缓存
             }
             log.debug("${CACHE_NAME}缓存同步完成。")
         }
     }
 
-    fun syncOnDelete(id: String, dictId: String) {
+    open fun syncOnDelete(id: String, dictId: String) {
         if (CacheKit.isCacheActive(CACHE_NAME)) {
             log.debug("删除id为${id}的租户后，同步从${CACHE_NAME}缓存中踢除...")
             val dict = sysDictBiz.get(dictId)!!
             CacheKit.evict(CACHE_NAME, "${dict.module}::${dict.dictType}") // 字典的缓存粒度为字典类型
             if (CacheKit.isWriteInTime(CACHE_NAME)) {
-                getSelf().getItemsFromCache(dict.module!!, dict.dictType) // 重新缓存
+                self.getItemsFromCache(dict.module!!, dict.dictType) // 重新缓存
             }
             log.debug("${CACHE_NAME}缓存同步完成。")
         }
-    }
-
-    fun getSelf(): DictItemsByModuleAndTypeCacheHandler {
-        return SpringKit.getBean(DictItemsByModuleAndTypeCacheHandler::class)
     }
 
 }

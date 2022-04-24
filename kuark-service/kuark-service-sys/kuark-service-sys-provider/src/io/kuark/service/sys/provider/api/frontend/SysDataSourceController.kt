@@ -3,6 +3,7 @@ package io.kuark.service.sys.provider.api.frontend
 import io.kuark.service.sys.common.vo.datasource.*
 import io.kuark.service.sys.provider.biz.ibiz.ISysDataSourceBiz
 import io.kuark.ability.web.springmvc.BaseCrudController
+import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.bind.annotation.RequestMapping
 
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping
  */
 @RestController
 //region your codes 1
+@CrossOrigin
 @RequestMapping("sys/dataSource")
 open class SysDataSourceController :
     BaseCrudController<String, ISysDataSourceBiz, SysDataSourceSearchPayload, SysDataSourceRecord, SysDataSourceDetail, SysDataSourcePayload>() {

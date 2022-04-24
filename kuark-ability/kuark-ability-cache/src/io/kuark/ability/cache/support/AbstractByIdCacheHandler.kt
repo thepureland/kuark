@@ -17,9 +17,7 @@ abstract class AbstractByIdCacheHandler<PK: Any, T: IIdEntity<*>, DAO: IBaseRead
     @Autowired
     protected lateinit var dao: DAO
 
-    companion object {
-        private val log = LogFactory.getLog(AbstractByIdCacheHandler::class)
-    }
+    private val log = LogFactory.getLog(AbstractByIdCacheHandler::class)
     
     protected fun getById(id: PK): T? {
         if (id is CharSequence) {
@@ -80,7 +78,7 @@ abstract class AbstractByIdCacheHandler<PK: Any, T: IIdEntity<*>, DAO: IBaseRead
         log.debug("缓存了${dicts.size}条${itemDesc()}信息。")
     }
 
-    fun syncOnInsert(id: PK) {
+    open fun syncOnInsert(id: PK) {
         if (CacheKit.isCacheActive(cacheName()) && CacheKit.isWriteInTime(cacheName())) {
             log.debug("新增id为${id}的${itemDesc()}后，同步${cacheName()}缓存...")
             doReload(id.toString()) // 缓存
@@ -88,7 +86,7 @@ abstract class AbstractByIdCacheHandler<PK: Any, T: IIdEntity<*>, DAO: IBaseRead
         }
     }
 
-    fun syncOnUpdate(id: PK) {
+    open fun syncOnUpdate(id: PK) {
         if (CacheKit.isCacheActive(cacheName())) {
             log.debug("更新id为${id}的${itemDesc()}后，同步${cacheName()}缓存...")
             CacheKit.evict(cacheName(), id) // 踢除缓存
@@ -99,7 +97,7 @@ abstract class AbstractByIdCacheHandler<PK: Any, T: IIdEntity<*>, DAO: IBaseRead
         }
     }
 
-    fun syncOnDelete(id: PK) {
+    open fun syncOnDelete(id: PK) {
         if (CacheKit.isCacheActive(cacheName())) {
             log.debug("删除id为${id}的${itemDesc()}后，同步${cacheName()}缓存...")
             CacheKit.evict(cacheName(), id) // 踢除缓存
@@ -107,7 +105,7 @@ abstract class AbstractByIdCacheHandler<PK: Any, T: IIdEntity<*>, DAO: IBaseRead
         }
     }
 
-    fun syncOnBatchDelete(ids: Collection<String>) {
+    open fun syncOnBatchDelete(ids: Collection<String>) {
         if (CacheKit.isCacheActive(cacheName())) {
             log.debug("批量删除id为${ids}的${itemDesc()}后，同步从${cacheName()}缓存中踢除...")
             ids.forEach {

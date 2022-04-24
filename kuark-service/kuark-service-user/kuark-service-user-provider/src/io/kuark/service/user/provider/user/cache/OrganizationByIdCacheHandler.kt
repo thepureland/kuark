@@ -8,7 +8,6 @@ import io.kuark.base.query.Criterion
 import io.kuark.base.query.enums.Operator
 import io.kuark.base.support.Consts
 import io.kuark.base.support.payload.ListSearchPayload
-import io.kuark.context.kit.SpringKit
 import io.kuark.service.user.common.user.vo.organization.UserOrganizationCacheItem
 import io.kuark.service.user.provider.user.dao.UserOrganizationDao
 import io.kuark.service.user.provider.user.model.po.UserOrganization
@@ -22,16 +21,20 @@ open class OrganizationByIdCacheHandler : AbstractCacheHandler<UserOrganizationC
     @Autowired
     private lateinit var userOrganizationDao: UserOrganizationDao
 
+    @Autowired
+    private lateinit var self: OrganizationByIdCacheHandler
+
+    private val log = LogFactory.getLog(OrganizationByIdCacheHandler::class)
+    
     companion object {
         private const val CACHE_NAME = "user_organization_by_id"
-        private val log = LogFactory.getLog(OrganizationByIdCacheHandler::class)
     }
 
 
     override fun cacheName() = CACHE_NAME
 
     override fun doReload(key: String): UserOrganizationCacheItem? {
-        return getSelf().getOrganizationById(key)
+        return self.getOrganizationById(key)
     }
 
     override fun reloadAll(clear: Boolean) {
@@ -91,10 +94,6 @@ open class OrganizationByIdCacheHandler : AbstractCacheHandler<UserOrganizationC
         val results = userOrganizationDao.search(searchPayload) as List<UserOrganizationCacheItem>
         log.debug("数据库中加载到${results.size}条组织机构.")
         return results.associateBy { it.id!! }
-    }
-
-    private fun getSelf(): OrganizationByIdCacheHandler {
-        return SpringKit.getBean(OrganizationByIdCacheHandler::class)
     }
 
 }

@@ -4,7 +4,7 @@ import io.kuark.base.support.biz.IBaseCrudBiz
 import io.kuark.service.sys.common.vo.dict.SysParamCacheItem
 import io.kuark.service.sys.common.vo.param.SysParamRecord
 import io.kuark.service.sys.common.vo.param.SysParamSearchPayload
-import io.kuark.service.sys.provider.model.po.SysDataSource
+import io.kuark.service.sys.provider.model.po.SysParam
 
 /**
  * 参数业务接口
@@ -13,7 +13,7 @@ import io.kuark.service.sys.provider.model.po.SysDataSource
  * @since 1.0.0
  */
 //region your codes 1
-interface ISysParamBiz: IBaseCrudBiz<String, SysDataSource> {
+interface ISysParamBiz: IBaseCrudBiz<String, SysParam> {
 //endregion your codes 1
 
     //region your codes 2

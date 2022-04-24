@@ -4,7 +4,6 @@ import io.kuark.ability.cache.kit.CacheKit
 import io.kuark.ability.cache.support.AbstractCacheHandler
 import io.kuark.base.log.LogFactory
 import io.kuark.base.support.Consts
-import io.kuark.context.kit.SpringKit
 import io.kuark.service.user.provider.user.dao.UserAccountDao
 import io.kuark.service.user.provider.user.model.po.UserAccount
 import org.springframework.beans.factory.annotation.Autowired
@@ -18,9 +17,13 @@ open class UserIdBySubSysAndUsernameCacheHandler : AbstractCacheHandler<String>(
     @Autowired
     private lateinit var userAccountDao: UserAccountDao
 
+    @Autowired
+    private lateinit var self: UserIdBySubSysAndUsernameCacheHandler
+
+    private val log = LogFactory.getLog(UserIdBySubSysAndUsernameCacheHandler::class)
+    
     companion object {
         private const val CACHE_NAME = "user_id_by_sub_sys_and_username"
-        private val log = LogFactory.getLog(UserIdBySubSysAndUsernameCacheHandler::class)
     }
 
 
@@ -29,7 +32,7 @@ open class UserIdBySubSysAndUsernameCacheHandler : AbstractCacheHandler<String>(
     override fun doReload(key: String): String? {
         require(key.contains(":")) { "缓存${CACHE_NAME}的key格式必须是 子系统代码::用户名" }
         val subSysAndUsername = key.split("::")
-        return getSelf().getUserId(subSysAndUsername[0], subSysAndUsername[1])
+        return self.getUserId(subSysAndUsername[0], subSysAndUsername[1])
     }
 
     override fun reloadAll(clear: Boolean) {
@@ -75,10 +78,6 @@ open class UserIdBySubSysAndUsernameCacheHandler : AbstractCacheHandler<String>(
             log.debug("数据库中加载到子系统为${subSysDictCode}且用户名为${username}的用户id.")
             ids.first() as String
         }
-    }
-
-    private fun getSelf(): UserIdBySubSysAndUsernameCacheHandler {
-        return SpringKit.getBean(UserIdBySubSysAndUsernameCacheHandler::class)
     }
 
 }

@@ -6,7 +6,6 @@ import io.kuark.base.bean.BeanKit
 import io.kuark.base.log.LogFactory
 import io.kuark.base.support.Consts
 import io.kuark.base.support.payload.ListSearchPayload
-import io.kuark.context.kit.SpringKit
 import io.kuark.service.sys.common.vo.cache.SysCacheCacheItem
 import io.kuark.service.sys.common.vo.cache.SysCacheSearchPayload
 import io.kuark.service.sys.provider.dao.SysCacheDao
@@ -22,15 +21,19 @@ open class CacheByNameCacheHandler : AbstractCacheHandler<SysCacheCacheItem>() {
     @Autowired
     private lateinit var sysCacheDao: SysCacheDao
 
+    @Autowired
+    private lateinit var self: CacheByNameCacheHandler
+
+    private val log = LogFactory.getLog(CacheByNameCacheHandler::class)
+
     companion object {
         private const val CACHE_NAME = "sys_cache_by_name"
-        private val log = LogFactory.getLog(CacheByNameCacheHandler::class)
     }
 
     override fun cacheName(): String = CACHE_NAME
 
     override fun doReload(key: String): SysCacheCacheItem? {
-        return getSelf().getCacheFromCache(key)
+        return self.getCacheFromCache(key)
     }
 
     override fun reloadAll(clear: Boolean) {
@@ -84,16 +87,16 @@ open class CacheByNameCacheHandler : AbstractCacheHandler<SysCacheCacheItem>() {
         return result
     }
 
-    fun syncOnInsert(any: Any, id: String) {
+    open fun syncOnInsert(any: Any, id: String) {
         if (CacheKit.isCacheActive(CACHE_NAME)) {
             log.debug("新增id为${id}的缓存配置后，同步${CACHE_NAME}缓存...")
             val name = BeanKit.getProperty(any, SysCache::name.name) as String
-            getSelf().getCacheFromCache(name) // 缓存
+            self.getCacheFromCache(name) // 缓存
             log.debug("${CACHE_NAME}缓存同步完成。")
         }
     }
 
-    fun syncOnUpdate(any: Any, id: String) {
+    open fun syncOnUpdate(any: Any, id: String) {
         if (CacheKit.isCacheActive(CACHE_NAME)) {
             log.debug("更新id为${id}的缓存配置后，同步${CACHE_NAME}缓存...")
             var name = BeanKit.getProperty(any, SysCache::name.name) as String
@@ -101,12 +104,12 @@ open class CacheByNameCacheHandler : AbstractCacheHandler<SysCacheCacheItem>() {
                 name = sysCacheDao.get(id)!!.name
             }
             CacheKit.evict(CACHE_NAME, name) // 踢除缓存配置缓存
-            getSelf().getCacheFromCache(name) // 重新缓存
+            self.getCacheFromCache(name) // 重新缓存
             log.debug("${CACHE_NAME}缓存同步完成。")
         }
     }
 
-    fun syncOnDelete(id: String, name: String) {
+    open fun syncOnDelete(id: String, name: String) {
         if (CacheKit.isCacheActive(CACHE_NAME)) {
             log.debug("删除id为${id}的缓存配置后，同步从${CACHE_NAME}缓存中踢除...")
             CacheKit.evict(CACHE_NAME, name) // 踢除缓存
@@ -114,7 +117,7 @@ open class CacheByNameCacheHandler : AbstractCacheHandler<SysCacheCacheItem>() {
         }
     }
 
-    fun synchOnBatchDelete(ids: Collection<String>, sysCaches: List<SysCache>) {
+    open fun synchOnBatchDelete(ids: Collection<String>, sysCaches: List<SysCache>) {
         if (CacheKit.isCacheActive(CACHE_NAME)) {
             log.debug("批量删除id为${ids}的缓存配置后，同步从${CACHE_NAME}缓存中踢除...")
             sysCaches.forEach {
@@ -122,10 +125,6 @@ open class CacheByNameCacheHandler : AbstractCacheHandler<SysCacheCacheItem>() {
             }
             log.debug("${CACHE_NAME}缓存同步完成。")
         }
-    }
-
-    fun getSelf(): CacheByNameCacheHandler {
-        return SpringKit.getBean(CacheByNameCacheHandler::class)
     }
 
 }

@@ -5,7 +5,6 @@ import io.kuark.ability.cache.support.AbstractCacheHandler
 import io.kuark.base.bean.BeanKit
 import io.kuark.base.log.LogFactory
 import io.kuark.base.support.Consts
-import io.kuark.context.kit.SpringKit
 import io.kuark.service.sys.common.vo.dict.SysTenantCacheItem
 import io.kuark.service.sys.common.vo.tenant.SysTenantSearchPayload
 import io.kuark.service.sys.provider.dao.SysTenantDao
@@ -21,9 +20,13 @@ open class TenantsBySubSysCacheHandler: AbstractCacheHandler<List<SysTenantCache
     @Autowired
     private lateinit var dao: SysTenantDao
 
+    @Autowired
+    private lateinit var self: TenantsBySubSysCacheHandler
+
+    private val log = LogFactory.getLog(TenantsBySubSysCacheHandler::class)
+
     companion object {
         private const val CACHE_NAME = "sys_tenants_by_sub_sys"
-        private val log = LogFactory.getLog(TenantsBySubSysCacheHandler::class)
     }
 
     @Autowired
@@ -32,7 +35,7 @@ open class TenantsBySubSysCacheHandler: AbstractCacheHandler<List<SysTenantCache
 
     override fun cacheName(): String = CACHE_NAME
 
-    override fun doReload(key: String): List<SysTenantCacheItem> = getSelf().getTenantsFromCache(key)
+    override fun doReload(key: String): List<SysTenantCacheItem> = self.getTenantsFromCache(key)
 
     override fun reloadAll(clear: Boolean) {
         if (!CacheKit.isCacheActive(CACHE_NAME)) {
@@ -84,17 +87,17 @@ open class TenantsBySubSysCacheHandler: AbstractCacheHandler<List<SysTenantCache
         return tenants
     }
 
-    fun syncOnInsert(any: Any, id: String) {
+    open fun syncOnInsert(any: Any, id: String) {
         if (CacheKit.isCacheActive(CACHE_NAME) && CacheKit.isWriteInTime(CACHE_NAME)) {
             log.debug("新增id为${id}的租户后，同步${CACHE_NAME}缓存...")
             val subSysDictCode = BeanKit.getProperty(any, SysTenant::subSysDictCode.name) as String
             CacheKit.evict(CACHE_NAME, subSysDictCode) // 踢除缓存，因为缓存的粒度为子系统
-            getSelf().getTenantsFromCache(subSysDictCode) // 重新缓存
+            self.getTenantsFromCache(subSysDictCode) // 重新缓存
             log.debug("${CACHE_NAME}缓存同步完成。")
         }
     }
 
-    fun syncOnUpdate(any: Any?, id: String) {
+    open fun syncOnUpdate(any: Any?, id: String) {
         if (CacheKit.isCacheActive(CACHE_NAME)) {
             log.debug("更新id为${id}的租户后，同步${CACHE_NAME}缓存...")
             val subSysDictCode = if (any == null) {
@@ -104,39 +107,35 @@ open class TenantsBySubSysCacheHandler: AbstractCacheHandler<List<SysTenantCache
             }
             CacheKit.evict(CACHE_NAME, subSysDictCode) // 踢除缓存，因为缓存的粒度为子系统
             if (CacheKit.isWriteInTime(CACHE_NAME)) {
-                getSelf().getTenantsFromCache(subSysDictCode) // 重新缓存
+                self.getTenantsFromCache(subSysDictCode) // 重新缓存
             }
             log.debug("${CACHE_NAME}缓存同步完成。")
         }
     }
 
-    fun syncOnDelete(sysTenant: SysTenantCacheItem) {
+    open fun syncOnDelete(sysTenant: SysTenantCacheItem) {
         if (CacheKit.isCacheActive(CACHE_NAME)) {
             log.debug("删除id为${sysTenant.id}的租户后，同步从${CACHE_NAME}缓存中踢除...")
             val subSysDictCode = sysTenant.subSysDictCode!!
             CacheKit.evict(CACHE_NAME, subSysDictCode) // 踢除缓存，缓存的粒度为子系统
             if (CacheKit.isWriteInTime(CACHE_NAME)) {
-                getSelf().getTenantsFromCache(subSysDictCode) // 重新缓存
+                self.getTenantsFromCache(subSysDictCode) // 重新缓存
             }
             log.debug("${CACHE_NAME}缓存同步完成。")
         }
     }
 
-    fun synchOnBatchDelete(ids: Collection<String>, subSysDictCodes: Set<String>) {
+    open fun synchOnBatchDelete(ids: Collection<String>, subSysDictCodes: Set<String>) {
         if (CacheKit.isCacheActive(CACHE_NAME)) {
             log.debug("批量删除id为${ids}的租户后，同步从${CACHE_NAME}缓存中踢除...")
             subSysDictCodes.forEach {
                 CacheKit.evict(CACHE_NAME, it) // 踢除缓存，缓存的粒度为子系统
                 if (CacheKit.isWriteInTime(CACHE_NAME)) {
-                    getSelf().getTenantsFromCache(it) // 重新缓存
+                    self.getTenantsFromCache(it) // 重新缓存
                 }
             }
             log.debug("${CACHE_NAME}缓存同步完成。")
         }
-    }
-
-    fun getSelf(): TenantsBySubSysCacheHandler {
-        return SpringKit.getBean(TenantsBySubSysCacheHandler::class)
     }
 
 }

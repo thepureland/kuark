@@ -48,10 +48,12 @@ open class SysDomainBiz : BaseCrudBiz<String, SysDomain, SysDomainDao>(), ISysDo
 
         // 根据租户id获取租户名称
         val records = pair.first as List<SysDomainRecord>
-        val tenantIds = records.map { it.tenantId!! }
-        val tenants = sysTenantApi.getTenants(tenantIds)
-        records.forEach {
-            it.tenantName = tenants[it.tenantId]?.name
+        if (records.isNotEmpty()) {
+            val tenantIds = records.map { it.tenantId!! }
+            val tenants = sysTenantApi.getTenants(tenantIds)
+            records.forEach {
+                it.tenantName = tenants[it.tenantId]?.name
+            }
         }
 
         return pair

@@ -2,9 +2,9 @@ package io.kuark.service.sys.provider.cache
 
 import io.kuark.ability.cache.core.BatchCacheable
 import io.kuark.ability.cache.support.AbstractByIdCacheHandler
-import io.kuark.context.kit.SpringKit
 import io.kuark.service.sys.common.vo.dict.SysTenantCacheItem
 import io.kuark.service.sys.provider.dao.SysTenantDao
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Component
 
@@ -12,6 +12,9 @@ import org.springframework.stereotype.Component
 @Component
 open class TenantByIdCacheHandler : AbstractByIdCacheHandler<String, SysTenantCacheItem, SysTenantDao>() {
 
+    @Autowired
+    private lateinit var self: TenantByIdCacheHandler
+    
     companion object {
         private const val CACHE_NAME = "sys_tenant_by_id"
     }
@@ -19,7 +22,7 @@ open class TenantByIdCacheHandler : AbstractByIdCacheHandler<String, SysTenantCa
     override fun cacheName(): String = CACHE_NAME
 
     override fun doReload(key: String): SysTenantCacheItem? {
-        return getSelf().getTenantById(key)
+        return self.getTenantById(key)
     }
 
     @Cacheable(
@@ -37,10 +40,6 @@ open class TenantByIdCacheHandler : AbstractByIdCacheHandler<String, SysTenantCa
     )
     open fun getTenantsByIds(ids: Collection<String>): Map<String, SysTenantCacheItem> {
         return getByIds(ids)
-    }
-
-    fun getSelf(): TenantByIdCacheHandler {
-        return SpringKit.getBean(TenantByIdCacheHandler::class)
     }
 
     override fun itemDesc() = "租户"

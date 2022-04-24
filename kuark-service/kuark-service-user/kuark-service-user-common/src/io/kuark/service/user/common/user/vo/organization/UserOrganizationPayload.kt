@@ -34,4 +34,7 @@ open class UserOrganizationPayload: FormPayload<String>() {
     /** 备注 */
     var remark: String? = null
 
+    /** 所有父id列表 */
+    var parentIds: List<String>? = null
+
 }

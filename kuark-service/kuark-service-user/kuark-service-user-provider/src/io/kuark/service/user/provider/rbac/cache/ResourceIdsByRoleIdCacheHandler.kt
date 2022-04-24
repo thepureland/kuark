@@ -4,7 +4,6 @@ import io.kuark.ability.cache.kit.CacheKit
 import io.kuark.ability.cache.support.AbstractCacheHandler
 import io.kuark.base.log.LogFactory
 import io.kuark.base.support.Consts
-import io.kuark.context.kit.SpringKit
 import io.kuark.service.user.provider.rbac.dao.RbacRoleResourceDao
 import io.kuark.service.user.provider.rbac.model.po.RbacRoleResource
 import org.springframework.beans.factory.annotation.Autowired
@@ -18,15 +17,19 @@ open class ResourceIdsByRoleIdCacheHandler : AbstractCacheHandler<List<String>>(
     @Autowired
     private lateinit var rbacRoleResourceDao: RbacRoleResourceDao
 
+    @Autowired
+    private lateinit var self: ResourceIdsByRoleIdCacheHandler
+
+    private val log = LogFactory.getLog(ResourceIdsByRoleIdCacheHandler::class)
+
     companion object {
         private const val CACHE_NAME = "rbac_resource_ids_by_role_id"
-        private val log = LogFactory.getLog(ResourceIdsByRoleIdCacheHandler::class)
     }
 
     override fun cacheName() = CACHE_NAME
 
     override fun doReload(key: String): List<String>? {
-        return getSelf().getResourceIdsByRoleId(key)
+        return self.getResourceIdsByRoleId(key)
     }
 
     override fun reloadAll(clear: Boolean) {
@@ -70,7 +73,7 @@ open class ResourceIdsByRoleIdCacheHandler : AbstractCacheHandler<List<String>>(
         return resIds as List<String>
     }
 
-    fun syncOnUpdate(roleId: String, resourceIds: Collection<String>) {
+    open fun syncOnUpdate(roleId: String, resourceIds: Collection<String>) {
         if (CacheKit.isCacheActive(CACHE_NAME)) {
             log.debug("roleId关联的资源更新后，同步${CACHE_NAME}缓存...")
             CacheKit.evict(CACHE_NAME, roleId)
@@ -81,7 +84,7 @@ open class ResourceIdsByRoleIdCacheHandler : AbstractCacheHandler<List<String>>(
         }
     }
 
-    fun syncOnDelete(id: String) {
+    open fun syncOnDelete(id: String) {
         if (CacheKit.isCacheActive(CACHE_NAME)) {
             log.debug("删除id为${id}的角色后，同步从${CACHE_NAME}缓存中踢除...")
             CacheKit.evict(CACHE_NAME, id) // 踢除缓存
@@ -89,7 +92,7 @@ open class ResourceIdsByRoleIdCacheHandler : AbstractCacheHandler<List<String>>(
         }
     }
 
-    fun syncOnBatchDelete(ids: Collection<String>) {
+    open fun syncOnBatchDelete(ids: Collection<String>) {
         if (CacheKit.isCacheActive(CACHE_NAME)) {
             log.debug("批量删除id为${ids}的角色后，同步从${CACHE_NAME}缓存中踢除...")
             ids.forEach {
@@ -97,10 +100,6 @@ open class ResourceIdsByRoleIdCacheHandler : AbstractCacheHandler<List<String>>(
             }
             log.debug("${CACHE_NAME}缓存同步完成。")
         }
-    }
-
-    private fun getSelf(): ResourceIdsByRoleIdCacheHandler {
-        return SpringKit.getBean(ResourceIdsByRoleIdCacheHandler::class)
     }
 
 }

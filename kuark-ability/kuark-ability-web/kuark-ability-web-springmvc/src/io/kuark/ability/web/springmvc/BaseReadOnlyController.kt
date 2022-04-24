@@ -31,14 +31,14 @@ open class BaseReadOnlyController<PK : Any, B : IBaseReadOnlyBiz<PK, *>, S : Lis
     @Autowired
     protected lateinit var biz: B
 
-    private var resultClass: KClass<R>? = null
+    private var resultClass: KClass<F>? = null
     private var detailClass: KClass<D>? = null
 
     /**
      * 列表查询
      *
      * @param searchPayload 列表查询条件载体
-     * @return WebResult(Pair(记录列表，总记录数))
+     * @return Pair(记录列表，总记录数)
      * @author K
      * @since 1.0.0
      */
@@ -51,15 +51,15 @@ open class BaseReadOnlyController<PK : Any, B : IBaseReadOnlyBiz<PK, *>, S : Lis
     /**
      * 返回指定主键的记录
      *
-     * @return WebResult(记录)
+     * @return Payload
      * @author K
      * @since 1.0.0
      */
     @GetMapping("/get")
     @Suppress(Consts.Suppress.UNCHECKED_CAST)
-    open fun get(id: PK): R {
+    open fun get(id: PK): F {
         if (resultClass == null) {
-            resultClass = GenericKit.getSuperClassGenricClass(this::class, 3) as KClass<R>
+            resultClass = GenericKit.getSuperClassGenricClass(this::class, 5) as KClass<F>
         }
         return biz.get(id, resultClass!!) ?: throw ObjectNotFoundException("找不到记录！")
     }

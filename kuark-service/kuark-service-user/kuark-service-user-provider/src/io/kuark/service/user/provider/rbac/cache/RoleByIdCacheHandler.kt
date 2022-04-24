@@ -4,9 +4,9 @@ import io.kuark.ability.cache.core.BatchCacheable
 import io.kuark.ability.cache.kit.CacheKit
 import io.kuark.ability.cache.support.AbstractByIdCacheHandler
 import io.kuark.base.log.LogFactory
-import io.kuark.context.kit.SpringKit
 import io.kuark.service.user.common.rbac.vo.role.RbacRoleCacheItem
 import io.kuark.service.user.provider.rbac.dao.RbacRoleDao
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Component
 
@@ -14,15 +14,19 @@ import org.springframework.stereotype.Component
 @Component
 open class RoleByIdCacheHandler : AbstractByIdCacheHandler<String, RbacRoleCacheItem, RbacRoleDao>() {
 
+    @Autowired
+    private lateinit var self: RoleByIdCacheHandler
+
+    private val log = LogFactory.getLog(RoleByIdCacheHandler::class)
+
     companion object {
         private const val CACHE_NAME = "rbac_role_by_id"
-        private val log = LogFactory.getLog(RoleByIdCacheHandler::class)
     }
 
 
     override fun cacheName(): String = CACHE_NAME
 
-    override fun doReload(key: String): RbacRoleCacheItem? = getSelf().getRoleById(key)
+    override fun doReload(key: String): RbacRoleCacheItem? = self.getRoleById(key)
 
     @Cacheable(
         cacheNames = [CACHE_NAME],
@@ -46,17 +50,13 @@ open class RoleByIdCacheHandler : AbstractByIdCacheHandler<String, RbacRoleCache
             log.debug("更新id为${id}的角色的启用状态后，同步${CACHE_NAME}缓存...")
             if (active) {
                 if (CacheKit.isWriteInTime(CACHE_NAME)) {
-                    getSelf().getRoleById(id) // 缓存角色
+                    self.getRoleById(id) // 缓存角色
                 }
             } else {
                 CacheKit.evict(CACHE_NAME, id) // 踢除角色缓存
             }
             log.debug("${CACHE_NAME}缓存同步完成。")
         }
-    }
-
-    fun getSelf(): RoleByIdCacheHandler {
-        return SpringKit.getBean(RoleByIdCacheHandler::class)
     }
 
     override fun itemDesc() = "角色"

@@ -3,11 +3,13 @@ package io.kuark.service.sys.provider.cache
 import io.kuark.ability.cache.kit.CacheKit
 import io.kuark.ability.cache.support.AbstractCacheHandler
 import io.kuark.base.log.LogFactory
+import io.kuark.base.support.Consts
 import io.kuark.service.sys.common.vo.dict.SysDictItemCacheItem
 import io.kuark.service.sys.common.vo.dict.SysDictSearchPayload
 import io.kuark.service.sys.provider.biz.ibiz.ISysDictBiz
 import io.kuark.service.sys.provider.dao.SysDictDao
 import io.kuark.service.sys.provider.dao.SysDictItemDao
+import io.kuark.service.sys.provider.model.po.SysDict
 import io.kuark.service.sys.provider.model.po.SysDictItem
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.Cacheable
@@ -25,7 +27,7 @@ open class DictItemsByModuleAndTypeCacheHandler : AbstractCacheHandler<List<SysD
 
     @Autowired
     private lateinit var sysDictItemDao: SysDictItemDao
-    
+
     @Autowired
     private lateinit var self: DictItemsByModuleAndTypeCacheHandler
 
@@ -38,8 +40,10 @@ open class DictItemsByModuleAndTypeCacheHandler : AbstractCacheHandler<List<SysD
     override fun cacheName(): String = CACHE_NAME
 
     override fun doReload(key: String): List<SysDictItemCacheItem> {
-        require(key.contains(":")) { "缓存${CACHE_NAME}的key格式必须是 模块代码::字典类型代码" }
-        val moduleAndDictType = key.split(":")
+        require(key.contains(Consts.CACHE_KEY_DEFALT_DELIMITER)) {
+            "缓存${CACHE_NAME}的key格式必须是 模块代码${Consts.CACHE_KEY_DEFALT_DELIMITER}字典类型代码"
+        }
+        val moduleAndDictType = key.split(Consts.CACHE_KEY_DEFALT_DELIMITER)
         return self.getItemsFromCache(moduleAndDictType[0], moduleAndDictType[1])
     }
 
@@ -61,9 +65,7 @@ open class DictItemsByModuleAndTypeCacheHandler : AbstractCacheHandler<List<SysD
         }
 
         // 缓存数据
-        val dictMap = results.groupBy {
-            "${it.module}::${it.dictType}"
-        }
+        val dictMap = results.groupBy { getKey(it.module!!, it.dictType!!) }
         dictMap.forEach { (key, value) ->
             val valueItems = value.map {
                 SysDictItemCacheItem().apply {
@@ -80,7 +82,7 @@ open class DictItemsByModuleAndTypeCacheHandler : AbstractCacheHandler<List<SysD
 
     @Cacheable(
         cacheNames = [CACHE_NAME],
-        key = "#module.concat('::').concat(#type)",
+        key = "#module.concat('${Consts.CACHE_KEY_DEFALT_DELIMITER}').concat(#type)",
         unless = "#result == null || #result.isEmpty()"
     )
     open fun getItemsFromCache(module: String, type: String): List<SysDictItemCacheItem> {
@@ -112,7 +114,7 @@ open class DictItemsByModuleAndTypeCacheHandler : AbstractCacheHandler<List<SysD
         if (CacheKit.isCacheActive(CACHE_NAME)) {
             log.debug("新增id为${sysDictItem.id}的字典项后，同步${CACHE_NAME}缓存...")
             val dict = sysDictBiz.getDictFromCache(sysDictItem.dictId)!!
-            CacheKit.evict(CACHE_NAME, "${dict.module}::${dict.dictType}") // 踢除缓存
+            CacheKit.evict(CACHE_NAME, "${dict.module}${Consts.CACHE_KEY_DEFALT_DELIMITER}${dict.dictType}") // 踢除缓存
             if (CacheKit.isWriteInTime(CACHE_NAME)) {
                 self.getItemsFromCache(dict.module!!, dict.dictType!!)
             }
@@ -124,7 +126,7 @@ open class DictItemsByModuleAndTypeCacheHandler : AbstractCacheHandler<List<SysD
         if (CacheKit.isCacheActive(CACHE_NAME)) {
             log.debug("更新id为${sysDictItem.id}的字典项后，同步${CACHE_NAME}缓存...")
             val dict = sysDictBiz.getDictFromCache(sysDictItem.dictId)!!
-            CacheKit.evict(CACHE_NAME, "${dict.module}::${dict.dictType}") // 踢除缓存
+            CacheKit.evict(CACHE_NAME, "${dict.module}${Consts.CACHE_KEY_DEFALT_DELIMITER}${dict.dictType}") // 踢除缓存
             if (CacheKit.isWriteInTime(CACHE_NAME)) {
                 self.getItemsFromCache(dict.module!!, dict.dictType!!)
             }
@@ -137,7 +139,9 @@ open class DictItemsByModuleAndTypeCacheHandler : AbstractCacheHandler<List<SysD
             log.debug("更新id为${dictItemId}的字典项的启用状态后，同步${CACHE_NAME}缓存...")
             val dictIds = sysDictItemDao.oneSearchProperty(SysDictItem::id.name, dictItemId, SysDictItem::dictId.name)
             val dict = sysDictBiz.get(dictIds.first() as String)!!
-            CacheKit.evict(CACHE_NAME, "${dict.module}::${dict.dictType}") // 字典的缓存粒度为字典类型
+            CacheKit.evict(
+                CACHE_NAME, getKey(dict.module!!, dict.dictType)
+            ) // 字典的缓存粒度为字典类型
             if (CacheKit.isWriteInTime(CACHE_NAME)) {
                 self.getItemsFromCache(dict.module!!, dict.dictType) // 重新缓存
             }
@@ -149,12 +153,16 @@ open class DictItemsByModuleAndTypeCacheHandler : AbstractCacheHandler<List<SysD
         if (CacheKit.isCacheActive(CACHE_NAME)) {
             log.debug("删除id为${id}的租户后，同步从${CACHE_NAME}缓存中踢除...")
             val dict = sysDictBiz.get(dictId)!!
-            CacheKit.evict(CACHE_NAME, "${dict.module}::${dict.dictType}") // 字典的缓存粒度为字典类型
+            CacheKit.evict(CACHE_NAME, getKey(dict.module!!, dict.dictType)) // 字典的缓存粒度为字典类型
             if (CacheKit.isWriteInTime(CACHE_NAME)) {
                 self.getItemsFromCache(dict.module!!, dict.dictType) // 重新缓存
             }
             log.debug("${CACHE_NAME}缓存同步完成。")
         }
+    }
+
+    private fun getKey(module: String, dictType: String): String {
+        return "${module}${Consts.CACHE_KEY_DEFALT_DELIMITER}${dictType}"
     }
 
 }

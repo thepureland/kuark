@@ -114,7 +114,7 @@ open class SysTenantBiz : BaseCrudBiz<String, SysTenant, SysTenantDao>(), ISysTe
         log.debug("批量删除租户，期望删除${ids.size}条，实际删除${count}条。")
         // 同步缓存
         tenantByIdCacheHandler.syncOnBatchDelete(ids)
-        tenantBySubSysCacheHandler.synchOnBatchDelete(ids, subSysDictCodes)
+        tenantBySubSysCacheHandler.syncOnBatchDelete(ids, subSysDictCodes)
         return count
     }
 

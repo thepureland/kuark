@@ -126,7 +126,7 @@ create table "sys_param"
 (
     "id"            CHAR(36)  default RANDOM_UUID() not null
         primary key,
-    "module"        VARCHAR(64),
+    "module"        VARCHAR(64)                     not null,
     "param_name"    VARCHAR(32)                     not null,
     "param_value"   VARCHAR(128)                    not null,
     "default_value" VARCHAR(128),

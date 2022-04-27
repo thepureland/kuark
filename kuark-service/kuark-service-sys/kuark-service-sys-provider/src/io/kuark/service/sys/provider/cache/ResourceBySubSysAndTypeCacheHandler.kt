@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component
 
 
 @Component
-open class ResourceBySubSysAndTypeCacheHandler: AbstractCacheHandler<List<SysResourceCacheItem>>() {
+open class ResourceBySubSysAndTypeCacheHandler : AbstractCacheHandler<List<SysResourceCacheItem>>() {
 
     @Autowired
     private lateinit var sysResourceDao: SysResourceDao
@@ -32,8 +32,10 @@ open class ResourceBySubSysAndTypeCacheHandler: AbstractCacheHandler<List<SysRes
     override fun cacheName(): String = CACHE_NAME
 
     override fun doReload(key: String): List<SysResourceCacheItem> {
-        require(key.contains(":")) { "缓存${CACHE_NAME}的key格式必须是 子系统代码::资源类型代码" }
-        val subSysAndResType = key.split("::")
+        require(key.contains(Consts.CACHE_KEY_DEFALT_DELIMITER)) {
+            "缓存${CACHE_NAME}的key格式必须是 子系统代码${Consts.CACHE_KEY_DEFALT_DELIMITER}资源类型代码"
+        }
+        val subSysAndResType = key.split(Consts.CACHE_KEY_DEFALT_DELIMITER)
         return self.getResourcesFromCache(subSysAndResType[0], subSysAndResType[1])
     }
 
@@ -59,7 +61,7 @@ open class ResourceBySubSysAndTypeCacheHandler: AbstractCacheHandler<List<SysRes
         }
 
         // 缓存资源
-        val resMap = resources.groupBy { "${it.subSysDictCode}::${it.resourceTypeDictCode}" }
+        val resMap = resources.groupBy { getKey(it.subSysDictCode!!, it.resourceTypeDictCode!!) }
         resMap.forEach { (key, value) ->
             CacheKit.put(CACHE_NAME, key, value)
             log.debug("缓存了key为${key}的${value.size}条资源。")
@@ -68,7 +70,7 @@ open class ResourceBySubSysAndTypeCacheHandler: AbstractCacheHandler<List<SysRes
 
     @Cacheable(
         cacheNames = [CACHE_NAME],
-        key = "#subSysDictCode.concat('::').concat(#resourceTypeDictCode)",
+        key = "#subSysDictCode.concat('${Consts.CACHE_KEY_DEFALT_DELIMITER}').concat(#resourceTypeDictCode)",
         unless = "#result == null || #result.isEmpty()"
     )
     open fun getResourcesFromCache(subSysDictCode: String, resourceTypeDictCode: String): List<SysResourceCacheItem> {
@@ -105,8 +107,7 @@ open class ResourceBySubSysAndTypeCacheHandler: AbstractCacheHandler<List<SysRes
             log.debug("更新id为${id}的资源后，同步${CACHE_NAME}缓存...")
             val subSysDictCode = BeanKit.getProperty(any, SysResource::subSysDictCode.name) as String
             val resourceTypeDictCode = BeanKit.getProperty(any, SysResource::resourceTypeDictCode.name) as String
-            val key = "${subSysDictCode}::${resourceTypeDictCode}"
-            CacheKit.evict(CACHE_NAME, key) // 踢除资源缓存
+            CacheKit.evict(CACHE_NAME, getKey(subSysDictCode, resourceTypeDictCode)) // 踢除资源缓存
             if (CacheKit.isWriteInTime(CACHE_NAME)) {
                 self.getResourcesFromCache(subSysDictCode, resourceTypeDictCode) // 重新缓存
             }
@@ -123,8 +124,7 @@ open class ResourceBySubSysAndTypeCacheHandler: AbstractCacheHandler<List<SysRes
                     self.getResourcesFromCache(sysRes.subSysDictCode, sysRes.resourceTypeDictCode) // 重新缓存
                 }
             } else {
-                val key = "${sysRes.subSysDictCode}::${sysRes.resourceTypeDictCode}"
-                CacheKit.evict(CACHE_NAME, key) // 踢除资源缓存
+                CacheKit.evict(CACHE_NAME, getKey(sysRes.subSysDictCode, sysRes.resourceTypeDictCode)) // 踢除资源缓存
             }
             log.debug("${CACHE_NAME}缓存同步完成。")
         }
@@ -133,10 +133,13 @@ open class ResourceBySubSysAndTypeCacheHandler: AbstractCacheHandler<List<SysRes
     open fun syncOnDelete(id: String, subSysDictCode: String, resourceTypeDictCode: String) {
         if (CacheKit.isCacheActive(CACHE_NAME)) {
             log.debug("删除id为${id}的资源后，同步从${CACHE_NAME}缓存中踢除...")
-            val key = "${subSysDictCode}::${resourceTypeDictCode}"
-            CacheKit.evict(CACHE_NAME, key) // 踢除缓存, 资源缓存的粒度到资源类型
+            CacheKit.evict(CACHE_NAME, getKey(subSysDictCode, resourceTypeDictCode)) // 踢除缓存, 资源缓存的粒度到资源类型
             log.debug("${CACHE_NAME}缓存同步完成。")
         }
+    }
+
+    private fun getKey(subSysDictCode: String, resourceTypeDictCode: String): String {
+        return "${subSysDictCode}${Consts.CACHE_KEY_DEFALT_DELIMITER}${resourceTypeDictCode}"
     }
 
 }

@@ -27,7 +27,7 @@ open class ParamByModuleAndNameCacheHandler : AbstractCacheHandler<SysParamCache
     private lateinit var self: ParamByModuleAndNameCacheHandler
 
     private val log = LogFactory.getLog(ParamByModuleAndNameCacheHandler::class)
-    
+
     companion object {
         private const val CACHE_NAME = "sys_param_by_module_and_name"
     }
@@ -35,8 +35,10 @@ open class ParamByModuleAndNameCacheHandler : AbstractCacheHandler<SysParamCache
     override fun cacheName(): String = CACHE_NAME
 
     override fun doReload(key: String): SysParamCacheItem? {
-        require(key.contains(":")) { "缓存${CACHE_NAME}的key格式必须是 模块代码::参数名称" }
-        val moduleAndParamName = key.split("::")
+        require(key.contains(Consts.CACHE_KEY_DEFALT_DELIMITER)) {
+            "缓存${CACHE_NAME}的key格式必须是 模块代码${Consts.CACHE_KEY_DEFALT_DELIMITER}参数名称"
+        }
+        val moduleAndParamName = key.split(Consts.CACHE_KEY_DEFALT_DELIMITER)
         return self.getParamFromCache(moduleAndParamName[0], moduleAndParamName[1])
     }
 
@@ -63,15 +65,14 @@ open class ParamByModuleAndNameCacheHandler : AbstractCacheHandler<SysParamCache
 
         // 缓存参数
         params.forEach {
-            val key = "${it.module}::${it.paramName}"
-            CacheKit.putIfAbsent(CACHE_NAME, key, it)
+            CacheKit.putIfAbsent(CACHE_NAME, getKey(it.module!!, it.paramName!!), it)
         }
         log.debug("缓存了${params.size}条参数信息。")
     }
 
     @Cacheable(
         value = [CACHE_NAME],
-        key = "#module.concat('::').concat(#name)",
+        key = "#module.concat('${Consts.CACHE_KEY_DEFALT_DELIMITER}').concat(#name)",
         unless = "#result == null"
     )
     open fun getParamFromCache(module: String, name: String): SysParamCacheItem? {
@@ -115,8 +116,7 @@ open class ParamByModuleAndNameCacheHandler : AbstractCacheHandler<SysParamCache
             log.debug("更新id为${id}的参数后，同步${CACHE_NAME}缓存...")
             val module = BeanKit.getProperty(any, SysParam::module.name) as String
             val paramName = BeanKit.getProperty(any, SysParam::paramName.name) as String
-            val key = "${module}::${paramName}"
-            CacheKit.evict(CACHE_NAME, key) // 踢除参数缓存
+            CacheKit.evict(CACHE_NAME, getKey(module, paramName)) // 踢除参数缓存
             if (CacheKit.isWriteInTime(CACHE_NAME)) {
                 self.getParamFromCache(module, paramName) // 重新缓存
             }
@@ -130,11 +130,10 @@ open class ParamByModuleAndNameCacheHandler : AbstractCacheHandler<SysParamCache
             val sysParam = sysParamDao.get(id)!!
             if (active) {
                 if (CacheKit.isWriteInTime(CACHE_NAME)) {
-                    self.getParamFromCache(sysParam.module!!, sysParam.paramName)
+                    self.getParamFromCache(sysParam.module, sysParam.paramName)
                 }
             } else {
-                val key = "${sysParam.module}::${sysParam.paramName}"
-                CacheKit.evict(CACHE_NAME, key) // 踢除参数缓存
+                CacheKit.evict(CACHE_NAME, getKey(sysParam.module, sysParam.paramName)) // 踢除参数缓存
             }
             log.debug("缓存同步完成。")
         }
@@ -143,21 +142,23 @@ open class ParamByModuleAndNameCacheHandler : AbstractCacheHandler<SysParamCache
     open fun syncOnDelete(param: SysParam) {
         if (CacheKit.isCacheActive(CACHE_NAME)) {
             log.debug("删除id为${param.id}的参数后，同步从${CACHE_NAME}缓存中踢除...")
-            val key = "${param.module}::${param.paramName}"
-            CacheKit.evict(CACHE_NAME, key) // 踢除缓存
+            CacheKit.evict(CACHE_NAME, getKey(param.module, param.paramName)) // 踢除缓存
             log.debug("${CACHE_NAME}缓存同步完成。")
         }
     }
 
-    open fun synchOnBatchDelete(ids: Collection<String>, params: List<SysParam>) {
+    open fun syncOnBatchDelete(ids: Collection<String>, params: List<SysParam>) {
         if (CacheKit.isCacheActive(CACHE_NAME)) {
             log.debug("批量删除id为${ids}的参数后，同步从${CACHE_NAME}缓存中踢除...")
             params.forEach {
-                val key = "${it.module}::${it.paramName}"
-                CacheKit.evict(CACHE_NAME, key) // 踢除缓存
+                CacheKit.evict(CACHE_NAME, getKey(it.module, it.paramName)) // 踢除缓存
             }
             log.debug("${CACHE_NAME}缓存同步完成。")
         }
+    }
+
+    private fun getKey(module: String, paramName: String): String {
+        return "${module}${Consts.CACHE_KEY_DEFALT_DELIMITER}${paramName}"
     }
 
 }

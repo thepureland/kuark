@@ -1,8 +1,5 @@
 package io.kuark.context.core
 
-import org.springframework.session.MapSession
-import org.springframework.session.Session
-
 /**
  * Kuark上下文
  *
@@ -10,6 +7,12 @@ import org.springframework.session.Session
  * @since 1.0.0
  */
 class KuarkContext private constructor(builder: Builder) {
+
+    companion object {
+        const val OTHER_INFO_KEY_DATA_SOURCE = "DATA_SOURCE"
+        const val OTHER_INFO_KEY_DATABASE = "DATABASE"
+        const val OTHER_INFO_KEY_VERIFY_CODE = "VERIFY_CODE"
+    }
 
     /** 数据源id，为null将根据路由策略决定 */
     var dataSourceId: String? = null
@@ -27,13 +30,19 @@ class KuarkContext private constructor(builder: Builder) {
     var traceKey: String? = null
 
     /** 客户端信息对象 */
-    var clientInfo = ClientInfo.Builder()
+    var clientInfo: ClientInfo? = null
+
+    /** Session属性信息 */
+    var sessionAttributes: Map<String, Any?>? = null
+
+    /** Cookie属性信息 */
+    var cookieAttributes: Map<String, String?>? = null
+
+    /** Header属性信息 */
+    var headerAttributes: MutableMap<String, String?>? = null
 
     /** 其他信息 */
-    var otherInfos = hashMapOf<String, Any>()
-
-    /** Session */
-    var session: Session = MapSession()
+    var otherInfos: MutableMap<String, Any?>? = null
 
     init {
         dataSourceId = builder.dataSourceId
@@ -41,8 +50,10 @@ class KuarkContext private constructor(builder: Builder) {
         tenantId = builder.tenantId
         userId = builder.userId
         traceKey = builder.traceKey
+        sessionAttributes = builder.sessionAttributes
+        cookieAttributes = builder.cookieAttributes
+        headerAttributes = builder.headerAttributes
         otherInfos = builder.otherInfos
-        session = builder.session
     }
 
     /**
@@ -69,10 +80,16 @@ class KuarkContext private constructor(builder: Builder) {
         internal var traceKey: String? = null
 
         /** 其他信息 */
-        internal var otherInfos = hashMapOf<String, Any>()
+        internal var otherInfos: MutableMap<String, Any?>? = null
 
-        /** Session */
-        internal var session: Session = MapSession()
+        /** Session属性信息 */
+        internal var sessionAttributes: MutableMap<String, Any?>? = null
+
+        /** Cookie属性信息 */
+        internal var cookieAttributes: MutableMap<String, String?>? = null
+
+        /** Header属性信息 */
+        internal var headerAttributes: MutableMap<String, String?>? = null
 
         fun build(): KuarkContext = KuarkContext(this)
 
@@ -101,13 +118,35 @@ class KuarkContext private constructor(builder: Builder) {
             return this
         }
 
-        fun addOtherInfos(vararg otherInfos: Pair<String, Any>): Builder {
-            this.otherInfos.putAll(otherInfos)
+        fun addSessionAttributes(vararg sessionAttributes: Pair<String, Any?>): Builder {
+            if (this.sessionAttributes == null) {
+                this.sessionAttributes = mutableMapOf()
+            }
+            this.sessionAttributes!!.putAll(sessionAttributes)
             return this
         }
 
-        fun session(session: Session): Builder {
-            this.session = session
+        fun addCookieAttributes(vararg cookieAttributes: Pair<String, String?>): Builder {
+            if (this.cookieAttributes == null) {
+                this.cookieAttributes = mutableMapOf()
+            }
+            this.cookieAttributes!!.putAll(cookieAttributes)
+            return this
+        }
+
+        fun addHeaderAttributes(vararg headerAttributes: Pair<String, String?>): Builder {
+            if (this.headerAttributes == null) {
+                this.headerAttributes = mutableMapOf()
+            }
+            this.headerAttributes!!.putAll(headerAttributes)
+            return this
+        }
+
+        fun addOtherInfos(vararg otherInfos: Pair<String, Any?>): Builder {
+            if (this.otherInfos == null) {
+                this.otherInfos = mutableMapOf()
+            }
+            this.otherInfos!!.putAll(otherInfos)
             return this
         }
 

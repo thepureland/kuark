@@ -22,9 +22,14 @@ object KuarkContextHolder {
      * @since 1.0.0
      */
     fun get(): KuarkContext {
-        val kuarkContext = contextThreadLocal.get() ?: KuarkContext.Builder().build()
-        contextThreadLocal.set(kuarkContext)
-        return kuarkContext
+//        val kuarkContext = contextThreadLocal.get() ?: KuarkContext.Builder().build()
+//        contextThreadLocal.set(kuarkContext)
+//        return kuarkContext
+        return contextThreadLocal.get()
+    }
+
+    fun set(context: KuarkContext) {
+        contextThreadLocal.set(context)
     }
 
 }

@@ -32,8 +32,10 @@ open class DataSourceBySubSysAndTenantIdCacheHandler : AbstractCacheHandler<SysD
     override fun cacheName() = CACHE_NAME
 
     override fun doReload(key: String): SysDataSourceCacheItem? {
-        require(key.contains(":")) { "缓存${CACHE_NAME}的key格式必须是 子系统代码::租户id" }
-        val subSysAndTenantId = key.split("::")
+        require(key.contains(Consts.CACHE_KEY_DEFALT_DELIMITER)) {
+            "缓存${CACHE_NAME}的key格式必须是 子系统代码${Consts.CACHE_KEY_DEFALT_DELIMITER}租户id"
+        }
+        val subSysAndTenantId = key.split(Consts.CACHE_KEY_DEFALT_DELIMITER)
         return self.getDataSource(subSysAndTenantId[0], subSysAndTenantId[1])
     }
 
@@ -59,15 +61,14 @@ open class DataSourceBySubSysAndTenantIdCacheHandler : AbstractCacheHandler<SysD
 
         // 缓存数据
         results.forEach {
-            val key = "${it.subSysDictCode}::${it.tenantId}"
-            CacheKit.putIfAbsent(CACHE_NAME, key, it)
+            CacheKit.putIfAbsent(CACHE_NAME, getKey(it.subSysDictCode!!, it.tenantId), it)
         }
         log.debug("缓存了数据源共${results.size}条。")
     }
 
     @Cacheable(
         cacheNames = [CACHE_NAME],
-        key = "#subSysDictCode.concat('::').concat(#tenantId)",
+        key = "#subSysDictCode.concat('${Consts.CACHE_KEY_DEFALT_DELIMITER}').concat(#tenantId)",
         unless = "#result == null"
     )
     open fun getDataSource(subSysDictCode: String, tenantId: String?): SysDataSourceCacheItem? {
@@ -113,8 +114,7 @@ open class DataSourceBySubSysAndTenantIdCacheHandler : AbstractCacheHandler<SysD
             log.debug("更新id为${id}的数据源后，同步${CACHE_NAME}缓存...")
             val subSysDictCode = BeanKit.getProperty(any, SysDataSource::subSysDictCode.name) as String
             val tenantId = BeanKit.getProperty(any, SysDataSource::tenantId.name) as String?
-            val key = "${subSysDictCode}::${tenantId}"
-            CacheKit.evict(CACHE_NAME, key) // 踢除数据源缓存
+            CacheKit.evict(CACHE_NAME, getKey(subSysDictCode, tenantId)) // 踢除数据源缓存
             if (CacheKit.isWriteInTime(CACHE_NAME)) {
                 self.getDataSource(subSysDictCode, tenantId) // 重新缓存
             }
@@ -131,8 +131,7 @@ open class DataSourceBySubSysAndTenantIdCacheHandler : AbstractCacheHandler<SysD
                     self.getDataSource(dataSource.subSysDictCode, dataSource.tenantId) // 重新缓存
                 }
             } else {
-                val key = "${dataSource.subSysDictCode}::${dataSource.tenantId}"
-                CacheKit.evict(CACHE_NAME, key) // 踢除数据源缓存
+                CacheKit.evict(CACHE_NAME, getKey(dataSource.subSysDictCode, dataSource.tenantId)) // 踢除数据源缓存
             }
             log.debug("${CACHE_NAME}缓存同步完成。")
         }
@@ -141,10 +140,14 @@ open class DataSourceBySubSysAndTenantIdCacheHandler : AbstractCacheHandler<SysD
     open fun syncOnDelete(id: String, subSysDictCode: String, tenantId: String?) {
         if (CacheKit.isCacheActive(CACHE_NAME)) {
             log.debug("删除id为${id}的数据源后，同步从${CACHE_NAME}缓存中踢除...")
-            val key = "${subSysDictCode}::${tenantId}"
+            val key = "${subSysDictCode}${Consts.CACHE_KEY_DEFALT_DELIMITER}${tenantId}"
             CacheKit.evict(CACHE_NAME, key) // 踢除缓存, 数据源缓存的粒度到数据源类型
             log.debug("${CACHE_NAME}缓存同步完成。")
         }
+    }
+
+    private fun getKey(subSysDictCode: String, tenantId: String?): String {
+        return "${subSysDictCode}${Consts.CACHE_KEY_DEFALT_DELIMITER}${tenantId}"
     }
 
 }

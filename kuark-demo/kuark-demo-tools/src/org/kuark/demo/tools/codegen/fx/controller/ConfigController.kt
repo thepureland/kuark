@@ -1,13 +1,13 @@
 package org.kuark.demo.tools.codegen.fx.controller
 
 import io.kuark.ability.data.rdb.datasource.DataSourceKit
-import io.kuark.ability.data.rdb.datasource.setCurrentDataSource
 import io.kuark.ability.data.rdb.kit.RdbKit
 import io.kuark.base.io.FilenameKit
 import io.kuark.base.io.PathKit
 import io.kuark.base.lang.SystemKit
 import io.kuark.base.lang.string.StringKit
 import io.kuark.base.support.PropertiesLoader
+import io.kuark.context.core.KuarkContext
 import io.kuark.context.core.KuarkContextHolder
 import javafx.collections.FXCollections
 import javafx.fxml.FXML
@@ -143,7 +143,9 @@ class ConfigController : Initializable {
             userTextField.text.trim(),
             passwordField.text
         )
-        KuarkContextHolder.setCurrentDataSource(dataSource)
+        val builder = KuarkContext.Builder()
+        builder.addOtherInfos(Pair(KuarkContext.OTHER_INFO_KEY_DATA_SOURCE, dataSource))
+        KuarkContextHolder.set(builder.build())
 
         _testDbConnection()
 

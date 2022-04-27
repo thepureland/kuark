@@ -4,6 +4,7 @@ import io.kuark.service.sys.common.vo.datasource.*
 import io.kuark.service.sys.provider.biz.ibiz.ISysDataSourceBiz
 import io.kuark.ability.web.springmvc.BaseCrudController
 import org.springframework.web.bind.annotation.CrossOrigin
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.bind.annotation.RequestMapping
 
@@ -23,6 +24,11 @@ open class SysDataSourceController :
 //endregion your codes 1
 
     //region your codes 2
+
+    @GetMapping("/resetPassword")
+    open fun resetPassword(id: String, password: String) {
+        biz.resetPassword(id, password)
+    }
 
     //endregion your codes 2
 

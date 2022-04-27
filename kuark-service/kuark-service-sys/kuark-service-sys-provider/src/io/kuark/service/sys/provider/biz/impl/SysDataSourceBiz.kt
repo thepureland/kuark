@@ -6,6 +6,7 @@ import io.kuark.service.sys.provider.dao.SysDataSourceDao
 import io.kuark.ability.data.rdb.biz.BaseCrudBiz
 import io.kuark.base.bean.BeanKit
 import io.kuark.base.log.LogFactory
+import io.kuark.base.security.CryptoKit
 import io.kuark.base.support.Consts
 import io.kuark.base.support.payload.ListSearchPayload
 import io.kuark.service.sys.common.api.ISysTenantApi
@@ -114,6 +115,24 @@ open class SysDataSourceBiz : BaseCrudBiz<String, SysDataSource, SysDataSourceDa
             log.error("更新id为${id}的数据源的启用状态为${active}失败！")
         }
         return success
+    }
+
+    @Transactional
+    override fun resetPassword(id: String, newPassword: String) {
+        val newPwd = CryptoKit.aesEncrypt(newPassword) // 加密密码
+        val dataSource = SysDataSource {
+            this.id = id
+            this.password = newPwd
+        }
+        val success = dao.update(dataSource)
+        if (success) {
+            // 同步缓存
+            val ds = get(id)!!
+            dataSourceByIdCacheHandler.syncOnUpdate(id)
+            dataSourceBySubSysAndTenantIdCacheHandler.syncOnUpdate(ds, id)
+        } else {
+            log.error("重置id为${id}的数据源密码失败！")
+        }
     }
 
     @Transactional

@@ -1,5 +1,6 @@
 package io.kuark.ability.data.rdb.datasource
 
+import io.kuark.context.core.KuarkContext
 import io.kuark.context.core.KuarkContextHolder
 import io.kuark.context.kit.SpringKit
 import org.ktorm.database.Database
@@ -12,16 +13,16 @@ import javax.sql.DataSource
  * @since 1.0.0
  */
 
-/**
- * 设置当前线程关联的数据源
- *
- * @param dataSource 数据源
- * @author K
- * @since 1.0.0
- */
-fun KuarkContextHolder.setCurrentDataSource(dataSource: DataSource) = run {
-    this.get().otherInfos["DATA_SOURCE"] = dataSource
-}
+///**
+// * 设置当前线程关联的数据源
+// *
+// * @param dataSource 数据源
+// * @author K
+// * @since 1.0.0
+// */
+//fun KuarkContextHolder.setCurrentDataSource(dataSource: DataSource) = run {
+//    this.get().otherInfos.set("DATA_SOURCE", dataSource)
+//}
 
 /**
  * 返回当前线程关联的数据源，如果没有，取默认数据源，并将其与当前线程关联
@@ -31,24 +32,24 @@ fun KuarkContextHolder.setCurrentDataSource(dataSource: DataSource) = run {
  * @since 1.0.0
  */
 fun KuarkContextHolder.currentDataSource(): DataSource {
-    var dataSource = this.get().otherInfos["DATA_SOURCE"]
+    var dataSource = this.get().otherInfos?.get(KuarkContext.OTHER_INFO_KEY_DATA_SOURCE)
     if (dataSource == null) {
         dataSource = SpringKit.getBean("dataSource")
-        setCurrentDataSource(dataSource as DataSource)
+//        setCurrentDataSource(dataSource as DataSource)
     }
     return dataSource as DataSource
 }
 
-/**
- * 设置当前线程关联的数据库
- *
- * @param database 数据库
- * @author K
- * @since 1.0.0
- */
-fun KuarkContextHolder.setCurrentDatabase(database: Database) = run {
-    this.get().otherInfos["DATABASE"] = database
-}
+///**
+// * 设置当前线程关联的数据库
+// *
+// * @param database 数据库
+// * @author K
+// * @since 1.0.0
+// */
+//fun KuarkContextHolder.setCurrentDatabase(database: Database) = run {
+//    this.get().otherInfos["DATABASE"] = database
+//}
 
 /**
  * 返回当前线程关联的数据库，如果没有，则用默认数据源创建一个，并将其与当前线程关联
@@ -58,10 +59,10 @@ fun KuarkContextHolder.setCurrentDatabase(database: Database) = run {
  * @since 1.0.0
  */
 fun KuarkContextHolder.currentDatabase(): Database {
-    var database = this.get().otherInfos["DATABASE"]
+    var database = this.get().otherInfos?.get(KuarkContext.OTHER_INFO_KEY_DATABASE)
     if (database == null) {
         database = Database.connectWithSpringSupport(currentDataSource(), alwaysQuoteIdentifiers = true)
-        setCurrentDatabase(database)
+//        setCurrentDatabase(database)
     }
     return database as Database
 }

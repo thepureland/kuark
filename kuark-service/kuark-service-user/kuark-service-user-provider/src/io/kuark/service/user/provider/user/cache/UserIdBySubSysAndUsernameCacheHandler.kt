@@ -21,7 +21,7 @@ open class UserIdBySubSysAndUsernameCacheHandler : AbstractCacheHandler<String>(
     private lateinit var self: UserIdBySubSysAndUsernameCacheHandler
 
     private val log = LogFactory.getLog(UserIdBySubSysAndUsernameCacheHandler::class)
-    
+
     companion object {
         private const val CACHE_NAME = "user_id_by_sub_sys_and_username"
     }
@@ -30,8 +30,10 @@ open class UserIdBySubSysAndUsernameCacheHandler : AbstractCacheHandler<String>(
     override fun cacheName() = CACHE_NAME
 
     override fun doReload(key: String): String? {
-        require(key.contains(":")) { "缓存${CACHE_NAME}的key格式必须是 子系统代码::用户名" }
-        val subSysAndUsername = key.split("::")
+        require(key.contains(Consts.CACHE_KEY_DEFALT_DELIMITER)) {
+            "缓存${CACHE_NAME}的key格式必须是 子系统代码${Consts.CACHE_KEY_DEFALT_DELIMITER}用户名"
+        }
+        val subSysAndUsername = key.split(Consts.CACHE_KEY_DEFALT_DELIMITER)
         return self.getUserId(subSysAndUsername[0], subSysAndUsername[1])
     }
 
@@ -55,7 +57,7 @@ open class UserIdBySubSysAndUsernameCacheHandler : AbstractCacheHandler<String>(
 
         // 缓存
         results.forEach {
-            val key = "${it[UserAccount::subSysDictCode.name]}::${it[UserAccount::username.name]}"
+            val key = getKey(it[UserAccount::subSysDictCode.name] as String, it[UserAccount::username.name] as String)
             CacheKit.putIfAbsent(CACHE_NAME, key, it[UserAccount::id.name])
         }
         log.debug("缓存了${results.size}条用户id数据。")
@@ -63,7 +65,7 @@ open class UserIdBySubSysAndUsernameCacheHandler : AbstractCacheHandler<String>(
 
     @Cacheable(
         cacheNames = [CACHE_NAME],
-        key = "#subSysDictCode.concat('::').concat(#username)",
+        key = "#subSysDictCode.concat('${Consts.CACHE_KEY_DEFALT_DELIMITER}').concat(#username)",
         unless = "#result == null"
     )
     open fun getUserId(subSysDictCode: String, username: String): String? {
@@ -78,6 +80,10 @@ open class UserIdBySubSysAndUsernameCacheHandler : AbstractCacheHandler<String>(
             log.debug("数据库中加载到子系统为${subSysDictCode}且用户名为${username}的用户id.")
             ids.first() as String
         }
+    }
+
+    private fun getKey(subSysDictCode: String, username: String): String {
+        return "${subSysDictCode}${Consts.CACHE_KEY_DEFALT_DELIMITER}${username}"
     }
 
 }

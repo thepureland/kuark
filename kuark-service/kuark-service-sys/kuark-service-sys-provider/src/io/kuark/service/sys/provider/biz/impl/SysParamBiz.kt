@@ -96,7 +96,7 @@ open class SysParamBiz : BaseCrudBiz<String, SysParam, SysParamDao>(), ISysParam
         val params = dao.inSearchById(ids)
         val count = super.batchDelete(ids)
         log.debug("批量删除参数，期望删除${ids.size}条，实际删除${count}条。")
-        paramCacheHandler.synchOnBatchDelete(ids, params)
+        paramCacheHandler.syncOnBatchDelete(ids, params)
         return count
     }
 

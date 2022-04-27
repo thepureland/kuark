@@ -459,6 +459,7 @@ internal class BaseReadOnlyDaoTest : SpringTest() {
             override var returnProperties: List<String>? = listOf("id", "name", "height")
             override var operators: Map<String, Operator>? = mapOf(SearchPayload2::name.name to Operator.ILIKE)
         }
+
         val searchPayload2 = SearchPayload2().apply {
             name = "nAme1"
             weight = 56.5
@@ -498,7 +499,7 @@ internal class BaseReadOnlyDaoTest : SpringTest() {
     //region aggregate
     @Test
     fun count() {
-        assertEquals(11, testTableDao.count())
+        assertEquals(11, testTableDao.count(null as Criteria?))
         val criteria = Criteria.add(TestTable::name.name, Operator.LIKE_S, "name1")
         assertEquals(3, testTableDao.count(criteria))
     }

@@ -39,7 +39,7 @@ class DefaultKeysGenerator : IKeysGenerator {
         return generateKeys(function, totalCount, *params)
     }
 
-    override fun getDelimiter(): String = ":"
+    override fun getDelimiter(): String = Consts.CACHE_KEY_DEFALT_DELIMITER
 
     override fun getParamIndexes(function: KFunction<*>?, vararg params: Any): List<Int> {
         var ignoreParamIndexes =
@@ -137,10 +137,11 @@ class DefaultKeysGenerator : IKeysGenerator {
         }
 
         val result = mutableListOf<String>()
+        val delimiter = getDelimiter()
         for (index in 0 until totalCount) {
             val sb = StringBuilder()
-            keys.forEachIndexed { segIndex, _ -> sb.append(keys[segIndex][index]).append(getDelimiter()) }
-            result.add(sb.substring(0, sb.length - 1))
+            keys.forEachIndexed { segIndex, _ -> sb.append(keys[segIndex][index]).append(delimiter) }
+            result.add(sb.substring(0, sb.length - delimiter.length))
         }
         return result
     }

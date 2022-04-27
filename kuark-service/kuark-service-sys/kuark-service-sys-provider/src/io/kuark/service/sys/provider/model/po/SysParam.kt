@@ -16,7 +16,7 @@ interface SysParam: IMaintainableDbEntity<String, SysParam> {
     companion object : DbEntityFactory<SysDataSource>()
 
     /** 模块 */
-    var module: String?
+    var module: String
 
     /** 参数名称 */
     var paramName: String

@@ -125,7 +125,7 @@ open class TenantsBySubSysCacheHandler: AbstractCacheHandler<List<SysTenantCache
         }
     }
 
-    open fun synchOnBatchDelete(ids: Collection<String>, subSysDictCodes: Set<String>) {
+    open fun syncOnBatchDelete(ids: Collection<String>, subSysDictCodes: Set<String>) {
         if (CacheKit.isCacheActive(CACHE_NAME)) {
             log.debug("批量删除id为${ids}的租户后，同步从${CACHE_NAME}缓存中踢除...")
             subSysDictCodes.forEach {

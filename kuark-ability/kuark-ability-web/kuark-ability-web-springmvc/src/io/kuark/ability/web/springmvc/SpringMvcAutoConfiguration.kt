@@ -1,5 +1,6 @@
 package io.kuark.ability.web.springmvc
 
+import io.kuark.context.core.IContextInitializer
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.web.servlet.FilterRegistrationBean
 import org.springframework.boot.web.servlet.ServletListenerRegistrationBean
@@ -25,21 +26,24 @@ open class SpringMvcAutoConfiguration {
     open fun requestContextListener(): RequestContextListener = RequestContextListener()
 
     @Bean
-    open fun getDemoListener(requestContextListener: RequestContextListener): ServletListenerRegistrationBean<EventListener> {
+    open fun servletListenerRegistration(requestContextListener: RequestContextListener): ServletListenerRegistrationBean<EventListener> {
         val registrationBean = ServletListenerRegistrationBean<EventListener>()
-        registrationBean.setListener(requestContextListener())
+        registrationBean.listener = requestContextListener()
         registrationBean.order = 1
         return registrationBean
     }
 
+    @Bean
+    @ConditionalOnMissingBean
+    open fun webContextInitializer() : IContextInitializer = EmptyWebContextInitializer()
 
     @Bean
     @ConditionalOnMissingBean
-    open fun contextInitFilter(): IContextInitFilter = EmptyFilter()
+    open fun webContextInitFilter(): IWebContextInitFilter = WebContextInitFilter()
 
     @Bean
     @ConditionalOnMissingBean
-    open fun registerAuthFilter(contextInitFilter: IContextInitFilter): FilterRegistrationBean<*> {
+    open fun registerAuthFilter(contextInitFilter: IWebContextInitFilter): FilterRegistrationBean<*> {
         val registration = FilterRegistrationBean<Filter>()
         registration.filter = contextInitFilter
         registration.addUrlPatterns("/*")

@@ -50,6 +50,7 @@ class KuarkContext private constructor(builder: Builder) {
         tenantId = builder.tenantId
         userId = builder.userId
         traceKey = builder.traceKey
+        clientInfo = builder.clientInfo
         sessionAttributes = builder.sessionAttributes
         cookieAttributes = builder.cookieAttributes
         headerAttributes = builder.headerAttributes
@@ -78,6 +79,9 @@ class KuarkContext private constructor(builder: Builder) {
 
         /** 日志跟踪关键词串，格式可自定义 */
         internal var traceKey: String? = null
+
+        /** 客户端信息对象 */
+        var clientInfo: ClientInfo? = null
 
         /** 其他信息 */
         internal var otherInfos: MutableMap<String, Any?>? = null
@@ -115,6 +119,11 @@ class KuarkContext private constructor(builder: Builder) {
 
         fun traceKey(traceKey: String?): Builder {
             this.traceKey = traceKey
+            return this
+        }
+
+        fun clientInfo(clientInfo: ClientInfo): Builder {
+            this.clientInfo = clientInfo
             return this
         }
 

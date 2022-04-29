@@ -2,7 +2,9 @@ package io.kuark.service.sys.client.proxy
 
 import io.kuark.service.sys.common.api.ISysDataSourceApi
 import io.kuark.service.sys.client.fallback.SysDataSourceFallback
+import io.kuark.service.sys.common.vo.datasource.SysDataSourceCacheItem
 import org.springframework.cloud.openfeign.FeignClient
+import org.springframework.web.bind.annotation.GetMapping
 
 
 /**
@@ -17,6 +19,9 @@ interface ISysDataSourceProxy : ISysDataSourceApi {
 //endregion your codes 1
 
     //region your codes 2
+
+    @GetMapping("/sys/datasource/api/getDataSource")
+    override fun getDataSource(subSysDictCode: String, tenantId: String?): SysDataSourceCacheItem?
 
     //endregion your codes 2
 

@@ -1,52 +1,26 @@
-package io.kuark.service.sys.provider.context
+package io.kuark.ability.web.springmvc
 
-import io.kuark.ability.web.springmvc.IContextInitFilter
-import io.kuark.base.log.LogFactory
+import io.kuark.ability.web.springmvc.kit.getBrowserInfo
+import io.kuark.ability.web.springmvc.kit.getOsInfo
+import io.kuark.ability.web.springmvc.kit.getRemoteIp
+import io.kuark.ability.web.springmvc.kit.getRootPath
+import io.kuark.context.core.ClientInfo
+import io.kuark.context.core.IContextInitializer
 import io.kuark.context.core.KuarkContext
 import io.kuark.context.core.KuarkContextHolder
-import io.kuark.service.sys.provider.biz.ibiz.ISysDataSourceBiz
-import io.kuark.service.sys.provider.biz.ibiz.ISysDomainBiz
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.stereotype.Component
 import javax.servlet.FilterChain
 import javax.servlet.ServletRequest
 import javax.servlet.ServletResponse
 import javax.servlet.http.HttpServletRequest
 
-
-/**
- * 上下文初始化web过滤器
- *
- * @author K
- * @since 1.0.0
- */
-@Component
-open class ContextInitFilter : IContextInitFilter {
+open class WebContextInitFilter: IWebContextInitFilter {
 
     @Autowired
-    private lateinit var sysDomainBiz: ISysDomainBiz
-
-    @Autowired
-    private lateinit var dataSourceBiz: ISysDataSourceBiz
-
-    private val log = LogFactory.getLog(this::class)
+    private lateinit var webContextInitializer: IContextInitializer
 
     override fun doFilter(request: ServletRequest, response: ServletResponse, chain: FilterChain) {
         val builder = KuarkContext.Builder()
-
-        val domainName = request.serverName
-        // 域名 => 子系统和租户
-        val domain = sysDomainBiz.getDomainByName(domainName)
-        if (domain != null) {
-            builder.subSysCode(domain.subSysDictCode)
-            builder.tenantId(domain.tenantId)
-
-            // 子系统和租户 => 数据源
-            val dataSource = dataSourceBiz.getDataSource(domain.subSysDictCode!!, domain.tenantId)
-            if (dataSource != null) {
-                builder.dataSourceId(dataSource.id)
-            }
-        }
 
         // session
         val session = (request as HttpServletRequest).session
@@ -67,11 +41,26 @@ open class ContextInitFilter : IContextInitFilter {
         }
 
         // client info
+        val clientInfoBuilder = ClientInfo.Builder()
+        clientInfoBuilder.ip(request.getRemoteIp())
+        clientInfoBuilder.domain(request.serverName)
+        clientInfoBuilder.url(request.requestURI)
+        clientInfoBuilder.params(request.parameterMap)
+        clientInfoBuilder.browser(request.getBrowserInfo())
+        clientInfoBuilder.os(request.getOsInfo())
+        clientInfoBuilder.requestReferer(request.getHeader("referer"))
+        clientInfoBuilder.locale(request.locale)
+//        clientInfoBuilder.timeZone() //TODO
+        builder.clientInfo(ClientInfo(clientInfoBuilder))
 
 
+        // 初始化上下文
         val context = builder.build()
+        webContextInitializer.init(builder, context)
         KuarkContextHolder.set(context)
+
         chain.doFilter(request, response)
     }
+
 
 }

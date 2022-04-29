@@ -1,6 +1,7 @@
 package io.kuark.service.sys.client.fallback
 
 import io.kuark.service.sys.client.proxy.ISysDomainProxy
+import io.kuark.service.sys.common.vo.domain.SysDomainCacheItem
 import org.springframework.stereotype.Component
 
 
@@ -16,6 +17,10 @@ interface SysDomainFallback : ISysDomainProxy {
 //endregion your codes 1
 
     //region your codes 2
+
+    override fun getDomainByName(domainName: String): SysDomainCacheItem? {
+        TODO("Not yet implemented")
+    }
 
     //endregion your codes 2
 

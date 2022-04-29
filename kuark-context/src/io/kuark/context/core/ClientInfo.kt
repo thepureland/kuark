@@ -8,7 +8,7 @@ import java.util.*
  * @author K
  * @since 1.0.0
  */
-class ClientInfo private constructor(builder: Builder) {
+class ClientInfo(builder: Builder) {
 
     /** 请求的ip */
     var ip: String? = null
@@ -20,13 +20,13 @@ class ClientInfo private constructor(builder: Builder) {
     var url: String? = null
 
     /** 请求的参数 */
-    var params: String? = null
+    var params: Map<String, Array<String?>?>? = null
 
-    /** 请求内容字节数据表示 */
-    var requestContent: ByteArray? = null
-
-    /** 请求内容字符串表示 */
-    var requestContentString: String? = requestContent?.toString()
+//    /** 请求内容字节数据表示 */
+//    var requestContent: ByteArray? = null
+//
+//    /** 请求内容字符串表示 */
+//    var requestContentString: String? = requestContent?.toString()
 
     /** 请求referer */
     var requestReferer: String? = null
@@ -35,10 +35,10 @@ class ClientInfo private constructor(builder: Builder) {
     var requestType: String? = null
 
     /** 客户端操作系统 */
-    var os: String? = null
+    var os: Pair<String, String>? = null
 
     /** 客户端浏览器 */
-    var browser: String? = null
+    var browser: Pair<String, String>? = null
 
     /** 客户端地区-语言 */
     var locale: Locale? = null
@@ -52,8 +52,8 @@ class ClientInfo private constructor(builder: Builder) {
         domain = builder.domain
         url = builder.url
         params = builder.params
-        requestContent = builder.requestContent
-        requestContentString = builder.requestContentString
+//        requestContent = builder.requestContent
+//        requestContentString = builder.requestContentString
         requestReferer = builder.requestReferer
         requestType = builder.requestType
         os = builder.os
@@ -80,13 +80,13 @@ class ClientInfo private constructor(builder: Builder) {
         internal var url: String? = null
 
         /** 请求的参数 */
-        internal var params: String? = null
+        internal var params: Map<String, Array<String?>?>? = null
 
-        /** 请求内容字节数据表示 */
-        internal var requestContent: ByteArray? = null
-
-        /** 请求内容字符串表示 */
-        internal var requestContentString: String? = requestContent?.toString()
+//        /** 请求内容字节数据表示 */
+//        internal var requestContent: ByteArray? = null
+//
+//        /** 请求内容字符串表示 */
+//        internal var requestContentString: String? = requestContent?.toString()
 
         /** 请求referer */
         internal var requestReferer: String? = null
@@ -95,10 +95,10 @@ class ClientInfo private constructor(builder: Builder) {
         internal var requestType: String? = null
 
         /** 客户端操作系统 */
-        internal var os: String? = null
+        internal var os: Pair<String, String>? = null
 
         /** 客户端浏览器 */
-        internal var browser: String? = null
+        internal var browser: Pair<String, String>? = null
 
         /** 客户端地区-语言 */
         internal var locale: Locale? = null
@@ -125,20 +125,20 @@ class ClientInfo private constructor(builder: Builder) {
             return this
         }
 
-        fun params(params: String?): Builder {
+        fun params(params: Map<String, Array<String?>?>?): Builder {
             this.params = params
             return this
         }
 
-        fun requestContent(requestContent: ByteArray?): Builder {
-            this.requestContent = requestContent
-            return this
-        }
-
-        fun requestContentString(requestContentString: String?): Builder {
-            this.requestContentString = requestContentString
-            return this
-        }
+//        fun requestContent(requestContent: ByteArray?): Builder {
+//            this.requestContent = requestContent
+//            return this
+//        }
+//
+//        fun requestContentString(requestContentString: String?): Builder {
+//            this.requestContentString = requestContentString
+//            return this
+//        }
 
         fun requestReferer(requestReferer: String?): Builder {
             this.requestReferer = requestReferer
@@ -150,12 +150,12 @@ class ClientInfo private constructor(builder: Builder) {
             return this
         }
 
-        fun os(os: String?): Builder {
+        fun os(os: Pair<String, String>?): Builder {
             this.os = os
             return this
         }
 
-        fun browser(browser: String?): Builder {
+        fun browser(browser: Pair<String, String>?): Builder {
             this.browser = browser
             return this
         }

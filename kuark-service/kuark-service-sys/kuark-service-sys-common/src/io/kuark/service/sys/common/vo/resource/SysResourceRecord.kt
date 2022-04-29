@@ -14,9 +14,6 @@ class SysResourceRecord: IdJsonResult<String>() {
     /** 资源类型字典代码 */
     var resourceTypeDictCode: String? = null
 
-    /** 资源类型名称 */
-    var resourceTypeName: String? = null
-
     /** 所有父项ID */
     var parentIds: List<String>? = null
 

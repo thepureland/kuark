@@ -170,7 +170,6 @@ open class SysResourceBiz : BaseCrudBiz<String, SysResource, SysResourceDao>(), 
         }
         val result = dao.search(listSearchPayload, whereConditionFactory)
         @Suppress(Consts.Suppress.UNCHECKED_CAST)
-        (result as List<SysResourceRecord>).forEach { transCode(it) }
         val count = dao.count(listSearchPayload, whereConditionFactory)
         return Pair(result, count)
     }
@@ -178,7 +177,6 @@ open class SysResourceBiz : BaseCrudBiz<String, SysResource, SysResourceDao>(), 
     override fun <R : Any> get(id: String, returnType: KClass<R>, fetchAllParentIds: Boolean): R? {
         val result = super.get(id, returnType)
         if (result is SysResourceRecord) {
-            transCode(result)
             if (fetchAllParentIds) {
                 val realParentIds = fetchAllParentIds(id)
                 val parentIds = mutableListOf(result.resourceTypeDictCode!!, result.subSysDictCode!!)
@@ -263,11 +261,6 @@ open class SysResourceBiz : BaseCrudBiz<String, SysResource, SysResourceDao>(), 
             results.add(id as String)
             recursionFindAllChildId(id, results)
         }
-    }
-
-    private fun transCode(record: SysResourceRecord) {
-        record.resourceTypeName = dictItemBiz.transDictCode("kuark:sys", "resource_type", record.resourceTypeDictCode!!)
-        record.subSysName = dictItemBiz.transDictCode("kuark:sys", "sub_sys", record.subSysDictCode!!)
     }
 
     //endregion your codes 2

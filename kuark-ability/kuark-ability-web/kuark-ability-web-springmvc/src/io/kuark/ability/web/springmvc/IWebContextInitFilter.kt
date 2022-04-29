@@ -8,5 +8,5 @@ import javax.servlet.Filter
  * @author K
  * @since 1.0.0
  */
-interface IContextInitFilter : Filter {
+interface IWebContextInitFilter : Filter {
 }

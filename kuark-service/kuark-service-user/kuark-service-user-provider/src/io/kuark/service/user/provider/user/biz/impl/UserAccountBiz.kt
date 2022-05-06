@@ -69,6 +69,10 @@ open class UserAccountBiz : BaseCrudBiz<String, UserAccount, UserAccountDao>(), 
     @Transactional
     override fun register(userAccount: UserAccount): Boolean = dao.register(userAccount)
 
+    override fun getByUserId(userId: String): UserAccountCacheItem? {
+        return userByIdCacheHandler.getUserById(userId)
+    }
+
     override fun getByUsername(subSysDictCode: String, username: String): UserAccountCacheItem? {
         val userId = userIdByUsernameCacheHandler.getUserId(subSysDictCode, username) ?: return null
         return userByIdCacheHandler.getUserById(userId)

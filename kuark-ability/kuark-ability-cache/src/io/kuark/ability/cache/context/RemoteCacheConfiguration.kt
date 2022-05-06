@@ -6,6 +6,7 @@ import io.kuark.ability.cache.core.MixCacheManager
 import io.kuark.ability.cache.support.ICacheConfigProvider
 import io.kuark.ability.data.redis.context.RedisConfiguration
 import io.kuark.base.log.LogFactory
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression
 import org.springframework.cache.CacheManager
@@ -63,7 +64,7 @@ open class RemoteCacheConfiguration {
             .build()
     }
 
-    @Bean
+    @Bean("redisMessageListenerContainer")
     open fun redisMessageListenerContainer(
         redisTemplate: RedisTemplate<String, Any>, cacheManager: CacheManager
     ): RedisMessageListenerContainer {

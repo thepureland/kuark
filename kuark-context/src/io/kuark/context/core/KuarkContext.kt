@@ -12,6 +12,7 @@ class KuarkContext private constructor(builder: Builder) {
         const val OTHER_INFO_KEY_DATA_SOURCE = "DATA_SOURCE"
         const val OTHER_INFO_KEY_DATABASE = "DATABASE"
         const val OTHER_INFO_KEY_VERIFY_CODE = "VERIFY_CODE"
+        const val SESSION_KEY_USER_ID = "USER_ID"
     }
 
     /** 数据源id，为null将根据路由策略决定 */

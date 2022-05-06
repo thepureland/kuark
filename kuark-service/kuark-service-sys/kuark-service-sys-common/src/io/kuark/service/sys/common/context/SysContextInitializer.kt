@@ -1,5 +1,6 @@
 package io.kuark.service.sys.common.context
 
+import io.kuark.base.lang.string.StringKit
 import io.kuark.context.core.IContextInitializer
 import io.kuark.context.core.KuarkContext
 import io.kuark.service.sys.common.api.ISysDataSourceApi
@@ -15,7 +16,7 @@ import org.springframework.stereotype.Component
  * @since 1.0.0
  */
 @Component
-open class WebContextInitializer : IContextInitializer {
+open class SysContextInitializer : IContextInitializer {
 
     @Autowired
     private lateinit var sysDomainApi: ISysDomainApi
@@ -25,16 +26,18 @@ open class WebContextInitializer : IContextInitializer {
 
     override fun init(builder: KuarkContext.Builder, context: KuarkContext) {
         // 域名 => 子系统和租户
-        val domainName = context.clientInfo?.domain!!
-        val domain = sysDomainApi.getDomainByName(domainName)
-        if (domain != null) {
-            builder.subSysCode(domain.subSysDictCode)
-            builder.tenantId(domain.tenantId)
+        val domainName = context.clientInfo?.domain
+        if (StringKit.isNotBlank(domainName)) {
+            val domain = sysDomainApi.getDomainByName(domainName!!)
+            if (domain != null) {
+                builder.subSysCode(domain.subSysDictCode)
+                builder.tenantId(domain.tenantId)
 
-            // 子系统和租户 => 数据源
-            val dataSource = dataSourceApi.getDataSource(domain.subSysDictCode!!, domain.tenantId)
-            if (dataSource != null) {
-                builder.dataSourceId(dataSource.id)
+                // 子系统和租户 => 数据源
+                val dataSource = dataSourceApi.getDataSource(domain.subSysDictCode!!, domain.tenantId)
+                if (dataSource != null) {
+                    builder.dataSourceId(dataSource.id)
+                }
             }
         }
     }

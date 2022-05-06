@@ -22,6 +22,8 @@ interface IUserAccountBiz: IBaseCrudBiz<String, UserAccount> {
 
     fun register(userAccount: UserAccount): Boolean
 
+    fun getByUserId(userId: String): UserAccountCacheItem?
+
     fun getByUsername(subSysDictCode: String, username: String): UserAccountCacheItem?
 
     fun getMenuPermissions(userId: String): Set<String>

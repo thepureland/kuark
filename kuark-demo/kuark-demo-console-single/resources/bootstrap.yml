@@ -4,6 +4,8 @@ spring:
     - context-default
     - ability-cache-default
     - ability-data-rdb-default
+    - ability-data-memdb-default
+    - ability-distributed-session-default
     - ability-sys-provider-default
     - ability-workflow-provider-default
     - demo-console-single-default

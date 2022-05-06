@@ -39,13 +39,13 @@ include("kuark-ability:kuark-ability-distributed:kuark-ability-distributed-bus")
 findProject(":kuark-ability:kuark-ability-distributed:kuark-ability-distributed-bus")?.name = "kuark-ability-distributed-bus"
 include("kuark-ability:kuark-ability-distributed:kuark-ability-distributed-client")
 findProject(":kuark-ability:kuark-ability-distributed:kuark-ability-distributed-client")?.name = "kuark-ability-distributed-client"
+include("kuark-ability:kuark-ability-distributed:kuark-ability-distributed-session")
+findProject(":kuark-ability:kuark-ability-distributed:kuark-ability-distributed-session")?.name = "kuark-ability-distributed-session"
 include("kuark-ability:kuark-ability-web")
 include("kuark-ability:kuark-ability-web:kuark-ability-web-common")
 findProject(":kuark-ability:kuark-ability-web:kuark-ability-web-common")?.name = "kuark-ability-web-common"
 include("kuark-ability:kuark-ability-web:kuark-ability-web-ktor")
 findProject(":kuark-ability:kuark-ability-web:kuark-ability-web-ktor")?.name = "kuark-ability-web-ktor"
-include("kuark-ability:kuark-ability-web:kuark-ability-web-web")
-findProject(":kuark-ability:kuark-ability-web:kuark-ability-web-web")?.name = "kuark-ability-web-web"
 include("kuark-ability:kuark-ability-web:kuark-ability-web-webflux")
 findProject(":kuark-ability:kuark-ability-web:kuark-ability-web-webflux")?.name = "kuark-ability-web-webflux"
 include("kuark-ability:kuark-ability-web:kuark-ability-web-springmvc")

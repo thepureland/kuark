@@ -51,8 +51,8 @@ open class UserIdsByRoleIdCacheHandler : AbstractCacheHandler<List<String>>() {
         // 缓存
         val userIdMap = results.groupBy { it.roleId }
         userIdMap.forEach {
-            val values = it.value.map { roleUser -> roleUser.userId }
-            CacheKit.putIfAbsent(CACHE_NAME, it.key, it.value)
+            val userIds = it.value.map { roleUser -> roleUser.userId }
+            CacheKit.putIfAbsent(CACHE_NAME, it.key, userIds)
         }
         log.debug("缓存了${userIdMap.size}个角色共${results.size}条用户id的数据。")
     }

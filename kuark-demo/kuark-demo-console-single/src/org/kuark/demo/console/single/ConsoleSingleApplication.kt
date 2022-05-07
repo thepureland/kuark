@@ -5,10 +5,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 
 @SpringBootApplication(
     scanBasePackages = ["io.kuark"],
-    excludeName = [
-        "org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration",
-        "org.springframework.boot.actuate.autoconfigure.security.servlet.ManagementWebSecurityAutoConfiguration"
-    ]
+//    excludeName = [
+//        "org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration",
+//        "org.springframework.boot.actuate.autoconfigure.security.servlet.ManagementWebSecurityAutoConfiguration"
+//    ]
 )
 open class ConsoleSingleApplication {
 

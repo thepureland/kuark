@@ -24,11 +24,15 @@ open class SysResourceApi : ISysResourceApi {
     override fun getResources(
         subSysDictCode: String, resourceType: ResourceType, vararg resourceIds: String
     ): List<SysResourceCacheItem> {
-        return sysResourceBiz.getResources(subSysDictCode, resourceType, *resourceIds)
+        return sysResourceBiz.getResourcesFromCache(subSysDictCode, resourceType, *resourceIds)
     }
 
     override fun getSimpleMenus(subSysDictCode: String): List<BaseMenuTreeNode> {
         return sysResourceBiz.getSimpleMenus(subSysDictCode)
+    }
+
+    override fun getResourceId(subSysDictCode: String, url: String): String? {
+        return sysResourceBiz.getResourceId(subSysDictCode, url)
     }
 
 }

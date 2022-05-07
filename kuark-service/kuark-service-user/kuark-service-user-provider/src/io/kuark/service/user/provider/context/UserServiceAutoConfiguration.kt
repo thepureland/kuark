@@ -10,9 +10,8 @@ import org.springframework.context.annotation.Primary
 @Configuration
 open class UserServiceAutoConfiguration {
 
-    @Bean
-    @Primary
-    @ConditionalOnMissingBean
-    open fun sysContextInitializer(): IContextInitializer = UserContextInitializer()
+//    @Bean
+//    @Primary
+//    open fun sysContextInitializer(): IContextInitializer = UserContextInitializer()
 
 }

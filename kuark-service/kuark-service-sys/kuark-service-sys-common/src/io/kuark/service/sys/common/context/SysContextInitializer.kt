@@ -6,7 +6,6 @@ import io.kuark.context.core.KuarkContext
 import io.kuark.service.sys.common.api.ISysDataSourceApi
 import io.kuark.service.sys.common.api.ISysDomainApi
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.stereotype.Component
 
 
 /**
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Component
  * @author K
  * @since 1.0.0
  */
-@Component
 open class SysContextInitializer : IContextInitializer {
 
     @Autowired
@@ -24,19 +22,19 @@ open class SysContextInitializer : IContextInitializer {
     @Autowired
     private lateinit var dataSourceApi: ISysDataSourceApi
 
-    override fun init(builder: KuarkContext.Builder, context: KuarkContext) {
+    override fun init(context: KuarkContext) {
         // 域名 => 子系统和租户
         val domainName = context.clientInfo?.domain
         if (StringKit.isNotBlank(domainName)) {
             val domain = sysDomainApi.getDomainByName(domainName!!)
             if (domain != null) {
-                builder.subSysCode(domain.subSysDictCode)
-                builder.tenantId(domain.tenantId)
+                context.subSysCode = domain.subSysDictCode
+                context.tenantId = domain.tenantId
 
                 // 子系统和租户 => 数据源
                 val dataSource = dataSourceApi.getDataSource(domain.subSysDictCode!!, domain.tenantId)
                 if (dataSource != null) {
-                    builder.dataSourceId(dataSource.id)
+                    context.dataSourceId = dataSource.id
                 }
             }
         }

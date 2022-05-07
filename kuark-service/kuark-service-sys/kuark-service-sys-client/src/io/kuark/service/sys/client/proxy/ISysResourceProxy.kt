@@ -25,4 +25,7 @@ interface ISysResourceProxy : ISysResourceApi {
     @GetMapping("/sys/resource/getSimpleMenus")
     override fun getSimpleMenus(subSysDictCode: String): List<BaseMenuTreeNode>
 
+    @GetMapping("/sys/resource/getResourceId")
+    override fun getResourceId(subSysDictCode: String, url: String): String?
+
 }

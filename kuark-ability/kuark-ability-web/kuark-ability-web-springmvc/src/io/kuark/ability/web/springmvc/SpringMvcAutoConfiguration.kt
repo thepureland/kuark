@@ -6,6 +6,8 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean
 import org.springframework.boot.web.servlet.ServletListenerRegistrationBean
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.core.Ordered
+import org.springframework.core.annotation.Order
 import org.springframework.web.context.request.RequestContextListener
 import org.springframework.web.filter.HttpPutFormContentFilter
 import org.springframework.web.servlet.config.annotation.EnableWebMvc
@@ -48,7 +50,7 @@ open class SpringMvcAutoConfiguration {
         registration.filter = contextInitFilter
         registration.addUrlPatterns("/*")
         registration.setName("contextInitFilter")
-        registration.order = 1
+        registration.order = Ordered.HIGHEST_PRECEDENCE
         return registration
     }
 

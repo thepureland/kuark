@@ -35,7 +35,7 @@ interface IRbacRoleBiz : IBaseCrudBiz<String, RbacRole> {
      * @author K
      * @since 1.0.0
      */
-    fun getRoleFromCache(roleId: String): RbacRoleCacheItem?
+    fun getRole(roleId: String): RbacRoleCacheItem?
 
     /**
      * 批量从缓存中返回指定id集合的角色(启用的)，如果不存在，从数据库加载，并缓存。
@@ -46,7 +46,7 @@ interface IRbacRoleBiz : IBaseCrudBiz<String, RbacRole> {
      * @author K
      * @since 1.0.0
      */
-    fun getRolesFromCache(roleIds: Collection<String>): Map<String, RbacRoleCacheItem>
+    fun getRoles(roleIds: Collection<String>): Map<String, RbacRoleCacheItem>
 
     /**
      * 从缓存中返回指定子系统和租户的角色id(启用的)，如果不存在，从数据库加载，并缓存。
@@ -58,7 +58,18 @@ interface IRbacRoleBiz : IBaseCrudBiz<String, RbacRole> {
      * @author K
      * @since 1.0.0
      */
-    fun getRoleIdsFromCache(subSysDictCode: String, tenantId: String?): List<String>
+    fun getRoleIds(subSysDictCode: String, tenantId: String?): List<String>
+
+    /**
+     * 从缓存中返回指定用户id关联的角色id，如果不存在，从数据库加载，并缓存。
+     * 如果缓存未开启，只加载不缓存。
+     *
+     * @param userId 用户id，不能为空
+     * @return List(角色id)，找不到时返回空列表且不缓存
+     * @author K
+     * @since 1.0.0
+     */
+    fun getRoleIds(userId: String): List<String>
 
     /**
      * 从缓存中返回指定子系统和租户的角色(启用的)，如果不存在，从数据库加载，并缓存。
@@ -70,7 +81,7 @@ interface IRbacRoleBiz : IBaseCrudBiz<String, RbacRole> {
      * @author K
      * @since 1.0.0
      */
-    fun getRolesFromCache(subSysDictCode: String, tenantId: String?): Map<String, RbacRoleCacheItem>
+    fun getRoles(subSysDictCode: String, tenantId: String?): Map<String, RbacRoleCacheItem>
 
     /**
      * 更新启用状态，并同步缓存
@@ -137,6 +148,17 @@ interface IRbacRoleBiz : IBaseCrudBiz<String, RbacRole> {
      * @since 1.0.0
      */
     fun getCandidateUsers(subSysDictCode: String, tenantId: String?): LinkedHashMap<String, String>
+
+    /**
+     * 返回指定url可以访问的角色的id
+     *
+     * @param subSysDictCode 子系统代码
+     * @param url URL
+     * @return List(角色id)
+     * @author K
+     * @since 1.0.0
+     */
+    fun getUrlAccessRoleIdsFromCache(subSysDictCode: String, url: String): List<String>
 
     /**
      * 返回角色最大权限的菜单和其当前已分配权限的菜单ID

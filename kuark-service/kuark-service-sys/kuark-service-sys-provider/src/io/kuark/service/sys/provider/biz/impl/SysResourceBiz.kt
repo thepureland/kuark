@@ -1,5 +1,6 @@
 package io.kuark.service.sys.provider.biz.impl
 
+import io.kuark.ability.cache.kit.CacheKit
 import io.kuark.ability.data.rdb.biz.BaseCrudBiz
 import io.kuark.ability.data.rdb.support.SqlWhereExpressionFactory
 import io.kuark.base.bean.BeanKit
@@ -13,7 +14,9 @@ import io.kuark.service.sys.common.vo.dict.SysResourceCacheItem
 import io.kuark.service.sys.common.vo.resource.*
 import io.kuark.service.sys.provider.biz.ibiz.ISysDictItemBiz
 import io.kuark.service.sys.provider.biz.ibiz.ISysResourceBiz
-import io.kuark.service.sys.provider.cache.ResourceBySubSysAndTypeCacheHandler
+import io.kuark.service.sys.provider.cache.ResourceByIdCacheHandler
+import io.kuark.service.sys.provider.cache.ResourceIdsBySubSysAndTypeCacheHandler
+import io.kuark.service.sys.provider.cache.ResourceIdBySubSysAndUrlCacheHandler
 import io.kuark.service.sys.provider.dao.SysResourceDao
 import io.kuark.service.sys.provider.model.po.SysResource
 import io.kuark.service.sys.provider.model.table.SysResources
@@ -44,26 +47,50 @@ open class SysResourceBiz : BaseCrudBiz<String, SysResource, SysResourceDao>(), 
     private lateinit var dictItemBiz: ISysDictItemBiz
 
     @Autowired
-    private lateinit var resourceCacheHandler: ResourceBySubSysAndTypeCacheHandler
+    private lateinit var resourceIdsBySubSysAndTypeCacheHandler: ResourceIdsBySubSysAndTypeCacheHandler
 
-    override fun getResourcesFromCache(subSysDictCode: String, resourceTypeDictCode: String): List<SysResourceCacheItem> {
-        return resourceCacheHandler.getResourcesFromCache(subSysDictCode, resourceTypeDictCode)
+    @Autowired
+    private lateinit var resourceIdBySubSysAndUrlCacheHandler: ResourceIdBySubSysAndUrlCacheHandler
+
+    @Autowired
+    private lateinit var resourceByIdCacheHandler: ResourceByIdCacheHandler
+
+
+    override fun getResourcesFromCache(
+        subSysDictCode: String,
+        resourceTypeDictCode: String
+    ): List<SysResourceCacheItem> {
+        val ids = resourceIdsBySubSysAndTypeCacheHandler.getResourceIds(subSysDictCode, resourceTypeDictCode)
+        return resourceByIdCacheHandler.getResourcesByIds(ids).values.toList()
+    }
+
+    override fun getResourceId(subSysDictCode: String, url: String): String? {
+        return resourceIdBySubSysAndUrlCacheHandler.getResourceId(subSysDictCode, url)
     }
 
     @Transactional
     override fun insert(any: Any): String {
         val id = super.insert(any)
         log.debug("新增id为${id}的资源。")
-        resourceCacheHandler.syncOnInsert(any, id) // 同步缓存
+        // 同步缓存
+        resourceIdsBySubSysAndTypeCacheHandler.syncOnInsert(any, id)
+        resourceByIdCacheHandler.syncOnInsert(id)
         return id
     }
 
     @Transactional
     override fun update(any: Any): Boolean {
-        val success = super.update(any)
         val id = BeanKit.getProperty(any, SysResource::id.name) as String
+        val sysRes = getResourceFromCache(id)
+        val success = super.update(any)
         if (success) {
-            resourceCacheHandler.syncOnUpdate(any, id) // 同步缓存
+            // 同步缓存
+            val oldUrl = sysRes!!.url
+            val oldSubSysDictCode = sysRes.subSysDictCode!!
+            val oldResourceTypeDictCode = sysRes.resourceTypeDictCode!!
+            resourceIdsBySubSysAndTypeCacheHandler.syncOnUpdate(any, id, oldSubSysDictCode, oldResourceTypeDictCode)
+            resourceIdBySubSysAndUrlCacheHandler.syncOnUpdate(any, id, oldUrl)
+            resourceByIdCacheHandler.syncOnUpdate(id)
         } else {
             log.error("更新id为${id}的资源失败！")
         }
@@ -79,7 +106,7 @@ open class SysResourceBiz : BaseCrudBiz<String, SysResource, SysResourceDao>(), 
         val success = dao.update(res)
         if (success) {
             log.debug("更新id为${id}的资源的启用状态为${active}。")
-            resourceCacheHandler.syncOnUpdateActive(id, active)
+            resourceIdsBySubSysAndTypeCacheHandler.syncOnUpdateActive(id, active)
         } else {
             log.error("更新id为${id}的资源的启用状态为${active}失败！")
         }
@@ -87,7 +114,7 @@ open class SysResourceBiz : BaseCrudBiz<String, SysResource, SysResourceDao>(), 
     }
 
     override fun getSimpleMenus(subSysDictCode: String): List<BaseMenuTreeNode> {
-        val origMenus = resourceCacheHandler.getResourcesFromCache(subSysDictCode, ResourceType.MENU.code)
+        val origMenus = getResourcesFromCache(subSysDictCode, ResourceType.MENU.code)
         val menus = origMenus.map {
             BaseMenuTreeNode().apply {
                 title = it.name
@@ -100,7 +127,7 @@ open class SysResourceBiz : BaseCrudBiz<String, SysResource, SysResourceDao>(), 
     }
 
     override fun getMenus(subSysDictCode: String): List<MenuTreeNode> {
-        val origMenus = resourceCacheHandler.getResourcesFromCache(subSysDictCode, ResourceType.MENU.code)
+        val origMenus = getResourcesFromCache(subSysDictCode, ResourceType.MENU.code)
         val menus = origMenus.map {
             MenuTreeNode().apply {
                 title = it.name
@@ -169,6 +196,7 @@ open class SysResourceBiz : BaseCrudBiz<String, SysResource, SysResourceDao>(), 
             } else null
         }
         val result = dao.search(listSearchPayload, whereConditionFactory)
+
         @Suppress(Consts.Suppress.UNCHECKED_CAST)
         val count = dao.count(listSearchPayload, whereConditionFactory)
         return Pair(result, count)
@@ -197,13 +225,13 @@ open class SysResourceBiz : BaseCrudBiz<String, SysResource, SysResourceDao>(), 
     @Transactional
     override fun cascadeDeleteChildren(id: String): Boolean {
         // 找出组成缓存key的子系统代码和资源类型代码
-        val resource = dao.get(id)
+        val resource = getResourceFromCache(id)
         if (resource == null) {
             log.error("找不到主键为${id}的资源记录！")
             return false
         }
-        val subSysDictCode = resource.subSysDictCode
-        val resourceTypeDictCode = resource.resourceTypeDictCode
+        val subSysDictCode = resource.subSysDictCode!!
+        val resourceTypeDictCode = resource.resourceTypeDictCode!!
 
         // 级联删除所有孩子记录
         val childItemIds = mutableListOf<String>()
@@ -213,6 +241,27 @@ open class SysResourceBiz : BaseCrudBiz<String, SysResource, SysResourceDao>(), 
             if (!success) {
                 log.error("级联删除主键为${id}的资源记录的所有孩子记录失败！")
                 return false
+            } else {
+                val ids = childItemIds.toMutableList()
+                ids.add(id)
+
+                ids.forEach {
+                    val res = getResourceFromCache(it)!!
+                    resourceIdBySubSysAndUrlCacheHandler.syncOnDelete(id, res.subSysDictCode!!, res.url)
+                }
+
+                // 同步清除role_ids_by_resource_id缓存
+                // 该缓存的维护在user-service服务，当前sys-service服务不依赖于user-service服务，所以这里直接用CacheKit进行操作
+                val cacheName = "rbac_role_ids_by_resource_id"
+                if (CacheKit.isCacheActive(cacheName)) {
+                    ids.forEach {
+                        log.debug("删除id为${it}的资源后，同步从${cacheName}缓存中踢除...")
+                        CacheKit.evict(cacheName, it)
+                        log.debug("${cacheName}缓存同步完成。")
+                    }
+                }
+
+                resourceByIdCacheHandler.syncOnBatchDelete(ids)
             }
         }
 
@@ -224,15 +273,19 @@ open class SysResourceBiz : BaseCrudBiz<String, SysResource, SysResourceDao>(), 
         }
 
         // 同步缓存
-        resourceCacheHandler.syncOnDelete(id, subSysDictCode, resourceTypeDictCode)
+        resourceIdsBySubSysAndTypeCacheHandler.syncOnDelete(id, subSysDictCode, resourceTypeDictCode)
 
         return true
     }
 
-    override fun getResources(
+    override fun getResourceFromCache(id: String): SysResourceCacheItem? {
+        return resourceByIdCacheHandler.getResourceById(id)
+    }
+
+    override fun getResourcesFromCache(
         subSysDictCode: String, resourceType: ResourceType, vararg resourceIds: String
     ): List<SysResourceCacheItem> {
-        val resources = resourceCacheHandler.getResourcesFromCache(subSysDictCode, resourceType.code)
+        val resources = getResourcesFromCache(subSysDictCode, resourceType.code)
         return resources.filter { it.id in resourceIds }
     }
 

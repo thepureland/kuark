@@ -11,7 +11,6 @@ import io.kuark.base.support.Consts
 import io.kuark.service.sys.common.api.ISysResourceApi
 import io.kuark.service.sys.common.api.ISysTenantApi
 import io.kuark.service.sys.common.vo.dict.SysResourceCacheItem
-import io.kuark.service.sys.common.vo.domain.SysDomainDetail
 import io.kuark.service.sys.common.vo.resource.BaseMenuTreeNode
 import io.kuark.service.sys.common.vo.resource.ResourceType
 import io.kuark.service.user.common.rbac.vo.role.RbacRoleCacheItem
@@ -19,8 +18,7 @@ import io.kuark.service.user.common.rbac.vo.role.RbacRoleDetail
 import io.kuark.service.user.common.user.vo.account.UserAccountCacheItem
 import io.kuark.service.user.common.user.vo.account.UserAccountSearchPayload
 import io.kuark.service.user.provider.rbac.biz.ibiz.IRbacRoleBiz
-import io.kuark.service.user.provider.rbac.cache.RoleByIdCacheHandler
-import io.kuark.service.user.provider.rbac.cache.RoleIdBySubSysAndTenantIdCacheHandler
+import io.kuark.service.user.provider.rbac.cache.*
 import io.kuark.service.user.provider.rbac.dao.RbacRoleDao
 import io.kuark.service.user.provider.rbac.dao.RbacRoleResourceDao
 import io.kuark.service.user.provider.rbac.dao.RbacRoleUserDao
@@ -30,8 +28,6 @@ import io.kuark.service.user.provider.rbac.model.po.RbacRoleUser
 import io.kuark.service.user.provider.rbac.model.table.RbacRoleResources
 import io.kuark.service.user.provider.rbac.model.table.RbacRoleUsers
 import io.kuark.service.user.provider.user.biz.ibiz.IUserAccountBiz
-import io.kuark.service.user.provider.rbac.cache.ResourceIdsByRoleIdCacheHandler
-import io.kuark.service.user.provider.rbac.cache.UserIdsByRoleIdCacheHandler
 import io.kuark.service.user.provider.user.cache.UserByIdCacheHandler
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -70,7 +66,7 @@ open class RbacRoleBiz : IRbacRoleBiz, BaseCrudBiz<String, RbacRole, RbacRoleDao
     private lateinit var roleCacheHandler: RoleByIdCacheHandler
 
     @Autowired
-    private lateinit var roleIdCacheHandler: RoleIdBySubSysAndTenantIdCacheHandler
+    private lateinit var roleIdBySubSysAndTenantIdCacheHandler: RoleIdBySubSysAndTenantIdCacheHandler
 
     @Autowired
     private lateinit var userIdByRoleIdCacheHandler: UserIdsByRoleIdCacheHandler
@@ -79,7 +75,13 @@ open class RbacRoleBiz : IRbacRoleBiz, BaseCrudBiz<String, RbacRole, RbacRoleDao
     private lateinit var resourceIdsByRoleIdCacheHandler: ResourceIdsByRoleIdCacheHandler
 
     @Autowired
+    private lateinit var roleIdsByResourceIdCacheHandler: RoleIdsByResourceIdCacheHandler
+
+    @Autowired
     private lateinit var userByIdCacheHandler: UserByIdCacheHandler
+
+    @Autowired
+    private lateinit var roleIdsByUserIdCacheHandler: RoleIdsByUserIdCacheHandler
 
 
     @Autowired
@@ -94,20 +96,24 @@ open class RbacRoleBiz : IRbacRoleBiz, BaseCrudBiz<String, RbacRole, RbacRoleDao
         return result
     }
 
-    override fun getRoleFromCache(roleId: String): RbacRoleCacheItem? {
+    override fun getRole(roleId: String): RbacRoleCacheItem? {
         return roleCacheHandler.getRoleById(roleId)
     }
 
-    override fun getRolesFromCache(roleIds: Collection<String>): Map<String, RbacRoleCacheItem> {
+    override fun getRoles(roleIds: Collection<String>): Map<String, RbacRoleCacheItem> {
         return roleCacheHandler.getRolesByIds(roleIds)
     }
 
-    override fun getRoleIdsFromCache(subSysDictCode: String, tenantId: String?): List<String> {
-        return roleIdCacheHandler.getRoleIdsFromCache(subSysDictCode, tenantId)
+    override fun getRoleIds(subSysDictCode: String, tenantId: String?): List<String> {
+        return roleIdBySubSysAndTenantIdCacheHandler.getRoleIds(subSysDictCode, tenantId)
     }
 
-    override fun getRolesFromCache(subSysDictCode: String, tenantId: String?): Map<String, RbacRoleCacheItem> {
-        val roleIds = roleIdCacheHandler.getRoleIdsFromCache(subSysDictCode, tenantId)
+    override fun getRoleIds(userId: String): List<String> {
+        return roleIdsByUserIdCacheHandler.getRoleIdsByUserId(userId)
+    }
+
+    override fun getRoles(subSysDictCode: String, tenantId: String?): Map<String, RbacRoleCacheItem> {
+        val roleIds = roleIdBySubSysAndTenantIdCacheHandler.getRoleIds(subSysDictCode, tenantId)
         return if (roleIds.isNotEmpty()) {
             roleCacheHandler.getRolesByIds(roleIds)
         } else {
@@ -121,7 +127,7 @@ open class RbacRoleBiz : IRbacRoleBiz, BaseCrudBiz<String, RbacRole, RbacRoleDao
         log.debug("新增id为${id}的角色。")
         // 同步缓存
         roleCacheHandler.syncOnInsert(id)
-        roleIdCacheHandler.syncOnInsert(id)
+        roleIdBySubSysAndTenantIdCacheHandler.syncOnInsert(id)
         return id
     }
 
@@ -146,7 +152,7 @@ open class RbacRoleBiz : IRbacRoleBiz, BaseCrudBiz<String, RbacRole, RbacRoleDao
             log.debug("删除id为${id}的角色成功！")
             // 同步缓存
             roleCacheHandler.syncOnDelete(id)
-            roleIdCacheHandler.syncOnDelete(role)
+            roleIdBySubSysAndTenantIdCacheHandler.syncOnDelete(role)
             userIdByRoleIdCacheHandler.syncOnDelete(id)
             resourceIdsByRoleIdCacheHandler.syncOnDelete(id)
         } else {
@@ -162,7 +168,7 @@ open class RbacRoleBiz : IRbacRoleBiz, BaseCrudBiz<String, RbacRole, RbacRoleDao
         log.debug("批量删除角色，期望删除${ids.size}条，实际删除${count}条。")
         // 同步缓存
         roleCacheHandler.syncOnBatchDelete(ids)
-        roleIdCacheHandler.syncOnBatchDelete(ids, roleMap)
+        roleIdBySubSysAndTenantIdCacheHandler.syncOnBatchDelete(ids, roleMap)
         userIdByRoleIdCacheHandler.syncOnBatchDelete(ids)
         resourceIdsByRoleIdCacheHandler.syncOnBatchDelete(ids)
         return count
@@ -179,7 +185,7 @@ open class RbacRoleBiz : IRbacRoleBiz, BaseCrudBiz<String, RbacRole, RbacRoleDao
             log.debug("更新id为${roleId}的角色的启用状态为${active}。")
             // 同步缓存
             roleCacheHandler.syncOnUpdateActive(roleId, active)
-            roleIdCacheHandler.syncOnUpdateActive(roleId)
+            roleIdBySubSysAndTenantIdCacheHandler.syncOnUpdateActive(roleId)
         } else {
             log.error("更新id为${roleId}的角色的启用状态为${active}失败！")
         }
@@ -203,6 +209,7 @@ open class RbacRoleBiz : IRbacRoleBiz, BaseCrudBiz<String, RbacRole, RbacRoleDao
             success = rbacRoleResourceDao.batchInsert(roleResources) == resourceIds.size
         }
         resourceIdsByRoleIdCacheHandler.syncOnUpdate(roleId, resourceIds)
+        resourceIds.forEach { roleIdsByResourceIdCacheHandler.syncOnUpdate(it, setOf(roleId)) }
         return success
     }
 
@@ -214,6 +221,7 @@ open class RbacRoleBiz : IRbacRoleBiz, BaseCrudBiz<String, RbacRole, RbacRoleDao
             success = rbacRoleUserDao.batchInsert(roleUsers) == userIds.size
         }
         userIdByRoleIdCacheHandler.syncOnUpdate(roleId, userIds)
+        userIds.forEach { roleIdsByUserIdCacheHandler.syncOnUpdate(it, setOf(roleId)) }
         return success
     }
 
@@ -227,6 +235,11 @@ open class RbacRoleBiz : IRbacRoleBiz, BaseCrudBiz<String, RbacRole, RbacRoleDao
         val map = linkedMapOf<String, String>()
         accounts.forEach { map[it.id!!] = it.username!! }
         return map
+    }
+
+    override fun getUrlAccessRoleIdsFromCache(subSysDictCode: String, url: String): List<String> {
+        val resourceId = resourceApi.getResourceId(subSysDictCode, url) ?: return emptyList()
+        return roleIdsByResourceIdCacheHandler.getRoleIdsByResouceId(resourceId)
     }
 
     override fun getMenuPermissions(roleId: String): Pair<List<BaseMenuTreeNode>, List<String>> {

@@ -11,8 +11,8 @@ import org.springframework.context.annotation.Configuration
 open class SysServiceAutoConfiguration {
 
 
-    @Bean
-    @ConditionalOnMissingBean
-    open fun sysContextInitializer(): IContextInitializer = SysContextInitializer()
+//    @Bean
+//    @ConditionalOnMissingBean
+//    open fun sysContextInitializer(): IContextInitializer = SysContextInitializer()
 
 }

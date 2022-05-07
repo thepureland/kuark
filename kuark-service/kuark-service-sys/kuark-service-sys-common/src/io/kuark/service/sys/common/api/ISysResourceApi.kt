@@ -48,4 +48,15 @@ interface ISysResourceApi {
      */
     fun getSimpleMenus(subSysDictCode: String): List<BaseMenuTreeNode>
 
+    /**
+     * 返回指定子系统和url对应的资源的id
+     *
+     * @param subSysDictCode 子系统代码
+     * @param url 资源URL
+     * @return 资源id
+     * @author K
+     * @since 1.0.0
+     */
+    fun getResourceId(subSysDictCode: String, url: String): String?
+
 }

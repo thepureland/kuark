@@ -9,6 +9,6 @@ package io.kuark.context.core
  */
 interface IContextInitializer {
 
-    fun init(builder: KuarkContext.Builder, context: KuarkContext)
+    fun init(context: KuarkContext)
 
 }

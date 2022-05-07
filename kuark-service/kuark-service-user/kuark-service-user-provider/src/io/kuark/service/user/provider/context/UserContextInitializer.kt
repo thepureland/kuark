@@ -6,8 +6,10 @@ import io.kuark.context.core.KuarkContext
 import io.kuark.service.sys.common.context.SysContextInitializer
 import io.kuark.service.user.provider.user.biz.ibiz.IUserAccountBiz
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Component
 
 
+@Component
 open class UserContextInitializer: SysContextInitializer() {
 
     @Autowired
@@ -15,8 +17,8 @@ open class UserContextInitializer: SysContextInitializer() {
 
     private val log = LogFactory.getLog(this::class)
 
-    override fun init(builder: KuarkContext.Builder, context: KuarkContext) {
-        super.init(builder, context)
+    override fun init(context: KuarkContext) {
+        super.init(context)
         val userId = context.sessionAttributes?.get(KuarkContext.SESSION_KEY_USER_ID)
         if (userId != null) {
             context.userId = userId as String
@@ -25,8 +27,8 @@ open class UserContextInitializer: SysContextInitializer() {
             if (StringKit.isBlank(context.subSysCode) || StringKit.isBlank(context.tenantId)) {
                 val user = userAccountBiz.getByUserId(userId)
                 if (user != null) {
-                    builder.subSysCode(user.subSysDictCode)
-                    builder.tenantId(user.tenantId)
+                    context.subSysCode = user.subSysDictCode
+                    context.tenantId = user.tenantId
                 } else {
                     log.error("不存在用户id为${userId}的用户！")
                 }

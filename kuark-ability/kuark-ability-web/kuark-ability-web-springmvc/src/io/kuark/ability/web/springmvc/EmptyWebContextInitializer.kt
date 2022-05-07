@@ -5,7 +5,7 @@ import io.kuark.context.core.KuarkContext
 
 class EmptyWebContextInitializer: IContextInitializer {
 
-    override fun init(builder: KuarkContext.Builder, context: KuarkContext) {
+    override fun init(context: KuarkContext) {
     }
 
 }

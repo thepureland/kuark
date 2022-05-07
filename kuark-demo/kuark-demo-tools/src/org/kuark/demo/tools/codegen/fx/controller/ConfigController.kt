@@ -143,9 +143,9 @@ class ConfigController : Initializable {
             userTextField.text.trim(),
             passwordField.text
         )
-        val builder = KuarkContext.Builder()
-        builder.addOtherInfos(Pair(KuarkContext.OTHER_INFO_KEY_DATA_SOURCE, dataSource))
-        KuarkContextHolder.set(builder.build())
+        val context = KuarkContext()
+        context.addOtherInfos(Pair(KuarkContext.OTHER_INFO_KEY_DATA_SOURCE, dataSource))
+        KuarkContextHolder.set(context)
 
         _testDbConnection()
 

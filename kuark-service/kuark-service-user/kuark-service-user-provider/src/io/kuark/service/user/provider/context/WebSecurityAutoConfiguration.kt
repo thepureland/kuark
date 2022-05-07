@@ -10,7 +10,9 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl
 import org.springframework.security.authentication.*
+import org.springframework.security.config.annotation.ObjectPostProcessor
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.builders.WebSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
@@ -19,19 +21,30 @@ import org.springframework.security.core.session.SessionRegistryImpl
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
+import org.springframework.security.web.access.intercept.FilterSecurityInterceptor
 import org.springframework.security.web.firewall.HttpFirewall
 import org.springframework.security.web.firewall.StrictHttpFirewall
 import org.springframework.security.web.session.HttpSessionEventPublisher
+import org.springframework.web.cors.CorsConfiguration
+import org.springframework.web.cors.CorsConfigurationSource
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 import java.io.PrintWriter
 
 
 @Configuration
 @EnableWebSecurity
 //@Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
-open class SecurityConfig : WebSecurityConfigurerAdapter() {
+@EnableGlobalMethodSecurity(prePostEnabled = true)
+open class WebSecurityAutoConfiguration : WebSecurityConfigurerAdapter() {
 
     @Autowired
     private lateinit var userAccountDetails: UserDetailsService
+
+    @Autowired
+    private lateinit var customAccessDecisionManager: CustomAccessDecisionManager
+
+    @Autowired
+    private lateinit var customFilterInvocationSecurityMetadataSource: CustomFilterInvocationSecurityMetadataSource
 
     /**
      * 配置认证
@@ -44,12 +57,20 @@ open class SecurityConfig : WebSecurityConfigurerAdapter() {
      * 配置授权
      */
     override fun configure(http: HttpSecurity) { //TODO
+        http.cors()
+
         http.authorizeRequests()
+            .withObjectPostProcessor(object : ObjectPostProcessor<FilterSecurityInterceptor> {
+
+                override fun <O : FilterSecurityInterceptor> postProcess(o: O): O {
+                    o.securityMetadataSource = customFilterInvocationSecurityMetadataSource
+                    o.accessDecisionManager = customAccessDecisionManager
+                    return o;
+                }
+
+            })
             .antMatchers("/rememberme").rememberMe() //rememberme 接口，必须是通过自动登录认证后才能访问，如果用户是通过用户名/密码认证的，则无法访问该接口
-            .antMatchers("/admin").fullyAuthenticated() //admin 接口，必须要用户名密码认证之后才能访问，如果用户是通过自动登录认证的，则必须重新输入用户名密码才能访问该接口
-            .antMatchers("/user", "/menu")
-            .hasRole("ADMIN")
-            .antMatchers("/", "/**").permitAll()
+//            .antMatchers("/", "/**").permitAll()
             .and()
             .formLogin()
             .loginPage("/login")
@@ -176,6 +197,16 @@ open class SecurityConfig : WebSecurityConfigurerAdapter() {
 //        firewall.setAllowSemicolon(true)
         return firewall
     }
+
+//    @Bean
+//    open fun corsConfigurationSource(): CorsConfigurationSource {
+//        val configuration = CorsConfiguration()
+//        configuration.allowedOrigins = listOf("http://localhost:8080")
+//        val source = UrlBasedCorsConfigurationSource()
+//        source.registerCorsConfiguration("/hello", configuration)
+//        return source
+//    }
+
 
 //    @Bean
 //    @Throws(Exception::class)

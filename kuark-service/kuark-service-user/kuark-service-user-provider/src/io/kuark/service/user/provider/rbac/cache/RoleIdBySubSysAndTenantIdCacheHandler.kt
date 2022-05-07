@@ -42,7 +42,7 @@ open class RoleIdBySubSysAndTenantIdCacheHandler : AbstractCacheHandler<List<Str
             "缓存${CACHE_NAME}的key格式必须是 子系统代码${Consts.CACHE_KEY_DEFALT_DELIMITER}租户id"
         }
         val subSysAndTenantId = key.split(Consts.CACHE_KEY_DEFALT_DELIMITER)
-        return self.getRoleIdsFromCache(subSysAndTenantId[0], subSysAndTenantId[1])
+        return self.getRoleIds(subSysAndTenantId[0], subSysAndTenantId[1])
     }
 
     override fun reloadAll(clear: Boolean) {
@@ -88,7 +88,7 @@ open class RoleIdBySubSysAndTenantIdCacheHandler : AbstractCacheHandler<List<Str
         key = "#subSysDictCode.concat('${Consts.CACHE_KEY_DEFALT_DELIMITER}').concat(#tenantId)",
         unless = "#result == null || #result.size() == 0"
     )
-    open fun getRoleIdsFromCache(subSysDictCode: String, tenantId: String?): List<String> {
+    open fun getRoleIds(subSysDictCode: String, tenantId: String?): List<String> {
         require(subSysDictCode.isNotBlank()) { log.error("从缓存中获取角色id时，必须指定子系统代码！") }
         if (CacheKit.isCacheActive(CACHE_NAME)) {
             log.debug("缓存中不存在子系统为${subSysDictCode}且租户id为${tenantId}的角色id，从数据库中加载...")
@@ -110,7 +110,7 @@ open class RoleIdBySubSysAndTenantIdCacheHandler : AbstractCacheHandler<List<Str
             val role = roleCacheManager.getRoleById(id)!! // 缓存角色
             CacheKit.evict(CACHE_NAME, "${role.subSysDictCode}${Consts.CACHE_KEY_DEFALT_DELIMITER}${role.tenantId}") // 踢除角色id的缓存
             if (CacheKit.isWriteInTime(CACHE_NAME)) {
-                self.getRoleIdsFromCache(role.subSysDictCode!!, role.tenantId)  // 缓存角色id
+                self.getRoleIds(role.subSysDictCode!!, role.tenantId)  // 缓存角色id
             }
             log.debug("${CACHE_NAME}缓存同步完成。")
         }
@@ -121,7 +121,7 @@ open class RoleIdBySubSysAndTenantIdCacheHandler : AbstractCacheHandler<List<Str
             log.debug("更新id为${id}的角色的启用状态后，同步${CACHE_NAME}缓存...")
             val r = roleCacheManager.getRoleById(id)!!
             CacheKit.evict(CACHE_NAME, getKey(r.subSysDictCode!!, r.tenantId!!)) // 踢除角色id的缓存
-            self.getRoleIdsFromCache(r.subSysDictCode!!, r.tenantId)  // 缓存角色id
+            self.getRoleIds(r.subSysDictCode!!, r.tenantId)  // 缓存角色id
             log.debug("${CACHE_NAME}缓存同步完成。")
         }
     }
@@ -131,7 +131,7 @@ open class RoleIdBySubSysAndTenantIdCacheHandler : AbstractCacheHandler<List<Str
             log.debug("删除id为${role.id}的角色后，同步从${CACHE_NAME}缓存中踢除...")
             CacheKit.evict(CACHE_NAME, getKey(role.subSysDictCode!!, role.tenantId!!)) // 踢除角色id的缓存
             if (CacheKit.isWriteInTime(CACHE_NAME)) {
-                self.getRoleIdsFromCache(role.subSysDictCode!!, role.tenantId)  // 缓存角色id
+                self.getRoleIds(role.subSysDictCode!!, role.tenantId)  // 缓存角色id
             }
             log.debug("${CACHE_NAME}缓存同步完成。")
         }
@@ -145,7 +145,7 @@ open class RoleIdBySubSysAndTenantIdCacheHandler : AbstractCacheHandler<List<Str
                 CacheKit.evict(CACHE_NAME, it) // 踢除角色id缓存
                 if (CacheKit.isWriteInTime(CACHE_NAME)) {
                     val subSysAndTenantId = it.split(Consts.CACHE_KEY_DEFALT_DELIMITER)
-                    self.getRoleIdsFromCache(subSysAndTenantId[0], subSysAndTenantId[1])  // 缓存角色id
+                    self.getRoleIds(subSysAndTenantId[0], subSysAndTenantId[1])  // 缓存角色id
                 }
             }
             log.debug("${CACHE_NAME}缓存同步完成。")

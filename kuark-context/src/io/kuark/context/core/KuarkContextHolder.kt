@@ -11,7 +11,7 @@ object KuarkContextHolder {
     private val contextThreadLocal = InheritableThreadLocal<KuarkContext>()
 
     init {
-        contextThreadLocal.set(KuarkContext.Builder().build())
+        contextThreadLocal.set(KuarkContext())
     }
 
     /**

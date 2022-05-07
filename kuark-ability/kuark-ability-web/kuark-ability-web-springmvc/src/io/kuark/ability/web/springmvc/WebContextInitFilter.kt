@@ -3,7 +3,6 @@ package io.kuark.ability.web.springmvc
 import io.kuark.ability.web.springmvc.kit.getBrowserInfo
 import io.kuark.ability.web.springmvc.kit.getOsInfo
 import io.kuark.ability.web.springmvc.kit.getRemoteIp
-import io.kuark.ability.web.springmvc.kit.getRootPath
 import io.kuark.context.core.ClientInfo
 import io.kuark.context.core.IContextInitializer
 import io.kuark.context.core.KuarkContext
@@ -20,24 +19,24 @@ open class WebContextInitFilter: IWebContextInitFilter {
     private lateinit var webContextInitializer: IContextInitializer
 
     override fun doFilter(request: ServletRequest, response: ServletResponse, chain: FilterChain) {
-        val builder = KuarkContext.Builder()
+        val context = KuarkContext()
 
         // session
         val session = (request as HttpServletRequest).session
         session.attributeNames.asIterator().forEach { name ->
             val value = session.getAttribute(name)
-            builder.addSessionAttributes(Pair(name, value))
+            context.addSessionAttributes(Pair(name, value))
         }
 
         // cookie
         request.cookies?.forEach { cookie ->
-            builder.addCookieAttributes(Pair(cookie.name, cookie.value))
+            context.addCookieAttributes(Pair(cookie.name, cookie.value))
         }
 
         // header
         request.headerNames.asIterator().forEach { name ->
             val value = request.getHeader(name)
-            builder.addHeaderAttributes(Pair(name, value))
+            context.addHeaderAttributes(Pair(name, value))
         }
 
         // client info
@@ -51,12 +50,11 @@ open class WebContextInitFilter: IWebContextInitFilter {
         clientInfoBuilder.requestReferer(request.getHeader("referer"))
         clientInfoBuilder.locale(request.locale)
 //        clientInfoBuilder.timeZone() //TODO
-        builder.clientInfo(ClientInfo(clientInfoBuilder))
+        context.clientInfo = ClientInfo(clientInfoBuilder)
 
 
         // 初始化上下文
-        val context = builder.build()
-        webContextInitializer.init(builder, context)
+        webContextInitializer.init(context)
         KuarkContextHolder.set(context)
 
         chain.doFilter(request, response)

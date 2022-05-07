@@ -61,6 +61,16 @@ interface ISysResourceBiz : IBaseCrudBiz<String, SysResource> {
     fun cascadeDeleteChildren(id: String): Boolean
 
     /**
+     * 从缓存中返回资源id对应的资源
+     *
+     * @param id 主键
+     * @return 资源缓存信息
+     * @author K
+     * @since 1.0.0
+     */
+    fun getResourceFromCache(id: String): SysResourceCacheItem?
+
+    /**
      * 根据子系统代码、资源类型和资源id，从缓存中取得对应资源(仅包括处于启用状态的)
      *
      * @param subSysDictCode 子系统代码
@@ -70,9 +80,20 @@ interface ISysResourceBiz : IBaseCrudBiz<String, SysResource> {
      * @author K
      * @since 1.0.0
      */
-    fun getResources(
+    fun getResourcesFromCache(
         subSysDictCode: String, resourceType: ResourceType, vararg resourceIds: String
     ): List<SysResourceCacheItem>
+
+    /**
+     * 返回指定子系统和url对应的资源的id
+     *
+     * @param subSysDictCode 子系统代码
+     * @param url 资源URL
+     * @return 资源id
+     * @author K
+     * @since 1.0.0
+     */
+    fun getResourceId(subSysDictCode: String, url: String): String?
 
     /**
      * 更新启用状态，并同步缓存

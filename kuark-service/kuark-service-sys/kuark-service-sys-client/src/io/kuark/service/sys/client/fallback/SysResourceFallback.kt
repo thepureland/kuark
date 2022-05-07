@@ -18,11 +18,15 @@ class SysResourceFallback : ISysResourceProxy {
 
     override fun getResources(
         subSysDictCode: String, resourceType: ResourceType, vararg resourceIds: String
-    ): List<SysResourceDetail> {
+    ): List<SysResourceCacheItem> {
         TODO("Not yet implemented")
     }
 
     override fun getSimpleMenus(subSysDictCode: String): List<BaseMenuTreeNode> {
+        TODO("Not yet implemented")
+    }
+
+    override fun getResourceId(subSysDictCode: String, url: String): String? {
         TODO("Not yet implemented")
     }
 

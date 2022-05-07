@@ -78,6 +78,10 @@ open class UserAccountBiz : BaseCrudBiz<String, UserAccount, UserAccountDao>(), 
         return userByIdCacheHandler.getUserById(userId)
     }
 
+    override fun getPermissions(userId: String): Set<String> {
+        return rbacRoleBiz.getRoleIds(userId).toSet()
+    }
+
     override fun getMenuPermissions(userId: String): Set<String> {
         // 得到用户隶属的用户组
         //TODO

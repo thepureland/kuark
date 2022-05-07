@@ -48,7 +48,7 @@ class Criterion : Serializable {
      * @param operator 查询条件逻辑操作符枚举
      * @param value 要查询的属性名对应的值
      */
-    constructor(property: String, operator: Operator, value: Any?) {
+    constructor(property: String, operator: Operator, value: Any? = null) {
         this.property = property
         this.operator = operator
         this.value = value

@@ -220,7 +220,7 @@ object ImageKit {
             // 设置解码器的输入流
             imageReader.setInput(imageInputstream, true, true)
             // 图像文件格式后缀
-            val suffix: String = imageReader.formatName.trim().lowercase(Locale.getDefault())
+            val suffix: String = imageReader.formatName.trim().lowercase()
             // 图像宽度
             val width: Int = imageReader.getWidth(0)
             // 图像高度

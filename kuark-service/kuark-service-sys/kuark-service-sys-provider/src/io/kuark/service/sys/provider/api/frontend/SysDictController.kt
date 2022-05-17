@@ -18,7 +18,6 @@ import javax.validation.Valid
  */
 @RestController
 @RequestMapping("/sys/dict")
-@CrossOrigin
 open class SysDictController :
     BaseReadOnlyController<String, ISysDictBiz, SysDictSearchPayload, SysDictRecord, SysDictDetail, SysDictPayload>() {
 

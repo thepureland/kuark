@@ -55,7 +55,7 @@ open class TemplateModelCreator {
         templateModel["cacheItemColumns"] = cacheItemColumns
 
         for (origColumn in origColumns) {
-            val columnName = origColumn.name.lowercase(Locale.getDefault())
+            val columnName = origColumn.name.lowercase()
             val columnInfo = columnConfMap[columnName]
             if (columnInfo != null) {
                 BeanKit.copyProperties(columnInfo, origColumn)

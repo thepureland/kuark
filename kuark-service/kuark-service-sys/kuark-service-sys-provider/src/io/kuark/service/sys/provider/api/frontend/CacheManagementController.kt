@@ -6,7 +6,6 @@ import io.kuark.base.log.LogFactory
 import io.kuark.context.kit.SpringKit
 import io.kuark.service.sys.provider.biz.ibiz.ISysCacheBiz
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/sys/cache/management")
-@CrossOrigin
 class CacheManagementController {
 
     private val cacheMgmtMap = mutableMapOf<String, AbstractCacheHandler<*>>()

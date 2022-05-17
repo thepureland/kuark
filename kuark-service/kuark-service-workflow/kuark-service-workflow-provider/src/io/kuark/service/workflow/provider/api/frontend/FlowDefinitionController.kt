@@ -21,7 +21,6 @@ import javax.imageio.ImageIO
  */
 @RestController
 @RequestMapping("/flow/definition")
-@CrossOrigin
 class FlowDefinitionController {
 
     @Autowired

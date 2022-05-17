@@ -2,10 +2,7 @@ package io.kuark.service.sys.client.fallback
 
 import io.kuark.service.sys.client.proxy.ISysResourceProxy
 import io.kuark.service.sys.common.vo.dict.SysResourceCacheItem
-import io.kuark.service.sys.common.vo.resource.BaseMenuTreeNode
-import io.kuark.service.sys.common.vo.resource.ResourceType
-import io.kuark.service.sys.common.vo.resource.SysResourceDetail
-import io.kuark.service.sys.common.vo.resource.SysResourceRecord
+import io.kuark.service.sys.common.vo.resource.*
 import org.springframework.stereotype.Component
 
 
@@ -23,6 +20,10 @@ class SysResourceFallback : ISysResourceProxy {
     }
 
     override fun getSimpleMenus(subSysDictCode: String): List<BaseMenuTreeNode> {
+        TODO("Not yet implemented")
+    }
+
+    override fun getMenus(subSysDictCode: String): List<MenuTreeNode> {
         TODO("Not yet implemented")
     }
 

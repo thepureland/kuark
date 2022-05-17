@@ -9,6 +9,10 @@ import org.springframework.security.web.FilterInvocation
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource
 import org.springframework.stereotype.Component
 
+
+/**
+ * 从当前请求url中判断属于哪些权限
+ */
 @Component
 open class CustomFilterInvocationSecurityMetadataSource : FilterInvocationSecurityMetadataSource {
 
@@ -21,7 +25,7 @@ open class CustomFilterInvocationSecurityMetadataSource : FilterInvocationSecuri
         val roleIds = rbacRoleBiz.getUrlAccessRoleIdsFromCache(subSysCode, requestUrl)
         val configs = roleIds.map { SecurityConfig(it) }
         return configs.ifEmpty {
-            return SecurityConfig.createList("ROLE_LOGIN")
+            SecurityConfig.createList("ROLE_LOGIN")
         }
     }
 
@@ -30,7 +34,7 @@ open class CustomFilterInvocationSecurityMetadataSource : FilterInvocationSecuri
     }
 
     override fun supports(clazz: Class<*>?): Boolean {
-        return true
+        return FilterInvocation::class.java.isAssignableFrom(clazz)
     }
 
 

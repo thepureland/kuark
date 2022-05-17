@@ -1,6 +1,7 @@
 package io.kuark.service.user.provider.user.biz.ibiz
 
 import io.kuark.base.support.biz.IBaseCrudBiz
+import io.kuark.service.sys.common.vo.resource.MenuTreeNode
 import io.kuark.service.user.common.user.vo.account.UserAccountCacheItem
 import io.kuark.service.user.common.user.vo.account.UserAccountRecord
 import io.kuark.service.user.provider.user.model.po.UserAccount
@@ -29,6 +30,8 @@ interface IUserAccountBiz: IBaseCrudBiz<String, UserAccount> {
     fun getPermissions(userId: String): Set<String>
 
     fun getMenuPermissions(userId: String): Set<String>
+
+    fun getAuthorisedMenus(userId: String): List<MenuTreeNode>
 
     fun getAccounts(subSysDictCode: String, tenantId: String?): List<UserAccountRecord>
 

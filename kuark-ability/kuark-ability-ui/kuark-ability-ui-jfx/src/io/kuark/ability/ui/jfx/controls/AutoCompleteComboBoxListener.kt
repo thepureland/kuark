@@ -7,7 +7,6 @@ import javafx.event.EventHandler
 import javafx.scene.control.ComboBox
 import javafx.scene.input.KeyCode
 import javafx.scene.input.KeyEvent
-import java.util.*
 
 class AutoCompleteComboBoxListener<T>(private val comboBox: ComboBox<Any>?) : EventHandler<KeyEvent> {
     private val sb: StringBuilder
@@ -39,10 +38,7 @@ class AutoCompleteComboBoxListener<T>(private val comboBox: ComboBox<Any>?) : Ev
         val list = FXCollections.observableArrayList<Any>()
         for (i in data.indices) {
             if (comboBox != null) {
-                if (data[i].toString().lowercase(Locale.getDefault()).startsWith(
-                        comboBox.editor.text.lowercase(Locale.getDefault())
-                    )
-                ) {
+                if (data[i].toString().lowercase().startsWith(comboBox.editor.text.lowercase())) {
                     list.add(data[i])
                 }
             }

@@ -28,7 +28,7 @@ open class KtorConfiguration {
      */
     @Bean
     open fun registerKtorWebContainer(): ApplicationEngineFactory<ApplicationEngine, out ApplicationEngine.Configuration> {
-        val clazzStr = when(webContainer.uppercase(Locale.getDefault())) {
+        val clazzStr = when(webContainer.uppercase()) {
             "NETTY" -> "io.ktor.server.netty.Netty"
             "JETTY" -> "io.ktor.server.jetty.Jetty"
             "TOMCAT" -> "io.ktor.server.tomcat.Tomcat"
@@ -38,7 +38,7 @@ open class KtorConfiguration {
         val clazz = try {
              Class.forName(clazzStr)
         } catch (e: ClassNotFoundException) {
-            error("类${clazzStr}找不到，请确保依赖存在：io.ktor:ktor-server-${webContainer.lowercase(Locale.getDefault())}")
+            error("类${clazzStr}找不到，请确保依赖存在：io.ktor:ktor-server-${webContainer.lowercase()}")
         }
         val instance = clazz.getDeclaredField("INSTANCE")
         return instance.get(null) as ApplicationEngineFactory<ApplicationEngine, out ApplicationEngine.Configuration>

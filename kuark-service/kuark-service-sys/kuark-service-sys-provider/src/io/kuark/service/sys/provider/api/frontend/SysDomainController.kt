@@ -1,11 +1,13 @@
 package io.kuark.service.sys.provider.api.frontend
 
-import io.kuark.service.sys.common.vo.domain.*
-import io.kuark.service.sys.provider.biz.ibiz.ISysDomainBiz
 import io.kuark.ability.web.springmvc.BaseCrudController
-import org.springframework.web.bind.annotation.CrossOrigin
-import org.springframework.web.bind.annotation.RestController
+import io.kuark.service.sys.common.vo.domain.SysDomainDetail
+import io.kuark.service.sys.common.vo.domain.SysDomainPayload
+import io.kuark.service.sys.common.vo.domain.SysDomainRecord
+import io.kuark.service.sys.common.vo.domain.SysDomainSearchPayload
+import io.kuark.service.sys.provider.biz.ibiz.ISysDomainBiz
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 
 
 /**
@@ -16,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping
  */
 @RestController
 //region your codes 1
-@CrossOrigin
 @RequestMapping("/sys/domain")
 open class SysDomainController :
     BaseCrudController<String, ISysDomainBiz, SysDomainSearchPayload, SysDomainRecord, SysDomainDetail, SysDomainPayload>() {

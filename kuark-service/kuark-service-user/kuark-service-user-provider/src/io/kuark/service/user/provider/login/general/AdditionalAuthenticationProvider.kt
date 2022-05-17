@@ -14,9 +14,9 @@ open class AdditionalAuthenticationProvider : DaoAuthenticationProvider() {
     ) {
         val verifyCode = KuarkContextHolder.get().otherInfos?.get(KuarkContext.OTHER_INFO_KEY_VERIFY_CODE)
         val code = KuarkContextHolder.get().sessionAttributes?.get("verify_code")
-        if (verifyCode == null || code == null || verifyCode != code) {
-            throw AuthenticationServiceException("验证码错误！")
-        }
+//        if (verifyCode == null || code == null || verifyCode != code) {
+//            throw AuthenticationServiceException("验证码错误！")
+//        }
 
         super.additionalAuthenticationChecks(userDetails, authentication)
     }

@@ -130,7 +130,7 @@ object SystemKit {
      * @author K
      * @since 1.0.0
      */
-    fun getOSName(): String = System.getProperty("os.name").lowercase(Locale.getDefault())
+    fun getOSName(): String = System.getProperty("os.name").lowercase()
 
     /**
      * 是否调试模式
@@ -155,7 +155,7 @@ object SystemKit {
      * @author K
      * @since 1.0.0
      */
-    fun isWindowsOS(): Boolean = getOSName().lowercase(Locale.getDefault()).contains("windows")
+    fun isWindowsOS(): Boolean = getOSName().lowercase().contains("windows")
 
     /**
      * 得到系统当前用户

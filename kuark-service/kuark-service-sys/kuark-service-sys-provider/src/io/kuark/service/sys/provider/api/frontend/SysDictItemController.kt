@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.*
  */
 @RestController
 @RequestMapping("/sys/dictItem")
-@CrossOrigin
 class SysDictItemController :
     BaseReadOnlyController<String, ISysDictItemBiz, SysDictSearchPayload, SysDictRecord, SysDictItemDetail, SysDictPayload>() {
 

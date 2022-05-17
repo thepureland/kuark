@@ -4,7 +4,6 @@ import io.kuark.base.lang.string.EncodeKit
 import io.kuark.base.log.LogFactory
 import java.io.UnsupportedEncodingException
 import java.security.SecureRandom
-import java.util.*
 import javax.crypto.Cipher
 import javax.crypto.KeyGenerator
 import javax.crypto.Mac
@@ -249,7 +248,7 @@ object CryptoKit {
      */
     private fun aesDecryptBytes(input: String, password: String): ByteArray {
         return if (password.isNotBlank() && password.startsWith(HTB)) {
-            EncodeKit.decodeHex(input.lowercase(Locale.getDefault()))
+            EncodeKit.decodeHex(input.lowercase())
         } else {
             EncodeKit.decodeHex(input)
         }
@@ -264,7 +263,7 @@ object CryptoKit {
      */
     private fun aesEncryptBytes(bytes: ByteArray, password: String): String {
         return if (password.isNotBlank() && password.startsWith(HTB)) {
-            EncodeKit.encodeHex(bytes).uppercase(Locale.getDefault())
+            EncodeKit.encodeHex(bytes).uppercase()
         } else {
             EncodeKit.encodeHex(bytes)
         }

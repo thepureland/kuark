@@ -5,7 +5,6 @@ import io.kuark.base.lang.string.StringKit
 import io.kuark.service.sys.common.vo.resource.BaseMenuTreeNode
 import io.kuark.service.user.common.rbac.vo.role.*
 import io.kuark.service.user.common.user.vo.account.UserAccountCacheItem
-import io.kuark.service.user.common.user.vo.account.UserAccountRecord
 import io.kuark.service.user.common.user.vo.account.UserAccountSearchPayload
 import io.kuark.service.user.provider.rbac.biz.ibiz.IRbacRoleBiz
 import org.springframework.web.bind.annotation.*
@@ -13,7 +12,6 @@ import javax.validation.Valid
 
 @RestController
 @RequestMapping("/rbac/role")
-@CrossOrigin
 open class RbacRoleController :
     BaseCrudController<String, IRbacRoleBiz, RbacRoleSearchPayload, RbacRoleRecord, RbacRoleDetail, RbacRolePayload>() {
 

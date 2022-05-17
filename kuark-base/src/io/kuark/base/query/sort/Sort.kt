@@ -3,7 +3,6 @@ package io.kuark.base.query.sort
 import io.kuark.base.lang.collections.CollectionKit
 import io.kuark.base.lang.string.humpToUnderscore
 import java.io.Serializable
-import java.util.*
 
 /**
  * 排序规则
@@ -100,13 +99,13 @@ class Sort : Iterable<Order>, Serializable {
             val orderSb = StringBuilder("ORDER BY ")
             for (order in orders) {
                 val property = order.property
-                val direction = order.direction.name.lowercase(Locale.getDefault())
+                val direction = order.direction.name.lowercase()
                 var columnName = if (columnMap == null) {
                     property.humpToUnderscore()
                 } else {
                     columnMap[property]
                 }
-                columnName = columnName!!.lowercase(Locale.getDefault())
+                columnName = columnName!!.lowercase()
                 orderSb.append(columnName).append(" ").append(direction).append(",")
             }
             return if (orderSb.length == 9) { // 所有指定的属性都不支持排序

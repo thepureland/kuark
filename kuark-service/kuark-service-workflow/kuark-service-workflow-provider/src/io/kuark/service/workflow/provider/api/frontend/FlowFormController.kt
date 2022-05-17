@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.*
 @RestController
 //region your codes 1
 @RequestMapping("/flow/form")
-@CrossOrigin
 class FlowFormController {
 //endregion your codes 1
 

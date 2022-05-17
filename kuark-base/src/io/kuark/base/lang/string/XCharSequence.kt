@@ -29,7 +29,7 @@ import kotlin.reflect.KClass
  * @since 1.0.0
  */
 fun CharSequence.capitalizeString(): String =
-    this.toString().replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
+    this.toString().replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
 
 
 /**
@@ -166,8 +166,8 @@ fun CharSequence.humpToUnderscore(upperCase: Boolean = true): String {
     }
     val result = sb.toString()
     return if (upperCase) {
-        result.uppercase(Locale.getDefault())
-    } else result.lowercase(Locale.getDefault())
+        result.uppercase()
+    } else result.lowercase()
 }
 
 /**
@@ -188,8 +188,8 @@ fun CharSequence.underscoreToHump(): String {
     val sb = StringBuilder()
     val words = this.split("_")
     for (word in words) {
-        sb.append(word.lowercase(Locale.getDefault())
-            .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() })
+        sb.append(word.lowercase()
+            .replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() })
     }
     return sb.first().lowercaseChar() + sb.substring(1)
 }

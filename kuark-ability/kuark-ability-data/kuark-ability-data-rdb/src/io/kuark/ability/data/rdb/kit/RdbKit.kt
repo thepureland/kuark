@@ -11,7 +11,6 @@ import io.kuark.context.core.KuarkContextHolder
 import org.ktorm.database.Database
 import java.sql.Connection
 import java.sql.DriverManager
-import java.util.*
 import javax.sql.DataSource
 
 /**
@@ -90,11 +89,11 @@ object RdbKit {
      * @since 1.0.0
      */
     fun determinRdbTypeByUrl(url: String): RdbType {
-        val urlStr = url.deleteWhitespace().lowercase(Locale.getDefault())
+        val urlStr = url.deleteWhitespace().lowercase()
         if (urlStr.contains(":sqlserver:"))
             return RdbType.SQLSERVER
         val type = url.substringBetween("jdbc:", ":")
-        return RdbType.valueOf(type.uppercase(Locale.getDefault()))
+        return RdbType.valueOf(type.uppercase())
     }
 
     /**

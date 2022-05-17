@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*
  */
 @RestController
 @RequestMapping("/user/organization")
-@CrossOrigin
 //region your codes 1
 class UserOrganizationController :
     BaseCrudController<String, IUserOrganizationBiz, UserOrganizationSearchPayload, UserOrganizationRecord, UserOrganizationDetail, UserOrganizationPayload>() {

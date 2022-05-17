@@ -3,13 +3,18 @@ package io.kuark.service.user.provider.user.biz.impl
 import io.kuark.ability.data.rdb.biz.BaseCrudBiz
 import io.kuark.base.query.sort.Order
 import io.kuark.base.support.Consts
+import io.kuark.context.core.KuarkContextHolder
+import io.kuark.service.sys.common.api.ISysResourceApi
 import io.kuark.service.sys.common.api.ISysTenantApi
+import io.kuark.service.sys.common.vo.resource.MenuTreeNode
 import io.kuark.service.user.common.rbac.vo.role.RbacRoleDetail
 import io.kuark.service.user.common.user.vo.account.UserAccountCacheItem
 import io.kuark.service.user.common.user.vo.account.UserAccountDetail
 import io.kuark.service.user.common.user.vo.account.UserAccountRecord
 import io.kuark.service.user.common.user.vo.account.UserAccountSearchPayload
 import io.kuark.service.user.provider.rbac.biz.ibiz.IRbacRoleBiz
+import io.kuark.service.user.provider.rbac.cache.ResourceIdsByRoleIdCacheHandler
+import io.kuark.service.user.provider.rbac.cache.RoleIdsByUserIdCacheHandler
 import io.kuark.service.user.provider.rbac.dao.RbacRoleUserDao
 import io.kuark.service.user.provider.rbac.model.po.RbacRoleUser
 import io.kuark.service.user.provider.user.biz.ibiz.IUserAccountBiz
@@ -48,9 +53,18 @@ open class UserAccountBiz : BaseCrudBiz<String, UserAccount, UserAccountDao>(), 
     @Autowired
     protected lateinit var userIdByUsernameCacheHandler: UserIdBySubSysAndUsernameCacheHandler
 
+    @Autowired
+    protected lateinit var roleIdsByUserIdCacheHandler: RoleIdsByUserIdCacheHandler
+
+    @Autowired
+    protected lateinit var resourceIdsByRoleIdCacheHandler: ResourceIdsByRoleIdCacheHandler
 
     @Autowired
     private lateinit var sysTenantApi: ISysTenantApi
+
+    @Autowired
+    private lateinit var sysResourceApi: ISysResourceApi
+
 
     override fun <R : Any> get(id: String, returnType: KClass<R>): R? {
         val result = super.get(id, returnType)
@@ -99,6 +113,14 @@ open class UserAccountBiz : BaseCrudBiz<String, UserAccount, UserAccountDao>(), 
             resIds.addAll(menuPermissions.second)
         }
         return resIds
+    }
+
+    override fun getAuthorisedMenus(userId: String): List<MenuTreeNode> {
+        val subSysDictCode = KuarkContextHolder.get().subSysCode!!
+        val roleIds = roleIdsByUserIdCacheHandler.getRoleIdsByUserId(userId)
+        val resIds = roleIds.flatMap { roleId -> resourceIdsByRoleIdCacheHandler.getResourceIdsByRoleId(roleId) }.toSet()
+        val menus = sysResourceApi.getMenus(subSysDictCode)
+        return menus.filter { menuTreeNode -> menuTreeNode.id in resIds }
     }
 
     @Suppress(Consts.Suppress.UNCHECKED_CAST)

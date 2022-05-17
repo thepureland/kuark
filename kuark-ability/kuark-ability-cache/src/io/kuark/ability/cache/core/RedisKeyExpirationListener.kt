@@ -31,7 +31,7 @@ class RedisKeyExpirationListener(
         val expiredKeys = message.toString() // 获取失效的key
         val parts = expiredKeys.split(Consts.CACHE_KEY_DEFALT_DELIMITER)
         val cacheName = parts[0]
-        val key = parts[1]
+        val key = if (parts.size == 2) parts[1] else null
         mixCacheManager.clearLocal(cacheName, key)
         logger.info("远程缓存已失效，同步清除其本地缓存：$expiredKeys")
     }

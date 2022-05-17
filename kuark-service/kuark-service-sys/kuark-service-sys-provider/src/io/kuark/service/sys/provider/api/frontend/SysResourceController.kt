@@ -2,6 +2,7 @@ package io.kuark.service.sys.provider.api.frontend
 
 import io.kuark.ability.web.springmvc.BaseCrudController
 import io.kuark.base.error.ObjectNotFoundException
+import io.kuark.context.core.KuarkContextHolder
 import io.kuark.service.sys.common.api.ISysDictApi
 import io.kuark.service.sys.common.api.ISysResourceApi
 import io.kuark.service.sys.common.vo.dict.DictModuleAndTypePayload
@@ -14,7 +15,6 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/sys/resource")
-@CrossOrigin
 open class SysResourceController :
     BaseCrudController<String, ISysResourceBiz, SysResourceSearchPayload, SysResourceRecord, SysResourceDetail, SysResourcePayload>() {
 
@@ -27,7 +27,7 @@ open class SysResourceController :
     @GetMapping("/getMenus")
     fun getMenus(): List<MenuTreeNode> {
 //        KuarkContextHolder.get().subSysCode
-        return biz.getMenus("01") //TODO 从上下文取
+        return biz.getMenus(KuarkContextHolder.get().subSysCode!!) //TODO 从上下文取
     }
 
     @PostMapping("/loadTreeNodes")

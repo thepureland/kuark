@@ -4,7 +4,6 @@ import io.kuark.base.lang.EnumKit
 import io.kuark.base.lang.collections.containsAll
 import io.kuark.base.support.Consts
 import io.kuark.base.support.enums.IDictEnum
-import java.util.*
 
 /**
  * 查询逻辑操作符枚举
@@ -188,7 +187,7 @@ enum class Operator constructor(
                     return false
                 }
                 if (v1 is String && v2 is String) {
-                    v1.toString().lowercase(Locale.getDefault()) == v2.toString().lowercase(Locale.getDefault())
+                    v1.toString().lowercase() == v2.toString().lowercase()
                 } else v1 == v2
             }
             NE, LG -> {
@@ -245,17 +244,17 @@ enum class Operator constructor(
             }
             ILIKE -> {
                 if (v1 is String && v2 is String) {
-                    v1.lowercase(Locale.getDefault()).contains(v2.lowercase(Locale.getDefault()))
+                    v1.lowercase().contains(v2.lowercase())
                 } else false
             }
             ILIKE_S -> {
                 if (v1 is String && v2 is String) {
-                    v1.trim { it <= ' ' }.lowercase(Locale.getDefault()).startsWith(v2.lowercase(Locale.getDefault()))
+                    v1.trim { it <= ' ' }.lowercase().startsWith(v2.lowercase())
                 } else false
             }
             ILIKE_E -> {
                 if (v1 is String && v2 is String) {
-                    v1.trim { it <= ' ' }.lowercase(Locale.getDefault()).endsWith(v2.lowercase(Locale.getDefault()))
+                    v1.trim { it <= ' ' }.lowercase().endsWith(v2.lowercase())
                 } else false
             }
             IN -> inOperation(v1, v2)
@@ -341,7 +340,7 @@ enum class Operator constructor(
         fun enumOf(code: String): Operator {
             var operatorCode = code
             if (operatorCode.isNotBlank()) {
-                operatorCode = operatorCode.uppercase(Locale.getDefault())
+                operatorCode = operatorCode.uppercase()
             }
             return EnumKit.enumOf(Operator::class, operatorCode) ?: error("非法的Operator code: $operatorCode")
         }

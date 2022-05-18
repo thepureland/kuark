@@ -243,8 +243,8 @@ open class RbacRoleBiz : IRbacRoleBiz, BaseCrudBiz<String, RbacRole, RbacRoleDao
     }
 
     override fun getMenuPermissions(roleId: String): Pair<List<BaseMenuTreeNode>, List<String>> {
-        val role = dao.get(roleId) ?: throw ObjectNotFoundException("找不到id为${roleId}的角色信息")
-        val simpleMenus = resourceApi.getSimpleMenus(role.subSysDictCode ?: "")
+        val role = roleCacheHandler.getRoleById(roleId) ?: throw ObjectNotFoundException("找不到id为${roleId}的角色信息")
+        val simpleMenus = resourceApi.getSimpleMenus(role.subSysDictCode!!)
         val resourceIds = resourceIdsByRoleIdCacheHandler.getResourceIdsByRoleId(roleId)
         return Pair(simpleMenus, resourceIds)
     }

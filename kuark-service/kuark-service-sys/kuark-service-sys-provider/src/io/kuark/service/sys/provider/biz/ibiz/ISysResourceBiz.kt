@@ -32,7 +32,7 @@ interface ISysResourceBiz : IBaseCrudBiz<String, SysResource> {
 
     fun getSimpleMenus(subSysDictCode: String): List<BaseMenuTreeNode>
 
-    fun getMenus(subSysDictCode: String): List<MenuTreeNode>
+    fun getMenus(subSysDictCode: String, predicate: ((SysResourceCacheItem) -> Boolean)? = null): List<MenuTreeNode>
 
     fun loadDirectChildrenForTree(searchPayload: SysResourceSearchPayload): List<SysResourceTreeNode>
 

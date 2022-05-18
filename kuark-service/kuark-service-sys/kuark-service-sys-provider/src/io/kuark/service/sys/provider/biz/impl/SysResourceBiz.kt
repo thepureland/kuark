@@ -126,8 +126,11 @@ open class SysResourceBiz : BaseCrudBiz<String, SysResource, SysResourceDao>(), 
         return TreeKit.convertListToTree(menus, Direction.ASC)
     }
 
-    override fun getMenus(subSysDictCode: String): List<MenuTreeNode> {
-        val origMenus = getResourcesFromCache(subSysDictCode, ResourceType.MENU.code)
+    override fun getMenus(subSysDictCode: String, predicate: ((SysResourceCacheItem) -> Boolean)?): List<MenuTreeNode> {
+        var origMenus = getResourcesFromCache(subSysDictCode, ResourceType.MENU.code)
+        if (predicate != null) {
+            origMenus = origMenus.filter(predicate)
+        }
         val menus = origMenus.map {
             MenuTreeNode().apply {
                 title = it.name

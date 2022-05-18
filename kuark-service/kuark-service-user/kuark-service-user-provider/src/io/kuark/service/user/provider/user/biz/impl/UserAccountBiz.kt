@@ -1,12 +1,15 @@
 package io.kuark.service.user.provider.user.biz.impl
 
 import io.kuark.ability.data.rdb.biz.BaseCrudBiz
+import io.kuark.base.query.sort.Direction
 import io.kuark.base.query.sort.Order
 import io.kuark.base.support.Consts
+import io.kuark.base.tree.TreeKit
 import io.kuark.context.core.KuarkContextHolder
 import io.kuark.service.sys.common.api.ISysResourceApi
 import io.kuark.service.sys.common.api.ISysTenantApi
 import io.kuark.service.sys.common.vo.resource.MenuTreeNode
+import io.kuark.service.sys.common.vo.resource.ResourceType
 import io.kuark.service.user.common.rbac.vo.role.RbacRoleDetail
 import io.kuark.service.user.common.user.vo.account.UserAccountCacheItem
 import io.kuark.service.user.common.user.vo.account.UserAccountDetail
@@ -118,9 +121,21 @@ open class UserAccountBiz : BaseCrudBiz<String, UserAccount, UserAccountDao>(), 
     override fun getAuthorisedMenus(userId: String): List<MenuTreeNode> {
         val subSysDictCode = KuarkContextHolder.get().subSysCode!!
         val roleIds = roleIdsByUserIdCacheHandler.getRoleIdsByUserId(userId)
-        val resIds = roleIds.flatMap { roleId -> resourceIdsByRoleIdCacheHandler.getResourceIdsByRoleId(roleId) }.toSet()
-        val menus = sysResourceApi.getMenus(subSysDictCode)
-        return menus.filter { menuTreeNode -> menuTreeNode.id in resIds }
+        val resIds = roleIds.flatMap { roleId ->
+            resourceIdsByRoleIdCacheHandler.getResourceIdsByRoleId(roleId)
+        }.toSet()
+        val menuCacheItems = sysResourceApi.getResources(subSysDictCode, ResourceType.MENU)
+        val menus = menuCacheItems.filter { it.id in resIds }.map {
+            MenuTreeNode().apply {
+                title = it.name
+                index = it.url
+                icon = it.icon
+                id = it.id!!
+                parentId = it.parentId
+                seqNo = it.seqNo
+            }
+        }
+        return TreeKit.convertListToTree(menus, Direction.ASC)
     }
 
     @Suppress(Consts.Suppress.UNCHECKED_CAST)

@@ -20,23 +20,14 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.builders.WebSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
-import org.springframework.security.core.AuthenticationException
 import org.springframework.security.core.session.SessionRegistryImpl
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
-import org.springframework.security.web.AuthenticationEntryPoint
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
-import org.springframework.security.web.firewall.HttpFirewall
-import org.springframework.security.web.firewall.StrictHttpFirewall
 import org.springframework.security.web.session.HttpSessionEventPublisher
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher
 import org.springframework.web.cors.CorsUtils
-import org.springframework.web.cors.CorsUtils.isPreFlightRequest
-import java.io.IOException
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse
 
 
 @Configuration
@@ -57,6 +48,10 @@ open class WebSecurityAutoConfiguration : WebSecurityConfigurerAdapter() {
 //    @Autowired
 //    private val authenticationProvider: AuthenticationProvider? = null
 
+    @Bean
+    @ConditionalOnMissingBean
+    open fun webSecurityConfigurer(): IWebSecurityConfigurer = DefaultWebSecurityConfigurer()
+
     /**
      * 配置认证
      */
@@ -68,7 +63,9 @@ open class WebSecurityAutoConfiguration : WebSecurityConfigurerAdapter() {
     /**
      * 配置授权
      */
-    override fun configure(http: HttpSecurity) { //TODO
+    override fun configure(http: HttpSecurity) {
+        val configProvider = webSecurityConfigurer()
+
         http.authorizeRequests()
             .withObjectPostProcessor(object : ObjectPostProcessor<FilterSecurityInterceptor> {
 
@@ -83,22 +80,19 @@ open class WebSecurityAutoConfiguration : WebSecurityConfigurerAdapter() {
 //            .antMatchers("/rememberme").rememberMe() //rememberme 接口，必须是通过自动登录认证后才能访问，如果用户是通过用户名/密码认证的，则无法访问该接口
 //            .antMatchers("/", "/**").permitAll()
             .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-            .antMatchers("/login", "/doLogin", "/logout", "/error").permitAll()
+            .antMatchers(*configProvider.permissiveUrls()).permitAll()
             .anyRequest().authenticated() // 其他请求需要登录
             .and()
             .formLogin()
-            .loginPage("/login")
-            .loginProcessingUrl("/doLogin")
-            .usernameParameter("username")
-            .passwordParameter("password")
-//            .successForwardUrl() // 服务端跳转： 不管从哪来，登陆成功后始终跳到指定页面
-//            .defaultSuccessUrl("/home") // 重定向：从哪个页面来，登陆成功后跳到哪个页面
-
+            .loginPage(configProvider.loginPage())
+            .loginProcessingUrl(configProvider.loginProcessingUrl())
+            .usernameParameter(configProvider.usernameParameter())
+            .passwordParameter(configProvider.passwordParameter())
             .and()
-//            .rememberMe()
-//            .key("KUARK-user-Key")  // 若没有设置 key，key 默认值是一个 UUID 字符串，这样会带来一个问题：如果服务端重启，这个 key 会变，这样就导致之前派发出去的所有 remember-me 自动登录令牌失效
-//            .tokenRepository(tokenRepository())
-//            .and()
+            .rememberMe()
+            .key(configProvider.rememberMeKey())  // 若没有设置 key，key 默认值是一个 UUID 字符串，这样会带来一个问题：如果服务端重启，这个 key 会变，这样就导致之前派发出去的所有 remember-me 自动登录令牌失效
+            .tokenRepository(tokenRepository())
+            .and()
             .logout()
             .logoutSuccessHandler { _, resp, _ ->
                 resp.contentType = "application/json;charset=utf-8"
@@ -108,30 +102,21 @@ open class WebSecurityAutoConfiguration : WebSecurityConfigurerAdapter() {
                 out.close()
             }
             .permitAll()
-//            .logoutRequestMatcher(AntPathRequestMatcher("/logout", "POST"))
-//            .logoutSuccessUrl("/login")
             .and()
             .sessionManagement()
-            .maximumSessions(1) // 配置最大会话数为 1，这样后面的登录就会自动踢掉前面的登录
-//            .maxSessionsPreventsLogin(true)  // 添加该配置后，将禁止新的登录
+            .maximumSessions(configProvider.maximumSessions()) // 配置最大会话数为 1，这样后面的登录就会自动踢掉前面的登录
+            .maxSessionsPreventsLogin(configProvider.maxSessionsPreventsLogin())  // 添加该配置后，将禁止新的登录
 
         http.exceptionHandling()
-            .authenticationEntryPoint { _, resp, authExcp ->
+            .authenticationEntryPoint { _, resp, _ ->
                 resp.sendError(HttpStatus.UNAUTHORIZED.value())
             }
             .accessDeniedHandler { _, resp, _ ->
                 resp.sendError(HttpStatus.FORBIDDEN.value())
-//                resp.contentType = "application/json;charset=utf-8"
-//                val out = resp.writer
-//                out.write("没有访问权限!")
-//                out.flush()
-//                out.close()
             }
-        http.csrf().disable() //TODO
-//        http.cors()
+        http.csrf().disable()
 
         http.addFilterAt(loginFilter(), UsernamePasswordAuthenticationFilter::class.java)
-
     }
 
     @Bean
@@ -147,7 +132,8 @@ open class WebSecurityAutoConfiguration : WebSecurityConfigurerAdapter() {
 
 
     override fun configure(web: WebSecurity) {
-        web.ignoring().antMatchers("/js/**", "/css/**", "/images/**")   //TODO
+        val configProvider = webSecurityConfigurer()
+        web.ignoring().antMatchers(*configProvider.ignoringUrls())
     }
 
     @Bean

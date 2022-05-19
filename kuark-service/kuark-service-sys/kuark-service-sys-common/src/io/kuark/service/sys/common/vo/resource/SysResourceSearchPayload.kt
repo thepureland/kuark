@@ -1,9 +1,10 @@
 package io.kuark.service.sys.common.vo.resource
 
+import io.kuark.base.query.enums.Operator
 import io.kuark.base.support.payload.ListSearchPayload
 import kotlin.reflect.KClass
 
-class SysResourceSearchPayload: ListSearchPayload() {
+open class SysResourceSearchPayload: ListSearchPayload() {
 
     /** 子系统代码 */
     var subSysDictCode: String? = null
@@ -24,5 +25,7 @@ class SysResourceSearchPayload: ListSearchPayload() {
     var active: Boolean? = null
 
     override var returnEntityClass: KClass<*>? = SysResourceRecord::class
+
+    override var operators: Map<String, Operator>? = mapOf(SysResourceSearchPayload::name.name to Operator.ILIKE)
 
 }

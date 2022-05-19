@@ -1,5 +1,6 @@
 package io.kuark.service.sys.common.vo.cache
 
+import io.kuark.base.query.enums.Operator
 import io.kuark.base.support.payload.ListSearchPayload
 import kotlin.reflect.KClass
 
@@ -26,6 +27,8 @@ open class SysCacheSearchPayload : ListSearchPayload() {
 
     /** 是否启用 */
     var active: Boolean? = null
+
+    override var operators: Map<String, Operator>? = mapOf(SysCacheSearchPayload::name.name to Operator.ILIKE)
 
     //endregion your codes 2
 

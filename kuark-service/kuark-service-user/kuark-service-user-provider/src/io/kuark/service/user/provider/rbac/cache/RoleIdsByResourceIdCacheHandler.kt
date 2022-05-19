@@ -1,9 +1,11 @@
 package io.kuark.service.user.provider.rbac.cache
 
+import io.kuark.ability.cache.core.BatchCacheable
 import io.kuark.ability.cache.kit.CacheKit
 import io.kuark.ability.cache.support.AbstractCacheHandler
 import io.kuark.base.log.LogFactory
 import io.kuark.base.support.Consts
+import io.kuark.service.user.common.rbac.vo.role.RbacRoleCacheItem
 import io.kuark.service.user.provider.rbac.dao.RbacRoleResourceDao
 import io.kuark.service.user.provider.rbac.model.po.RbacRoleResource
 import org.springframework.beans.factory.annotation.Autowired
@@ -16,7 +18,7 @@ open class RoleIdsByResourceIdCacheHandler : AbstractCacheHandler<List<String>>(
 
 
     @Autowired
-    private lateinit var rbacRoleResourceDao : RbacRoleResourceDao
+    private lateinit var rbacRoleResourceDao: RbacRoleResourceDao
 
     @Autowired
     private lateinit var self: RoleIdsByResourceIdCacheHandler
@@ -31,7 +33,7 @@ open class RoleIdsByResourceIdCacheHandler : AbstractCacheHandler<List<String>>(
     override fun cacheName(): String = CACHE_NAME
 
     override fun doReload(key: String): List<String>? {
-        return self.getRoleIdsByResouceId(key)
+        return self.getRoleIdsByResourceId(key)
     }
 
     override fun reloadAll(clear: Boolean) {
@@ -63,14 +65,40 @@ open class RoleIdsByResourceIdCacheHandler : AbstractCacheHandler<List<String>>(
         key = "#resourceId",
         unless = "#result == null || #result.size() == 0"
     )
-    open fun getRoleIdsByResouceId(resourceId: String): List<String> {
+    open fun getRoleIdsByResourceId(resourceId: String): List<String> {
         if (CacheKit.isCacheActive(CACHE_NAME)) {
             log.debug("${CACHE_NAME}缓存中不存在key为${resourceId}的数据，从数据库中加载...")
         }
-        val roleIds = rbacRoleResourceDao.oneSearchProperty(RbacRoleResource::resourceId.name, resourceId, RbacRoleResource::roleId.name)
+        val roleIds = rbacRoleResourceDao.oneSearchProperty(
+            RbacRoleResource::resourceId.name, resourceId, RbacRoleResource::roleId.name
+        )
         log.debug("从数据库中加载resourceId为${resourceId}的roleId共${roleIds.size}条。")
         @Suppress(Consts.Suppress.UNCHECKED_CAST)
         return roleIds as List<String>
+    }
+
+    @BatchCacheable(
+        cacheNames = [CACHE_NAME],
+        valueClass = List::class
+    )
+    open fun getRoleIdsByResourceIds(resourceIds: Collection<String>): Map<String, List<String>> {
+        val returnProperties = listOf(RbacRoleResource::roleId.name, RbacRoleResource::resourceId.name)
+        val results = rbacRoleResourceDao.inSearchProperties(
+            RbacRoleResource::resourceId.name, resourceIds, returnProperties
+        )
+        log.debug("从数据库中加载resourceIds为${resourceIds}的roleId共${results.size}条。")
+        val result = mutableMapOf<String, MutableList<String>>()
+        results.forEach { map ->
+            val resourceId = map[RbacRoleResource::resourceId.name] as String
+            val roleId = map[RbacRoleResource::roleId.name] as String
+            var roleIds = result[resourceId]
+            if (roleIds == null) {
+                roleIds = mutableListOf()
+                result[resourceId] = roleIds
+            }
+            roleIds.add(roleId)
+        }
+        return result
     }
 
     open fun syncOnUpdate(resourceId: String, roleIds: Collection<String>) {
@@ -101,5 +129,5 @@ open class RoleIdsByResourceIdCacheHandler : AbstractCacheHandler<List<String>>(
             log.debug("${CACHE_NAME}缓存同步完成。")
         }
     }
-    
+
 }

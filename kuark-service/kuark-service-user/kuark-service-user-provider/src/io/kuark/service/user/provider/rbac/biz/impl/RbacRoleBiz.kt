@@ -239,7 +239,7 @@ open class RbacRoleBiz : IRbacRoleBiz, BaseCrudBiz<String, RbacRole, RbacRoleDao
 
     override fun getUrlAccessRoleIdsFromCache(subSysDictCode: String, url: String): List<String> {
         val resourceId = resourceApi.getResourceId(subSysDictCode, url) ?: return emptyList()
-        return roleIdsByResourceIdCacheHandler.getRoleIdsByResouceId(resourceId)
+        return roleIdsByResourceIdCacheHandler.getRoleIdsByResourceId(resourceId)
     }
 
     override fun getMenuPermissions(roleId: String): Pair<List<BaseMenuTreeNode>, List<String>> {

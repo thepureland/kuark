@@ -5,7 +5,6 @@ import io.kuark.ability.cache.kit.CacheKit
 import io.kuark.ability.cache.support.AbstractCacheHandler
 import io.kuark.base.log.LogFactory
 import io.kuark.base.support.Consts
-import io.kuark.service.user.common.rbac.vo.role.RbacRoleCacheItem
 import io.kuark.service.user.provider.rbac.dao.RbacRoleResourceDao
 import io.kuark.service.user.provider.rbac.model.po.RbacRoleResource
 import org.springframework.beans.factory.annotation.Autowired
@@ -14,7 +13,7 @@ import org.springframework.stereotype.Component
 
 
 @Component
-open class RoleIdsByResourceIdCacheHandler : AbstractCacheHandler<List<String>>() {
+open class RoleIdsByResourceIdCacheHandler : AbstractCacheHandler<Collection<String>>() {
 
 
     @Autowired
@@ -32,7 +31,7 @@ open class RoleIdsByResourceIdCacheHandler : AbstractCacheHandler<List<String>>(
 
     override fun cacheName(): String = CACHE_NAME
 
-    override fun doReload(key: String): List<String>? {
+    override fun doReload(key: String): Collection<String>? {
         return self.getRoleIdsByResourceId(key)
     }
 
@@ -65,7 +64,7 @@ open class RoleIdsByResourceIdCacheHandler : AbstractCacheHandler<List<String>>(
         key = "#resourceId",
         unless = "#result == null || #result.size() == 0"
     )
-    open fun getRoleIdsByResourceId(resourceId: String): List<String> {
+    open fun getRoleIdsByResourceId(resourceId: String): Collection<String> {
         if (CacheKit.isCacheActive(CACHE_NAME)) {
             log.debug("${CACHE_NAME}缓存中不存在key为${resourceId}的数据，从数据库中加载...")
         }
@@ -79,9 +78,9 @@ open class RoleIdsByResourceIdCacheHandler : AbstractCacheHandler<List<String>>(
 
     @BatchCacheable(
         cacheNames = [CACHE_NAME],
-        valueClass = List::class
+        valueClass = Collection::class
     )
-    open fun getRoleIdsByResourceIds(resourceIds: Collection<String>): Map<String, List<String>> {
+    open fun getRoleIdsByResourceIds(resourceIds: Collection<String>): Map<String, Collection<String>> {
         val returnProperties = listOf(RbacRoleResource::roleId.name, RbacRoleResource::resourceId.name)
         val results = rbacRoleResourceDao.inSearchProperties(
             RbacRoleResource::resourceId.name, resourceIds, returnProperties

@@ -22,6 +22,9 @@ class RbacRoleSearchPayload: ListSearchPayload() {
     /** 子系统代码 */
     var subSysDictCode: String? = null
 
+    /** 租户id */
+    var tenantId: String? = null
+
     /** 是否启用 */
     var active: Boolean? = null
 

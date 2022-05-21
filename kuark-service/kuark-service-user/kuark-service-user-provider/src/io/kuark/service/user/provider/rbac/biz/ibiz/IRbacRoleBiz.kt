@@ -8,6 +8,7 @@ import io.kuark.service.sys.common.vo.resource.SysResourceDetail
 import io.kuark.service.sys.common.vo.resource.SysResourceRecord
 import io.kuark.service.user.common.rbac.vo.role.RbacRoleCacheItem
 import io.kuark.service.user.common.rbac.vo.role.RbacRoleDetail
+import io.kuark.service.user.common.rbac.vo.role.RoleIdAndName
 import io.kuark.service.user.common.user.vo.account.UserAccountCacheItem
 import io.kuark.service.user.common.user.vo.account.UserAccountRecord
 import io.kuark.service.user.common.user.vo.account.UserAccountSearchPayload
@@ -104,7 +105,11 @@ interface IRbacRoleBiz : IBaseCrudBiz<String, RbacRole> {
      * @author K
      * @since 1.0.0
      */
-    fun getRolePermissions(roleId: String, subSysDictCode: String, resourceType: ResourceType): List<SysResourceCacheItem>
+    fun getRolePermissions(
+        roleId: String,
+        subSysDictCode: String,
+        resourceType: ResourceType
+    ): List<SysResourceCacheItem>
 
     /**
      * 设置角色可操作的资源
@@ -154,11 +159,11 @@ interface IRbacRoleBiz : IBaseCrudBiz<String, RbacRole> {
      *
      * @param subSysDictCode 子系统代码
      * @param url URL
-     * @return List(角色id)
+     * @return Collection(角色id)
      * @author K
      * @since 1.0.0
      */
-    fun getUrlAccessRoleIdsFromCache(subSysDictCode: String, url: String): List<String>
+    fun getUrlAccessRoleIdsFromCache(subSysDictCode: String, url: String): Collection<String>
 
     /**
      * 返回角色最大权限的菜单和其当前已分配权限的菜单ID
@@ -181,6 +186,36 @@ interface IRbacRoleBiz : IBaseCrudBiz<String, RbacRole> {
      * @since 1.0.0
      */
     fun searchAssignedUsers(searchPayload: UserAccountSearchPayload, userIds: List<String>?): List<UserAccountCacheItem>
+
+    /**
+     * 返回资源所关联的角色id
+     *
+     * @param resourceId 资源id
+     * @param subSysDictCode 子系统代码
+     * @param tenantId 租户id
+     * @return Set(角色id)
+     * @author K
+     * @since 1.0.0
+     */
+    fun getRoleIdsForResource(resourceId: String, subSysDictCode: String, tenantId: String?): Set<String>
+
+    /**
+     * 为资源重新关联角色id
+     *
+     * @param resourceId 资源id
+     * @param subSysDictCode 子系统代码
+     * @param tenantId 租户id
+     * @param roleIds Set(角色id)
+     * @return 是否关联成功
+     * @author K
+     * @since 1.0.0
+     */
+    fun reassignRolesForResource(
+        resourceId: String,
+        subSysDictCode: String,
+        tenantId: String?,
+        roleIds: Set<String>?
+    ): Boolean
 
     //endregion your codes 2
 

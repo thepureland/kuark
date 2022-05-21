@@ -1,7 +1,10 @@
 package io.kuark.ability.web.springmvc
 
 import io.kuark.context.core.IContextInitializer
+import org.apache.catalina.connector.Connector
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
+import org.springframework.boot.web.embedded.tomcat.TomcatConnectorCustomizer
+import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory
 import org.springframework.boot.web.servlet.FilterRegistrationBean
 import org.springframework.boot.web.servlet.ServletListenerRegistrationBean
 import org.springframework.context.annotation.Bean
@@ -26,6 +29,21 @@ open class SpringMvcAutoConfiguration : WebMvcConfigurer {
 //    open fun mutipartResolvet(): CommonsMultipartResolver {
 //        return CommonsMultipartResolver()
 //    }
+
+    @Bean
+    open fun webServerFactory(): TomcatServletWebServerFactory {
+        val factory = TomcatServletWebServerFactory()
+        factory.addConnectorCustomizers(object : TomcatConnectorCustomizer {
+
+            override fun customize(connector: Connector) {
+                // 解决用tomcat时，get请求传入特殊符号报400错误（RFC7230andRFC3986）的问题
+                connector.setProperty("relaxedPathChars", "\"<>[\\]^`{|}");
+                connector.setProperty("relaxedQueryChars", "\"<>[\\]^`{|}");
+            }
+
+        })
+        return factory
+    }
 
     @Bean
     open fun requestContextListener(): RequestContextListener = RequestContextListener()

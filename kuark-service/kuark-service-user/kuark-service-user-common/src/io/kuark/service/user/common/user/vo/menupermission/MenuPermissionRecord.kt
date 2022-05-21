@@ -1,7 +1,6 @@
 package io.kuark.service.user.common.user.vo.menupermission
 
 import io.kuark.base.support.result.IdJsonResult
-import java.time.LocalDateTime
 
 open class MenuPermissionRecord: IdJsonResult<String>() {
 

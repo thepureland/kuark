@@ -3,6 +3,7 @@ package io.kuark.service.user.provider.rbac.biz.impl
 import io.kuark.ability.data.rdb.biz.BaseCrudBiz
 import io.kuark.base.bean.BeanKit
 import io.kuark.base.error.ObjectNotFoundException
+import io.kuark.base.lang.collections.CollectionKit
 import io.kuark.base.lang.string.StringKit
 import io.kuark.base.log.LogFactory
 import io.kuark.base.query.Criteria
@@ -15,6 +16,7 @@ import io.kuark.service.sys.common.vo.resource.BaseMenuTreeNode
 import io.kuark.service.sys.common.vo.resource.ResourceType
 import io.kuark.service.user.common.rbac.vo.role.RbacRoleCacheItem
 import io.kuark.service.user.common.rbac.vo.role.RbacRoleDetail
+import io.kuark.service.user.common.rbac.vo.role.RoleIdAndName
 import io.kuark.service.user.common.user.vo.account.UserAccountCacheItem
 import io.kuark.service.user.common.user.vo.account.UserAccountSearchPayload
 import io.kuark.service.user.provider.rbac.biz.ibiz.IRbacRoleBiz
@@ -192,7 +194,11 @@ open class RbacRoleBiz : IRbacRoleBiz, BaseCrudBiz<String, RbacRole, RbacRoleDao
         return success
     }
 
-    override fun getRolePermissions(roleId: String, subSysDictCode: String,resourceType: ResourceType): List<SysResourceCacheItem> {
+    override fun getRolePermissions(
+        roleId: String,
+        subSysDictCode: String,
+        resourceType: ResourceType
+    ): List<SysResourceCacheItem> {
         val resourceIds = resourceIdsByRoleIdCacheHandler.getResourceIdsByRoleId(roleId)
         if (resourceIds.isNotEmpty()) {
             return resourceApi.getResources(subSysDictCode, resourceType, *resourceIds.toTypedArray())
@@ -237,7 +243,7 @@ open class RbacRoleBiz : IRbacRoleBiz, BaseCrudBiz<String, RbacRole, RbacRoleDao
         return map
     }
 
-    override fun getUrlAccessRoleIdsFromCache(subSysDictCode: String, url: String): List<String> {
+    override fun getUrlAccessRoleIdsFromCache(subSysDictCode: String, url: String): Collection<String> {
         val resourceId = resourceApi.getResourceId(subSysDictCode, url) ?: return emptyList()
         return roleIdsByResourceIdCacheHandler.getRoleIdsByResourceId(resourceId)
     }
@@ -262,6 +268,50 @@ open class RbacRoleBiz : IRbacRoleBiz, BaseCrudBiz<String, RbacRole, RbacRoleDao
         return if (ids.isNotEmpty()) {
             userByIdCacheHandler.getUsersByIds(ids).values.toList()
         } else emptyList()
+    }
+
+    override fun getRoleIdsForResource(resourceId: String, subSysDictCode: String, tenantId: String?): Set<String> {
+        val allRoleIds = roleIdBySubSysAndTenantIdCacheHandler.getRoleIds(subSysDictCode, tenantId)
+        val roleIds = roleIdsByResourceIdCacheHandler.getRoleIdsByResourceId(resourceId)
+        return allRoleIds.intersect(roleIds)
+    }
+
+    @Transactional
+    override fun reassignRolesForResource(
+        resourceId: String,
+        subSysDictCode: String,
+        tenantId: String?,
+        roleIds: Set<String>?
+    ): Boolean {
+        // 选删除已经关联的角色-资源（必须属于subSysDictCode和tenantId的）
+        val allRoleIds = roleIdBySubSysAndTenantIdCacheHandler.getRoleIds(subSysDictCode, tenantId)
+        val criteria = Criteria.add(RbacRoleResource::resourceId.name, Operator.EQ, resourceId)
+            .addAnd(RbacRoleResource::roleId.name, Operator.IN, allRoleIds)
+
+        @Suppress(Consts.Suppress.UNCHECKED_CAST)
+        val affectRoleIds = rbacRoleResourceDao.searchProperty(criteria, RbacRoleResource::roleId.name) as List<String>
+
+        val count = rbacRoleResourceDao.batchDeleteCriteria(criteria)
+        if (count > 0) {
+            roleIdsByResourceIdCacheHandler.syncOnDelete(resourceId)
+            resourceIdsByRoleIdCacheHandler.syncOnBatchDelete(affectRoleIds.toSet())
+        }
+
+        // 重新关联角色-资源
+        return if (CollectionKit.isEmpty(roleIds)) {
+            true
+        } else {
+            val roleResources = roleIds!!.map {
+                RbacRoleResource {
+                    roleId = it
+                    this.resourceId = resourceId
+                }
+            }
+            val count = rbacRoleResourceDao.batchInsert(roleResources)
+            roleIdsByResourceIdCacheHandler.syncOnUpdate(resourceId, roleIds)
+            // resourceIdsByRoleIdCacheHandler由于不同角色可能关联有其它资源，所以无法在这里同步，下次使用到时将自动从数据库中同步
+            count == roleIds.size
+        }
     }
 
     //endregion your codes 2

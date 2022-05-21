@@ -15,7 +15,7 @@ import kotlin.reflect.KClass
  *
  * 2.缓存名称一定要指定，并不会像spring的@Cacheable那样缺省取方法名
  *
- * 3.方法的返回值必须是Map，其key为缓存的key，value通过@BatchCacheable的valueClass定义
+ * 3.方法的返回值必须是Map，其key为缓存的key，value通过@BatchCacheable的valueClass定义。如果是集合类型，必须定义为Collection。
  *
  * 4.方法必须是open的
  *
@@ -39,7 +39,7 @@ annotation class BatchCacheable(
     /** 实现IKeysGenerator接口的spring bean的名称 */
     val keysGenerator: String = "defaultKeysGenerator",
 
-    /** 单个key对应的缓存值的类型 */
+    /** 单个key对应的缓存值的类型，如果是集合类型，必须定义为Collection */
     val valueClass: KClass<*>,
 
     /** 处理缓存key时忽略的参数的索引 */

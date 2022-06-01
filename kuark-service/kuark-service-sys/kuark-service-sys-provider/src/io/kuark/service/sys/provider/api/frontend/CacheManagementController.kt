@@ -4,8 +4,6 @@ import io.kuark.ability.cache.support.AbstractCacheHandler
 import io.kuark.base.lang.GenericKit
 import io.kuark.base.log.LogFactory
 import io.kuark.context.kit.SpringKit
-import io.kuark.service.sys.provider.biz.ibiz.ISysCacheBiz
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
@@ -18,9 +16,6 @@ class CacheManagementController {
     private val cacheMgmtMap = mutableMapOf<String, AbstractCacheHandler<*>>()
 
     private val log = LogFactory.getLog(this::class)
-
-    @Autowired
-    private lateinit var sysCacheBiz: ISysCacheBiz
 
     @GetMapping("/reload")
     fun reload(cacheName: String, key: String): String {

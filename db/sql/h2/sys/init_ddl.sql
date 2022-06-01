@@ -60,7 +60,6 @@ create table "sys_dict_item"
     "dict_id"     CHAR(36)                        not null,
     "item_code"   VARCHAR(64)                     not null,
     "item_name"   VARCHAR(64)                     not null,
-    "parent_code" VARCHAR(64),
     "parent_id"   CHAR(36)                        not null,
     "seq_no"      INT4,
     "remark"      VARCHAR(128),
@@ -88,9 +87,6 @@ on column "sys_dict_item"."item_code" is '字典项编号';
 
 comment
 on column "sys_dict_item"."item_name" is '字典项名称，或其国际化key';
-
-comment
-on column "sys_dict_item"."parent_code" is '父项编号';
 
 comment
 on column "sys_dict_item"."parent_id" is '父项主键';

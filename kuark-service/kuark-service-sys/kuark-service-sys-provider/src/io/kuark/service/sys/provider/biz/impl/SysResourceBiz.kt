@@ -150,25 +150,25 @@ open class SysResourceBiz : BaseCrudBiz<String, SysResource, SysResourceDao>(), 
             0 -> { // 资源类型
                 val dictItems = dictItemBiz.getItemsFromCache("kuark:sys", "resource_type")
                 dictItems.map {
-                    SysResourceTreeNode()
-                        .apply { this.id = it.itemCode;this.name = it.itemName }
+                    SysResourceTreeNode().apply { this.id = it.itemCode;this.name = it.itemName }
                 }
             }
             1 -> { // 子系统
                 val dictItems = dictItemBiz.getItemsFromCache("kuark:sys", "sub_sys")
                 dictItems.map {
-                    SysResourceTreeNode()
-                        .apply { this.id = it.itemCode;this.name = it.itemName }
+                    SysResourceTreeNode().apply { this.id = it.itemCode;this.name = it.itemName }
                 }
             }
             else -> { // 资源
+                searchPayload.resourceTypeDictCode = ResourceType.MENU.code
+
                 if (searchPayload.active == false) { // 非仅启用状态
                     searchPayload.active = null
                 }
                 searchPayload.returnEntityClass = SysResourceTreeNode::class
                 searchPayload.pageNo = null // 不分页
                 dao.search(searchPayload) { column, _ ->
-                    if (column.name == SysResources.parentId.name && searchPayload.level == 2) { // 1层是资源类型，2层是子系统，从第3层开始才是RegResource
+                    if (column.name == SysResources.parentId.name && searchPayload.level == 2) { // 1层是资源类型，2层是子系统，从第3层开始才是SysResource
                         column.isNull()
                     } else null
                 } as List<SysResourceTreeNode>

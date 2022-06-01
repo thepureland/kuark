@@ -40,10 +40,10 @@ open class WebSecurityAutoConfiguration : WebSecurityConfigurerAdapter() {
     private lateinit var userAccountDetails: UserDetailsService
 
     @Autowired
-    private lateinit var customAccessDecisionManager: CustomAccessDecisionManager
+    private lateinit var customAccessDecisionManager: RoleAccessDecisionManager
 
     @Autowired
-    private lateinit var customFilterInvocationSecurityMetadataSource: CustomFilterInvocationSecurityMetadataSource
+    private lateinit var customFilterInvocationSecurityMetadataSource: RequestUrlAuthorityMetadataSource
 
 //    @Autowired
 //    private val authenticationProvider: AuthenticationProvider? = null

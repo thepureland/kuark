@@ -423,7 +423,7 @@ create table "user_account"
 );
 
 create
-unique index "uq_user_account__name_subsys_owner" on "user_account" ("username", "sub_sys_dict_code", "tenant_id");
+unique index "uq_user_account__name_subsys_tenant" on "user_account" ("username", "sub_sys_dict_code", "tenant_id");
 
 comment
 on table "user_account" is '用户账号';

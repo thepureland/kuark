@@ -1,5 +1,7 @@
 package io.kuark.context.core
 
+import io.kuark.base.support.IIdEntity
+
 /**
  * Kuark上下文
  *
@@ -9,10 +11,10 @@ package io.kuark.context.core
 class KuarkContext {
 
     companion object {
-        const val OTHER_INFO_KEY_DATA_SOURCE = "DATA_SOURCE"
-        const val OTHER_INFO_KEY_DATABASE = "DATABASE"
-        const val OTHER_INFO_KEY_VERIFY_CODE = "VERIFY_CODE"
-        const val SESSION_KEY_USER_ID = "USER_ID"
+        const val OTHER_INFO_KEY_DATA_SOURCE = "_DATA_SOURCE_"
+        const val OTHER_INFO_KEY_DATABASE = "_DATABASE_"
+        const val OTHER_INFO_KEY_VERIFY_CODE = "_VERIFY_CODE_"
+        const val SESSION_KEY_USER = "_USER_"
     }
 
     /** 数据源id，为null将根据路由策略决定 */
@@ -24,8 +26,10 @@ class KuarkContext {
     /** 租户id */
     var tenantId: String? = null
 
-    /** 用户id */
-    var userId: String? = null
+//    var userId: String? = null
+
+    /** 用户 */
+    var user: IIdEntity<String>? = null
 
     /** 日志跟踪关键词串，格式可自定义 */
     var traceKey: String? = null

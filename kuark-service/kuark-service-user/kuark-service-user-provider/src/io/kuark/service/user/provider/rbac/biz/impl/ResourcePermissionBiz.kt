@@ -4,9 +4,9 @@ import io.kuark.base.query.sort.Direction
 import io.kuark.base.tree.TreeKit
 import io.kuark.service.sys.common.api.ISysResourceApi
 import io.kuark.service.sys.common.vo.resource.ResourceType
-import io.kuark.service.user.common.user.vo.menupermission.MenuPermissionSearchPayload
+import io.kuark.service.user.common.user.vo.menupermission.ResourcePermissionSearchPayload
 import io.kuark.service.user.common.user.vo.menupermission.MenuPermissionTreeNode
-import io.kuark.service.user.provider.rbac.biz.ibiz.IMenuPermissionBiz
+import io.kuark.service.user.provider.rbac.biz.ibiz.IResourcePermissionBiz
 import io.kuark.service.user.provider.rbac.biz.ibiz.IRbacRoleBiz
 import io.kuark.service.user.provider.rbac.cache.RoleIdsByResourceIdCacheHandler
 import org.springframework.beans.factory.annotation.Autowired
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service
 
 
 @Service
-open class MenuPermissionBiz : IMenuPermissionBiz {
+open class ResourcePermissionBiz : IResourcePermissionBiz {
 
     @Autowired
     private lateinit var sysResourceApi: ISysResourceApi
@@ -26,7 +26,7 @@ open class MenuPermissionBiz : IMenuPermissionBiz {
     private lateinit var roleIdsByResourceIdCacheHandler : RoleIdsByResourceIdCacheHandler
 
 
-    override fun searchTree(payload: MenuPermissionSearchPayload): List<MenuPermissionTreeNode> {
+    override fun searchTree(payload: ResourcePermissionSearchPayload): List<MenuPermissionTreeNode> {
         val subSysDictCode = payload.subSysDictCode!!
         val tenantId = payload.tenantId
         val menuCacheItems = sysResourceApi.getResources(subSysDictCode, ResourceType.MENU)

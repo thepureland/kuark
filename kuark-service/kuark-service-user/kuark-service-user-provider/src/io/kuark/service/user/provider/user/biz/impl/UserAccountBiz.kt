@@ -10,11 +10,7 @@ import io.kuark.service.sys.common.api.ISysResourceApi
 import io.kuark.service.sys.common.api.ISysTenantApi
 import io.kuark.service.sys.common.vo.resource.MenuTreeNode
 import io.kuark.service.sys.common.vo.resource.ResourceType
-import io.kuark.service.user.common.rbac.vo.role.RbacRoleDetail
-import io.kuark.service.user.common.user.vo.account.UserAccountCacheItem
-import io.kuark.service.user.common.user.vo.account.UserAccountDetail
-import io.kuark.service.user.common.user.vo.account.UserAccountRecord
-import io.kuark.service.user.common.user.vo.account.UserAccountSearchPayload
+import io.kuark.service.user.common.user.vo.account.*
 import io.kuark.service.user.provider.rbac.biz.ibiz.IRbacRoleBiz
 import io.kuark.service.user.provider.rbac.cache.ResourceIdsByRoleIdCacheHandler
 import io.kuark.service.user.provider.rbac.cache.RoleIdsByUserIdCacheHandler
@@ -120,12 +116,19 @@ open class UserAccountBiz : BaseCrudBiz<String, UserAccount, UserAccountDao>(), 
 
     override fun getAuthorisedMenus(userId: String): List<MenuTreeNode> {
         val subSysDictCode = KuarkContextHolder.get().subSysCode!!
-        val roleIds = roleIdsByUserIdCacheHandler.getRoleIdsByUserId(userId)
-        val resIds = roleIds.flatMap { roleId ->
-            resourceIdsByRoleIdCacheHandler.getResourceIdsByRoleId(roleId)
-        }.toSet()
-        val menuCacheItems = sysResourceApi.getResources(subSysDictCode, ResourceType.MENU)
-        val menus = menuCacheItems.filter { it.id in resIds }.map {
+        val user = userByIdCacheHandler.getUserById(userId)
+        val resIds = if (user?.userTypeDictCode != UserType.MAIN_ACCOUNT.code) {
+            val roleIds = roleIdsByUserIdCacheHandler.getRoleIdsByUserId(userId)
+            roleIds.flatMap { roleId ->
+                resourceIdsByRoleIdCacheHandler.getResourceIdsByRoleId(roleId)
+            }.toSet()
+        } else null
+        val menuCacheItems = sysResourceApi.getResources(subSysDictCode, ResourceType.MENU).let { menuItems ->
+            if (resIds != null) {
+                menuItems.filter { it.id in resIds }
+            } else menuItems // 主账号，拥有所有菜单权限，不用过滤
+        }
+        val menus = menuCacheItems.map {
             MenuTreeNode().apply {
                 title = it.name
                 index = it.url

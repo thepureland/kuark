@@ -2,6 +2,7 @@ package io.kuark.service.sys.provider.api.frontend
 
 import io.kuark.ability.web.springmvc.BaseCrudController
 import io.kuark.base.error.ObjectNotFoundException
+import io.kuark.base.support.Consts
 import io.kuark.context.core.KuarkContextHolder
 import io.kuark.service.sys.common.api.ISysDictApi
 import io.kuark.service.sys.common.api.ISysResourceApi
@@ -52,6 +53,19 @@ open class SysResourceController :
             this.active = active
         }
         return biz.update(sysResource)
+    }
+
+    @PostMapping("/searchOnClick")
+    fun searchOnClick(@RequestBody searchPayload: SysResourceSearchPayload): Pair<List<SysResourceRecord>, Int> {
+        return if (searchPayload.resourceTypeDictCode == ResourceType.MENU.code) {
+            Pair(listOf(get(searchPayload.parentId!!, false)), 1)
+        } else {
+            searchPayload.name = null
+            @Suppress(Consts.Suppress.UNCHECKED_CAST)
+            val records = biz.search(searchPayload) as List<SysResourceRecord>
+            val count = biz.count(searchPayload)
+            Pair(records, count)
+        }
     }
 
     @DeleteMapping("/delete")

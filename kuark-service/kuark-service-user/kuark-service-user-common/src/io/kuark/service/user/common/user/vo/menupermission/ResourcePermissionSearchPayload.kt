@@ -3,7 +3,7 @@ package io.kuark.service.user.common.user.vo.menupermission
 import io.kuark.base.support.payload.ListSearchPayload
 import kotlin.reflect.KClass
 
-open class MenuPermissionSearchPayload: ListSearchPayload() {
+open class ResourcePermissionSearchPayload: ListSearchPayload() {
 
     override var pageNo: Int? = null // 不分页
 

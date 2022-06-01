@@ -13,20 +13,16 @@ import org.springframework.stereotype.Component
  * 判断是否拥有权限
  */
 @Component
-open class CustomAccessDecisionManager : AccessDecisionManager {
+open class RoleAccessDecisionManager : AccessDecisionManager {
 
     override fun decide(authentication: Authentication, any: Any?, configAttributes: Collection<ConfigAttribute>) {
         for (configAttribute in configAttributes) {
-            val needRole = configAttribute.attribute
-            // 如果请求Url需要的角色是ROLE_LOGIN，说明当前的Url用户登录后即可访问
-            if ("ROLE_LOGIN" == needRole) {
-                if (authentication is AnonymousAuthenticationToken) {
-                    throw BadCredentialsException("unlogin");
-                } else
-                    return;
+            // 处理主账号权限
+            if (configAttribute.attribute == RequestUrlAuthorityMetadataSource.ROLE_SUPERUSER) {
+                return
             }
 
-            //当前用户所具有的权限
+            // 当前用户所具有的权限
             val auths = authentication.authorities
             for (grantedAuthority in auths) {
                 if ("ROLE_${configAttribute.attribute}" == grantedAuthority.authority) {

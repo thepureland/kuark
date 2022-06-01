@@ -59,7 +59,7 @@ open class DefaultLoginFilter : UsernamePasswordAuthenticationFilter() {
             val authentication = authenticationManager.authenticate(authRequest)
             val subSysCode = KuarkContextHolder.get().subSysCode!!
             val user = userAccountBiz.getByUsername(subSysCode, username!!)
-            session.setAttribute(KuarkContext.SESSION_KEY_USER_ID, user!!.id)
+            session.setAttribute(KuarkContext.SESSION_KEY_USER, user)
             authentication
         } else {
 //            checkCode(response, request.getParameter("code"), verifyCode)

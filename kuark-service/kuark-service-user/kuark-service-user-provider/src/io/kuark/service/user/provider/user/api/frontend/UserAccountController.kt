@@ -48,8 +48,8 @@ open class UserAccountController :
 
     @GetMapping("/getAuthorisedMenus")
     fun getAuthorisedMenus(request: ServletRequest): List<MenuTreeNode> {
-        val userId = KuarkContextHolder.get().userId!!
-        return userAccountBiz.getAuthorisedMenus(userId)
+        val user = KuarkContextHolder.get().user!!
+        return userAccountBiz.getAuthorisedMenus(user.id!!)
     }
 
 }

@@ -283,7 +283,7 @@ open class RbacRoleBiz : IRbacRoleBiz, BaseCrudBiz<String, RbacRole, RbacRoleDao
         tenantId: String?,
         roleIds: Set<String>?
     ): Boolean {
-        // 选删除已经关联的角色-资源（必须属于subSysDictCode和tenantId的）
+        // 先删除已经关联的角色-资源（必须属于subSysDictCode和tenantId的）
         val allRoleIds = roleIdBySubSysAndTenantIdCacheHandler.getRoleIds(subSysDictCode, tenantId)
         val criteria = Criteria.add(RbacRoleResource::resourceId.name, Operator.EQ, resourceId)
             .addAnd(RbacRoleResource::roleId.name, Operator.IN, allRoleIds)

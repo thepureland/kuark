@@ -292,6 +292,12 @@ open class SysResourceBiz : BaseCrudBiz<String, SysResource, SysResourceDao>(), 
         return resources.filter { it.id in resourceIds }
     }
 
+    override fun getDirectChildrenMenu(subSysDictCode: String, parentId: String?): List<SysResourceCacheItem> {
+        val resources = getResourcesFromCache(subSysDictCode, ResourceType.MENU.code)
+        val menus = resources.filter { it.parentId == parentId }
+        return menus.sortedBy { it.seqNo }
+    }
+
     private fun recursionFindAllParentId(itemId: String, results: MutableList<String>) {
         val list = dao.oneSearchProperty(
             SysResources.id.name,

@@ -1,11 +1,15 @@
 package io.kuark.service.user.provider.rbac.biz.ibiz
 
-import io.kuark.service.user.common.user.vo.menupermission.ResourcePermissionSearchPayload
-import io.kuark.service.user.common.user.vo.menupermission.MenuPermissionTreeNode
+import io.kuark.service.sys.common.vo.resource.BaseMenuTreeNode
+import io.kuark.service.sys.common.vo.resource.SysResourceSearchPayload
+import io.kuark.service.user.common.user.vo.resourcepermission.ResourcePermissionSearchPayload
+import io.kuark.service.user.common.user.vo.resourcepermission.ResourcePermissionRecord
 
 
 interface IResourcePermissionBiz {
 
-    fun searchTree(payload: ResourcePermissionSearchPayload): List<MenuPermissionTreeNode>
+    fun search(payload: ResourcePermissionSearchPayload): List<ResourcePermissionRecord>
+
+    fun loadDirectChildrenMenuForUser(userId: String, searchPayload: SysResourceSearchPayload): List<BaseMenuTreeNode>
 
 }

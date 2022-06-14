@@ -1,8 +1,9 @@
-package io.kuark.service.user.common.user.vo.menupermission
+package io.kuark.service.user.common.user.vo.resourcepermission
 
 import io.kuark.base.support.result.IdJsonResult
 
-open class MenuPermissionRecord: IdJsonResult<String>() {
+
+open class ResourcePermissionRecord : IdJsonResult<String>() {
 
     /** 名称 */
     var name: String? = null

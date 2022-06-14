@@ -31,4 +31,8 @@ class SysResourceFallback : ISysResourceProxy {
         TODO("Not yet implemented")
     }
 
+    override fun getDirectChildrenMenu(subSysDictCode: String, parentId: String?): List<SysResourceCacheItem> {
+        TODO("Not yet implemented")
+    }
+
 }

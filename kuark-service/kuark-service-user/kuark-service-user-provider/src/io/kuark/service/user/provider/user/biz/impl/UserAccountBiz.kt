@@ -8,6 +8,7 @@ import io.kuark.base.tree.TreeKit
 import io.kuark.context.core.KuarkContextHolder
 import io.kuark.service.sys.common.api.ISysResourceApi
 import io.kuark.service.sys.common.api.ISysTenantApi
+import io.kuark.service.sys.common.vo.resource.BaseMenuTreeNode
 import io.kuark.service.sys.common.vo.resource.MenuTreeNode
 import io.kuark.service.sys.common.vo.resource.ResourceType
 import io.kuark.service.user.common.user.vo.account.*
@@ -114,7 +115,7 @@ open class UserAccountBiz : BaseCrudBiz<String, UserAccount, UserAccountDao>(), 
         return resIds
     }
 
-    override fun getAuthorisedMenus(userId: String): List<MenuTreeNode> {
+    override fun <T : BaseMenuTreeNode> getAuthorisedMenus(userId: String, clazz: KClass<T>): List<T> {
         val subSysDictCode = KuarkContextHolder.get().subSysCode!!
         val user = userByIdCacheHandler.getUserById(userId)
         val resIds = if (user?.userTypeDictCode != UserType.MAIN_ACCOUNT.code) {
@@ -129,16 +130,19 @@ open class UserAccountBiz : BaseCrudBiz<String, UserAccount, UserAccountDao>(), 
             } else menuItems // 主账号，拥有所有菜单权限，不用过滤
         }
         val menus = menuCacheItems.map {
-            MenuTreeNode().apply {
-                title = it.name
-                index = it.url
-                icon = it.icon
-                id = it.id!!
-                parentId = it.parentId
-                seqNo = it.seqNo
+            val menuTreeNode = if (clazz == BaseMenuTreeNode::class) BaseMenuTreeNode() else MenuTreeNode()
+            menuTreeNode.title = it.name
+            menuTreeNode.id = it.id!!
+            menuTreeNode.parentId = it.parentId
+            menuTreeNode.seqNo = it.seqNo
+            if (clazz == MenuTreeNode::class) {
+                (menuTreeNode as MenuTreeNode).index = it.url
+                menuTreeNode.icon = it.icon
             }
+            menuTreeNode
         }
-        return TreeKit.convertListToTree(menus, Direction.ASC)
+        @Suppress(Consts.Suppress.UNCHECKED_CAST)
+        return TreeKit.convertListToTree(menus as List<T>, Direction.ASC)
     }
 
     @Suppress(Consts.Suppress.UNCHECKED_CAST)

@@ -6,7 +6,6 @@ import io.kuark.base.support.Consts
 import io.kuark.context.core.KuarkContextHolder
 import io.kuark.service.sys.common.api.ISysDictApi
 import io.kuark.service.sys.common.api.ISysResourceApi
-import io.kuark.service.sys.common.vo.dict.DictModuleAndTypePayload
 import io.kuark.service.sys.common.vo.dict.SysResourceCacheItem
 import io.kuark.service.sys.common.vo.resource.*
 import io.kuark.service.sys.provider.biz.ibiz.ISysResourceBiz
@@ -81,11 +80,6 @@ open class SysResourceController :
         return true
     }
 
-    @GetMapping("/loadResourceTypes")
-    fun loadResourceTypes(): Map<String, String> {
-        return dictApi.getDictItemMap(DictModuleAndTypePayload("kuark:sys", "resource_type"))
-    }
-
     @GetMapping("/getResources")
     fun getResources(subSysDictCode: String, resourceType: ResourceType): List<SysResourceCacheItem> {
         return resourceApi.getResources(subSysDictCode, resourceType)
@@ -103,6 +97,11 @@ open class SysResourceController :
     @GetMapping("/getSimpleMenus")
     fun getSimpleMenus(subSysDictCode: String): List<BaseMenuTreeNode> {
         return resourceApi.getSimpleMenus(subSysDictCode)
+    }
+
+    @GetMapping("/sys/resource/getDirectChildrenMenu")
+    fun getDirectChildrenMenu(subSysDictCode: String, parentId: String?): List<SysResourceCacheItem> {
+        return resourceApi.getDirectChildrenMenu(subSysDictCode, parentId)
     }
 
 }

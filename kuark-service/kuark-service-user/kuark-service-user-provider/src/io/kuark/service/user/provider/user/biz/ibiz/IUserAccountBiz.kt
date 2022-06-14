@@ -1,10 +1,12 @@
 package io.kuark.service.user.provider.user.biz.ibiz
 
 import io.kuark.base.support.biz.IBaseCrudBiz
+import io.kuark.service.sys.common.vo.resource.BaseMenuTreeNode
 import io.kuark.service.sys.common.vo.resource.MenuTreeNode
 import io.kuark.service.user.common.user.vo.account.UserAccountCacheItem
 import io.kuark.service.user.common.user.vo.account.UserAccountRecord
 import io.kuark.service.user.provider.user.model.po.UserAccount
+import kotlin.reflect.KClass
 
 
 /**
@@ -14,7 +16,7 @@ import io.kuark.service.user.provider.user.model.po.UserAccount
  * @since 1.0.0
  */
 //region your codes 1
-interface IUserAccountBiz: IBaseCrudBiz<String, UserAccount> {
+interface IUserAccountBiz : IBaseCrudBiz<String, UserAccount> {
 //endregion your codes 1
 
     //region your codes 2
@@ -31,7 +33,7 @@ interface IUserAccountBiz: IBaseCrudBiz<String, UserAccount> {
 
     fun getMenuPermissions(userId: String): Set<String>
 
-    fun getAuthorisedMenus(userId: String): List<MenuTreeNode>
+    fun <T : BaseMenuTreeNode> getAuthorisedMenus(userId: String, clazz: KClass<T>): List<T>
 
     fun getAccounts(subSysDictCode: String, tenantId: String?): List<UserAccountRecord>
 

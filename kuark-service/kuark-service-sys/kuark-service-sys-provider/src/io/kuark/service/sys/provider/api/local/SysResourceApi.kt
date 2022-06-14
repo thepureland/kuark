@@ -40,4 +40,8 @@ open class SysResourceApi : ISysResourceApi {
         return sysResourceBiz.getResourceId(subSysDictCode, url)
     }
 
+    override fun getDirectChildrenMenu(subSysDictCode: String, parentId: String?): List<SysResourceCacheItem> {
+        return sysResourceBiz.getDirectChildrenMenu(subSysDictCode, parentId)
+    }
+
 }

@@ -28,4 +28,7 @@ interface ISysResourceProxy : ISysResourceApi {
     @GetMapping("/sys/resource/getResourceId")
     override fun getResourceId(subSysDictCode: String, url: String): String?
 
+    @GetMapping("/sys/resource/getDirectChildrenMenu")
+    override fun getDirectChildrenMenu(subSysDictCode: String, parentId: String?): List<SysResourceCacheItem>
+
 }

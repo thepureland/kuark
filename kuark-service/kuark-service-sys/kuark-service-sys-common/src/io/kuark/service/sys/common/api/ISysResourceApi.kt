@@ -70,4 +70,15 @@ interface ISysResourceApi {
      */
     fun getResourceId(subSysDictCode: String, url: String): String?
 
+    /**
+     * 返回指定父菜单id的直接孩子菜单(active的)
+     *
+     * @param subSysDictCode 子系统代码
+     * @param parentId 父菜单id，为null时返回第一层菜单
+     * @return List(资源对象)
+     * @author K
+     * @since 1.0.0
+     */
+    fun getDirectChildrenMenu(subSysDictCode: String, parentId: String?): List<SysResourceCacheItem>
+
 }

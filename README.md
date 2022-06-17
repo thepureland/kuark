@@ -57,13 +57,14 @@
 ![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a34d6baae78641e5bd9abe66a13c1572~tplv-k3u1fbpfcp-watermark.image)
 #### 5.5.2 部署架构图
 ![](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/83ab15b11ca44df18497c7b7c0712ba9~tplv-k3u1fbpfcp-watermark.image)
-### 5.6 基于用户服务的单节点应用
+### 5.6 基于本地用户服务的web应用
 #### 5.6.1 逻辑架构图
-![]()
+![](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/927f3c0432924a0f8b883561570ff199~tplv-k3u1fbpfcp-watermark.image)
 #### 5.6.2 部署架构图
-![]()
+![](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/bf2351f6f8254dbeb41df20c1e6dfa21~tplv-k3u1fbpfcp-watermark.image)
 
-### 5.7 基于用户服务的多节点应用
+### 5.7 基于远程用户服务的web应用
 #### 5.7.1 逻辑架构图
-
+![](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/00e8c4ccc08741eda811f57c3a52a874~tplv-k3u1fbpfcp-watermark.image)
 #### 5.7.2 部署架构图
+![](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2d726571cee34a23948b06ba13cdca3c~tplv-k3u1fbpfcp-watermark.image)

@@ -25,7 +25,7 @@
 #### 4.1 透明的两级联动分布式缓存
 ![](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/eb4469652446453c9a9e86bea39af202~tplv-k3u1fbpfcp-zoom-in-crop-mark:1304:0:0:0.awebp)
 #### 4.2 可拆可合的服务
-![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/74d0fe9dd44c4a71aabb5a5aba6f3f73~tplv-k3u1fbpfcp-zoom-in-crop-mark:1304:0:0:0.awebp)
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7d4bcf713ec34c108c7bd4a2b42bca08~tplv-k3u1fbpfcp-watermark.image)
 #### 4.3 强大的Bean校验
 
 #### 4.4 表单校验前后端统一规则

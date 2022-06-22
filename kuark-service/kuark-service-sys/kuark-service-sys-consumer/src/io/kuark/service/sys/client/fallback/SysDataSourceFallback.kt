@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component
  */
 @Component
 //region your codes 1
-interface SysDataSourceFallback : ISysDataSourceProxy {
+class SysDataSourceFallback : ISysDataSourceProxy {
 //endregion your codes 1
 
     //region your codes 2

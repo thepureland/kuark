@@ -26,6 +26,8 @@
 ![](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/eb4469652446453c9a9e86bea39af202~tplv-k3u1fbpfcp-zoom-in-crop-mark:1304:0:0:0.awebp)
 #### 4.2 可拆可合的服务
 ![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7d4bcf713ec34c108c7bd4a2b42bca08~tplv-k3u1fbpfcp-watermark.image)
+
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a1ac8ed50f6f4bd89634a5001664a88f~tplv-k3u1fbpfcp-zoom-in-crop-mark:3024:0:0:0.awebp)
 #### 4.3 强大的Bean校验，表单校验前后端统一规则
 ![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e5bc084b5a4c423cbc2d83bc9cc69e79~tplv-k3u1fbpfcp-zoom-in-crop-mark:1304:0:0:0.awebp)
 

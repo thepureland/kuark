@@ -21,12 +21,30 @@ interface IUserAccountBiz : IBaseCrudBiz<String, UserAccount> {
 
     //region your codes 2
 
+    /**
+     * 检测指定子系统和用户名的用户是否存在
+     *
+     * @param subSysDictCode 子系统代码
+     * @param username 用户名，大小写不敏感
+     * @return true: 存在，false: 不存在
+     * @author K
+     * @since 1.0.0
+     */
     fun isUsernameExists(subSysDictCode: String, username: String): Boolean
 
     fun register(userAccount: UserAccount): Boolean
 
     fun getByUserId(userId: String): UserAccountCacheItem?
 
+    /**
+     * 返回指定子系统和用户名的用户
+     *
+     * @param subSysDictCode 子系统代码
+     * @param username 用户名，大小写不敏感
+     * @return 用户账号缓存对象，不存在返回null
+     * @author K
+     * @since 1.0.0
+     */
     fun getByUsername(subSysDictCode: String, username: String): UserAccountCacheItem?
 
     fun getPermissions(userId: String): Set<String>

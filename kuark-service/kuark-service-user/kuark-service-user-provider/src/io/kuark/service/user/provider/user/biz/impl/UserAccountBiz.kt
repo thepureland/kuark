@@ -76,7 +76,8 @@ open class UserAccountBiz : BaseCrudBiz<String, UserAccount, UserAccountDao>(), 
     }
 
     override fun isUsernameExists(subSysDictCode: String, username: String): Boolean {
-        val userId = userIdByUsernameCacheHandler.getUserId(subSysDictCode, username)
+        val lowerCaseUsername = username.lowercase() // 转为小写，因为数据库中存的是小写
+        val userId = userIdByUsernameCacheHandler.getUserId(subSysDictCode, lowerCaseUsername)
         return userId != null
     }
 
@@ -88,7 +89,8 @@ open class UserAccountBiz : BaseCrudBiz<String, UserAccount, UserAccountDao>(), 
     }
 
     override fun getByUsername(subSysDictCode: String, username: String): UserAccountCacheItem? {
-        val userId = userIdByUsernameCacheHandler.getUserId(subSysDictCode, username) ?: return null
+        val lowerCaseUsername = username.lowercase() // 转为小写，因为数据库中存的是小写
+        val userId = userIdByUsernameCacheHandler.getUserId(subSysDictCode, lowerCaseUsername) ?: return null
         return userByIdCacheHandler.getUserById(userId)
     }
 

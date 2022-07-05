@@ -33,6 +33,5 @@ dependencies {
     api("javax.el:javax.el-api")
     api("org.glassfish.web:javax.el")
 
-    api("org.springframework.boot:spring-boot-starter-aop")
-    api("org.springframework.boot:spring-boot-starter-test")
+    testApi("org.springframework.boot:spring-boot-starter-test")
 }

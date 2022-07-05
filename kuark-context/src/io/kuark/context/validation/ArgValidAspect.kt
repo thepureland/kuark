@@ -1,5 +1,6 @@
-package io.kuark.base.bean.validation.support
+package io.kuark.context.validation
 
+import io.kuark.base.bean.validation.support.ValidatorFactory
 import io.kuark.base.lang.reflect.getMemberProperty
 import org.aspectj.lang.ProceedingJoinPoint
 import org.aspectj.lang.annotation.Around
@@ -29,7 +30,7 @@ class ArgValidAspect {
      * @author K
      * @since 1.0.0
      */
-    @Pointcut("@annotation(io.kuark.base.bean.validation.support.ArgValid)")
+    @Pointcut("@annotation(io.kuark.context.validation.ArgValid)")
     private fun cut() {
         // do nothing
     }

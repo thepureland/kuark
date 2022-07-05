@@ -1,6 +1,5 @@
 package io.kuark.context.validation
 
-import io.kuark.base.bean.validation.support.ArgValid
 import org.springframework.stereotype.Component
 import org.springframework.web.bind.annotation.ModelAttribute
 import javax.validation.constraints.Max

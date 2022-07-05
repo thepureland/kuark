@@ -29,7 +29,7 @@
 
 ![](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6d3d40f7ab3d44a6a154d372782bb074~tplv-k3u1fbpfcp-watermark.image)
 #### 4.3 强大的Bean校验，表单校验前后端统一规则
-![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e5bc084b5a4c423cbc2d83bc9cc69e79~tplv-k3u1fbpfcp-zoom-in-crop-mark:1304:0:0:0.awebp)
+![](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/45b3814c9db44ac583f5ec42448c9754~tplv-k3u1fbpfcp-zoom-in-crop-mark:3024:0:0:0.awebp)
 
 
 ## 5. 按需搭配典型场景举例

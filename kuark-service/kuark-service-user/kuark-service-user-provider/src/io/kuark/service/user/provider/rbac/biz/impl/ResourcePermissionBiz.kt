@@ -93,7 +93,10 @@ open class ResourcePermissionBiz : IResourcePermissionBiz {
         if (searchPayload.leaf == true) {
             resIds.add(searchPayload.id!!)
         } else {
-            val menus = sysResourceApi.getDirectChildrenResources(searchPayload.subSysDictCode!!, searchPayload.id)
+            val resourceType = EnumKit.enumOf(ResourceType::class, searchPayload.resourceTypeDictCode!!)!!
+            val menus = sysResourceApi.getDirectChildrenResources(
+                searchPayload.subSysDictCode!!, resourceType, searchPayload.id
+            )
             resIds.addAll(menus.map { it.id!! })
         }
 
@@ -113,7 +116,9 @@ open class ResourcePermissionBiz : IResourcePermissionBiz {
                 }
             }
             else -> { // 菜单
-                val menus = sysResourceApi.getDirectChildrenResources(searchPayload.subSysDictCode!!, searchPayload.parentId)
+                val menus = sysResourceApi.getDirectChildrenResources(
+                    searchPayload.subSysDictCode!!, ResourceType.MENU, searchPayload.parentId
+                )
                 val allResIds = menus.map { it.id!! }
 
                 // 过滤出指定用户拥有权限的菜单id

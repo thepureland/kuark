@@ -4,9 +4,7 @@ import io.kuark.ability.web.springmvc.BaseCrudController
 import io.kuark.base.error.ObjectNotFoundException
 import io.kuark.base.support.Consts
 import io.kuark.context.core.KuarkContextHolder
-import io.kuark.service.sys.common.api.ISysDictApi
 import io.kuark.service.sys.common.api.ISysResourceApi
-import io.kuark.service.sys.common.vo.dict.SysResourceCacheItem
 import io.kuark.service.sys.common.vo.resource.*
 import io.kuark.service.sys.provider.biz.ibiz.ISysResourceBiz
 import io.kuark.service.sys.provider.model.po.SysResource
@@ -17,9 +15,6 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/sys/resource")
 open class SysResourceController :
     BaseCrudController<String, ISysResourceBiz, SysResourceSearchPayload, SysResourceRecord, SysResourceDetail, SysResourcePayload>() {
-
-    @Autowired
-    private lateinit var dictApi: ISysDictApi
 
     @Autowired
     private lateinit var resourceApi: ISysResourceApi
@@ -80,28 +75,9 @@ open class SysResourceController :
         return true
     }
 
-    @GetMapping("/getResources")
-    fun getResources(subSysDictCode: String, resourceType: ResourceType): List<SysResourceCacheItem> {
-        return resourceApi.getResources(subSysDictCode, resourceType)
-    }
-
-    @GetMapping("/getResourcesByIds")
-    fun getResourcesByIds(
-        subSysDictCode: String,
-        resourceType: ResourceType,
-        vararg resourceIds: String
-    ): List<SysResourceCacheItem> {
-        return resourceApi.getResources(subSysDictCode, resourceType, *resourceIds)
-    }
-
     @GetMapping("/getSimpleMenus")
     fun getSimpleMenus(subSysDictCode: String): List<BaseMenuTreeNode> {
         return resourceApi.getSimpleMenus(subSysDictCode)
-    }
-
-    @GetMapping("/sys/resource/getDirectChildrenMenu")
-    fun getDirectChildrenMenu(subSysDictCode: String, parentId: String?): List<SysResourceCacheItem> {
-        return resourceApi.getDirectChildrenMenu(subSysDictCode, parentId)
     }
 
 }

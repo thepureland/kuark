@@ -17,16 +17,24 @@ open class SysResourceApi : ISysResourceApi {
     @Autowired
     private lateinit var sysResourceBiz: ISysResourceBiz
 
-    @Suppress(Consts.Suppress.UNCHECKED_CAST)
-    override fun getResources(subSysDictCode: String, resourceType: ResourceType): List<SysResourceCacheItem> {
-        return sysResourceBiz.getResourcesFromCache(subSysDictCode, resourceType.code)
+    override fun getResource(resourceId: String): SysResourceCacheItem? {
+        return sysResourceBiz.getResource(resourceId)
     }
 
-    override fun getResources(
-        subSysDictCode: String, resourceType: ResourceType, vararg resourceIds: String
-    ): List<SysResourceCacheItem> {
-        return sysResourceBiz.getResourcesFromCache(subSysDictCode, resourceType, *resourceIds)
+    override fun getResources(resourceIds: Collection<String>): Map<String, SysResourceCacheItem> {
+        return sysResourceBiz.getResources(resourceIds)
     }
+
+    @Suppress(Consts.Suppress.UNCHECKED_CAST)
+    override fun getResources(subSysDictCode: String, resourceType: ResourceType): List<SysResourceCacheItem> {
+        return sysResourceBiz.getResources(subSysDictCode, resourceType.code)
+    }
+
+//    override fun getResources(
+//        subSysDictCode: String, resourceType: ResourceType, vararg resourceIds: String
+//    ): List<SysResourceCacheItem> {
+//        return sysResourceBiz.getResources(subSysDictCode, resourceType, *resourceIds)
+//    }
 
     override fun getSimpleMenus(subSysDictCode: String): List<BaseMenuTreeNode> {
         return sysResourceBiz.getSimpleMenus(subSysDictCode)
@@ -40,8 +48,16 @@ open class SysResourceApi : ISysResourceApi {
         return sysResourceBiz.getResourceId(subSysDictCode, url)
     }
 
-    override fun getDirectChildrenMenu(subSysDictCode: String, parentId: String?): List<SysResourceCacheItem> {
-        return sysResourceBiz.getDirectChildrenMenu(subSysDictCode, parentId)
+    override fun getDirectChildrenResources(subSysDictCode: String, resourceType: ResourceType,parentId: String?): List<SysResourceCacheItem> {
+        return sysResourceBiz.getDirectChildrenResources(subSysDictCode, resourceType, parentId)
+    }
+
+    override fun getChildrenResources(
+        subSysDictCode: String,
+        resourceType: ResourceType,
+        parentId: String
+    ): List<SysResourceCacheItem> {
+        return sysResourceBiz.getChildrenResources(subSysDictCode, resourceType, parentId)
     }
 
 }

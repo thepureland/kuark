@@ -31,6 +31,11 @@ open class SysTenantApiController {
         return sysTenantApi.getTenant(id)
     }
 
+    @PostMapping("/getTenantsByIds")
+    fun getTenants(ids: Collection<String>): Map<String, SysTenantCacheItem> {
+        return sysTenantApi.getTenants(ids)
+    }
+
     @PostMapping("/getTenants")
     fun getTenants(subSysDictCode: String): List<SysTenantCacheItem> {
         return sysTenantApi.getTenants(subSysDictCode)

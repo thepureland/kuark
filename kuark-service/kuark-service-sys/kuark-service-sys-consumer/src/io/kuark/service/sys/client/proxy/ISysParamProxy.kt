@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping
 @FeignClient(name = "sys-param", fallback = SysDictFallback::class)
 interface ISysParamProxy: ISysParamApi {
 
-    @GetMapping("/sys/param/getParam")
+    @GetMapping("/sys/param/api/getParam")
     override fun getParam(module: String, paramName: String): SysParamCacheItem?
 
 }

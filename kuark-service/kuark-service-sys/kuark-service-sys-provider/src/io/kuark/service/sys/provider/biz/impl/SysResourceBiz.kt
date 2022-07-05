@@ -56,7 +56,7 @@ open class SysResourceBiz : BaseCrudBiz<String, SysResource, SysResourceDao>(), 
     private lateinit var resourceByIdCacheHandler: ResourceByIdCacheHandler
 
 
-    override fun getResourcesFromCache(
+    override fun getResources(
         subSysDictCode: String,
         resourceTypeDictCode: String
     ): List<SysResourceCacheItem> {
@@ -81,7 +81,7 @@ open class SysResourceBiz : BaseCrudBiz<String, SysResource, SysResourceDao>(), 
     @Transactional
     override fun update(any: Any): Boolean {
         val id = BeanKit.getProperty(any, SysResource::id.name) as String
-        val sysRes = getResourceFromCache(id)
+        val sysRes = getResource(id)
         val success = super.update(any)
         if (success) {
             // 同步缓存
@@ -114,7 +114,7 @@ open class SysResourceBiz : BaseCrudBiz<String, SysResource, SysResourceDao>(), 
     }
 
     override fun getSimpleMenus(subSysDictCode: String): List<BaseMenuTreeNode> {
-        val origMenus = getResourcesFromCache(subSysDictCode, ResourceType.MENU.code)
+        val origMenus = getResources(subSysDictCode, ResourceType.MENU.code)
         val menus = origMenus.map {
             BaseMenuTreeNode().apply {
                 title = it.name
@@ -127,7 +127,7 @@ open class SysResourceBiz : BaseCrudBiz<String, SysResource, SysResourceDao>(), 
     }
 
     override fun getMenus(subSysDictCode: String, predicate: ((SysResourceCacheItem) -> Boolean)?): List<MenuTreeNode> {
-        var origMenus = getResourcesFromCache(subSysDictCode, ResourceType.MENU.code)
+        var origMenus = getResources(subSysDictCode, ResourceType.MENU.code)
         if (predicate != null) {
             origMenus = origMenus.filter(predicate)
         }
@@ -228,7 +228,7 @@ open class SysResourceBiz : BaseCrudBiz<String, SysResource, SysResourceDao>(), 
     @Transactional
     override fun cascadeDeleteChildren(id: String): Boolean {
         // 找出组成缓存key的子系统代码和资源类型代码
-        val resource = getResourceFromCache(id)
+        val resource = getResource(id)
         if (resource == null) {
             log.error("找不到主键为${id}的资源记录！")
             return false
@@ -249,7 +249,7 @@ open class SysResourceBiz : BaseCrudBiz<String, SysResource, SysResourceDao>(), 
                 ids.add(id)
 
                 ids.forEach {
-                    val res = getResourceFromCache(it)!!
+                    val res = getResource(it)!!
                     resourceIdBySubSysAndUrlCacheHandler.syncOnDelete(id, res.subSysDictCode!!, res.url)
                 }
 
@@ -281,21 +281,46 @@ open class SysResourceBiz : BaseCrudBiz<String, SysResource, SysResourceDao>(), 
         return true
     }
 
-    override fun getResourceFromCache(id: String): SysResourceCacheItem? {
+    override fun getResource(id: String): SysResourceCacheItem? {
         return resourceByIdCacheHandler.getResourceById(id)
     }
 
-    override fun getResourcesFromCache(
+    override fun getResources(ids: Collection<String>): Map<String, SysResourceCacheItem> {
+        return resourceByIdCacheHandler.getResourcesByIds(ids)
+    }
+
+    override fun getResources(
         subSysDictCode: String, resourceType: ResourceType, vararg resourceIds: String
     ): List<SysResourceCacheItem> {
-        val resources = getResourcesFromCache(subSysDictCode, resourceType.code)
+        val resources = getResources(subSysDictCode, resourceType.code)
         return resources.filter { it.id in resourceIds }
     }
 
-    override fun getDirectChildrenMenu(subSysDictCode: String, parentId: String?): List<SysResourceCacheItem> {
-        val resources = getResourcesFromCache(subSysDictCode, ResourceType.MENU.code)
+    override fun getDirectChildrenResources(subSysDictCode: String, resourceType: ResourceType, parentId: String?): List<SysResourceCacheItem> {
+        val resources = getResources(subSysDictCode, ResourceType.MENU.code)
         val menus = resources.filter { it.parentId == parentId }
         return menus.sortedBy { it.seqNo }
+    }
+
+    override fun getChildrenResources(
+        subSysDictCode: String,
+        resourceType: ResourceType,
+        parentId: String
+    ): List<SysResourceCacheItem> {
+        val resourceIds = resourceIdsBySubSysAndTypeCacheHandler.getResourceIds(subSysDictCode, resourceType.code)
+        val resources = resourceByIdCacheHandler.getResourcesByIds(resourceIds).values
+        val children = mutableListOf<SysResourceCacheItem>()
+        filterChildrenRecursively(parentId, children, resources)
+        return children
+    }
+
+    /**
+     * 递归地过滤孩子资源
+     */
+    private fun filterChildrenRecursively(parentId: String, children: MutableList<SysResourceCacheItem>, resources: Collection<SysResourceCacheItem>) {
+        val filteredChildren = resources.filter { it.parentId == parentId }
+        children.addAll(filteredChildren)
+        filteredChildren.forEach { filterChildrenRecursively(it.parentId!!, children, resources) }
     }
 
     private fun recursionFindAllParentId(itemId: String, results: MutableList<String>) {

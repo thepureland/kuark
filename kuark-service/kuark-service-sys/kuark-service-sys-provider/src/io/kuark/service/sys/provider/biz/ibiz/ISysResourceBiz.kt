@@ -28,7 +28,7 @@ interface ISysResourceBiz : IBaseCrudBiz<String, SysResource> {
      * @author K
      * @since 1.0.0
      */
-    fun getResourcesFromCache(subSysDictCode: String, resourceTypeDictCode: String): List<SysResourceCacheItem>
+    fun getResources(subSysDictCode: String, resourceTypeDictCode: String): List<SysResourceCacheItem>
 
     fun getSimpleMenus(subSysDictCode: String): List<BaseMenuTreeNode>
 
@@ -68,7 +68,17 @@ interface ISysResourceBiz : IBaseCrudBiz<String, SysResource> {
      * @author K
      * @since 1.0.0
      */
-    fun getResourceFromCache(id: String): SysResourceCacheItem?
+    fun getResource(id: String): SysResourceCacheItem?
+
+    /**
+     * 返回资源id集合对应的资源
+     *
+     * @param ids 资源id集合
+     * @return Map(资源id，资源缓存信息)
+     * @author K
+     * @since 1.0.0
+     */
+    fun getResources(ids: Collection<String>): Map<String, SysResourceCacheItem>
 
     /**
      * 根据子系统代码、资源类型和资源id，从缓存中取得对应资源(仅包括处于启用状态的)
@@ -80,7 +90,7 @@ interface ISysResourceBiz : IBaseCrudBiz<String, SysResource> {
      * @author K
      * @since 1.0.0
      */
-    fun getResourcesFromCache(
+    fun getResources(
         subSysDictCode: String, resourceType: ResourceType, vararg resourceIds: String
     ): List<SysResourceCacheItem>
 
@@ -110,12 +120,33 @@ interface ISysResourceBiz : IBaseCrudBiz<String, SysResource> {
      * 返回指定父菜单id的直接孩子菜单(active的)
      *
      * @param subSysDictCode 子系统代码
+     * @param resourceType 资源类型枚举
      * @param parentId 父菜单id，为null时返回第一层菜单
      * @return List(资源对象)
      * @author K
      * @since 1.0.0
      */
-    fun getDirectChildrenMenu(subSysDictCode: String, parentId: String?): List<SysResourceCacheItem>
+    fun getDirectChildrenResources(
+        subSysDictCode: String,
+        resourceType: ResourceType,
+        parentId: String?
+    ): List<SysResourceCacheItem>
+
+    /**
+     * 返回指定参数的孩子资源
+     *
+     * @param subSysDictCode 子系统代码
+     * @param resourceType 资源类型枚举
+     * @param parentId 父资源id
+     * @return List(资源对象)
+     * @author K
+     * @since 1.0.0
+     */
+    fun getChildrenResources(
+        subSysDictCode: String,
+        resourceType: ResourceType,
+        parentId: String
+    ): List<SysResourceCacheItem>
 
     //endregion your codes 2
 

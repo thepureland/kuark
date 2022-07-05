@@ -9,15 +9,23 @@ import org.springframework.stereotype.Component
 @Component
 class SysResourceFallback : ISysResourceProxy {
 
+    override fun getResource(resourceId: String): SysResourceCacheItem? {
+        TODO("Not yet implemented")
+    }
+
+    override fun getResources(resourceIds: Collection<String>): Map<String, SysResourceCacheItem> {
+        TODO("Not yet implemented")
+    }
+
     override fun getResources(subSysDictCode: String, resourceType: ResourceType): List<SysResourceCacheItem> {
         TODO("Not yet implemented")
     }
 
-    override fun getResources(
-        subSysDictCode: String, resourceType: ResourceType, vararg resourceIds: String
-    ): List<SysResourceCacheItem> {
-        TODO("Not yet implemented")
-    }
+//    override fun getResources(
+//        subSysDictCode: String, resourceType: ResourceType, vararg resourceIds: String
+//    ): List<SysResourceCacheItem> {
+//        TODO("Not yet implemented")
+//    }
 
     override fun getSimpleMenus(subSysDictCode: String): List<BaseMenuTreeNode> {
         TODO("Not yet implemented")
@@ -31,7 +39,19 @@ class SysResourceFallback : ISysResourceProxy {
         TODO("Not yet implemented")
     }
 
-    override fun getDirectChildrenMenu(subSysDictCode: String, parentId: String?): List<SysResourceCacheItem> {
+    override fun getDirectChildrenResources(
+        subSysDictCode: String,
+        resourceType: ResourceType,
+        parentId: String?
+    ): List<SysResourceCacheItem> {
+        TODO("Not yet implemented")
+    }
+
+    override fun getChildrenResources(
+        subSysDictCode: String,
+        resourceType: ResourceType,
+        parentId: String
+    ): List<SysResourceCacheItem> {
         TODO("Not yet implemented")
     }
 

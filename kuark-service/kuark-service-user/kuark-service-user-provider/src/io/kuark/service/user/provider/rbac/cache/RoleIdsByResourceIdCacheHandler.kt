@@ -90,12 +90,9 @@ open class RoleIdsByResourceIdCacheHandler : AbstractCacheHandler<Collection<Str
         results.forEach { map ->
             val resourceId = map[RbacRoleResource::resourceId.name] as String
             val roleId = map[RbacRoleResource::roleId.name] as String
-            var roleIds = result[resourceId]
-            if (roleIds == null) {
-                roleIds = mutableListOf()
-                result[resourceId] = roleIds
-            }
+            val roleIds = result[resourceId] ?: mutableListOf()
             roleIds.add(roleId)
+            result[resourceId] = roleIds
         }
         return result
     }

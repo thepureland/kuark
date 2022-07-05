@@ -20,7 +20,7 @@ interface ISysDataSourceProxy : ISysDataSourceApi {
 
     //region your codes 2
 
-    @GetMapping("/sys/datasource/api/getDataSource")
+    @GetMapping("/sys/dataSource/api/getDataSource")
     override fun getDataSource(subSysDictCode: String, tenantId: String?): SysDataSourceCacheItem?
 
     //endregion your codes 2

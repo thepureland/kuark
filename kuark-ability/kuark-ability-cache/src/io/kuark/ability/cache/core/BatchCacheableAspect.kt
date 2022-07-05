@@ -54,8 +54,6 @@ class BatchCacheableAspect {
      */
     @Around("cut()")
     fun around(joinPoint: ProceedingJoinPoint): Map<String, Any?> {
-        val result = linkedMapOf<String, Any?>() // Map<缓存key, 缓存值>
-
         // 拿到方法定义的注解信息
         val function = (joinPoint.signature as MethodSignature).method.kotlinFunction!!
         val batchCacheable = function.findAnnotation<BatchCacheable>()!!
@@ -64,24 +62,25 @@ class BatchCacheableAspect {
         val cacheName = validate(joinPoint, function, batchCacheable)
 
         // 得到所有缓存key
+        val cachedData = linkedMapOf<String, Any?>() // 已缓存的数据。Map<缓存key, 缓存值>
         val keys = getAllCacheKeys(joinPoint, function, batchCacheable)
-        keys.forEach { result[it] = null } // 保证顺序
+        keys.forEach { cachedData[it] = null } // 保证顺序
 
         // 读取缓存中存在的数据
-        readCachedData(keys, cacheName, batchCacheable, result)
+        readCachedData(keys, cacheName, batchCacheable, cachedData)
 
         // 没有在缓存中的(参数为集合的，要踢除缓存中读到的部分)，从@BatchCacheable标注的方法读
-        val data = readUncachedData(result, joinPoint, function, batchCacheable)
+        val uncachedData = readUncachedData(cachedData, joinPoint, function, batchCacheable) // 未缓存的数据。Map<缓存key, 缓存值>
 
         // 缓存从@BatchCacheable标注的方法读取(未缓存)的数据(注意：已存在的缓存并不会被更新)
-        data?.forEach { (k, v) -> CacheKit.putIfAbsent(cacheName, k, v) }
+        uncachedData?.forEach { (k, v) -> CacheKit.putIfAbsent(cacheName, k, v) }
 
         // 组装两部分数据：缓存中读取的和刚加载的，并作为@BatchCacheable标注的方法的返回值返回
-        if (data != null) {
-            result.forEach { (k, v) -> if (v == null) result[k] = data[k] }
+        if (uncachedData != null) {
+            cachedData.forEach { (k, v) -> if (v == null) cachedData[k] = uncachedData[k] }
         }
 
-        return result
+        return cachedData.filterValues { it != null } // value为null的踢除
     }
 
     /**
@@ -198,7 +197,7 @@ class BatchCacheableAspect {
                 }
                 var params: Any? = null
                 when (clazz.kotlin) {
-                    List::class -> params = elemValues
+                    List::class, Collection::class -> params = elemValues
                     Set::class -> params = elemValues.toSet()
                     Array<String>::class -> params = (elemValues as List<String>).toTypedArray()
                     Array<Char>::class -> params = (elemValues as List<Char>).toTypedArray()

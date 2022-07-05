@@ -5,6 +5,7 @@ import io.kuark.service.sys.common.vo.resource.BaseMenuTreeNode
 import io.kuark.service.sys.common.vo.resource.SysResourceSearchPayload
 import io.kuark.service.user.common.user.vo.resourcepermission.ResourcePermissionSearchPayload
 import io.kuark.service.user.common.user.vo.resourcepermission.ResourcePermissionRecord
+import io.kuark.service.user.common.user.vo.resourcepermission.ResourcePermissionTreeSearchPayload
 import io.kuark.service.user.provider.rbac.biz.ibiz.IResourcePermissionBiz
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.PostMapping
@@ -30,6 +31,11 @@ open class ResourcePermissionController {
     fun loadDirectChildrenForTree(@RequestBody searchPayload: SysResourceSearchPayload): List<BaseMenuTreeNode> {
         val user = KuarkContextHolder.get().user!!
         return resourcePermissionBiz.loadDirectChildrenMenuForUser(user.id!!, searchPayload)
+    }
+
+    @PostMapping("/searchOnClickTree")
+    fun searchOnClickTree(@RequestBody @Valid searchPayload: ResourcePermissionTreeSearchPayload): List<ResourcePermissionRecord> {
+        return resourcePermissionBiz.searchOnClickTree(searchPayload)
     }
 
 }

@@ -5,11 +5,13 @@ import io.kuark.base.lang.string.StringKit
 import io.kuark.service.sys.common.api.ISysDictApi
 import io.kuark.service.sys.common.api.ISysResourceApi
 import io.kuark.service.sys.common.vo.dict.DictModuleAndTypePayload
+import io.kuark.service.sys.common.vo.dict.SysResourceCacheItem
 import io.kuark.service.sys.common.vo.resource.BaseMenuTreeNode
 import io.kuark.service.sys.common.vo.resource.ResourceType
 import io.kuark.service.sys.common.vo.resource.SysResourceSearchPayload
 import io.kuark.service.user.common.user.vo.resourcepermission.ResourcePermissionSearchPayload
 import io.kuark.service.user.common.user.vo.resourcepermission.ResourcePermissionRecord
+import io.kuark.service.user.common.user.vo.resourcepermission.ResourcePermissionTreeSearchPayload
 import io.kuark.service.user.provider.rbac.biz.ibiz.IResourcePermissionBiz
 import io.kuark.service.user.provider.rbac.biz.ibiz.IRbacRoleBiz
 import io.kuark.service.user.provider.rbac.cache.ResourceIdsByRoleIdCacheHandler
@@ -53,11 +55,20 @@ open class ResourcePermissionBiz : IResourcePermissionBiz {
         val resMap = resCacheItems.associateBy { it.id!! }
         val resIds = resCacheItems.map { it.id!! }
 
+        return searchResPermissions(payload.subSysDictCode!!, payload.tenantId, resIds, resMap)
+    }
+
+    private fun searchResPermissions(
+        subSysDictCode: String,
+        tenantId: String?,
+        resIds: Collection<String>,
+        resMap: Map<String, SysResourceCacheItem>
+    ): List<ResourcePermissionRecord> {
         // 取得子系统所有指定资源已分配的角色id
         val allRoleIds = roleIdsByResourceIdCacheHandler.getRoleIdsByResourceIds(resIds)
 
         // 取得租户的所有角色id
-        val tenantRoleIds = rbacRoleBiz.getRoleIds(subSysDictCode, payload.tenantId)
+        val tenantRoleIds = rbacRoleBiz.getRoleIds(subSysDictCode, tenantId).toSet()
 
         val records = mutableListOf<ResourcePermissionRecord>()
         allRoleIds.forEach { (resId, roleIds) ->
@@ -77,6 +88,20 @@ open class ResourcePermissionBiz : IResourcePermissionBiz {
         return records
     }
 
+    override fun searchOnClickTree(searchPayload: ResourcePermissionTreeSearchPayload): List<ResourcePermissionRecord> {
+        val resIds = mutableSetOf<String>()
+        if (searchPayload.leaf == true) {
+            resIds.add(searchPayload.id!!)
+        } else {
+            val menus = sysResourceApi.getDirectChildrenResources(searchPayload.subSysDictCode!!, searchPayload.id)
+            resIds.addAll(menus.map { it.id!! })
+        }
+
+        val resMap = sysResourceApi.getResources(resIds)
+
+        return searchResPermissions(searchPayload.subSysDictCode!!, searchPayload.tenantId, resIds, resMap)
+    }
+
     override fun loadDirectChildrenMenuForUser(
         userId: String, searchPayload: SysResourceSearchPayload
     ): List<BaseMenuTreeNode> {
@@ -88,7 +113,7 @@ open class ResourcePermissionBiz : IResourcePermissionBiz {
                 }
             }
             else -> { // 菜单
-                val menus = sysResourceApi.getDirectChildrenMenu(searchPayload.subSysDictCode!!, searchPayload.parentId)
+                val menus = sysResourceApi.getDirectChildrenResources(searchPayload.subSysDictCode!!, searchPayload.parentId)
                 val allResIds = menus.map { it.id!! }
 
                 // 过滤出指定用户拥有权限的菜单id

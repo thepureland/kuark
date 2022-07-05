@@ -16,7 +16,6 @@ import io.kuark.service.sys.common.vo.resource.BaseMenuTreeNode
 import io.kuark.service.sys.common.vo.resource.ResourceType
 import io.kuark.service.user.common.rbac.vo.role.RbacRoleCacheItem
 import io.kuark.service.user.common.rbac.vo.role.RbacRoleDetail
-import io.kuark.service.user.common.rbac.vo.role.RoleIdAndName
 import io.kuark.service.user.common.user.vo.account.UserAccountCacheItem
 import io.kuark.service.user.common.user.vo.account.UserAccountSearchPayload
 import io.kuark.service.user.provider.rbac.biz.ibiz.IRbacRoleBiz
@@ -201,7 +200,9 @@ open class RbacRoleBiz : IRbacRoleBiz, BaseCrudBiz<String, RbacRole, RbacRoleDao
     ): List<SysResourceCacheItem> {
         val resourceIds = resourceIdsByRoleIdCacheHandler.getResourceIdsByRoleId(roleId)
         if (resourceIds.isNotEmpty()) {
-            return resourceApi.getResources(subSysDictCode, resourceType, *resourceIds.toTypedArray())
+            return resourceApi.getResources(resourceIds).values.filter {
+                it.resourceTypeDictCode == resourceType.code && it.subSysDictCode == subSysDictCode
+            }
         }
         return emptyList()
     }

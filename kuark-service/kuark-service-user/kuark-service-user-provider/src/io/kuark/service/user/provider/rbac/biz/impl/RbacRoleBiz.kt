@@ -222,13 +222,29 @@ open class RbacRoleBiz : IRbacRoleBiz, BaseCrudBiz<String, RbacRole, RbacRoleDao
 
     @Transactional
     override fun assignUser(roleId: String, userIds: Collection<String>): Boolean {
-        var success = rbacRoleUserDao.batchDeleteCriteria(Criteria(RbacRoleUsers.roleId.name, Operator.EQ, roleId)) != 0
+        val criteria = Criteria(RbacRoleUsers.roleId.name, Operator.EQ, roleId)
+        var success = rbacRoleUserDao.batchDeleteCriteria(criteria) != 0
         if (userIds.isNotEmpty()) {
             val roleUsers = userIds.map { RbacRoleUser { this.roleId = roleId; userId = it } }
             success = rbacRoleUserDao.batchInsert(roleUsers) == userIds.size
         }
         userIdByRoleIdCacheHandler.syncOnUpdate(roleId, userIds)
-        userIds.forEach { roleIdsByUserIdCacheHandler.syncOnUpdate(it, setOf(roleId)) }
+        val roleIds = setOf(roleId)
+        userIds.forEach { roleIdsByUserIdCacheHandler.syncOnUpdate(it, roleIds) }
+        return success
+    }
+
+    @Transactional
+    override fun assignRoleForResource(resourceId: String, roleIds: List<String>): Boolean {
+        val criteria = Criteria(RbacRoleResources.resourceId.name, Operator.EQ, resourceId)
+        var success = rbacRoleResourceDao.batchDeleteCriteria(criteria) != 0
+        if (roleIds.isNotEmpty()) {
+            val roleResources = roleIds.map { RbacRoleResource { roleId = it; this.resourceId = resourceId } }
+            success = rbacRoleResourceDao.batchInsert(roleResources) == roleIds.size
+        }
+        roleIdsByResourceIdCacheHandler.syncOnUpdate(resourceId, roleIds)
+        val resourceIds = setOf(resourceId)
+        roleIds.forEach { resourceIdsByRoleIdCacheHandler.syncOnUpdate(it, resourceIds) }
         return success
     }
 
@@ -237,10 +253,22 @@ open class RbacRoleBiz : IRbacRoleBiz, BaseCrudBiz<String, RbacRole, RbacRoleDao
         return userIds.toSet()
     }
 
+    override fun getAssignedRoles(resourceId: String): Set<String> {
+        return roleIdsByResourceIdCacheHandler.getRoleIdsByResourceId(resourceId).toSet()
+    }
+
     override fun getCandidateUsers(subSysDictCode: String, tenantId: String?): LinkedHashMap<String, String> {
         val accounts = userAccountBiz.getAccounts(subSysDictCode, tenantId)  //TODO from cache
         val map = linkedMapOf<String, String>()
         accounts.forEach { map[it.id!!] = it.username!! }
+        return map
+    }
+
+    override fun getCandidateRoles(subSysDictCode: String, tenantId: String?): LinkedHashMap<String, String> {
+        val roleIds = roleIdBySubSysAndTenantIdCacheHandler.getRoleIds(subSysDictCode, tenantId)
+        val roles = roleCacheHandler.getRolesByIds(roleIds)
+        val map = linkedMapOf<String, String>()
+        roles.values.forEach { map[it.id!!] = it.roleName!! }
         return map
     }
 

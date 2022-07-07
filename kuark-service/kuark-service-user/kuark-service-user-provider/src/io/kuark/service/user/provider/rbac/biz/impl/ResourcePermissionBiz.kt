@@ -49,6 +49,9 @@ open class ResourcePermissionBiz : IResourcePermissionBiz {
         val resourceTypeDictCode = EnumKit.enumOf(ResourceType::class, payload.resourceTypeDictCode!!)!!
         var resCacheItems = sysResourceApi.getResources(subSysDictCode, resourceTypeDictCode)
         if (StringKit.isNotBlank(payload.name)) {
+            resCacheItems = resCacheItems.filter { it.name!!.contains(payload.name!!, true) }
+        }
+        if (StringKit.isNotBlank(payload.name)) {
             val name = payload.name!!.lowercase()
             resCacheItems = resCacheItems.filter { it.name!!.lowercase().contains(name) }
         }
@@ -90,14 +93,14 @@ open class ResourcePermissionBiz : IResourcePermissionBiz {
 
     override fun searchOnClickTree(searchPayload: ResourcePermissionTreeSearchPayload): List<ResourcePermissionRecord> {
         val resIds = mutableSetOf<String>()
-        if (searchPayload.leaf == true) {
+        val resourceType = EnumKit.enumOf(ResourceType::class, searchPayload.resourceTypeDictCode!!)!!
+        if (resourceType == ResourceType.MENU && searchPayload.leaf == true) {
             resIds.add(searchPayload.id!!)
         } else {
-            val resourceType = EnumKit.enumOf(ResourceType::class, searchPayload.resourceTypeDictCode!!)!!
-            val menus = sysResourceApi.getDirectChildrenResources(
+            val resList = sysResourceApi.getDirectChildrenResources(
                 searchPayload.subSysDictCode!!, resourceType, searchPayload.id
             )
-            resIds.addAll(menus.map { it.id!! })
+            resIds.addAll(resList.map { it.id!! })
         }
 
         val resMap = sysResourceApi.getResources(resIds)

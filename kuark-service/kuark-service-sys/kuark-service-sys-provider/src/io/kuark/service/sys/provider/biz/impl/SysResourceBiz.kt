@@ -297,9 +297,9 @@ open class SysResourceBiz : BaseCrudBiz<String, SysResource, SysResourceDao>(), 
     }
 
     override fun getDirectChildrenResources(subSysDictCode: String, resourceType: ResourceType, parentId: String?): List<SysResourceCacheItem> {
-        val resources = getResources(subSysDictCode, ResourceType.MENU.code)
-        val menus = resources.filter { it.parentId == parentId }
-        return menus.sortedBy { it.seqNo }
+        val resources = getResources(subSysDictCode, resourceType.code)
+        val resList = resources.filter { it.parentId == parentId }
+        return resList.sortedBy { it.seqNo }
     }
 
     override fun getChildrenResources(

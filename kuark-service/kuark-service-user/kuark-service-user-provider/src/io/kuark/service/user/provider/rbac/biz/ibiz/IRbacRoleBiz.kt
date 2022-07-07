@@ -134,6 +134,17 @@ interface IRbacRoleBiz : IBaseCrudBiz<String, RbacRole> {
     fun assignUser(roleId: String, userIds: Collection<String>): Boolean
 
     /**
+     * 为资源分配角色
+     *
+     * @param resourceId 资源id
+     * @param roleIds 待分配的角色id列表
+     * @return 是否分配成功
+     * @author K
+     * @since 1.0.0
+     */
+    fun assignRoleForResource(resourceId: String, roleIds: List<String>): Boolean
+
+    /**
      * 返回已关联的用户的id
      *
      * @param roleId 角色id
@@ -142,6 +153,16 @@ interface IRbacRoleBiz : IBaseCrudBiz<String, RbacRole> {
      * @since 1.0.0
      */
     fun getAssignedUsers(roleId: String): Set<String>
+
+    /**
+     * 返回指定资源已关联的角色的id
+     *
+     * @param resourceId 资源id
+     * @return Set(角色id)
+     * @author K
+     * @since 1.0.0
+     */
+    fun getAssignedRoles(resourceId: String): Set<String>
 
     /**
      * 返回候选的用户
@@ -153,6 +174,17 @@ interface IRbacRoleBiz : IBaseCrudBiz<String, RbacRole> {
      * @since 1.0.0
      */
     fun getCandidateUsers(subSysDictCode: String, tenantId: String?): LinkedHashMap<String, String>
+
+    /**
+     * 返回候选的角色
+     *
+     * @param subSysDictCode 子系统代码
+     * @param tenantId 租户id
+     * @return LinkedHashMap(角色id， 角色名)
+     * @author K
+     * @since 1.0.0
+     */
+    fun getCandidateRoles(subSysDictCode: String, tenantId: String?): LinkedHashMap<String, String>
 
     /**
      * 返回指定url可以访问的角色的id

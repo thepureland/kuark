@@ -48,7 +48,11 @@ open class SysResourceApi : ISysResourceApi {
         return sysResourceBiz.getResourceId(subSysDictCode, url)
     }
 
-    override fun getDirectChildrenResources(subSysDictCode: String, resourceType: ResourceType,parentId: String?): List<SysResourceCacheItem> {
+    override fun getDirectChildrenResources(
+        subSysDictCode: String,
+        resourceType: ResourceType,
+        parentId: String?
+    ): List<SysResourceCacheItem> {
         return sysResourceBiz.getDirectChildrenResources(subSysDictCode, resourceType, parentId)
     }
 

@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.springframework.boot.gradle.tasks.bundling.BootJar
 
 object Version {
-    const val KOTLIN = "1.7.0"
+    const val KOTLIN = "1.7.10"
     const val SPRING_BOOT = "2.4.6"
     const val SPRING_SESSION = "2.5.2"
     const val SPRING_CLOUD = "2020.0.3"
